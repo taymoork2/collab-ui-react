@@ -39,22 +39,24 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectIsNotDisplayed(wizard.wizard);
     });
 
-    xit('should show invite pending status on new user', function () {
-      utils.searchAndClick(inviteEmail);
-      utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
+    it('should show invite pending status on new user', function () {
+      utils.search(inviteEmail);
+      utils.expectTextToBeSet(users.userListStatus, 'Invite Pending');
     });
 
     it('should add licenses successfully', function () {
       utils.clickUser(inviteEmail);
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
+      utils.waitForModal().then(function () {
 
-      //click on license checkbox
-      utils.click(users.paidMsg);
-      utils.click(users.saveButton);
-      notifications.assertSuccess('entitled successfully');
-      utils.expectIsDisplayed(users.servicesPanel);
-      utils.expectIsDisplayed(users.messageService);
+        //click on license checkbox
+        utils.click(users.paidMsgCheckbox);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
+        utils.expectIsDisplayed(users.servicesPanel);
+        utils.expectIsDisplayed(users.messageService);
+      });
     });
 
     afterAll(function () {

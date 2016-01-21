@@ -123,7 +123,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
       this.product = 'Account';
-      this.cssColorClass = 'device-status-red';
+      this.cssColorClass = 'device-status-gray';
       this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
       this.isUnused = true;
@@ -315,10 +315,13 @@ angular.module('Squared').service('CsdmConverter',
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.NeedsActivation');
+        return t('CsdmStatus.RequiresActivation');
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return t('CsdmStatus.OnlineWithIssues');
+          }
           return t('CsdmStatus.Online');
         default:
           return t('CsdmStatus.Offline');
@@ -327,18 +330,18 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getCssColorClass(obj) {
-      if (hasIssues(obj)) {
-        return 'device-status-red';
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
-        return 'device-status-yellow';
+        return 'device-status-gray';
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return 'device-status-yellow';
+          }
           return 'device-status-green';
         default:
-          return 'device-status-gray';
+          return 'device-status-red';
         }
       }
     }
@@ -373,9 +376,9 @@ angular.module('Squared').service('CsdmConverter',
       if (obj.registrationStatus == 'registered') {
         return 'device-status-green';
       } else if (obj.state == 'unregistered') {
-        return 'device-status-gray';
+        return 'device-status-red';
       }
-      return 'device-status-yellow';
+      return 'device-status-red';
     }
 
     var getHuronReadableState = function (obj) {

@@ -1240,6 +1240,13 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
+    "setSipUriDesc": "This name will appear in the end-users' ID which they will use to reach each other. For example, if John Smith who works at Acme, he would be reachable by dialing jsmith@acme.call.ciscospark.com",
+    "setSipUriDomainMsg": "Enter a SIP URI domain name",
+    "setSipUriDomainTitle": "SIP URI Domain Name",
+    "setSipUriDomainCompNames": "Company's Domain Names",
+    "setSipUriDomainCheckAvailability": "Check Availability",
+    "setSipUriPlaceholder": "input a unique domain",
+    "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -2881,11 +2888,11 @@
   },
   "CsdmStatus": {
     "Online": "Online",
+    "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
-    "NeedsActivation": "Needs Activation",
-    "issuesDetected": "Issues Detected",
+    "RequiresActivation": "Requires Activation",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
@@ -2923,11 +2930,15 @@
       },
       "AudioPairingInterference": {
         "type": "Signal interference from other devices",
-        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing with your phone and laptop."
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing between the video system and your phone or laptop."
       },
       "ECReferenceDelay": {
         "type": "Audio Delay",
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
+      },
+      "UltrasoundSpeakerAvailability": {
+        "type": "No Embedded Ultrasound Speaker",
+        "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "inactive": {
         "type": "Inactive Account",

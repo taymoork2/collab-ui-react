@@ -162,7 +162,7 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
-  this.paidMsg = element(by.id('paidMsg'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
