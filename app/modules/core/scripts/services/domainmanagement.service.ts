@@ -110,71 +110,10 @@ class DomainManagementService {
 
       this.loadDomainlist(data.pendingDomains, this.states.pending, null);
 
-     /* function(domainList, domainStatus, overridePredicate)
-
-      _.each(data.domains, claimedDom => {
-
-        let claimedDomLower = claimedDom.toLowerCase();
-        let alreadyAddedMatch = _.find(this._domainList, { text: claimedDomLower});
-
-        if (!alreadyAddedMatch || (alreadyAddedMatch.status != this.states.claimed)){
-
-          if (alreadyAddedMatch)
-            _.remove(this._domainList, {text: claimedDomLower});
-
-          this._domainList.push({
-              text: claimedDomLower,
-              code: '',
-              status: this.states.claimed
-          });
-        }
-      });
-
-      _.each(data.verifiedDomains, verifiedDom => {
-
-        let verifiedDomLower = verifiedDom.toLowerCase();
-        let alreadyAddedMatch = _.find(this._domainList, { text: verifiedDomLower});
-
-        if (!alreadyAddedMatch || (alreadyAddedMatch.status == this.states.pending)){
-
-          if (alreadyAddedMatch)
-            _.remove(this._domainList, {text: verifiedDomLower});
-
-          this._domainList.push({
-            text: verifiedDomLower,
-            code: '',
-            status: this.states.verified
-          });
-        }
-      });
-
-      _.each(data.pendingDomains, pendingDom => {
-
-        let pendingDomLower = pendingDom.toLowerCase();
-        let alreadyAddedMatch = _.find(this._domainList, { text: pendingDomLower});
-
-        if (!alreadyAddedMatch){
-          this._domainList.push({
-            text: pendingDomLower,
-            code: 'RNG31337',
-            status: this.states.pending
-          });
-        }
-      });*/
-
       deferred.resolve(this._domainList);
     }, error => {
       deferred.reject(error);
     });
-
-
-    /*this._domainList.push(
-      {
-        text: 'getVerifiedDomainspromise.com'.toLowerCase(),
-        code: '',
-        status: this.states.verified
-      });*/
-
 
     return deferred.promise;
   }
