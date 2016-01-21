@@ -3381,7 +3381,7 @@
       "header": "Send email",
       "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
       "exampleEmail": "Enter email addresses separated by commas.",
-      "invalidEmail": "This is not an email address",
+      "invalidEmail": "This is not a valid email address.",
       "sendEmail": "Send instructions"
     },
     "verify": {
