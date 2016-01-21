@@ -3357,7 +3357,7 @@
   },
   "domainManagement": {
     "title": "Domain Verification",
-    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "description": "Add and verify your organization domains so that your users can use services such as Hybrid Call. All DNS verification codes need to be entered into your DNS management interface for all domains. We highly recommend that you verify all your domains at the same time to avoid blocking user access. To avoid admin lockout, you will have to verify your own domain first.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
     "list": {
