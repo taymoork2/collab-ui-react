@@ -12,7 +12,7 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q, DirectoryNumberService) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -33,7 +33,8 @@
       getFallbackNumber: getFallbackNumber,
       getFallbackMember: getFallbackMember,
       isFallbackDirty: isFallbackDirty,
-      setAsPristine: setAsPristine
+      setAsPristine: setAsPristine,
+      isVoicemailDisabled: isVoicemailDisabled
     };
 
     ////////////////
@@ -248,6 +249,19 @@
     function memberSendToVoicemailChanged(pristineFallbackJSON) {
       return (pristineFallbackJSON.sendToVoicemail !==
         fallbackMember.sendToVoicemail);
+    }
+
+    function isVoicemailDisabled(customerId, fallbackUuid) {
+      return DirectoryNumberService.get({
+        customerId: customerId,
+        directoryNumberId: fallbackUuid
+      }).$promise.then(function (data) {
+        if (data.voiceMailProfile === null) {
+          return true;
+        } else {
+          return false;
+        }
+      });
     }
   }
 })();

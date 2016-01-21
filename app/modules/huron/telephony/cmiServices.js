@@ -65,6 +65,10 @@
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId'
     }, {
+      get: {
+        method: 'GET',
+        cache: true
+      },
       update: {
         method: 'PUT'
       }
