@@ -6,14 +6,24 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
+    deviceOverview.huronDeviceDetailsLoaded = false;
 
     if (deviceOverview.currentDevice.isHuronDevice) {
+      var huronPollInterval = $interval(pollHuronDevice, 5000);
+      $scope.$on("$destroy", function () {
+        $interval.cancel(huronPollInterval);
+      });
+      pollHuronDevice();
+    }
+
+    function pollHuronDevice() {
       CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.currentDevice = result;
+        deviceOverview.huronDeviceDetailsLoaded = true;
       });
     }
 
