@@ -17,6 +17,7 @@ angular.module('Squared').service('CsdmConverter',
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
       this.isOnline = getIsOnline(obj);
+      this.lastConnectionTime = getLastConnectionTime(obj);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
@@ -312,6 +313,14 @@ angular.module('Squared').service('CsdmConverter',
       return (obj.status || {}).connectionStatus == 'CONNECTED';
     }
 
+    function getLastConnectionTime(obj) {
+      moment.localeData(moment.locale())._calendar.sameElse = 'h:mm A, MMM D YYYY';
+      return (obj.status && obj.status.lastConnectionTime) ? uncapitalize(moment(obj.status.lastConnectionTime).calendar()) : null;
+    }
+
+    function uncapitalize(text) {
+      return text.charAt(0).toLowerCase() + text.slice(1);
+    }
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':

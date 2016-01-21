@@ -2117,6 +2117,7 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "expires": "expires",
+    "since": "since",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
