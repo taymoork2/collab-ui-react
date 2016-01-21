@@ -2930,11 +2930,15 @@
       },
       "AudioPairingInterference": {
         "type": "Signal interference from other devices",
-        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing with your phone and laptop."
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing between the video system and your phone or laptop."
       },
       "ECReferenceDelay": {
         "type": "Audio Delay",
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
+      },
+      "UltrasoundSpeakerAvailability": {
+        "type": "No Embedded Ultrasound Speaker",
+        "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "inactive": {
         "type": "Inactive Account",
