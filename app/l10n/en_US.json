@@ -1105,7 +1105,7 @@
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "deactivateService": "Your users will no longer be able to use this service.",
       "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
