@@ -315,12 +315,15 @@ angular.module('Squared').service('CsdmConverter',
 
     function getLastConnectionTime(obj) {
       moment.localeData(moment.locale())._calendar.sameElse = 'h:mm A, MMM D YYYY';
-      return (obj.status && obj.status.lastConnectionTime) ? uncapitalize(moment(obj.status.lastConnectionTime).calendar()) : null;
+      return (obj.status && obj.status.lastConnectionTime) ? lowerCaseExceptDateTimes(moment(obj.status.lastConnectionTime).calendar()) : null;
     }
 
-    function uncapitalize(text) {
-      return text.charAt(0).toLowerCase() + text.slice(1);
+    function lowerCaseExceptDateTimes(text) {
+      return text.toLowerCase().replace(" am", " AM").replace(" pm", " PM").replace(" jan", " Jan").replace(" feb", " Feb")
+          .replace(" mar", " Mar").replace(" apr", " Apr").replace(" may", " May").replace(" jun", " Jun").replace(" jul", " Jul")
+          .replace(" aug", " Aug").replace(" sep", " Sep").replace(" oct", " Oct").replace(" nov", " Nov").replace(" dec", " Dec");
     }
+
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':

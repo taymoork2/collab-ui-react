@@ -305,7 +305,7 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
-  describe("lastConnectionTime", function() {
+  describe("lastConnectionTime", function () {
     it('when long ago', function () {
       var arr = [{
         status: {
@@ -323,7 +323,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0,8) == "today at").toBeTruthy();
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 8) == "today at").toBeTruthy();
     });
 
     it('when null', function () {
