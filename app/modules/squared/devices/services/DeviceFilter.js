@@ -17,7 +17,7 @@ angular.module('Squared').service('DeviceFilter',
       filterValue: 'offline'
     }, {
       count: 0,
-      name: 'Online With Issues',
+      name: 'Online, With Issues',
       filterValue: 'issues'
     }, {
       count: 0,

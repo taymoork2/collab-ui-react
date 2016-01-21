@@ -2879,7 +2879,7 @@
   },
   "CsdmStatus": {
     "Online": "Online",
-    "OnlineWithIssues": "Online With Issues",
+    "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
