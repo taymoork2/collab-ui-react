@@ -1,5 +1,5 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
-  <i class="fa fa-circle hercules-state-{{row.entity.aggregated.services[grid.appScope.exp.currentServiceType].runningStateSeverity}}"></i>
-  <span translate="{{'hercules.status.' + row.entity.aggregated.services[grid.appScope.exp.currentServiceType].runningState}}"></span>
-  <span ng-if="row.entity.aggregated.services[grid.appScope.exp.currentServiceType].upgradeState === 'upgrading'"> | <span translate="hercules.overview.upgrading"></span></span>
+  <i class="fa fa-circle hercules-state-{{row.entity.aggregates[grid.appScope.exp.currentServiceType].runningStateSeverity}}"></i>
+  <span translate="{{'hercules.status.' + row.entity.aggregates[grid.appScope.exp.currentServiceType].runningState}}"></span>
+  <span ng-if="row.entity.aggregates[grid.appScope.exp.currentServiceType].upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
 </div>

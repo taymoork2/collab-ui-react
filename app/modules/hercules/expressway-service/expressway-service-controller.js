@@ -158,34 +158,28 @@
   function AlarmController($stateParams) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
-    vm.host = $stateParams.host;
   }
 
   /* @ngInject */
   function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
-    vm.host = $stateParams.host;
-    vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
-    vm.serviceType = $stateParams.serviceType;
-    vm.connector = function () {
-      var service = _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-      return _.find(service.connectors, function (connector) {
-        return connector.host.serial == vm.host.serial;
-      });
-    };
+    var cluster = ClusterService.getClustersById($stateParams.clusterId);
+    vm.host = _.find(cluster.connectors, {
+      hostname: $stateParams.host,
+      connectorType: $stateParams.serviceType
+    });
 
     vm.deleteHost = function () {
-      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
-        if (ClusterService.getClusters()[vm.cluster.id]) {
-          $state.go('cluster-details', {
-            clusterId: vm.cluster.id
-          });
-        } else {
-          $state.sidepanel.close();
-        }
-      }, XhrNotificationService.notify);
+      return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
+        .then(function () {
+          if (ClusterService.getClustersById(cluster.id)) {
+            $state.go('cluster-details', {
+              clusterId: vm.cluster.id
+            });
+          } else {
+            $state.sidepanel.close();
+          }
+        }, XhrNotificationService.notify);
     };
   }
 
@@ -194,7 +188,7 @@
     var vm = this;
     vm.clusterId = $stateParams.clusterId;
     vm.serviceType = $stateParams.serviceType;
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
+    vm.cluster = ClusterService.getClustersById(vm.clusterId);
     vm.saving = false;
 
     vm.selectedService = function () {

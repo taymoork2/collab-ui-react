@@ -14,11 +14,8 @@
     }
 
     function overrideStateIfAlarms(connector) {
-      // the alarms property is not present if there are no alarms
-      // otherwise it's an array
-      if (connector.alarms) {
-        // we override the state with 'has_alarm'
-        connector.state = 'has_alarm';
+      if (connector.alarms.length > 0) {
+        connector.state = 'has_alarms';
       }
       return connector;
     }
@@ -45,7 +42,7 @@
           stateSeverity = 'warning';
           stateSeverityValue = 2;
           break;
-        case 'has_alarm':
+        case 'has_alarms':
           stateSeverity = 'error';
           stateSeverityValue = 3;
           break;
@@ -69,194 +66,375 @@
       }
     }
 
-    function aggregateStatePerConnectorType(connectors) {
+    function mergeAllAlarms(connectors) {
+      return _.reduce(connectors, function (acc, connector) {
+        return acc.concat(connector.alarms);
+      }, []);
+    }
+
+    function getUpgradeState(connectors) {
+      var allAreUpgraded = _.every(connectors, 'upgradeState', 'upgraded');
+      return allAreUpgraded ? 'upgraded' : 'upgrading';
+    }
+
+    function getRunningState(connectors) {
       return _.chain(connectors)
-        .groupBy('connectorType')
-        .mapValues(function (connectorsWithTheSameType) {
-          var reducedRunningState = _.chain(connectorsWithTheSameType)
-            .map(overrideStateIfAlarms)
-            .reduce(getMostSevereRunningState, {
-              stateSeverityValue: -1
-            })
-            .value();
-          var allUpgraded = _.every(connectorsWithTheSameType, {
-            upgradeState: 'upgraded'
-          });
-          return {
-            runningState: reducedRunningState.state,
-            runningStateSeverity: reducedRunningState.stateSeverity,
-            upgradeState: allUpgraded ? 'upgraded' : 'upgrading'
-          };
+        .map(overrideStateIfAlarms)
+        .reduce(getMostSevereRunningState, {
+          stateSeverityValue: -1
         })
         .value();
     }
 
-    function aggregateStatePerHosts(connectors) {
-      var hosts = _.chain(connectors)
+    function buildAggregates(type, connectors) {
+      var filteredConnectorsByType = _.filter(connectors, 'connectorType', type);
+      var hostsWithThisType = _.chain(filteredConnectorsByType)
         .pluck('hostname')
         .uniq()
         .value();
-      return hosts;
+      var runningState = getRunningState(filteredConnectorsByType);
+      var result = {
+        alarms: mergeAllAlarms(filteredConnectorsByType),
+        runningState: runningState.state,
+        runningStateSeverity: runningState.stateSeverity,
+        upgradeState: getUpgradeState(filteredConnectorsByType),
+        hosts: _.map(hostsWithThisType, function (host) {
+          var filteredConnectorsByTypeAndHosts = _.filter(filteredConnectorsByType, 'hostname', host);
+          var runningStateForHost = getRunningState(filteredConnectorsByTypeAndHosts);
+          return {
+            hostname: host,
+            alarms: mergeAllAlarms(filteredConnectorsByTypeAndHosts),
+            runningState: runningStateForHost.state,
+            runningStateSeverity: runningStateForHost.stateSeverity,
+            upgradeState: getUpgradeState(filteredConnectorsByTypeAndHosts)
+          };
+        })
+      };
+      return result;
     }
 
-    var addAggregatedData = function (clusters) {
+    function addAggregatedData(clusters) {
+      // We add aggregated data like alarms, states and versions to the cluster
+      // per connector type and per host + connector type
       return _.map(clusters, function (cluster) {
-        var result = cluster;
-        result.aggregated = {
-          services: aggregateStatePerConnectorType(cluster.connectors),
-          hosts: aggregateStatePerHosts(cluster.connectors)
-        };
-        return result;
+        var connectors = cluster.connectors;
+        var connectorTypes = _.chain(connectors)
+          .pluck('connectorType')
+          .uniq()
+          .value();
+        cluster.aggregates = _.reduce(connectorTypes, function (acc, type) {
+          acc[type] = buildAggregates(type, connectors);
+          return acc;
+        }, {});
+        return cluster;
       });
-    };
+    }
 
-    var replaceByFakeClusters = function (clusters) {
+    function addRunningStateToConnectors(clusters) {
+      // We add runningState and runningStateSeverity to connectors like we
+      // did at a upper level when using addAggregatedData
+      return _.map(clusters, function (cluster) {
+        var connectors = _.map(cluster.connectors, function (connector) {
+          var runningState = getRunningState([connector]);
+          connector.runningState = connector.state;
+          delete connector.state;
+          connector.runningStateSeverity = runningState.stateSeverity;
+          return connector;
+        });
+        cluster.connectors = connectors;
+        return cluster;
+      });
+    }
+
+    function replaceByFakeClusters(clusters) {
       return [
         {
           "id": "cluster_A",
           "name": "1 of each cluster",
+          "releaseChannel": "GA",
+          "url": "…",
+          "provisioning": [
+            {
+              "url": "…",
+              "connectorType": "c_mgmt",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
+            },
+            {
+              "url": "…",
+              "connectorType": "c_ucmc",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
+            },
+            {
+              "url": "…",
+              "connectorType": "c_cal",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
+            }
+          ],
           "connectors": [
             {
-              "hostname": "host0.example.com",
-              "id": "c_cal@A0",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "stopped",
+              "alarms": [],
               "connectorType": "c_cal",
-              "upgradeState": "upgraded"
-            },
-            {
               "hostname": "host0.example.com",
-              "id": "c_mgmt@A1",
-              "provisionedVersion": "1.0",
+              "hostSerial": "DEADBEEF",
+              "id": "c_cal@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_cal",
               "runningVersion": "1.0",
               "state": "running",
+              "upgradeState": "upgrading",
+              "url": "…"
+            },
+            {
+              "alarms": [],
               "connectorType": "c_mgmt",
-              "upgradeState": "upgraded"
-            },
-            {
               "hostname": "host0.example.com",
-              "id": "c_ucmc@A2",
-              "provisionedVersion": "1.0",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
               "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
               "connectorType": "c_ucmc",
-              "upgradeState": "upgrading"
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_ucmc@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_ucmc",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
             }
           ]
         },
         {
           "id": _.uniqueId('cluster_'),
+          "name": "Only mgmt cluster",
+          "releaseChannel": "GA",
+          "url": "…",
+          "provisioning": [
+            {
+              "url": "…",
+              "connectorType": "c_mgmt",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
+            }
+          ],
           "connectors": [
             {
+              "alarms": [],
+              "connectorType": "c_mgmt",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgrading",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_mgmt",
               "hostname": "host1.example.com",
-              "id": "c_mgmt@UC0",
-              "provisionedVersion": "1.0",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@1",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
-              "state": "not_configured",
-              "connectorType": "c_mgmt",
-              "upgradeState": "upgraded"
+              "state": "running",
+              "upgradeState": "pending",
+              "url": "…"
             }
-          ],
-          "name": "Only mgmt cluster"
+          ]
         },
         {
           "id": _.uniqueId('cluster_'),
-          "connectors": [
+          "name": "Many calendar hosts cluster",
+          "releaseChannel": "GA",
+          "url": "…",
+          "provisioning": [
             {
-              "hostname": "hostA.example.com",
-              "id": "c_cal@UCA0",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
-              "connectorType": "c_cal",
-              "upgradeState": "upgraded"
-            },
-            {
-              "hostname": "hostA.example.com",
-              "id": "c_mgmt@UCA1",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
+              "url": "…",
               "connectorType": "c_mgmt",
-              "upgradeState": "upgraded"
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
             },
             {
-              "hostname": "hostA.example.com",
-              "id": "c_ucmc@UCA2",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
+              "url": "…",
               "connectorType": "c_ucmc",
-              "upgradeState": "upgraded"
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
             },
             {
-              "hostname": "hostB.example.com",
-              "id": "c_cal@UCB0",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "stopped",
+              "url": "…",
               "connectorType": "c_cal",
-              "upgradeState": "upgraded"
-            },
-            {
-              "hostname": "hostB.example.com",
-              "id": "c_mgmt@UCB1",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "stopped",
-              "connectorType": "c_mgmt",
-              "upgradeState": "upgraded"
-            },
-            {
-              "alarms": [],
-              "hostname": "hostC.example.com",
-              "id": "c_cal@UCC0",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
-              "connectorType": "c_cal",
-              "upgradeState": "upgraded"
-            },
-            {
-              "alarms": [],
-              "hostname": "hostC.example.com",
-              "id": "c_mgmt@UCC1",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
-              "connectorType": "c_mgmt",
-              "upgradeState": "upgraded"
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
             }
           ],
-          "name": "Many calendar hosts cluster"
+          "connectors": [
+            {
+              "alarms": [
+                {
+                  "id": "789",
+                  "firstReported": "2016-01-11T15:38:06.670Z",
+                  "lastReported": "2016-01-21T15:38:06.670Z",
+                  "severity": "warning",
+                  "title": "Lorem ipsum",
+                  "description": "Lorem ipsum dolor sit amet"
+                }
+              ],
+              "connectorType": "c_mgmt",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_cal",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_cal@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_cal",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_ucmc",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_ucmc@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_ucmc",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_mgmt",
+              "hostname": "host1.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@1",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_cal",
+              "hostname": "host1.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_cal@1",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_cal",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [
+                {
+                  "id": "789",
+                  "firstReported": "2016-01-11T15:38:06.670Z",
+                  "lastReported": "2016-01-21T15:38:06.670Z",
+                  "severity": "warning",
+                  "title": "Lorem ipsum",
+                  "description": "Lorem ipsum dolor sit amet"
+                }
+              ],
+              "connectorType": "c_ucmc",
+              "hostname": "host1.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_ucmc@1",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_ucmc",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            }
+          ]
         },
         {
           "id": _.uniqueId('cluster_'),
-          "connectors": [
+          "name": "Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_",
+          "releaseChannel": "GA",
+          "url": "…",
+          "provisioning": [
             {
-              "hostname": "hostD0.example.com",
-              "id": "c_ucmc@A1",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
-              "connectorType": "c_ucmc",
-              "upgradeState": "upgraded"
+              "url": "…",
+              "connectorType": "c_mgmt",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
             },
             {
-              "hostname": "hostD0.example.com",
-              "id": "c_mgmt@A2",
-              "provisionedVersion": "1.0",
-              "runningVersion": "1.0",
-              "state": "running",
-              "connectorType": "c_mgmt",
-              "upgradeState": "upgrading"
+              "url": "…",
+              "connectorType": "c_cal",
+              "provisionedVersion": "1.0-1.0",
+              "availableVersion": "1.0-1.0"
             }
           ],
-          "name": "Who are you?"
+          "connectors": [
+            {
+              "alarms": [
+                {
+                  "id": "123",
+                  "firstReported": "2016-01-11T15:38:06.670Z",
+                  "lastReported": "2016-01-21T15:38:06.670Z",
+                  "severity": "warning",
+                  "title": "Lorem ipsum",
+                  "description": "Lorem ipsum dolor sit amet"
+                },
+                {
+                  "id": "789",
+                  "firstReported": "2016-01-11T15:38:06.670Z",
+                  "lastReported": "2016-01-21T15:38:06.670Z",
+                  "severity": "warning",
+                  "title": "Lorem ipsum",
+                  "description": "Lorem ipsum dolor sit amet"
+                }
+              ],
+              "connectorType": "c_mgmt",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_cal",
+              "hostname": "host0.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_cal@0",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_cal",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
+              "url": "…"
+            }
+          ]
         }
       ];
-    };
+    }
 
     var fetch = function () {
       return $http
@@ -269,13 +447,16 @@
           return addAggregatedData(clusters);
         })
         .then(function (clusters) {
+          return addRunningStateToConnectors(clusters);
+        })
+        .then(function (clusters) {
           return _.indexBy(clusters, 'id');
         })
         .then(_.partial(CsdmCacheUpdater.update, clusterCache));
     };
 
-    var getClusters = function () {
-      return clusterCache;
+    var getClustersById = function (id) {
+      return clusterCache[id];
     };
 
     var getClustersByConnectorType = function (connectorType) {
@@ -328,12 +509,12 @@
     return {
       fetch: fetch,
       deleteHost: deleteHost,
-      getClusters: getClusters,
+      getClustersById: getClustersById,
+      getClustersByConnectorType: getClustersByConnectorType,
       getConnector: getConnector,
       upgradeSoftware: upgradeSoftware,
       deleteCluster: deleteCluster,
-      subscribe: hub.on,
-      getClustersByConnectorType: getClustersByConnectorType
+      subscribe: hub.on
     };
   }
 }());

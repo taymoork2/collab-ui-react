@@ -10,44 +10,24 @@
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
 
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
+    vm.cluster = ClusterService.getClustersById(vm.clusterId);
+    vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
+    var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
+    vm.softwareUpgrade = {
+      provisionedVersion: provisioning.provisionedVersion,
+      availableVersion: provisioning.availableVersion,
+      isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+      isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
     };
-
-    vm.alarms2hosts = _.memoize(function () {
-      var alarms = {};
-
-      _.forEach(vm.selectedService().connectors, function (conn) {
-        _.forEach(conn.alarms, function (alarm) {
-          if (!alarms[alarm.id]) {
-            alarms[alarm.id] = {
-              alarm: alarm,
-              hosts: []
-            };
-          }
-          alarms[alarm.id].hosts.push(conn.host);
-        });
-      });
-      var mappedAlarms = _.toArray(alarms);
-      return mappedAlarms;
-    });
 
     //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
-    vm.serviceNotInstalled = function () {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
-
     vm.upgrade = function () {
       $modal.open({
-        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
+        templateUrl: 'modules/hercules/expressway-service/software-upgrade-dialog.html',
         controller: SoftwareUpgradeController,
-        controllerAs: "softwareUpgrade",
+        controllerAs: 'softwareUpgrade',
         resolve: {
           serviceId: function () {
             return vm.serviceId;
