@@ -52,6 +52,9 @@ namespace domainManagement {
       this._email = email;
     }
 
+    public get domain(){
+      return this._domain;
+    }
   }
   angular
     .module('Core')

@@ -4,7 +4,7 @@
     <h4 class="modal-title" translate="domainManagement.email.header"></h4>
   </div>
   <div class="modal-body">
-    <p translate="domainManagement.email.description"/>
+    <p translate="domainManagement.email.description" translate-value-name="{{dmpopup.domain.text}}"/>
     <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.email.exampleEmail' | translate)}}"
            ng-model="dmpopup.email" ng-keypress="dmpopup.keyPressInInputField($event)"/>
     <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty"

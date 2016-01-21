@@ -8,7 +8,13 @@
     <br>
     <p><b>{{dmpopup.domain}}</b></p>
   </div>
-  <div ng-if="dmpopup.error" class="modal-body domError">
+  <div ng-if="!dmpopup.error" class="modal-body domWarning domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p translate="domainManagement.delete.warning"></p>
+    </section>
+  </div>
+  <div ng-if="dmpopup.error" class="modal-body domWarning domError">
     <section>
       <i class="icon icon-error"></i>
       <p>{{dmpopup.error}}</p>
