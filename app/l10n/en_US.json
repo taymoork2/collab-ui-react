@@ -2923,7 +2923,7 @@
       },
       "AudioPairingInterference": {
         "type": "Signal interference from other devices",
-        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing with your phone and laptop."
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing between the video system and your phone or laptop."
       },
       "ECReferenceDelay": {
         "type": "Audio Delay",
