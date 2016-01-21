@@ -3,29 +3,29 @@
 angular.module('Squared').service('DeviceFilter',
 
   /* @ngInject  */
-  function () {
+  function ($translate) {
 
     var currentSearch, currentFilter, arr = [];
 
     var filters = [{
       count: 0,
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
       count: 0,
-      name: 'Offline',
+      name: $translate.instant('CsdmStatus.Offline'),
       filterValue: 'offline'
     }, {
       count: 0,
-      name: 'Online, With Issues',
+      name: $translate.instant('CsdmStatus.OnlineWithIssues'),
       filterValue: 'issues'
     }, {
       count: 0,
-      name: 'Online',
+      name: $translate.instant('CsdmStatus.Online'),
       filterValue: 'online'
     }, {
       count: 0,
-      name: 'Requires Activation',
+      name: $translate.instant('CsdmStatus.RequiresActivation'),
       filterValue: 'codes'
     }];
 
