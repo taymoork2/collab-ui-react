@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
+  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Orgservice', 'SparkDomainManagementService', 'Authinfo', 'Log', '$log', 'Notification', '$translate', '$window', 'Config',
+    function ($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, $log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
@@ -12,15 +12,58 @@ angular.module('Core')
       //SIP URI Domain Controller code
       $scope.cloudSipUriField = {};
       $scope.cloudSipUriField.inputValue = '';
+      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isAvailable = false;
       $scope.cloudSipUriField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
 
+      $scope.setRecommendedSipUri = function() {
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            if (data.sipCloudDomain) {
+              $scope.cloudSipUriField.inputValue = data.sipCloudDomain;
+              $scope.cloudSipUriField.isDisabled = true;
+            } else if (data.verifiedDomains) {
+              $scope.cloudSipUriField.inputValue = data.verifiedDomains[0];
+            } else if (data.displayName) {
+              if (data.displayName.indexOf('_') > 0) {
+                var displayName = data.displayName.split('_')[0].toLowerCase();
+                $scope.cloudSipUriField.inputValue = displayName;
+              } else if (data.displayName.indexOf(' ') > 0) {
+                var displayName = data.displayName.split(' ')[0].toLowerCase();
+                $scope.cloudSipUriField.inputValue = displayName;
+              }
+            } else {
+              $scope.cloudSipUriField.inputValue = '';
+            }
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+          }
+        });
+      };
+      $scope.setRecommendedSipUri();
+
+      $scope.checkSipUriAvailability = function() {
+        //$log.log($event);
+        if ($scope.cloudSipUriField.inputValue !== '') {
+          var domain = $scope.cloudSipUriField.inputValue + Config.getSparkDomainCheckUrl();
+          var payload = {'name': domain, 'isVerifyDomainOnly': true};
+          SparkDomainManagementService.checkDomainAvailability(payload, function(data, status) {
+            if (status === 200 && data.isDomainAvailable) {
+              $scope.cloudSipUriField.isAvailable = true;
+              $scope.cloudSipUriField.isError = false;
+            } else {
+              $scope.cloudSipUriField.isError = true;
+            }
+          });
+        }
+      };
+
       $scope.validateSipUri = function () {
-        var isError = false;
         if ($scope.cloudSipUriField.inputValue.length > 40) {
-          isError = true;
+          $scope.cloudSipUriField.isError = true;
         }
 
-        return isError;
+        return $scope.cloudSipUriField.isError;
       };
 
       $scope.options = {

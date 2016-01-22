@@ -167,6 +167,16 @@ angular.module('Core')
           prod: 'https://identity.webex.com/organization/%s/v1/'
         },
 
+        sparkDomainManagementUrl: {
+          dev: 'http://171.68.20.147:8080/atlas-server/admin/api/v1/',
+          prod: ''
+        },
+
+        sparkDomainCheckUrl: {
+          dev: '.koalabait.com',
+          prod: '.ciscospark.com'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
@@ -648,6 +658,24 @@ angular.module('Core')
           };
 
           return adminServiceUrl[this.getEnv()];
+        },
+
+        getSparkDomainManagementUrl: function () {
+          var sparkDomainManagementUrl = {
+            'dev': this.sparkDomainManagementUrl.dev,
+            'prod': this.sparkDomainManagementUrl.prod
+          };
+
+          return sparkDomainManagementUrl[this.getEnv()];
+        },
+
+        getSparkDomainCheckUrl: function () {
+          var sparkDomainCheckUrl = {
+            'dev': this.sparkDomainCheckUrl.dev,
+            'prod': this.sparkDomainCheckUrl.prod
+          };
+
+          return sparkDomainCheckUrl[this.getEnv()];
         },
 
         getProdAdminServiceUrl: function () {
