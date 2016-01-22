@@ -53,7 +53,7 @@
             ng-class="{'list-item': !$first}">
           <a
             ui-sref="cluster-details.host-details({host: host.hostname, clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">
-            <i class="fa fa-circle status-icon" ng-class="'hercules-state-'+host.runningStateSeverity"></i>
+            <i class="fa fa-circle status-icon" ng-class="'hercules-state-' + host.runningStateSeverity"></i>
             <span class="feature-name">{{host.hostname}}</span>
             <span class="feature-status">
               <span translate="{{'hercules.status.' + host.runningState }}"></span>

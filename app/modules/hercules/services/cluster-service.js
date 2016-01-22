@@ -31,28 +31,26 @@
           stateSeverity = 'ok';
           stateSeverityValue = 0;
           break;
+        case 'not_installed':
+          stateSeverity = 'neutral';
+          stateSeverityValue = 1;
+          break;
         case 'disabled':
         case 'downloading':
         case 'installing':
         case 'not_configured':
-        case 'not_installed':
-        case 'offline':
-        case 'stopped':
         case 'uninstalling':
+        case 'registered':
           stateSeverity = 'warning';
           stateSeverityValue = 2;
           break;
         case 'has_alarms':
+        case 'offline':
+        case 'stopped':
+        case 'unknown':
+        default:
           stateSeverity = 'error';
           stateSeverityValue = 3;
-          break;
-        case 'registered':
-        case 'unknown':
-          stateSeverity = 'unknown';
-          stateSeverityValue = 1;
-          break;
-        default:
-          throw new Error('Unexpected connector state: ' + connector.state);
       }
 
       if (stateSeverityValue > result.stateSeverityValue) {
@@ -215,7 +213,7 @@
           ]
         },
         {
-          "id": _.uniqueId('cluster_'),
+          "id": 'cluster_B',
           "name": "Only mgmt cluster",
           "releaseChannel": "GA",
           "url": "…",
@@ -267,7 +265,7 @@
           ]
         },
         {
-          "id": _.uniqueId('cluster_'),
+          "id": 'cluster_C',
           "name": "Many calendar hosts cluster",
           "releaseChannel": "GA",
           "url": "…",
@@ -385,7 +383,7 @@
           ]
         },
         {
-          "id": _.uniqueId('cluster_'),
+          "id": 'cluster_D',
           "name": "Who are you?",
           "releaseChannel": "GA",
           "url": "…",
@@ -412,7 +410,7 @@
               "id": "c_mgmt@0",
               "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
-              "state": "offline",
+              "state": "not_configured",
               "upgradeState": "upgraded",
               "url": "…"
             },
