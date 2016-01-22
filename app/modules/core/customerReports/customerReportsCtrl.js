@@ -21,20 +21,20 @@
     vm.displayEngagement = true;
     vm.displayQuality = true;
 
-    var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+    var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var activeUserCard = null;
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
-    vm.searchPlaceholder = $translate.instant('activeUsers.user');
+    vm.searchPlaceholder = $translate.instant('activeUsers.search');
     vm.searchField = "";
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
@@ -341,6 +341,7 @@
             } else if (response.length === 0) {
               vm.mostActiveUserStatus = EMPTY;
             } else {
+              vm.activeUserPredicate = activeUsersSort[3];
               vm.mostActiveUsers = response;
               vm.activeUserCurrentPage = 1;
               vm.mostActiveUserStatus = SET;
@@ -362,6 +363,9 @@
         }
       });
       vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      $timeout(function () {
+        resizeCards();
+      }, 10);
       return returnArray;
     }
 

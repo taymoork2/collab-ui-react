@@ -29,14 +29,14 @@
                 <tr>
                   <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
                   <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(1)"></th>
-                  <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.squaredActivity" ng-click="nav.mostActiveSort(2)"></th>
+                  <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(2)"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr ng-repeat="user in nav.searchMostActive() | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
                   <td class="vertical-center">{{user.userName}}</td>
                   <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
-                  <td class="vertical-center horizontal-center">{{user.totalActivity}}</td>
+                  <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
                 </tr>
               </tbody>
             </table>

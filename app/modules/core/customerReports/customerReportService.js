@@ -94,6 +94,7 @@
             data.push({
               'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
               'totalActivity': parseInt(item.details.totalActivity),
+              'sparkMessages': parseInt(item.details.sparkMessages),
               'userId': item.details.userId,
               'userName': item.details.userName
             });
@@ -132,7 +133,7 @@
         var activeUsers = parseInt(item.details.activeUsers);
         var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-        // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
+        // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
         if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
