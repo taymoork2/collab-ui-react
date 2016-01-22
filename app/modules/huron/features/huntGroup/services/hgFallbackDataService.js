@@ -256,11 +256,7 @@
         customerId: customerId,
         directoryNumberId: fallbackUuid
       }).$promise.then(function (data) {
-        if (data.voiceMailProfile === null) {
-          return true;
-        } else {
-          return false;
-        }
+        return !data.voiceMailProfile;
       });
     }
   }

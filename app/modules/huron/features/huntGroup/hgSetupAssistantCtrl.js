@@ -269,7 +269,7 @@
     function selectFallback($item) {
       vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
-      HuntGroupFallbackDataService.isVoicemailDisabled($item.selectableNumber.uuid).then(function (isVoicemailDisabled) {
+      HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
         vm.disableVoicemail = isVoicemailDisabled;
       });
     }
@@ -300,7 +300,7 @@
       HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
-          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, vm.selectedFallbackMember.member.selectableNumber.uuid).then(function (isVoicemailDisabled) {
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(vm.selectedFallbackMember, 'member.selectableNumber.uuid')).then(function (isVoicemailDisabled) {
             vm.disableVoicemail = isVoicemailDisabled;
           });
         });

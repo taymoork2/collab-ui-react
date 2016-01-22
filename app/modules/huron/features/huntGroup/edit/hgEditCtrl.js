@@ -103,7 +103,7 @@
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
         vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
-        HuntGroupFallbackDataService.isVoicemailDisabled(customerId, pristineData.fallbackDestination.numberUuid).then(function (isVoicemailDisabled) {
+        HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
           vm.disableVoicemail = isVoicemailDisabled;
         });
         if (resetFromBackend) {
@@ -201,7 +201,7 @@
       HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
-          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, vm.selectedFallbackMember.member.selectableNumber.uuid).then(function (isVoicemailDisabled) {
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(vm.selectedFallbackMember, 'member.selectableNumber.uuid')).then(function (isVoicemailDisabled) {
             vm.disableVoicemail = isVoicemailDisabled;
           });
         });
