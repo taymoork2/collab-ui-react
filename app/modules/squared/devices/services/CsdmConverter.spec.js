@@ -298,7 +298,7 @@ describe('CsdmConverterSpec', function () {
   });
 
   describe("lastConnectionTime", function () {
-    fit('when long ago', function () {
+    it('when long ago', function () {
       var arr = [{
         status: {
           lastConnectionTime: '2015-01-09T08:00:00Z',
