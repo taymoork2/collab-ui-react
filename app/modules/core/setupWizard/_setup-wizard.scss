@@ -637,3 +637,30 @@
       font-size: 1rem
     }
 }
+
+.enterprise-sipUri-page {
+  .btn-space {
+    margin-left: .7rem
+  }
+  .space {
+    margin-left: 1rem
+  }
+  .spaceFlow {
+    margin-bottom: 2.2rem
+  }
+  .url-examples-style {
+    margin-bottom: 1rem
+  }
+  .sip-uri-input {
+    margin-bottom: 2.2rem
+  }
+  .inline {
+    float: left;
+  }
+  .inputFieldButton {
+    float: left;
+  }
+  .uriCheckSpace {
+    clear: both;
+  }
+}

@@ -17,6 +17,8 @@ var Navigation = function () {
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
+  this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
+
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
@@ -30,8 +32,8 @@ var Navigation = function () {
   // hybrid services
   this.activateService = element(by.id('activateService'));
   this.deactivateService = element(by.id('deactivateService'));
-  this.calendarServicePage = element(by.css('a[href="#/services/calendar"]'));
-  this.callServicePage = element(by.css('a[href="#/services/call"]'));
+  this.calendarServicePage = element(by.css('a[href="#services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="#services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
 

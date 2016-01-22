@@ -92,6 +92,8 @@ describe('User List Service', function () {
       status: 'success'
     });
 
+    $httpBackend.whenDELETE(userReportsUrl).respond(204);
+
     UserListService.getUserReports(testData.exportCSV.id, function (data, status) {
       expect(status).toBe(200);
       expect(data.status).toBe('success');
@@ -123,6 +125,8 @@ describe('User List Service', function () {
       id: testData.exportCSV.id,
       status: 'success'
     });
+
+    $httpBackend.whenDELETE(getUserReportsUrl).respond(204);
 
     var promise = UserListService.exportCSV(testData.exportCSV.filter);
 

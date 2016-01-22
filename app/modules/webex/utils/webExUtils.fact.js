@@ -231,7 +231,7 @@
 
             logMsg = funcName + ": " + "\n" +
               "licenses=" + JSON.stringify(licenses);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             var licenseInfo = null;
 
@@ -308,70 +308,80 @@
             webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
             webExXmlApiInfoObj.webexAdminSessionTicket = response;
 
+            var siteVersionJsonObj = null;
+            var enableT30UnifiedAdminJsonObj = null;
+
+            var isAdminReportEnabled = false;
+            var isT31IframeSupported = false;
+            var isT30IframeSupported = false;
+
             getSiteData().then(
               function getSiteDataSuccess(response) {
                 var funcName = "getSiteDataSuccess()";
                 var logMsg = "";
 
-                var isAdminReportEnabled = isAdminReportEnabledCheck(obj.validateSiteInfoXmlData(response.siteInfoXml));
+                siteVersionJsonObj = obj.validateSiteVersionXmlData(response.siteVersionXml);
+                isAdminReportEnabled = isAdminReportEnabledCheck(obj.validateSiteInfoXmlData(response.siteInfoXml));
+                isT31IframeSupported = isT31IframeSupportedCheck(siteVersionJsonObj);
 
-                var isIframeSupported = isIframeSupportedCheck1(
-                  obj.validateSiteVersionXmlData(response.siteVersionXml)
-                );
-
-                if (isIframeSupported) {
+                if (isT31IframeSupported) {
                   var isSiteSupportsIframeResult = {
                     siteUrl: siteUrl,
-                    isIframeSupported: isIframeSupported,
+                    isIframeSupported: isT31IframeSupported,
                     isAdminReportEnabled: isAdminReportEnabled
                   };
 
                   logMsg = funcName + ": " + "\n" +
                     "siteUrl=" + siteUrl + "\n" +
                     "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                  // $log.log(logMsg);
+                  $log.log(logMsg);
 
                   deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                }
+                } else { // check iFrame support for T30 site
+                  getEnableT30UnifiedAdminData().then(
+                    function getEnableT30UnifiedAdminDataSuccess(response) {
+                      var funcName = "getEnableT30UnifiedAdminDataSuccess()";
+                      var logMsg = "";
 
-                getEnableT30UnifiedAdminData().then(
-                  function getEnableT30UnifiedAdminDataSuccess(response) {
-                    isIframeSupported = isIframeSupportedCheck2(
-                      obj.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml)
-                    );
+                      enableT30UnifiedAdminJsonObj = obj.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml);
+                      isT30IframeSupported = isT30IframeSupportedCheck(
+                        siteVersionJsonObj,
+                        enableT30UnifiedAdminJsonObj
+                      );
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      isIframeSupported: isIframeSupported,
-                      isAdminReportEnabled: isAdminReportEnabled
-                    };
+                      var isSiteSupportsIframeResult = {
+                        siteUrl: siteUrl,
+                        isIframeSupported: isT30IframeSupported,
+                        isAdminReportEnabled: isAdminReportEnabled
+                      };
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    // $log.log(logMsg);
+                      logMsg = funcName + ": " + "\n" +
+                        "siteUrl=" + siteUrl + "\n" +
+                        "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                      $log.log(logMsg);
 
-                    deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                  }, // getEnableT30UnifiedAdminDataSuccess()
+                      deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
+                    }, // getEnableT30UnifiedAdminDataSuccess()
 
-                  function getEnableT30UnifiedAdminDataError(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataError()";
-                    var logMsg = "";
+                    function getEnableT30UnifiedAdminDataError(response) {
+                      var funcName = "getEnableT30UnifiedAdminDataError()";
+                      var logMsg = "";
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      error: "getEnableT30UnifiedAdminDataError",
-                      response: response
-                    };
+                      var isSiteSupportsIframeResult = {
+                        siteUrl: siteUrl,
+                        error: "getEnableT30UnifiedAdminDataError",
+                        response: response
+                      };
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
+                      logMsg = funcName + ": " + "\n" +
+                        "siteUrl=" + siteUrl + "\n" +
+                        "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                      $log.log(logMsg);
 
-                    deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
-                  } // getEnableT30UnifiedAdminDataError()
-                );
+                      deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
+                    } // getEnableT30UnifiedAdminDataError()
+                  ); // getEnableT30UnifiedAdminData().then()
+                } // check iFrame support for T30 site
               }, // getSiteDataSuccess()
 
               function getSiteDataError(response) {
@@ -420,7 +430,6 @@
         function getSiteData() {
           var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
           var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
-          var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(webExXmlApiInfoObj);
 
           return $q.all({
             siteVersionXml: siteVersionXml,
@@ -436,12 +445,12 @@
           });
         } // getEnableT30UnifiedAdminData()
 
-        function isIframeSupportedCheck1(siteVersionJsonObj) {
-          var funcName = "isIframeSupportedCheck1()";
+        function isT31IframeSupportedCheck(siteVersionJsonObj) {
+          var funcName = "isT31IframeSupportedCheck()";
           var logMsg = "";
 
           var trainReleaseOrder = obj.getSiteVersion(siteVersionJsonObj).trainReleaseOrder;
-          var isIframeSupported = (
+          var isT31IframeSupported = (
             (null != trainReleaseOrder) &&
             (400 <= +trainReleaseOrder)
           ) ? true : false;
@@ -449,18 +458,21 @@
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "trainReleaseOrder=" + trainReleaseOrder + "\n" +
-            "isIframeSupported=" + isIframeSupported;
+            "isT31IframeSupported=" + isT31IframeSupported;
           $log.log(logMsg);
 
-          return isIframeSupported;
-        } // isIframeSupportedCheck1()
+          return isT31IframeSupported;
+        } // isT31IframeSupportedCheck()
 
-        function isIframeSupportedCheck2(enableT30UnifiedAdminJsonObj) {
-          var funcName = "isIframeSupportedCheck2()";
+        function isT30IframeSupportedCheck(
+          siteVersionJsonObj,
+          enableT30UnifiedAdminJsonObj
+        ) {
+          var funcName = "isT30IframeSupportedCheck()";
           var logMsg = "";
 
           var enableT30UnifiedAdmin = obj.getEnableT30UnifiedAdmin(enableT30UnifiedAdminJsonObj);
-          var isIframeSupported = (
+          var isT30IframeSupported = (
             (null != enableT30UnifiedAdmin) &&
             ("true" == enableT30UnifiedAdmin)
           ) ? true : false;
@@ -468,11 +480,11 @@
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "enableT30UnifiedAdmin=" + enableT30UnifiedAdmin + "\n" +
-            "isIframeSupported=" + isIframeSupported;
+            "isIframeSupported=" + isT30IframeSupported;
           $log.log(logMsg);
 
-          return isIframeSupported;
-        } // isIframeSupportedCheck2()
+          return isT30IframeSupported;
+        } // isT30IframeSupportedCheck()
 
         function isAdminReportEnabledCheck(siteInfoJsonObj) {
           var funcName = "isAdminReportEnabledCheck()";

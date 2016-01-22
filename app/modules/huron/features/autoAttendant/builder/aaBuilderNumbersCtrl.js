@@ -11,6 +11,7 @@
     var vm = this;
 
     vm.addNumber = addNumber;
+    vm.loadNums = loadNums;
     vm.removeNumber = removeNumber;
     vm.addAAResource = addAAResource;
     vm.deleteAAResource = deleteAAResource;
@@ -249,6 +250,17 @@
         getInternalNumbers();
       });
 
+      /* make sure the mapping exists for already existing resource numbers, so it sorts correctly */
+
+      if (_.has(vm, 'ui.ceInfo.resources')) {
+        _.forEach(vm.ui.ceInfo.resources, function (r) {
+          if (TelephoneNumberService.validateDID(r.number)) {
+            vm.numberTypeList[r.number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+          } else {
+            vm.numberTypeList[r.number] = AANumberAssignmentService.DIRECTORY_NUMBER;
+          }
+        });
+      }
     }
 
     function getInternalNumbers() {

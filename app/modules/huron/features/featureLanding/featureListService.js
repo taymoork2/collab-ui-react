@@ -82,7 +82,7 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = huntGroup.numbers;
+        formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';

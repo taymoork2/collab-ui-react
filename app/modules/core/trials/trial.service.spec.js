@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTimeZoneService*/
+/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
 'use strict';
 
 describe('Service: Trial Service', function () {
@@ -13,7 +13,7 @@ describe('Service: Trial Service', function () {
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
       'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService',
-      'WebexTimeZoneService');
+      'WebexTrialService');
 
     bard.mockService(LogMetricsService, {});
     bard.mockService(Authinfo, {

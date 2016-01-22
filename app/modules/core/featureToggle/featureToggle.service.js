@@ -15,6 +15,7 @@
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
+      atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       huronHuntGroup: 'huronHuntGroup',
@@ -42,6 +43,7 @@
       deleteContent: 'delete-content',
       dialOut: 'dial-out',
       disableCacheForFeatures: 'disableCacheForFeatures',
+      domainManagement: 'domainManagement',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
@@ -124,7 +126,8 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
-      setFeatureToggle: setFeatureToggle,
+      setFeatureToggles: setFeatureToggles,
+      generateFeatureToggleRule: generateFeatureToggleRule,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
@@ -310,17 +313,16 @@
       return deferred.promise;
     }
 
-    function setFeatureToggle(isUser, id, key, val) {
+    function setFeatureToggles(isUser, listOfFeatureToggleRules) {
       if (isUser) {
         return $q.reject('User level toggles are not changeable in the web app');
       }
 
-      var toggle = isUser ? undefined : generateFeatureToggleRule(id, key, val);
       var usingId = isUser ? undefined : '';
 
       return getUrl(isUser).save({
         id: usingId
-      }, toggle).$promise;
+      }, listOfFeatureToggleRules).$promise;
     }
 
     /**
@@ -328,7 +330,7 @@
      * @param  {uuid} orgId
      * @param  {string} key   one of the FeatureToggleService.features
      * @param  {any} val      false to turn off, otherwise any value
-     * @return {object}       this should not be used outside of this service
+     * @return {object}       the object that the backend expects
      */
     function generateFeatureToggleRule(orgId, key, val) {
       return {
