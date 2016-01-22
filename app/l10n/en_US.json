@@ -1918,9 +1918,9 @@
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
-      "timezonePlaceholder": "Search for a time zone...",
-      "invalidSite": "SiteUrl is invalid.",
-      "duplicateSite": "SiteUrl is already in use.",
+      "timeZonePlaceholder": "Select a time zone...",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "duplicateSite": "Site URL is already in use. Enter a different site URL.",
       "domainInvalid": "SiteUrl must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
