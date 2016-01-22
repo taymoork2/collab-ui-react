@@ -400,21 +400,32 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, vm.customerOrgId)
-            .catch(function (response) {
-              Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-            })
-            .then(function () {
-              if (vm.callTrial.enabled) {
-                return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
-                  .catch(function (response) {
-                    vm.startTrialButtonLoad = false;
-                    Notification.errorResponse(response, 'trialModal.squareducError');
-                    return $q.reject(response);
-                  });
-              }
-            });
+          return response;
+        })
+        .then(function (response) {
+          // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
+          // handled by the backend process once provisioning is complete)
+          if (!vm.meetingTrial.enabled) {
+            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
+                vm.details.licenseDuration, vm.customerOrgId)
+              .catch(function (response) {
+                Notification.error('didManageModal.emailFailText');
+              })
+              .then(function () {
+                return response;
+              });
+          }
+          return response;
+        })
+        .then(function (response) {
+          if (vm.callTrial.enabled) {
+            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
+              .catch(function (response) {
+                vm.startTrialButtonLoad = false;
+                Notification.errorResponse(response, 'trialModal.squareducError');
+                return $q.reject(response);
+              });
+          }
         })
         .then(function () {
           var successMessage = [$translate.instant('trialModal.addSuccess', {

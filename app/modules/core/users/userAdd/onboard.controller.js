@@ -397,7 +397,7 @@ angular.module('Core')
           siteUrl: _.get(obj, 'license.siteUrl', ''),
           billing: obj.license.billingServiceId,
           volume: obj.license.volume,
-          licenseId: obj.license.licenseId,
+          licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
           confModel: false,
@@ -1076,11 +1076,17 @@ angular.module('Core')
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
-              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
-                userResult.message = $translate.instant('usersPage.userExistsError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
+              } else if (userStatus === 403) {
+                if (data.userResponse[i].message === '400081') {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                } else if (data.userResponse[i].message === '400084') {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                }
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {

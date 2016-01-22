@@ -372,5 +372,31 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
   });
+  describe('403 errors during onboarding', function () {
+    function testOnboardUsers(successFlag, statusCode, responseMessage) {
+      return function (userArray, entitleList, licenseList, callback) {
+        var data = {
+          success: successFlag,
+          userResponse: [{
+            status: statusCode,
+            message: responseMessage
+          }, {
+            status: statusCode,
+            message: responseMessage
+          }]
+        };
+        callback(data);
+      };
+    }
 
+    it('checkClaimedDomain', function () {
+      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400084'));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExists', function () {
+      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400081'));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+  });
 });

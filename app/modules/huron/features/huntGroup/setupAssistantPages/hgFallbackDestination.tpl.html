@@ -49,7 +49,8 @@
     <div class="text-center fallback-container-item">
       <cs-checkbox ng-if="huntGroupSA.selectedFallbackMember" ckid="checkbox"
                    ng-model="huntGroupSA.selectedFallbackMember.sendToVoicemail"
-                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}">
+                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"
+                   isdisabled="huntGroupSA.disableVoicemail">
       </cs-checkbox>
     </div>
     <div class="text-center fallback-container-item">

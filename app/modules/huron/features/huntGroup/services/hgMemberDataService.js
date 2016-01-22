@@ -71,7 +71,8 @@
       users.forEach(function (user) {
         tempArray.some(function (u) {
           var found = (user.userUuid === u.uuid);
-          if (found) {
+          var alreadyAdded = selectedHuntMembers.indexOf(u);
+          if (found && alreadyAdded === -1) {
             selectedHuntMembers.push(u);
           }
           return found;

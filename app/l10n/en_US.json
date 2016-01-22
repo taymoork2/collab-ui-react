@@ -91,7 +91,8 @@
     "noExtMappingAvail": "No DID mapping available.",
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
-    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
+    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
+    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -134,10 +135,10 @@
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
-    "paidMsg": "Spark Message",
+    "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
-    "paidComm": "Spark Call",
+    "paidComm": "Call",
     "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -1107,7 +1108,7 @@
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "deactivateService": "Your users will no longer be able to use this service.",
       "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
@@ -1919,9 +1920,9 @@
       "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "companyname.webex.com",
-      "timezonePlaceholder": "Search for a time zone...",
-      "invalidSite": "SiteUrl is invalid.",
-      "duplicateSite": "SiteUrl is already in use.",
+      "timeZonePlaceholder": "Select a time zone...",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "duplicateSite": "Site URL is already in use. Enter a different site URL.",
       "domainInvalid": "SiteUrl must contain the webex.com domain name.",
       "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
@@ -2126,6 +2127,7 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "expires": "expires",
+    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
