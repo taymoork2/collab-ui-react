@@ -466,31 +466,38 @@
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http
         .post(url, '{}')
-        .then(extractDataFromResponse);
+        .then(extractDataFromResponse)
+        .then(function () {
+          poller.forceAction();
+        });
     };
 
     var deleteCluster = function (clusterId) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      return $http.delete(url).then(function () {
-        if (clusterCache[clusterId]) {
-          delete clusterCache[clusterId];
-        }
-      });
+      return $http.delete(url)
+        .then(function () {
+          if (clusterCache[clusterId]) {
+            delete clusterCache[clusterId];
+          }
+          poller.forceAction();
+        });
     };
 
     var deleteHost = function (clusterId, serial) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
-      return $http.delete(url).then(function () {
-        var cluster = clusterCache[clusterId];
-        if (cluster && cluster.hosts) {
-          _.remove(cluster.hosts, {
-            serial: serial
-          });
-          if (cluster.hosts.length === 0) {
-            delete clusterCache[clusterId];
+      return $http.delete(url)
+        .then(function () {
+          var cluster = clusterCache[clusterId];
+          if (cluster) {
+            _.remove(cluster.connectors, {
+              hostSerial: serial
+            });
+            if (cluster.hosts.length === 0) {
+              delete clusterCache[clusterId];
+            }
           }
-        }
-      });
+          poller.forceAction();
+        });
     };
 
     var getConnector = function (connectorId) {
@@ -499,7 +506,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    CsdmPoller.create(fetch, hub);
+    var poller = CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,

@@ -3,10 +3,11 @@
 
   /* @ngInject  */
   function CsdmPoller($injector) {
-    function create(service, hub) {
+    function create(service, hub, options) {
       return $injector.instantiate(CsdmPollerInstance, {
         hub: hub,
-        service: service
+        service: service,
+        options: options || {}
       });
     }
     return {
@@ -94,11 +95,13 @@
   }
 
   /* @ngInject  */
-  function CsdmPollerInstance($timeout, service, hub, $log) {
+  function CsdmPollerInstance($timeout, service, hub, options) {
     hub.onListener('added', listenerAdded);
     hub.onListener('removed', listenerRemoved);
 
-    var pollPromise, pollDelay = 30 * 1000;
+    var pollPromise;
+    var defaultPollDelay = options.delay || 30 * 1000;
+    var pollDelay = defaultPollDelay;
 
     function listenerAdded(event) {
       if (event == 'data' && hub.count('data') == 1) {
@@ -125,7 +128,26 @@
       service().then(_.partial(notifyAll, undefined), notifyAll);
     }
 
-    return {};
+    function forceAction() {
+      $timeout.cancel(pollPromise);
+      poll();
+    }
+
+    function updateDelay(delay) {
+      $timeout.cancel(pollPromise);
+      pollDelay = delay;
+      pollPromise = $timeout(poll, delay);
+    }
+
+    function resetDelay() {
+      updateDelay(defaultPollDelay);
+    }
+
+    return {
+      forceAction: forceAction,
+      updateDelay: updateDelay,
+      resetDelay: resetDelay
+    };
   }
 
   angular.module('Squared')
