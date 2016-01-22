@@ -7,6 +7,17 @@ angular.module('Core')
       $scope.email1 = $location.search().email;
 
       $scope.handleCreateAccount = function () {
+
+        if (!$scope.email1 || 0 === $scope.email1.trim()) {
+          $scope.error = "Empty email";
+          return;
+        }
+
+        if (!$scope.password1 || 0 === $scope.password1.trim()) {
+          $scope.error = "Empty password";
+          return;
+        }
+
         if ($scope.email1 != $scope.email2) {
           $scope.error = "Emails do not match";
           return;
