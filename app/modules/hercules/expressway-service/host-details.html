@@ -19,7 +19,7 @@
         <td>
           <i class="fa fa-circle status-icon"
              ng-class="hostDetailsCtrl.host.alarms.length > 0 ? 'hercules-state-error' : 'hercules-state-' + hostDetailsCtrl.host.runningStateSeverity"></i>
-          <span translate="{{'hercules.status.' + hostDetailsCtrl.host.runningState }}"></span>
+          <span translate="{{'hercules.status.' + hostDetailsCtrl.host.runningState }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>
       </tr>
       </tbody>

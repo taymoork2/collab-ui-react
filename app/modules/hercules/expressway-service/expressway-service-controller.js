@@ -17,8 +17,6 @@
     vm.currentServiceId = HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType);
     vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.loadingClusters = true;
-
-    //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
 
     // Added for cs-page-header
@@ -190,12 +188,6 @@
     vm.serviceType = $stateParams.serviceType;
     vm.cluster = ClusterService.getClustersById(vm.clusterId);
     vm.saving = false;
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-    };
 
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);

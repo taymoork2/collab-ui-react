@@ -99,14 +99,16 @@
         runningStateSeverity: runningState.stateSeverity,
         upgradeState: getUpgradeState(filteredConnectorsByType),
         hosts: _.map(hostsWithThisType, function (host) {
-          var filteredConnectorsByTypeAndHosts = _.filter(filteredConnectorsByType, 'hostname', host);
-          var runningStateForHost = getRunningState(filteredConnectorsByTypeAndHosts);
+          // 1 host = 1 connector (for a given type)
+          var connector = _.filter(filteredConnectorsByType, 'hostname', host)[0];
+          // re-use getRunningState to get running state severity among other things
+          var runningStateForHost = getRunningState([connector]);
           return {
             hostname: host,
-            alarms: mergeAllAlarms(filteredConnectorsByTypeAndHosts),
+            alarms: connector.alarms,
             runningState: runningStateForHost.state,
             runningStateSeverity: runningStateForHost.stateSeverity,
-            upgradeState: getUpgradeState(filteredConnectorsByTypeAndHosts)
+            upgradeState: connector.upgradeState
           };
         })
       };
@@ -158,7 +160,7 @@
               "url": "…",
               "connectorType": "c_mgmt",
               "provisionedVersion": "1.0-1.0",
-              "availableVersion": "1.0-1.0"
+              "availableVersion": "2.0-1.0"
             },
             {
               "url": "…",
@@ -248,6 +250,18 @@
               "runningVersion": "1.0",
               "state": "running",
               "upgradeState": "pending",
+              "url": "…"
+            },
+            {
+              "alarms": [],
+              "connectorType": "c_mgmt",
+              "hostname": "host42.example.com",
+              "hostSerial": "DEADBEEF",
+              "id": "c_mgmt@1",
+              "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
+              "runningVersion": "1.0",
+              "state": "running",
+              "upgradeState": "upgraded",
               "url": "…"
             }
           ]
@@ -372,7 +386,7 @@
         },
         {
           "id": _.uniqueId('cluster_'),
-          "name": "Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_Who-are-you?_",
+          "name": "Who are you?",
           "releaseChannel": "GA",
           "url": "…",
           "provisioning": [
@@ -391,31 +405,14 @@
           ],
           "connectors": [
             {
-              "alarms": [
-                {
-                  "id": "123",
-                  "firstReported": "2016-01-11T15:38:06.670Z",
-                  "lastReported": "2016-01-21T15:38:06.670Z",
-                  "severity": "warning",
-                  "title": "Lorem ipsum",
-                  "description": "Lorem ipsum dolor sit amet"
-                },
-                {
-                  "id": "789",
-                  "firstReported": "2016-01-11T15:38:06.670Z",
-                  "lastReported": "2016-01-21T15:38:06.670Z",
-                  "severity": "warning",
-                  "title": "Lorem ipsum",
-                  "description": "Lorem ipsum dolor sit amet"
-                }
-              ],
+              "alarms": [],
               "connectorType": "c_mgmt",
               "hostname": "host0.example.com",
               "hostSerial": "DEADBEEF",
               "id": "c_mgmt@0",
               "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
-              "state": "running",
+              "state": "offline",
               "upgradeState": "upgraded",
               "url": "…"
             },

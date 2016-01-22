@@ -9,8 +9,10 @@
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
+    vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
     vm.cluster = ClusterService.getClustersById(vm.clusterId);
+    // for shorter 'variables' in the HTML
     vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
     var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
     vm.softwareUpgrade = {
@@ -20,17 +22,33 @@
       isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
     };
 
-    //TODO: Don't like this linking to routes...
-    vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
+    if (vm.softwareUpgrade.isUpgrading) {
+      vm.upgradeDetails = {
+        numberOfUpgradedHosts: _.chain(vm.clusterAggregates.hosts)
+          .filter('upgradeState', 'upgraded')
+          .size()
+          .value(),
+        numberOfHosts: _.size(vm.clusterAggregates.hosts),
+        upgradingHostname: _.chain(vm.clusterAggregates.hosts)
+          .find('upgradeState', 'upgrading')
+          .value().hostname
+      };
+    }
 
     vm.upgrade = function () {
       $modal.open({
         templateUrl: 'modules/hercules/expressway-service/software-upgrade-dialog.html',
         controller: SoftwareUpgradeController,
-        controllerAs: 'softwareUpgrade',
+        controllerAs: 'softwareUpgradeCtrl',
         resolve: {
           serviceId: function () {
             return vm.serviceId;
+          },
+          cluster: function () {
+            return vm.cluster;
+          },
+          softwareUpgrade: function () {
+            return vm.softwareUpgrade;
           }
         }
       }).result.then(function () {
@@ -39,22 +57,22 @@
           .then(function () {}, XhrNotificationService.notify);
       });
     };
+  }
 
-    /* @ngInject */
-    function SoftwareUpgradeController(serviceId, $translate, $modalInstance) {
-      var modalVm = this;
-      modalVm.newVersion = vm.selectedService().not_approved_package.version;
-      modalVm.oldVersion = vm.selectedService().connectors[0].version;
-      modalVm.serviceId = serviceId;
-      modalVm.serviceName = $translate.instant('hercules.serviceNames.' + modalVm.serviceId);
-      modalVm.ok = function () {
-        $modalInstance.close();
-      };
-      modalVm.cancel = function () {
-        $modalInstance.dismiss();
-      };
-      modalVm.clusterName = vm.cluster.name;
-    }
+  /* @ngInject */
+  function SoftwareUpgradeController($translate, $modalInstance, serviceId, softwareUpgrade, cluster) {
+    var vm = this;
+    vm.provisionedVersion = softwareUpgrade.provisionedVersion;
+    vm.availableVersion = softwareUpgrade.availableVersion;
+    vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
+    vm.clusterName = cluster.name;
+
+    vm.ok = function () {
+      $modalInstance.close();
+    };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
   }
 
   angular

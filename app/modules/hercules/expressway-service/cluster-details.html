@@ -24,8 +24,13 @@
         <td><span>{{expresswayClusterDetails.softwareUpgrade.provisionedVersion}}</span></td>
       </tr>
       <tr ng-if="expresswayClusterDetails.softwareUpgrade.isUpgrading">
-        <td>Upgrading…</td>
-        <td>OMG UPGRADING to {{expresswayClusterDetails.softwareUpgrade.provisionedVersion}}. HOW MANY HOSTS??? HOW FAR ARE WE?</td>
+        <td colspan="2">
+          <div class="progressbar-info">
+            <span class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: expresswayClusterDetails.upgradeDetails.upgradingHostname, version: expresswayClusterDetails.softwareUpgrade.provisionedVersion}"></span>
+            <span class="progressbar-progress">{{expresswayClusterDetails.upgradeDetails.numberOfUpgradedHosts}} / {{expresswayClusterDetails.upgradeDetails.numberOfHosts}}</span>
+          </div>
+          <progressbar animate="true" max="expresswayClusterDetails.upgradeDetails.numberOfHosts" value="expresswayClusterDetails.upgradeDetails.numberOfUpgradedHosts"></progressbar>
+        </td>
       </tr>
       </tr>
       <tr ng-if="expresswayClusterDetails.softwareUpgrade.isUpgradeAvailable">
