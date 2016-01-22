@@ -21,7 +21,7 @@ namespace domainManagement {
     }
 
     public delete() {
-      this.DomainManagementService.deleteDomain(this._domainToDelete.text).then(
+      this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
         () => {
           this.$state.go('domainmanagement');
         },

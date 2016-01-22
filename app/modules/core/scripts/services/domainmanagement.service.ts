@@ -15,8 +15,10 @@ class DomainManagementService {
 
   private _scomUrl;
   private _invokeGetTokenUrl;
+  private _invokeUnverifyDomainUrl;
+  private _deleteDomainUrl;
 
-  constructor(private $http, Config, Authinfo, private $q) {
+  constructor(private $http, Config, Authinfo, private $q, private Log) {
 
     // var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId()) + "Domain";  //not used anymore?
 
@@ -29,9 +31,12 @@ class DomainManagementService {
 
     //Unverify: http://wikicentral.cisco.com/display/IDENTITY/API+-+UnVerify+Domain+Ownership
     //POST https://identity.webex.com/organization/{orgid}/v1/actions/DomainVerification/Unverify/invoke
+    this._invokeUnverifyDomainUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/Unverify/invoke';
 
     //Delete: (domain base64 enc) http://wikicentral.cisco.com/display/IDENTITY/Domain+Management+API+-+Delete+Domain
     //DELETE https://<server name>/organization/{orgId}/v1/Domains/<domainValue>
+    this._deleteDomainUrl = Config.getDomainManagementUrl(orgId) + 'Domains/';
+
   }
 
   get states() {
@@ -68,11 +73,40 @@ class DomainManagementService {
     return this.getToken(domainToAdd);
   }
 
-  deleteDomain(domainToDelete) {
+  unverifyDomain(domain) {
+    let deferred = this.$q.defer();
+    if (domain) {
+
+      this.$http.post(this._invokeUnverifyDomainUrl, {
+        'domain': domain
+      }).then(res => {
+        _.remove(this._domainList, {text: domain});
+        deferred.resolve();
+      }, err => {
+        this.Log.error('Failed to unverify domain:' + domain, err);
+        deferred.reject(err.statusText?err.statusText:err);
+      });
+    } else {
+      deferred.reject();
+    }
+    return deferred.promise;
+  }
+
+  unclaimDomain(domainToDelete) {
     let deferred = this.$q.defer();
     if (domainToDelete) {
-      _.remove(this._domainList, {text: domainToDelete});
-      deferred.resolve();
+
+      this.$http.delete(this._deleteDomainUrl).then(res => {
+        let claimedDomain = _.find(this._domainList, {text: domainToDelete, status: this.states.claimed});
+
+        if (claimedDomain)
+          claimedDomain.status = this.states.verified;
+
+        deferred.resolve();
+      }, err => {
+        this.Log.error('Failed to unclaim domain:' + domainToDelete, err);
+        deferred.reject(err.statusText?err.statusText:err);
+      });
     } else {
       deferred.reject();
     }
@@ -155,14 +189,15 @@ class DomainManagementService {
       domainInList.status = this.states.verified;
       deferred.resolve()
     } else {
-      deferred.reject("not a domain possible to verify");
+      this.Log.error('attempt to delete a domain not in list:' + domain);
+      deferred.reject();
     }
     return deferred.promise;
   }
 
   private getVerificationTokens():void {
 
-    let pendingDomains = _.filter(this._domainList, {status: this.states.pending });
+    let pendingDomains = _.filter(this._domainList, { status: this.states.pending });
 
     if (!pendingDomains || pendingDomains.length < 1)
       return;
