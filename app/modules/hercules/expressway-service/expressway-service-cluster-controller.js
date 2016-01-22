@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
+  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -11,29 +11,33 @@
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
-    vm.cluster = ClusterService.getClustersById(vm.clusterId);
-    // for shorter 'variables' in the HTML
-    vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
-    var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
-    vm.softwareUpgrade = {
-      provisionedVersion: provisioning.provisionedVersion,
-      availableVersion: provisioning.availableVersion,
-      isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
-      isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
-    };
-
-    if (vm.softwareUpgrade.isUpgrading) {
-      vm.upgradeDetails = {
-        numberOfUpgradedHosts: _.chain(vm.clusterAggregates.hosts)
-          .filter('upgradeState', 'upgraded')
-          .size()
-          .value(),
-        numberOfHosts: _.size(vm.clusterAggregates.hosts),
-        upgradingHostname: _.chain(vm.clusterAggregates.hosts)
-          .find('upgradeState', 'upgrading')
-          .value().hostname
+    $scope.$watch(function () {
+      return ClusterService.getClustersById(vm.clusterId);
+    }, function (newValue, oldValue) {
+      vm.cluster = ClusterService.getClustersById(vm.clusterId);
+      // for shorter 'variables' in the HTML
+      vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
+      var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
+      vm.softwareUpgrade = {
+        provisionedVersion: provisioning.provisionedVersion,
+        availableVersion: provisioning.availableVersion,
+        isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
       };
-    }
+
+      if (vm.softwareUpgrade.isUpgrading) {
+        var pendingHosts = _.chain(vm.clusterAggregates.hosts)
+          .filter('upgradeState', 'pending')
+          .value();
+        vm.upgradeDetails = {
+          numberOfHosts: _.size(vm.clusterAggregates.hosts),
+          numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
+          upgradingHostname: _.chain(vm.clusterAggregates.hosts)
+            .find('upgradeState', 'upgrading')
+            .value().hostname
+        };
+      }
+    }, true);
 
     vm.upgrade = function () {
       $modal.open({
@@ -54,7 +58,9 @@
       }).result.then(function () {
         ClusterService
           .upgradeSoftware(vm.clusterId, vm.serviceType)
-          .then(function () {}, XhrNotificationService.notify);
+          .then(function () {
+            // TODO: show a fake progressbar
+          }, XhrNotificationService.notify);
       });
     };
   }

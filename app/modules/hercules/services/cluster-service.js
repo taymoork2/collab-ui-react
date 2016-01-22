@@ -235,7 +235,7 @@
               "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
               "state": "running",
-              "upgradeState": "upgrading",
+              "upgradeState": callCount === 1 ? "upgrading" : "upgraded",
               "url": "…"
             },
             {
@@ -247,7 +247,7 @@
               "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
               "state": "running",
-              "upgradeState": "pending",
+              "upgradeState": callCount === 1 ? "pending" : (callCount === 2 ? "upgrading" : "upgraded"),
               "url": "…"
             },
             {
@@ -259,7 +259,7 @@
               "packageUrl": "http://localhost:9393/hercules/api/v2/channels/GA/packages/c_mgmt",
               "runningVersion": "1.0",
               "state": "running",
-              "upgradeState": "upgraded",
+              "upgradeState": callCount < 3 ? "pending" : (callCount === 3 ? "upgrading" : "upgraded"),
               "url": "…"
             }
           ]
@@ -431,7 +431,9 @@
       ];
     }
 
+    var callCount = 0;
     var fetch = function () {
+      callCount++;
       return $http
         .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId())
         .then(extractDataFromResponse)
@@ -464,8 +466,7 @@
 
     var upgradeSoftware = function (clusterId, serviceType) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
-      return $http
-        .post(url, '{}')
+      return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function () {
           poller.forceAction();
@@ -506,7 +507,9 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub);
+    var poller = CsdmPoller.create(fetch, hub, {
+      delay: 5000
+    });
 
     return {
       fetch: fetch,
