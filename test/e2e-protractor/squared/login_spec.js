@@ -14,18 +14,3 @@ describe('Login Page', function () {
   });
 
 });
-
-describe('Login Page', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
-  it('should login and redirect to the requested users page', function () {
-    login.loginThroughGui(helper.auth['partner-sales-user'].user, helper.auth['partner-sales-user'].pass, '#/partner/overview');
-  });
-
-  it('should logout', function () {
-    navigation.logout();
-  });
-
-});
