@@ -22,8 +22,9 @@
                  ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"></i></td>
           <td>
             <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})" ng-if="domain.status==='pending'"
-                    ng-class="{ 'disabled' : dv.adminDomain.status === 'pending' && domain.text !== dv.adminDomain }"
                     class="btn--cta" translate="domainManagement.verifyDomain"></button>
+            <button ui-sref="domainmanagement.claim({domain: domain, loggedOnUser: dv.loggedOnUser})" ng-if="domain.status==='verified'"
+                    class="btn--cta" translate="domainManagement.claimDomain"></button>
           </td>
         </tr>
       </table>

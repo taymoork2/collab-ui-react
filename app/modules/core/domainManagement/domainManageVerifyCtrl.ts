@@ -3,7 +3,7 @@ namespace domainManagement {
   class DomainManageVerifyCtrl {
     private _domain;
     private _loggedOnUser;
-    private _verifyError;
+    private _error;
 
     /* @ngInject */
     constructor(private $state, private DomainManagementService, $translate) {
@@ -16,7 +16,7 @@ namespace domainManagement {
 
         //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
         if (this.domainName != this._loggedOnUser.domain)
-          this._verifyError = $translate.instant('domainManagement.verify.preventLockoutError', { domain: this._loggedOnUser.domain});
+          this._error = $translate.instant('domainManagement.verify.preventLockoutError', { domain: this._loggedOnUser.domain});
       }
     }
 
@@ -24,24 +24,26 @@ namespace domainManagement {
       return this._domain && this._domain.text;
     }
 
-    get verifyError() {
-      return this._verifyError;
+    get error() {
+      return this._error;
     }
 
-    get verifyAllowed() {
+    get operationAllowed() {
       //input validation:
       if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
         return false;
 
-      if (this._verifyError)
+      if (this._error)
         return false;
 
       return true;
     }
 
     public verify() {
-      this.DomainManagementService.verifyDomain(this._domain).then(res => {
+      this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
         this.$state.go('domainmanagement');
+      }, err => {
+        this._error = err;
       });
     }
   }

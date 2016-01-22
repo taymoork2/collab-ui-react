@@ -16,19 +16,31 @@ namespace domainManagement {
 
       if (this.isValid && this._domainToDelete.status === DomainManagementService.states.pending) {
         //Just delete it without confirmation!
-        this.delete();
+        this.deleteDomain();
       }
     }
 
-    public delete() {
-      this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
-        () => {
-          this.$state.go('domainmanagement');
-        },
-        err => {
-          this._error = err;
-        }
-      )
+    public deleteDomain() {
+      if (this._domainToDelete.status === this.DomainManagementService.states.verified){
+        this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
+          () => {
+            this.$state.go('domainmanagement');
+          },
+          err => {
+            this._error = err;
+          }
+        );
+      } else {
+        this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
+          () => {
+            this.$state.go('domainmanagement');
+          },
+          err => {
+            this._error = err;
+          }
+        );
+      }
+
     }
 
     public cancel() {
@@ -47,6 +59,7 @@ namespace domainManagement {
       return this.domain && this._loggedOnUser && this._loggedOnUser.isLoaded && !this._error;
     }
   }
+
   angular
     .module('Core')
     .controller('DomainManageDeleteCtrl', DomainManageDeleteCtrl);

@@ -3360,6 +3360,7 @@
     "description": "Add and verify the domains in your organization so that your users can take advantage of services such as Hybrid Call Service Connect. All DNS verification codes must be entered into your DNS management interface for all domains. We highly recommend that you verify all your domains at the same time to avoid blocking user access. To avoid admin lockout, you will have to verify your own domain first.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
+    "claimDomain": "Claim",
     "list": {
       "domainHeader": "Domain",
       "statusHeader": "Status",
@@ -3391,6 +3392,12 @@
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
+    },
+    "claim": {
+      "header": "Claim domain",
+      "claimThis": "You are about to claim the following domain:",
+      "warning": "Users with e-mail addresses in this domain that belong to other orgs will have to provide new e-mail addresses.",
+      "claim": "Claim"
     }
   }
 }

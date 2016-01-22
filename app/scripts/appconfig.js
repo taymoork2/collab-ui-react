@@ -236,6 +236,20 @@ angular
             loggedOnUser: null
           }
         })
+        .state('domainmanagement.claim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageClaimCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
+          }
+        })
         .state('domainmanagement.verify', {
           parent: 'modal',
           views: {
