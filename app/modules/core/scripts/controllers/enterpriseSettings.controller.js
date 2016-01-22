@@ -1,4 +1,3 @@
-/* eslint no-console:0 */
 (function () {
   'use strict';
 

@@ -179,6 +179,16 @@ angular.module('Core')
           prod: '.ciscospark.com'
         },
 
+        sparkDomainManagementUrl: {
+          dev: 'http://171.68.20.147:8080/atlas-server/admin/api/v1/',
+          prod: ''
+        },
+
+        sparkDomainCheckUrl: {
+          dev: '.koalabait.com',
+          prod: '.ciscospark.com'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
