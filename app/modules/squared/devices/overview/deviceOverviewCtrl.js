@@ -11,6 +11,25 @@
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
 
+    deviceOverview.linesAreLoaded = false;
+
+    if (deviceOverview.currentDevice.isHuronDevice) {
+      var huronPollInterval = $interval(pollLines, 5000);
+      $scope.$on("$destroy", function () {
+        $interval.cancel(huronPollInterval);
+      });
+      pollLines();
+    }
+
+    function pollLines() {
+      CsdmHuronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.lines = result;
+        $timeout(function () {
+          deviceOverview.linesAreLoaded = true;
+        }, 100);
+      });
+    }
+
     deviceOverview.save = function (newName) {
       if (deviceOverview.currentDevice.needsActivation) {
         return CsdmCodeService

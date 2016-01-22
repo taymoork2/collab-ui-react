@@ -2,9 +2,17 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, HuronConfig, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
     var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+
+    function directoryNumbersUrl(userId) {
+      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/directorynumbers';
+    }
+
+    function alternateNumbersUrl(directoryNumberId) {
+      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers';
+    }
 
     var initialDataPromise = huronEnabled().then(function (enabled) {
       return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
@@ -35,6 +43,26 @@
       return deviceCache.list();
     }
 
+    function getLinesForDevice(huronDevice) {
+      return $http.get(directoryNumbersUrl(huronDevice.cisUuid))
+        .then(function (res) {
+          var lines = [];
+          return $q.all(_.map(res.data, function (directoryNumber) {
+            var line = {
+              'directoryNumber': directoryNumber.directoryNumber.pattern,
+              'alternates': [],
+              'usage': directoryNumber.dnUsage
+            };
+            return $http.get(alternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
+              alternates.data.forEach(function (alternate) {
+                line.alternates.push(alternate.numMask);
+              });
+              lines.push(line);
+            });
+          }));
+        });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -46,6 +74,7 @@
     return {
       on: deviceCache.on,
       getDeviceList: getDeviceList,
+      getLinesForDevice: getLinesForDevice,
       resetDevice: resetDevice
     };
   }
