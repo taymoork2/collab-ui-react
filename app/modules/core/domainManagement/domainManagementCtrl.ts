@@ -52,10 +52,6 @@ namespace domainManagement {
       return this._loggedOnUser;
     }
 
-    delete(domain) {
-      this.DomainManagementService.deleteDomain(domain);
-    }
-
     get feature() {
       return this._feature;
     }
