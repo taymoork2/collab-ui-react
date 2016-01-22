@@ -74,7 +74,8 @@
           <div class="ui-mt">
             <cs-checkbox ckid="voicemail" ng-click="hge.checkFallbackDirtiness()"
                          ng-model="hge.selectedFallbackMember.sendToVoicemail"
-                         label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
+                         label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"
+                         isdisabled="hge.disableVoicemail"></cs-checkbox>
           </div>
         </div>
       </div>

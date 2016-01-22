@@ -6,7 +6,7 @@
 describe('Hunt Group EditCtrl Controller', function () {
 
   var hgEditCtrl, controller, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo,
-    HuntGroupService, HuntGroupEditDataService, HuntGroupMemberDataService, Notification, form;
+    HuntGroupService, HuntGroupEditDataService, HuntGroupMemberDataService, Notification, form, HuntGroupFallbackDataService;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
   var GetMember1Url = new RegExp(".*/api/v2/customers/1/users/ba6c9d76-bed9-413f-a373-054a40df7095.*");
@@ -42,7 +42,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   };
 
   beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
-    _HuntGroupService_, _HuntGroupEditDataService_, _HuntGroupMemberDataService_, _Notification_) {
+    _HuntGroupService_, _HuntGroupEditDataService_, _HuntGroupMemberDataService_, _Notification_, _HuntGroupFallbackDataService_) {
     controller = $controller;
     $scope = _$rootScope_.$new();
     $state = _$state_;
@@ -54,7 +54,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     Notification = _Notification_;
     HuntGroupEditDataService = _HuntGroupEditDataService_;
     HuntGroupMemberDataService = _HuntGroupMemberDataService_;
-
+    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
     var emptyForm = function () {
       return true;
     };
@@ -75,7 +75,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(Notification, 'errorResponse');
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
     spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
-
+    spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
     member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
     member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
