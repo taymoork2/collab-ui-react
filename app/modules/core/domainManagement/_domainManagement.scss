@@ -29,7 +29,7 @@
           .icon-circle.pending {
             color: $color-attention-base;
           }
-          .icon-circle.verified {
+          .icon-circle.verified, .icon-circle.claimed {
             color: $color-cta-base;
           }
           .icon-email {
