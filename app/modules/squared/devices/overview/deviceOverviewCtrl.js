@@ -10,16 +10,6 @@
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
-    deviceOverview.huronDeviceDetailsLoaded = false;
-
-    //keeping below code as reference for adding polling on fetching lines for Huron devices
-    //if (deviceOverview.currentDevice.isHuronDevice) {
-    //  var huronPollInterval = $interval(pollHuronDevice, 5000);
-    //  $scope.$on("$destroy", function () {
-    //    $interval.cancel(huronPollInterval);
-    //  });
-    //  pollHuronDevice();
-    //}
 
     deviceOverview.save = function (newName) {
       if (deviceOverview.currentDevice.needsActivation) {

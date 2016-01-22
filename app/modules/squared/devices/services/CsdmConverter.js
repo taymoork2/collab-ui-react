@@ -71,69 +71,24 @@ angular.module('Squared').service('CsdmConverter',
       this.readableState = getReadableState(obj);
       this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
       this.isHuronDevice = true;
-      this.product = (function () {
-        switch ((obj.product)) {
-          case "MODEL_CISCO_7811":
-            return "Cisco 7811";
-          case "MODEL_CISCO_7821":
-            return "Cisco 7821";
-          case "MODEL_CISCO_7841":
-            return "Cisco 7841";
-          case "MODEL_CISCO_7861":
-            return "Cisco 7861";
-          case "MODEL_CISCO_8811":
-            return "Cisco 8811";
-          case "MODEL_CISCO_8831":
-            return "Cisco 8831";
-          case "MODEL_CISCO_8841":
-            return "Cisco 8841";
-          case "MODEL_CISCO_8845":
-            return "Cisco 8845";
-          case "MODEL_CISCO_8851":
-            return "Cisco 8851";
-          case "MODEL_CISCO_8851NR":
-            return "Cisco 8851NR";
-          case "MODEL_CISCO_8861":
-            return "Cisco 8861";
-          case "MODEL_CISCO_8865":
-            return "Cisco 8865";
-          case "UNKNOWN":
-            return "";
-          default:
-            return obj.product;
-        }
-      }());
-      this.image = (function () {
-        switch ((obj.product)) {
-          case "MODEL_CISCO_7811":
-            return "images/devices-hi/cisco_7811.png";
-          case "MODEL_CISCO_7821":
-            return "images/devices-hi/cisco_7821.png";
-          case "MODEL_CISCO_7841":
-            return "images/devices-hi/cisco_7841.png";
-          case "MODEL_CISCO_7861":
-            return "images/devices-hi/cisco_7861.png";
-          case "MODEL_CISCO_8811":
-            return "images/devices-hi/cisco_8811.png";
-          case "MODEL_CISCO_8831":
-            return "images/devices-hi/unknown.png"; //image is on the way
-          case "MODEL_CISCO_8841":
-            return "images/devices-hi/cisco_8841.png";
-          case "MODEL_CISCO_8845":
-            return "images/devices-hi/cisco_8845.png";
-          case "MODEL_CISCO_8851":
-            return "images/devices-hi/cisco_8851.png";
-          case "MODEL_CISCO_8851NR":
-            return "images/devices-hi/unknown.png"; //image is on the way
-          case "MODEL_CISCO_8861":
-            return "images/devices-hi/cisco_8861.png";
-          case "MODEL_CISCO_8865":
-            return "images/devices-hi/cisco_8865.png";
-          default:
-            return "images/devices-hi/unknown.png";
-        }
-      }());
+      this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
+      this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
     }
+
+    var huron_model_map = {
+      "MODEL_CISCO_7811": {displayName: "Cisco 7811", image: "images/devices-hi/cisco_7811.png"},
+      "MODEL_CISCO_7821": {displayName: "Cisco 7821", image: "images/devices-hi/cisco_7821.png"},
+      "MODEL_CISCO_7841": {displayName: "Cisco 7841", image: "images/devices-hi/cisco_7841.png"},
+      "MODEL_CISCO_7861": {displayName: "Cisco 7861", image: "images/devices-hi/cisco_7861.png"},
+      "MODEL_CISCO_8811": {displayName: "Cisco 8811", image: "images/devices-hi/cisco_8811.png"},
+      "MODEL_CISCO_8831": {displayName: "Cisco 8831", image: "images/devices-hi/cisco_8831.png"},
+      "MODEL_CISCO_8841": {displayName: "Cisco 8841", image: "images/devices-hi/cisco_8841.png"},
+      "MODEL_CISCO_8845": {displayName: "Cisco 8845", image: "images/devices-hi/cisco_8845.png"},
+      "MODEL_CISCO_8851": {displayName: "Cisco 8851", image: "images/devices-hi/cisco_8851.png"},
+      "MODEL_CISCO_8851NR": {displayName: "Cisco 8851NR", image: "images/devices-hi/cisco_8851.png"},
+      "MODEL_CISCO_8861": {displayName: "Cisco 8861", image: "images/devices-hi/cisco_8861.png"},
+      "MODEL_CISCO_8865": {displayName: "Cisco 8865", image: "images/devices-hi/cisco_8865.png"}
+    };
 
     function UnusedAccount(obj) {
       this.url = obj.url;
