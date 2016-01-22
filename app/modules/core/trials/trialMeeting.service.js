@@ -6,7 +6,7 @@
     .factory('TrialMeetingService', TrialMeetingService);
 
   /* @ngInject */
-  function TrialMeetingService(Config) {
+  function TrialMeetingService($translate, Config) {
     var _trialData;
     var service = {
       'getData': getData,
@@ -32,11 +32,8 @@
         'details': {
           'siteUrl': '',
           'timeZone': {
-            "label": "(GMT -8:00) San Francisco",
-            "timeZoneId": "4",
-            "timeZoneName": "San Francisco",
-            "DCName": "SJC",
-            "DCID": "PM"
+            'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
+            'value': ''
           }
         }
       };

@@ -18,6 +18,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "type": "directoryNumber",
       "trigger": "incomingCall",
       "number": "999999"
+    }, {
+      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
+      "type": "directoryNumber",
+      "trigger": "incomingCall",
+      "number": "12068551179"
     }]
   };
 
@@ -114,6 +119,23 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   afterEach(function () {
+
+  });
+  describe('checkResourceNumbers', function () {
+
+    it('should map an E164 phone number correctly', function () {
+
+      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+      controller.loadNums();
+
+      $scope.$apply();
+
+      expect(controller.numberTypeList[controller.ui.ceInfo.resources[0].number]).toEqual("directoryNumber");
+
+      expect(controller.numberTypeList[controller.ui.ceInfo.resources[1].number]).toEqual("externalNumber");
+
+    });
 
   });
 
@@ -224,13 +246,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       // top line header is used for preferred, e164 should be on top.
-      expect(resources[0].number).toEqual("2064261234");
+      expect(resources[0].number).toEqual("12068551179");
 
       // and the 1234567 should have sorted first after that - even though we added it last
       expect(resources[1].number).toEqual("1234567");
 
       // and the internal 1234 should have sorted last - special case for internal
-      expect(resources[3].number).toEqual("1234");
+      expect(resources[resources.length - 1].number).toEqual("1234");
 
     });
 
