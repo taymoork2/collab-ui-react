@@ -76,18 +76,54 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     var huron_model_map = {
-      "MODEL_CISCO_7811": {displayName: "Cisco 7811", image: "images/devices-hi/cisco_7811.png"},
-      "MODEL_CISCO_7821": {displayName: "Cisco 7821", image: "images/devices-hi/cisco_7821.png"},
-      "MODEL_CISCO_7841": {displayName: "Cisco 7841", image: "images/devices-hi/cisco_7841.png"},
-      "MODEL_CISCO_7861": {displayName: "Cisco 7861", image: "images/devices-hi/cisco_7861.png"},
-      "MODEL_CISCO_8811": {displayName: "Cisco 8811", image: "images/devices-hi/cisco_8811.png"},
-      "MODEL_CISCO_8831": {displayName: "Cisco 8831", image: "images/devices-hi/cisco_8831.png"},
-      "MODEL_CISCO_8841": {displayName: "Cisco 8841", image: "images/devices-hi/cisco_8841.png"},
-      "MODEL_CISCO_8845": {displayName: "Cisco 8845", image: "images/devices-hi/cisco_8845.png"},
-      "MODEL_CISCO_8851": {displayName: "Cisco 8851", image: "images/devices-hi/cisco_8851.png"},
-      "MODEL_CISCO_8851NR": {displayName: "Cisco 8851NR", image: "images/devices-hi/cisco_8851.png"},
-      "MODEL_CISCO_8861": {displayName: "Cisco 8861", image: "images/devices-hi/cisco_8861.png"},
-      "MODEL_CISCO_8865": {displayName: "Cisco 8865", image: "images/devices-hi/cisco_8865.png"}
+      "MODEL_CISCO_7811": {
+        displayName: "Cisco 7811",
+        image: "images/devices-hi/cisco_7811.png"
+      },
+      "MODEL_CISCO_7821": {
+        displayName: "Cisco 7821",
+        image: "images/devices-hi/cisco_7821.png"
+      },
+      "MODEL_CISCO_7841": {
+        displayName: "Cisco 7841",
+        image: "images/devices-hi/cisco_7841.png"
+      },
+      "MODEL_CISCO_7861": {
+        displayName: "Cisco 7861",
+        image: "images/devices-hi/cisco_7861.png"
+      },
+      "MODEL_CISCO_8811": {
+        displayName: "Cisco 8811",
+        image: "images/devices-hi/cisco_8811.png"
+      },
+      "MODEL_CISCO_8831": {
+        displayName: "Cisco 8831",
+        image: "images/devices-hi/cisco_8831.png"
+      },
+      "MODEL_CISCO_8841": {
+        displayName: "Cisco 8841",
+        image: "images/devices-hi/cisco_8841.png"
+      },
+      "MODEL_CISCO_8845": {
+        displayName: "Cisco 8845",
+        image: "images/devices-hi/cisco_8845.png"
+      },
+      "MODEL_CISCO_8851": {
+        displayName: "Cisco 8851",
+        image: "images/devices-hi/cisco_8851.png"
+      },
+      "MODEL_CISCO_8851NR": {
+        displayName: "Cisco 8851NR",
+        image: "images/devices-hi/cisco_8851.png"
+      },
+      "MODEL_CISCO_8861": {
+        displayName: "Cisco 8861",
+        image: "images/devices-hi/cisco_8861.png"
+      },
+      "MODEL_CISCO_8865": {
+        displayName: "Cisco 8865",
+        image: "images/devices-hi/cisco_8865.png"
+      }
     };
 
     function UnusedAccount(obj) {
