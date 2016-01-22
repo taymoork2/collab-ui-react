@@ -3,24 +3,19 @@
 
   <cs-sp-container>
     <cs-sp-section>
-      <div ng-switch="!deviceOverview.currentDevice.isHuronDevice || deviceOverview.huronDeviceDetailsLoaded">
-        <div id="overview" ng-switch-when="true">
-          <img
-            id="overviewImage"
-            ng-if="deviceOverview.currentDevice.image"
-            ng-src="{{deviceOverview.currentDevice.image}}"
-          />
-          <div id="overviewDescription">
-            <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
-            <i
-              class="fa fa-circle device-status device-status"
-              ng-class="deviceOverview.currentDevice.cssColorClass">
-            </i>
-            <span>{{deviceOverview.currentDevice.readableState}}</span>
-          </div>
-        </div>
-        <div ng-switch-when="false" class="overviewSpinner">
-          <i class="icon icon-spinner"></i>
+      <div id="overview">
+        <img
+          id="overviewImage"
+          ng-if="deviceOverview.currentDevice.image"
+          ng-src="{{deviceOverview.currentDevice.image}}"
+        />
+        <div id="overviewDescription">
+          <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
+          <i
+            class="fa fa-circle device-status device-status"
+            ng-class="deviceOverview.currentDevice.cssColorClass">
+          </i>
+          <span>{{deviceOverview.currentDevice.readableState}}</span>
         </div>
       </div>
     </cs-sp-section>

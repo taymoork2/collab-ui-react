@@ -12,20 +12,14 @@
     deviceOverview.currentDevice = $stateParams.currentDevice;
     deviceOverview.huronDeviceDetailsLoaded = false;
 
-    if (deviceOverview.currentDevice.isHuronDevice) {
-      var huronPollInterval = $interval(pollHuronDevice, 5000);
-      $scope.$on("$destroy", function () {
-        $interval.cancel(huronPollInterval);
-      });
-      pollHuronDevice();
-    }
-
-    function pollHuronDevice() {
-      CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice).then(function (result) {
-        deviceOverview.currentDevice = result;
-        deviceOverview.huronDeviceDetailsLoaded = true;
-      });
-    }
+    //keeping below code as reference for adding polling on fetching lines for Huron devices
+    //if (deviceOverview.currentDevice.isHuronDevice) {
+    //  var huronPollInterval = $interval(pollHuronDevice, 5000);
+    //  $scope.$on("$destroy", function () {
+    //    $interval.cancel(huronPollInterval);
+    //  });
+    //  pollHuronDevice();
+    //}
 
     deviceOverview.save = function (newName) {
       if (deviceOverview.currentDevice.needsActivation) {
