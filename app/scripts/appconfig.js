@@ -28,6 +28,35 @@ angular
           },
           authenticate: false
         })
+        .state('enterEmailAddr', {
+          url: '/enterEmailAddr',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
+        .state('drLoginForward', {
+          url: '/drLoginForward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController'
+            }
+          } 
+        })
+        .state('createAccount', {
+          url: '/createAccount',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {
