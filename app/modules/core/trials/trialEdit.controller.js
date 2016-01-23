@@ -17,8 +17,7 @@
     vm.canEditMeeting = true;
     vm.showRoomSystems = false;
 
-    var messageTemplateOptionId = 'messageTrial';
-    var meetingTemplateOptionId = 'meetingTrial';
+    var _messageTemplateOptionId = 'messageTrial';
 
     vm.trialData = TrialService.getData();
     vm.details = vm.trialData.details;
@@ -29,15 +28,16 @@
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
-      message: !!stateContains(Config.trials.message) || !!stateContains(Config.offerTypes.message),
-      meeting: !!stateContains(Config.trials.meeting) || !!stateContains(Config.offerTypes.meetings),
-      call: !!stateContains(Config.trials.call) || !!stateContains(Config.offerTypes.call),
-      roomSystems: !!stateContains(Config.offerTypes.roomSystems),
-      roomSystemsValue: _.get(stateContains(Config.offerTypes.roomSystems), 'licenseCount', 0),
+      message: hasOfferType(Config.trials.message) || hasOfferType(Config.offerTypes.message),
+      meeting: hasOfferType(Config.trials.meeting) || hasOfferType(Config.offerTypes.meetings),
+      call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
+      roomSystems: hasOfferType(Config.offerTypes.roomSystems),
+      roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
       licenseDuration: _.get(vm, 'currentTrial.duration', 0)
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
+    vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
 
     vm.trialStates = [{
       'name': 'trialEdit.meeting',
@@ -89,7 +89,7 @@
       className: 'columns medium-12',
       templateOptions: {
         label: $translate.instant('trials.messageAndMeeting'),
-        id: messageTemplateOptionId,
+        id: _messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
@@ -181,7 +181,6 @@
       key: 'quantity',
       type: 'input',
       className: "columns medium-6",
-      defaultValue: vm.preset.roomSystemsValue,
       templateOptions: {
         id: 'trialRoomSystemsAmount',
         inputClass: 'columns medium-10',
@@ -226,7 +225,6 @@
 
     vm.hasCallEntitlement = Authinfo.isSquaredUC;
     vm.hasNextStep = hasNextStep;
-    vm.hasTrial = hasTrial;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
     vm.finishSetup = finishSetup;
@@ -255,7 +253,7 @@
         vm.messageTrial.enabled = vm.preset.message;
 
         if (vm.showMeeting) {
-          updateTrialService(messageTemplateOptionId);
+          updateTrialService(_messageTemplateOptionId);
         }
 
         setViewState('trialEdit.call', results[3] && results[1]);
@@ -280,18 +278,18 @@
         vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
 
         toggleTrial();
-        hasTrial();
       });
     }
 
-    // Update offer and label for Meetings/WebEx trial.
+    // If Webex Trials are enabled, we switch out offerType Collab for Message
+    // This requires changing the label it contains as well
     function updateTrialService(templateOptionsId) {
       var index = _.findIndex(vm.individualServices, function (individualService) {
         return individualService.templateOptions.id === templateOptionsId;
       });
       if (index) {
         switch (templateOptionsId) {
-        case messageTemplateOptionId:
+        case _messageTemplateOptionId:
           vm.individualServices[index].model.type = Config.offerTypes.message;
           vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
           break;
@@ -331,12 +329,6 @@
         } else {
           addNavState(state.name);
         }
-      });
-    }
-
-    function hasTrial() {
-      return _.some(vm.trialData.trials, {
-        enabled: true
       });
     }
 
@@ -444,7 +436,13 @@
         });
     }
 
-    function stateContains(configOption) {
+    function hasOfferType(configOption) {
+      return _.some(vm.currentTrial.offers, {
+        id: configOption
+      });
+    }
+
+    function findOffer(configOption) {
       return _.find(vm.currentTrial.offers, {
         id: configOption
       });

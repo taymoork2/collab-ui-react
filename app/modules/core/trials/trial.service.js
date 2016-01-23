@@ -109,8 +109,8 @@
           }
 
           if (trial.type === Config.offerTypes.meetings) {
-            details.siteUrl = trial.details.siteUrl;
-            details.timeZoneId = trial.details.timeZone.timeZoneId;
+            details.siteUrl = _.get(trial, 'details.siteUrl', '');
+            details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
         })
         .value();

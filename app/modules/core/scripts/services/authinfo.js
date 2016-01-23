@@ -173,7 +173,13 @@ angular.module('Core')
           authData.email = null;
         },
         setEmail: function (data) {
-          authData.email = data;
+          if (_.isArray(data)) {
+            authData.email = _.find(data, {
+              primary: true
+            }).value;
+          } else {
+            authData.email = data;
+          }
           //email domain of user
           var domain = authData.email.split('@')[1];
           ll('setCustomDimension', 0, domain);
