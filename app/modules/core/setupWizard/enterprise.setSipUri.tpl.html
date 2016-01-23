@@ -13,7 +13,8 @@
 			<!-- TODO: replace function call for isError-->
 			<cs-input-depreciated class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
 			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
-			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input>
+			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"
+			onchange=""></cs-input>
 		</div>
 		<div class="col-md-9">
 			<button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability" ng-disabled="cloudSipUriField.isDisabled"></button>

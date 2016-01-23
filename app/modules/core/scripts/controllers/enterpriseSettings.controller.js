@@ -86,9 +86,6 @@
       if (sipField.inputValue.length > 40) {
         sipField.isError = true;
       }
-      /*else if (/^[a-zA-Z]+$/.test(sipField.inputValue) === false) {
-               sipField.isError = true;
-             } */
 
       return sipField.isError;
     };

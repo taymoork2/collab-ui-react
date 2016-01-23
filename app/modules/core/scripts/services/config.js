@@ -180,7 +180,7 @@ angular.module('Core')
         },
 
         sparkDomainManagementUrl: {
-          dev: 'http://171.68.20.147:8080/atlas-server/admin/api/v1/',
+          dev: 'http://171.68.20.80:8080/atlas-server/admin/api/v1/',
           prod: ''
         },
 
