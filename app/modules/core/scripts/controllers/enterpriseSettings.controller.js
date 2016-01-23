@@ -13,50 +13,75 @@ angular.module('Core')
       $scope.cloudSipUriField = {};
       $scope.cloudSipUriField.inputValue = '';
       $scope.cloudSipUriField.isDisabled = false;
-      $scope.cloudSipUriField.isAvailable = false;
+      $scope.cloudSipUriField.isUrlAvailableFlag = false;
       $scope.cloudSipUriField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
 
-      $scope.setRecommendedSipUri = function() {
-        Orgservice.getOrg(function (data, status) {
-          if (status === 200) {
-            if (data.sipCloudDomain) {
-              $scope.cloudSipUriField.inputValue = data.sipCloudDomain;
-              $scope.cloudSipUriField.isDisabled = true;
-            } else if (data.verifiedDomains) {
-              $scope.cloudSipUriField.inputValue = data.verifiedDomains[0];
-            } else if (data.displayName) {
-              if (data.displayName.indexOf('_') > 0) {
-                var displayName = data.displayName.split('_')[0].toLowerCase();
-                $scope.cloudSipUriField.inputValue = displayName;
-              } else if (data.displayName.indexOf(' ') > 0) {
-                var displayName = data.displayName.split(' ')[0].toLowerCase();
-                $scope.cloudSipUriField.inputValue = displayName;
-              }
-            } else {
-              $scope.cloudSipUriField.inputValue = '';
+      Orgservice.getOrg(function (data, status) {
+        var displayName;
+        if (status === 200) {
+          if (data.orgSettings.sipCloudDomain) {
+            var value = data.orgSettings.sipCloudDomain.split('.')[0];
+            $scope.cloudSipUriField.inputValue = value;
+            $scope.cloudSipUriField.isDisabled = true;
+          } else if (data.verifiedDomains) {
+            $scope.cloudSipUriField.inputValue = data.verifiedDomains[0];
+          } else if (data.displayName) {
+            if (data.displayName.indexOf('_') > 0) {
+              displayName = data.displayName.split('_')[0].toLowerCase();
+              $scope.cloudSipUriField.inputValue = displayName;
+            } else if (data.displayName.indexOf(' ') > 0) {
+              displayName = data.displayName.split(' ')[0].toLowerCase();
+              $scope.cloudSipUriField.inputValue = displayName;
             }
           } else {
-            Log.debug('Get existing org failed. Status: ' + status);
+            $scope.cloudSipUriField.inputValue = '';
           }
-        });
-      };
-      $scope.setRecommendedSipUri();
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+        }
+      });
 
-      $scope.checkSipUriAvailability = function() {
-        //$log.log($event);
+      $scope.isUrlAvailable = function () {
+        return $scope.cloudSipUriField.isUrlAvailableFlag;
+      };
+
+      $scope.checkSipUriAvailability = function () {
         if ($scope.cloudSipUriField.inputValue !== '') {
           var domain = $scope.cloudSipUriField.inputValue + Config.getSparkDomainCheckUrl();
-          var payload = {'name': domain, 'isVerifyDomainOnly': true};
-          SparkDomainManagementService.checkDomainAvailability(payload, function(data, status) {
+          var payload = {
+            'name': domain,
+            'isVerifyDomainOnly': true
+          };
+
+          SparkDomainManagementService.checkDomainAvailability(payload, function (data, status) {
             if (status === 200 && data.isDomainAvailable) {
-              $scope.cloudSipUriField.isAvailable = true;
+              $scope.cloudSipUriField.isUrlAvailableFlag = true;
               $scope.cloudSipUriField.isError = false;
             } else {
+              $scope.cloudSipUriField.isUrlAvailableFlag = false;
               $scope.cloudSipUriField.isError = true;
             }
           });
         }
       };
+
+      $scope.$on('wizard-enterprise-sip-url-event', function () {
+        if ($scope.cloudSipUriField.isUrlAvailableFlag && !$scope.cloudSipUriField.isDisabled) {
+          var domain = $scope.cloudSipUriField.inputValue + Config.getSparkDomainCheckUrl();
+          var payload = {
+            'name': domain,
+            'isVerifyDomainOnly': false
+          };
+
+          SparkDomainManagementService.addSipUriDomain(payload, function (data, status) {
+            if (status === 200 && data.isDomainReserved) {
+              $scope.cloudSipUriField.isError = false;
+              $scope.cloudSipUriField.isDisabled = true;
+              Notification.notify([$translate.instant('firstTimeWizard.setSipUriDomainSuccessMessage')], 'success');
+            }
+          });
+        }
+      });
 
       $scope.validateSipUri = function () {
         if ($scope.cloudSipUriField.inputValue.length > 40) {

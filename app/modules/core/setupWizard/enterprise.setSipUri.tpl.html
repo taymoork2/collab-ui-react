@@ -12,7 +12,8 @@
 		<div class="col-md-3">
 			<cs-input class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
 			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
-			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input>
+			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"
+			onchange=""></cs-input>
 		</div>
 		<div class="col-md-9">
 			<button class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability"></button>
@@ -28,7 +29,7 @@
 		</div> -->
 		<div class="uriCheckSpace url-examples-style">
 			<h5 class="inline">{{cloudSipUriField.inputValue}}.call.ciscospark.com</h5>
-			<i class="space icon icon-checkbox" ng-show="cloudSipUriFeild.isAvailable"></i>
+			<i ng-if="cloudSipUriField.isUrlAvailableFlag" class="space icon icon-checkbox"></i>
 		</div>
 	</div>
 </div>
