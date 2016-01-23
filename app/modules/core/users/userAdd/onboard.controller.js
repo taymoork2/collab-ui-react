@@ -354,13 +354,15 @@ angular.module('Core')
       }
 
       var getSubscriptions = function () {
-        Orgservice.getLicensesUsage().then(function (subscriptions) {
-          $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-          $scope.selectedSubscription = $scope.subscriptionOptions[0];
-          $scope.oneBilling = $scope.subscriptionOptions.length === 1;
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
-        });
+        if (Authinfo.hasAccount()) {
+          Orgservice.getLicensesUsage().then(function (subscriptions) {
+            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+            $scope.selectedSubscription = $scope.subscriptionOptions[0];
+            $scope.oneBilling = $scope.subscriptionOptions.length === 1;
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+          });
+        }
       };
 
       $scope.modelChange = function () {
