@@ -144,23 +144,34 @@
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
           AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
 
-            // find first e164 number, move to array[0] if not already there
-            var r = _.find(resources, function (resource) {
-              return (TelephoneNumberService.validateDID(resource.number));
-            });
+              // find first e164 number, move to array[0] if not already there
+              var r = _.find(resources, function (resource) {
+                return (TelephoneNumberService.validateDID(resource.number));
+              });
 
-            if (angular.isDefined(r)) {
-              var index = _.indexOf(resources, r);
+              if (angular.isDefined(r)) {
+                var index = _.indexOf(resources, r);
 
-              // if e164 number is already the 0th element, all done
+                // if e164 number is already the 0th element, all done
 
-              if (index >= 1) {
-                resources.splice(0, 0, _.pullAt(resources, index)[0]);
+                if (index >= 1) {
+                  resources.splice(0, 0, _.pullAt(resources, index)[0]);
+                }
               }
-            }
 
-            sortAssignedResources(resources);
-          });
+              sortAssignedResources(resources);
+
+            },
+            function (response) {
+              Notification.error('autoAttendant.errorAddCMI', {
+                phoneNumber: number,
+                statusText: response.statusText,
+                status: response.status
+              });
+
+              resources.pop();
+
+            });
 
         },
         function (response) {
