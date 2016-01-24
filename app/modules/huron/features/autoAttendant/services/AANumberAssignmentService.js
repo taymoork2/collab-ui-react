@@ -19,10 +19,12 @@
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
       checkAANumberAssignments: checkAANumberAssignments,
-      formatAAResourcesBasedOnList: formatAAResourcesBasedOnList,
-      formatAAResourcesBasedOnCMI: formatAAResourcesBasedOnCMI,
+      formatAAE164ResourcesBasedOnList: formatAAE164ResourcesBasedOnList,
+      formatAAE164ResourcesBasedOnCMI: formatAAE164ResourcesBasedOnCMI,
+      formatAAExtensionResourcesBasedOnCMI: formatAAExtensionResourcesBasedOnCMI,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
+      NUMBER_FORMAT_ENTERPRISE_LINE: "NUMBER_FORMAT_ENTERPRISE_LINE",
       DIRECTORY_NUMBER: "directoryNumber",
       EXTERNAL_NUMBER: "externalNumber"
     };
@@ -64,6 +66,7 @@
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
             var cmiObj = cmiAssignedNumbers.filter(function (obj) {
+
               return obj.number.replace(/\D/g, '') == resources[i].getNumber();
             });
             if (!angular.isDefined(cmiObj) || cmiObj == null || cmiObj.length === 0) {
@@ -72,12 +75,14 @@
           }
           // find CMI assigned numbers not in resources
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
-            // check to see if it's in the CMI assigned list
-            var rscObj = resources.filter(function (obj) {
-              return obj.getNumber() == cmiAssignedNumbers[i].number.replace(/\D/g, '');
-            });
-            if (!angular.isDefined(rscObj) || rscObj == null || rscObj.length === 0) {
-              onlyCMI.push(cmiAssignedNumbers[i].number);
+            if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
+              // check to see if it's in the resource list
+              var rscObj = resources.filter(function (obj) {
+                return obj.getNumber() == cmiAssignedNumbers[i].number.replace(/\D/g, '');
+              });
+              if (!angular.isDefined(rscObj) || rscObj == null || rscObj.length === 0) {
+                onlyCMI.push(cmiAssignedNumbers[i].number);
+              }
             }
           }
           return cmiAssignedNumbers;
@@ -90,16 +95,30 @@
 
     }
 
-    // Format AA resources based on a list of external numbers from CMI
-    function formatAAResourcesBasedOnList(resources, externalNumberList) {
+    // Format AA E164 resources based on a list of external numbers from CMI
+    function formatAAE164ResourcesBasedOnList(resources, externalNumberList) {
       var formattedResources = _.map(resources, function (res) {
         if (res.getType() === service.EXTERNAL_NUMBER) {
           var fmtRes = angular.copy(res);
           var extNum = _.find(externalNumberList, function (n) {
-            return n.number.replace(/\D/g, '') === res.number;
+            if (angular.isDefined(res.number) && res.number != null && res.number.length > 0)
+              return n.number.replace(/\D/g, '') === res.number.replace(/\D/g, '');
+            else
+              return n.number.replace(/\D/g, '') === res.id.replace(/\D/g, '');
           });
           if (extNum) {
-            fmtRes.number = extNum.number;
+            // For external numbers, save the id as E164 as in CMI so it's matched in call processsing
+            // Save just the numbers in the phone number
+            fmtRes.id = extNum.number;
+            fmtRes.number = extNum.number.replace(/\D/g, '');
+          } else {
+            // We didn't find in CMI - shouldn't happen - but let's try to fixup any empty fields
+            if (!angular.isDefined(fmtRes.number) || fmtRes.number === null || fmtRes.number.length <= 0) {
+              fmtRes.number = fmtRes.id;
+            }
+            if (!angular.isDefined(fmtRes.id) || fmtRes.id === null || fmtRes.id.length <= 0) {
+              fmtRes.id = fmtRes.number;
+            }
           }
           return fmtRes;
         } else {
@@ -110,8 +129,8 @@
       return formattedResources;
     }
 
-    // Format AA resources based on entries in CMI external number list
-    function formatAAResourcesBasedOnCMI(resources) {
+    // Format AA E164 resources based on entries in CMI external number list
+    function formatAAE164ResourcesBasedOnCMI(resources) {
 
       return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
@@ -133,8 +152,51 @@
 
           }
 
-          return formatAAResourcesBasedOnList(resources, externalNumberList);
+          return formatAAE164ResourcesBasedOnList(resources, externalNumberList);
         });
+
+    }
+
+    // Format AA extension resources based on entries in CMI assignment (when ESN #'s get derived)
+    function formatAAExtensionResourcesBasedOnCMI(orgId, cesId, resources) {
+
+      return getAANumberAssignments(orgId, cesId).then(function (cmiAssignedNumbers) {
+
+        var i = 0;
+        for (i = 0; i < resources.length; i++) {
+          if (resources[i].getType() === service.DIRECTORY_NUMBER) {
+
+            if (!angular.isDefined(resources[i].id) || resources[i].id === null || resources[i].id.length <= 0) {
+              // find it in CMI assigned list
+              var cmiObjESN = _.find(cmiAssignedNumbers, function (obj) {
+                return obj.type == service.NUMBER_FORMAT_ENTERPRISE_LINE && obj.number.replace(/\D/g, '').endsWith(resources[i].getNumber());
+              });
+              if (angular.isDefined(cmiObjESN) && cmiObjESN) {
+                resources[i].setId(cmiObjESN.number);
+              } else {
+                resources[i].setId(resources[i].getNumber());
+              }
+            }
+
+            if (!angular.isDefined(resources[i].number) || resources[i].number === null || resources[i].number.length <= 0) {
+              // find it in CMI assigned list
+              var cmiObjExtension = _.find(cmiAssignedNumbers, function (obj) {
+                return obj.type == service.NUMBER_FORMAT_EXTENSION && resources[i].getId().replace(/\D/g, '').endsWith(obj.number);
+              });
+              if (angular.isDefined(cmiObjExtension) && cmiObjExtension) {
+                resources[i].setNumber(cmiObjExtension.number);
+              } else {
+                resources[i].setNumber(resources[i].getId());
+              }
+
+            }
+
+          }
+        }
+
+        return resources;
+
+      });
 
     }
 
@@ -145,15 +207,18 @@
       for (var i = 0; i < resources.length; i++) {
 
         var numType = service.NUMBER_FORMAT_DIRECT_LINE;
+        var number = resources[i].getNumber();
         if (resources[i].getType() === service.DIRECTORY_NUMBER) {
           numType = service.NUMBER_FORMAT_EXTENSION;
+          number = resources[i].getNumber();
         } else if (resources[i].getType() === service.EXTERNAL_NUMBER) {
           numType = service.NUMBER_FORMAT_DIRECT_LINE;
+          number = resources[i].getId();
         }
 
         var numObj = {
-          number: resources[i].getNumber(),
-          type: numType
+          "number": number,
+          "type": numType
         };
 
         numObjList.push(numObj);

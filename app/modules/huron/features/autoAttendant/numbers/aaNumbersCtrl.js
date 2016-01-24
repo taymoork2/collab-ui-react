@@ -102,10 +102,10 @@
     // Save the AA Number Assignments in CMI
     function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
       // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
-      // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
-      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, vm.externalNumberList);
+      // So save to CMI with the original CMI format for external numbers
+      resources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, vm.externalNumberList);
 
-      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, resources);
     }
 
     // Add the number to the CE Info resource list
@@ -115,12 +115,19 @@
       // both internal and external triggers are incomingCall
       resource.setTrigger('incomingCall');
 
-      // the server POST schema specifies an id and number field but the number is actually not used; the id is used as the number
-      // So just set them both to the number
+      // the number field contains the phone number as known to the human
       resource.setNumber(number);
-      resource.setId(number);
 
-      resource.setType(vm.numberTypeList[number]);
+      // set the type
+      if (angular.isDefined(vm.numberTypeList[number]) && vm.numberTypeList[number] != null && vm.numberTypeList[number].length > 0) {
+        resource.setType(vm.numberTypeList[number]);
+      } else {
+        if (TelephoneNumberService.validateDID(number)) {
+          resource.setType(AANumberAssignmentService.EXTERNAL_NUMBER);
+        } else {
+          resource.setType(AANumberAssignmentService.DIRECTORY_NUMBER);
+        }
+      }
 
       // add to the resource list
       var resources;
@@ -133,22 +140,27 @@
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
-          // find first e164 number, move to array[0] if not already there
-          var r = _.find(resources, function (resource) {
-            return (TelephoneNumberService.validateDID(resource.number));
-          });
 
-          if (angular.isDefined(r)) {
-            var index = _.indexOf(resources, r);
+          // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
+          AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
 
-            // if e164 number is already the 0th element, all done
+            // find first e164 number, move to array[0] if not already there
+            var r = _.find(resources, function (resource) {
+              return (TelephoneNumberService.validateDID(resource.number));
+            });
 
-            if (index >= 1) {
-              resources.splice(0, 0, _.pullAt(resources, index)[0]);
+            if (angular.isDefined(r)) {
+              var index = _.indexOf(resources, r);
+
+              // if e164 number is already the 0th element, all done
+
+              if (index >= 1) {
+                resources.splice(0, 0, _.pullAt(resources, index)[0]);
+              }
             }
-          }
 
-          sortAssignedResources(resources);
+            sortAssignedResources(resources);
+          });
 
         },
         function (response) {

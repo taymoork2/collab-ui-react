@@ -89,13 +89,6 @@
 
     }
 
-    function removeNumberAttribute(resources) {
-      for (var i = 0; i < resources.length; i++) {
-        delete resources[i].number;
-      }
-
-    }
-
     function populateUiModel() {
       vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
 
@@ -154,7 +147,7 @@
     // Notify the user of any numbers that failed
     function saveAANumberAssignmentWithErrorDetail(resources) {
 
-      return AANumberAssignmentService.formatAAResourcesBasedOnCMI(resources).then(function (fmtResources) {
+      return AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(function (fmtResources) {
 
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
@@ -167,6 +160,69 @@
           }
         );
       });
+    }
+
+    function updateCE(recNum) {
+      var aaRecords = vm.aaModel.aaRecords;
+      var aaRecord = vm.aaModel.aaRecord;
+
+      var updateResponsePromise = AutoAttendantCeService.updateCe(
+        aaRecords[recNum].callExperienceURL,
+        aaRecord);
+
+      updateResponsePromise.then(
+        function (response) {
+          // update successfully
+          aaRecords[recNum].callExperienceName = aaRecord.callExperienceName;
+          aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
+          vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
+
+          Notification.success('autoAttendant.successUpdateCe', {
+            name: aaRecord.callExperienceName
+          });
+
+        },
+        function (response) {
+          Notification.error('autoAttendant.errorUpdateCe', {
+            name: aaRecord.callExperienceName,
+            statusText: response.statusText,
+            status: response.status
+          });
+          unAssignAssigned();
+        }
+      );
+
+    }
+
+    function createCE(recNum) {
+      var aaRecords = vm.aaModel.aaRecords;
+      var aaRecord = vm.aaModel.aaRecord;
+
+      var ceUrlPromise = AutoAttendantCeService.createCe(aaRecord);
+      ceUrlPromise.then(
+        function (response) {
+          // create successfully
+          var newAaRecord = {};
+          newAaRecord.callExperienceName = aaRecord.callExperienceName;
+          newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+          newAaRecord.callExperienceURL = response.callExperienceURL;
+          aaRecords.push(newAaRecord);
+          vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
+          vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
+          Notification.success('autoAttendant.successCreateCe', {
+            name: aaRecord.callExperienceName
+          });
+
+        },
+        function (response) {
+          Notification.error('autoAttendant.errorCreateCe', {
+            name: aaRecord.callExperienceName,
+            statusText: response.statusText,
+            status: response.status
+          });
+          unAssignAssigned();
+        }
+      );
     }
 
     function saveAARecords() {
@@ -186,85 +242,42 @@
 
       vm.saveUiModel();
 
-      var i = 0;
+      var recNum = 0;
       var isNewRecord = true;
       vm.canSave = true;
 
       if (aaRecordUUID.length > 0) {
-        for (i = 0; i < aaRecords.length; i++) {
-          if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[i].callExperienceURL) === aaRecordUUID) {
+        for (recNum = 0; recNum < aaRecords.length; recNum++) {
+          if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[recNum].callExperienceURL) === aaRecordUUID) {
             isNewRecord = false;
             vm.canSave = false;
             break;
           }
         }
       }
+
       AACommonService.resetFormStatus();
-      // Workaround: remove resource.number attribute before sending the ceDefinition to CES
-      //
-      var _aaRecord = angular.copy(aaRecord);
-      removeNumberAttribute(_aaRecord.assignedResources);
-      //
 
       if (isNewRecord) {
-        var ceUrlPromise = AutoAttendantCeService.createCe(_aaRecord);
-        ceUrlPromise.then(
-          function (response) {
-            // create successfully
-            var newAaRecord = {};
-            newAaRecord.callExperienceName = aaRecord.callExperienceName;
-            newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
-            newAaRecord.callExperienceURL = response.callExperienceURL;
-            aaRecords.push(newAaRecord);
-            vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
-            vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
-            Notification.success('autoAttendant.successCreateCe', {
-              name: aaRecord.callExperienceName
-            });
-
-          },
-          function (response) {
-            Notification.error('autoAttendant.errorCreateCe', {
-              name: aaRecord.callExperienceName,
-              statusText: response.statusText,
-              status: response.status
-            });
-            unAssignAssigned();
-          }
-        );
+        createCE(recNum);
       } else {
+        // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
+        // Try a complete save here and report error details
+        if (vm.aaModel.possibleNumberDiscrepancy) {
+          var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
+          saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function (assignmentResults) {
 
-        var updateResponsePromise = AutoAttendantCeService.updateCe(
-          aaRecords[i].callExperienceURL,
-          _aaRecord);
+            AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function (resources) {
 
-        updateResponsePromise.then(
-          function (response) {
-            // update successfully
-            aaRecords[i].callExperienceName = aaRecord.callExperienceName;
-            aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
-            vm.aaModel.ceInfos[i] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[i]);
+              updateCE(recNum);
 
-            // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
-            // Try a complete save here and report error details
-            if (vm.aaModel.possibleNumberDiscrepancy) {
-              saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources());
-            }
-
-            Notification.success('autoAttendant.successUpdateCe', {
-              name: aaRecord.callExperienceName
             });
 
-          },
-          function (response) {
-            Notification.error('autoAttendant.errorUpdateCe', {
-              name: aaRecord.callExperienceName,
-              statusText: response.statusText,
-              status: response.status
-            });
-            unAssignAssigned();
-          }
-        );
+          });
+        } else {
+          updateCE(recNum);
+        }
+
       }
     }
 
@@ -354,9 +367,6 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
-                // Workaround for reading the dn number: by copying it from aaRecords[i], until
-                // dn number is officialy stored in ceDefintion.
-                vm.aaModel.aaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
 
                 vm.populateUiModel();

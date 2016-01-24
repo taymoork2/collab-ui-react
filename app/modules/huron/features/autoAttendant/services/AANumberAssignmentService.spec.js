@@ -10,14 +10,14 @@ describe('Service: AANumberAssignmentService', function () {
 
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
 
-  var cmiAAAsignedNumbers = [{
+  var cmiAAAssignedNumbers = [{
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
     "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
   }];
 
   var cmiAAAsignment = {
-    "numbers": cmiAAAsignedNumbers,
+    "numbers": cmiAAAssignedNumbers,
     "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
   };
 
@@ -41,11 +41,14 @@ describe('Service: AANumberAssignmentService', function () {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
-    cmiAAAsignmentURL = url + '/' + '004' + '/numbers';
+    cmiAAAsignmentURL = url + '/' + '2' + '/numbers';
     $q = _$q_;
 
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');
+
+    $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
+
   }));
 
   afterEach(function () {
@@ -53,7 +56,7 @@ describe('Service: AANumberAssignmentService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('formatAAResourcesBasedOnList', function () {
+  describe('formatAAE164ResourcesBasedOnList', function () {
     it('should correctly format resources based on passed-in list', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
@@ -69,12 +72,12 @@ describe('Service: AANumberAssignmentService', function () {
         number: "+14084744458"
       });
 
-      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, externalNumberList);
+      var formattedResources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, externalNumberList);
     });
 
   });
 
-  describe('formatAAResourcesBasedOnCMI', function () {
+  describe('formatAAE164ResourcesBasedOnCMI', function () {
     it('should correctly format resources based on CMI call', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
@@ -92,7 +95,7 @@ describe('Service: AANumberAssignmentService', function () {
         'uuid': '8888888881-id'
       }]);
 
-      AANumberAssignmentService.formatAAResourcesBasedOnCMI(resources).then(
+      AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(
         successSpy,
         failureSpy
       );
@@ -100,7 +103,8 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
-      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].id, '+14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '14084744458')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
@@ -115,15 +119,13 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
-
-      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), '004', resources, cmiAAAsignments, onlyCMI).then(
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), '2', resources, cmiAAAsignments, onlyCMI).then(
         successSpy,
         failureSpy
       );
       $httpBackend.flush();
       var args = successSpy.calls.mostRecent().args;
-      expect(angular.equals(args[0], cmiAAAsignedNumbers)).toEqual(true);
+      expect(angular.equals(args[0], cmiAAAssignedNumbers)).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
@@ -141,7 +143,7 @@ describe('Service: AANumberAssignmentService', function () {
 
       $httpBackend.whenPUT(cmiAAAsignmentURL).respond(200);
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '2', resources).then(
         successSpy,
         failureSpy
       );
@@ -164,7 +166,7 @@ describe('Service: AANumberAssignmentService', function () {
 
       $httpBackend.whenPUT(cmiAAAsignmentURL).respond(500);
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '2', resources).then(
         successSpy,
         failureSpy
       );
@@ -211,7 +213,7 @@ describe('Service: AANumberAssignmentService', function () {
         }
       });
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '2', resources).then(
         successSpy,
         failureSpy
       );
@@ -241,7 +243,7 @@ describe('Service: AANumberAssignmentService', function () {
       resources.push(resource);
 
       $httpBackend.whenPUT(cmiAAAsignmentURL).respond(200);
-      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), '004', resources).then(
+      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), '2', resources).then(
         successSpy,
         failureSpy
       );
@@ -256,7 +258,7 @@ describe('Service: AANumberAssignmentService', function () {
     it('should notify on success', function () {
 
       $httpBackend.whenDELETE(cmiAAAsignmentURL).respond(200);
-      AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), '004').then(
+      AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), '2').then(
         successSpy,
         failureSpy
       );

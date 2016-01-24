@@ -6,6 +6,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
+  var url, cmiAAAsignmentURL;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -25,6 +26,19 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "number": "12068551179"
     }]
   };
+
+  var cmiAAAssignedNumbers = [{
+    "number": "2578",
+    "type": "NUMBER_FORMAT_EXTENSION",
+    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+  }];
+
+  var cmiAAAsignment = {
+    "numbers": cmiAAAssignedNumbers,
+    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
+  };
+
+  var cmiAAAsignments = [cmiAAAsignment];
 
   var aaModel = {};
 
@@ -106,9 +120,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     // By default CMI will just return happy code
-    $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond([{
-      "numbers": []
-    }]);
+    url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
+    cmiAAAsignmentURL = url + '/' + '2' + '/numbers';
+    $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
     aaModel.aaRecordUUID = '2';
 
@@ -495,13 +509,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should not warn when assignments return no error', function () {
 
-      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
+        onlyCMI = [];
+        onlyResources = [];
+        return $q.when("{}");
+      });
 
       var ret = controller.warnOnAssignedNumberDiscrepancies();
-
-      $httpBackend.flush();
-
-      $scope.$apply();
 
       expect(errorSpy).not.toHaveBeenCalled();
 
