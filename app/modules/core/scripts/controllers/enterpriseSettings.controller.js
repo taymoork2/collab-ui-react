@@ -13,15 +13,17 @@ angular.module('Core')
       $scope.cloudSipUriField = {};
       $scope.cloudSipUriField.inputValue = '';
       $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.savedValue = '';
       $scope.cloudSipUriField.isUrlAvailableFlag = false;
+      $scope.cloudSipUriField.isUrlAvailableValue = '';
       $scope.cloudSipUriField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
 
       Orgservice.getOrg(function (data, status) {
         var displayName;
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
-            var value = data.orgSettings.sipCloudDomain.split('.')[0];
-            $scope.cloudSipUriField.inputValue = value;
+            $scope.cloudSipUriField.savedValue = data.orgSettings.sipCloudDomain.split('.')[0];
+            $scope.cloudSipUriField.inputValue = $scope.cloudSipUriField.savedValue;
             $scope.cloudSipUriField.isDisabled = true;
           } else if (data.verifiedDomains) {
             $scope.cloudSipUriField.inputValue = data.verifiedDomains[0];
@@ -56,6 +58,7 @@ angular.module('Core')
           SparkDomainManagementService.checkDomainAvailability(payload, function (data, status) {
             if (status === 200 && data.isDomainAvailable) {
               $scope.cloudSipUriField.isUrlAvailableFlag = true;
+              $scope.cloudSipUriField.isUrlAvailableValue = $scope.cloudSipUriField.inputValue;
               $scope.cloudSipUriField.isError = false;
             } else {
               $scope.cloudSipUriField.isUrlAvailableFlag = false;
@@ -78,6 +81,8 @@ angular.module('Core')
               $scope.cloudSipUriField.isError = false;
               $scope.cloudSipUriField.isDisabled = true;
               Notification.notify([$translate.instant('firstTimeWizard.setSipUriDomainSuccessMessage')], 'success');
+            } else if (status !== 200) {
+              Notification.notify([$translate.instant('firstTimeWizard.sparkDomainManagementServiceErrorMessage')], 'error');
             }
           });
         }
@@ -90,6 +95,14 @@ angular.module('Core')
 
         return $scope.cloudSipUriField.isError;
       };
+
+      $scope.$watch('$scope.cloudSipUriField.inputValue',
+          function onChange(newValue, oldValue) {
+              if (newValue !== $scope.cloudSipUriField.isUrlAvailableValue) {
+                $scope.cloudSipUriField.isUrlAvailableFlag = false;
+              }
+          }
+      );
 
       $scope.options = {
         configureSSO: 1,
