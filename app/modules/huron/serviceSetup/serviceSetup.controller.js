@@ -588,7 +588,7 @@
 
     function loadExternalNumberPool(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
-        vm.externalNumberPool = ExternalNumberService.getAllNumbers();
+        vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
         vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
           var externalNumber = angular.copy(en);
           externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
