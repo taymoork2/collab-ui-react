@@ -76,7 +76,7 @@
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
       templateOptions: {
         label: $translate.instant('trials.messageAndMeeting'),
-        id: 'squaredTrial',
+        id: 'messageTrial',
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
