@@ -15,8 +15,7 @@ describe('Test the createAccount page', function () {
   });
 
   it('should have the right title', function () {
-    //expect(element(by.id('title')).getInnerHtml()).toEqual('Create Account');
-    // expect(createAccount.pageTitle).getInnerHtml()).toEqual('Create Account');
+    expect(element(by.id('title')).getInnerHtml()).toEqual('Create Account');
     expect(element(by.id('h2')).getInnerHtml()).toEqual('Create Account');
   });
 
