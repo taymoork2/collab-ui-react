@@ -19,6 +19,7 @@
 
         var statusIds = {
           //Spark
+          SparkMeeting: 'lkjcjdfgfnbk',
           SparkMessage: '4z5sdybd2jxy',
           SparkCall: 'gfg7cvjszyw0',
           CCMAdministration: '7v9ds0q2zfsy',

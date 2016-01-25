@@ -24,15 +24,14 @@
         card.previousTitle = 'overview.cards.roomSystem.previousTitle';
         card.settingsUrl = '#/devices';
         card.helper = OverviewHelper;
-        card.showHealth = false;
+        card.showHealth = true;
 
         card.healthStatusUpdatedHandler = function (data) {
-          var room = _.find(data.components, {
-            id: 'notavailyet' //card.helper.statusIds.Rooms
+          _.each(data.components, function (component) {
+            if (component.id === card.helper.statusIds.SparkMeeting) {
+              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+            }
           });
-          if (room) {
-            card.healthStatus = card.helper.mapStatus(card.healthStatus, room.status);
-          }
         };
 
         card.reportDataEventHandler = function (event, response) {
