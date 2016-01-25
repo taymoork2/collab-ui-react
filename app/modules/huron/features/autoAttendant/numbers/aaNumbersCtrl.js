@@ -119,7 +119,7 @@
       resource.setNumber(number);
 
       // set the type
-      if (angular.isDefined(vm.numberTypeList[number]) && vm.numberTypeList[number] != null && vm.numberTypeList[number].length > 0) {
+      if (vm.numberTypeList[number]) {
         resource.setType(vm.numberTypeList[number]);
       } else {
         if (TelephoneNumberService.validateDID(number)) {
