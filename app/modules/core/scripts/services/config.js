@@ -244,6 +244,13 @@ angular.module('Core')
           prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
         },
 
+        cdrUrl: {
+          dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
+          integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -1026,6 +1033,17 @@ angular.module('Core')
           };
 
           return sunlightConfigServiceUrl[this.getEnv()];
+        },
+
+        getCdrUrl: function () {
+          var cdrConfigServiceUrl = {
+            'dev': this.cdrUrl.dev,
+            'cfe': this.cdrUrl.cfe,
+            'integration': this.cdrUrl.integration,
+            'prod': this.cdrUrl.prod
+          };
+
+          return cdrConfigServiceUrl[this.getEnv()];
         }
       };
 
@@ -1117,7 +1135,8 @@ angular.module('Core')
           'huntgroupedit',
           'devReports',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',

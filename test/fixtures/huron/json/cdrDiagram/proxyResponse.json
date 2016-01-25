@@ -1,0 +1,274 @@
+{
+  "took": 1982,
+  "timed_out": false,
+  "_shards": {
+    "total": 21,
+    "successful": 184,
+    "failed": 19,
+    "failures": [{
+      "index": ".kibana",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-07-internal][inet[\/192.168.90.36:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[.kibana][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[.kibana][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": ".marvel-kibana",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-07-internal][inet[\/192.168.90.36:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[.marvel-kibana][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[.marvel-kibana][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "05xu04u7jvct1uobbzx",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-02-internal][inet[\/192.168.90.38:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[05xu04u7jvct1uobbzx][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[05xu04u7jvct1uobbzx][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "06nh63rajt9uxiv5pg7",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-04-internal][inet[\/192.168.90.33:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[06nh63rajt9uxiv5pg7][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[06nh63rajt9uxiv5pg7][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "0feku9i5fjpqof94pxb",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-05-internal][inet[\/192.168.90.34:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[0feku9i5fjpqof94pxb][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[0feku9i5fjpqof94pxb][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "0s7dhmd64srto36q0fz",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-14-internal][inet[\/192.168.90.51:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[0s7dhmd64srto36q0fz][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[0s7dhmd64srto36q0fz][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "0x0xb4an954lcgldnra",
+      "shard": 0,
+      "status": 400,
+      "reason": "SearchParseException[[0x0xb4an954lcgldnra][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[0x0xb4an954lcgldnra][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "0xsvsnp1ni2rmsaiysm",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-12-internal][inet[\/192.168.90.48:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[0xsvsnp1ni2rmsaiysm][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[0xsvsnp1ni2rmsaiysm][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "100xbl4jut7ga1whhnf",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-01-internal][inet[\/192.168.90.37:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[100xbl4jut7ga1whhnf][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[100xbl4jut7ga1whhnf][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1axtgrbavvmc3v19aux",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-09-internal][inet[\/192.168.90.41:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1axtgrbavvmc3v19aux][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1axtgrbavvmc3v19aux][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1iao7nh6t4c8nuxkret",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-08-internal][inet[\/192.168.90.40:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1iao7nh6t4c8nuxkret][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1iao7nh6t4c8nuxkret][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1ixax3m7y2ltpu4mfjp",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-04-internal][inet[\/192.168.90.33:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1ixax3m7y2ltpu4mfjp][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1ixax3m7y2ltpu4mfjp][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1kzkchrvf48n53lleh9",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-06-internal][inet[\/192.168.90.35:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1kzkchrvf48n53lleh9][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1kzkchrvf48n53lleh9][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1lwuwnojbm7xllcoqvp",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-07-internal][inet[\/192.168.90.36:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1lwuwnojbm7xllcoqvp][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1lwuwnojbm7xllcoqvp][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1tubzfi70un3um14ntz",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-06-internal][inet[\/192.168.90.35:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1tubzfi70un3um14ntz][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1tubzfi70un3um14ntz][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "1vrtgmcwwk0oztxexe4",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-09-internal][inet[\/192.168.90.41:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[1vrtgmcwwk0oztxexe4][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[1vrtgmcwwk0oztxexe4][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "2014",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-13-internal][inet[\/192.168.90.47:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[2014][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[2014][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "2015",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-07-internal][inet[\/192.168.90.36:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[2015][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[2015][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "23ygm6urfwpa07ozlg2",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-07-internal][inet[\/192.168.90.36:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[23ygm6urfwpa07ozlg2][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[23ygm6urfwpa07ozlg2][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "250saag6f9ghu9ckdbq",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-02-internal][inet[\/192.168.90.38:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[250saag6f9ghu9ckdbq][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[250saag6f9ghu9ckdbq][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }, {
+      "index": "2kctqqbxmf8iterir1j",
+      "shard": 0,
+      "status": 400,
+      "reason": "RemoteTransportException[[es-data-04-internal][inet[\/192.168.90.33:9300]][indices:data\/read\/search[phase\/query]]]; nested: SearchParseException[[2kctqqbxmf8iterir1j][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"CallTrace.Release\"}},{\"query_string\":{\"query\":\"CallTrace.Split\"}},{\"query_string\":{\"query\":\"CallTrace.SetupReq\"}},{\"query_string\":{\"query\":\"CallTrace.Reject\"}},{\"query_string\":{\"query\":\"CallTrace.Join\"}},{\"query_string\":{\"query\":\"CallTrace.SIPEvent\"}},{\"query_string\":{\"query\":\"sipmsg\"}}]}}, \"filter\": {\"bool\": {\"should\":[{\"fquery\": {\"query\":{\"query_string\":{\"query\":\"320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c\"}}, \"_cache\": true}}]}}}}, \"size\": 2000, \"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[2kctqqbxmf8iterir1j][0]: query[filtered(_all:calltrace.release _all:calltrace.split _all:calltrace.setupreq _all:calltrace.reject _all:calltrace.join _all:calltrace.sipevent _all:sipmsg)->BooleanFilter(cache(QueryWrapperFilter(_all:320aade700105000a000ac7e8ab6cab8 _all:e02d28c2fe254f0da3de1430a1d9043c)))],from[-1],size[2000]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
+    }]
+  },
+  "hits": {
+    "total": 3,
+    "max_score": null,
+    "hits": [{
+      "_index": "logstash-2016.01.25",
+      "_type": "ProtocolEvents",
+      "_id": "AVJ2__2M1-G2yt7gDf_Z",
+      "_score": null,
+      "_source": {
+        "message": "{\"ts\":1453695433960,\"id\":\"CallTrace.SIPEvent\",\"level\":\"INFORMATIONAL\",\"type\":\"ProtocolEvents\",\"eventSource\":{\"serviceID\":\"ccm\",\"serviceVersionID\":\"1.0.0.0.2670 2016-01-22 11:25:55-06:00\",\"hostname\":\"cms-02-internal.int-tx3.huron-int.com\"},\"dataParam\":{\"_event_seq\":\"1453493725766_1285626\",\"msgType\":\"NOTIFY\",\"cSeq\":\"101 NOTIFY\",\"type\":\"SIPL\",\"localIPAddress\":\"192.168.90.72\",\"VIPAddress_IPv4\":\"192.168.90.66\",\"VIPAddress_FQDN\":\"cms-vip-a-01-internal.int-tx3.huron-int.com\",\"remoteIPAddress\":\"192.168.90.128\",\"remoteName\":\"\",\"from\":\"1234867256\",\"to\":\"\",\"callID\":\"813df000-1e61e11d-1633d-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\",\"localPort\":5061,\"remotePort\":5061,\"direction\":\"out\",\"operation\":\"NOTIFY\",\"code\":\"\",\"cmLegID\":0,\"cmCorrID\":\"4,100,17,1094.102875^*^044e7beb00105000a000b000b4ba0233:320aade700105000a000ac7e8ab6cab8\",\"cmMsgTag\":4159426,\"localSessionID\":\"044e7beb00105000a000b000b4ba0233\",\"remoteSessionID\":\"320aade700105000a000ac7e8ab6cab8\",\"trackingID\":\"\",\"rawMsg\":\"NOTIFY sip:3e4a03ea-2a7e-4512-b7bb-186522a0ec39@10.79.63.206:53245;transport=tls SIP\/2.0\\r\\nVia: SIP\/2.0\/TLS cms-vip-a-01-internal.int-tx3.huron-int.com:5061;branch=z9hG4bK44f3b2a782394\\r\\nFrom: <sip:cms-vip-a-01-internal.int-tx3.huron-int.com>;tag=1234867256\\r\\nTo: <sip:2512@192.168.90.128>\\r\\nCall-ID: 813df000-1e61e11d-1633d-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\\r\\nCSeq: 101 NOTIFY\\r\\nMax-Forwards: 70\\r\\nDate: Mon, 25 Jan 2016 04:17:13 GMT\\r\\nUser-Agent: Cisco-CUCM1.0\\r\\nEvent: dialog\\r\\nSubscription-State: active\\r\\nContact: <sip:cms-vip-a-01-internal.int-tx3.huron-int.com:5061;transport=tls>\\r\\nRoute: <sip:192.168.90.128:5061;transport=tls;lr>\\r\\nContent-Type: application\/dialog-info+xml\\r\\nSession-ID: 044e7beb00105000a000b000b4ba0233;remote=320aade700105000a000ac7e8ab6cab8\\r\\nContent-Length: 558\\r\\n\\r\\n<dialog-info xmlns=\\\"urn:ietf:parmams:xml:ns:dialog-info\\\"\\n xmlns:call=\\\"urn:x-cisco:parmams:xml:ns:dialog-info:dialog:callinfo-dialog\\\"\\n xmlns:xsi=\\\"http:\/\/www.w3.org\/2001\/XMLSchema-instance\\\"\\n version=\\\"14795\\\" state=\\\"partial\\\" entity=\\\"sip:2512@192.168.90.72\\\">\\n  <dialog id=\\\"27440\\\" call-id=\\\"50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\\\" local-tag=\\\"b000b4ba023302326f17ecbf-1b119438\\\" remote-tag=\\\"1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964\\\" direction=\\\"recipient\\\">\\n    <state>terminated<\/state>\\n  <\/dialog>\\n<\/dialog-info>\\n\\n\\r\\n\"}}",
+        "tags": [
+          ""
+        ],
+        "@version": "1",
+        "@timestamp": "2016-01-25T04:17:13.960Z",
+        "host": "192.168.90.204",
+        "record_type": "event_record",
+        "eventType": "SAEVENT",
+        "ts": 1453695433960,
+        "id": "CallTrace.SIPEvent",
+        "level": "INFORMATIONAL",
+        "type": "ProtocolEvents",
+        "eventSource": {
+          "serviceID": "ccm",
+          "serviceVersionID": "1.0.0.0.2670 2016-01-22 11:25:55-06:00",
+          "hostname": "cms-02-internal.int-tx3.huron-int.com"
+        },
+        "dataParam": {
+          "_event_seq": "1453493725766_1285626",
+          "msgType": "NOTIFY",
+          "cSeq": "101 NOTIFY",
+          "type": "SIPL",
+          "localIPAddress": "192.168.90.72",
+          "VIPAddress_IPv4": "192.168.90.66",
+          "VIPAddress_FQDN": "cms-vip-a-01-internal.int-tx3.huron-int.com",
+          "remoteIPAddress": "192.168.90.128",
+          "remoteName": "",
+          "from": "1234867256",
+          "to": "",
+          "callID": "813df000-1e61e11d-1633d-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com",
+          "localPort": 5061,
+          "remotePort": 5061,
+          "direction": "out",
+          "operation": "NOTIFY",
+          "code": "",
+          "cmLegID": 0,
+          "cmCorrID": "4,100,17,1094.102875^*^044e7beb00105000a000b000b4ba0233:320aade700105000a000ac7e8ab6cab8",
+          "cmMsgTag": 4159426,
+          "localSessionID": "044e7beb00105000a000b000b4ba0233",
+          "remoteSessionID": "320aade700105000a000ac7e8ab6cab8",
+          "trackingID": "",
+          "rawMsg": "NOTIFY sip:3e4a03ea-2a7e-4512-b7bb-186522a0ec39@10.79.63.206:53245;transport=tls SIP\/2.0\r\nVia: SIP\/2.0\/TLS cms-vip-a-01-internal.int-tx3.huron-int.com:5061;branch=z9hG4bK44f3b2a782394\r\nFrom: <sip:cms-vip-a-01-internal.int-tx3.huron-int.com>;tag=1234867256\r\nTo: <sip:2512@192.168.90.128>\r\nCall-ID: 813df000-1e61e11d-1633d-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\r\nCSeq: 101 NOTIFY\r\nMax-Forwards: 70\r\nDate: Mon, 25 Jan 2016 04:17:13 GMT\r\nUser-Agent: Cisco-CUCM1.0\r\nEvent: dialog\r\nSubscription-State: active\r\nContact: <sip:cms-vip-a-01-internal.int-tx3.huron-int.com:5061;transport=tls>\r\nRoute: <sip:192.168.90.128:5061;transport=tls;lr>\r\nContent-Type: application\/dialog-info+xml\r\nSession-ID: 044e7beb00105000a000b000b4ba0233;remote=320aade700105000a000ac7e8ab6cab8\r\nContent-Length: 558\r\n\r\n<dialog-info xmlns=\"urn:ietf:parmams:xml:ns:dialog-info\"\n xmlns:call=\"urn:x-cisco:parmams:xml:ns:dialog-info:dialog:callinfo-dialog\"\n xmlns:xsi=\"http:\/\/www.w3.org\/2001\/XMLSchema-instance\"\n version=\"14795\" state=\"partial\" entity=\"sip:2512@192.168.90.72\">\n  <dialog id=\"27440\" call-id=\"50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\" local-tag=\"b000b4ba023302326f17ecbf-1b119438\" remote-tag=\"1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964\" direction=\"recipient\">\n    <state>terminated<\/state>\n  <\/dialog>\n<\/dialog-info>\n\n\r\n"
+        },
+        "serviceID": "ccm",
+        "hostAddress": "192.168.90.204",
+        "indexName": "huron-event-192.168.90.204-ccm"
+      },
+      "sort": [
+        1453695433960
+      ]
+    }, {
+      "_index": "logstash-2016.01.25",
+      "_type": "ApplicationEvents",
+      "_id": "AVJ2__2DhGl0GdpkQXG1",
+      "_score": null,
+      "_source": {
+        "message": "{\"ts\":1453695433958,\"id\":\"CallTrace.Release\",\"level\":\"INFORMATIONAL\",\"type\":\"ApplicationEvents\",\"eventSource\":{\"serviceID\":\"ccm\",\"serviceVersionID\":\"1.0.0.0.2670 2016-01-22 11:25:55-06:00\",\"hostname\":\"cms-02-internal.int-tx3.huron-int.com\"},\"dataParam\":{\"_event_seq\":\"1453493725766_1285625\",\"aSideLegID\":76212964,\"bSideLegID\":76212930,\"cause\":16,\"localSessionID\":\"044e7beb00105000a000b000b4ba0233\",\"remoteSessionID\":\"320aade700105000a000ac7e8ab6cab8\",\"trackingID\":\"\"}}",
+        "tags": [
+          ""
+        ],
+        "@version": "1",
+        "@timestamp": "2016-01-25T04:17:13.958Z",
+        "host": "192.168.90.204",
+        "record_type": "event_record",
+        "eventType": "SAEVENT",
+        "ts": 1453695433958,
+        "id": "CallTrace.Release",
+        "level": "INFORMATIONAL",
+        "type": "ApplicationEvents",
+        "eventSource": {
+          "serviceID": "ccm",
+          "serviceVersionID": "1.0.0.0.2670 2016-01-22 11:25:55-06:00",
+          "hostname": "cms-02-internal.int-tx3.huron-int.com"
+        },
+        "dataParam": {
+          "_event_seq": "1453493725766_1285625",
+          "aSideLegID": 76212964,
+          "bSideLegID": 76212930,
+          "cause": 16,
+          "localSessionID": "044e7beb00105000a000b000b4ba0233",
+          "remoteSessionID": "320aade700105000a000ac7e8ab6cab8",
+          "trackingID": ""
+        },
+        "serviceID": "ccm",
+        "hostAddress": "192.168.90.204",
+        "indexName": "huron-event-192.168.90.204-ccm"
+      },
+      "sort": [
+        1453695433958
+      ]
+    }, {
+      "_index": "logstash-2016.01.25",
+      "_type": "ProtocolEvents",
+      "_id": "AVJ2__2DhGl0GdpkQXG0",
+      "_score": null,
+      "_source": {
+        "message": "{\"ts\":1453695433957,\"id\":\"CallTrace.SIPEvent\",\"level\":\"INFORMATIONAL\",\"type\":\"ProtocolEvents\",\"eventSource\":{\"serviceID\":\"ccm\",\"serviceVersionID\":\"1.0.0.0.2670 2016-01-22 11:25:55-06:00\",\"hostname\":\"cms-02-internal.int-tx3.huron-int.com\"},\"dataParam\":{\"_event_seq\":\"1453493725766_1285623\",\"msgType\":\"200 OK\",\"cSeq\":\"118 BYE\",\"type\":\"SIPL\",\"localIPAddress\":\"192.168.90.72\",\"VIPAddress_IPv4\":\"192.168.90.66\",\"VIPAddress_FQDN\":\"cms-vip-a-01-internal.int-tx3.huron-int.com\",\"remoteIPAddress\":\"192.168.90.128\",\"remoteName\":\"SEPB000B4BA0233\",\"from\":\"1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964\",\"to\":\"b000b4ba023302326f17ecbf-1b119438\",\"callID\":\"50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\",\"localPort\":5061,\"remotePort\":5061,\"direction\":\"in\",\"operation\":\"200 OK\",\"code\":\"\",\"cmLegID\":76212964,\"cmCorrID\":\"4,100,17,1094.102875^*^044e7beb00105000a000b000b4ba0233:320aade700105000a000ac7e8ab6cab8\",\"cmMsgTag\":4159425,\"localSessionID\":\"044e7beb00105000a000b000b4ba0233\",\"remoteSessionID\":\"320aade700105000a000ac7e8ab6cab8\",\"trackingID\":\"\",\"rawMsg\":\"SIP\/2.0 200 OK\\r\\nVia: SIP\/2.0\/TLS cms-vip-a-01-internal.int-tx3.huron-int.com:5061;branch=z9hG4bK44f3a30ea353c;received=192.168.90.72;rport=35829;ingress-zone=UCHcmsvipa01internalinttx3huronintcom\\r\\nCall-ID: 50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\\r\\nCSeq: 118 BYE\\r\\nFrom: \\\"18918183386@189.cn\\\" <sip:18918183386@189-cn.wbx2.com>;tag=1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964\\r\\nTo: <sip:2512@cms-vip-a-01-internal.int-tx3.huron-int.com>;tag=b000b4ba023302326f17ecbf-1b119438\\r\\nServer: Cisco-CP8861\/11.5.1\\r\\nDate: Mon, 25 Jan 2016 04:17:14 GMT\\r\\nSession-ID: 044e7beb00105000a000b000b4ba0233;remote=320aade700105000a000ac7e8ab6cab8\\r\\nRTP-RxStat: Dur=11,Pkt=503,Oct=86344,LatePkt=1,LostPkt=2,AvgJit=1,VQMetrics=\\\"CCR=0.0035;ICR=0.0000;ICRmx=0.0065;CS=3;SCS=0;Ver=0.90;VoRxCodec=G.722 64k;CID=6;VoPktSizeMs=20;VoPktLost=2;VoPktDis=1;VoOneWayDelayMs=0\\\"\\r\\nRTP-TxStat: Dur=11,Pkt=541,Oct=86560\\r\\nContent-Length: 0\\r\\n\\r\\n\"}}",
+        "tags": [
+          ""
+        ],
+        "@version": "1",
+        "@timestamp": "2016-01-25T04:17:13.957Z",
+        "host": "192.168.90.204",
+        "record_type": "event_record",
+        "eventType": "SAEVENT",
+        "ts": 1453695433957,
+        "id": "CallTrace.SIPEvent",
+        "level": "INFORMATIONAL",
+        "type": "ProtocolEvents",
+        "eventSource": {
+          "serviceID": "ccm",
+          "serviceVersionID": "1.0.0.0.2670 2016-01-22 11:25:55-06:00",
+          "hostname": "cms-02-internal.int-tx3.huron-int.com"
+        },
+        "dataParam": {
+          "_event_seq": "1453493725766_1285623",
+          "msgType": "200 OK",
+          "cSeq": "118 BYE",
+          "type": "SIPL",
+          "localIPAddress": "192.168.90.72",
+          "VIPAddress_IPv4": "192.168.90.66",
+          "VIPAddress_FQDN": "cms-vip-a-01-internal.int-tx3.huron-int.com",
+          "remoteIPAddress": "192.168.90.128",
+          "remoteName": "SEPB000B4BA0233",
+          "from": "1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964",
+          "to": "b000b4ba023302326f17ecbf-1b119438",
+          "callID": "50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com",
+          "localPort": 5061,
+          "remotePort": 5061,
+          "direction": "in",
+          "operation": "200 OK",
+          "code": "",
+          "cmLegID": 76212964,
+          "cmCorrID": "4,100,17,1094.102875^*^044e7beb00105000a000b000b4ba0233:320aade700105000a000ac7e8ab6cab8",
+          "cmMsgTag": 4159425,
+          "localSessionID": "044e7beb00105000a000b000b4ba0233",
+          "remoteSessionID": "320aade700105000a000ac7e8ab6cab8",
+          "trackingID": "",
+          "rawMsg": "SIP\/2.0 200 OK\r\nVia: SIP\/2.0\/TLS cms-vip-a-01-internal.int-tx3.huron-int.com:5061;branch=z9hG4bK44f3a30ea353c;received=192.168.90.72;rport=35829;ingress-zone=UCHcmsvipa01internalinttx3huronintcom\r\nCall-ID: 50f65180-1e61e11d-162be-485aa8c0@cms-vip-a-01-internal.int-tx3.huron-int.com\r\nCSeq: 118 BYE\r\nFrom: \"18918183386@189.cn\" <sip:18918183386@189-cn.wbx2.com>;tag=1234772~b9db9ca4-a895-41a5-b493-f051ac668b81-76212964\r\nTo: <sip:2512@cms-vip-a-01-internal.int-tx3.huron-int.com>;tag=b000b4ba023302326f17ecbf-1b119438\r\nServer: Cisco-CP8861\/11.5.1\r\nDate: Mon, 25 Jan 2016 04:17:14 GMT\r\nSession-ID: 044e7beb00105000a000b000b4ba0233;remote=320aade700105000a000ac7e8ab6cab8\r\nRTP-RxStat: Dur=11,Pkt=503,Oct=86344,LatePkt=1,LostPkt=2,AvgJit=1,VQMetrics=\"CCR=0.0035;ICR=0.0000;ICRmx=0.0065;CS=3;SCS=0;Ver=0.90;VoRxCodec=G.722 64k;CID=6;VoPktSizeMs=20;VoPktLost=2;VoPktDis=1;VoOneWayDelayMs=0\"\r\nRTP-TxStat: Dur=11,Pkt=541,Oct=86560\r\nContent-Length: 0\r\n\r\n"
+        },
+        "serviceID": "ccm",
+        "hostAddress": "192.168.90.204",
+        "indexName": "huron-event-192.168.90.204-ccm"
+      },
+      "sort": [
+        1453695433957
+      ]
+    }]
+  }
+}

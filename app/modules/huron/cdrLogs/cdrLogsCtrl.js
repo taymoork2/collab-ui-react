@@ -604,7 +604,10 @@
 
       $state.go('cdr-overview', {
         cdrData: vm.selectedCDR,
-        call: callCopy
+        call: callCopy,
+        uniqueIds: CdrService.extractUniqueIds(call),
+        events: vm.events,
+        imported: vm.imported
       });
     }
 

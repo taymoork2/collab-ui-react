@@ -1171,10 +1171,29 @@ angular
           },
           params: {
             cdrData: {},
-            call: []
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
+          }
+        })
+        .state('cdrladderdiagram', {
+          parent: 'modalFull',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
+              controller: 'CdrLadderDiagramCtrl',
+              controllerAs: 'cdrLadderDiagram'
+            }
+          },
+          params: {
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           }
         })
         .state('callroutingBase', {
