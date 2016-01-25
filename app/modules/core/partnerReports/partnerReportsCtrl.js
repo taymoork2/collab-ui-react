@@ -17,7 +17,7 @@
 
     // variables for the active users section
     var activeUserRefreshDiv = 'activeUsersRefreshDiv';
-    var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
+    var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var mediaQualityChart = null;
     var callMetricsDonutChart = null;
@@ -31,7 +31,7 @@
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[3];
+    vm.activeUserPredicate = activeUsersSort[4];
     vm.activeButton = [1, 2, 3];
     vm.mostActiveUsers = [];
     vm.mostActiveTitle = "";
@@ -308,7 +308,7 @@
           }
           vm.activeUserCurrentPage = 1;
           vm.activeButton = [1, 2, 3];
-          vm.activeUserPredicate = activeUsersSort[3];
+          vm.activeUserPredicate = activeUsersSort[4];
 
           vm.activeUsersRefresh = SET;
           if (response.graphData.length === 0) {
