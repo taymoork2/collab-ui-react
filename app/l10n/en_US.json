@@ -3230,8 +3230,10 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
+    "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
-    "ReadOnly_Admin": "Read-only Admin"
+    "Readonly_Admin": "Read-only Admin",
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
