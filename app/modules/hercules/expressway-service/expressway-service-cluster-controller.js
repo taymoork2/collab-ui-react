@@ -24,15 +24,16 @@
         provisionedVersion: provisioning.provisionedVersion,
         availableVersion: provisioning.availableVersion,
         isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        numberOfHosts: _.size(vm.clusterAggregates.hosts),
         isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
       };
 
       if (vm.softwareUpgrade.isUpgrading) {
+        vm.fakeUpgrade = false;
         var pendingHosts = _.chain(vm.clusterAggregates.hosts)
           .filter('upgradeState', 'pending')
           .value();
         vm.upgradeDetails = {
-          numberOfHosts: _.size(vm.clusterAggregates.hosts),
           numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
           upgradingHostname: _.chain(vm.clusterAggregates.hosts)
             .find('upgradeState', 'upgrading')
@@ -48,9 +49,9 @@
           vm.showUpgradeProgress = false;
         }, 2000);
       }
-      vm.showUpgradeProgress = vm.softwareUpgrade.isUpgrading || vm.upgradeJustFinished;
+      vm.showUpgradeProgress = vm.fakeUpgrade || vm.softwareUpgrade.isUpgrading || vm.upgradeJustFinished;
 
-      wasUpgrading = vm.softwareUpgrade.isUpgrading;
+      wasUpgrading = vm.softwareUpgrade.isUpgrading || vm.fakeUpgrade;
     }, true);
 
     vm.upgrade = function () {
@@ -73,7 +74,7 @@
         ClusterService
           .upgradeSoftware(vm.clusterId, vm.serviceType)
           .then(function () {
-            // TODO: show a fake progressbar
+            vm.fakeUpgrade = vm.showUpgradeProgress = true;
           }, XhrNotificationService.notify);
       });
 

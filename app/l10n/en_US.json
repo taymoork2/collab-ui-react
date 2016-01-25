@@ -1138,6 +1138,7 @@
       "currentVersion": "Current Version",
       "newVersion": "New Version",
       "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
+      "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!"
