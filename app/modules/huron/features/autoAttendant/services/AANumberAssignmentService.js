@@ -67,9 +67,9 @@
             // check to see if it's in the CMI assigned list
             var cmiObj = cmiAssignedNumbers.filter(function (obj) {
 
-              return obj.number.replace(/\D/g, '') == resources[i].getNumber();
+              return obj.number.replace(/\D/g, '') === resources[i].getNumber();
             });
-            if (!angular.isDefined(cmiObj) || cmiObj == null || cmiObj.length === 0) {
+            if (!angular.isDefined(cmiObj) || cmiObj === null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
             }
           }
@@ -78,9 +78,9 @@
             if (cmiAssignedNumbers[i].type != service.NUMBER_FORMAT_ENTERPRISE_LINE) {
               // check to see if it's in the resource list
               var rscObj = resources.filter(function (obj) {
-                return obj.getNumber() == cmiAssignedNumbers[i].number.replace(/\D/g, '');
+                return obj.getNumber() === cmiAssignedNumbers[i].number.replace(/\D/g, '');
               });
-              if (!angular.isDefined(rscObj) || rscObj == null || rscObj.length === 0) {
+              if (!angular.isDefined(rscObj) || rscObj === null || rscObj.length === 0) {
                 onlyCMI.push(cmiAssignedNumbers[i].number);
               }
             }
@@ -157,6 +157,11 @@
 
     }
 
+    // endsWith works on the browsers (ECMA6), but not phantomjs, so here is an implemenation
+    function endsWith(str, suffix) {
+      return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
     // Format AA extension resources based on entries in CMI assignment (when ESN #'s get derived)
     function formatAAExtensionResourcesBasedOnCMI(orgId, cesId, resources) {
 
@@ -169,24 +174,28 @@
             if (!angular.isDefined(resources[i].id) || resources[i].id === null || resources[i].id.length <= 0) {
               // find it in CMI assigned list
               var cmiObjESN = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type == service.NUMBER_FORMAT_ENTERPRISE_LINE && obj.number.replace(/\D/g, '').endsWith(resources[i].getNumber());
+                return obj.type === service.NUMBER_FORMAT_ENTERPRISE_LINE && resources[i].getNumber() && endsWith(obj.number.replace(/\D/g, ''), resources[i].getNumber());
               });
-              if (angular.isDefined(cmiObjESN) && cmiObjESN) {
+              if (angular.isDefined(cmiObjESN) && cmiObjESN.number) {
                 resources[i].setId(cmiObjESN.number);
               } else {
-                resources[i].setId(resources[i].getNumber());
+                if (resources[i].getNumber()) {
+                  resources[i].setId(resources[i].getNumber());
+                }
               }
             }
 
             if (!angular.isDefined(resources[i].number) || resources[i].number === null || resources[i].number.length <= 0) {
               // find it in CMI assigned list
               var cmiObjExtension = _.find(cmiAssignedNumbers, function (obj) {
-                return obj.type == service.NUMBER_FORMAT_EXTENSION && resources[i].getId().replace(/\D/g, '').endsWith(obj.number);
+                return obj.type === service.NUMBER_FORMAT_EXTENSION && resources[i].getId() && endsWith(resources[i].getId().replace(/\D/g, ''), obj.number);
               });
-              if (angular.isDefined(cmiObjExtension) && cmiObjExtension) {
+              if (angular.isDefined(cmiObjExtension) && cmiObjExtension.number) {
                 resources[i].setNumber(cmiObjExtension.number);
               } else {
-                resources[i].setNumber(resources[i].getId());
+                if (resources[i].getId()) {
+                  resources[i].setNumber(resources[i].getId());
+                }
               }
 
             }

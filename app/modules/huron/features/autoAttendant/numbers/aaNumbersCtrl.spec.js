@@ -31,6 +31,10 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
     "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+  }, {
+    "number": "8002578",
+    "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
   }];
 
   var cmiAAAsignment = {
@@ -314,6 +318,33 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       expect(resources.length === 1);
+
+    });
+
+    it('should report error when cannot format extension on assignment', function () {
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      controller.availablePhoneNums[0] = {
+        label: "1234",
+        value: "1234"
+      };
+
+      errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+      spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
+        statusText: "server error",
+        status: 500
+      }));
+
+      controller.addNumber("1234");
+
+      $scope.$apply();
+      $httpBackend.flush();
+
+      expect(errorSpy).toHaveBeenCalled();
 
     });
 

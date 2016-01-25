@@ -14,6 +14,10 @@ describe('Service: AANumberAssignmentService', function () {
     "number": "2578",
     "type": "NUMBER_FORMAT_EXTENSION",
     "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+  }, {
+    "number": "8002578",
+    "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
   }];
 
   var cmiAAAsignment = {
@@ -60,8 +64,7 @@ describe('Service: AANumberAssignmentService', function () {
     it('should correctly format resources based on passed-in list', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("14084744458");
+      resource.setType("externalNumber");
       resource.setNumber("14084744458");
       var resources = [];
       resources.push(resource);
@@ -73,6 +76,9 @@ describe('Service: AANumberAssignmentService', function () {
       });
 
       var formattedResources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, externalNumberList);
+
+      expect(angular.equals(formattedResources[0].id, '+14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '14084744458')).toEqual(true);
     });
 
   });
@@ -82,7 +88,6 @@ describe('Service: AANumberAssignmentService', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType("externalNumber");
-      resource.setId("14084744458");
       resource.setNumber("14084744458");
       var resources = [];
       resources.push(resource);
@@ -110,6 +115,110 @@ describe('Service: AANumberAssignmentService', function () {
 
   });
 
+  describe('formatAAE164ResourcesBasedOnCMI', function () {
+    it('should set external number to same as id worst case if not in CMI call', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType("externalNumber");
+      resource.setId("+14084749999");
+      var resources = [];
+      resources.push(resource);
+
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+        'pattern': '+14084744458',
+        'uuid': '9999999991-id'
+      }, {
+        'pattern': '+8888888881',
+        'uuid': '8888888881-id'
+      }]);
+
+      AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(
+        successSpy,
+        failureSpy
+      );
+
+      $httpBackend.flush();
+
+      var formattedResources = successSpy.calls.mostRecent().args[0];
+      expect(angular.equals(formattedResources[0].id, '+14084749999')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '+14084749999')).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
+  describe('formatAAExtensionResourcesBasedOnCMI', function () {
+    it('should correctly format resource extensions id based on CMI call', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType("directoryNumber");
+      resource.setNumber("2578");
+      var resources = [];
+      resources.push(resource);
+
+      AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI('1', '2', resources).then(
+        successSpy,
+        failureSpy
+      );
+
+      $httpBackend.flush();
+
+      var formattedResources = successSpy.calls.mostRecent().args[0];
+      expect(angular.equals(formattedResources[0].id, '8002578')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '2578')).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
+  describe('formatAAExtensionResourcesBasedOnCMI', function () {
+    it('should correctly format resource extensions number based on CMI call', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType("directoryNumber");
+      resource.setId("8002578");
+      var resources = [];
+      resources.push(resource);
+
+      AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI('1', '2', resources).then(
+        successSpy,
+        failureSpy
+      );
+
+      $httpBackend.flush();
+
+      var formattedResources = successSpy.calls.mostRecent().args[0];
+      expect(angular.equals(formattedResources[0].id, '8002578')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '2578')).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
+  describe('formatAAExtensionResourcesBasedOnCMI', function () {
+    it('should use id for number in worst case that CMI does not have mapping', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType("directoryNumber");
+      resource.setId("8009999");
+      var resources = [];
+      resources.push(resource);
+
+      AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI('1', '2', resources).then(
+        successSpy,
+        failureSpy
+      );
+
+      $httpBackend.flush();
+
+      var formattedResources = successSpy.calls.mostRecent().args[0];
+      expect(angular.equals(formattedResources[0].id, '8009999')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '8009999')).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
   describe('checkAANumberAssignments', function () {
     it('should check all CMI Assigned Auto Attendants', function () {
 
@@ -130,6 +239,28 @@ describe('Service: AANumberAssignmentService', function () {
     });
 
   });
+
+  describe('checkAANumberAssignments', function () {
+    it('should fail promise when checks cannot be made due to failing CMI call', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId(aCe.assignedResources.id);
+      var resources = [];
+      resources.push(resource);
+
+      $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/999/features/autoattendants/000/numbers').respond(404);
+
+      AANumberAssignmentService.checkAANumberAssignments('999', '000', resources, cmiAAAsignments, onlyCMI).then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+      expect(failureSpy).toHaveBeenCalled();
+    });
+
+  });
+
   describe('setAANumberAssignmentWithErrorDetail', function () {
     it('should set AA Number Assignment to one in working', function () {
 
