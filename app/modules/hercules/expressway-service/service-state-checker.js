@@ -49,7 +49,7 @@
     }
 
     function checkUserStatuses(serviceId) {
-      if (serviceId == "squared-fusion-mgmt") {
+      if (serviceId === 'squared-fusion-mgmt') {
         return;
       }
       var summaryForService = _.find(USSService2.getStatusesSummary(), {
@@ -80,7 +80,7 @@
     }
 
     function checkCallServiceConnect(serviceId) {
-      if (serviceId != "squared-fusion-uc") {
+      if (serviceId !== 'squared-fusion-uc') {
         return;
       }
       ServiceDescriptor.services(function (error, services) {
@@ -116,16 +116,15 @@
       });
     }
 
-    function allConnectorsConfigured(cluster, serviceType) {
-      var service = _.find(cluster.services, {
-        service_type: serviceType
-      });
-      if (!service) {
-        return true;
-      }
-      return _.all(service.connectors, function (connector) {
-        return connector.state !== 'not_configured';
-      });
+    function allConnectorsConfigured(cluster, connectorType) {
+      return _.chain(cluster.connectors)
+        .filter(function (connector) {
+          return connector.connectorType === connectorType;
+        })
+        .all(function (connector) {
+          return connector.runningState !== 'not_configured';
+        })
+        .value();
     }
 
     return {
