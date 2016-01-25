@@ -16,10 +16,11 @@ describe('Remove partner trials from partner org page', function () {
   });
 
   it('should remove all trials', function () {
-    for ( var i = 0; i < 10; i++ )
+    for ( var i = 0; i < 1; i++ )
     {
       navigation.clickCustomers();
       utils.expectIsNotDisplayed(element(by.css('.icon-spinner')));
+//      utils.click(element(by.css('.ui-grid-icon-up-dir')));
 
       element.all(by.css('.ui-grid .ui-grid-row')).each(function (elem, index) {
         elem.getText().then(function (text) {
@@ -32,10 +33,11 @@ describe('Remove partner trials from partner org page', function () {
                 var result=patt.exec(inner);
                 if ( result.length == 2 )
                 {
-                  console.log('Removing... ' + id[0] + ' - ' + result[1] );
-                  if ( result[1] === "ABC1" )
+                  //if ( id[0] === "ABC1" )
                   {
-                    //deleteTrialUtils.deleteOrg(result[1], accessToken);
+                    deleteTrialUtils.deleteOrg(result[1], accessToken).then( function() {
+                      console.log('Removed ' + id[0] + ' - ' + result[1] + '\n' );
+                    });
                   }
                 }
               });

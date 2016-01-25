@@ -66,10 +66,10 @@ exports.deleteOrg = function (orgId, token) {
     defer.reject('Prevent delete of a blacklisted orgId: ' + orgId);
   } else {
     utils.sendRequest(options).then(function () {
-      // console.log('org deleted successfully: ', orgId);
+      console.log('org deleted successfully: ', orgId);
       defer.fulfill(200);
     }, function (data) {
-      // console.log('org deletion failed: ', orgId, data);
+      console.log('org deletion failed: ', orgId, data);
       defer.fulfill(200);
     });
   }
