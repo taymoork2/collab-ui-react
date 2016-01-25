@@ -194,7 +194,7 @@
 
     }
 
-    function createCE(recNum) {
+    function createCE() {
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
 
@@ -259,7 +259,7 @@
       AACommonService.resetFormStatus();
 
       if (isNewRecord) {
-        createCE(recNum);
+        createCE();
       } else {
         // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
         // Try a complete save here and report error details
