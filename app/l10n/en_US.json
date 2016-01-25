@@ -1139,7 +1139,8 @@
       "newVersion": "New Version",
       "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
       "upgrade": "Upgrade",
-      "upgradingHost": "Upgrading {{host}} to {{version}}"
+      "upgradingHost": "Upgrading {{host}} to {{version}}",
+      "upgradeDone": "Upgrade completed!"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",

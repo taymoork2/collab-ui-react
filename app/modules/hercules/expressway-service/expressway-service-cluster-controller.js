@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
+  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService, $timeout) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
@@ -11,10 +11,12 @@
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
+    var wasUpgrading = false;
+    var promise;
     $scope.$watch(function () {
       return ClusterService.getClustersById(vm.clusterId);
     }, function (newValue, oldValue) {
-      vm.cluster = ClusterService.getClustersById(vm.clusterId);
+      vm.cluster = newValue;
       // for shorter 'variables' in the HTML
       vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
       var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
@@ -34,9 +36,21 @@
           numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
           upgradingHostname: _.chain(vm.clusterAggregates.hosts)
             .find('upgradeState', 'upgrading')
-            .value().hostname
+            .value()
+            .hostname
         };
       }
+
+      // If the upgrade is finished, display the success status during 2s
+      vm.upgradeJustFinished = wasUpgrading && !vm.softwareUpgrade.isUpgrading;
+      if (vm.upgradeJustFinished) {
+        promise = $timeout(function () {
+          vm.showUpgradeProgress = false;
+        }, 2000);
+      }
+      vm.showUpgradeProgress = vm.softwareUpgrade.isUpgrading || vm.upgradeJustFinished;
+
+      wasUpgrading = vm.softwareUpgrade.isUpgrading;
     }, true);
 
     vm.upgrade = function () {
@@ -61,6 +75,10 @@
           .then(function () {
             // TODO: show a fake progressbar
           }, XhrNotificationService.notify);
+      });
+
+      $scope.$on('$destroy', function () {
+        $timeout.cancel(promise);
       });
     };
   }

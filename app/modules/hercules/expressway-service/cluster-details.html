@@ -19,21 +19,23 @@
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
     <table>
       <tbody>
-      <tr ng-if="!expresswayClusterDetails.softwareUpgrade.isUpgrading">
+      <tr ng-if="!expresswayClusterDetails.showUpgradeProgress">
         <td translate="hercules.softwareUpgrade.currentVersion"></td>
         <td><span>{{expresswayClusterDetails.softwareUpgrade.provisionedVersion}}</span></td>
       </tr>
-      <tr ng-if="expresswayClusterDetails.softwareUpgrade.isUpgrading">
+      <tr ng-if="expresswayClusterDetails.showUpgradeProgress" class="software-upgrade-container">
         <td colspan="2">
           <div class="progressbar-info">
-            <span class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: expresswayClusterDetails.upgradeDetails.upgradingHostname, version: expresswayClusterDetails.softwareUpgrade.provisionedVersion}"></span>
+            <span ng-show="!expresswayClusterDetails.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: expresswayClusterDetails.upgradeDetails.upgradingHostname, version: expresswayClusterDetails.softwareUpgrade.provisionedVersion}"></span>
+            <span ng-if="expresswayClusterDetails.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
             <span class="progressbar-progress">{{expresswayClusterDetails.upgradeDetails.numberOfUpsmthngHosts}} / {{expresswayClusterDetails.upgradeDetails.numberOfHosts}}</span>
           </div>
-          <progressbar animate="true" value="expresswayClusterDetails.upgradeDetails.numberOfUpsmthngHosts" max="expresswayClusterDetails.upgradeDetails.numberOfHosts"></progressbar>
+          <progressbar ng-show="!expresswayClusterDetails.upgradeJustFinished" animate="true" value="expresswayClusterDetails.upgradeDetails.numberOfUpsmthngHosts" max="expresswayClusterDetails.upgradeDetails.numberOfHosts"></progressbar>
+          <progressbar ng-show="expresswayClusterDetails.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
         </td>
       </tr>
       </tr>
-      <tr ng-if="expresswayClusterDetails.softwareUpgrade.isUpgradeAvailable">
+      <tr ng-if="!expresswayClusterDetailsshowUpgradeProgress && expresswayClusterDetails.softwareUpgrade.isUpgradeAvailable">
         <td translate="hercules.softwareUpgrade.newVersion"></td>
         <td><span>{{expresswayClusterDetails.softwareUpgrade.availableVersion}}</span></td>
       </tr>

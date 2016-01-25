@@ -447,6 +447,7 @@
           return addRunningStateToConnectors(clusters);
         })
         .then(function (clusters) {
+          console.log('clusters', clusters);
           return _.indexBy(clusters, 'id');
         })
         .then(_.partial(CsdmCacheUpdater.update, clusterCache));
@@ -508,7 +509,7 @@
 
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub, {
-      delay: 5000
+      delay: 3000
     });
 
     return {
