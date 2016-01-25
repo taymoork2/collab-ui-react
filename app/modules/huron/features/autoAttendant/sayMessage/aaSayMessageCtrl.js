@@ -226,8 +226,6 @@
             var headerSayAction = getSayAction(sayHeader);
             if (angular.isDefined(headerSayAction)) {
               vm.actionEntry.setVoice(headerSayAction.getVoice());
-            } else {
-              vm.actionEntry.setVoice(sayHeader.getVoice());
             }
           }
           return;
