@@ -106,13 +106,7 @@
       angular.forEach(carriers, function (carrier) {
         var promise = TerminusCarrierService.get({
           carrierId: carrier.uuid
-        }).$promise.then(function (carrierGet) {
-          carrier.country = carrierGet.country;
-          carrier.countryCode = carrierGet.countryCode;
-          carrier.apiExists = carrierGet.apiExists;
-          carrier.vendor = carrierGet.vendor;
-          return carrier;
-        });
+        }).$promise;
         promises.push(promise);
       });
       return $q.all(promises);
