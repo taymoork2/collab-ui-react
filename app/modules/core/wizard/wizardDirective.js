@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;

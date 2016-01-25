@@ -168,12 +168,14 @@ angular.module('Core')
         },
 
         sparkDomainManagementUrl: {
-          dev: 'http://171.68.20.80:8080/atlas-server/admin/api/v1/',
-          prod: ''
+          dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
         },
 
         sparkDomainCheckUrl: {
-          dev: '.koalabait.com',
+          dev: '.wbx2.com',
+          integration: '.wbx2.com',
           prod: '.ciscospark.com'
         },
 

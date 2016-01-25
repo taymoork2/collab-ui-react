@@ -1,38 +1,47 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .service('SparkDomainManagementService', ['$rootScope', '$http', 'Config', 'Log', 'Authinfo', '$translate',
-    function ($rootScope, $http, Config, Log, Authinfo, $translate) {
-      var sparksUrl = Config.getSparkDomainManagementUrl() + 'organization/' + Authinfo.getOrgId() + '/settings/domain';
+  angular.module('Core')
+    .service('SparkDomainManagementService', sparkDomainManagementService);
 
-      return {
-        checkDomainAvailability: function (payload, callback) {
-          if (payload) {
-            $http.post(sparksUrl, payload)
-              .success(function (data, status) {
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                callback(data, status);
-              });
-          } else {
-            Log.error('no payload present for Spark Domain Management Service');
-          }
-        },
+  /* @ngInject */
+  function sparkDomainManagementService($http, Config, Authinfo, $q) {
+    var sparksUrl = Config.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
+    var service = {
+      checkDomainAvailability: checkDomainAvailability,
+      addSipUriDomain: addSipUriDomain
+    };
 
-        addSipUriDomain: function (payload, callback) {
-          if (payload) {
-            $http.post(sparksUrl, payload)
-              .success(function (data, status) {
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                callback(data, status);
-              });
-          } else {
-            Log.error('no payload present for Spark Domain Management Service');
-          }
-        }
+    return service;
+
+    function checkDomainAvailability(domain) {
+      if (!domain || domain === '') {
+        return $q.reject('A Sip Uri Domain input value must be entered');
+      }
+
+      var domainName = domain + Config.getSparkDomainCheckUrl();
+      var payload = {
+        'name': domainName,
+        'isVerifyDomainOnly': true
       };
+
+      return $http.post(sparksUrl, payload, {
+        caching: true
+      });
     }
-  ]);
+
+    function addSipUriDomain(domain) {
+      if (!domain || domain === '') {
+        return $q.reject('A Sip Uri Domain input value must be entered');
+      }
+
+      var domainName = domain + Config.getSparkDomainCheckUrl();
+      var payload = {
+        'name': domainName,
+        'isVerifyDomainOnly': false
+      };
+
+      return $http.post(sparksUrl, payload);
+    }
+  }
+})();
