@@ -419,6 +419,7 @@
                 index.orgName = customer.label;
                 index.numCalls = parseInt(index.details.numCalls);
                 index.totalActivity = parseInt(index.details.totalActivity);
+                index.sparkMessages = index.totalActivity - index.numCalls;
                 index.userId = index.details.userId;
                 index.userName = index.details.userName;
               }
