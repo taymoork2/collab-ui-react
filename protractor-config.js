@@ -131,6 +131,8 @@ exports.config = {
     var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
     var HuronFeatures = require('./test/e2e-protractor/pages/huronFeatures.page.js');
     var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
+    var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
+    var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe('Protractor Demo App', function () {
   it('should redirect to digitalriver', function () {
     //login.login('pbr-admin', '#/drLoginForward');

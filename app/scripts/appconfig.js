@@ -45,7 +45,7 @@ angular
               templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
               controller: 'drLoginForwardController'
             }
-          } 
+          }
         })
         .state('createAccount', {
           url: '/createAccount',
