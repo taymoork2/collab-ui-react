@@ -211,3 +211,20 @@ Special stuff currently used for out own mail input field...
     margin: 5px 0;
   }
 }
+
+.hercules-sip-settings {
+  /*.tooltip {
+    width: 400px;
+  }*/
+  .tooltip {
+    width: 100%;
+  }
+  .sip-domain-tooltip {
+    text-align: left;
+    text-wrap: avoid;
+    width: 300px;
+    list-style-type: none;
+    text-align: left;
+    height: 100%;
+  }
+}

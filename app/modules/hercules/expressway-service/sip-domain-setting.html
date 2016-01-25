@@ -1,5 +1,18 @@
 <h5 translate="hercules.settings.call.sipDomainHeading"></h5>
-<p translate="hercules.settings.call.sipDomain"></p>
+<div class="hercules-settings-table">
+  <table>
+    <tbody>
+    <tr>
+      <td><p translate="hercules.settings.call.sipDomain"></p></td>
+      <td><i
+        tooltip-html-unsafe="<ul class='sip-domain-tooltip'><li><i class='icon'></i>{{'hercules.settings.call.sipDomainInformationUl1' | translate}}</li><li><i class='icon icon-check'></i>{{'hercules.settings.call.sipDomainInformationUl2' | translate}}</li><li><i class='icon icon-check'></i>{{'hercules.settings.call.sipDomainInformationUl3' | translate}}</li><li><i class='icon icon-check'></i>{{'hercules.settings.call.sipDomainInformationUl2' | translate}}</li></ul>"
+        tooltip-placement="right" tooltip-trigger="mouseenter"
+        class="icon icon-information"></i></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
 <form ng-submit="expresswayServiceSettings.updateSipDomain()">
   <input type="text"
          ng-disabled="expresswayServiceSettings.savingSip"

@@ -1128,16 +1128,19 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
-        "sipDomainHeading": "SIP Domain",
-        "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
-        "sipDomainPlaceholder": "Enter a single domain or subdomain"
+        "sipDomainHeading": "SIP Destination",
+        "sipDomain": "We recommend that you not use a single IP address/hostname when multiple Expressway nodes are configured to accept calls from the cloud.  Instead, use a domain or a subdomain name paired with a service SRV record to allow for the most flexibility and high availability for the service.",
+        "sipDomainInformationUl1": "Example values:",
+        "sipDomainInformationUl2": "Domain or subdomain name configured for Service SRV Record",
+        "sipDomainInformationUl3": "Expressway-E Hostname:port",
+        "sipDomainInformationUl4": "Expressway-E IP:port",
+        "sipDomainPlaceholder": "example.com:5060"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
