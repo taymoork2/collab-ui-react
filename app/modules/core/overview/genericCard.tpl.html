@@ -17,17 +17,17 @@
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
         ng-if="card.enabled">
   <span class="footer-content">
-<span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
+  <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
   <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
     <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
     <span>{{card.levelText}}</span>
   </a>
   </span>
   <span class="footer-icons">
-<a ng-href="{{card.settingsUrl}}">
-  &nbsp;<i class="icon icon-tools" ng-if="card.settingsUrl"></i>
-</a>
-</span>
+    <a ng-href="{{card.settingsUrl}}" ng-if="card.settingsUrl">
+      &nbsp;<i class="icon icon-tools"></i>
+    </a>
+  </span>
 </footer>
 <section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name"
          ng-if="card.enabled">
