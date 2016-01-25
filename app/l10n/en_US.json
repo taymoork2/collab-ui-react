@@ -989,7 +989,8 @@
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
-      "status-title": "Service Status"
+      "status-title": "Service Status",
+      "add-resource-button": "Add Resource"
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",

@@ -1,0 +1,21 @@
+<div class="redirect-target">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title">Register a New Expressway</h5>
+  </div>
+  <div class="modal-body">
+    <p>Enter the asdlk......</p>
+    <input type="text" placeholder="Enter the Expressway hostname" ng-model="redirectTarget.hostName">
+  </div>
+  <div class="modal-footer">
+    <button class="btn pull-right" ng-click="$close()">
+      <span translate="common.close"></span>
+    </button>
+    <button class="btn pull-right register-button"
+            ng-click="redirectTarget.addRedirectTargetClicked(redirectTarget.hostName)">
+      <span>Add</span>
+    </button>
+  </div>
+</div>
