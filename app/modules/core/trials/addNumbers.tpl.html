@@ -14,7 +14,7 @@
 
     <div class="modal-footer" ng-if="didAdd.fromEditTrial">
       <button class="btn" ng-click="didAdd.backtoEditTrial()" translate="common.back"></button>
-      <button class="btn btn--primary" id="startTrial" cs-btn loading="didAdd.startTrialLoad" ng-click="didAdd.editTrial()">
+      <button class="btn btn--primary" id="startTrial" cs-btn loading="didAdd.startTrialLoad" ng-disabled="!didAdd.submitBtnStatus" ng-click="didAdd.editTrial()">
         <span translate="partnerHomePage.startTrial"></span>
       </button>
     </div>
@@ -24,7 +24,7 @@
         translate="common.back">
       </button>
       <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.startTrialButtonLoad"
-        ng-click="trial.nextStep(didAdd.startTrial)">
+        ng-disabled="!didAdd.submitBtnStatus" ng-click="trial.nextStep(didAdd.startTrial)">
           <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
           <span ng-if="trial.hasNextStep()" translate="common.next"></span>
         </span>

@@ -63,7 +63,7 @@
         }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
-        type: 'danger'
+        type: 'negative'
       }).result.then(function () {
         return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {

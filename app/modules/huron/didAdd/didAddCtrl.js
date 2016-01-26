@@ -6,34 +6,25 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
     var vm = this;
     var firstValidDid = false;
-    var editMode = false;
+    var editMode = !!$stateParams.editMode;
 
     vm.invalidcount = 0;
-    vm.submitBtnStatus = false;
-    vm.deleteCount = 0;
     vm.unchangedCount = 0;
-
-    vm.deletedCount = 0;
     vm.addedCount = 0;
     vm.processing = false;
-    vm.retrievingNumbers = false;
-    vm.errors = [];
 
-    vm.didObjectsFromCmi = [];
-    vm.unchangedDids = [];
-    vm.deletedDids = [];
-    vm.newDids = [];
+    var errors = [];
+    var didPatternsFromCmi = [];
+    var unchangedDids = [];
+    var newDids = [];
 
     vm.addNumbers = true;
-    vm.deleteNumbers = false;
-
     vm.addSuccess = false;
     vm.unsavedTokens = [];
 
-    vm.deletedNumbers = '';
     vm.tokenfieldid = 'didAddField';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
     vm.fromEditTrial = $stateParams.fromEditTrial;
@@ -49,61 +40,15 @@
       beautify: false
     };
     vm.tokenmethods = {
-      createtoken: function (e) {
-        var tokenNumber = e.attrs.label;
-        e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
-        e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
-      },
-      createdtoken: function (e) {
-        if (!validateDID(e.attrs.value)) {
-          angular.element(e.relatedTarget).addClass('invalid');
-          vm.invalidcount++;
-        } else {
-          if (isDidAlreadyPresent(e.attrs.value)) {
-            angular.element(e.relatedTarget).addClass('invalid');
-          }
-          if (!editMode && !firstValidDid) {
-            firstValidDid = true;
-            LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1, null);
-          }
-        }
-        // add to service after validation/duplicate checks
-        DidService.addDid(e.attrs.value);
-        setPlaceholderText("");
-        vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
-      },
-      removedtoken: function (e) {
-        DidService.removeDid(e.attrs.value);
-        if (!validateDID(e.attrs.value)) {
-          vm.invalidcount--;
-        }
-        vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
-
-        $timeout(function () {
-          var tmpDids = DidService.getDidList().slice();
-          // reset invalid and list before setTokens
-          vm.invalidcount = 0;
-          DidService.clearDidList();
-          $('#didAddField').tokenfield('setTokens', tmpDids.toString());
-        });
-
-        //If this is the last token, put back placeholder text.
-        var tokenElement = $("div", ".did-input").children(".token");
-        if (tokenElement.length === 0) {
-          setPlaceholderText(vm.tokenplacehoder);
-        }
-      },
-      editedtoken: function (e) {
-        DidService.removeDid(e.attrs.value);
-        if (!validateDID(e.attrs.value)) {
-          vm.invalidcount--;
-        }
-      }
+      createtoken: createToken,
+      createdtoken: createdToken,
+      removedtoken: removedToken,
+      edittoken: editToken
     };
+
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.checkForDuplicates = checkForDuplicates;
     vm.submit = submit;
-    vm.confirmSubmit = confirmSubmit;
     vm.goBackToAddNumber = goBackToAddNumber;
     vm.startTrial = startTrial;
     vm.editTrial = editTrial;
@@ -112,13 +57,64 @@
     vm.backtoEditTrial = backtoEditTrial;
     vm.currentOrg = $stateParams.currentOrg;
     vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
-    vm.launchCustomerPortal = launchCustomerPortal;
-    vm.setupPstnService = setupPstnService;
 
-    if ($stateParams.editMode === undefined || $stateParams.editMode === null) {
-      editMode = false;
-    } else {
-      editMode = $stateParams.editMode;
+    activate();
+    initSubmitButtonStatus();
+
+    function initSubmitButtonStatus() {
+      // submit should init enabled for trial add/edit
+      // submit should init disabled for add numbers dialog
+      vm.submitBtnStatus = !editMode;
+    }
+
+    function createToken(e) {
+      var tokenNumber = e.attrs.label;
+      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
+      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+    }
+
+    function createdToken(e) {
+      if (!validateDID(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
+        angular.element(e.relatedTarget).addClass('invalid');
+        vm.invalidcount++;
+      } else {
+        if (!editMode && !firstValidDid) {
+          firstValidDid = true;
+          LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1, null);
+        }
+      }
+      // add to service after validation/duplicate checks
+      DidService.addDid(e.attrs.value);
+      setPlaceholderText("");
+      vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
+    }
+
+    function removedToken(e) {
+      DidService.removeDid(e.attrs.value);
+
+      $timeout(reinitTokens);
+
+      //If this is the last token, put back placeholder text.
+      var tokenElement = $("div", ".did-input").children(".token");
+      if (tokenElement.length === 0) {
+        setPlaceholderText(vm.tokenplacehoder);
+      }
+    }
+
+    function editToken(e) {
+      DidService.removeDid(e.attrs.value);
+      if (angular.element(e.relatedTarget).hasClass('invalid')) {
+        vm.invalidcount--;
+      }
+    }
+
+    function reinitTokens() {
+      var tmpDids = DidService.getDidList();
+      // reset invalid and list before setTokens
+      vm.invalidcount = 0;
+      DidService.clearDidList();
+      initSubmitButtonStatus();
+      $('#didAddField').tokenfield('setTokens', tmpDids.toString());
     }
 
     function setDidValidationCountry(carrierOrDialPlanInfo) {
@@ -163,17 +159,12 @@
                   country: "us"
                 });
               });
-          }).then(function () {
+          })
+          .then(reinitTokens)
+          .then(function () {
             return ExternalNumberPool.getAll(customerOrgId);
           }).then(function (results) {
-            if (angular.isArray(results)) {
-              $timeout(function () {
-                angular.forEach(results, function (did) {
-                  addToTokenField(did.pattern);
-                });
-                vm.didObjectsFromCmi = results;
-              });
-            }
+            didPatternsFromCmi = _.map(results, 'pattern');
           });
       } else {
         // if customerId is not defined, get country info from partner/reseller carrier(s)
@@ -187,45 +178,21 @@
             setDidValidationCountry({
               country: "us"
             });
-          }).then(function () {
-            var dids = DidService.getDidList();
-            $timeout(function () {
-              angular.forEach(dids, function (did) {
-                addToTokenField(did);
-              });
-            }, 100);
-          });
+          }).then(reinitTokens);
       }
     }
 
-    activate();
-    ////////////
-
     function isDidAlreadyPresent(input) {
-      var dids = DidService.getDidList();
-      return dids.indexOf(input) >= 0;
+      return _.includes(DidService.getDidList(), input);
     }
 
     function checkForDuplicates() {
       var dids = DidService.getDidList();
-      var tmpDids = dids.slice();
-      var i = 0;
-      while (tmpDids.length > 0) {
-        var did = tmpDids.splice(0, 1);
-        if (tmpDids.indexOf(String(did)) >= 0) {
-          return false;
-        }
-        i++;
-      }
-      return true;
+      return _.uniq(dids).length === dids.length;
     }
 
     function setPlaceholderText(text) {
       $('#didAddField-tokenfield').attr('placeholder', text);
-    }
-
-    function addToTokenField(pattern) {
-      $('#didAddField').tokenfield('createToken', pattern);
     }
 
     function getInputTokens() {
@@ -254,91 +221,40 @@
     function populateDidArrays() {
       var didList = getDIDList();
 
-      vm.tokenObjs = getInputTokens();
-      if (angular.isDefined(vm.tokenObjs) && angular.isArray(vm.tokenObjs) && vm.tokenObjs.length != didList.length) {
-        didList = [];
-        angular.forEach(vm.tokenObjs, function (input, index) {
-          didList.push(input.value);
+      var tokenObjs = getInputTokens();
+      if (_.isArray(tokenObjs) && tokenObjs.length != didList.length) {
+        didList = _.map(tokenObjs, 'value');
+      }
+
+      if (didPatternsFromCmi.length > 0) {
+        // remove patterns that already exist in CMI
+        unchangedDids = _.remove(didList, function (didPattern) {
+          return _.includes(didPatternsFromCmi, didPattern);
         });
       }
 
-      if (vm.didObjectsFromCmi.length > 0) {
-        //look for DIDs that need to be removed
-        var dids = vm.didObjectsFromCmi.slice();
-        angular.forEach(vm.didObjectsFromCmi, function (didObj, index) {
-          if (!_.contains(didList, didObj.pattern)) {
-            dids.splice(index);
-            vm.deletedDids.push(didObj);
-          } else {
-            didList.splice(didList.indexOf(didObj.pattern), 1);
-          }
-        });
-
-        //Add new dids
-        if (didList.length > 0) {
-          vm.newDids = didList.slice();
-        }
-
-        //Adding already existing dids
-        vm.unchangedDids = dids.slice();
-
-      } else if (didList.length > 0) {
-        vm.newDids = didList.slice();
-      }
-    }
-
-    function restoreDeletedDids() {
-      _.forEach(vm.deletedDids, function (deletedDid) {
-        addToTokenField(deletedDid.pattern);
-      });
-      vm.deletedDids = [];
-      vm.deletedNumbers = [];
-    }
-
-    function confirmSubmit(customerId) {
-      populateDidArrays();
-
-      vm.unchangedCount = vm.unchangedDids.length;
-      vm.addNumbers = false;
-
-      if (vm.deletedDids.length > 0) {
-        vm.deleteCount = vm.deletedDids.length;
-        vm.deletedNumbers = formatDidList(vm.deletedDids);
-        vm.deleteNumbers = true;
-      } else {
-        submit(customerId);
-      }
+      // Add new dids
+      newDids = didList;
     }
 
     function submit(customerId) {
-      vm.deleteNumbers = false;
+      populateDidArrays();
+      vm.unchangedCount = _.size(unchangedDids);
+      vm.addNumbers = false;
       vm.processing = true;
 
       var promises = [];
-      if (vm.deletedDids.length > 0) {
-        _.forEach(vm.deletedDids, function (delDid) {
-          var deletePromise = ExternalNumberPool.deletePool(customerId ? customerId : vm.currentOrg.customerOrgId, delDid.uuid).then(function (response) {
-            vm.deletedCount++;
-          }).catch(function (response) {
-            vm.errors.push({
-              pattern: this.pattern,
-              message: Notification.processErrorResponse(response)
-            });
-          }.bind(delDid));
-          promises.push(deletePromise);
-        });
-      }
 
-      if (vm.newDids.length > 0) {
-        _.forEach(vm.newDids, function (newDid) {
+      if (newDids.length > 0) {
+        _.forEach(newDids, function (newDid) {
           var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function (response) {
             vm.addedCount++;
           }).catch(function (response) {
-            vm.errors.push({
-              pattern: this,
+            errors.push({
+              pattern: newDid,
               message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response)
             });
-          }.bind(newDid));
+          });
           promises.push(addPromise);
         });
       }
@@ -348,9 +264,9 @@
         vm.processing = false;
         vm.addSuccess = true;
 
-        if (vm.errors.length > 0) {
+        if (errors.length > 0) {
           var errorMsgs = [];
-          _.forEach(vm.errors, function (error) {
+          _.forEach(errors, function (error) {
             errorMsgs.push("Number: " + error.pattern + " " + error.message);
           });
           Notification.notify(errorMsgs, 'error');
@@ -360,8 +276,6 @@
 
     function goBackToAddNumber() {
       vm.addNumbers = true;
-      vm.deleteNumbers = false;
-      restoreDeletedDids();
     }
 
     function backtoEditTrial() {
@@ -373,25 +287,6 @@
 
     function backtoStartTrial() {
       $state.go('trialAdd.info');
-    }
-
-    function setupPstnService() {
-      if (angular.isDefined($scope.trial)) {
-        $state.go('pstnSetup', {
-          customerId: $scope.trial.model.customerOrgId,
-          customerName: $scope.trial.model.customerName
-        });
-      }
-    }
-
-    function formatDidList(didList) {
-      var formattedDids = [];
-      if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
-        _.forEach(didList, function (number) {
-          formattedDids.push(TelephoneNumberService.getDIDLabel(number.pattern));
-        });
-      }
-      return formattedDids;
     }
 
     function startTrial(customerOrgId) {
@@ -449,20 +344,9 @@
       }
     }
 
-    function launchCustomerPortal() {
-      if (angular.isDefined($scope.trial)) {
-        $window.open($state.href('login_swap', {
-          customerOrgId: $scope.trial.model.customerOrgId,
-          customerOrgName: $scope.trial.model.customerName
-        }));
-      }
-    }
-
     // We want to capture the modal close event and clear didList from service.
     if ($state.modal) {
-      $state.modal.result.finally(function () {
-        DidService.clearDidList();
-      });
+      $state.modal.result.finally(DidService.clearDidList);
     }
 
   }
