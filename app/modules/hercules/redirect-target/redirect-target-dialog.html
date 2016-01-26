@@ -3,19 +3,39 @@
     <button type="button" class="close" ng-click="$close()">
       <span class="sr-only" translate="common.close"></span>
     </button>
-    <h5 class="modal-title">Register a New Expressway</h5>
+    <h5 class="modal-title"><span translate="hercules.redirect-target-dialog.hostname-placeholder"></span></h5>
   </div>
-  <div class="modal-body">
-    <p>Enter the asdlk......</p>
-    <input type="text" placeholder="Enter the Expressway hostname" ng-model="redirectTarget.hostName">
+  <form name="inputHostNameForm">
+    <div class="modal-body" ng-hide="redirectTarget.enableRedirectToTarget">
+      <strong><span translate="hercules.redirect-target-dialog.grant-registration-header"></span></strong>
+
+      <p><span
+        translate="hercules.redirect-target-dialog.instructions-grant-registration"></span></p>
+      <input type="text" placeholder="{{'hercules.redirect-target-dialog.hostname-placeholder' | translate}} "
+             ng-model="redirectTarget.hostName" required>
+  </div>
+  </form>
+  <div class="modal-body" ng-show="redirectTarget.enableRedirectToTarget">
+    <h3><span translate="hercules.redirect-target-dialog.grant-registration-success-header"></span></h3>
+    <strong>{{redirectTarget.hostName}}</strong>
+
+    <p><span
+      translate="hercules.redirect-target-dialog.grant-success-information"></span></p>
   </div>
   <div class="modal-footer">
     <button class="btn pull-right" ng-click="$close()">
       <span translate="common.close"></span>
     </button>
-    <button class="btn pull-right register-button"
+    <button class="btn pull-right activate-button"
+            ng-hide="redirectTarget.enableRedirectToTarget"
+            ng-disabled="inputHostNameForm.$invalid"
             ng-click="redirectTarget.addRedirectTargetClicked(redirectTarget.hostName)">
-      <span>Add</span>
+      <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    </button>
+    <button class="btn pull-right register-button"
+            ng-show="redirectTarget.enableRedirectToTarget"
+            ng-click="redirectTarget.redirectToTargetAndCloseWindowClicked(redirectTarget.hostName)">
+      <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
     </button>
   </div>
 </div>

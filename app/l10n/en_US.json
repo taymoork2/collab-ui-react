@@ -990,7 +990,18 @@
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add Resource"
+      "add-resource-button": "Add Resource",
+      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+    },
+    "redirect-target-dialog": {
+      "title": "Register a New Expressway",
+      "instructions-grant-registration": "Enter the hostname of the Expressway that you want to grant registration to the cloud and click Activate Resource",
+      "hostname-placeholder": "Enter the Expressway hostname",
+      "activate-resource-button": "Activate Resource",
+      "register-resource-button": "Register Resource",
+      "grant-registration-header": "Grant Registration",
+      "grant-registration-success-header": "Cloud registration has been granted for:",
+      "grant-success-information": "The registration is granted for 1 hour. <br> Click Register Resource, login on your Expressway click Register."
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",

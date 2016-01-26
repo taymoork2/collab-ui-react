@@ -29,18 +29,14 @@ fdescribe('RedirectTargetController', function () {
   });
 
   it('should close the popup after having done the redirect', function () {
-    controller.addRedirectTargetClicked("hostname");
-    expect(redirectTargetPromise.then.callCount).toBe(1);
-    expect(modalInstanceMock.close.callCount).toBe(0);
-    redirectTargetPromise.then.callArg(0);
+    controller.redirectToTargetAndCloseWindowClicked("hostname");
     expect(modalInstanceMock.close.callCount).toBe(1);
   });
 
   it('should open a new window with hostname address', function () {
-    controller.addRedirectTargetClicked("balle");
-    redirectTargetPromise.then.callArg(0);
+    controller.redirectToTargetAndCloseWindowClicked("hostname");
     expect(windowMock.open.callCount).toBe(1);
-    expect(windowMock.open.getCall(0).args[0]).toBe("https://balle");
+    expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname?action=register");
   });
 });
 
