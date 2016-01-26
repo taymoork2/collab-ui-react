@@ -91,18 +91,6 @@
     .pointer {
       cursor: pointer;
     }
-    .amExportButton {
-      left: calc(95% + .1rem);
-      ul, .export-main, .export-list {
-        overflow: visible;
-      }
-      .export-main {
-        padding-bottom: rem-calc(5);
-        ul {
-          padding: 0;
-        }
-      }
-    }
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
       font-size: rem-calc(15);
@@ -114,6 +102,18 @@
         font-size: rem-calc(18);
         color: $brand-success;
         text-align: left;
+      }
+    }
+  }
+  .amExportButton {
+    left: calc(95% + .1rem);
+    ul, .export-main, .export-list {
+      overflow: visible;
+    }
+    .export-main {
+      padding-bottom: rem-calc(5);
+      ul {
+        padding: 0;
       }
     }
   }

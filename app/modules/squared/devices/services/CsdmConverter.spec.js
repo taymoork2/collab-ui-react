@@ -297,6 +297,37 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
+  describe("lastConnectionTime", function () {
+    it('when long ago', function () {
+      var arr = [{
+        status: {
+          lastConnectionTime: '2015-01-09T08:00:00Z',
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 11) == "Jan 9, 2015").toBeTruthy();
+    });
+
+    it('when today', function () {
+      var arr = [{
+        status: {
+          lastConnectionTime: new Date(),
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 8) == "Today at").toBeTruthy();
+    });
+
+    it('when null', function () {
+      var arr = [{
+        status: {
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime).toBeFalsy();
+    });
+  });
+
   describe("remote support user", function () {
     it('rsuKey is taken from remoteSupportUser on device', function () {
       var token = 'this_is_a_very_secret_token';

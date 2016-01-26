@@ -5,16 +5,16 @@
     "addressparser": "~0.1.1",
     "alertify.js": "~0.3.11",
     "amcharts3": "~3.18.5",
-    "angular": "=1.4.5",
-    "angular-animate": "=1.4.5",
+    "angular": "=1.4.6",
+    "angular-animate": "=1.4.6",
     "angular-cookie": "~4.0.2",
-    "angular-cookies": "=1.4.5",
+    "angular-cookies": "=1.4.6",
     "angular-dialog-service": "~3.1.0",
     "angular-libphonenumber": "~0.0.7",
-    "angular-resource": "=1.4.5",
-    "angular-route": "=1.4.5",
-    "angular-sanitize": "=1.4.5",
-    "angular-messages": "=1.4.5",
+    "angular-resource": "=1.4.6",
+    "angular-route": "=1.4.6",
+    "angular-sanitize": "=1.4.6",
+    "angular-messages": "=1.4.6",
     "angular-translate": "~2.8.0",
     "angular-translate-loader-static-files": "~2.8.0",
     "angular-translate-interpolation-messageformat": "~2.8.0",
@@ -53,15 +53,15 @@
     "parse-address-bobbr": ""
   },
   "devDependencies": {
-    "angular-mocks": "=1.4.5",
-    "angular-scenario": "=1.4.5",
+    "angular-mocks": "=1.4.6",
+    "angular-scenario": "=1.4.6",
     "sinon-ng": "~0.1.2",
     "bardjs": "~0.1.8",
     "jasmine-sinon": "~0.4.0"
   },
   "resolutions": {
-    "angular-sanitize": "=1.4.5",
-    "angular": "=1.4.5",
+    "angular-sanitize": "=1.4.6",
+    "angular": "=1.4.6",
     "lodash": "~3.10.1",
     "bootstrap": "~3.1.1"
   }

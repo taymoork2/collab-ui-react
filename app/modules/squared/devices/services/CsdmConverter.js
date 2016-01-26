@@ -17,6 +17,7 @@ angular.module('Squared').service('CsdmConverter',
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
       this.isOnline = getIsOnline(obj);
+      this.lastConnectionTime = getLastConnectionTime(obj);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
@@ -313,6 +314,11 @@ angular.module('Squared').service('CsdmConverter',
 
     function getIsOnline(obj) {
       return (obj.status || {}).connectionStatus == 'CONNECTED';
+    }
+
+    function getLastConnectionTime(obj) {
+      moment.localeData(moment.locale())._calendar.sameElse = 'lll';
+      return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
     }
 
     function getReadableState(obj) {

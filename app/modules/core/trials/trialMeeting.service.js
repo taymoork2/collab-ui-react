@@ -31,10 +31,7 @@
         'enabled': false,
         'details': {
           'siteUrl': '',
-          'timeZone': {
-            'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
-            'value': ''
-          }
+          'timeZone': undefined
         }
       };
 

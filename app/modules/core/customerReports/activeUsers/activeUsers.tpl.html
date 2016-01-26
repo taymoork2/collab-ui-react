@@ -20,19 +20,23 @@
           <div class="active-table" ng-if="nav.showMostActiveUsers">
             <h4 class="report-section-header report-sides">{{nav.mostActiveTitle}}</h4>
             <p class="report-description" translate='activeUsers.customerMostActiveDescription'></p>
+            <div class="active-search" ng-show="!nav.isRefresh(nav.mostActiveUserStatus) && !nav.isEmpty(nav.mostActiveUserStatus)">
+              <i class="icon icon-search"></i>
+              <input type="text" placeholder="{{nav.searchPlaceholder}}" ng-model="nav.searchField"></input>
+            </div>
             <table class="table table-bordered active-users-table report-sides" ng-show="!nav.isRefresh(nav.mostActiveUserStatus) && !nav.isEmpty(nav.mostActiveUserStatus)">
               <thead>
                 <tr>
                   <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
                   <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(1)"></th>
-                  <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.squaredActivity" ng-click="nav.mostActiveSort(2)"></th>
+                  <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(2)"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
+                <tr ng-repeat="user in nav.searchMostActive() | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
                   <td class="vertical-center">{{user.userName}}</td>
                   <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
-                  <td class="vertical-center horizontal-center">{{user.totalActivity}}</td>
+                  <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
                 </tr>
               </tbody>
             </table>
@@ -50,7 +54,7 @@
             <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
             <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
           </a>
-          <div id="activeCarousel" class="pull-right" ng-show="(nav.activeUsersTotalPages > 1)">
+          <div id="activeCarousel" class="pull-right active-carousel" ng-show="nav.showMostActiveUsers && (nav.activeUsersTotalPages > 1)">
             <button type="button" class="actions-button btn--none" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3">
               <i class='icon icon-chevron-left'></i>
             </button>
