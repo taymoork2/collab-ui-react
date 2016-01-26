@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('createAccountController', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log', 'Userservice', '$cookies',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log, Userservice, $cookies) {
+  .controller('createAccountController', ['$scope', '$location', '$window', '$log', '$cookies', 'Userservice',
+    function ($scope, $location, $window, $log, $cookies, Userservice) {
 
       $scope.email1 = $location.search().email;
 

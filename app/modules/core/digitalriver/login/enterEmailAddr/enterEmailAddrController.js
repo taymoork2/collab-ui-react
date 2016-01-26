@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('enterEmailAddrController', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log', 'Userservice',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log, Userservice) {
+  .controller('enterEmailAddrController', ['$scope', '$window', '$log', 'Userservice',
+    function ($scope, $window, $log, Userservice) {
 
       $scope.handleEnterEmailAddr = function () {
 
