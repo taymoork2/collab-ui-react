@@ -39,11 +39,11 @@ describe('Test the enterEmailAddr page', function () {
     element(by.model('email')).sendKeys(randomEmail);
     // browser.driver.sleep(1000);
     element(by.id('next')).click();
-    // browser.driver.sleep(3000);
+    browser.driver.sleep(3000);
     browser.getCurrentUrl().
-      then(function (url) {
-        expect(url).toContain('/#/createAccount');
-      });
+    then(function (url) {
+      expect(url).toContain('/#/createAccount');
+    });
   });
 
 });

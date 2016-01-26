@@ -70,13 +70,13 @@ describe('Test the createAccount page', function () {
     expect(element(by.model('error')).getAttribute('value')).toEqual('Passwords do not match');
   });
 
-  it('should forward to the create account page', function () {
+  it('should forward to the digital river page', function () {
     element(by.model('password1')).clear();
     element(by.model('password2')).clear();
     element(by.model('password1')).sendKeys('P@ssword123');
     element(by.model('password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
-    // browser.driver.sleep(3000);
+    browser.driver.sleep(3000);
     browser.getCurrentUrl().
     then(function (url) {
       expect(url).toContain('digitalriver');
@@ -84,11 +84,12 @@ describe('Test the createAccount page', function () {
   });
 
   it('should validate existing user', function () {
+    browser.get('#/createAccount?email=' + newEmail);
     element(by.model('email2')).sendKeys(newEmail);
     element(by.model('password1')).sendKeys('P@ssword123');
     element(by.model('password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
-    // browser.driver.sleep(1000);
+    browser.driver.sleep(3000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('User ' + newEmail + ' already exists');
   });
 
