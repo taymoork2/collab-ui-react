@@ -217,9 +217,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub, {
-      delay: 3000
-    });
+    var poller = CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
