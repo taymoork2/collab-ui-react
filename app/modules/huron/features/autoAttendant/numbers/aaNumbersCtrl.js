@@ -101,11 +101,14 @@
 
     // Save the AA Number Assignments in CMI
     function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
+
       // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
       // So save to CMI with the original CMI format for external numbers
-      resources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, vm.externalNumberList);
+      return AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(function (formattedResources) {
 
-      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, resources);
+        return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+
+      });
     }
 
     // Add the number to the CE Info resource list
@@ -114,9 +117,6 @@
       var resource = AutoAttendantCeInfoModelService.newResource();
       // both internal and external triggers are incomingCall
       resource.setTrigger('incomingCall');
-
-      // the number field contains the phone number as known to the human
-      resource.setNumber(number);
 
       // set the type
       if (vm.numberTypeList[number]) {
@@ -128,6 +128,12 @@
           resource.setType(AANumberAssignmentService.DIRECTORY_NUMBER);
         }
       }
+
+      // the number field contains the phone number as known to the human
+      resource.setNumber(number);
+      // for external numbers, we just store the number as the routable id, extension id's are formatted later based on CMI
+      if (resource.getType() === AANumberAssignmentService.EXTERNAL_NUMBER)
+        resource.setId(number);
 
       // add to the resource list
       var resources;

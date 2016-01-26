@@ -109,6 +109,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       'uuid': '8888888881-id'
     }]);
 
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      'pattern': '+9999999991',
+      'uuid': '9999999991-id'
+    }, {
+      'pattern': '+8888888881',
+      'uuid': '8888888881-id'
+    }]);
+
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",
       "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"

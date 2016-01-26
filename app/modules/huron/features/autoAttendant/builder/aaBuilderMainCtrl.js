@@ -264,10 +264,12 @@
         // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
         // Try a complete save here and report error details
         if (vm.aaModel.possibleNumberDiscrepancy) {
-          var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
-          saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function (assignmentResults) {
 
-            AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function (resources) {
+          var currentlyShownResources = AutoAttendantCeInfoModelService.getCeInfo(aaRecord).getResources();
+
+          return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function (assignmentResults) {
+
+            return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function (resources) {
 
               updateCE(recNum);
 

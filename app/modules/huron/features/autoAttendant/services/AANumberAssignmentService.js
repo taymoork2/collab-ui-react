@@ -107,10 +107,10 @@
               return n.number.replace(/\D/g, '') === res.id.replace(/\D/g, '');
           });
           if (extNum) {
-            // For external numbers, save the id as E164 as in CMI so it's matched in call processsing
-            // Save just the numbers in the phone number
-            fmtRes.id = extNum.number;
-            fmtRes.number = extNum.number.replace(/\D/g, '');
+            // For external numbers, save the number in id so it's matched in call processsing
+            // Save the E164 in number
+            fmtRes.number = extNum.number;
+            fmtRes.id = extNum.number.replace(/\D/g, '');
           } else {
             // We didn't find in CMI - shouldn't happen - but let's try to fixup any empty fields
             if (!fmtRes.number) {
@@ -223,10 +223,8 @@
         var number = resources[i].getNumber();
         if (resources[i].getType() === service.DIRECTORY_NUMBER) {
           numType = service.NUMBER_FORMAT_EXTENSION;
-          number = resources[i].getNumber();
         } else if (resources[i].getType() === service.EXTERNAL_NUMBER) {
           numType = service.NUMBER_FORMAT_DIRECT_LINE;
-          number = resources[i].getId();
         }
 
         var numObj = {

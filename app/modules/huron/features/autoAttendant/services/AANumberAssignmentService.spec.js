@@ -77,8 +77,8 @@ describe('Service: AANumberAssignmentService', function () {
 
       var formattedResources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, externalNumberList);
 
-      expect(angular.equals(formattedResources[0].id, '+14084744458')).toEqual(true);
-      expect(angular.equals(formattedResources[0].number, '14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
     });
 
   });
@@ -108,8 +108,8 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
-      expect(angular.equals(formattedResources[0].id, '+14084744458')).toEqual(true);
-      expect(angular.equals(formattedResources[0].number, '14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
+      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
