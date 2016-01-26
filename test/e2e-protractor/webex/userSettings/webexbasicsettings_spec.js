@@ -2,6 +2,10 @@
 
 describe('WebEx user settings', function () {
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('should allow login as admin user', function () {
     login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
   });
