@@ -177,14 +177,11 @@
         case Config.offerCodes.CF:
           offerUserServices.push($translate.instant('customerPage.CF'));
           break;
-        case Config.offerCodes.CO:
-          offerUserServices.push($translate.instant('customerPage.CO'));
-          break;
         case Config.offerCodes.EE:
           offerUserServices.push($translate.instant('customerPage.EE'));
           break;
-        case Config.offerCodes.CMR:
-          offerUserServices.push($translate.instant('customerPage.CMR'));
+        case Config.offerCodes.CO:
+          offerUserServices.push($translate.instant('customerPage.CO'));
           break;
         case Config.offerCodes.SD:
           offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
@@ -193,8 +190,8 @@
       }
 
       return {
-        'userServices': offerUserServices.sort().join(', '),
-        'deviceBasedServices': offerDeviceBasedServices.sort().join(', ')
+        'userServices': offerUserServices.join(', '),
+        'deviceBasedServices': offerDeviceBasedServices.join(', ')
       };
     }
   }

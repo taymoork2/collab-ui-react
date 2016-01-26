@@ -27,8 +27,13 @@ describe('Controller: TrialEditCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
 
     spyOn(Notification, 'notify');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+    spyOn($state, 'go');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
 
     controller = $controller('TrialEditCtrl', {
       $scope: $scope,
@@ -42,60 +47,57 @@ describe('Controller: TrialEditCtrl', function () {
     $scope.$apply();
   }));
 
-  describe('TrialEditCtrl controller', function () {
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
+  it('should be created successfully', function () {
+    expect(controller).toBeDefined();
+  });
+
+  describe('getDaysLeft', function () {
+    it('should return expired', function () {
+      expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
     });
 
-    describe('getDaysLeft', function () {
-      it('should return expired', function () {
-        expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
-      });
-
-      it('should return expires today', function () {
-        expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
-      });
-
-      it('should return days left', function () {
-        expect(controller.getDaysLeft(1)).toEqual(1);
-      });
+    it('should return expires today', function () {
+      expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
     });
 
-    describe('Edit a trial', function () {
-      beforeEach(function () {
-        spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
-        controller.editTrial();
-        $scope.$apply();
-      });
+    it('should return days left', function () {
+      expect(controller.getDaysLeft(1)).toEqual(1);
+    });
+  });
 
-      it('should notify success', function () {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-      });
-
-      it('should close the modal', function () {
-        expect($state.modal.close).toHaveBeenCalled();
-      });
+  describe('Interacting with TrialService.editTrial', function () {
+    beforeEach(function () {
+      spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+      controller.editTrial();
+      $scope.$apply();
     });
 
-    describe('Edit a trial with error', function () {
-      beforeEach(function () {
-        spyOn(TrialService, "editTrial").and.returnValue($q.reject({
-          data: {
-            message: 'An error occurred'
-          }
-        }));
-        controller.editTrial();
-        $scope.$apply();
-      });
-
-      it('should notify error', function () {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-      });
-
-      it('should not close the modal', function () {
-        expect($state.modal.close).not.toHaveBeenCalled();
-      });
+    it('should notify success', function () {
+      expect(Notification.success).toHaveBeenCalled();
     });
 
+    it('should close the modal', function () {
+      expect($state.modal.close).toHaveBeenCalled();
+    });
+  });
+
+  describe('Edit a trial with error', function () {
+    beforeEach(function () {
+      spyOn(TrialService, "editTrial").and.returnValue($q.reject({
+        data: {
+          message: 'An error occurred'
+        }
+      }));
+      controller.editTrial();
+      $scope.$apply();
+    });
+
+    it('should notify error', function () {
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not close the modal', function () {
+      expect($state.modal.close).not.toHaveBeenCalled();
+    });
   });
 });

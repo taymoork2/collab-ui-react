@@ -172,11 +172,8 @@ angular.module('Core')
           authData.setupDone = null;
           authData.email = null;
         },
-        setEmail: function (data) {
+        setEmails: function (data) {
           authData.email = data;
-          //email domain of user
-          var domain = authData.email.split('@')[1];
-          ll('setCustomDimension', 0, domain);
         },
         getEmail: function () {
           return authData.email;
