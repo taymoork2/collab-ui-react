@@ -8,23 +8,20 @@ angular.module('Core')
 
       $scope.handleCreateAccount = function () {
 
-        if (!$scope.email1 || 0 === $scope.email1.trim()) {
+        if (!$scope.email1 || 0 === $scope.email1.trim().length) {
           $scope.error = "Empty email";
           return;
-        }
-
-        if (!$scope.password1 || 0 === $scope.password1.trim()) {
+        } else if (!$scope.password1 || 0 === $scope.password1.trim()) {
           $scope.error = "Empty password";
           return;
-        }
-
-        if ($scope.email1 != $scope.email2) {
+        } else if ($scope.email1 !== $scope.email2) {
           $scope.error = "Emails do not match";
           return;
         } else if ($scope.password1 != $scope.password2) {
           $scope.error = "Passwords do not match";
           return;
         }
+
         Userservice.addDrUser({
             'emailPassword': {
               'email': $scope.email1,

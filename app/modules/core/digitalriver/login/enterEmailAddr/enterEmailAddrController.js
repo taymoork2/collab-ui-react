@@ -6,7 +6,7 @@ angular.module('Core')
 
       $scope.handleEnterEmailAddr = function () {
 
-        if (!$scope.email || 0 === $scope.email.trim()) {
+        if (!$scope.email || 0 === $scope.email.trim().length) {
           $scope.error = "The email address cannot be blank";
           return;
         }

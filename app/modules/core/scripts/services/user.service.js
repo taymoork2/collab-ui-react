@@ -182,10 +182,7 @@ angular.module('Core')
         getUserFromEmail: function (obj, callback) {
           Auth.setAccessToken().then(function () {
             $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + obj.email + "/exists", {
-                cache: false,
-                headers: {
-                  'Content-Type': 'application/json'
-                }
+                cache: false
               })
               .success(function (data, status) {
                 data = data || {};
@@ -204,10 +201,7 @@ angular.module('Core')
         getUserAuthToken: function (userid, callback) {
           Auth.setAccessToken().then(function () {
             $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid, {
-                cache: false,
-                headers: {
-                  'Content-Type': 'application/json'
-                }
+                cache: false
               })
               .success(function (data, status) {
                 data = data || {};
@@ -228,10 +222,7 @@ angular.module('Core')
             $http({
                 url: Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user",
                 method: "POST",
-                data: obj.emailPassword,
-                headers: {
-                  'Content-Type': 'application/json'
-                }
+                data: obj.emailPassword
               })
               .success(function (data, status) {
                 data = data || {};

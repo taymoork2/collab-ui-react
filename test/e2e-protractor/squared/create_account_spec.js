@@ -8,11 +8,8 @@
 describe('Test the createAccount page', function () {
 
   var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
-
-  it('setup', function () {
-    browser.get('#/createAccount?email=' + newEmail);
-    browser.driver.sleep(1000);
-  });
+  browser.get('#/createAccount?email=' + newEmail);
+  // browser.driver.sleep(1000);
 
   it('should have the right title', function () {
     expect(element(by.id('title')).getInnerHtml()).toEqual('Create Account');
@@ -39,11 +36,11 @@ describe('Test the createAccount page', function () {
     element(by.model('password1')).sendKeys('foo');
     element(by.model('password2')).sendKeys('foo');
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('Emails do not match');
     element(by.model('email2')).sendKeys('foo');
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('Emails do not match');
   });
 
@@ -51,7 +48,7 @@ describe('Test the createAccount page', function () {
     element(by.model('email1')).clear();
     element(by.model('email2')).clear();
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('Empty email');
   });
 
@@ -61,7 +58,7 @@ describe('Test the createAccount page', function () {
     element(by.model('email1')).sendKeys(newEmail);
     element(by.model('email2')).sendKeys(newEmail);
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('Empty password');
   });
 
@@ -69,7 +66,7 @@ describe('Test the createAccount page', function () {
     element(by.model('password1')).sendKeys('foo');
     element(by.model('password2')).sendKeys('bar');
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('Passwords do not match');
   });
 
@@ -79,18 +76,11 @@ describe('Test the createAccount page', function () {
     element(by.model('password1')).sendKeys('P@ssword123');
     element(by.model('password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
-    browser.driver.sleep(2000);
+    // browser.driver.sleep(3000);
     browser.getCurrentUrl().
     then(function (url) {
       expect(url).toContain('digitalriver');
     });
-  });
-
-  it('should set the cookie', function () {
-    browser.get('#/createAccount?email=' + newEmail);
-    browser.driver.sleep(2000);
-    browser.manage().getCookie('atlasDrCookie')
-      .then(function (cookie) {});
   });
 
   it('should validate existing user', function () {
@@ -98,16 +88,16 @@ describe('Test the createAccount page', function () {
     element(by.model('password1')).sendKeys('P@ssword123');
     element(by.model('password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     expect(element(by.model('error')).getAttribute('value')).toEqual('User ' + newEmail + ' already exists');
   });
 
   it('should validate existing user for the checkEmailAddr page too', function () {
     browser.get('#/enterEmailAddr');
     element(by.model('email')).sendKeys(newEmail);
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     element(by.id('next')).click();
-    browser.driver.sleep(1000);
+    // browser.driver.sleep(1000);
     browser.getCurrentUrl().
     then(function (url) {
       expect(url).not.toContain('/#/createAccount');
