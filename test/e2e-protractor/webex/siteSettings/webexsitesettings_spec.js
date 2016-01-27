@@ -19,6 +19,11 @@ describe('WebEx site settings cross-launch', function () {
 */
 
 describe('WebEx site settings iframe', function () {
+
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('should login as sjsite14@mailinator.com ', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
   });

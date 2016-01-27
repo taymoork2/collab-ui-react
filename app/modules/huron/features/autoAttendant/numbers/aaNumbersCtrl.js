@@ -101,11 +101,14 @@
 
     // Save the AA Number Assignments in CMI
     function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
-      // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
-      // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
-      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, vm.externalNumberList);
 
-      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+      // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
+      // So save to CMI with the original CMI format for external numbers
+      return AANumberAssignmentService.formatAAE164ResourcesBasedOnCMI(resources).then(function (formattedResources) {
+
+        return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+
+      });
     }
 
     // Add the number to the CE Info resource list
@@ -115,12 +118,22 @@
       // both internal and external triggers are incomingCall
       resource.setTrigger('incomingCall');
 
-      // the server POST schema specifies an id and number field but the number is actually not used; the id is used as the number
-      // So just set them both to the number
-      resource.setNumber(number);
-      resource.setId(number);
+      // set the type
+      if (vm.numberTypeList[number]) {
+        resource.setType(vm.numberTypeList[number]);
+      } else {
+        if (TelephoneNumberService.validateDID(number)) {
+          resource.setType(AANumberAssignmentService.EXTERNAL_NUMBER);
+        } else {
+          resource.setType(AANumberAssignmentService.DIRECTORY_NUMBER);
+        }
+      }
 
-      resource.setType(vm.numberTypeList[number]);
+      // the number field contains the phone number as known to the human
+      resource.setNumber(number);
+      // for external numbers, we just store the number as the routable id, extension id's are formatted later based on CMI
+      if (resource.getType() === AANumberAssignmentService.EXTERNAL_NUMBER)
+        resource.setId(number);
 
       // add to the resource list
       var resources;
@@ -133,22 +146,38 @@
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
-          // find first e164 number, move to array[0] if not already there
-          var r = _.find(resources, function (resource) {
-            return (TelephoneNumberService.validateDID(resource.number));
-          });
 
-          if (angular.isDefined(r)) {
-            var index = _.indexOf(resources, r);
+          // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
+          AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(function (resources) {
 
-            // if e164 number is already the 0th element, all done
+              // find first e164 number, move to array[0] if not already there
+              var r = _.find(resources, function (resource) {
+                return (TelephoneNumberService.validateDID(resource.number));
+              });
 
-            if (index >= 1) {
-              resources.splice(0, 0, _.pullAt(resources, index)[0]);
-            }
-          }
+              if (angular.isDefined(r)) {
+                var index = _.indexOf(resources, r);
 
-          sortAssignedResources(resources);
+                // if e164 number is already the 0th element, all done
+
+                if (index >= 1) {
+                  resources.splice(0, 0, _.pullAt(resources, index)[0]);
+                }
+              }
+
+              sortAssignedResources(resources);
+
+            },
+            function (response) {
+              Notification.error('autoAttendant.errorAddCMI', {
+                phoneNumber: number,
+                statusText: response.statusText,
+                status: response.status
+              });
+
+              resources.pop();
+
+            });
 
         },
         function (response) {
