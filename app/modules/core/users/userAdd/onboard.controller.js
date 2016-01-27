@@ -357,8 +357,8 @@ angular.module('Core')
         if (Authinfo.hasAccount()) {
           Orgservice.getLicensesUsage().then(function (subscriptions) {
             $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-            $scope.selectedSubscription = $scope.subscriptionOptions[0];
-            $scope.oneBilling = $scope.subscriptionOptions.length === 1;
+            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
+            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
           }).catch(function (response) {
             Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
           });

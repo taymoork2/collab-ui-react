@@ -121,7 +121,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
-    "subscriptionIdError": "An error occurred loading your subscription id's",
+    "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
