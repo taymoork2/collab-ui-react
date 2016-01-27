@@ -102,7 +102,6 @@
     }
 
     function massageDevice(device) {
-      console.log(device);
       device.displayName = device.name;
       device.isHuronDevice = true;
       device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
