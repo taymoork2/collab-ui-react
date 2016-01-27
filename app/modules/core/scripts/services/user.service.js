@@ -208,11 +208,7 @@ angular.module('Core')
 
         addDrUser: function (emailPassword, callback) {
           return Auth.setAccessToken().then(function () {
-            return $http({
-                url: Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user",
-                method: "POST",
-                data: emailPassword
-              })
+            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword)
           });
         },
 
