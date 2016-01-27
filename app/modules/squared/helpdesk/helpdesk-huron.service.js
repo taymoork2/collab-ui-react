@@ -2,33 +2,101 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskHuronService(HelpdeskService, $http, Config, $q, HelpdeskMockData, DeviceService, UserServiceCommonV2, HuronConfig) {
+  function HelpdeskHuronService(HelpdeskService, $http, Config, $q, HelpdeskMockData, DeviceService, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
 
-    function getDevices(orgId, userId) {
+    function getDevices(userId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(massageDevices(HelpdeskMockData.huronDevicesForUser));
       }
-      // return DeviceService.loadDevices(userId, orgId).then(massageHuronDevices);
-      return deferredResolve([]);
+      if (!Config.isProd()) {
+        return UserEndpointService.query({customerId: orgId,userId: userId}).$promise
+          .then(function (devices) {
+            var deviceList = [];
+            for (var i = 0; i < devices.length; i++) {
+              var device = {
+                uuid: devices[i].endpoint.uuid,
+                name: devices[i].endpoint.name,
+                deviceStatus: {}
+              };
+
+              deviceList.push(device);
+              
+              SipEndpointService.get({
+                customerId: orgId,
+                sipEndpointId: device.uuid,
+                status: true
+              }).$promise.then(function (endpoint) {
+                device.model = endpoint.model;
+                device.description = endpoint.description;
+                if (endpoint.registrationStatus && angular.lowercase(endpoint.registrationStatus) === 'registered') {
+                  device.deviceStatus.status = 'Online';
+                } else {
+                  device.deviceStatus.status = 'Offline';
+                }
+                massageDevice(device);        
+              });
+          }
+          return deviceList;
+        });
+      } else {
+        return deferredResolve([]);
+      }
     }
     
     function getDevice(orgId, deviceId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(massageDevice(HelpdeskMockData.huronDevice));
       }
-       /*return $http
-      .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true')
-      .then(extractDevices);*/
-      return deferredResolve([]);
+      if (!Config.isProd()) {
+        return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true').then(extractDevice);
+      } else {
+        return deferredResolve([]);
+      }
     }
 
+    function getUserNumbers(userId, orgId) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(extractNumbers(HelpdeskMockData.huronUserNumbers));
+      }
+      if (!Config.isProd()) {
+        return UserServiceCommonV2.get({customerId: orgId, userId: userId}).$promise.then(extractNumbers);
+      } else {
+        return deferredResolve([]);
+      }
+    }
+
+    function searchDevices(searchString, orgId, limit) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
+      }
+      if (!Config.isProd()) {
+         return $http
+                .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' +  encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
+                .then(extractDevices);
+      } else {
+        return deferredResolve([]);
+      }
+    }
+    
+     function extractNumbers(res) {
+      return res.data ? res.data.numbers : res.numbers;
+    }
+
+    function extractDevices(res) {
+      return massageDevices(res.data || res);
+    }
+    
+    function extractDevice(res) {
+      return massageDevice(res.data || res);
+    }
+    
     function massageDevices(devices) {
       _.each(devices, massageDevice);
-      console.log('massageDevices', devices);
       return devices;
     }
     
     function massageDevice(device) {
+      console.log(device);
       device.displayName = device.name;
       device.isHuronDevice = true;
       device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
@@ -42,34 +110,17 @@
         device.deviceStatus.status = 'Unknown';
       }
       device.deviceStatus.statusKey = 'common.' + angular.lowercase(device.deviceStatus.status);
-      device.deviceStatus.cssColorClass = device.deviceStatus.status === 'Online' ? 'device-status-green' : 'device-status-red';    
+      switch (device.deviceStatus.status) {
+        case "Online":
+          device.deviceStatus.cssColorClass = 'helpdesk-green';
+          break;
+        case "Unknown":
+          device.deviceStatus.cssColorClass = 'helpdesk-grey';
+          break;
+        default:
+          device.deviceStatus.cssColorClass = 'helpdesk-red';
+      }  
       return device;
-    }
-
-    function getUserNumbers(userId, orgId) {
-      if (HelpdeskService.useMock()) {
-        return deferredResolve(extractNumbers(HelpdeskMockData.huronUserNumbers));
-      }
-      //return UserServiceCommonV2.get({customerId: orgId, userId: userId}).$promise.then(extractNumbers);
-      return deferredResolve([]);
-    }
-
-    function extractNumbers(res) {
-      return res.data ? res.data.numbers : res.numbers;
-    }
-
-    function searchDevices(searchString, orgId, limit) {
-      if (HelpdeskService.useMock()) {
-        return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
-      }
-      /*return $http
-      .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' +  encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
-      .then(extractDevices);*/
-      return deferredResolve([]);
-    }
-
-    function extractDevices(res) {
-      return massageDevices(res.data || res);
     }
 
     function deferredResolve(resolved) {

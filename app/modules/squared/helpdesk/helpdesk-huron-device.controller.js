@@ -27,6 +27,11 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
+      if (vm.device.ownerUser && vm.device.ownerUser.uuid) {
+        HelpdeskService.getUser(vm.orgId, vm.device.ownerUser.uuid).then(function (ownerUser) {
+          vm.ownerUser = ownerUser;
+        }, XhrNotificationService.notify);
+      }
       angular.element(".helpdesk-details").focus();
     }
 

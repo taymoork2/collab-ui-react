@@ -31,9 +31,18 @@
           <span>{{'helpdesk.status' | translate}}:</span>
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
-          <span><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
+          <span ng-if="helpdeskDeviceCtrl.device"><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
         </div>
       </div>
+      
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'common.description' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.device.description}}</span>
+        </div>
+      </div>    
       
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">
@@ -41,6 +50,19 @@
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>{{helpdeskDeviceCtrl.device.uuid}}</span>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'common.user' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <a ng-if="helpdeskDeviceCtrl.ownerUser" ui-sref="helpdesk.user({user:helpdeskDeviceCtrl.ownerUser, id:helpdeskDeviceCtrl.ownerUser.id, orgId:helpdeskDeviceCtrl.ownerUser.organization.id})">
+              {{helpdeskDeviceCtrl.ownerUser.displayName}}
+            </a>
+          </span>
         </div>
       </div>
 

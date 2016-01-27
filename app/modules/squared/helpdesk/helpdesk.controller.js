@@ -213,7 +213,11 @@
         }, function (err) {
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          if (err.status === 404) { 
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+          } else {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
         });
       }
     }
