@@ -1,6 +1,6 @@
 'use strict';
 
-describe('RedirectTargetController', function () {
+fdescribe('RedirectTargetController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
   var controller, redirectTargetServiceMock, modalInstanceMock, redirectTargetPromise, windowMock;
 
@@ -40,5 +40,11 @@ describe('RedirectTargetController', function () {
     controller.redirectToTargetAndCloseWindowClicked("hostname");
     expect(windowMock.open.callCount).toBe(1);
     expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname?action=register");
+  });
+
+  it('should encode the url properly before calling window open ', function () {
+    controller.redirectToTargetAndCloseWindowClicked("hostname/something");
+    expect(windowMock.open.callCount).toBe(1);
+    expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname%2Fsomething?action=register");
   });
 });
