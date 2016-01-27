@@ -245,8 +245,14 @@
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
           updateStep();
-        } else if (getTab().name === 'communications' && getStep().name === 'claimSipUrl') {
+        } else if ((getTab().name === 'communications' || getTab().name === 'serviceSetup') && getStep().name === 'claimSipUrl') {
           $rootScope.$broadcast('wizard-claim-sip-uri-event');
+          updateStep();
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
+          updateStep();
+          vm.isNextDisabled = true;
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
+          $rootScope.$broadcast('wizard-set-sso-event');
           updateStep();
         } else {
           updateStep();
@@ -255,9 +261,6 @@
         vm.wizardNextLoad = false;
       });
 
-      //if(getTab()==='enterpriseSetting'){
-      //call service setup.
-      //}
     }
 
     function updateStep() {

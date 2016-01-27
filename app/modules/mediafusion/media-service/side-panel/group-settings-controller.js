@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function GroupSettingsController($state, $modal, ServiceDescriptor, Authinfo, $stateParams, $log, MediaClusterService) {
+  function GroupSettingsController($stateParams, MediaClusterService) {
     var vm = this;
     vm.config = "";
     vm.cluster = $stateParams.cluster;
@@ -21,14 +21,15 @@
     }
 
     vm.options = [
-      'GA'
+      'GA',
+      'DEV',
+      'ALPHA'
     ];
 
     vm.changeReleaseChanel = function () {
       vm.propertySetValue = MediaClusterService.getPropertySet(vm.clusterList[0].assigned_property_sets).then(function (propertySet) {
         if (vm.selected != propertySet.properties["fms.releaseChannel"]) {
           propertySet.properties["fms.releaseChannel"] = vm.selected;
-          $log.log("kk after change", propertySet);
           MediaClusterService.setPropertySet(vm.clusterList[0].assigned_property_sets, propertySet);
         }
       });

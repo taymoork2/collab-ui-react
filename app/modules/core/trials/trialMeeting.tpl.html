@@ -12,21 +12,28 @@
   <!-- body -->
   <section class="modal-body row">
     <h5 translate="trialModal.meeting.webexHeader"></h5>
-    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.meetingDetails"></div>
-    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.webexDetails"></div>
+    <div class="medium-12 columns" translate="trialModal.meeting.meetingDetails"></div>
+    <div class="medium-12 columns" translate="trialModal.meeting.webexDetails"></div>
   </section>
   <section class="modal-body collapse-fields row">
-    <h5 translate="trialModal.meeting.siteUrl"></h5>
+    <h5 translate="trialModal.meeting.webexSiteUrl"></h5>
     <section>
-      <formly-form model="meetingTrial.details" fields="meetingTrial.siteUrlFields" hide-directive="ng-show" class="medium-11 medium-offset-1 columns">
+      <formly-form model="meetingTrial.details" fields="meetingTrial.siteUrlFields" hide-directive="ng-show"
+        class="medium-12 columns">
       </formly-form>
+    <div class="medium-12 columns">
+      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.siteUrlDescription"></em>
+    </div>
     </section>
   </section>
   <section class="modal-body collapse-fields row">
-    <h5 translate="trialModal.meeting.timezone"></h5>
-    <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields" class="medium-11 medium-offset-1 columns">
+    <h5 translate="trialModal.meeting.webexTimezone"></h5>
+    <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields"
+      class="medium-12 columns">
     </formly-form>
-    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.tzDescription"></div>
+    <div class="medium-12 columns">
+      <em class="small-10 small-offset-2 columns small" translate="trialModal.meeting.tzDescription"></em>
+    </div>
   </section>
 
   <!-- footer -->

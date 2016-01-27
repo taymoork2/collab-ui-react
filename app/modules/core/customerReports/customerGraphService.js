@@ -63,15 +63,16 @@
     var mediaQualityDiv = 'mediaQualityDiv';
 
     // variables for Call Metrics
-    var audioGraphDiv = 'audioGraphDiv';
-    var audioBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
+    var metricsGraphDiv = 'metricsGraphDiv';
+    var metricsBalloonText = '<span class="graph-text">[[numCalls]] [[callCondition]] ([[percentage]]%)</span>';
+    var metricsLabelText = '[[percents]]%<br>[[callCondition]]';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
       setAvgRoomsGraph: setAvgRoomsGraph,
       setFilesSharedGraph: setFilesSharedGraph,
       setMediaQualityGraph: setMediaQualityGraph,
-      setMetricsAudioGraph: setMetricsAudioGraph
+      setMetricsGraph: setMetricsGraph
     };
 
     // bar charts
@@ -328,7 +329,7 @@
       return [graph];
     }
 
-    function setMediaQualityGraph(data, mediaChart) {
+    function setMediaQualityGraph(data, mediaChart, mediaFilter) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (mediaChart !== null && angular.isDefined(mediaChart)) {
@@ -338,21 +339,21 @@
         }
 
         mediaChart.dataProvider = data;
-        mediaChart.graphs = mediaGraphs(data);
+        mediaChart.graphs = mediaGraphs(data, mediaFilter);
         mediaChart.startDuration = startDuration;
         mediaChart.validateData();
       } else {
-        mediaChart = createMediaGraph(data);
+        mediaChart = createMediaGraph(data, mediaFilter);
       }
       return mediaChart;
     }
 
-    function createMediaGraph(data) {
+    function createMediaGraph(data, mediaFilter) {
       if (data.length === 0) {
         return;
       }
 
-      var graphs = mediaGraphs(data);
+      var graphs = mediaGraphs(data, mediaFilter);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
@@ -369,10 +370,18 @@
       return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), angular.copy(numFormatBase), startDuration);
     }
 
-    function mediaGraphs(data) {
+    function mediaGraphs(data, mediaFilter) {
+      var values = ['totalDurationSum', 'partialSum', 'poorAudioQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorAudioQualityDurationSum'];
+      if (mediaFilter.value === 1) {
+        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorQualityDurationSum'];
+        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorQualityDurationSum'];
+      } else if (mediaFilter.value === 2) {
+        values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
+        balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];
+      }
+
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
@@ -387,7 +396,7 @@
         graphs[i].valueField = values[i];
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
-        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[totalDurationSum]]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
+        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[' + values[0] + ']]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
         graphs[i].clustered = false;
       }
 
@@ -395,16 +404,24 @@
     }
 
     // donut charts
-    function createDonutChart(div, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider) {
+    function createDonutChart(div, balloonText, labelText, dataProvider) {
       return AmCharts.makeChart(div, {
         "type": "pie",
         "balloonText": balloonText,
-        "innerRadius": "75%",
+        'balloon': {
+          'adjustBorderColor': true,
+          'borderThickness': 1,
+          'fillAlpha': 1,
+          'fillColor': Config.chartColors.brandWhite,
+          'fixedPosition': true,
+          'shadowAlpha': 0
+        },
+        "innerRadius": "65%",
         "labelText": labelText,
-        "color": textColor,
-        "colors": colors,
+        "colorField": "color",
+        "labelColorField": "color",
         "titleField": "callCondition",
-        "valueField": "numCalls",
+        "valueField": "percentage",
         "fontFamily": "Arial",
         "fontSize": 14,
         "percentPrecision": 0,
@@ -412,9 +429,7 @@
         "creditsPosition": "bottom-left",
         "radius": "30%",
         "outlineAlpha": 1,
-        "allLabels": labels,
         "dataProvider": dataProvider,
-        "labelsEnabled": labelsEnabled,
         "startDuration": 0,
         "export": {
           "enabled": true,
@@ -435,78 +450,32 @@
       });
     }
 
-    function setMetricsAudioGraph(data, audioChart) {
+    function setMetricsGraph(data, metricsChart) {
       if ((data === null || data === 'undefined' || data.length === 0) && (angular.isUndefined(data.dataProvider) || angular.isUndefined(data.labelData))) {
         return;
-      } else if (audioChart !== null && angular.isDefined(audioChart)) {
-        var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
-        var textColor = Config.chartColors.grayDarkest;
-        var labelsEnabled = true;
-        var labelText = '[[percents]]%<br>[[callCondition]]';
-        var balloonText = audioBalloonText;
-
+      } else if (metricsChart !== null && angular.isDefined(metricsChart)) {
+        var balloonText = metricsBalloonText;
         if (data.dummy) {
-          colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
-          textColor = Config.chartColors.brandWhite;
           balloonText = "";
-          labelsEnabled = false;
         }
 
-        audioChart.dataProvider = data.dataProvider;
-        audioChart.allLabels = getLabels(data.labelData);
-        audioChart.color = textColor;
-        audioChart.colors = colors;
-        audioChart.balloonText = balloonText;
-        audioChart.labelsEnabled = labelsEnabled;
-        audioChart.validateData();
+        metricsChart.dataProvider = data.dataProvider;
+        metricsChart.balloonText = balloonText;
+        metricsChart.validateData();
       } else {
-        audioChart = createAudioGraph(data);
+        metricsChart = createMetricsGraph(data);
       }
-      return audioChart;
+      return metricsChart;
     }
 
-    function createAudioGraph(data) {
+    function createMetricsGraph(data) {
       var dataProvider = data.dataProvider;
-      var labels = getLabels(data.labelData);
-      var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
-      var textColor = Config.chartColors.grayDarkest;
-      var labelsEnabled = true;
-      var labelText = '[[percents]]%<br>[[callCondition]]';
-      var balloonText = audioBalloonText;
-
+      var balloonText = metricsBalloonText;
       if (data.dummy) {
-        colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
-        textColor = Config.chartColors.brandWhite;
         balloonText = "";
-        labelsEnabled = false;
       }
 
-      return createDonutChart(audioGraphDiv, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider);
-    }
-
-    function getLabels(data) {
-      window.console.log(data);
-      return [{
-        "align": "center",
-        "size": "42",
-        "text": data.numTotalCalls,
-        "y": 112
-      }, {
-        "align": "center",
-        "size": "16",
-        "text": $translate.instant('callMetrics.totalCalls'),
-        "y": 162
-      }, {
-        "align": "center",
-        "size": "30",
-        "text": data.numTotalMinutes,
-        "y": 197
-      }, {
-        "align": "center",
-        "size": "16",
-        "text": $translate.instant('callMetrics.totalCallMinutes'),
-        "y": 232
-      }];
+      return createDonutChart(metricsGraphDiv, balloonText, metricsLabelText, dataProvider);
     }
   }
 })();

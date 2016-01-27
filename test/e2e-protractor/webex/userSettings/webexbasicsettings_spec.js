@@ -2,6 +2,10 @@
 
 describe('WebEx user settings', function () {
 
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('should allow login as admin user', function () {
     login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
   });
@@ -11,8 +15,7 @@ describe('WebEx user settings', function () {
   });
 
   it('should allow search and click on user', function () {
-    utils.search(usersettings.testUser.username);
-    users.clickOnUser();
+    utils.searchAndClick(usersettings.testUser.username);
   });
 
   it('should allow click on conferencing', function () {

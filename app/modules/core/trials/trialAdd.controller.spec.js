@@ -90,6 +90,30 @@ describe('Controller: TrialAddCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
+      it('should have a customer org id set', function () {
+        expect(controller.customerOrgId).toBeDefined();
+      });
+    });
+
+    describe('with atlas-webex-trial feature-toggle enabled', function () {
+      beforeEach(function () {
+        controller.meetingTrial.enabled = true;
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
+      it('should not send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('with atlas-webex-trial feature-toggle disabled', function () {
+      beforeEach(function () {
+        controller.meetingTrial.enabled = false;
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
       it('should send an email', function () {
         expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
       });

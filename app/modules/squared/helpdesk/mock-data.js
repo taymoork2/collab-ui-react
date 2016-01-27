@@ -143,7 +143,7 @@
         "squared-fusion-ec",
         "ciscouc",
         "cloudMeetings",
-        "spark-device-mgmt"
+        "spark-room-system"
       ],
       "contact": "tywin.lannister@kingslanding.com",
       "domains": ["kingslanding.com", "kingslanding2.com"],
@@ -436,7 +436,64 @@
         progressStatus: false,
         isValid: true
       }
-    }]
+    }],
+    huronUserNumbers: {
+      "uuid": "d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f",
+      "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f",
+      "firstName": "Tom",
+      "lastName": "Vasset",
+      "userName": "tvasset@cisco.com",
+      "numbers": [{
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "internal": "1234",
+        "external": "+14084744520",
+        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
+      }, {
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/baa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "internal": "2345",
+        "external": null,
+        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18"
+      }]
+    },
+    huronDeviceSearchResult: [{
+      "uuid": "17a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP1CDEA7DBF740",
+      "description": "373323613@qq.com (Cisco 8861 SIP)",
+      "product": "Cisco 8861",
+      "model": "Cisco 8861",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      }
+    }, {
+      "uuid": "18a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP74A02FC0A15F",
+      "description": "58852083 (Cisco 8865 SIP)",
+      "product": "Cisco 8865",
+      "model": "Cisco 8865",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      }
+    }],
+    huronNumbersSearchResult: {
+      "url": "https://cmi.huron-int.com/api/v2/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/numbers?number=223",
+      "numbers": [{
+        "uuid": "5e33df41-2031-4a42-8870-b73ff7ba1dba",
+        "number": "2223",
+        "type": "internal"
+      }, {
+        "uuid": "62f90838-8169-4774-931b-c46e95529354",
+        "number": "2230",
+        "type": "internal"
+      }, {
+        "uuid": "9642ac0a-1795-47f5-bbab-e84e349e1c8f",
+        "number": "+14084744450",
+        "type": "external"
+      }]
+    }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

@@ -97,12 +97,8 @@
     });
   })
 
-  /*
-   * TODO: UserSearchServiceV2 is a temp setup until UserServiceCommonV2's GET/search functionality is implemented.
-   */
   .factory('UserSearchServiceV2', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getMockHgUrl() + '/customers/:customerId/users/:userId', {
-      secret: 'sunlight',
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       name: '@name',
       userId: '@userId',
@@ -110,10 +106,7 @@
   })
 
   .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getMockHgUrl();
-    //var baseUrl = HuronConfig.getCmiV2Url();
-    return $resource(baseUrl + '/customers/:customerId/numbers', {
-      secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned'
@@ -121,10 +114,8 @@
   })
 
   .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
-      //secret: 'sunlight', // TODO: Remove this parameter when Mock is no more needed.
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
     }, {

@@ -36,31 +36,22 @@
       }).$promise;
     }
 
-    function editTrial(id, trialPeriod, licenseCount, usageCount, roomSystemCount, corgId, offersList) {
-      var editTrialData = {
-        'trialPeriod': trialPeriod,
-        'customerOrgId': corgId,
-        'offers': []
+    function editTrial(custId, trialId) {
+      var data = _trialData;
+      var trialData = {
+        'customerOrgId': custId,
+        'trialPeriod': data.details.licenseDuration,
+        'details': _getDetails(data),
+        'offers': _getOffers(data)
       };
 
-      for (var i in offersList) {
-        editTrialData.offers.push({
-          'id': offersList[i],
-          'licenseCount': offersList[i] === Config.trials.roomSystems ? roomSystemCount : licenseCount
-        });
-      }
-
-      var editTrialUrl = trialsUrl + '/' + id;
+      var editTrialUrl = trialsUrl + '/' + trialId;
 
       function logEditTrialMetric(data, status) {
-        LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, editTrialData);
+        LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
       }
 
-      return $http({
-          method: 'PATCH',
-          url: editTrialUrl,
-          data: editTrialData
-        })
+      return $http.patch(editTrialUrl, trialData)
         .success(logEditTrialMetric)
         .error(logEditTrialMetric);
     }
@@ -104,7 +95,7 @@
           enabled: true
         })
         .forEach(function (trial) {
-          if (trial.type === Config.trials.call) {
+          if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             details.shippingInfo = trial.details.shippingInfo;
             details.devices = _(trial.details.roomSystems)
               .concat(trial.details.phones)
@@ -117,9 +108,9 @@
               .value();
           }
 
-          if (trial.type === Config.trials.meeting) {
-            details.siteUrl = trial.details.siteUrl;
-            details.timeZoneId = trial.details.timeZone.timeZoneId;
+          if (trial.type === Config.offerTypes.meetings) {
+            details.siteUrl = _.get(trial, 'details.siteUrl', '');
+            details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
         })
         .value();

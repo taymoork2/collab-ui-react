@@ -6,7 +6,7 @@
     <section>
       <div class="call-metrics-customer">
         <p class="report-description">{{nav.metricsDescription}}</p>
-        <div id="audioGraphDiv" class="timechartDiv"></div>
+        <div id="metricsGraphDiv" class="timechartDiv"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.metricStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>
@@ -15,6 +15,20 @@
             <i class='icon icon-warning no-data-warning'></i>
             <span translate='reportsPage.noCustomerData'></span>
           </h3>
+        </div>
+        <div class="row" ng-if="!nav.isRefresh(nav.metricStatus) && !nav.isEmpty(nav.metricStatus)">
+          <div class="columns medium-4 metrics-display">
+            <p class="metrics-numeral">{{nav.metrics.totalCalls}}</p>
+            <span class="metrics-text" translate='callMetrics.totalCalls'></span>
+          </div>
+          <div class="columns medium-4 metrics-display">
+            <p class="metrics-numeral">{{nav.metrics.totalAudioDuration}}</p>
+            <span class="metrics-text" translate='callMetrics.callMinutes'></span>
+          </div>
+          <div class="columns medium-4 metrics-display">
+            <p class="metrics-numeral">{{nav.metrics.totalFailedCalls}}%</p>
+            <span class="metrics-text" translate='callMetrics.failureRate'></span>
+          </div>
         </div>
       </div>
     </section>

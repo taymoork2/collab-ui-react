@@ -13,21 +13,28 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
-    vm.pageTitle = 'reportsPage.pageTitle';
-    vm.showWebexTab = false;
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    var currentFilter = vm.allReports;
 
-    var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+    vm.displayEngagement = true;
+    vm.displayQuality = true;
+
+    var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var activeUserCard = null;
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
-    vm.displayMostActive = false;
+    vm.mostActiveUserStatus = REFRESH;
+    vm.searchPlaceholder = $translate.instant('activeUsers.search');
+    vm.searchField = "";
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
@@ -43,16 +50,28 @@
     var mediaChart = null;
     var mediaCard = null;
     vm.mediaQualityStatus = REFRESH;
+    vm.mediaOptions = [{
+      value: 0,
+      label: $translate.instant('reportsPage.allCalls')
+    }, {
+      value: 1,
+      label: $translate.instant('reportsPage.audioCalls')
+    }, {
+      value: 2,
+      label: $translate.instant('reportsPage.videoCalls')
+    }];
+    vm.mediaSelected = vm.mediaOptions[0];
 
     var deviceChart = null;
     var deviceCard = null;
     vm.deviceStatus = REFRESH;
     vm.deviceDescription = '';
 
-    var audioChart = null;
-    var audioCard = null;
-    vm.audioDescription = '';
+    var metricsChart = null;
+    var metricsCard = null;
+    vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
+    vm.metrics = {};
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -75,7 +94,10 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
+    vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
+    vm.resetCards = resetCards;
+    vm.searchMostActive = searchMostActive;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -86,11 +108,12 @@
     };
 
     vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.floor((num + 1) / 5);
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.changePage = function (num) {
       vm.activeUserCurrentPage = num;
+      resizeCards();
     };
 
     vm.mostActiveSort = function (num) {
@@ -115,6 +138,7 @@
       if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
+      resizeCards();
     };
 
     vm.pageBackward = function () {
@@ -126,19 +150,22 @@
       if (vm.activeUserCurrentPage !== 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
+      resizeCards();
     };
 
     function init() {
-      setFilterBasedText();
-      $timeout(function () {
-        setDummyData();
+      if (vm.showEngagement) {
+        setFilterBasedText();
+        $timeout(function () {
+          setDummyData();
 
-        setActiveUserData();
-        setAvgRoomData();
-        setFilesSharedData();
-        setMediaData();
-        setCallMetricsData();
-      }, 30);
+          setActiveUserData();
+          setAvgRoomData();
+          setFilesSharedData();
+          setMediaData();
+          setCallMetricsData();
+        }, 30);
+      }
     }
 
     function resizeCards() {
@@ -149,20 +176,46 @@
 
     function mostActiveUserSwitch() {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resetCards();
+      resizeCards();
     }
 
-    function resetCards() {
-      var engagementElems = [activeUserCard, avgRoomsCard, filesSharedCard];
-      var qualityElems = [];
+    function resetCards(filter) {
+      if (currentFilter !== filter) {
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var qualityElems = [mediaCard, metricsCard];
 
-      // $('.cs-card-layout').masonry('remove', engagementElems);
-      // $('.cs-card-layout').masonry('remove', qualityElems);
-      // resizeCards();
+        if (filter === vm.allReports) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          }
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = true;
+        } else if (filter === vm.engagement) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          }
+          if (vm.displayQuality) {
+            $('.cs-card-layout').masonry('remove', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = false;
+        } else if (filter === vm.quality) {
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          if (vm.displayEngagement) {
+            $('.cs-card-layout').masonry('remove', engagementElems);
+          }
+          vm.displayEngagement = false;
+          vm.displayQuality = true;
+        }
 
-      // $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-      // $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-      resizeCards();
+        currentFilter = filter;
+        resizeCards();
+      }
     }
 
     function setFilterBasedText() {
@@ -182,7 +235,7 @@
         time: vm.timeSelected.description
       });
 
-      vm.metricsDescription = $translate.instant("callMetrics.audioDescription", {
+      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
         time: vm.timeSelected.description
       });
 
@@ -215,19 +268,32 @@
       }
 
       var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
+
+      var metricsData = DummyCustomerReportService.dummyMetricsData();
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
+
+      resizeCards();
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
+      vm.metrics = {};
+      vm.mediaSelected = vm.mediaOptions[0];
 
       setFilterBasedText();
       setDummyData();
@@ -239,23 +305,68 @@
       setCallMetricsData();
     }
 
+    function mediaUpdate() {
+      vm.mediaQualityStatus = REFRESH;
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+
+      setMediaData();
+    }
+
     function setActiveUserData() {
+      vm.activeUsersTotalPages = 0;
+      vm.activeUserCurrentPage = 0;
+      vm.searchField = "";
+      vm.showMostActiveUsers = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.activeUserGraph.length === 0) {
+        } else if (response.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          // TODO: add data handling to update the active user graph and table with the data in response
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response.activeUserGraph, activeUsersChart);
+          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
           if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
             activeUsersChart = tempActiveUserChart;
           }
-
           vm.activeUserStatus = SET;
+          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+            if (response === ABORT) {
+              return;
+            } else if (response.length === 0) {
+              vm.mostActiveUserStatus = EMPTY;
+            } else {
+              vm.activeUserPredicate = activeUsersSort[3];
+              vm.mostActiveUsers = response;
+              vm.activeUserCurrentPage = 1;
+              vm.mostActiveUserStatus = SET;
+            }
+            resizeCards();
+          });
         }
-        activeUserCard = document.getElementById('active-user-card');
+        resizeCards();
       });
+      activeUserCard = document.getElementById('active-user-card');
+    }
+
+    function searchMostActive() {
+      var returnArray = [];
+      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+        var userName = item.userName;
+        if (vm.searchField === undefined || vm.searchField === '' || (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
+          returnArray.push(item);
+        }
+      });
+      vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      $timeout(function () {
+        resizeCards();
+      }, 10);
+      return returnArray;
     }
 
     function setAvgRoomData() {
@@ -299,13 +410,13 @@
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart);
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart, vm.mediaSelected);
           if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
             mediaChart = tempMediaChart;
           }
           vm.mediaQualityStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        mediaCard = document.getElementById('media-quality-card');
       });
     }
 
@@ -313,16 +424,17 @@
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (angular.isUndefined(response.audio.dataProvider)) {
+        } else if (response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
-          var tempAudioChart = CustomerGraphService.setMetricsAudioGraph(response.audio, audioChart);
-          if (tempAudioChart !== null && angular.isDefined(tempAudioChart)) {
-            audioChart = tempAudioChart;
+          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
+          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+            metricsChart = tempMetricsChart;
           }
+          vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
@@ -333,31 +445,24 @@
         } else if (response.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          // var tempDeviceChart = CustomerGraphService.setMediaQualityGraph(response, deviceChart);
+          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
           // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           //   deviceChart = tempDeviceChart;
           // }
           vm.deviceStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        deviceCard = document.getElementById('device-card');
       });
     }
 
-    // TODO WEBEX side of the page has been copied from the existing reports page (needs converting from $scope to vm)
-    vm.show = show;
-
-    function show(showEngagement, showWebexReports) {
-      vm.showEngagement = showEngagement;
-      vm.showWebexReports = showWebexReports;
-    }
-
+    // WEBEX side of the page has been copied from the existing reports page
     $scope.webexReportsObject = {};
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab) {
+    if ($stateParams.tab === 'webex') {
       vm.showEngagement = false;
-      vm.showWebexReports = $stateParams.tab === 'webex';
+      vm.showWebexReports = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;
@@ -416,7 +521,7 @@
           var funcName = "promisChainDone()";
           var logMsg = "";
 
-          // if we are displaying the webex reports index page then go ahead with the rest of the code 
+          // if we are displaying the webex reports index page then go ahead with the rest of the code
           if (vm.showWebexReports) {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
@@ -460,7 +565,7 @@
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }
