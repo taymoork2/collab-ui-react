@@ -61,7 +61,9 @@ describe('Squared Invite User and Assign Services User Flow', function () {
     it('should check if licenses saved successfully, then uncheck them', function () {
       utils.clickUser(inviteEmail);
       utils.expectIsDisplayed(users.servicesPanel);
+
       utils.expectIsDisplayed(users.messageService);
+      utils.expectIsDisplayed(users.meetingService);
 
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
@@ -85,8 +87,8 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.click(users.editServicesButton);
 
       utils.waitForModal().then(function () {
-        utils.expectCheckbox(users.paidMsgCheckbox, true);
-        utils.expectCheckbox(users.paidMtgCheckbox, true);
+        utils.expectCheckbox(users.paidMsgCheckbox, false);
+        utils.expectCheckbox(users.paidMtgCheckbox, false);
         utils.click(users.cancelButton);
         utils.expectIsNotDisplayed(users.manageDialog);
         utils.click(users.closeSidePanel);
