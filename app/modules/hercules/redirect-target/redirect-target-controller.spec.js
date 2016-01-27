@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('RedirectTargetController', function () {
+describe('RedirectTargetController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
   var controller, redirectTargetServiceMock, modalInstanceMock, redirectTargetPromise, windowMock;
 
