@@ -124,6 +124,9 @@ angular.module('Core')
                   if (data.data[datum].entityId === newEntityId) {
                     metaUrl = data.data[datum].url;
                     break;
+                  } else {
+                    SSOService.deleteMeta(data.data[datum].url);
+                    break;
                   }
                 }
 
