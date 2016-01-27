@@ -2038,7 +2038,7 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "expires": "expires",
-    "lastSeen": "Last seen",
+    "lastSeen": "Offline since:",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
