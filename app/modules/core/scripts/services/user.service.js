@@ -183,7 +183,7 @@ angular.module('Core')
           return Auth.setAccessToken().then(function () {
             return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
               cache: false
-            })
+            });
           });
         },
 
@@ -208,7 +208,7 @@ angular.module('Core')
 
         addDrUser: function (emailPassword, callback) {
           return Auth.setAccessToken().then(function () {
-            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword)
+            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
           });
         },
 

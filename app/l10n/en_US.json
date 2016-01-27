@@ -3156,6 +3156,13 @@
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
+  "digitalRiver": {
+    "emailAddressCannotBeBlank": "The email address cannot be blank",
+    "emptyEmail": "Empty email",
+    "emptyPassword": "Empty password",
+    "emailsDontMatch": "Emails do not match",
+    "passwordsDontMatch": "Passwords do not match"
+  },
   "overview": {
     "pageTitle": "Overview",
     "thisMonth": "This month",
