@@ -15,6 +15,7 @@ angular.module('Squared').controller('ReportsCtrl', [
   'Userservice',
   'WebExUtilsFact',
   'Storage',
+  'FeatureToggleService',
   function (
     $scope,
     $stateParams,
@@ -29,7 +30,8 @@ angular.module('Squared').controller('ReportsCtrl', [
     CannedDataService,
     Userservice,
     WebExUtilsFact,
-    Storage
+    Storage,
+    FeatureToggleService
   ) {
 
     $scope.webexReportsObject = {};
@@ -601,5 +603,18 @@ angular.module('Squared').controller('ReportsCtrl', [
     $scope.$on('AuthinfoUpdated', function () {
       $scope.manualReload(true);
     });
+
+    function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasReportTrials).then(function (toggle) {
+        if (toggle) {
+          $scope.repPageHeader_tabs.splice(1, 0, {
+            title: $translate.instant('reportsPage.sparkReports'),
+            state: 'devReports'
+          });
+        }
+      });
+    }
+
+    init();
   }
 ]);
