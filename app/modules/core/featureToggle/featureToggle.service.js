@@ -42,7 +42,7 @@
       deleteContent: 'delete-content',
       dialOut: 'dial-out',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'domainManagement',
+      domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',

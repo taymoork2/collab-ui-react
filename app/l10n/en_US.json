@@ -3376,7 +3376,7 @@
       "header": "Unverify domain",
       "description": "You are about to unverify the following domain:",
       "preventLockoutError": "Unverifying your own domain will prevent you from logging in.",
-      "warning":"Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
     },
     "email": {
       "header": "Send email",

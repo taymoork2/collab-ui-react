@@ -61,7 +61,7 @@ namespace domainManagement {
 
     get domainToAdd() {
       if (this._domain || !this._loggedOnUser.domain || !this._loggedOnUser.isLoaded || this._loggedOnUser.isPartner)
-        return (this._domain + '').toLowerCase();
+        return (this._domain || '').toLowerCase();
 
       return this._loggedOnUser.domain.toLowerCase();
     }

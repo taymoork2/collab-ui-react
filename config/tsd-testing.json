@@ -1,27 +1,51 @@
 {
   "version": "v4",
-  "repo": "borisyankov/DefinitelyTyped",
+  "repo": "DefinitelyTyped/DefinitelyTyped",
   "ref": "master",
   "path": "../typings",
   "bundle": "../typings/tsd-testing.d.ts",
   "installed": {
-    "jasmine-promise-matchers/jasmine-promise-matchers.d.ts": {
-      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    "jasmine/jasmine.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "angularjs/angular.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "angularjs/angular-mocks.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
     },
     "jasmine-jquery/jasmine-jquery.d.ts": {
-      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
     },
-    "jasmine/jasmine.d.ts": {
-      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    "jasmine-promise-matchers/jasmine-promise-matchers.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
     },
     "karma-jasmine/karma-jasmine.d.ts": {
-      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "log4js/log4js.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "mime/mime.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "serve-static/serve-static.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "bluebird/bluebird.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "express/express.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
+    },
+    "node/node.d.ts": {
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
     },
     "karma/karma.d.ts": {
-      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
-    },
-    "selenium-webdriver/selenium-webdriver.d.ts": {
-      "commit": "001ca36ba58cef903c4c063555afb07bbc36bb58"
+      "commit": "46719185c564694c5583c4b7ad94dbb786ecad46"
     }
   }
 }

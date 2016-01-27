@@ -299,6 +299,23 @@ class DomainManagementService {
   private getToken(domain) {
     let deferred = this.$q.defer();
 
+    if (this._mock) {
+      let pendingDomain = _.find(this._domainList, {text: domain, status: this.states.pending});
+
+      if (!pendingDomain){
+        this._domainList.push({
+          text: domain,
+          token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke",
+          status: this.states.pending
+        });
+      } else {
+        pendingDomain.token = "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke";
+      }
+
+      deferred.resolve("mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke");
+      return deferred.promise;
+    }
+
     this.$http.post(this._invokeGetTokenUrl, {
       'domain': domain
     }).then(res => {
