@@ -151,7 +151,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }

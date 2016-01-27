@@ -327,14 +327,15 @@
                 if (isT31IframeSupported) {
                   var isSiteSupportsIframeResult = {
                     siteUrl: siteUrl,
-                    isIframeSupported: isT31IframeSupported,
+                    isCSVSupported: true,
+                    isIframeSupported: true,
                     isAdminReportEnabled: isAdminReportEnabled
                   };
 
                   logMsg = funcName + ": " + "\n" +
                     "siteUrl=" + siteUrl + "\n" +
                     "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                  $log.log(logMsg);
+                  // $log.log(logMsg);
 
                   deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
                 } else { // check iFrame support for T30 site
@@ -351,6 +352,7 @@
 
                       var isSiteSupportsIframeResult = {
                         siteUrl: siteUrl,
+                        isCSVSupported: false,
                         isIframeSupported: isT30IframeSupported,
                         isAdminReportEnabled: isAdminReportEnabled
                       };
@@ -358,7 +360,7 @@
                       logMsg = funcName + ": " + "\n" +
                         "siteUrl=" + siteUrl + "\n" +
                         "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                      $log.log(logMsg);
+                      // $log.log(logMsg);
 
                       deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
                     }, // getEnableT30UnifiedAdminDataSuccess()
