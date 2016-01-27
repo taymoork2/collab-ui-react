@@ -54,6 +54,7 @@ describe('Squared Invite User and Assign Services User Flow', function () {
         utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
         notifications.assertSuccess('entitled successfully');
+        utils.click(users.closeSidePanel);
       });
     });
 
@@ -72,6 +73,8 @@ describe('Squared Invite User and Assign Services User Flow', function () {
         utils.click(users.paidMsgCheckbox);
         utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
+        utils.click(users.closeSidePanel);
       });
     });
 
@@ -86,6 +89,7 @@ describe('Squared Invite User and Assign Services User Flow', function () {
         utils.expectCheckbox(users.paidMtgCheckbox, true);
         utils.click(users.cancelButton);
         utils.expectIsNotDisplayed(users.manageDialog);
+        utils.click(users.closeSidePanel);
       });
     });
 
