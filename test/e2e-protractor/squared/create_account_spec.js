@@ -22,10 +22,10 @@ describe('Test the createAccount page', function () {
   });
 
   it('should have all the correct field values', function () {
-    expect(element(by.model('email1')).getAttribute('value')).toEqual(newEmail);
-    expect(element(by.model('email2')).getAttribute('value')).toEqual('');
-    expect(element(by.model('password1')).getAttribute('value')).toEqual('');
-    expect(element(by.model('password2')).getAttribute('value')).toEqual('');
+    expect(element(by.model('createAccountController.email1')).getAttribute('value')).toEqual(newEmail);
+    expect(element(by.model('createAccountController.email2')).getAttribute('value')).toEqual('');
+    expect(element(by.model('createAccountController.password1')).getAttribute('value')).toEqual('');
+    expect(element(by.model('createAccountController.password2')).getAttribute('value')).toEqual('');
   });
 
   it('should have a next button', function () {
@@ -33,48 +33,48 @@ describe('Test the createAccount page', function () {
   });
 
   it('should not allow mismatched emails', function () {
-    element(by.model('password1')).sendKeys('foo');
-    element(by.model('password2')).sendKeys('foo');
+    element(by.model('createAccountController.password1')).sendKeys('foo');
+    element(by.model('createAccountController.password2')).sendKeys('foo');
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('Emails do not match');
-    element(by.model('email2')).sendKeys('foo');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('Emails do not match');
+    element(by.model('createAccountController.email2')).sendKeys('foo');
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('Emails do not match');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('Emails do not match');
   });
 
   it('should not allow blank email', function () {
-    element(by.model('email1')).clear();
-    element(by.model('email2')).clear();
+    element(by.model('createAccountController.email1')).clear();
+    element(by.model('createAccountController.email2')).clear();
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('Empty email');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('Empty email');
   });
 
   it('should not allow blank password', function () {
-    element(by.model('password1')).clear();
-    element(by.model('password2')).clear();
-    element(by.model('email1')).sendKeys(newEmail);
-    element(by.model('email2')).sendKeys(newEmail);
+    element(by.model('createAccountController.password1')).clear();
+    element(by.model('createAccountController.password2')).clear();
+    element(by.model('createAccountController.email1')).sendKeys(newEmail);
+    element(by.model('createAccountController.email2')).sendKeys(newEmail);
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('Empty password');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('Empty password');
   });
 
   it('should not allow mismatched passwords', function () {
-    element(by.model('password1')).sendKeys('foo');
-    element(by.model('password2')).sendKeys('bar');
+    element(by.model('createAccountController.password1')).sendKeys('foo');
+    element(by.model('createAccountController.password2')).sendKeys('bar');
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('Passwords do not match');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('Passwords do not match');
   });
 
   it('should forward to the digital river page', function () {
-    element(by.model('password1')).clear();
-    element(by.model('password2')).clear();
-    element(by.model('password1')).sendKeys('P@ssword123');
-    element(by.model('password2')).sendKeys('P@ssword123');
+    element(by.model('createAccountController.password1')).clear();
+    element(by.model('createAccountController.password2')).clear();
+    element(by.model('createAccountController.password1')).sendKeys('P@ssword123');
+    element(by.model('createAccountController.password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
     browser.driver.sleep(3000);
     browser.getCurrentUrl().
@@ -85,17 +85,17 @@ describe('Test the createAccount page', function () {
 
   it('should validate existing user', function () {
     browser.get('#/createAccount?email=' + newEmail);
-    element(by.model('email2')).sendKeys(newEmail);
-    element(by.model('password1')).sendKeys('P@ssword123');
-    element(by.model('password2')).sendKeys('P@ssword123');
+    element(by.model('createAccountController.email2')).sendKeys(newEmail);
+    element(by.model('createAccountController.password1')).sendKeys('P@ssword123');
+    element(by.model('createAccountController.password2')).sendKeys('P@ssword123');
     element(by.id('next')).click();
     browser.driver.sleep(3000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('User ' + newEmail + ' already exists');
+    expect(element(by.model('createAccountController.error')).getAttribute('value')).toEqual('User ' + newEmail + ' already exists');
   });
 
   it('should validate existing user for the checkEmailAddr page too', function () {
     browser.get('#/enterEmailAddr');
-    element(by.model('email')).sendKeys(newEmail);
+    element(by.model('enterEmailAddrController.email')).sendKeys(newEmail);
     // browser.driver.sleep(1000);
     element(by.id('next')).click();
     // browser.driver.sleep(1000);

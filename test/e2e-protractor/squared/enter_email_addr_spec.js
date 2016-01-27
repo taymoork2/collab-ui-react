@@ -21,7 +21,7 @@ describe('Test the enterEmailAddr page', function () {
   });
 
   it('should have a blank text field', function () {
-    expect(element(by.model('email')).getAttribute('value')).toEqual('')
+    expect(element(by.model('enterEmailAddrController.email')).getAttribute('value')).toEqual('')
   });
 
   it('should have a next button', function () {
@@ -31,12 +31,12 @@ describe('Test the enterEmailAddr page', function () {
   it('should not allow an empty email address', function () {
     element(by.id('next')).click();
     // browser.driver.sleep(1000);
-    expect(element(by.model('error')).getAttribute('value')).toEqual('The email address cannot be blank');
+    expect(element(by.model('enterEmailAddrController.error')).getAttribute('value')).toEqual('The email address cannot be blank');
   });
 
   it('unrecongnized email address should forward to the create account page', function () {
     var randomEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
-    element(by.model('email')).sendKeys(randomEmail);
+    element(by.model('enterEmailAddrController.email')).sendKeys(randomEmail);
     // browser.driver.sleep(1000);
     element(by.id('next')).click();
     browser.driver.sleep(3000);

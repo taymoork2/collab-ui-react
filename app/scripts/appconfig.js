@@ -33,7 +33,8 @@ angular
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
-              controller: 'enterEmailAddrController'
+              controller: 'enterEmailAddrController',
+              controllerAs: 'enterEmailAddrController'
             }
           },
           authenticate: false
@@ -43,7 +44,8 @@ angular
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
-              controller: 'drLoginForwardController'
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
             }
           }
         })
@@ -52,7 +54,8 @@ angular
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
-              controller: 'createAccountController'
+              controller: 'createAccountController',
+              controllerAs: 'createAccountController'
             }
           },
           authenticate: false

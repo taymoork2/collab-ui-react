@@ -1,28 +1,31 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('enterEmailAddrController', ['$scope', '$window', '$log', 'Userservice',
-    function ($scope, $window, $log, Userservice) {
+  angular
+    .module('Core')
+    .controller('enterEmailAddrController', enterEmailAddrController);
 
-      $scope.handleEnterEmailAddr = function () {
+  /* @ngInject */
+  function enterEmailAddrController($window, $log, Userservice) {
 
-        if (!$scope.email || 0 === $scope.email.trim().length) {
-          $scope.error = "The email address cannot be blank";
-          return;
+    var vm = this;
+
+    vm.handleEnterEmailAddr = function () {
+      if (!vm.email || 0 === vm.email.trim().length) {
+        vm.error = "The email address cannot be blank";
+        return;
+      }
+      Userservice.getUserFromEmail(
+        {'email': vm.email},
+        function (result, status) {
+          if (status != 200 || !result.success) {
+            $log.error("getUserFromEmail failed. Status: " + status);
+          } else {
+            $window.location.href = (result.data.exists === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + vm.email;
+          }
         }
+      );
+    };
 
-        Userservice.getUserFromEmail({
-            'email': $scope.email
-          },
-          function (result, status) {
-            if (status != 200 || !result.success) {
-              $log.error("getUserFromEmail failed. Status: " + status);
-            } else {
-              $window.location.href = (result.data.exists === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + $scope.email;
-            }
-          });
-
-      };
-
-    }
-  ]);
+  }
+})();

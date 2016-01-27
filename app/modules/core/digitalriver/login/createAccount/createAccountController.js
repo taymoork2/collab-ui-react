@@ -1,42 +1,48 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('createAccountController', ['$scope', '$location', '$window', '$log', '$cookies', 'Userservice',
-    function ($scope, $location, $window, $log, $cookies, Userservice) {
+  angular
+    .module('Core')
+    .controller('createAccountController', createAccountController);
 
-      $scope.email1 = $location.search().email;
+  /* @ngInject */
+  function createAccountController($location, $window, $log, $cookies, Userservice) {
 
-      $scope.handleCreateAccount = function () {
+    var vm = this;
 
-        if (!$scope.email1 || 0 === $scope.email1.trim().length) {
-          $scope.error = "Empty email";
-          return;
-        } else if (!$scope.password1 || 0 === $scope.password1.trim()) {
-          $scope.error = "Empty password";
-          return;
-        } else if ($scope.email1 !== $scope.email2) {
-          $scope.error = "Emails do not match";
-          return;
-        } else if ($scope.password1 != $scope.password2) {
-          $scope.error = "Passwords do not match";
-          return;
-        }
+    vm.email1 = $location.search().email;
 
-        Userservice.addDrUser({
-            'emailPassword': {
-              'email': $scope.email1,
-              'password': $scope.password1
-            }
-          },
-          function (result, status) {
-            if (status != 200 || !result.success) {
-              $scope.error = result.message;
-            } else {
-              $cookies.atlasDrCookie = result.data.token;
-              $window.location.href = "https://www.digitalriver.com/";
-            }
-          });
-      };
+    vm.handleCreateAccount = function () {
 
-    }
-  ]);
+      if (!vm.email1 || 0 === vm.email1.trim().length) {
+        vm.error = "Empty email";
+        return;
+      } else if (!vm.password1 || 0 === vm.password1.trim()) {
+        vm.error = "Empty password";
+        return;
+      } else if (vm.email1 !== vm.email2) {
+        vm.error = "Emails do not match";
+        return;
+      } else if (vm.password1 != vm.password2) {
+        vm.error = "Passwords do not match";
+        return;
+      }
+
+      Userservice.addDrUser({
+          'emailPassword': {
+            'email': vm.email1,
+            'password': vm.password1
+          }
+        },
+        function (result, status) {
+          if (status != 200 || !result.success) {
+            vm.error = result.message;
+          } else {
+            $cookies.atlasDrCookie = result.data.token;
+            $window.location.href = "https://www.digitalriver.com/";
+          }
+        });
+    };
+
+  }
+})();

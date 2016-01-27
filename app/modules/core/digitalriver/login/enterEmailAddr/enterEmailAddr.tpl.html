@@ -5,11 +5,11 @@
 	</head>
 	<body>
 		<h2 id="h2">Enter eMail Addr</h2>
-		<input type="text" ng-model="error" readonly="readonly" style="color:red">
+		<input type="text" ng-model="enterEmailAddrController.error" readonly="readonly" style="color:red">
 		<table>
-			<tr><td id="label">Enter your email address:</td><td><input type="email" ng-model="email" placeholder="Ex. x@y.com"></td></tr>
+			<tr><td id="label">Enter your email address:</td><td><input type="email" ng-model="enterEmailAddrController.email" placeholder="Ex. x@y.com"></td></tr>
 			<tr></tr>
-			<tr><td><button id="next" ng-click="handleEnterEmailAddr()">Next</button></td><td></td></tr>
+			<tr><td><button id="next" ng-click="enterEmailAddrController.handleEnterEmailAddr()">Next</button></td><td></td></tr>
 		</table>
 		
 	</body>
