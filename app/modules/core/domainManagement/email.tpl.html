@@ -4,12 +4,18 @@
     <h4 class="modal-title" translate="domainManagement.email.header"></h4>
   </div>
   <div class="modal-body">
+    <p class="tokenInfo">
+      <span translate="domainManagement.email.instructions"></span>
+      <br>
+      <b>{{dmpopup.domain.token}}</b>
+    </p>
     <p translate="domainManagement.email.description" translate-value-name="{{dmpopup.domain.text}}"/>
     <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.email.exampleEmail' | translate)}}"
            ng-model="dmpopup.email" ng-keypress="dmpopup.keyPressInInputField($event)"/>
 
     <p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty"
        translate="domainManagement.email.invalidEmail"></p>
+
     <p ng-if="dmpopup.error">{{dmpopup.error}}</p>
   </div>
   <div class="modal-footer">

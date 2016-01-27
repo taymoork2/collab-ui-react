@@ -43,7 +43,7 @@
           button {
             position: relative;
             top: -0.05rem;
-            margin-left: -1rem;
+            margin-left: 0rem;
             text-transform: uppercase;
             font-size: 0.625rem;
             width: 50px !important;
@@ -51,15 +51,48 @@
             min-width: 50px !important;
             padding: 0 !important;
             padding-top: 2px !important;
-
+          }
+          .dropdown{
+            margin-left: -5rem;
+          }
+          .dropdown-toggle{
+            font-size: 0.85rem;
+            position:relative;
+            top: 0.1rem;
+          }
+        }
+        .tokenCell{
+          width: 6rem;
+          .token{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 4rem;
+          }
+          .copy{
+            width: 1rem;
+            color: $color-primary;
+          }
+          span{
+            float: left;
           }
         }
         .tableMail {
           display: block;
           width: 1.2rem !important;
-
         }
       }
+    }
+    .verifyDomainInput{
+      margin-top: 2rem;
+      input{
+        max-width: 60% !important;
+        margin-right: 1rem;
+      }
+      input,button{
+        float: left;
+      }
+
     }
   }
 }
@@ -101,6 +134,9 @@
   }
   .modal-body.domError {
     background-color: $color-negative-base !important;
+  }
+  .tokenInfo{
+    margin-bottom: 1rem;
   }
 }
 #domainModalAdd{

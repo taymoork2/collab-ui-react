@@ -3383,6 +3383,7 @@
       "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
       "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not a valid email address.",
+      "instructions": "Enter the following DNS verification code in your DNS management interface",
       "sendEmail": "Send instructions"
     },
     "verify": {
@@ -3398,6 +3399,13 @@
       "claimThis": "You are about to claim the following domain:",
       "warning": "Users with e-mail addresses in this domain that belong to other orgs will have to provide new e-mail addresses.",
       "claim": "Claim"
+    },
+    "actions": {
+      "instructions":"Show code and instructions",
+      "mail":"Mail code and instructions",
+      "unverify":"Remove enforcement",
+      "unclaim":"Release domain",
+      "delete":"Remove"
     }
   }
 }
