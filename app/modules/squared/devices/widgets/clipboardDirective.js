@@ -5,15 +5,23 @@
     .module('Squared')
     .directive('sqClipboard', function ($timeout, Notification) {
       return {
-        restrict: 'EA',
-        template: '<a class="clipboard-button" href auto-hide-on-no-flash="true" clip-copy="getTextToCopy()" clip-click="doSomething()"><i class="fa fa-clipboard"></i></a>',
+        restrict: 'A',
+        scope: {
+          sqClipboard: '&'
+        },
         link: function ($scope, $element, $attr) {
-          $scope.getTextToCopy = function () {
-            return $attr.clipCopy;
-          };
-          $scope.doSomething = function () {
-            Notification.notify('Copied to Clipboard', 'success');
-          };
+          var clipBoard = new Clipboard($element[0], {
+            text: function (trigger) {
+              return $scope.sqClipboard();
+            }
+          });
+
+          clipBoard.on('success', function () {
+            Notification.success('Copied to Clipboard');
+          });
+          clipBoard.on('error', function () {
+            Notification.error('Copy failed');
+          });
         }
       };
     });
