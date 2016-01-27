@@ -84,14 +84,14 @@
 
       angular.element(".helpdesk-details").focus();
     }
-    
+
     function handleHuronError(err) {
-      if (err.status !== 404) { 
+      if (err.status !== 404) {
         XhrNotificationService.notify(err);
       }
     }
   }
-  
+
   function keyPressHandler(event) {
     if (event.keyCode === 27) { // Esc
       window.history.back();
