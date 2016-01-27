@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('RedirectTargetService', function () {
+describe('RedirectTargetService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var service;
