@@ -76,7 +76,7 @@ describe('SparkDomainManagementService: Service', function () {
         'isDomainAvailable': false,
         'isDomainReserved': true
       };
-      return [200, data, {}];
+      return [200, data];
     });
 
     SparkDomainManagementService.addSipUriDomain('shafiTest3').then(function (response) {
@@ -86,5 +86,4 @@ describe('SparkDomainManagementService: Service', function () {
 
     $httpBackend.flush();
   });
-
 });
