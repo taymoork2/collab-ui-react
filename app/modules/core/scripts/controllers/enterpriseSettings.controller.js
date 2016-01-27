@@ -193,9 +193,6 @@ angular.module('Core')
                 });
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-                Notification.error('ssoModal.disableFailed', {
-                  status: status
-                });
               }
             });
           }
