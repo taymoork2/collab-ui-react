@@ -1,6 +1,5 @@
 'use strict';
 
-
 fdescribe('RedirectTargetService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
@@ -15,9 +14,9 @@ fdescribe('RedirectTargetService', function () {
     });
     $provide.value("ConfigService", {
       getUrl: function () {
-        return "http://server"
+        return "http://server";
       }
-    })
+    });
   }));
 
   beforeEach(inject(function (RedirectTargetService, $httpBackend) {
@@ -33,11 +32,13 @@ fdescribe('RedirectTargetService', function () {
 
   it('should post to the correct hercules endpoint', function () {
     var url = "http://server/organizations/foo/allowedRedirectTargets";
-    var body = {hostname: "hostname", ttlInSeconds: 60 * 60 * 1};
+    var body = {
+      hostname: "hostname",
+      ttlInSeconds: 60 * 60 * 1
+    };
     httpBackend.expectPOST(url, body).respond(200);
 
     service.addRedirectTarget("hostname");
     httpBackend.flush();
   });
 });
-

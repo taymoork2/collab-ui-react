@@ -1,12 +1,13 @@
 'use strict';
 
-
 fdescribe('RedirectTargetController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
   var controller, redirectTargetServiceMock, modalInstanceMock, redirectTargetPromise, windowMock;
 
   beforeEach(inject(function ($controller) {
-    redirectTargetPromise = {then: sinon.stub()};
+    redirectTargetPromise = {
+      then: sinon.stub()
+    };
 
     redirectTargetServiceMock = {
       addRedirectTarget: sinon.stub().returns(redirectTargetPromise)
@@ -14,7 +15,9 @@ fdescribe('RedirectTargetController', function () {
     modalInstanceMock = {
       close: sinon.stub()
     };
-    windowMock = {open: sinon.stub()};
+    windowMock = {
+      open: sinon.stub()
+    };
 
     controller = $controller('RedirectTargetController', {
       RedirectTargetService: redirectTargetServiceMock,
@@ -39,4 +42,3 @@ fdescribe('RedirectTargetController', function () {
     expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname?action=register");
   });
 });
-

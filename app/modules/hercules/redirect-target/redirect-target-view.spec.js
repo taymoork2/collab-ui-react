@@ -23,5 +23,5 @@ describe('RedirectTargetView', function () {
     expect($scope.redirectTarget.redirectToTargetAndCloseWindowClicked.callCount).toBe(1);
     expect($scope.redirectTarget.redirectToTargetAndCloseWindowClicked.args[0][0]).toBe("yolo");
 
-  })
+  });
 });

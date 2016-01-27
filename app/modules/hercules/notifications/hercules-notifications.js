@@ -76,7 +76,7 @@
         controllerAs: 'redirectTarget',
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
-    }
+    };
   }
 
   function herculesNotificationsDirective() {

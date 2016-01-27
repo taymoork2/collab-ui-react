@@ -10,9 +10,12 @@
     return {
       addRedirectTarget: function (hostName) {
         var url = ConfigService.getUrl() + "/organizations/" + Authinfo.getOrgId() + "/allowedRedirectTargets";
-        var body = {hostname: hostName, ttlInSeconds: 60 * 60};
+        var body = {
+          hostname: hostName,
+          ttlInSeconds: 60 * 60
+        };
         return $http.post(url, body);
       }
-    }
+    };
   }
 }());

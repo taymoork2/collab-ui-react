@@ -19,7 +19,7 @@
     }
 
     function redirectToTargetAndCloseWindowClicked(hostName) {
-        $modalInstance.close();
+      $modalInstance.close();
       $window.open("https://" + hostName + "?action=register");
     }
   }
