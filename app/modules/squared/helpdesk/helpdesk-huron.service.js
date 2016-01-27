@@ -8,80 +8,64 @@
       if (HelpdeskService.useMock()) {
         return deferredResolve(massageDevices(HelpdeskMockData.huronDevicesForUser));
       }
-      if (!Config.isProd()) {
-        return UserEndpointService.query({
-            customerId: orgId,
-            userId: userId
-          }).$promise
-          .then(function (devices) {
-            var deviceList = [];
-            for (var i = 0; i < devices.length; i++) {
-              var device = {
-                uuid: devices[i].endpoint.uuid,
-                name: devices[i].endpoint.name,
-                deviceStatus: {}
-              };
+      return UserEndpointService.query({
+          customerId: orgId,
+          userId: userId
+        }).$promise
+        .then(function (devices) {
+          var deviceList = [];
+          for (var i = 0; i < devices.length; i++) {
+            var device = {
+              uuid: devices[i].endpoint.uuid,
+              name: devices[i].endpoint.name,
+              deviceStatus: {}
+            };
 
-              deviceList.push(device);
+            deviceList.push(device);
 
-              SipEndpointService.get({
-                customerId: orgId,
-                sipEndpointId: device.uuid,
-                status: true
-              }).$promise.then(function (endpoint) {
-                device.model = endpoint.model;
-                device.description = endpoint.description;
-                if (endpoint.registrationStatus && angular.lowercase(endpoint.registrationStatus) === 'registered') {
-                  device.deviceStatus.status = 'Online';
-                } else {
-                  device.deviceStatus.status = 'Offline';
-                }
-                massageDevice(device);
-              });
-            }
-            return deviceList;
-          });
-      } else {
-        return deferredResolve([]);
-      }
+            SipEndpointService.get({
+              customerId: orgId,
+              sipEndpointId: device.uuid,
+              status: true
+            }).$promise.then(function (endpoint) {
+              device.model = endpoint.model;
+              device.description = endpoint.description;
+              if (endpoint.registrationStatus && angular.lowercase(endpoint.registrationStatus) === 'registered') {
+                device.deviceStatus.status = 'Online';
+              } else {
+                device.deviceStatus.status = 'Offline';
+              }
+              massageDevice(device);
+            });
+          }
+          return deviceList;
+        });
     }
 
     function getDevice(orgId, deviceId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(massageDevice(HelpdeskMockData.huronDevice));
       }
-      if (!Config.isProd()) {
-        return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true').then(extractDevice);
-      } else {
-        return deferredResolve([]);
-      }
+      return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true').then(extractDevice);
     }
 
     function getUserNumbers(userId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractNumbers(HelpdeskMockData.huronUserNumbers));
       }
-      if (!Config.isProd()) {
-        return UserServiceCommonV2.get({
-          customerId: orgId,
-          userId: userId
-        }).$promise.then(extractNumbers);
-      } else {
-        return deferredResolve([]);
-      }
+      return UserServiceCommonV2.get({
+        customerId: orgId,
+        userId: userId
+      }).$promise.then(extractNumbers);
     }
 
     function searchDevices(searchString, orgId, limit) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
       }
-      if (!Config.isProd()) {
-        return $http
-          .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
-          .then(extractDevices);
-      } else {
-        return deferredResolve([]);
-      }
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
+        .then(extractDevices);
     }
 
     function extractNumbers(res) {
