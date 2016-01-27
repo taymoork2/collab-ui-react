@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('RedirectTargetView', function () {
+describe('RedirectTargetView', function () {
   beforeEach(module('wx2AdminWebClientApp'));
   var $scope;
   var view;
@@ -15,10 +15,10 @@ xdescribe('RedirectTargetView', function () {
 
   it('should open a new window with correct target when register resource clicked', function () {
     $scope.redirectTarget = {
-      addRedirectTargetClicked: sinon.stub(),
+      redirectToTargetAndCloseWindowClicked: sinon.stub(),
       hostName: "yolo"
     };
-    view.find(".activate-button").click();
+
     view.find(".register-button").click();
     expect($scope.redirectTarget.redirectToTargetAndCloseWindowClicked.callCount).toBe(1);
     expect($scope.redirectTarget.redirectToTargetAndCloseWindowClicked.args[0][0]).toBe("yolo");
