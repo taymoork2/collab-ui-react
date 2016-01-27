@@ -10,16 +10,16 @@
     var vm = this;
 
     var cbUseGlobal = {
-      opt: $translate.instant('internationalDialingPanel.useGlobal'),
-      val: '-1'
+      label: $translate.instant('internationalDialingPanel.useGlobal'),
+      value: '-1'
     };
     var cbAlwaysAllow = {
-      opt: $translate.instant('internationalDialingPanel.alwaysAllow'),
-      val: '1'
+      label: $translate.instant('internationalDialingPanel.alwaysAllow'),
+      value: '1'
     };
     var cbNeverAllow = {
-      opt: $translate.instant('internationalDialingPanel.neverAllow'),
-      val: '0'
+      label: $translate.instant('internationalDialingPanel.neverAllow'),
+      value: '0'
     };
 
     vm.currentUser = $stateParams.currentUser;
@@ -33,11 +33,9 @@
       key: 'internationalDialingEnabled',
       type: 'select',
       templateOptions: {
-        labelfield: "opt",
-        valuefield: "val",
-        options: vm.validInternationalDialingOptions,
-        required: true,
-        maxlength: 50
+        labelfield: "label",
+        valuefield: "value",
+        options: vm.validInternationalDialingOptions
       }
     }];
 
@@ -89,9 +87,9 @@
           vm.model.internationalDialingUuid = cosRestriction.user[0].uuid;
         }
         if (custRestriction) {
-          cbUseGlobal.opt = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.off') + ")";
+          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.off') + ")";
         } else {
-          cbUseGlobal.opt = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.on') + ")";
+          cbUseGlobal.label = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.on') + ")";
         }
         if (!overRide) {
           vm.model.internationalDialingEnabled = cbUseGlobal;
@@ -109,7 +107,6 @@
 
     function reset() {
       resetForm();
-      init();
     }
 
     function save() {
@@ -122,7 +119,7 @@
         type: 'null'
       };
 
-      if (vm.model.internationalDialingEnabled.val === "0") {
+      if (vm.model.internationalDialingEnabled.value === "0") {
         cosType.blocked = true;
       } else {
         cosType.blocked = false;

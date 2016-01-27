@@ -33,7 +33,7 @@ angular.module('Core')
         description: 'firstTimeWizard.enterpriseSettingsSub',
         icon: 'icon-settings',
         title: 'firstTimeWizard.enterpriseSettings',
-        controller: 'setupSSODialogCtrl',
+        controller: 'EnterpriseSettingsCtrl',
         steps: [{
           name: 'init',
           template: 'modules/core/setupWizard/enterprise.init.tpl.html'
@@ -78,16 +78,19 @@ angular.module('Core')
       $scope.isDirSyncEnabled = false;
       $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
+      $scope.addEnterpriseSipUrl = false;
 
       if (Authinfo.isCustomerAdmin()) {
         $q.all([FeatureToggleService.supportsDirSync(),
             FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
             FeatureToggleService.supportsCsvUpload(),
+            FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
           ])
           .then(function (results) {
             $scope.isDirSyncEnabled = results[0];
             $scope.addClaimSipUrl = results[1];
             $scope.csvUploadSupport = results[2];
+            $scope.addEnterpriseSipUrl = results[3];
           }).finally(function () {
             init();
           });
@@ -129,6 +132,22 @@ angular.module('Core')
           });
         }
 
+        var enterpriseSipUrlStep = {
+          name: 'enterpriseSipUrl',
+          template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html',
+        };
+
+        if ($scope.addEnterpriseSipUrl) {
+          if (Authinfo.isFusion()) {
+            var enterpriseSettingsTab = _.find($scope.tabs, {
+              name: 'enterpriseSettings',
+            });
+            if (angular.isDefined(enterpriseSettingsTab)) {
+              enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
+            }
+          }
+        }
+
         var claimSipUrlStep = {
           name: 'claimSipUrl',
           template: 'modules/core/setupWizard/claimSipUrl.tpl.html',
@@ -150,7 +169,7 @@ angular.module('Core')
               icon: 'icon-phone',
               title: 'firstTimeWizard.claimSipUrl',
               controller: 'CommunicationsCtrl as communicationsCtrl',
-              steps: [claimSipUrlStep],
+              steps: [claimSipUrlStep]
             };
 
             $scope.tabs.splice(2, 0, communicationsStep);

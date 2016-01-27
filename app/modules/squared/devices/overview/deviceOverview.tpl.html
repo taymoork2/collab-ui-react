@@ -16,6 +16,7 @@
             ng-class="deviceOverview.currentDevice.cssColorClass">
           </i>
           <span>{{deviceOverview.currentDevice.readableState}}</span>
+          <p ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</p>
         </div>
       </div>
     </cs-sp-section>
@@ -84,7 +85,6 @@
             labelfield="label"
             valuefield="value"
             on-change-fn="deviceOverview.saveUpgradeChannelAndWait()"
-            filter="false"
           >
           </cs-select>
         </div>

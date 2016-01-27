@@ -79,7 +79,6 @@ describe('WebExUtilsFact', function () {
     expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
   it('can check if site is iframe supported (release order < 400; enableT30UnifiedAdmin = true', inject(function (WebExUtilsFact) {
@@ -232,7 +231,7 @@ describe('WebExUtilsFact', function () {
     expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
-  xit('can check if site report is enabled', inject(function (WebExUtilsFact) {
+  it('can check if site report is enabled', inject(function (WebExUtilsFact) {
     WebExUtilsFact.isSiteSupportsIframe("test.site.com").then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
@@ -259,7 +258,6 @@ describe('WebExUtilsFact', function () {
     expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
   it('can check if site report is not enabled', inject(function (WebExUtilsFact) {
@@ -289,7 +287,6 @@ describe('WebExUtilsFact', function () {
     expect(WebExXmlApiFact.getSessionTicket).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteVersion).toHaveBeenCalled();
     expect(WebExXmlApiFact.getSiteInfo).toHaveBeenCalled();
-    expect(WebExXmlApiFact.getEnableT30UnifiedAdminInfo).toHaveBeenCalled();
   }));
 
   it('calls correct logout URL', function () {

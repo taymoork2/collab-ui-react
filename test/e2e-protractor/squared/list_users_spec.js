@@ -10,8 +10,7 @@ describe('List users flow', function () {
   });
 
   it('should search and click on user', function () {
-    utils.search(users.inviteTestUser.username);
-    users.clickOnUser();
+    utils.searchAndClick(users.inviteTestUser.username);
   });
 
   it('should display user admin settings panel when clicking on next arrow', function () {

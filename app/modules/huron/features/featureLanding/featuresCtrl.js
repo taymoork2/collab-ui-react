@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -114,7 +114,9 @@
     }
 
     function reload() {
-      init();
+      $state.go($state.current, {}, {
+        reload: true
+      });
     }
 
     function getListOfFeatures() {
@@ -151,7 +153,6 @@
 
       if (feature.name === 'AA') {
         vm.aaModel = data;
-        AAModelService.setAAModel(vm.aaModel);
       }
 
       var list = feature.formatter(data);

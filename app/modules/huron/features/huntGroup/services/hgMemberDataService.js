@@ -71,7 +71,8 @@
       users.forEach(function (user) {
         tempArray.some(function (u) {
           var found = (user.userUuid === u.uuid);
-          if (found) {
+          var alreadyAdded = selectedHuntMembers.indexOf(u);
+          if (found && alreadyAdded === -1) {
             selectedHuntMembers.push(u);
           }
           return found;
@@ -212,13 +213,20 @@
      * concatenated with a space.
      */
     function getDisplayName(user) {
-      if (!user || (!user.firstName && !user.lastName))
+      if (!user) {
         return;
+      }
 
-      if (user.lastName) {
-        return user.firstName + " " + user.lastName;
-      } else {
+      if (!user.firstName && !user.lastName) {
+        return user.userName;
+      } else if (user.firstName && user.lastName) {
+        return user.firstName + ' ' + user.lastName;
+      } else if (user.firstName) {
         return user.firstName;
+      } else if (user.lastName) {
+        return user.lastName;
+      } else {
+        return;
       }
     }
   }

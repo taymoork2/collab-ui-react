@@ -355,6 +355,9 @@ angular.module('Core')
 
           _.forEach(userLicenseIds, function (userLicenseId) {
             _.forEach($scope.allLicenses, function (siteObj) {
+              if (siteObj.siteUrl === '' && !siteObj.confModel) {
+                siteObj.confModel = siteObj.licenseId === userLicenseId;
+              }
               siteObj.confLic = _.map(siteObj.confLic, function (conf) {
                 if (!conf.confModel) {
                   conf.confModel = conf.licenseId === userLicenseId;
@@ -394,7 +397,7 @@ angular.module('Core')
           siteUrl: _.get(obj, 'license.siteUrl', ''),
           billing: obj.license.billingServiceId,
           volume: obj.license.volume,
-          licenseId: obj.license.licenseId,
+          licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
           confModel: false,
@@ -710,21 +713,23 @@ angular.module('Core')
        * @param {string[]} state - return license list based on matching state (checked = true)
        */
       var getConfIdList = function (state) {
-        var confId = [];
-        var cmrId = [];
+        var idList = [];
 
         _.forEach($scope.allLicenses, function (license) {
-          confId = confId.concat(_(license.confLic).filter({
+          if (!_.isArray(license) && license.confModel === state) {
+            idList.push(license.licenseId);
+          }
+          idList = idList.concat(_(license.confLic).filter({
             confModel: state
           }).pluck('licenseId').remove(undefined).value());
 
-          cmrId = cmrId.concat(_(license.cmrLic).filter({
+          idList = idList.concat(_(license.cmrLic).filter({
             cmrModel: state
           }).pluck('licenseId').remove(undefined).value());
 
         });
 
-        return confId.concat(cmrId);
+        return idList;
       };
 
       /**
@@ -915,10 +920,14 @@ angular.module('Core')
       };
 
       function isEmailAlreadyPresent(input) {
-        var inputEmail = getEmailAddress(input);
+        var inputEmail = getEmailAddress(input).toLowerCase();
         if (inputEmail) {
           var userEmails = getTokenEmailArray();
-          return userEmails.indexOf(inputEmail) >= 0;
+          var userEmailsLower = [];
+          for (var i = 0; i < userEmails.length; i++) {
+            userEmailsLower[i] = userEmails[i].toLowerCase();
+          }
+          return userEmailsLower.indexOf(inputEmail) >= 0;
         } else {
           return false;
         }
@@ -1067,11 +1076,17 @@ angular.module('Core')
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
-              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
-                userResult.message = $translate.instant('usersPage.userExistsError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
+              } else if (userStatus === 403) {
+                if (data.userResponse[i].message === '400081') {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                } else if (data.userResponse[i].message === '400084') {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                }
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {

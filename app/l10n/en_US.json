@@ -91,7 +91,8 @@
     "noExtMappingAvail": "No DID mapping available.",
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
-    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
+    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
+    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -123,7 +124,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
-    "contactCenter": "Contact Center",
+    "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -134,12 +135,11 @@
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
-    "paidMsg": "Spark Message",
+    "paidMsg": "Message",
     "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
-    "paidComm": "Spark Call",
+    "paidComm": "Call",
     "paidContactCenter": "Chat, Email, Voice",
-    "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -161,7 +161,6 @@
     "telephonyPreview": "Telephony",
     "telephonyFeaturesPreview": "Telephony Features",
     "conferencingPreview": "Conferencing",
-    "convPreview": "Messaging",
     "usagePreview": "Usage",
     "endpointsPreview": "Endpoints",
     "entitlementsPreview": "Entitlements",
@@ -182,9 +181,6 @@
     "calling": "Calling",
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
-  },
-  "messagingPanel": {
-    "title": "Messaging"
   },
   "settings": {
     "title": "Service Setup",
@@ -324,7 +320,7 @@
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
-    "errorSettingToggle": "There was a problem setting {{key}} for the selected organization",
+    "errorSettingToggle": "There was a problem setting a toggle",
     "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
@@ -360,7 +356,10 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
-    "saveAs": "Save As"
+    "saveAs": "Save As",
+    "allCalls": "All Calls",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "activeUsers": {
     "active": "Active",
@@ -375,12 +374,14 @@
     "registeredUsers": "Registered Users",
     "showActiveUsers": "Show Most Active Users",
     "squaredActivity": "Total Activity",
+    "sparkMessages": "Spark Messages",
     "user": "User",
     "users": "Users",
+    "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
-    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+    "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -408,6 +409,7 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
@@ -421,10 +423,13 @@
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
-    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
-    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
     "totalCalls": "Total Calls",
-    "totalCallMinutes": "Total Call Minutes"
+    "totalCallMinutes": "Total Call Minutes",
+    "callMinutes": "Call Minutes",
+    "failureRate": "Call Failure Rate",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
@@ -528,7 +533,17 @@
     "roles": "Roles",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
-    "status": "Status"
+    "status": "Spark Status",
+    "tabs": {
+      "status": "Status",
+      "logs": "Logs",
+      "orderProvisioning": "Order Provisioning"
+    },
+    "cards": {
+      "sparkStatus": "Spark Status",
+      "helpDesk": "Help Desk Support",
+      "supportResources": "Support Resources"
+    }
   },
   "cdrLogs": {
     "title": "CDR Call Flow",
@@ -604,6 +619,16 @@
     "errOrderStatus": "Failed to retrieve order status",
     "errCustomerEmail": "Failed to resend welcome email to customer admin",
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
+  },
+  "weekDays": {
+    "everyDay": "Every {{day}}",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
   },
   "common": {
     "delete": "Delete",
@@ -1078,7 +1103,7 @@
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
-      "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "deactivateService": "Your users will no longer be able to use this service.",
       "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
@@ -1101,7 +1126,7 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Domain",
+        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
@@ -1111,12 +1136,24 @@
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
+      },
+      "scheduleUpgrade": {
+        "title": "Automatic Software Upgrades",
+        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
+        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
+    },
+    "notifications": {
+      "scheduleUpgrade": {
+        "title": "Confirm the Schedule for Automatic Software Upgrades",
+        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
+        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+      }
     }
   },
   "firstTimeWizard": {
@@ -1136,6 +1173,7 @@
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
+    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "timeElapsed": "Time Elapsed:",
     "uploadResultStep": "Upload Result",
     "uploadErrorStep": "Upload Errors",
@@ -1201,6 +1239,13 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
+    "setSipUriDesc": "This name will appear in the end-users' ID which they will use to reach each other. For example, if John Smith who works at Acme, he would be reachable by dialing jsmith@acme.call.ciscospark.com",
+    "setSipUriDomainMsg": "Enter a SIP URI domain name",
+    "setSipUriDomainTitle": "SIP URI Domain Name",
+    "setSipUriDomainCompNames": "Company's Domain Names",
+    "setSipUriDomainCheckAvailability": "Check Availability",
+    "setSipUriPlaceholder": "input a unique domain",
+    "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -1238,10 +1283,11 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
-    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
+    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
@@ -1341,86 +1387,9 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "addAutoAttendant": "New Auto Attendant",
-    "deleteAutoAttendant": "Delete Auto Attendant",
-    "information": "Auto attendants allow you to create custom menus, annoucements and call flows to handle incoming calls to your business.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
-    "general": "General",
-    "schedule": "Schedule",
-    "holidayDates": "Holiday Dates",
-    "autoAttendant": "Auto Attendant",
-    "navHelpGeneral": "Click <b>General</b> to manage name and numbers to reach this Auto Attendant.",
-    "navHelpAA": "Click <b>Auto Attendant</b> to configure menu options and annoucements.",
-    "welcomeStartHelp": "Click + to begin",
-    "welcomeOngoingHelp": "Click + to add actions",
-    "name": "Auto Attendant Name",
     "namePlaceholder": "Enter Name",
-    "numbers": "Auto Attendant Numbers",
-    "numberInternalPlaceholder": "Enter Internal Number",
-    "addNumber": "Add Number",
-    "deleteNumber": "Delete Number",
-    "addMenu": "Add Menu",
-    "deleteMenu": "Delete Menu",
-    "editMenu": "Edit Menu",
-    "mainMenu": "Main Menu",
-    "addMenuOption": "Add Menu Option",
-    "editMenuOption": "Edit Menu Option",
-    "deleteMenuOption": "Delete Menu Option",
-    "announcementMenuPlaceholder": "Add Menu Announcement",
-    "announcementMenu": "Menu Announcement",
-    "editAnnouncement": "Edit Announcement",
-    "deleteAnnoucment": "Delete Annoucement",
-    "optionForInvalidInputPlaceholder": "Enter Default Option For Invalid Input",
-    "optionForInvalidInput": "Default Option For Invalid Input",
-    "timeoutOptionPlaceholder": "Configure Timeout Options",
-    "timeoutOption": "Timeout Options",
-    "customMenu": "Custom Menu",
-    "customEdit": "Edit Custom Menu",
-    "customeDelete": "Delete Custom Menu",
-    "customUrl": "CML Instruction Location",
-    "urlPlaceholder": "Enter URL",
-    "userName": "User Name",
-    "userNamePlaceholder": "Enter User Name",
-    "password": "Password",
-    "passwordPlaceholder": "Enter Password",
-    "description": "Description",
-    "descriptionPlaceholder": "Enter Description",
-    "action": "Action",
-    "numberPlaceholder": "Enter Number",
-    "key": "Key",
-    "keyPlaceholder": "Choose Key",
-    "playAnnouncement": "Play Announcement",
-    "playPlaceholder": "http:// or text",
-    "disconnect": "Disconnect",
-    "announcementPlaceholder": "Add Announcement",
-    "announcement": "Announcement",
-    "disconnectPlaceholder": "Add Disconnect",
-    "routeToNumberPlaceholder": "Add Route To Number",
-    "routeToDialedNumberPlaceholder": "Add Route To Dialed Number",
-    "routeToMailboxPlaceholder": "Add Route To Mailbox",
-    "routeToDialedMailboxPlaceholder": "Add Route To Dialed Mailbox",
-    "routeToCollectedNumberPlaceholder": "Add Route To Collected Number",
-    "repeatMenuPlaceholder": "Add Repeat Menu",
-    "disconnectBusy": "With Busy Tone",
-    "disconnectTone": "With Disconnect Tone",
-    "disconnectNone": "With No Tone",
-    "routeToNumber": "Route To Number",
-    "routeToDialedNumber": "Route To Dialed Number",
-    "routeToMailbox": "Route To Mailbox",
-    "routeToDialedMailbox": "Route To Dialed Mailbox",
-    "routeToCollectedNumber": "Route To Collected Number",
     "repeatMenu": "Repeat Menu",
-    "configureMenuOption": "Configure Menu Option",
-    "menuOption": "Menu Option",
-    "invalidMenuOptionRequired": "This menu option is required.",
-    "invalidRequiredFields": "Enter the required fields.",
-    "invalidNameMissing": "Enter Auto Attendant Name under General.",
-    "invalidNameNotUnique": "Auto Attendant Name is already in use. Please enter a new Auto Attendant Name under General.",
-    "invalidCustomMenuIncomplete": "Define Custom Menu under Auto Attendant.",
-    "invalidMenuAnnoucementMissing": "Add Menu Annoucement to Auto Attendant / Main Menu.",
-    "invalidMenuDefaultMissing": "Enter Default Option for Invalid Input for Auto Attendant / Main Menu.",
-    "invalidMenuMinimumOption": "Configure at least one menu option for Auto Attendant / Main Menu.",
-    "errorListCes": "Failed to list Auto Attendant(s): {{statusText}} ({{status}}).",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -1428,14 +1397,6 @@
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
-    "errorAddNumberInUse": "Failed to add number: {{number}} already in use.",
-    "errorAddNumberInUseOtherAA": "Failed to add number: {{number}} already in use by {{name}}.",
-    "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
-    "landingDevelopmentLink": "AA Development Link",
-    "landingInformation": "Auto attendants allow you to create a custom greetings and phone menus that handle inbound calls to your business.",
-    "landingTitle": "Auto Attendants",
-    "landingAddAutoAttendant": "Create New",
-    "landingTemplateAutoAttendant": "Create from Template",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1862,25 +1823,26 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting and WebEx Setup",
+      "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
+      "webexDetails": "WebEx Enterprise Edition",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
+      "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "siteUrlPlaceholder": "acmecorp.webex.com",
-      "timezonePlaceholder": "Search for a time zone...",
-      "invalidSite": "SiteUrl is invalid.",
-      "duplicateSite": "SiteUrl is already in use.",
-      "domainInvalid": "SiteUrl must contain the webex.com domain name.",
-      "validationHttpError": "Could not reach server to validate siteUrl. Try again."
+      "siteUrlPlaceholder": "companyname.webex.com",
+      "timeZonePlaceholder": "Select a time zone...",
+      "invalidSite": "Site URL is invalid. Re-enter a Site URL following the example below.",
+      "duplicateSite": "Site URL is already in use. Enter a different Site URL.",
+      "domainInvalid": "Site URL must contain the webex.com domain name.",
+      "validationHttpError": "Could not reach server to validate Site URL. Try again."
     },
     "call": {
-      "title": "Start New Trial - Ship Devices",
+      "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1899,10 +1861,12 @@
     "numbers": {
       "title": "Start New Trial - Add Numbers"
     },
-    "trialSuccess": "Your trial is ready.",
-    "nextStepPrompt": "Do you want to setup services for the customer?",
-    "setupLater": "No thanks",
+    "trialSuccess": "Your trial is ready",
+    "nextStepPrompt": "Do you want to setup the services for the customer?",
+    "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
+    "finishTrialAdded": "Your trial has been added",
+    "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}."
@@ -1911,12 +1875,15 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
+    "licenseQuantity": "Licenses Quantity",
+    "users": "Users",
     "message": "Message",
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
   },
+
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
@@ -1994,7 +1961,6 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
@@ -2075,6 +2041,7 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "expires": "expires",
+    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -2243,6 +2210,7 @@
       "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
       "schedule": "Set a Schedule",
+      "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "serviceStatus": {
@@ -2285,7 +2253,8 @@
       "lastReported": "Last Reported",
       "description": "Description",
       "noAlarms": "No alarms reported",
-      "hostImpact": "Host Impacted"
+      "hostImpact": "Host Impacted",
+      "raised": "Raised"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2837,11 +2806,11 @@
   },
   "CsdmStatus": {
     "Online": "Online",
+    "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
-    "NeedsActivation": "Needs Activation",
-    "issuesDetected": "Issues Detected",
+    "RequiresActivation": "Requires Activation",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
@@ -2873,6 +2842,22 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
+      "NTPStatus": {
+        "type": "Time Server Not Reachable",
+        "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
+      },
+      "AudioPairingInterference": {
+        "type": "Signal interference from other devices",
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing between the video system and your phone or laptop."
+      },
+      "ECReferenceDelay": {
+        "type": "Audio Delay",
+        "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
+      },
+      "UltrasoundSpeakerAvailability": {
+        "type": "No Embedded Ultrasound Speaker",
+        "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
+      },
       "inactive": {
         "type": "Inactive Account",
         "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
@@ -2894,7 +2879,7 @@
   },
   "contactCenterUserConfig": {
     "channels": "Channels",
-    "contactCenterProfile": "Contact Center Profile",
+    "contactCenterProfile": "Care Profile",
     "chat": "Chat",
     "voice": "Voice",
     "email": "Email",
@@ -3141,7 +3126,7 @@
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
-    "id_readonly_admin": "Readonly Admin",
+    "id_readonly_admin": "Read-only Admin",
     "user": "User"
   },
   "atlasRoles": {
@@ -3159,7 +3144,8 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
-    "Site_Admin": "Site Admin"
+    "Site_Admin": "Site Admin",
+    "ReadOnly_Admin": "Read-only Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3269,13 +3255,23 @@
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
+    "history": {
+      "clear": "Clear History",
+      "nohistory": "No Search History",
+      "singlematch": "match",
+      "matches": "matches"
+    },
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
     "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+    "numbers": "Numbers",
+    "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
+    "applyOrgFilterPleaseWait": "Applying filter, please wait...",
+    "noMoreResults": "Max results limit reached. Try a different search."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3287,5 +3283,41 @@
     "useLatestCode": "A new code has been sent to {{userEmail}}",
     "unexpectedError": "Unexpected error processing request.",
     "usage": "{{usage}} of {{volume}} in use"
+  },
+  "domainManagement": {
+    "title": "Domain Verification",
+    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "addDomain": "Add domain",
+    "verifyDomain": "Verify",
+    "list": {
+      "domainHeader": "Domain",
+      "statusHeader": "Status",
+      "actionsHeader": "Actions"
+    },
+    "add": {
+      "header": "Add domains",
+      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "exampleDomain": "example.com",
+      "invalidDomain": "Invalid domain entered"
+    },
+    "delete": {
+      "header": "Delete domain",
+      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains."
+    },
+    "email": {
+      "header": "Send email",
+      "description": "",
+      "exampleEmail": "admin@example.com",
+      "invalidEmail": "This is not an email address",
+      "sendEmail": "Send instructions"
+    },
+    "verify": {
+      "header": "Verify domain",
+      "verifyThis": "You are about to verify the following domain:",
+      "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "verify": "Verify",
+      "enable": "I understand this."
+    }
   }
 }

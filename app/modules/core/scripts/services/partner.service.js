@@ -231,8 +231,8 @@
             }
           }
 
-          dataObj.offer.userServices = offerUserServices.sort().join(', ');
-          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.sort().join(', ');
+          dataObj.offer.userServices = offerUserServices.join(', ');
+          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.join(', ');
         }
 
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);

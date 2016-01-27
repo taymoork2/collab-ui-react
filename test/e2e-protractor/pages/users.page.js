@@ -23,7 +23,7 @@ var UsersPage = function () {
     password: 'C1sc0123!',
   };
 
-  this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
+  this.servicesPanel = element.all(by.cssContainingText('.section-title-row', 'Services')).first();
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
   this.editServicesModal = element(by.css('.edit-services'));
@@ -44,7 +44,9 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.css('#Message .feature-arrow'));
+  this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
+  this.meeting25Party = element.all(by.id('CF_50de0558-2246-4a46-a87f-cfe477058fdb'));
+
   this.communicationsService = element(by.css('#Call .feature-arrow'));
   this.conferencingService = element(by.css('#Meeting .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
@@ -64,8 +66,8 @@ var UsersPage = function () {
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 
-  this.emailAddressRadio = element(by.cssContainingText("span", "Email address"));
-  this.nameAndEmailRadio = element(by.cssContainingText("span", "Names and Email address"));
+  this.emailAddressRadio = element(by.css('label[for="radioEmail"]'));
+  this.nameAndEmailRadio = element(by.css('label[for="radioNamesAndEmail"]'));
   this.firstName = element(by.id('firstName'));
   this.lastName = element(by.id('lastName'));
   this.emailAddress = element(by.id('emailAddress'));
@@ -79,10 +81,13 @@ var UsersPage = function () {
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
+  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Spark Message'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Message'));
   this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
@@ -160,7 +165,6 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
-  this.paidMsg = element(by.id('paidMsg'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -189,10 +193,6 @@ var UsersPage = function () {
   this.retrieveExternalNumber = function () {
     utils.wait(this.externalNumber);
     return this.externalNumber.evaluate('csSelect.selected.pattern');
-  };
-
-  this.clickOnUser = function () {
-    utils.click(element(by.css('.ui-grid-row')));
   };
 
   this.assertPage = function (page) {
@@ -226,6 +226,16 @@ var UsersPage = function () {
     });
   };
 
+  this.createUser = function (userName) {
+    utils.click(this.addUsers);
+    utils.expectIsDisplayed(this.manageDialog);
+    utils.click(this.nameAndEmailRadio);
+    utils.sendKeys(this.firstName, 'Test');
+    utils.sendKeys(this.lastName, 'User');
+    utils.sendKeys(this.emailAddress, userName);
+    utils.click(this.plusIcon);
+    utils.click(this.nextButton);
+  };
 };
 
 module.exports = UsersPage;

@@ -64,6 +64,9 @@ gulp.task('karma', function (done) {
       configFile: path.resolve(__dirname, '../../test/karma-unit-' + specs + '.js')
     };
     if (args.debug) {
+      if (args.watch) {
+        options.autoWatch = true;
+      }
       options.browsers = ['Chrome'];
       options.preprocessors = {};
       options.browserNoActivityTimeout = 600000;

@@ -78,7 +78,7 @@ describe('Partner Reports', function () {
       utils.click(reports.getOption(reports.timeSelect, time));
     });
 
-    it('should be able to show/hide most active users', function () {
+    xit('should be able to show/hide most active users', function () {
       reports.clickFilter(reports.customerSelect);
       utils.click(reports.getOption(reports.customerSelect, e2eCustomer));
       utils.expectIsDisplayed(reports.showmostActiveButton);

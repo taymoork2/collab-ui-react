@@ -6,16 +6,15 @@
     .controller('TrialMeetingCtrl', TrialMeetingCtrl);
 
   /* @ngInject */
-  function TrialMeetingCtrl($q, $translate, TrialMeetingService, WebexTimeZoneService) {
+  function TrialMeetingCtrl($q, $translate, TrialMeetingService, WebexTrialService) {
     var vm = this;
 
     var _trialData = TrialMeetingService.getData();
 
     vm.details = _trialData.details;
     vm.siteUrl = _trialData.details.siteUrl;
-    vm.timeZoneId = _trialData.details.timeZoneId;
-    vm.timeZones = [];
     vm.validatingUrl = false;
+    vm.validateSiteUrl = validateSiteUrl;
 
     vm.siteUrlFields = [{
       model: vm.details,
@@ -23,36 +22,17 @@
       type: 'input',
       templateOptions: {
         required: true,
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
-        label: $translate.instant('trialModal.meeting.webexSiteUrl'),
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
+        label: $translate.instant('trialModal.meeting.siteUrl'),
         placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
       },
       modelOptions: {
         'updateOn': 'blur'
       },
-      validators: {
-        validUrl: {
-          expression: function ($viewValue, $modelValue) {
-            var siteUrl = $modelValue || $viewValue;
-            vm.validatingUrl = true;
-            return $q(function (resolve, reject) {
-              WebexTimeZoneService.validateSiteUrl(siteUrl).then(function (site) {
-                  vm.siteUrlErrorCode = site.errorCode;
-                  if (site.isValid) {
-                    resolve();
-                  } else {
-                    reject();
-                  }
-                })
-                .catch(function () {
-                  reject();
-                })
-                .finally(function () {
-                  vm.validatingUrl = false;
-                });
-            });
-          },
+      asyncValidators: {
+        siteUrl: {
+          expression: vm.validateSiteUrl,
           message: function () {
             var errors = {
               'domainInvalid': $translate.instant('trialModal.meeting.domainInvalid'),
@@ -70,29 +50,61 @@
       model: vm.details,
       key: 'timeZone',
       type: 'select',
+      defaultValue: {
+        'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
+        'timeZoneId': undefined
+      },
       templateOptions: {
         required: true,
         labelfield: 'label',
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
-        filter: true,
-        label: $translate.instant('trialModal.meeting.webexTimezone'),
-        inputPlaceholder: $translate.instant('trialModal.meeting.timezonePlaceholder')
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
+        labelProp: 'label',
+        valueProp: 'timeZoneId',
+        label: $translate.instant('trialModal.meeting.timezone')
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return vm.timeZones;
+          var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
+          var timeZones = WebexTrialService.getTimeZones();
+          return _.filter(timeZones, function (timeZone) {
+            return _.includes(validTimeZoneIds, timeZone.timeZoneId);
+          });
+        }
+      },
+      validators: {
+        'timezone': {
+          expression: function ($viewValue, $modelValue) {
+            var timezone = $modelValue || $viewValue;
+            return !_.isUndefined(timezone.timeZoneId);
+          }
         }
       }
     }];
 
-    init();
-
     ////////////////
 
-    function init() {
-      WebexTimeZoneService.getTimeZones().then(function (timeZones) {
-        vm.timeZones = timeZones;
+    function validateSiteUrl($viewValue, $modelValue) {
+      var siteUrl = $modelValue || $viewValue;
+      if (!siteUrl) {
+        return false;
+      }
+      vm.validatingUrl = true;
+      return $q(function (resolve, reject) {
+        WebexTrialService.validateSiteUrl(siteUrl).then(function (site) {
+            vm.siteUrlErrorCode = site.errorCode;
+            if (site.isValid) {
+              resolve();
+            } else {
+              reject();
+            }
+          })
+          .catch(function () {
+            reject();
+          })
+          .finally(function () {
+            vm.validatingUrl = false;
+          });
       });
     }
   }

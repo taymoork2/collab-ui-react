@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTimeZoneService*/
+/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
 'use strict';
 
 describe('Service: Trial Service', function () {
@@ -13,7 +13,7 @@ describe('Service: Trial Service', function () {
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
       'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService',
-      'WebexTimeZoneService');
+      'WebexTrialService');
 
     bard.mockService(LogMetricsService, {});
     bard.mockService(Authinfo, {
@@ -46,9 +46,12 @@ describe('Service: Trial Service', function () {
   });
 
   it('should edit a trial', function () {
-    $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(trialEditResponse);
-    TrialService.editTrial('444', '', '', '', '', ['COLLAB']).then(function (response) {
+    var customerOrgId = 123;
+    var trialId = 444;
+    $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
+    TrialService.editTrial(customerOrgId, trialId).then(function (response) {
       expect(response.data).toEqual(trialEditResponse);
+      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
     });
     $httpBackend.flush();
   });
@@ -72,7 +75,7 @@ describe('Service: Trial Service', function () {
 
     it('should have offers list', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var offerList = ['COLLAB', 'WEBEX', 'SQUAREDUC'];
+        var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
         var offers = angular.fromJson(data).offers;
         return _.every(offerList, function (offer) {
           return _.some(offers, {

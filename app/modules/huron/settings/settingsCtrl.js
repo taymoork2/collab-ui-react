@@ -28,7 +28,6 @@
 
     var companyCallerIdType = 'Company Caller ID';
 
-    vm.CosFeatureEnabled = false;
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
@@ -215,10 +214,10 @@
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
         options: vm.steeringDigits
       },
+      hideExpression: function () {
+        return vm.hideFieldSteeringDigit;
+      },
       expressionProperties: {
-        'hideExpression': function () {
-          return vm.hideFieldSteeringDigit;
-        },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return true;
         }
@@ -383,13 +382,11 @@
             addInternalNumberRange();
           }
         },
-        expressionProperties: {
-          'hideExpression': function () {
-            if (vm.model.displayNumberRanges.length > 9) {
-              return true;
-            } else {
-              return vm.hideFieldInternalNumberRange;
-            }
+        hideExpression: function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
           }
         }
       }]
@@ -400,11 +397,6 @@
       templateOptions: {
         label: $translate.instant('internationalDialing.internationalDialing'),
         description: $translate.instant('internationalDialing.internationalDialingDesc')
-      },
-      expressionProperties: {
-        'hideExpression': function () {
-          return !vm.CosFeatureEnabled;
-        }
       }
     }];
 
@@ -443,12 +435,12 @@
             label: $translate.instant('companyCallerId.callerIdName'),
             type: 'text'
           },
+          hideExpression: function () {
+            return !vm.model.callerId.callerIdEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function () {
               return vm.model.callerId.callerIdEnabled;
-            },
-            'hideExpression': function () {
-              return !vm.model.callerId.callerIdEnabled;
             }
           }
         }, {
@@ -468,14 +460,14 @@
             combo: true,
             searchableCombo: true
           },
+          hideExpression: function () {
+            return !vm.model.callerId.callerIdEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function (newValue, oldValue) {
               if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
-            },
-            'hideExpression': function () {
-              return !vm.model.callerId.callerIdEnabled;
             }
           },
           controller: function ($scope) {
@@ -514,12 +506,12 @@
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
             isWarn: false
           },
+          hideExpression: function () {
+            return !vm.model.companyVoicemail.companyVoicemailEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
-            },
-            'hideExpression': function () {
-              return !vm.model.companyVoicemail.companyVoicemailEnabled;
             }
           },
           controller: function ($scope) {
@@ -573,11 +565,6 @@
       var promises = [];
       vm.loading = true;
       var errors = [];
-      var cosFeaturePromise = FeatureToggleService.supports(FeatureToggleService.features.huronClassOfService).then(function (toggle) {
-        if (toggle) {
-          vm.CosFeatureEnabled = true;
-        }
-      });
       promises.push(HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
         angular.forEach(customer.links, function (service) {
@@ -594,11 +581,7 @@
       }).then(function () {
         return listInternalExtensionRanges();
       }).then(function () {
-        if (vm.CosFeatureEnabled) {
-          return getInternationalDialing();
-        } else {
-          return;
-        }
+        return getInternationalDialing();
       }).then(function () {
         return setServiceValues();
       }).then(function () {
@@ -828,9 +811,7 @@
         });
 
         // save International dialing
-        if (vm.CosFeatureEnabled) {
-          promises.push(saveInternationalDialing());
-        }
+        promises.push(saveInternationalDialing());
       }
 
       $q.all(promises)
@@ -991,7 +972,7 @@
 
     function loadExternalNumberPool(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
-        vm.externalNumberPool = ExternalNumberService.getAllNumbers();
+        vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
         vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
           var externalNumber = angular.copy(en);
           externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);

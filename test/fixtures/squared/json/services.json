@@ -1,0 +1,62 @@
+[{
+  "serviceId": "squaredFusionCal",
+  "displayName": "Calendar Service",
+  "ciName": "squared-fusion-cal",
+  "type": "FREE_WITH_LICENSE",
+  "isConfigurable": false
+}, {
+  "serviceId": "squaredOnBehalfOf",
+  "displayName": "Spark On Behalf",
+  "ciName": "squared-onbehalf-of",
+  "type": "BETA",
+  "isConfigurable": false
+}, {
+  "serviceId": "webExSquared",
+  "displayName": "Free team rooms",
+  "ciName": "webex-squared",
+  "type": "FREE",
+  "isConfigurable": false
+}, {
+  "serviceId": "squaredCallInitiation",
+  "displayName": "Free 3 party meetings",
+  "ciName": "squared-call-initiation",
+  "type": "FREE",
+  "isConfigurable": false
+}, {
+  "serviceId": "spark",
+  "displayName": "Spark",
+  "ciName": "spark",
+  "type": "FREE",
+  "isConfigurable": false
+}, {
+  "serviceId": "squaredFusionUC",
+  "displayName": "Call Service Aware",
+  "ciName": "squared-fusion-uc",
+  "type": "FREE_WITH_LICENSE",
+  "isConfigurable": false
+}, {
+  "serviceId": "squaredFusionMgmt",
+  "displayName": "Hybrid Services Management",
+  "ciName": "squared-fusion-mgmt",
+  "type": "HYBRID_ADMIN_LICENSE",
+  "isConfigurable": false
+}, {
+  "serviceId": "squaredSyncUp",
+  "displayName": "25 party meetings",
+  "ciName": "squared-syncup",
+  "type": "PAID",
+  "isConfigurable": false
+}, {
+  "serviceId": "messengerInterop",
+  "displayName": "Messenger interop",
+  "ciName": "messenger-interop",
+  "type": "BETA",
+  "isConfigurable": true,
+  "licenseType": "MESSAGING"
+}, {
+  "serviceId": "squaredRoomModeration",
+  "displayName": "Standard team rooms",
+  "ciName": "squared-room-moderation",
+  "type": "PAID",
+  "isConfigurable": false
+}]

@@ -10,7 +10,7 @@ describe('Service: DeviceFilter', function () {
   }));
 
   it('should return a list of filters', function () {
-    expect(DeviceFilter.getFilters().length).toBe(6);
+    expect(DeviceFilter.getFilters().length).toBe(5);
   });
 
   it('should return a list of filters with correct count', function () {
@@ -43,9 +43,6 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(2);
     expect(_.find(filters, {
       filterValue: 'offline'
-    }).count).toBe(1);
-    expect(_.find(filters, {
-      filterValue: 'inactive'
     }).count).toBe(1);
   });
 
@@ -80,9 +77,6 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(0);
     expect(_.find(filters, {
       filterValue: 'offline'
-    }).count).toBe(0);
-    expect(_.find(filters, {
-      filterValue: 'inactive'
     }).count).toBe(0);
   });
 
@@ -271,12 +265,35 @@ describe('Service: DeviceFilter', function () {
 
     it('should filter devices in error', function () {
       var arr = [{
-        hasIssues: true
+        hasIssues: true,
+        isOnline: true
       }, {}];
 
       DeviceFilter.setCurrentFilter('issues');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+    });
+
+    it('inactive accounts are not counted as devices with issues', function () {
+      var arr = [{
+        hasIssues: true,
+        isUnused: true
+      }, {}];
+
+      DeviceFilter.setCurrentFilter('issues');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
+    });
+
+    it('offline devices are not counted as devices with issues', function () {
+      var arr = [{
+        hasIssues: true,
+        isUnused: true
+      }, {}];
+
+      DeviceFilter.setCurrentFilter('issues');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
     });
 
   });

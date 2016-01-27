@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $scope, $q, FeatureToggleService, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, FeatureToggleService, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.defaults = [];
@@ -14,6 +14,7 @@
 
     vm.resetForm = resetForm;
     vm.updateToggles = updateToggles;
+    vm.handleClick = handleClick;
 
     init();
     ////////////////
@@ -51,42 +52,31 @@
     }
 
     function resetForm() {
-      $scope.orgFeatureToggles.form.$setPristine();
-      $scope.orgFeatureToggles.form.$setUntouched();
       vm.toggles = angular.copy(vm.defaults);
     }
 
     function updateToggles() {
-      var deferred = $q.defer();
       var changedToggles = findDifference();
-      var successfulToggles = 0;
-      _.map(changedToggles, function (toggle) {
-        // The toggle service API only accepts one toggle at a time
-        FeatureToggleService.setFeatureToggle(false, vm.currentOrganization.id, toggle.name, toggle.model)
+
+      var featureToggleRules = _.map(changedToggles, function (toggle) {
+        return FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id, toggle.name, toggle.model);
+      });
+
+      if (featureToggleRules.length) {
+        FeatureToggleService.setFeatureToggles(false, featureToggleRules)
           .catch(function () {
-            Notification.error('organizationsPage.errorSettingToggle', {
-              key: toggle.key
-            });
-            deferred.reject();
+            Notification.error('organizationsPage.errorSettingToggle');
           })
           .then(function () {
-            successfulToggles++;
-
-            _.find(vm.defaults, {
-              name: toggle.name
-            }).model = toggle.model;
-
-            if (successfulToggles === changedToggles.length) {
-              deferred.resolve();
-            }
-          });
-      });
-
-      deferred.promise.then(function () {
-        Notification.success('organizationsPage.toggleModSuccess');
-      }).finally(function () {
-        resetForm();
-      });
+            _.forEach(featureToggleRules, function (ftr) {
+              _.find(vm.defaults, {
+                name: ftr.key
+              }).model = ftr.val;
+            });
+            Notification.success('organizationsPage.toggleModSuccess');
+          })
+          .finally(resetForm);
+      }
     }
 
     function findDifference() {
@@ -99,6 +89,10 @@
           return val;
         }
       });
+    }
+
+    function handleClick() {
+      updateToggles();
     }
   }
 })();

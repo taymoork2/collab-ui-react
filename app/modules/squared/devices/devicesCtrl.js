@@ -33,7 +33,8 @@ angular.module('Squared')
 
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
-          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
+          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
+          (vm.huronDeviceListSubscription.eventCount !== 0 || CsdmHuronDeviceService.getDeviceList().length > 0);
       };
 
       vm.updateListAndFilter = function () {
@@ -56,19 +57,26 @@ angular.module('Squared')
 
       vm.gridOptions = {
         data: 'sc.updateListAndFilter()',
-        rowHeight: 75,
+        rowHeight: 45,
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
+        multiSelect: false,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {
             vm.showDeviceDetails(row.entity);
           });
         },
+
         columnDefs: [{
+          field: 'photos',
+          displayName: '',
+          cellTemplate: getTemplate('_imageTpl'),
+          sortable: false,
+          width: 70
+        }, {
           field: 'displayName',
           displayName: 'Belongs to',
-          cellTemplate: getTemplate('_nameTpl'),
           sortingAlgorithm: sortFn,
           sort: {
             direction: 'asc',

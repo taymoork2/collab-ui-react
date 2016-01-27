@@ -1,10 +1,12 @@
 'use strict';
 
 describe('Service: AutoAttendantCeInfoModelService', function () {
-  var AutoAttendantCeInfoModelService;
+  var AutoAttendantCeInfoModelService, AutoAttendantCeService, AACeDependenciesService, AAModelService;
+  var $rootScope, $scope, $q, $timeout;
   // require('jasmine-collection-matchers');
 
   var callExperienceInfos = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
+  var depends = getJSONFixture('huron/json/autoAttendant/dependencies.json');
   var ceInfos = [];
   var rawCeInfos = [{
     "name": "Oleg's Call Experience 1",
@@ -29,8 +31,15 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_AutoAttendantCeInfoModelService_) {
+  beforeEach(inject(function (_AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AACeDependenciesService_, _AAModelService_, _$rootScope_, _$q_, _$timeout_) {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
+    AutoAttendantCeService = _AutoAttendantCeService_;
+    AACeDependenciesService = _AACeDependenciesService_;
+    AAModelService = _AAModelService_;
+    $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
+    $q = _$q_;
+    $timeout = _$timeout_;
 
     for (var i = 0; i < rawCeInfos.length; i++) {
       var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -101,4 +110,154 @@ describe('Service: AutoAttendantCeInfoModelService', function () {
     });
   });
 
+  describe('getCeInfosList', function () {
+    var notFoundResponse = {
+      'status': 404,
+      'statusText': 'Not Found'
+    };
+
+    var errorResponse = {
+      'status': 500,
+      'statusText': 'Server Error'
+    };
+    var aaModel, listCesDeferred, readCeDependsDeferred;
+
+    beforeEach(inject(function () {
+      // setup the promises
+      listCesDeferred = $q.defer();
+      readCeDependsDeferred = $q.defer();
+      spyOn(AutoAttendantCeService, 'listCes').and.returnValue(listCesDeferred.promise);
+      spyOn(AACeDependenciesService, 'readCeDependencies').and.returnValue(readCeDependsDeferred.promise);
+      spyOn(AAModelService, 'setAAModel');
+
+      // setup aaModel for test
+      aaModel = undefined;
+      AutoAttendantCeInfoModelService.getCeInfosList().then(function (value) {
+        aaModel = value;
+      });
+    }));
+
+    it('should set aaModel after resolve of ceInfos and depends', function () {
+      // verify listCes already called with test setup
+      expect(aaModel).toBeUndefined();
+      expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      // resolve listCes
+      listCesDeferred.resolve(callExperienceInfos);
+      $scope.$apply();
+      $timeout.flush();
+
+      // verify depends called
+      expect(AACeDependenciesService.readCeDependencies).toHaveBeenCalled();
+      expect(aaModel).toBeUndefined();
+
+      // now resolve depends
+      readCeDependsDeferred.resolve(depends);
+      $scope.$apply();
+      $timeout.flush();
+      expect(AAModelService.setAAModel).toHaveBeenCalled();
+
+      // verify data returned
+      expect(aaModel).toBeDefined();
+      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(aaModel.ceInfos).toEqual(ceInfos);
+      expect(aaModel.dependsIds.length).toEqual(1);
+    });
+
+    it('should set empty aaModel upon 404 for ceInfos', function () {
+      // verify listCes already called with test setup
+      expect(aaModel).toBeUndefined();
+      expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      // reject ceInfos with 404
+      listCesDeferred.reject(notFoundResponse);
+      $scope.$apply();
+      $timeout.flush();
+      expect(AAModelService.setAAModel).toHaveBeenCalled();
+
+      // verify depends not called
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      // verify empty data returned
+      expect(aaModel).toBeDefined();
+      expect(aaModel.ceInfos.length).toEqual(0);
+      expect(aaModel.dependsIds).toEqual({});
+    });
+
+    it('should set aaModel upon resolve of ceInfos then 404 for depends', function () {
+      // verify listCes already called with test setup
+      expect(aaModel).toBeUndefined();
+      expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      // resolve listCes
+      listCesDeferred.resolve(callExperienceInfos);
+      $scope.$apply();
+      $timeout.flush();
+
+      // verify depends called
+      expect(AACeDependenciesService.readCeDependencies).toHaveBeenCalled();
+      expect(aaModel).toBeUndefined();
+
+      // now resolve depends
+      readCeDependsDeferred.reject(notFoundResponse);
+      $scope.$apply();
+      $timeout.flush();
+
+      expect(AAModelService.setAAModel).toHaveBeenCalled();
+
+      // verify data returned
+      expect(aaModel).toBeDefined();
+      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(aaModel.ceInfos).toEqual(ceInfos);
+      expect(aaModel.dependsIds).toEqual({});
+    });
+
+    it('should return error upon error for ceInfos', function () {
+      // verify listCes already called with test setup
+      expect(aaModel).toBeUndefined();
+      expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      listCesDeferred.reject(errorResponse);
+      $scope.$apply();
+      $timeout.flush();
+
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      expect(AAModelService.setAAModel).toHaveBeenCalled();
+
+      // verify data not returned
+      expect(aaModel).toBeUndefined();
+    });
+
+    it('should return error upon resolve of ceInfos but then error for depends', function () {
+      // verify listCes already called with test setup
+      expect(aaModel).toBeUndefined();
+      expect(AutoAttendantCeService.listCes).toHaveBeenCalled();
+      expect(AACeDependenciesService.readCeDependencies).not.toHaveBeenCalled();
+
+      // resolve listCes
+      listCesDeferred.resolve(callExperienceInfos);
+      $scope.$apply();
+      $timeout.flush();
+
+      // verify depends called
+      expect(AACeDependenciesService.readCeDependencies).toHaveBeenCalled();
+      expect(aaModel).toBeUndefined();
+
+      // now reject depends
+      readCeDependsDeferred.reject(errorResponse);
+      $scope.$apply();
+      $timeout.flush();
+
+      expect(AAModelService.setAAModel).toHaveBeenCalled();
+
+      // verify data is not returned
+      expect(aaModel).toBeUndefined();
+    });
+
+  });
 });

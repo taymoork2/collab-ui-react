@@ -60,6 +60,16 @@ describe('Config', function () {
     expect(Config.roleStates).toBeDefined();
   });
 
+  it('partner_sales_admin should have correct roleStates', function () {
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('customer-overview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnercustomers');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
+  });
+
   it('should not have development states assigned to Full_Admin role', function () {
     function getDevelopmentStates() {
       var devStates = [];
@@ -446,10 +456,10 @@ describe('Config', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      prod: 'https://config.integration-tx1.thunderhead.io/config/v1'
+      dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+      cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+      integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     });
   });
 
@@ -464,5 +474,4 @@ describe('Config', function () {
       expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
     });
   });
-
 });
