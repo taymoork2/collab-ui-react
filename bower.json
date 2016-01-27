@@ -51,7 +51,8 @@
     "pako": "~0.2.8",
     "angular-cache": "~4.4.2",
     "parse-address-bobbr": "",
-    "clipboard": "~1.5.5"
+    "clipboard": "~1.5.5",
+    "query-command-supported": "~1.0.0"
   },
   "devDependencies": {
     "angular-mocks": "=1.4.6",

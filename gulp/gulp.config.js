@@ -191,7 +191,8 @@ module.exports = function() {
         vendor + '/pako/dist/pako.js',
         vendor + '/angular-cache/dist/angular-cache.js',
         vendor + '/parse-address-bobbr/parse-address.min.js',
-        vendor + '/clipboard/dist/clipboard.js'
+        vendor + '/clipboard/dist/clipboard.js',
+        vendor + '/query-command-supported/dist/queryCommandSupported.js'
       ],
       scss: {
         paths: [
