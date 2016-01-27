@@ -6,7 +6,7 @@
     .controller('enterEmailAddrController', enterEmailAddrController);
 
   /* @ngInject */
-  function enterEmailAddrController($window, $log, Userservice) {
+  function enterEmailAddrController($window, Userservice) {
 
     var vm = this;
 
@@ -15,16 +15,17 @@
         vm.error = "The email address cannot be blank";
         return;
       }
-      Userservice.getUserFromEmail(
-        {'email': vm.email},
-        function (result, status) {
-          if (status != 200 || !result.success) {
-            $log.error("getUserFromEmail failed. Status: " + status);
-          } else {
-            $window.location.href = (result.data.exists === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + vm.email;
-          }
-        }
-      );
+
+      Userservice.getUserFromEmail(vm.email)
+      .then(function (result) {
+            if (result.data.success === true) {
+              $window.location.href = (result.data.data.exists === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + vm.email;
+            } else {
+              vm.error = result.data.message;
+            }
+          }, function (result, status) {
+            vm.error = result.data.message;
+          });
     };
 
   }

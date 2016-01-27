@@ -179,22 +179,11 @@ angular.module('Core')
             });
         },
 
-        getUserFromEmail: function (obj, callback) {
-          Auth.setAccessToken().then(function () {
-            $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + obj.email + "/exists", {
-                cache: false
-              })
-              .success(function (data, status) {
-                data = data || {};
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
+        getUserFromEmail: function (email) {
+          return Auth.setAccessToken().then(function () {
+            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
+              cache: false
+            })
           });
         },
 
@@ -217,24 +206,13 @@ angular.module('Core')
           });
         },
 
-        addDrUser: function (obj, callback) {
-          Auth.setAccessToken().then(function () {
-            $http({
+        addDrUser: function (emailPassword, callback) {
+          return Auth.setAccessToken().then(function () {
+            return $http({
                 url: Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user",
                 method: "POST",
-                data: obj.emailPassword
+                data: emailPassword
               })
-              .success(function (data, status) {
-                data = data || {};
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
           });
         },
 

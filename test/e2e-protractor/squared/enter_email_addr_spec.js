@@ -7,7 +7,6 @@
 
 describe('Test the enterEmailAddr page', function () {
 
-  console.log('beginning test');
   browser.get('#/enterEmailAddr');
 
   it('should have the right title', function () {
