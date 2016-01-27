@@ -2,7 +2,7 @@
 
 describe('Controller: Partner Reports', function () {
   var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService, DummyReportService;
-  var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
+  var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
@@ -133,7 +133,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUserReverse).toBeTruthy();
         expect(controller.activeUsersTotalPages).toEqual(1);
         expect(controller.activeUserCurrentPage).toEqual(1);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
+        expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
         expect(controller.mostActiveUsers).toEqual(dummyTableData);
 
@@ -203,10 +203,10 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUserReverse).toBeTruthy();
       });
 
-      it('should sort by posts', function () {
+      it('should sort by messages', function () {
         controller.mostActiveSort(3);
         expect(controller.activeUserPredicate).toBe(activeUsersSort[3]);
-        expect(controller.activeUserReverse).toBeFalsy();
+        expect(controller.activeUserReverse).toBeTruthy();
       });
     });
 

@@ -60,6 +60,16 @@ describe('Config', function () {
     expect(Config.roleStates).toBeDefined();
   });
 
+  it('partner_sales_admin should have correct roleStates', function () {
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('customer-overview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnercustomers');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
+  });
+
   it('should not have development states assigned to Full_Admin role', function () {
     function getDevelopmentStates() {
       var devStates = [];
@@ -464,5 +474,4 @@ describe('Config', function () {
       expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
     });
   });
-
 });

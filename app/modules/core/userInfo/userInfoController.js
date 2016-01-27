@@ -29,7 +29,7 @@ angular.module('Core')
             Authinfo.setUserId(data.id);
           }
           if (data.emails) {
-            Authinfo.setEmail(data.emails);
+            Authinfo.setEmails(data.emails);
           }
           if (data.photos) {
             for (var i in data.photos) {

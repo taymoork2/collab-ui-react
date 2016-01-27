@@ -6,6 +6,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
+  var url, cmiAAAsignmentURL;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -18,8 +19,30 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "type": "directoryNumber",
       "trigger": "incomingCall",
       "number": "999999"
+    }, {
+      "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3c",
+      "type": "directoryNumber",
+      "trigger": "incomingCall",
+      "number": "12068551179"
     }]
   };
+
+  var cmiAAAssignedNumbers = [{
+    "number": "2578",
+    "type": "NUMBER_FORMAT_EXTENSION",
+    "uuid": "29d70a54-cf0a-4279-ad75-09116eedb7a7"
+  }, {
+    "number": "8002578",
+    "type": "NUMBER_FORMAT_ENTERPRISE_LINE",
+    "uuid": "29d70b54-cf0a-4279-ad75-09116eedb7a7"
+  }];
+
+  var cmiAAAsignment = {
+    "numbers": cmiAAAssignedNumbers,
+    "url": "https://cmi.huron-int.com/api/v2/customers/3338d491-d6ca-4786-82ed-cbe9efb02ad2/features/autoattendants/23a42558-6485-4dab-9505-704b6204410c/numbers"
+  };
+
+  var cmiAAAsignments = [cmiAAAsignment];
 
   var aaModel = {};
 
@@ -86,6 +109,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       'uuid': '8888888881-id'
     }]);
 
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      'pattern': '+9999999991',
+      'uuid': '9999999991-id'
+    }, {
+      'pattern': '+8888888881',
+      'uuid': '8888888881-id'
+    }]);
+
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",
       "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
@@ -101,9 +132,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     });
 
     // By default CMI will just return happy code
-    $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond([{
-      "numbers": []
-    }]);
+    url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
+    cmiAAAsignmentURL = url + '/' + '2' + '/numbers';
+    $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
     aaModel.aaRecordUUID = '2';
 
@@ -114,6 +145,23 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   afterEach(function () {
+
+  });
+  describe('checkResourceNumbers', function () {
+
+    it('should map an E164 phone number correctly', function () {
+
+      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+      controller.loadNums();
+
+      $scope.$apply();
+
+      expect(controller.numberTypeList[controller.ui.ceInfo.resources[0].number]).toEqual("directoryNumber");
+
+      expect(controller.numberTypeList[controller.ui.ceInfo.resources[1].number]).toEqual("externalNumber");
+
+    });
 
   });
 
@@ -224,13 +272,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       // top line header is used for preferred, e164 should be on top.
-      expect(resources[0].number).toEqual("2064261234");
+      expect(resources[0].number).toEqual("12068551179");
 
       // and the 1234567 should have sorted first after that - even though we added it last
       expect(resources[1].number).toEqual("1234567");
 
       // and the internal 1234 should have sorted last - special case for internal
-      expect(resources[3].number).toEqual("1234");
+      expect(resources[resources.length - 1].number).toEqual("1234");
 
     });
 
@@ -278,6 +326,33 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       expect(resources.length === 1);
+
+    });
+
+    it('should report error when cannot format extension on assignment', function () {
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      controller.availablePhoneNums[0] = {
+        label: "1234",
+        value: "1234"
+      };
+
+      errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+      spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
+        statusText: "server error",
+        status: 500
+      }));
+
+      controller.addNumber("1234");
+
+      $scope.$apply();
+      $httpBackend.flush();
+
+      expect(errorSpy).toHaveBeenCalled();
 
     });
 
@@ -473,13 +548,13 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should not warn when assignments return no error', function () {
 
-      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
+        onlyCMI = [];
+        onlyResources = [];
+        return $q.when("{}");
+      });
 
       var ret = controller.warnOnAssignedNumberDiscrepancies();
-
-      $httpBackend.flush();
-
-      $scope.$apply();
 
       expect(errorSpy).not.toHaveBeenCalled();
 

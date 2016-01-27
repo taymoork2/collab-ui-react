@@ -3,34 +3,30 @@
 angular.module('Squared').service('DeviceFilter',
 
   /* @ngInject  */
-  function () {
+  function ($translate) {
 
     var currentSearch, currentFilter, arr = [];
 
     var filters = [{
       count: 0,
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
       count: 0,
-      name: 'Needs Activation',
-      filterValue: 'codes'
-    }, {
-      count: 0,
-      name: 'Has Issues',
-      filterValue: 'issues'
-    }, {
-      count: 0,
-      name: 'Offline',
+      name: $translate.instant('CsdmStatus.Offline'),
       filterValue: 'offline'
     }, {
       count: 0,
-      name: 'Online',
+      name: $translate.instant('CsdmStatus.OnlineWithIssues'),
+      filterValue: 'issues'
+    }, {
+      count: 0,
+      name: $translate.instant('CsdmStatus.Online'),
       filterValue: 'online'
     }, {
       count: 0,
-      name: 'Inactive',
-      filterValue: 'inactive'
+      name: $translate.instant('CsdmStatus.RequiresActivation'),
+      filterValue: 'codes'
     }];
 
     var getFilters = function () {
@@ -67,13 +63,6 @@ angular.module('Squared').service('DeviceFilter',
         .value().length;
 
       _.find(filters, {
-          filterValue: 'inactive'
-        }).count = _.chain(list)
-        .filter(isUnused)
-        .filter(matchesSearch)
-        .value().length;
-
-      _.find(filters, {
         filterValue: 'all'
       }).count = _.filter(list, matchesSearch).length;
     };
@@ -83,7 +72,7 @@ angular.module('Squared').service('DeviceFilter',
     }
 
     function hasIssues(item) {
-      return item.hasIssues;
+      return item.hasIssues && item.isOnline && !item.isUnused;
     }
 
     function isOnline(item) {
@@ -92,10 +81,6 @@ angular.module('Squared').service('DeviceFilter',
 
     function isOffline(item) {
       return !item.isOnline && !item.needsActivation && !item.isUnused;
-    }
-
-    function isUnused(item) {
-      return item.isUnused;
     }
 
     function setCurrentSearch(search) {
@@ -146,8 +131,6 @@ angular.module('Squared').service('DeviceFilter',
         return isOnline(item);
       case 'offline':
         return isOffline(item);
-      case 'inactive':
-        return isUnused(item);
       default:
         return true;
       }

@@ -81,10 +81,13 @@ var UsersPage = function () {
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
+  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Spark Message'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Message'));
   this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
@@ -162,7 +165,6 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
-  this.paidMsg = element(by.id('paidMsg'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {

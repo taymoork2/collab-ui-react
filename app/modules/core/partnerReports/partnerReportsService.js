@@ -89,8 +89,8 @@
                 var activeUsers = parseInt(item.details.activeUsers);
                 var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-                // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
-                if (totalRegisteredUsers < 0) {
+                // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+                if (totalRegisteredUsers <= 0) {
                   var previousTotal = 0;
                   var nextTotal = 0;
                   if (index !== 0) {
@@ -419,6 +419,7 @@
                 index.orgName = customer.label;
                 index.numCalls = parseInt(index.details.numCalls);
                 index.totalActivity = parseInt(index.details.totalActivity);
+                index.sparkMessages = index.totalActivity - index.numCalls;
                 index.userId = index.details.userId;
                 index.userName = index.details.userName;
               }
