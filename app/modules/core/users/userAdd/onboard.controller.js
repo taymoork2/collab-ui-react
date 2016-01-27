@@ -941,8 +941,8 @@ angular.module('Core')
           wizardNextText();
           checkPlaceholder();
         },
-        edittoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+        editedtoken: function (e) {
+          if (!validateEmail(e.attrs.value) || angular.element(e.relatedTarget).hasClass('invalid')) {
             invalidcount--;
           }
         },
