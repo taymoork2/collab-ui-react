@@ -28,7 +28,8 @@
         return;
       }
 
-      Userservice.addDrUser({
+      Userservice.addDrUser(
+        {
           'emailPassword': {
             'email': vm.email1,
             'password': vm.password1
@@ -41,7 +42,8 @@
             $cookies.atlasDrCookie = result.data.token;
             $window.location.href = "https://www.digitalriver.com/";
           }
-        });
+        }
+      );
     };
 
   }
