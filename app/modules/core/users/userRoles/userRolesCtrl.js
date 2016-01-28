@@ -134,8 +134,8 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
       break;
     case 1: // Full admin
       roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': Config.roleState.active
+        'roleName': Config.roles.full_admin,
+        'roleState': Config.roleState.active
       });
       roles.push({
         'roleName': Config.roles.sales,
