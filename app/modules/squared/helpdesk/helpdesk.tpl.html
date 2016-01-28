@@ -14,7 +14,7 @@
           </small>
           </li>
           <li ng-repeat="search in helpdeskCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
-            <div ng-click="helpdeskCtrl.loadSearch(search)">
+            <div class="search-result" ng-click="helpdeskCtrl.loadSearch(search)">
               <small>
                 <strong>{{search.searchString}}</strong>
               </small>
@@ -44,4 +44,3 @@
   </cs-header>
   <div class="helpdesk-content-view" ui-view=""></div>
 </div>
-

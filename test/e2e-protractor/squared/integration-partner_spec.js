@@ -3,7 +3,7 @@
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-xdescribe('Partner flow', function () {
+describe('Partner flow', function () {
   var orgId;
   var accessToken;
   var appWindow;
@@ -66,12 +66,11 @@ xdescribe('Partner flow', function () {
 
       partner.assertDisabled('startTrialButton');
 
-      utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+      utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
@@ -97,7 +96,7 @@ xdescribe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
 
         partner.assertDisabled('saveUpdateButton');
         utils.clear(partner.licenseCountInput);

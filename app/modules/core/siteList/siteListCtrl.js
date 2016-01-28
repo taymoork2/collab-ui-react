@@ -252,8 +252,7 @@ angular.module('Core')
               (data.success) &&
               (data.emails)
             ) {
-
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               initGridColumns();
             }
           });

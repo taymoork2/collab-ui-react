@@ -431,11 +431,6 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
-          }, {
-            title: 'tabs.reportTab',
-            desc: 'reportsPage.devReports',
-            state: 'devReports',
-            link: '#devReports'
           }]
         }],
 
@@ -527,7 +522,8 @@ angular.module('Core')
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA',
-          colorAttentionBase: '#F5A623'
+          colorAttentionBase: '#F5A623',
+          colorPeopleBase: '#14A792'
         },
 
         confMap: {
@@ -1051,6 +1047,7 @@ angular.module('Core')
           'user-overview',
           'userprofile',
           'reports',
+          'devReports',
           'setupwizardmodal',
           'firsttimewizard',
           'groups',
@@ -1060,11 +1057,27 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing'],
-        WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support'],
+        Readonly_Admin: [
+          'overview',
+          'users',
+          'user-overview',
+          'userprofile',
+          'reports',
+          'setupwizardmodal',
+          'firsttimewizard',
+          'groups',
+          'profile',
+          'customerprofile',
+          'support',
+          'editService',
+          'trialExtInterest'
+        ],
+        Support: ['support', 'reports', 'billing', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
@@ -1099,7 +1112,6 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
