@@ -206,7 +206,7 @@ angular.module('Core')
           });
         },
 
-        addDrUser: function (emailPassword, callback) {
+        addDrUser: function (emailPassword) {
           return Auth.setAccessToken().then(function () {
             return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
           });

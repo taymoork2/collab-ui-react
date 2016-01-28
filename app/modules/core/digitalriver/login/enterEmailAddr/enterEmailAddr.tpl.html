@@ -1,15 +1,15 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title id="title">Atlas Portal Shopping Cart Login (APSCL)</title>
+		<title id="title" translate="digitalRiver.enterEmailAddr.title"/>
 	</head>
 	<body>
-		<h2 id="h2">Enter eMail Addr</h2>
+		<h2 id="h2" translate="digitalRiver.enterEmailAddr.header"/>
 		<input type="text" ng-model="enterEmailAddrController.error" readonly="readonly" style="color:red">
 		<table>
-			<tr><td id="label">Enter your email address:</td><td><input type="email" ng-model="enterEmailAddrController.email" placeholder="Ex. x@y.com"></td></tr>
+			<tr><td id="label" translate="digitalRiver.emailLabel"/><td><input type="email" ng-model="enterEmailAddrController.email" placeholder="Ex. x@y.com"></td></tr>
 			<tr></tr>
-			<tr><td><button id="next" ng-click="enterEmailAddrController.handleEnterEmailAddr()">Next</button></td><td></td></tr>
+			<tr><td><button id="next" ng-click="enterEmailAddrController.handleEnterEmailAddr()" translate="digitalRiver.nextButton"/></td><td></td></tr>
 		</table>
 		
 	</body>

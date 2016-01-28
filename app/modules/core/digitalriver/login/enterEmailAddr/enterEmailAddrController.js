@@ -12,7 +12,7 @@
 
     vm.handleEnterEmailAddr = function () {
       if (!vm.email || 0 === vm.email.trim().length) {
-        vm.error = $translate.instant('digitalRiver.emailAddressCannotBeBlank');
+        vm.error = $translate.instant('digitalRiver.enterEmailAddr.validation.emptyEmail');
         return;
       }
 

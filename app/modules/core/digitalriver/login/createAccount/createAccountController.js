@@ -15,16 +15,16 @@
     vm.handleCreateAccount = function () {
 
       if (!vm.email1 || 0 === vm.email1.trim().length) {
-        vm.error = $translate.instant('digitalRiver.emptyEmail');
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emptyEmail');
         return;
       } else if (!vm.password1 || 0 === vm.password1.trim()) {
-        vm.error = $translate.instant('digitalRiver.emptyPassword');
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emptyPassword');
         return;
       } else if (vm.email1 !== vm.email2) {
-        vm.error = $translate.instant('digitalRiver.emailsDontMatch');
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emailsDontMatch');
         return;
       } else if (vm.password1 != vm.password2) {
-        vm.error = $translate.instant('digitalRiver.passwordsDontMatch');
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.passwordsDontMatch');
         return;
       }
 
