@@ -604,7 +604,6 @@
       var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
 
       return getService(deviceUrl, deviceCancelPromise).then(function (response) {
-        window.console.log(response);
         return [];
       }, function (response) {
         return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);

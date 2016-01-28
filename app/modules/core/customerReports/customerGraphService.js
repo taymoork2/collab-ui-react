@@ -113,7 +113,7 @@
           number: 1e+12,
           prefix: "T"
         }],
-        '': {
+        'numberFormatter': {
           'precision': 0,
           'decimalSeparator': '.',
           'thousandsSeparator': ','
