@@ -608,6 +608,28 @@
     "value": "Value",
     "sparkCall": "(Spark Call)"
   },
+  "cdrLadderDiagram": {
+    "title": "Call Flow Ladder Diagram",
+    "downLoadOptions": "DownLoad Options",
+    "filterOptions": "Filter Options",
+    "filterBy": "Filter By",
+    "all": "All",
+    "callIds": "Call IDs",
+    "localRemoteSessionIds": "Local/Remote Session IDs",
+    "hostname": "Host Name",
+    "downLoadEvents": "DownLoad Events",
+    "downLoadJson": "JSON",
+    "downLoadJsonDesc": "This file format is ideal if you wish to use the results in a separate script.",
+    "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
+    "downLoadCsv": "CSV",
+    "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
+    "downLoadXml": "XML",
+    "downLoadXmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
+    "reload": "Reload",
+    "reloadMessage": "Please try reloading the page",
+    "close": "Close"
+  },
   "billingPage": {
     "title": "Order Provisioning",
     "sendCustomer": "Resend Customer Email",
