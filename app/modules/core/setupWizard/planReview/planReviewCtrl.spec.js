@@ -1,8 +1,9 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, $q, Config, Userservice, FeatureToggleService;
+  var $scope, controller, $httpBackend, $q, Config, Userservice, Orgservice, FeatureToggleService;
   var getUserMe;
+  var getLicensesUsage;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -20,12 +21,13 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _Orgservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
     Config = _Config_;
     Userservice = _Userservice_;
+    Orgservice = _Orgservice_;
     FeatureToggleService = _FeatureToggleService_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
@@ -33,6 +35,8 @@ describe('Controller: PlanReviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
+    getLicensesUsage = sinon.stub().returns(getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage);
+    spyOn(Orgservice, 'getLicensesUsage');
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 

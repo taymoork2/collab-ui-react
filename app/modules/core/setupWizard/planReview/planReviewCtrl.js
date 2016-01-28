@@ -6,14 +6,13 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
+  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice, Orgservice) {
     var vm = this;
 
     vm.multiSubscriptions = {
       oneBilling: false,
       selected: '',
-      options: [],
-      billings: []
+      options: []
     };
 
     vm.messagingServices = {
@@ -54,11 +53,14 @@
     init();
 
     function init() {
-      vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
 
-      vm.multiSubscriptions.options = _.uniq(_.pluck(vm.multiSubscriptions.billings, 'billingServiceId'));
-      vm.multiSubscriptions.selected = _.first(vm.multiSubscriptions.options);
-      vm.multiSubscriptions.oneBilling = _.size(vm.multiSubscriptions.options) === 1;
+      Orgservice.getLicensesUsage().then(function (subscriptions) {
+        vm.multiSubscriptions.options = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+        vm.multiSubscriptions.selected = _.first(vm.multiSubscriptions.options);
+        vm.multiSubscriptions.oneBilling = _.size(vm.multiSubscriptions.options) === 1;
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
