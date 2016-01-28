@@ -47,10 +47,4 @@ describe('RedirectTargetController', function () {
     expect(windowMock.open.callCount).toBe(1);
     expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname%2Fsomething/fusionregistration");
   });
-
-  it('should encode the url properly before calling window open ', function () {
-    controller.redirectToTargetAndCloseWindowClicked("hostname/something");
-    expect(windowMock.open.callCount).toBe(1);
-    expect(windowMock.open.getCall(0).args[0]).toBe("https://hostname%2Fsomething");
-  });
 });
