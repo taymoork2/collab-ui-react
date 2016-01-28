@@ -67,22 +67,22 @@
             <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
           </div>
           <div class="tag-container" style="display: flex; align-items: center; flex-wrap: wrap;">
-            <span 
+            <span
               class="tag"
               ng-repeat="tag in deviceDetails.device.tags">
               <span ng-bind-html="tag | highlight:devices.search" />
-              <i 
-                class="fa fa-times" 
+              <i
+                class="fa fa-times"
                 ng-click="deviceDetails.tags.removeTag(deviceDetails.device, tag)"
               />
             </span>
-            <a href 
+            <a href
               ng-hide="deviceDetails.tags.isAdding"
               ng-click="deviceDetails.tags.isAdding = !deviceDetails.tags.isAdding">
               Add tag
             </a>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Enter tag..."
               ng-model="deviceDetails.tags.newTag"
               ng-show="deviceDetails.tags.isAdding"
@@ -116,7 +116,7 @@
           <div class="small-4 columns">Activation Code:</div>
           <div class="small-8 columns ellipsis readable-activation-code">
             <span ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search"></span>
-            <sq-clipboard clip-copy="deviceDetails.device.readableActivationCode"></sq-clipboard>
+            <a class="clipboard-button" sq-clipboard="deviceDetails.device.readableActivationCode"><i class="fa fa-clipboard"></i></a>
           </div>
         </div>
         <div class="row" ng-if="deviceDetails.device.expiryTime">
