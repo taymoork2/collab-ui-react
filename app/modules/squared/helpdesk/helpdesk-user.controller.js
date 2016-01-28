@@ -76,13 +76,19 @@
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
         HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function (devices) {
           vm.huronDevices = devices;
-        }, XhrNotificationService.notify);
+        }, handleHuronError);
         HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function (numbers) {
           vm.callCard.huronNumbers = numbers;
-        }, XhrNotificationService.notify);
+        }, handleHuronError);
       }
 
       angular.element(".helpdesk-details").focus();
+    }
+
+    function handleHuronError(err) {
+      if (err.status !== 404) {
+        XhrNotificationService.notify(err);
+      }
     }
   }
 

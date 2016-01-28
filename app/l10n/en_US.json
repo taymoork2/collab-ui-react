@@ -121,6 +121,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
@@ -687,7 +688,13 @@
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
-    "submit": "Submit"
+    "submit": "Submit",
+    "online": "Online",
+    "offline": "Offline",
+    "unknown": "Unknown",
+    "description": "Description",
+    "user": "User",
+    "ipAddress": "IP Address"
   },
   "notifications": {
     "success": "Success notifications",
@@ -987,7 +994,18 @@
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
-      "status-title": "Service Status"
+      "status-title": "Service Status",
+      "add-resource-button": "Add Resource",
+      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+    },
+    "redirect-target-dialog": {
+      "title": "Register New Expressway",
+      "instructions-grant-registration": "Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.",
+      "hostname-placeholder": "Enter Expressway Hostname",
+      "activate-resource-button": "Next",
+      "register-resource-button": "Go To Expressway",
+      "grant-registration-success-header": "You may now register the Expressway <strong>{{hostname}}</strong> with Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Expressway within one hour to finish registration."
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
@@ -1215,7 +1233,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
-    "subscriptionId": "Subscription ID's",
+    "subscriptionId": "Subscription IDs",
     "spark": "Spark",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
@@ -3141,8 +3159,10 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
+    "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
-    "ReadOnly_Admin": "Read-only Admin"
+    "Readonly_Admin": "Read-only Admin",
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3172,7 +3192,6 @@
     "accountCreated": "Account Created",
     "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
@@ -3268,7 +3287,8 @@
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
-    "noMoreResults": "Max results limit reached. Try a different search."
+    "noMoreResults": "Max results limit reached. Try a different search.",
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
   },
   "activation": {
     "verificationComplete": "Verification Complete",

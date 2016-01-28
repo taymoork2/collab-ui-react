@@ -29,7 +29,6 @@
     h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
-      overflow-wrap: break-word;
       word-wrap: break-word;
     }
     h4 {
@@ -392,6 +391,9 @@
   } 
   .clear-history {
     color: $color-primary-base;
+  }
+  .search-result {
+    word-wrap: break-word;
   }
 }
 
