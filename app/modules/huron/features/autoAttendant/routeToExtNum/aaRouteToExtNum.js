@@ -47,7 +47,7 @@
     }
 
     function saveUiModel() {
-      vm.menuKeyEntry.actions[0].setValue(vm.model.phoneNumberInput.phoneNumber);
+      vm.menuKeyEntry.actions[0].setValue(vm.model.phoneNumberInput.phoneNumber.replace(/\D/g, ''));
       AACommonService.setPhoneMenuStatus(true);
     }
 
