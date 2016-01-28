@@ -121,6 +121,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
@@ -140,7 +141,6 @@
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Call",
     "paidContactCenter": "Chat, Email, Voice",
-    "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -162,7 +162,6 @@
     "telephonyPreview": "Telephony",
     "telephonyFeaturesPreview": "Telephony Features",
     "conferencingPreview": "Conferencing",
-    "convPreview": "Messaging",
     "usagePreview": "Usage",
     "endpointsPreview": "Endpoints",
     "entitlementsPreview": "Entitlements",
@@ -183,9 +182,6 @@
     "calling": "Calling",
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
-  },
-  "messagingPanel": {
-    "title": "Messaging"
   },
   "settings": {
     "title": "Service Setup",
@@ -692,7 +688,13 @@
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
-    "submit": "Submit"
+    "submit": "Submit",
+    "online": "Online",
+    "offline": "Offline",
+    "unknown": "Unknown",
+    "description": "Description",
+    "user": "User",
+    "ipAddress": "IP Address"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1178,6 +1180,7 @@
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
+    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "timeElapsed": "Time Elapsed:",
     "uploadResultStep": "Upload Result",
     "uploadErrorStep": "Upload Errors",
@@ -1219,7 +1222,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
-    "subscriptionId": "Subscription ID's",
+    "subscriptionId": "Subscription IDs",
     "spark": "Spark",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
@@ -1287,10 +1290,11 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
-    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
+    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
@@ -1826,7 +1830,7 @@
       "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
+      "webexDetails": "WebEx Enterprise Edition",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -1961,7 +1965,6 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
@@ -3145,8 +3148,10 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
+    "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
-    "ReadOnly_Admin": "Read-only Admin"
+    "Readonly_Admin": "Read-only Admin",
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3176,7 +3181,6 @@
     "accountCreated": "Account Created",
     "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
@@ -3272,7 +3276,8 @@
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
-    "noMoreResults": "Max results limit reached. Try a different search."
+    "noMoreResults": "Max results limit reached. Try a different search.",
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
   },
   "activation": {
     "verificationComplete": "Verification Complete",

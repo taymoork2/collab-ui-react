@@ -145,11 +145,7 @@
       return AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (angular.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
-          _.forEach(aaModel.aaRecords, function (aaRecord) {
-            _.forEach(aaRecord.assignedResources, function (assignedResource) {
-              setDirectoryNumber(assignedResource);
-            });
-          });
+
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
         }
         return AACeDependenciesService.readCeDependencies();
@@ -234,20 +230,6 @@
         return '';
       }
       return ceURL.substr(uuidPos + 1);
-    }
-
-    ////////////
-
-    function setDirectoryNumber(resource) {
-      resource.number = resource.id;
-      /* workaround for Tropo-AA integraiton
-      return DirectoryNumberService.get({
-        customerId: Authinfo.getOrgId(),
-        directoryNumberId: resource.id
-      }).$promise.then(function (data) {
-        resource.number = data.pattern;
-      });
-      */
     }
 
   }

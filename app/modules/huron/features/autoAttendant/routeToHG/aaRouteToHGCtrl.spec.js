@@ -18,9 +18,16 @@ describe('Controller: AARouteToHGCtrl', function () {
     }
   };
 
+  var huntGroupName = 'Olegs Hunt Group';
+  var huntGroupNumber = '987654321';
+
   var huntGroups = [{
-    name: 'Olegs Hunt Group',
-    numbers: ['987654321'],
+    name: huntGroupName,
+    numbers: [{
+      'uuid': '15098786-2413-42af-87f4-2ab9b1382885',
+      'number': huntGroupNumber,
+      'type': 'NUMBER_FORMAT_ENTERPRISE_LINE'
+    }],
     uuid: 'c16a6027-caef-4429-b3af-9d61ddc7964b'
   }];
 
@@ -96,8 +103,7 @@ describe('Controller: AARouteToHGCtrl', function () {
         $scope: $scope
       });
 
-      var nameNumber = huntGroups[0].name.concat(' (')
-        .concat(huntGroups[0].numbers).concat(')');
+      var nameNumber = huntGroupName.concat(' (').concat(huntGroupNumber).concat(')');
 
       $scope.$apply();
 

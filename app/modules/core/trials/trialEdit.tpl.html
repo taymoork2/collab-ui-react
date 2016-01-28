@@ -40,23 +40,14 @@
     <section class="medium-11 medium-offset-1 columns">
       <h6 translate="partnerHomePage.individualUserServices"></h6>
       <div class="row">
-        <formly-form model="trial.model" fields="trial.individualServices" class="medium-11 medium-offset-1 columns">
+        <formly-form model="trial.model" fields="trial.individualServices" hide-directive="ng-show" class="medium-11 medium-offset-1 columns">
         </formly-form>
       </div>
     </section>
-    <section ng-if="trial.showRoomSystems" class="medium-11 medium-offset-1 columns">
-      <h6 translate="partnerHomePage.deviceBasedServices"></h6>
-      <div class="row">
-        <div class="columns medium-offset-1 medium-11">
-          <div class="row">
-            <cs-checkbox class="columns medium-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'trials.roomSystem' | translate}}"></cs-checkbox>
-            <div class="columns medium-5 end">
-              <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled" secondary-label="{{::'common.devices' | translate}}">
-              </cs-select>
-            </div>
-          </div>
-        </div>
-      </div>
+    <section class="row" ng-if="trial.showRoomSystems">
+      <h6 translate="partnerHomePage.deviceBasedServices" class="small-11 small-offset-1 columns"></h6>
+      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show" class="small-10 small-offset-2 columns">
+      </formly-form>
     </section>
   </section>
   <section class="modal-body row">
@@ -83,10 +74,10 @@
       <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-    <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$pristine || trialForm.$invalid">
-      <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
-      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-show="huron-pstn-setup" translate="common.save"></span>
-      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-hide="huron-pstn-setup" translate="common.next"></span>
+    <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.saveUpdateButtonLoad"
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled()">
+        <span ng-if="!trial.hasNextStep()" translate="common.save"></span>
+        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>
     </div>
   </div>

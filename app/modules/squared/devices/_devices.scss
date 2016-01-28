@@ -214,6 +214,11 @@
   }
 }
 
+.device-status {
+  font-size: 0.6rem;
+  padding-right: 3px;
+}
+
 .device-status-red {
   color: $brand-danger;
 }

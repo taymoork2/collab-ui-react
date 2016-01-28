@@ -1123,10 +1123,21 @@ angular
             id: null
           }
         })
-        .state('helpdesk.device', {
-          url: '/device/:orgId/:id',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
-          controller: 'HelpdeskDeviceController',
+        .state('helpdesk.cloudberry-device', {
+          url: '/cloudberryDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
+          controller: 'HelpdeskCloudberryDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
+          }
+        })
+        .state('helpdesk.huron-device', {
+          url: '/huronDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
+          controller: 'HelpdeskHuronDeviceController',
           controllerAs: 'helpdeskDeviceCtrl',
           params: {
             device: null,
@@ -1288,6 +1299,19 @@ angular
         })
         .state('trialEdit.info', {
           templateUrl: 'modules/core/trials/trialEdit.tpl.html'
+        })
+        .state('trialEdit.finishSetup', {
+          templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+        })
+        .state('trialEdit.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
+        })
+        .state('trialEdit.call', {
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          controller: 'TrialCallCtrl',
+          controllerAs: 'callTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',

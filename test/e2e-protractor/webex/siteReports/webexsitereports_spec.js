@@ -19,7 +19,12 @@ describe('WebEx site reports cross-launch', function () {
 });
 */
 
-describe('WebEx site reports iframe', function () {
+describe('WebEx site reports', function () {
+
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
   it('should login as sjsite14@mailinator.com and navigate to reports engagement', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
   });
