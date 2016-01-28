@@ -71,7 +71,6 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
     $scope.rolesObj.salesAdminValue = hasRole(Config.backend_roles.sales);
     $scope.rolesObj.billingAdminValue = hasRole(Config.backend_roles.billing);
     $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
-    $scope.rolesObj.cloudAdminValue = hasRole(Config.backend_roles.application);
     $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
   }
 
@@ -134,45 +133,47 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
       }
       break;
     case 1: // Full admin
-      for (var rolename in Config.roles) {
-        var role = Config.roles[rolename];
-        if (role != Config.roles.helpdesk) {
-          roles.push({
-            'roleName': role,
-            'roleState': role === Config.roles.full_admin ? Config.roleState.active : Config.roleState.inactive
-          });
-        }
-      }
+      roles.push({
+          'roleName': Config.roles.full_admin,
+          'roleState': Config.roleState.active
+      });
+      roles.push({
+        'roleName': Config.roles.sales,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.billing,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.support,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.reports,
+        'roleState': Config.roleState.inactive
+      });
       break;
     case 2: // Some admin roles
       roles.push({
         'roleName': Config.roles.full_admin,
         'roleState': Config.roleState.inactive
       });
-
       roles.push({
         'roleName': Config.roles.sales,
         'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.billing,
         'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.support,
         'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.reports,
         'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
-      });
-
-      roles.push({
-        'roleName': Config.roles.application,
-        'roleState': checkPartialRoles($scope.rolesObj.cloudAdminValue)
       });
       break;
     }
