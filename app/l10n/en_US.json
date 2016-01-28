@@ -3175,7 +3175,7 @@
       }
     },
     "validation": {
-        "unexpectedError": "Unexpected error"
+      "unexpectedError": "Unexpected error"
     },
     "emailLabel": "Enter your email address:",
     "nextButton": "Next"

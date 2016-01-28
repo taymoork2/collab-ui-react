@@ -19,12 +19,12 @@
       Userservice.getUserFromEmail(vm.email)
         .then(function (result) {
           if (result.data.success === true) {
-            $window.location.href = (_.get(result,'data.data.exists', false) === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + vm.email;
+            $window.location.href = (_.get(result, 'data.data.exists', false) === true ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + vm.email;
           } else {
-            vm.error = _.get(result,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+            vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
         }, function (result, status) {
-          vm.error = _.get(result,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+          vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
         });
     };
 
