@@ -165,6 +165,7 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
+  this.meetingService = element(by.id('Meeting'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
