@@ -114,6 +114,15 @@
       padding-bottom: 2rem !important;
     }
   }
+  .domainToken{
+    padding-bottom: 1rem;
+    margin-top: 0.5rem;
+    color: $color-people-base;
+    font-size: 1.5rem;
+    line-height: 2.2rem;
+    word-wrap: break-word;
+    width: 90%;
+  }
   .modal-body.domWarning {
     background-color: $color-attention-base;
     margin-top: -1rem;

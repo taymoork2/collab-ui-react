@@ -3406,6 +3406,12 @@
       "unverify":"Remove enforcement",
       "unclaim":"Release domain",
       "delete":"Remove"
+    },
+    "instructions": {
+      "title":"Code and instructions",
+      "instructions": "Your DNS verification code for {{name}}",
+      "howto":"Before verifying this domain, make sure that this DNS verification code is added in your DNS management interface. Read how to enter the codes in our <a href=''>Domain Management Guidelines</a>.",
+      "done":"Done"
     }
   }
 }

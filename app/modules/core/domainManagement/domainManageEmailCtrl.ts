@@ -6,7 +6,6 @@ namespace domainManagement {
     private _email;
     private _loggedOnUser;
     private _progress;
-    private _token;
 
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
@@ -14,8 +13,6 @@ namespace domainManagement {
       this._domain = $stateParams.domain;
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._email = this._loggedOnUser.email;
-      this._token = $stateParams.domain.token;
-      console.log(this._token);
     }
 
     public cancel() {

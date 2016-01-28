@@ -208,6 +208,20 @@ angular
             loggedOnUser: null
           }
         })
+        .state('domainmanagement.instructions', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageInstructionsCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
+          }
+        })
         .state('domainmanagement.delete', {
           parent: 'modal',
           views: {
