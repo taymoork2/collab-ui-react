@@ -38,7 +38,7 @@
       setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
       exportCSV: exportCSV,
-      _parseLicensesAndOffers: _parseLicensesAndOffers
+      parseLicensesAndOffers: parseLicensesAndOffers
     };
 
     return factory;
@@ -182,7 +182,7 @@
           isSquaredUcOffer: false
         };
 
-        var licensesAndOffersData = _parseLicensesAndOffers(data);
+        var licensesAndOffersData = parseLicensesAndOffers(data);
         angular.extend(dataObj, licensesAndOffersData);
 
         dataObj.isAllowedToManage = isTrialData || data.isAllowedToManage;
@@ -328,7 +328,7 @@
       return deferred.promise;
     }
 
-    function _parseLicensesAndOffers(data) {
+    function parseLicensesAndOffers(customer) {
       var partial = {
         licenses: 0,
         deviceLicenses: 0,
@@ -340,8 +340,8 @@
       var deviceServiceText = [];
       var userServices = [];
 
-      for (var offer in _.get(data, 'offers', [])) {
-        var offerInfo = data.offers[offer];
+      for (var offer in _.get(customer, 'offers', [])) {
+        var offerInfo = customer.offers[offer];
         if (!offerInfo) {
           continue;
         }

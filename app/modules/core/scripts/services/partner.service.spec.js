@@ -215,20 +215,20 @@ describe('Partner Service -', function () {
   });
 
   describe('helper functions -', function () {
-    describe('_parseLicensesAndOffers -', function () {
+    describe('parseLicensesAndOffers -', function () {
       it('should never return null if input is not an object that has a truthy "offers" property', function () {
-        expect(PartnerService._parseLicensesAndOffers(null)).not.toBeNull();
-        expect(PartnerService._parseLicensesAndOffers({})).not.toBeNull();
-        expect(PartnerService._parseLicensesAndOffers({
+        expect(PartnerService.parseLicensesAndOffers(null)).not.toBeNull();
+        expect(PartnerService.parseLicensesAndOffers({})).not.toBeNull();
+        expect(PartnerService.parseLicensesAndOffers({
           offers: null
         })).not.toBeNull();
-        expect(PartnerService._parseLicensesAndOffers({
+        expect(PartnerService.parseLicensesAndOffers({
           offers: []
         })).not.toBeNull();
       });
 
       it('should return a default object if "offers" property is an empty list', function () {
-        var data = PartnerService._parseLicensesAndOffers();
+        var data = PartnerService.parseLicensesAndOffers();
         expect(data.licenses).toBe(0);
         expect(data.deviceLicenses).toBe(0);
         expect(data.isSquaredUcOffer).toBe(false);
@@ -240,7 +240,7 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with "usage" copied from the input\'s "offers" last element\'s "usageCount" property', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             usageCount: 1
           }]
@@ -249,14 +249,14 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with "license" copied from the input\'s "offers" last element\'s "licenseCount" property', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             licenseCount: 10
           }]
         });
         expect(data.licenses).toBe(10);
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             licenseCount: 10
           }, {
@@ -269,7 +269,7 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with "deviceLicenses" copied from the input\'s "offers" last element\'s "licenseCount" property, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems,
             licenseCount: 10,
@@ -279,21 +279,21 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.spark1
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.message
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('trials.message'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.spark1
           }, {
@@ -304,7 +304,7 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.collab
           }]
@@ -313,21 +313,21 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.call
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.call
           }, {
@@ -339,21 +339,21 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with "isSquaredUcOffer" property set to `true`, only if any of the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.call
           }]
         });
         expect(data.isSquaredUcOffer).toBe(true);
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
         });
         expect(data.isSquaredUcOffer).toBe(true);
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
               id: Config.offerTypes.spark1
             }, {
@@ -368,21 +368,21 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with its "offer.userServices" property as a populated list with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.webex
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.meetings
           }]
         });
         expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
 
-        data = PartnerService._parseLicensesAndOffers({
+        data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.webex
           }, {
@@ -393,7 +393,7 @@ describe('Partner Service -', function () {
       });
 
       it('should return an object with its "offer.deviceBasedServices" property as a populated list with the translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
-        var data = PartnerService._parseLicensesAndOffers({
+        var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems
           }]

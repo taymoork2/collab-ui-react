@@ -25,7 +25,7 @@
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
 
-    var licAndOffers = PartnerService._parseLicensesAndOffers(vm.currentCustomer);
+    var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
     vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
