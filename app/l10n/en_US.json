@@ -3174,6 +3174,9 @@
         "passwordsDontMatch": "Passwords do not match"
       }
     },
+    "validation": {
+        "unexpectedError": "Unexpected error"
+    },
     "emailLabel": "Enter your email address:",
     "nextButton": "Next"
   },

@@ -34,13 +34,13 @@
         })
         .then(function (result) {
           if (result.data.success === true) {
-            $cookies.atlasDrCookie = result.data.data.token;
+            $cookies.atlasDrCookie = _.get(result,'data.data.token', 'error');
             $window.location.href = "https://www.digitalriver.com/";
           } else {
-            vm.error = result.data.message;
+            vm.error = _.get(result,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
         }, function (result, status) {
-          vm.error = result.data.message;
+          vm.error = _.get(result,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
         });
     };
   }

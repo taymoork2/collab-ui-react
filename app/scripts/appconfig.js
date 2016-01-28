@@ -44,8 +44,7 @@ angular
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
-              controller: 'drLoginForwardController',
-              controllerAs: 'drLoginForwardController'
+              controller: 'drLoginForwardController'
             }
           }
         })
