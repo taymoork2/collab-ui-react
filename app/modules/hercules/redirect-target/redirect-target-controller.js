@@ -20,7 +20,7 @@
 
     function redirectToTargetAndCloseWindowClicked(hostName) {
       $modalInstance.close();
-      $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration?action=register");
+      $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration");
     }
   }
 }());
