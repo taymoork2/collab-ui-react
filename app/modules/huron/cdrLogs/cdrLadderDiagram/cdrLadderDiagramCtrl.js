@@ -34,6 +34,7 @@
     vm.error = '';
 
     vm.close = function () {
+      clearDownloads();
       $state.modal.close();
     };
 
@@ -69,6 +70,20 @@
       vm.xmlUrl = (window.URL || window.webkitURL).createObjectURL(xmlBlob);
 
       vm.downloadReady = true;
+    }
+
+    function clearDownloads() {
+      if (vm.jsonUrl !== null) {
+        (window.URL || window.webkitURL).revokeObjectURL(vm.jsonUrl);
+      }
+
+      if (vm.csvUrl !== null) {
+        (window.URL || window.webkitURL).revokeObjectURL(vm.csvUrl);
+      }
+
+      if (vm.xmlUrl !== null) {
+        (window.URL || window.webkitURL).revokeObjectURL(vm.xmlUrl);
+      }
     }
 
     vm.query = function () {
@@ -131,7 +146,7 @@
       var dataResponse = response.hits.hits;
       var singleEvent = {};
       for (var i = 0; i < dataResponse.length; i++) {
-        if (dataResponse[i]._source['type'] !== 'udp_json_event' && dataResponse[i]._source !== undefined) {
+        if (dataResponse[i]._source !== undefined && dataResponse[i]._source['type'] !== 'udp_json_event') {
           singleEvent = dataResponse[i]._source;
           events.push(singleEvent);
         }

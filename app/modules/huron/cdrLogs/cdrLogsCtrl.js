@@ -36,7 +36,8 @@
     formlyConfig.setType({
       name: 'custom-file',
       templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
-      wrapper: ['ciscoWrapper']
+      wrapper: ['ciscoWrapper'],
+      overwriteOk: true
     });
 
     var validations = {

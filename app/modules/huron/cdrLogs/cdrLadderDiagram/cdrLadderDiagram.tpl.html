@@ -53,7 +53,7 @@
                             <div class="row showgrid">
                                 <h4 class="col-lg-9 inherit-pad" ng-click="cdrLadderDiagram.isCallIdsCollapsed = !cdrLadderDiagram.isCallIdsCollapsed">
                                     {{::"cdrLadderDiagram.callIds" | translate}}
-                                    <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isCallIdsCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isCallIdsCollapsed == false }"></span>
+                                    <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isCallIdsCollapsed, 'icon icon-arrow-up' : !cdrLadderDiagram.isCallIdsCollapsed}"></span>
                                 </h4>
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-2"></div>

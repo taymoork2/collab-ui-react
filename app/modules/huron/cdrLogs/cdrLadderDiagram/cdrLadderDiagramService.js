@@ -9,6 +9,7 @@
     var access_token = 'Bearer ' + $rootScope.token;
     var callflowDiagramUrl = Config.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var TIMEOUT_IN_MILI = 8000;
+    var NOT_FOUND = 'Not Found';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var skinParam = "skinparam backgroundColor #EEEBDC \n" +
@@ -49,11 +50,11 @@
             note = getNote(events[i]);
 
             if (source === null || source === "") {
-              source = "???";
+              source = NOT_FOUND;
             }
 
             if (remote === null || remote === "") {
-              remote = "???";
+              remote = NOT_FOUND;
             }
 
             //incommig call
