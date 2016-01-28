@@ -1123,10 +1123,21 @@ angular
             id: null
           }
         })
-        .state('helpdesk.device', {
-          url: '/device/:orgId/:id',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
-          controller: 'HelpdeskDeviceController',
+        .state('helpdesk.cloudberry-device', {
+          url: '/cloudberryDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
+          controller: 'HelpdeskCloudberryDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
+          }
+        })
+        .state('helpdesk.huron-device', {
+          url: '/huronDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
+          controller: 'HelpdeskHuronDeviceController',
           controllerAs: 'helpdeskDeviceCtrl',
           params: {
             device: null,
@@ -1187,70 +1198,6 @@ angular
               template: '<div ui-view></div>'
             }
           }
-        })
-        .state('autoattendant', {
-          url: '/autoattendant',
-          abstract: false,
-          parent: 'callrouting',
-          template: '<div> <div ui-view></div> </div>'
-        })
-        .state('autoattendant.landing', {
-          parent: 'autoattendant',
-          templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantLanding.tpl.html',
-          controller: 'AutoAttendantLandingCtrl',
-          controllerAs: 'aaLanding'
-        })
-        .state('autoattendant.main', {
-          abstract: true,
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'AutoAttendantMainCtrl',
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMain.tpl.html',
-              controllerAs: 'aaMain'
-            }
-          }
-        })
-        .state('autoattendant.main.general', {
-          parent: 'autoattendant.main',
-          params: {
-            aaName: ''
-          },
-          views: {
-            'tabContent': {
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantGeneral.tpl.html',
-              controller: 'AutoAttendantGeneralCtrl',
-              controllerAs: 'aaGeneral'
-            }
-          }
-        })
-        .state('autoattendant.main.aa', {
-          parent: 'autoattendant.main',
-          params: {
-            aaName: ''
-          },
-          views: {
-            'tabContent': {
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
-              controller: 'AutoAttendantMenuCtrl',
-              controllerAs: 'aaMenu'
-            }
-          }
-        })
-        .state('autoattendant.aalanding', {
-          parent: 'autoattendant',
-          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
-          controller: 'AALandingCtrl',
-          controllerAs: 'aaLanding'
-        })
-        .state('autoattendant.aabuilder', {
-          parent: 'main',
-          params: {
-            aaName: ''
-          },
-          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
-          controller: 'AABuilderMainCtrl',
-          controllerAs: 'aaBuilderMain'
         })
         .state('callpark', {
           url: '/callpark',
@@ -1352,6 +1299,19 @@ angular
         })
         .state('trialEdit.info', {
           templateUrl: 'modules/core/trials/trialEdit.tpl.html'
+        })
+        .state('trialEdit.finishSetup', {
+          templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+        })
+        .state('trialEdit.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
+        })
+        .state('trialEdit.call', {
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          controller: 'TrialCallCtrl',
+          controllerAs: 'callTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',

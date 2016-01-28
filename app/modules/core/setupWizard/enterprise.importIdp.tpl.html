@@ -4,7 +4,7 @@
   <div id="importFileDiv" class="form-inline">
     <span translate="ssoModal.IdPFileLabel"></span>
     <input type="file" accept="text/xml" id="fileToUploadTextHolder" class="fileholder" onchange="angular.element(this).scope().setFile(this)"/>
-    <input type="text" class="fileholder form-control" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/>  
+    <input type="text" class="fileholder form-control choose-file" id="fileToUploadText" placeholder="{{'ssoModal.chooseFilePlaceHolder' | translate}}" ng-model="filename" disabled/>
     <input type="file" accept="text/xml" id="fileToUploadBtnHolder" class="btn form-control"  onchange="angular.element(this).scope().setFile(this)"/>
     <span id="fileToUploadBtn" class="btn" translate="ssoModal.browseBtn"></span>
     <button class="btn btn--people" ng-disabled="!(filename)" ng-click="importRemoteIdp()"><span translate="ssoModal.importBtn"></span></button>
