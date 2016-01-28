@@ -3,19 +3,15 @@
 describe('Service: ClusterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, $location, Service, converter, authinfo;
+  var $httpBackend, $location, Service, authinfo;
   var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
 
   beforeEach(function () {
     module(function ($provide) {
-      converter = {
-        convertClusters: sinon.stub()
-      };
       authinfo = {
         getOrgId: sinon.stub()
       };
-      authinfo.getOrgId.returns("orgId");
-      $provide.value('ConverterService', converter);
+      authinfo.getOrgId.returns('orgId');
       $provide.value('Authinfo', authinfo);
     });
   });
@@ -36,27 +32,35 @@ describe('Service: ClusterService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + '/clusters')
-      .respond('foo');
-
-    converter.convertClusters.returns({
-      id: 'foo'
-    });
+      .when('GET', rootPath + '?fields=@wide')
+      .respond({
+        id: 'org_0',
+        name: 'Org',
+        clusters: [{
+          id: 'cluster_0',
+          name: 'Cluster',
+          connectors: [{
+            alarms: [],
+            hostname: 'host.example.com',
+            state: 'running',
+            connectorType: 'c_mgmt'
+          }]
+        }]
+      });
 
     var callback = sinon.stub();
     Service.fetch().then(callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].id).toBe('foo');
+    var clusterCache = callback.args[0][0];
+    expect(clusterCache['cluster_0']).toBeDefined();
   });
 
   it('should upgrade software using the correct backend', function () {
+    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when(
-        'POST',
-        rootPath + '/clusters/foo/services/bar/upgrade', {}
-      )
+      .when('POST', rootPath + '/clusters/foo/services/bar/upgrade', {})
       .respond({
         foo: 'bar'
       });
@@ -69,12 +73,10 @@ describe('Service: ClusterService', function () {
     expect(callback.args[0][0].foo).toBe('bar');
   });
 
-  it('sw upgrade should fail on 500 errors', function () {
+  it('software upgrade should fail on 500 errors', function () {
+    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when(
-        'POST',
-        rootPath + '/clusters/foo/services/bar/upgrade', {}
-      )
+      .when('POST', rootPath + '/clusters/foo/services/bar/upgrade', {})
       .respond(500, {
         foo: 'bar'
       });
@@ -87,38 +89,10 @@ describe('Service: ClusterService', function () {
     expect(callback.args[0][0]).not.toBe(null);
   });
 
-  it('should be possible to set mock backend', function () {
-    $location.search('hercules-backend', 'mock');
-    converter.convertClusters.returns('foo');
-
-    var callback = sinon.stub();
-    Service.fetch().then(callback);
-    $httpBackend.flush();
-
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBe('foo');
-
-    expect(converter.convertClusters.callCount).toBe(1);
-    expect(converter.convertClusters.args[0][0].length).toBe(5);
-  });
-
-  it('should be possible to set empty backend', function () {
-    $location.search('hercules-backend', 'nodata');
-
-    var callback = sinon.stub();
-    Service.fetch().then(callback);
-    $httpBackend.flush();
-
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].length).toBe(0);
-  });
-
   it('should delete a host', function () {
+    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when(
-        'DELETE',
-        rootPath + '/clusters/clusterid/hosts/serial'
-      )
+      .when('DELETE', rootPath + '/clusters/clusterid/hosts/serial')
       .respond(200);
 
     var callback = sinon.stub();
@@ -129,11 +103,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('should handle host deletion failures', function () {
+    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when(
-        'DELETE',
-        rootPath + '/clusters/clusterid/hosts/serial'
-      )
+      .when('DELETE', rootPath + '/clusters/clusterid/hosts/serial')
       .respond(500);
 
     var callback = sinon.stub();
@@ -145,7 +117,7 @@ describe('Service: ClusterService', function () {
 
   it('should call error callback on failure', function () {
     $httpBackend
-      .when('GET', rootPath + '/clusters')
+      .when('GET', rootPath + '?fields=@wide')
       .respond(500, null);
 
     var callback = sinon.stub();

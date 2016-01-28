@@ -148,12 +148,13 @@
 
     var fetch = function () {
       return $http
-        .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId())
+        .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
-        .then(function (clusters) {
-          return addAggregatedData(clusters);
+        .then(function (response) {
+          return addAggregatedData(response.clusters);
         })
         .then(function (clusters) {
+          // todo extract as a service function
           return addRunningStateToConnectors(clusters);
         })
         .then(function (clusters) {
@@ -178,26 +179,28 @@
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
-        .then(function () {
+        .then(function (data) {
           poller.forceAction();
+          return data;
         });
     };
 
     var deleteCluster = function (clusterId) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.delete(url)
-        .then(function () {
+        .then(function (data) {
           if (clusterCache[clusterId]) {
             delete clusterCache[clusterId];
           }
           poller.forceAction();
+          return data;
         });
     };
 
     var deleteHost = function (clusterId, serial) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
       return $http.delete(url)
-        .then(function () {
+        .then(function (data) {
           var cluster = clusterCache[clusterId];
           if (cluster) {
             _.remove(cluster.connectors, {
@@ -208,6 +211,7 @@
             }
           }
           poller.forceAction();
+          return data;
         });
     };
 
