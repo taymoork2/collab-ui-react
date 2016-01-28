@@ -107,9 +107,19 @@ angular.module('Squared').service('DeviceFilter',
     function matchesSearch(item) {
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
-        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || (item.tags || []).some(function (tag) {
-          return (tag || '').toLowerCase().indexOf(term || '') != -1;
-        }) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || termMatchesAnyTag(item.tags, term) || termMatchesAnyIssue(item.diagnosticsEvents, term) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+      });
+    }
+
+    function termMatchesAnyTag(tags, term) {
+      return (tags || []).some(function (tag) {
+        return (tag || '').toLowerCase().indexOf(term || '') != -1;
+      });
+    }
+
+    function termMatchesAnyIssue(issues, term) {
+      return (issues || []).some(function (issue) {
+        return (issue.type || '').toLowerCase().indexOf(term || '') != -1 || (issue.message || '').toLowerCase().indexOf(term || '') != -1;
       });
     }
 
