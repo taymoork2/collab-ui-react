@@ -3357,7 +3357,7 @@
   },
   "domainManagement": {
     "title": "Domain Management",
-    "description": "Add and verify the domains in your organization so that your users can take advantage of services such as Hybrid Call Service Connect. All DNS verification codes must be entered into your DNS management interface for all domains. We highly recommend that you verify all your domains at the same time to avoid blocking user access. To avoid admin lockout, you will have to verify your own domain first.",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
@@ -3383,15 +3383,18 @@
       "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
       "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not a valid email address.",
-      "instructions": "Enter the following DNS verification code in your DNS management interface",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "learn":"<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify":"Before you verify",
       "sendEmail": "Send instructions"
     },
     "verify": {
       "header": "Verify domain",
-      "verifyThis": "You are about to verify the following domain:",
-      "beforeVerify": "Before verifying this domain, make sure that your DNS verification code is added in your DNS management interface.",
+      "verifyThis": "Before you verify",
+      "beforeVerify": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
+      "learn":"<a href=''>Learn more</a> about how to enter the DNS verification code.",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     },
     "claim": {
@@ -3409,8 +3412,8 @@
     },
     "instructions": {
       "title":"Code and instructions",
-      "instructions": "Your DNS verification code for {{name}}",
-      "howto":"Before verifying this domain, make sure that this DNS verification code is added in your DNS management interface. Read how to enter the codes in our <a href=''>Domain Management Guidelines</a>.",
+      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
+      "howto":"Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
       "done":"Done"
     }
   }

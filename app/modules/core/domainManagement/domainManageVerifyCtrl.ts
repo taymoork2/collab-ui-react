@@ -24,6 +24,10 @@ namespace domainManagement {
       return this._domain && this._domain.text;
     }
 
+    get domain() {
+      return this._domain;
+    }
+
     get error() {
       return this._error;
     }
