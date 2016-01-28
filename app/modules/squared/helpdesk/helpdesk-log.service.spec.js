@@ -55,7 +55,7 @@ describe('Service: HelpdeskLogService', function() {
     scope.$apply();
   });
 
-  fit('fetches the last log on user id', function(done) {
+  it('fetches the last log on user id', function(done) {
     console.log("koko");
     Service.getLastPushedLogForUser('userid').then(function(log) {
       expect(log.filename).toEqual("logFile4");
