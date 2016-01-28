@@ -28,15 +28,15 @@
               sipEndpointId: device.uuid,
               status: true
             }).$promise.then(function (endpoint) {
-              device.model = endpoint.model;
-              device.description = endpoint.description;
+              this.model = endpoint.model;
+              this.description = endpoint.description;
               if (endpoint.registrationStatus && angular.lowercase(endpoint.registrationStatus) === 'registered') {
-                device.deviceStatus.status = 'Online';
+                this.deviceStatus.status = 'Online';
               } else {
-                device.deviceStatus.status = 'Offline';
+                this.deviceStatus.status = 'Offline';
               }
-              massageDevice(device);
-            });
+              massageDevice(this);
+            }.bind(device));
           }
           return deviceList;
         });
