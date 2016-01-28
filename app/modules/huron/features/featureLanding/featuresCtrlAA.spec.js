@@ -107,7 +107,7 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('NewFeature');
   });
 
-  it('should be able call delete a huntGroup function and call the $state service', function () {
+  it('should be able call delete an AA function and call the $state service', function () {
     getDeferred.resolve(getAAListSuccessResp(emptyListOfAAs));
     $scope.$apply();
     $timeout.flush();
@@ -119,7 +119,7 @@ describe('Features Controller', function () {
       deleteFeatureType: 'AA'
     });
   });
-  it('should be able to edit a huntGroup function ', function () {
+  it('should be able to edit an AA function ', function () {
     featureCtrl.editHuronFeature(AAs[0]);
     expect($state.go).toHaveBeenCalledWith('huronfeatures.aabuilder', {
       aaName: AAs[0].cardName

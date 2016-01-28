@@ -13,7 +13,7 @@ describe('Directive: featureCards', function () {
   it('replaces the element with the appropriate content', function () {
     // var element = $compile("<feature-cards ng-if=\"huronFeaturesCtrl.pageState == 'showFeatures'\"></feature-cards>")($rootScope);
 
-    var element = $compile("<feature-cards </feature-cards>")($rootScope);
+    var element = $compile("<feature-cards></feature-cards>")($rootScope);
 
     $rootScope.$digest();
 
