@@ -1,0 +1,19 @@
+<cs-sp-section ng-show="trialWebexOverview.webexTrialExists">
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.webexOverview"></span>
+    <span class="status pull-right" ng-show="trialWebexOverview.pending">
+      <i class="icon icon-circle trial-pending"></i>
+      <span translate="common.pending"></span>
+    </span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature">
+        <span class="feature-name">{{trialWebexOverview.siteUrl}}</span>
+      </li>
+      <li class="feature">
+        <span class="feature-name">{{trialWebexOverview.timezone}}</span>
+      </li>
+    </ul>
+  </div>
+</cs-sp-section>
