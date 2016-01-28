@@ -18,7 +18,7 @@ describe('Controller: MediaServiceSettingsController', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _NotificationConfigService_, _Notification_) {
+  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _Notification_) {
     $state = $state;
     $stateParams = $stateParams;
     log = $log;
@@ -30,7 +30,6 @@ describe('Controller: MediaServiceSettingsController', function () {
     MediaServiceActivation = _MediaServiceActivation_;
     MailValidatorService = _MailValidatorService_;
     XhrNotificationService = _XhrNotificationService_;
-    NotificationConfigService = _NotificationConfigService_;
     Notification = _Notification_;
 
     controller = $controller('MediaServiceSettingsController', {
@@ -45,7 +44,6 @@ describe('Controller: MediaServiceSettingsController', function () {
       MediaServiceActivation: MediaServiceActivation,
       MailValidatorService: MailValidatorService,
       XhrNotificationService: XhrNotificationService,
-      NotificationConfigService: NotificationConfigService,
       Notification: Notification
     });
 

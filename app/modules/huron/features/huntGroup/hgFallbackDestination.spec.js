@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', function () {
 
-  var $httpBackend, $scope, $state, controller, Notification;
+  var $httpBackend, $scope, $state, controller, Notification, $q, HuntGroupFallbackDataService;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
@@ -54,17 +54,21 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _Notification_, _$q_, _HuntGroupFallbackDataService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
+    $q = _$q_;
+    HuntGroupFallbackDataService = _HuntGroupFallbackDataService_;
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       $state: $state,
       Notification: Notification
     });
+
+    spyOn(HuntGroupFallbackDataService, 'isVoicemailDisabled').and.returnValue($q.defer().promise);
 
   }));
 

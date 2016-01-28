@@ -19,7 +19,7 @@
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
     var mostActiveUrl = 'useractivity';
-    var registeredEndpoints = 'trend/registeredEndpoints';
+    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -88,12 +88,19 @@
       }
       var url = urlBase + mostActiveUrl + query + cacheValue;
       return getService(url, mostActivePromise).then(function (response) {
-        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
-          // TODO: update when API becomes available
-          return [];
-        } else {
-          return [];
+        var data = [];
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
+          angular.forEach(response.data.data, function (item, index, array) {
+            data.push({
+              'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
+              'totalActivity': parseInt(item.details.totalActivity),
+              'sparkMessages': parseInt(item.details.sparkMessages),
+              'userId': item.details.userId,
+              'userName': item.details.userName
+            });
+          });
         }
+        return data;
       }, function (response) {
         return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
       });
@@ -126,8 +133,8 @@
         var activeUsers = parseInt(item.details.activeUsers);
         var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-        // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
-        if (totalRegisteredUsers < 0) {
+        // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+        if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
           if (index !== 0) {
@@ -596,10 +603,10 @@
       deviceCancelPromise = $q.defer();
       var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
 
-      return getService(deviceUrl, deviceCancelPromise).success(function (response, status) {
+      return getService(deviceUrl, deviceCancelPromise).then(function (response) {
         return [];
-      }).error(function (response, status) {
-        return returnErrorCheck(status, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
+      }, function (response) {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
       });
     }
 

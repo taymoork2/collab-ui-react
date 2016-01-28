@@ -232,6 +232,9 @@
       var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
+      user.organization = {
+        id: user.orgId
+      };
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {

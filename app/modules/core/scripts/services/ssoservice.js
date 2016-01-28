@@ -23,7 +23,7 @@ angular.module('Core')
             });
         },
 
-        importRemoteIdp: function (metadataXmlContent, selfSigned, callback) {
+        importRemoteIdp: function (metadataXmlContent, selfSigned, ssoEnabled, callback) {
           var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
@@ -31,7 +31,7 @@ angular.module('Core')
             attributeMapping: ['uid=uid', 'mail=mail'],
             autofedAttribute: 'uid',
             ignoreSignatureVerification: selfSigned,
-            ssoEnabled: true
+            ssoEnabled: ssoEnabled
           };
 
           $http.post(remoteIdpUrl, payload)
@@ -49,11 +49,11 @@ angular.module('Core')
             });
         },
 
-        patchRemoteIdp: function (metaUrl, metadataXmlContent, callback) {
+        patchRemoteIdp: function (metaUrl, metadataXmlContent, ssoEnabled, callback) {
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
-            ssoEnabled: true
+            ssoEnabled: ssoEnabled
           };
 
           $http({
@@ -65,30 +65,6 @@ angular.module('Core')
               data = data || {};
               data.success = true;
               Log.debug('Posted metadataXml: ' + metadataXmlContent);
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
-        },
-
-        patchDisableSSO: function (metaUrl, callback) {
-          var payload = {
-            schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
-            ssoEnabled: false
-          };
-
-          $http({
-              method: 'PATCH',
-              url: metaUrl,
-              data: payload
-            })
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {

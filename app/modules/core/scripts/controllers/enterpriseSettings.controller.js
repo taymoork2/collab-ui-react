@@ -6,7 +6,7 @@ angular.module('Core')
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
-      var strEntityIdEnd = '">';
+      var strEntityIdEnd = '"';
       var oldSSOValue = 0;
 
       //SIP URI Domain Controller code
@@ -25,7 +25,7 @@ angular.module('Core')
 
       $scope.options = {
         configureSSO: 1,
-        enableSSO: 0,
+        enableSSO: null,
         SSOSelfSigned: 0
       };
 
@@ -67,14 +67,18 @@ angular.module('Core')
 
       $scope.$watch('options.enableSSO', function () {
         var ssoValue = $scope.options.enableSSO;
-        if (ssoValue !== oldSSOValue) {
-          if (ssoValue === 0) {
-            deleteSSO();
-          } else if (ssoValue === 1) {
-            reEnableSSO();
-          }
+        if (ssoValue !== 'null') {
+          $scope.wizard.isNextDisabled = false;
         }
-        oldSSOValue = ssoValue;
+      });
+
+      $scope.$on('wizard-set-sso-event', function () {
+        var ssoValue = $scope.options.enableSSO;
+        if (ssoValue === 0) {
+          deleteSSO();
+        } else if (ssoValue === 1) {
+          reEnableSSO();
+        }
       });
 
       $scope.initNext = function () {
@@ -114,14 +118,15 @@ angular.module('Core')
           if (data.success) {
             if (data.data.length > 0) {
               //check if data already exists for this entityId
-              var start = $rootScope.fileContents.indexOf(strEntityDesc);
-              start = $rootScope.fileContents.indexOf(strEntityId, start) + 10;
-              var end = $rootScope.fileContents.indexOf(strEntityIdEnd, start);
-              var newEntityId = $rootScope.fileContents.substring(start, end);
-              if (newEntityId.substring(0, 4) === 'http') {
+              var newEntityId = checkNewEntityId(data);
+              if (newEntityId.startsWith('http')) {
                 for (var datum in data.data) {
                   if (data.data[datum].entityId === newEntityId) {
                     metaUrl = data.data[datum].url;
+                    break;
+                  } else {
+                    SSOService.deleteMeta(data.data[datum].url);
+                    break;
                   }
                 }
 
@@ -132,105 +137,156 @@ angular.module('Core')
                 }
               } else {
                 Log.debug('Did not find entityId in IdP metadata file');
-                Notification.notify([$translate.instant('ssoModal.invalidFile')], 'error');
+                Notification.error('ssoModal.invalidFile', {
+                  status: status
+                });
               }
             } else {
               postRemoteIdp();
             }
           } else {
             Log.debug('Failed to retrieve meta url. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.importFailed', {
+            Notification.error('ssoModal.importFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
       };
 
       function deleteSSO() {
-        var metaUrls = [];
+        var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
         var metaUrl = null;
-        var success = true;
         SSOService.getMetaInfo(function (data, status) {
           if (data.success && data.data.length > 0) {
-            for (var datum in data.data) {
-              metaUrls.push(data.data[datum].url);
-            }
-            for (var num in metaUrls) {
-              metaUrl = metaUrls[num];
-              SSOService.deleteMeta(metaUrl, function (status) {
-                if (status !== 204) {
-                  success = false;
+            //check if data already exists for this entityId
+            var newEntityId = checkNewEntityId(data);
+            if (newEntityId.startsWith('http')) {
+              for (var datum in data.data) {
+                if (data.data[datum].entityId === newEntityId) {
+                  metaUrl = data.data[datum].url;
+                  break;
                 }
-              });
-            }
-            if (success === true) {
-              Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-              Notification.notify([$translate.instant('ssoModal.disableSuccess', {
-                status: status
-              })], 'success');
-            } else {
-              Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-              Notification.notify([$translate.instant('ssoModal.disableFailed', {
-                status: status
-              })], 'error');
+              }
+
+              if (metaUrl !== null) {
+                SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, false, function (data, status) {
+                  if (data.success) {
+                    Log.debug('Single Sign-On (SSO) successfully disabled for all users');
+                    Notification.success('ssoModal.disableSuccess', {
+                      status: status
+                    });
+                  } else {
+                    Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
+                    Notification.error('ssoModal.disableFailed', {
+                      status: status
+                    });
+                  }
+                });
+              }
             }
           } else {
-            Log.debug('Failed to retrieve meta url. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.disableFailed', {
-              status: status
-            })], 'error');
+            SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, false, function (data, status) {
+              if (data.success) {
+                Log.debug('Single Sign-On (SSO) successfully disabled for all users');
+                Notification.success('ssoModal.disableSuccess', {
+                  status: status
+                });
+              } else {
+                Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
+              }
+            });
           }
         });
       }
 
       function reEnableSSO() {
         var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
-        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
-          if (data.success) {
-            Log.debug('Single Sign-On (SSO) successfully enabled for all users');
-            Notification.notify([$translate.instant('ssoModal.enableSSOSuccess', {
-              status: status
-            })], 'success');
+        var metaUrl = null;
+        SSOService.getMetaInfo(function (data, status) {
+          if (data.success && data.data.length > 0) {
+            //check if data already exists for this entityId
+            var newEntityId = checkNewEntityId(data);
+            if (newEntityId.startsWith('http')) {
+              for (var datum in data.data) {
+                if (data.data[datum].entityId === newEntityId) {
+                  metaUrl = data.data[datum].url;
+                  break;
+                }
+              }
+
+              if (metaUrl !== null) {
+                SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
+                  if (data.success) {
+                    Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+                    Notification.success('ssoModal.enableSSOSuccess', {
+                      status: status
+                    });
+                  } else {
+                    Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
+                    Notification.error('ssoModal.enableSSOFailure', {
+                      status: status
+                    });
+                  }
+                });
+              }
+            }
           } else {
-            Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.enableSSOFailure', {
-              status: status
-            })], 'error');
+            SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, true, function (data, status) {
+              if (data.success) {
+                Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+                Notification.success('ssoModal.enableSSOSuccess', {
+                  status: status
+                });
+              } else {
+                Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
+                Notification.error('ssoModal.enableSSOFailure', {
+                  status: status
+                });
+              }
+            });
           }
         });
       }
 
       function postRemoteIdp() {
         var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
-        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
+        SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, false, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.importSuccess', {
+            Notification.success('ssoModal.importSuccess', {
               status: status
-            })], 'success');
+            });
           } else {
             Log.debug('Failed to Import On-premise IdP Metadata. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.importFailed', {
+            Notification.error('ssoModal.importFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
       }
 
       function patchRemoteIdp(metaUrl) {
-        SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, function (data, status) {
+        SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, false, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.importSuccess', {
+            Notification.success('ssoModal.importSuccess', {
               status: status
-            })], 'success');
+            });
           } else {
             Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.importFailed', {
+            Notification.error('ssoModal.importFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
+      }
+
+      function checkNewEntityId(data) {
+        var start = $rootScope.fileContents.indexOf(strEntityDesc);
+        start = $rootScope.fileContents.indexOf(strEntityId, start) + strEntityId.length;
+        var end = $rootScope.fileContents.indexOf(strEntityIdEnd, start);
+        var newEntityId = $rootScope.fileContents.substring(start, end);
+        return newEntityId;
       }
 
       $scope.openTest = function () {
@@ -245,15 +301,15 @@ angular.module('Core')
               $window.open(testUrl);
             } else {
               Log.debug('Retrieved null Entity id. Status: ' + status);
-              Notification.notify([$translate.instant('ssoModal.retrieveEntityIdFailed', {
+              Notification.error('ssoModal.retrieveEntityIdFailed', {
                 status: status
-              })], 'error');
+              });
             }
           } else {
             Log.debug('Failed to retrieve entity id. Status: ' + status);
-            Notification.notify([$translate.instant('ssoModal.retrieveEntityIdFailed', {
+            Notification.error('ssoModal.retrieveEntityIdFailed', {
               status: status
-            })], 'error');
+            });
           }
         });
 

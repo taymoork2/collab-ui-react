@@ -18,6 +18,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
+      atlasReportTrials: 'atlas-report-trials',
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
@@ -118,6 +119,7 @@
       zeroTouchMeeting: 'zero-touch-meeting',
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
+      webexCSV: 'webex-CSV',
     };
 
     var service = {

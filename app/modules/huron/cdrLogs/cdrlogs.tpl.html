@@ -65,7 +65,7 @@
                   <col class="medium-2">
                 </colgroup>
                 <tbody ng-repeat="callSegment in call">
-                  <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, call)' ng-class="{'selectedCDR': data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
+                  <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, callSegment)' ng-class="{'selectedCDR': data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
                     <td>{{::data['@timestamp']}}</td>
                     <td>{{::data.dataParam.calling_deviceName}}</td>
                     <td>{{::data.dataParam.calling_partyNumber}}</td>

@@ -66,12 +66,11 @@ describe('Partner flow', function () {
 
       utils.expectIsDisabled(partner.startTrialButton);
 
-      //utils.expectIsDisplayed(partner.squaredTrialCheckbox);
-      //utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
+      utils.expectIsDisplayed(partner.messageTrialCheckbox);
+      utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      //utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
@@ -97,7 +96,7 @@ describe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
 
         utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);

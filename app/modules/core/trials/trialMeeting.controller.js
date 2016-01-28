@@ -13,8 +13,6 @@
 
     vm.details = _trialData.details;
     vm.siteUrl = _trialData.details.siteUrl;
-    vm.timeZoneId = _trialData.details.timeZoneId;
-    vm.timeZones = [];
     vm.validatingUrl = false;
     vm.validateSiteUrl = validateSiteUrl;
 
@@ -52,31 +50,39 @@
       model: vm.details,
       key: 'timeZone',
       type: 'select',
+      defaultValue: {
+        'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
+        'timeZoneId': undefined
+      },
       templateOptions: {
         required: true,
         labelfield: 'label',
         labelClass: 'small-2 columns',
         inputClass: 'small-9 columns left',
-        filter: true,
-        label: $translate.instant('trialModal.meeting.timezone'),
-        inputPlaceholder: $translate.instant('trialModal.meeting.timezonePlaceholder')
+        labelProp: 'label',
+        valueProp: 'timeZoneId',
+        label: $translate.instant('trialModal.meeting.timezone')
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return vm.timeZones;
+          var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
+          var timeZones = WebexTrialService.getTimeZones();
+          return _.filter(timeZones, function (timeZone) {
+            return _.includes(validTimeZoneIds, timeZone.timeZoneId);
+          });
+        }
+      },
+      validators: {
+        'timezone': {
+          expression: function ($viewValue, $modelValue) {
+            var timezone = $modelValue || $viewValue;
+            return !_.isUndefined(timezone.timeZoneId);
+          }
         }
       }
     }];
 
-    init();
-
     ////////////////
-
-    function init() {
-      WebexTrialService.getTimeZones().then(function (timeZones) {
-        vm.timeZones = timeZones;
-      });
-    }
 
     function validateSiteUrl($viewValue, $modelValue) {
       var siteUrl = $modelValue || $viewValue;

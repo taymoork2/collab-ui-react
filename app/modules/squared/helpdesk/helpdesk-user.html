@@ -87,15 +87,6 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
-        </div>
-        <div class="medium-7 columns details-value">
-          <span>{{helpdeskUserCtrl.user.id}}</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.organization' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
@@ -107,24 +98,30 @@
           <span ng-if="helpdeskUserCtrl.user.isConsumerUser" translate="helpdesk.consumerOrg"></span>
         </div>
       </div>
+      
+       <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.id}}</span>
+        </div>
+      </div>
 
       <div class="row" ng-if="helpdeskUserCtrl.huronDevices && helpdeskUserCtrl.huronDevices.length > 0">
         <div class="medium-12 columns">
           <h4 translate="common.devices"></h4>
 
           <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">
-            <h5>
+            <h5 ng-if="device.model">
               <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/> <span class="device-name">{{device.model}}</span>
             </h5>             
-            <div>
-              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.status}}</span>
+            <div ng-if="device.deviceStatus.statusKey">
+              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
             </div>
             <div>
               <span>{{device.name}}</span>
-            </div>
-            <div ng-if="device.deviceStatus.ipAddress">
-              <span>{{device.deviceStatus.ipAddress}}</span>
-            </div>       
+            </div>      
             <div ng-if="device.description">
               <span>{{device.description}}</span>
             </div>            

@@ -56,7 +56,8 @@ describe('Controller: CdrLogsCtrl', function () {
   });
 
   it('selectCDR should set selectedCDR', function () {
-    controller.selectCDR(callLegs[0][0][0], callLegs[0]);
+    controller.selectCDR(callLegs[0][0][0], callLegs[0][0][0]);
     expect(controller.selectedCDR).toEqual(callLegs[0][0][0]);
   });
+
 });

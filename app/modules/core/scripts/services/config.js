@@ -244,6 +244,13 @@ angular.module('Core')
           prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
         },
 
+        cdrUrl: {
+          dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
+          integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -431,11 +438,6 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
-          }, {
-            title: 'tabs.reportTab',
-            desc: 'reportsPage.devReports',
-            state: 'devReports',
-            link: '#devReports'
           }]
         }],
 
@@ -527,7 +529,8 @@ angular.module('Core')
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA',
-          colorAttentionBase: '#F5A623'
+          colorAttentionBase: '#F5A623',
+          colorPeopleBase: '#14A792'
         },
 
         confMap: {
@@ -1026,6 +1029,17 @@ angular.module('Core')
           };
 
           return sunlightConfigServiceUrl[this.getEnv()];
+        },
+
+        getCdrUrl: function () {
+          var cdrConfigServiceUrl = {
+            'dev': this.cdrUrl.dev,
+            'cfe': this.cdrUrl.cfe,
+            'integration': this.cdrUrl.integration,
+            'prod': this.cdrUrl.prod
+          };
+
+          return cdrConfigServiceUrl[this.getEnv()];
         }
       };
 
@@ -1051,6 +1065,7 @@ angular.module('Core')
           'user-overview',
           'userprofile',
           'reports',
+          'devReports',
           'setupwizardmodal',
           'firsttimewizard',
           'groups',
@@ -1060,12 +1075,28 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing'],
-        WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support'],
+        Readonly_Admin: [
+          'overview',
+          'users',
+          'user-overview',
+          'userprofile',
+          'reports',
+          'setupwizardmodal',
+          'firsttimewizard',
+          'groups',
+          'profile',
+          'customerprofile',
+          'support',
+          'editService',
+          'trialExtInterest'
+        ],
+        Support: ['support', 'reports', 'billing', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_SALES_ADMIN: ['partnerreports'],
+        PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -1099,9 +1130,9 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'devReports',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',

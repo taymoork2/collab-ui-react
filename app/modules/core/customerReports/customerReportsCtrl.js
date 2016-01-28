@@ -13,6 +13,7 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
+    vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
@@ -21,18 +22,20 @@
     vm.displayEngagement = true;
     vm.displayQuality = true;
 
-    var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+    var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var activeUserCard = null;
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
+    vm.searchPlaceholder = $translate.instant('activeUsers.search');
+    vm.searchField = "";
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
@@ -72,6 +75,9 @@
     vm.metrics = {};
 
     vm.headerTabs = [{
+      title: $translate.instant('reportsPage.engagement'),
+      state: 'reports'
+    }, {
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'devReports'
     }];
@@ -95,6 +101,7 @@
     vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
+    vm.searchMostActive = searchMostActive;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -105,11 +112,12 @@
     };
 
     vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.floor((num + 1) / 5);
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.changePage = function (num) {
       vm.activeUserCurrentPage = num;
+      resizeCards();
     };
 
     vm.mostActiveSort = function (num) {
@@ -134,6 +142,7 @@
       if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
+      resizeCards();
     };
 
     vm.pageBackward = function () {
@@ -145,6 +154,7 @@
       if (vm.activeUserCurrentPage !== 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
+      resizeCards();
     };
 
     function init() {
@@ -158,6 +168,7 @@
           setFilesSharedData();
           setMediaData();
           setCallMetricsData();
+          setDeviceData();
         }, 30);
       }
     }
@@ -175,7 +186,7 @@
 
     function resetCards(filter) {
       if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard, deviceCard];
         var qualityElems = [mediaCard, metricsCard];
 
         if (filter === vm.allReports) {
@@ -275,6 +286,12 @@
         metricsChart = tempMetricsChart;
       }
 
+      var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
+      var tempDevicesChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+        deviceChart = tempDevicesChart;
+      }
+
       resizeCards();
     }
 
@@ -286,6 +303,7 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 
@@ -297,6 +315,7 @@
       setFilesSharedData();
       setMediaData();
       setCallMetricsData();
+      setDeviceData();
     }
 
     function mediaUpdate() {
@@ -314,6 +333,10 @@
     }
 
     function setActiveUserData() {
+      vm.activeUsersTotalPages = 0;
+      vm.activeUserCurrentPage = 0;
+      vm.searchField = "";
+      vm.showMostActiveUsers = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
@@ -331,13 +354,32 @@
             } else if (response.length === 0) {
               vm.mostActiveUserStatus = EMPTY;
             } else {
+              vm.activeUserPredicate = activeUsersSort[3];
+              vm.mostActiveUsers = response;
+              vm.activeUserCurrentPage = 1;
               vm.mostActiveUserStatus = SET;
             }
-            activeUserCard = document.getElementById('active-user-card');
+            resizeCards();
           });
         }
         resizeCards();
       });
+      activeUserCard = document.getElementById('active-user-card');
+    }
+
+    function searchMostActive() {
+      var returnArray = [];
+      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+        var userName = item.userName;
+        if (vm.searchField === undefined || vm.searchField === '' || (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
+          returnArray.push(item);
+        }
+      });
+      vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      $timeout(function () {
+        resizeCards();
+      }, 10);
+      return returnArray;
     }
 
     function setAvgRoomData() {
@@ -492,7 +534,7 @@
           var funcName = "promisChainDone()";
           var logMsg = "";
 
-          // if we are displaying the webex reports index page then go ahead with the rest of the code 
+          // if we are displaying the webex reports index page then go ahead with the rest of the code
           if (vm.showWebexReports) {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
@@ -536,7 +578,7 @@
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }
