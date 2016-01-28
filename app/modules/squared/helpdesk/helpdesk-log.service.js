@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   /*ngInject*/
@@ -7,7 +7,7 @@
     function searchForLastPushedLog(term) {
       var deferred = $q.defer();
 
-      LogService.searchLogs(term, function (data, status) {
+      LogService.searchLogs(term, function(data, status) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(findLastLog(data.metadataList));
@@ -23,7 +23,7 @@
 
     function getLastPushedLogForUser(uuid) {
       var deferred = $q.defer();
-      LogService.listLogs(uuid, function (data, status) {
+      LogService.listLogs(uuid, function(data, status) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
             deferred.resolve(findLastLog(data.metadataList));
@@ -39,7 +39,7 @@
 
     function downloadLog(filename) {
       var deferred = $q.defer();
-      LogService.downloadLog(filename, function (data, status) {
+      LogService.downloadLog(filename, function(data, status) {
         if (data.success) {
           deferred.resolve(data.tempURL);
         } else {
@@ -50,7 +50,7 @@
     }
 
     function findLastLog(metadataList) {
-      var lastLog = _.chain(metadataList).sortBy(metadataList, function (meta) {
+      var lastLog = _.chain(metadataList).sortBy(metadataList, function(meta) {
         return new Date(meta.timestamp);
       }).last().value();
       return {
