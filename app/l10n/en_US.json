@@ -994,7 +994,18 @@
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
-      "status-title": "Service Status"
+      "status-title": "Service Status",
+      "add-resource-button": "Add Resource",
+      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+    },
+    "redirect-target-dialog": {
+      "title": "Register New Expressway",
+      "instructions-grant-registration": "Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.",
+      "hostname-placeholder": "Enter Expressway Hostname",
+      "activate-resource-button": "Next",
+      "register-resource-button": "Go To Expressway",
+      "grant-registration-success-header": "You may now register the Expressway <strong>{{hostname}}</strong> with Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Expressway within one hour to finish registration."
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
