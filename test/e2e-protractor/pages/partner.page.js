@@ -70,8 +70,8 @@ var PartnerHomePage = function () {
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
   this.saveUpdateButton = element(by.id('saveUpdateButton'));
-  this.newTrialRow = element(by.id(this.newTrial.customerName));
-  this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
+  this.newTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newTrial.customerName));
+  this.newSqUCTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
   this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
@@ -103,7 +103,7 @@ var PartnerHomePage = function () {
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
-  this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
+  this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
@@ -148,7 +148,7 @@ var PartnerHomePage = function () {
   };
 
   this.retrieveOrgId = function (trialRow) {
-    return trialRow.getAttribute('orgId').then(function (orgId) {
+    return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
     });
