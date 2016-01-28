@@ -107,7 +107,11 @@ angular.module('Squared').service('DeviceFilter',
     function matchesSearch(item) {
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
-        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || termMatchesAnyTag(item.tags, term) || termMatchesAnyIssue(item.diagnosticsEvents, term) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        var matchesAnyFieldOfItem = termMatchesAnyFieldOfItem(term, item);
+        var matchesAnyTag = termMatchesAnyTag(item.tags, term);
+        var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
+        var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        return matchesAnyFieldOfItem || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
       });
     }
 
@@ -123,8 +127,8 @@ angular.module('Squared').service('DeviceFilter',
       });
     }
 
-    function termMatchesAnyFieldOfItem(term, item, fields) {
-      return (fields || []).some(function (field) {
+    function termMatchesAnyFieldOfItem(term, item) {
+      return ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
         return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
       });
     }
