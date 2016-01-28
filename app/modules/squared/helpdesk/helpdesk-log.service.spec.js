@@ -1,10 +1,10 @@
 'use strict';
-describe('Service: HelpdeskLogService', function() {
+describe('Service: HelpdeskLogService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var Service, LogService, q, scope, httpBackend, urlBase;
 
-  beforeEach(inject(function(_Config_, $httpBackend, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_Config_, $httpBackend, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
     Service = _HelpdeskLogService_;
     LogService = _LogService_;
     httpBackend = $httpBackend;
@@ -45,32 +45,31 @@ describe('Service: HelpdeskLogService', function() {
     LogService.downloadLog.yields(download);
   }));
 
-  it('fetches the last log on search', function(done) {
-    Service.searchForLastPushedLog('searchterm').then(function(log) {
+  it('fetches the last log on search', function (done) {
+    Service.searchForLastPushedLog('searchterm').then(function (log) {
       expect(log.filename).toEqual("logFile4");
       done();
-    }, function(reason) {
+    }, function (reason) {
       fail(reason);
     });
     scope.$apply();
   });
 
-  it('fetches the last log on user id', function(done) {
-    console.log("koko");
-    Service.getLastPushedLogForUser('userid').then(function(log) {
+  it('fetches the last log on user id', function (done) {
+    Service.getLastPushedLogForUser('userid').then(function (log) {
       expect(log.filename).toEqual("logFile4");
       done();
-    }, function(reason) {
+    }, function (reason) {
       fail(reason);
     });
     scope.$apply();
   });
 
-  it('can download log', function(done) {
-    Service.downloadLog('filename').then(function(url) {
+  it('can download log', function (done) {
+    Service.downloadLog('filename').then(function (url) {
       expect(url).toEqual('http://download.com');
       done();
-    }, function(reason) {
+    }, function (reason) {
       fail(reason);
     });
     scope.$apply();
