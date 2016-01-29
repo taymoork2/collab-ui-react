@@ -187,25 +187,6 @@ angular.module('Core')
           });
         },
 
-        getUserAuthToken: function (userid, callback) {
-          Auth.setAccessToken().then(function () {
-            $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid, {
-                cache: false
-              })
-              .success(function (data, status) {
-                data = data || {};
-                data.success = true;
-                callback(data, status);
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
-                callback(data, status);
-              });
-          });
-        },
-
         addDrUser: function (emailPassword) {
           return Auth.setAccessToken().then(function () {
             return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
