@@ -17,12 +17,11 @@ while (1 >= sitesettings.testInfo.describeCount) {
     sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin1.username + ' for T31 site config test';
   }
 
-  describe(sitereports.testInfo.describeText, function () {
+  xdescribe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
 
-    /*
     if (sitereports.testInfo.siteType == "T31") {
       it(sitereports.testInfo.signInText, function () {
         login.loginThroughGui(sitereports.testAdmin1.username, sitereports.testAdmin1.password);
@@ -119,9 +118,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
     it('should log out', function () {
       navigation.logout();
     });
-    */
   });
-  */
 
   ++sitesettings.testInfo.describeCount;
 }
