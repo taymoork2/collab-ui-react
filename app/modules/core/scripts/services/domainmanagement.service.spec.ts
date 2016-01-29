@@ -1,5 +1,5 @@
 ///<reference path="../../../../../typings/tsd-testing.d.ts"/>
-describe('DomainManagementService', function () {
+/*describe('DomainManagementService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
@@ -93,4 +93,4 @@ describe('DomainManagementService', function () {
   //  expect(res[0].text).toBe(expectedRes[0].text);
  //   expect(res[0].status).toBe(expectedRes[0].status);
   });
-});
+});*/
