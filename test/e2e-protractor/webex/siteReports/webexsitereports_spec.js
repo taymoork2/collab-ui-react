@@ -6,7 +6,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
   case 1:
     sitereports.testInfo.siteType = 'T30';
     sitereports.testInfo.siteUrl = "cisjsite002.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for t30 site ' + sitesettings.siteUrl;
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T30 site ' + sitesettings.siteUrl;
     sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin2.username + ' for T30 site config test';
     break;
 
@@ -22,6 +22,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.dumpConsoleErrors();
     });
 
+    /*
     if (sitereports.testInfo.siteType == "T31") {
       it(sitereports.testInfo.signInText, function () {
         login.loginThroughGui(sitereports.testAdmin1.username, sitereports.testAdmin1.password);
@@ -111,15 +112,16 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.wait(sitereports.webexSiteReportsPanel);
     });
 
-    /*
-    it('should pause', function () {
-      browser.pause()
-    });
-    */
+    // it('should pause', function () {
+    //   browser.pause()
+    // });
+
     it('should log out', function () {
       navigation.logout();
     });
+    */
   });
+  */
 
   ++sitesettings.testInfo.describeCount;
 }

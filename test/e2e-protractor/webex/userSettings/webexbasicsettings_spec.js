@@ -1,11 +1,11 @@
 'use strict';
 
 describe('WebEx user settings', function () {
-
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
 
+  /*
   it('should allow login as admin user', function () {
     login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
   });
@@ -67,8 +67,7 @@ describe('WebEx user settings', function () {
     usersettings.save();
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
-
-  /**
+  
     xit('should allow edit in 4th panel', function () {
       utils.click(usersettings.userPrivilegesLink);
       utils.wait(usersettings.userPrivilegesPanel);
@@ -101,15 +100,13 @@ describe('WebEx user settings', function () {
         usersettings.alertSuccess.click();
       }
     });
-  **/
 
-  /**
-    it('should pause', function () {
-      browser.pause();
-    });
-  **/
+  // it('should pause', function () {
+  //   browser.pause();
+  // });
 
   it('should allow log out', function () {
     navigation.logout();
   });
+  */
 });
