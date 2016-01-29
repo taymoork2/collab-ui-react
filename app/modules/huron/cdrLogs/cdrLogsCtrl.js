@@ -36,7 +36,8 @@
     formlyConfig.setType({
       name: 'custom-file',
       templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
-      wrapper: ['ciscoWrapper']
+      wrapper: ['ciscoWrapper'],
+      overwriteOk: true
     });
 
     var validations = {
@@ -604,7 +605,10 @@
 
       $state.go('cdr-overview', {
         cdrData: vm.selectedCDR,
-        call: callCopy
+        call: callCopy,
+        uniqueIds: CdrService.extractUniqueIds(call),
+        events: vm.events,
+        imported: vm.imported
       });
     }
 

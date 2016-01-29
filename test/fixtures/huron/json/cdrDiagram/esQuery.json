@@ -1,0 +1,59 @@
+{
+  "query": {
+    "filtered": {
+      "query": {
+        "bool": {
+          "should": [{
+            "query_string": {
+              "query": "CallTrace.Release"
+            }
+          }, {
+            "query_string": {
+              "query": "CallTrace.Split"
+            }
+          }, {
+            "query_string": {
+              "query": "CallTrace.SetupReq"
+            }
+          }, {
+            "query_string": {
+              "query": "CallTrace.Reject"
+            }
+          }, {
+            "query_string": {
+              "query": "CallTrace.Join"
+            }
+          }, {
+            "query_string": {
+              "query": "CallTrace.SIPEvent"
+            }
+          }, {
+            "query_string": {
+              "query": "sipmsg"
+            }
+          }]
+        }
+      },
+      "filter": {
+        "bool": {
+          "should": [{
+            "fquery": {
+              "query": {
+                "query_string": {
+                  "query": "320aade700105000a000ac7e8ab6cab8 OR e02d28c2fe254f0da3de1430a1d9043c"
+                }
+              },
+              "_cache": true
+            }
+          }]
+        }
+      }
+    }
+  },
+  "size": 200,
+  "sort": [{
+    "@timestamp": {
+      "order": "desc"
+    }
+  }]
+}

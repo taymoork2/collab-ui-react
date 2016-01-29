@@ -1,0 +1,3 @@
+{
+  "data": "@startuml\n\"Start Point\"->\"Line Hedge\": [1] INVITE SIP/2.0\"\n\"Line Hedge\"->\"Start Point\": \"[2] SIP/2.0 100\"\n\"Line Hedge\"->\"Start Point\": \"[3] INVITE SIP/2.0\"\n@enduml"
+}

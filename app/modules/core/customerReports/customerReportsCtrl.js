@@ -13,6 +13,7 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
+    vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
@@ -74,6 +75,9 @@
     vm.metrics = {};
 
     vm.headerTabs = [{
+      title: $translate.instant('reportsPage.engagement'),
+      state: 'reports'
+    }, {
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'devReports'
     }];
@@ -164,6 +168,7 @@
           setFilesSharedData();
           setMediaData();
           setCallMetricsData();
+          setDeviceData();
         }, 30);
       }
     }
@@ -181,7 +186,7 @@
 
     function resetCards(filter) {
       if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard, deviceCard];
         var qualityElems = [mediaCard, metricsCard];
 
         if (filter === vm.allReports) {
@@ -281,6 +286,12 @@
         metricsChart = tempMetricsChart;
       }
 
+      var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
+      var tempDevicesChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+        deviceChart = tempDevicesChart;
+      }
+
       resizeCards();
     }
 
@@ -292,6 +303,7 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 
@@ -303,6 +315,7 @@
       setFilesSharedData();
       setMediaData();
       setCallMetricsData();
+      setDeviceData();
     }
 
     function mediaUpdate() {

@@ -7,11 +7,22 @@
     <p translate="domainManagement.delete.description"/>
     <br>
     <p><b>{{dmpopup.domain}}</b></p>
-    <b><p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
+  </div>
+  <div ng-if="!dmpopup.error" class="modal-body domWarning domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p translate="domainManagement.delete.warning"></p>
+    </section>
+  </div>
+  <div ng-if="dmpopup.error" class="modal-body domWarning domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p>{{dmpopup.error}}</p>
+    </section>
   </div>
   <div class="modal-footer">
     <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
-    <button ng-disabled="!dmpopup.isValid" ng-click="dmpopup.delete()" class="btn--negative"
+    <button ng-disabled="!dmpopup.isValid" ng-click="dmpopup.deleteDomain()" class="btn--negative"
             translate="common.delete"></button>
   </div>
 </div>
