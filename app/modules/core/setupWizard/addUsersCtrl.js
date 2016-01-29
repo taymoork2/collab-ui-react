@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService',
-    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService, FeatureToggleService) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService', 'Authinfo',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService, FeatureToggleService, Authinfo) {
       var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
+
+      // $scope.csvTemplateUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/template';
 
       // Messeger User Sync Mode flag
       $scope.isMsgrSyncEnabled = false;

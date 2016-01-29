@@ -419,6 +419,47 @@ angular.module('Core')
           onboardUsers(userPayload, callback, cancelPromise);
         },
 
+        bulkOnboardUsers: function (usersDataArray, callback, cancelPromise) {
+          var userPayload = {
+            'users': []
+          };
+
+          _.forEach(usersDataArray, function (userData) {
+            var userEmail = userData.address.trim();
+            var userName = userData.name;
+            var displayName = userData.displayName;
+
+            var user = {
+              'email': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
+              'userEntitlements': null,
+              'licenses': null
+            };
+
+            if (userEmail.length > 0) {
+              user.email = userEmail;
+              user.name = tokenParseFirstLastName(userName);
+              if (displayName) {
+                user.displayName = displayName;
+              }
+
+              // Build entitlement and license arrays with properties driven from userData model
+              if (_.isArray(userData.entitlements) && userData.entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userData, userData.entitlements);
+              }
+              if (_.isArray(userData.licenses) && userData.licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userData, userData.licenses);
+              }
+
+              userPayload.users.push(user);
+            }
+          });
+          onboardUsers(userPayload, callback, cancelPromise);
+        },
+
         deactivateUser: function (userData) {
           return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
         }
