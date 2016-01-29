@@ -186,8 +186,8 @@ function export_project_root_env_var {
         return 1
     fi
 
-    entry_line_prefix="export ${project_root_env_var_name}="
-    entry_line="^export ${project_root_env_var_name}=${top_dir}"
+    entry_line_prefix="^export ${project_root_env_var_name}="
+    entry_line="export ${project_root_env_var_name}=${top_dir}"
     if grep -q "${entry_line_prefix}" ${bash_conf_file}; then
         sed -i -E "s,${entry_line_prefix}.*,${entry_line}," ${bash_conf_file}
     else
