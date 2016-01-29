@@ -161,10 +161,10 @@ angular.module('Core')
         },
 
         domainManagementUrl: {
-          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
-          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
-          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
-          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+          dev: 'https://identity.webex.com/organization/%s/v1/',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/',
+          integration: 'https://identity.webex.com/organization/%s/v1/',
+          prod: 'https://identity.webex.com/organization/%s/v1/'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',

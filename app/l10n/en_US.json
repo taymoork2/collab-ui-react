@@ -2742,7 +2742,7 @@
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
-    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
+    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3325,10 +3325,11 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Verification",
-    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "title": "Domain Management",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
+    "claimDomain": "Claim",
     "list": {
       "domainHeader": "Domain",
       "statusHeader": "Status",
@@ -3336,28 +3337,53 @@
     },
     "add": {
       "header": "Add domains",
-      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "Invalid domain entered"
+      "invalidDomain": "This is not a valid domain name."
     },
     "delete": {
-      "header": "Delete domain",
-      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains."
+      "header": "Unverify domain",
+      "description": "You are about to unverify the following domain:",
+      "preventLockoutError": "Unverifying your own domain will prevent you from logging in.",
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
     },
     "email": {
       "header": "Send email",
-      "description": "",
-      "exampleEmail": "admin@example.com",
-      "invalidEmail": "This is not an email address",
+      "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
+      "exampleEmail": "Enter email addresses separated by commas.",
+      "invalidEmail": "This is not a valid email address.",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     },
     "verify": {
       "header": "Verify domain",
-      "verifyThis": "You are about to verify the following domain:",
-      "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
-      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "verifyThis": "Before you verify",
+      "beforeVerify": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "enable": "I understand this."
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
+    },
+    "claim": {
+      "header": "Claim domain",
+      "claimThis": "You are about to claim the following domain:",
+      "warning": "Users with e-mail addresses in this domain that belong to other orgs will have to provide new e-mail addresses.",
+      "claim": "Claim"
+    },
+    "actions": {
+      "instructions": "Show code and instructions",
+      "mail": "Mail code and instructions",
+      "unverify": "Remove enforcement",
+      "unclaim": "Release domain",
+      "delete": "Remove"
+    },
+    "instructions": {
+      "title": "Code and instructions",
+      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
+      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
+      "done": "Done"
     }
   }
 }

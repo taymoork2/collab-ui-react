@@ -205,7 +205,21 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.instructions', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageInstructionsCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +233,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +247,21 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.claim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageClaimCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +274,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {
