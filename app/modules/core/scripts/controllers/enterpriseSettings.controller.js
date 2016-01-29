@@ -86,7 +86,6 @@
       if (sipField.inputValue.length > 40) {
         sipField.isError = true;
       }
-
       return sipField.isError;
     };
 
