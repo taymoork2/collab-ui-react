@@ -1,5 +1,5 @@
-///<reference path="../../../../../typings/tsd-testing.d.ts"/>
-/*describe('DomainManagementService', function () {
+///<reference path="../../../../typings/tsd-testing.d.ts"/>
+fdescribe('DomainManagementService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
@@ -23,7 +23,7 @@
   });
 
   beforeEach(inject(function ($injector, _DomainManagementService_, _Config_) {
-    Config = _Config_
+    Config = _Config_;
     DomainManagementService = _DomainManagementService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
@@ -34,7 +34,7 @@
     $httpBackend.verifyNoOutstandingExpectation();
   });
 
-  var $httpBackend, Orgservice, Auth, Authinfo, Config, Log;
+  var $httpBackend, Authinfo, Config;
 
   it('should fail to get an organization for a given orgId1', function () {
 
@@ -87,10 +87,10 @@
       text: 'verified1.grodum.org',
       code: '',
       status: DomainManagementService.states.pending
-    }]
+    }];
 
   //  expect(res.length).toBe(expectedRes.length);
   //  expect(res[0].text).toBe(expectedRes[0].text);
  //   expect(res[0].status).toBe(expectedRes[0].status);
   });
-});*/
+});
