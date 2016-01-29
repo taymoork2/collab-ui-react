@@ -6,8 +6,25 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($q, $http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, ConfigService, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, ConfigService, Authinfo) {
     var clusterCache = {};
+    var hub = CsdmHubFactory.create();
+    var poller = CsdmPoller.create(fetch, hub);
+
+    var service = {
+      deleteCluster: deleteCluster,
+      deleteHost: deleteHost,
+      fetch: fetch,
+      getClustersByConnectorType: getClustersByConnectorType,
+      getClustersById: getClustersById,
+      getConnector: getConnector,
+      subscribe: hub.on,
+      upgradeSoftware: upgradeSoftware
+    };
+
+    return service;
+
+    ////////////////
 
     function extractDataFromResponse(res) {
       return res.data;
@@ -146,7 +163,7 @@
       });
     }
 
-    var fetch = function () {
+    function fetch() {
       return $http
         .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
@@ -161,21 +178,21 @@
           return _.indexBy(clusters, 'id');
         })
         .then(_.partial(CsdmCacheUpdater.update, clusterCache));
-    };
+    }
 
-    var getClustersById = function (id) {
+    function getClustersById(id) {
       return clusterCache[id];
-    };
+    }
 
-    var getClustersByConnectorType = function (connectorType) {
+    function getClustersByConnectorType(connectorType) {
       return _.filter(clusterCache, function (cluster) {
         return _.some(cluster.connectors, function (connector) {
           return connector.connectorType === connectorType;
         });
       });
-    };
+    }
 
-    var upgradeSoftware = function (clusterId, serviceType) {
+    function upgradeSoftware(clusterId, serviceType) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
@@ -183,9 +200,9 @@
           poller.forceAction();
           return data;
         });
-    };
+    }
 
-    var deleteCluster = function (clusterId) {
+    function deleteCluster(clusterId) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.delete(url)
         .then(function (data) {
@@ -195,9 +212,9 @@
           poller.forceAction();
           return data;
         });
-    };
+    }
 
-    var deleteHost = function (clusterId, serial) {
+    function deleteHost(clusterId, serial) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
       return $http.delete(url)
         .then(function (data) {
@@ -213,25 +230,11 @@
           poller.forceAction();
           return data;
         });
-    };
+    }
 
-    var getConnector = function (connectorId) {
+    function getConnector(connectorId) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
-    };
-
-    var hub = CsdmHubFactory.create();
-    var poller = CsdmPoller.create(fetch, hub);
-
-    return {
-      fetch: fetch,
-      deleteHost: deleteHost,
-      getClustersById: getClustersById,
-      getClustersByConnectorType: getClustersByConnectorType,
-      getConnector: getConnector,
-      upgradeSoftware: upgradeSoftware,
-      deleteCluster: deleteCluster,
-      subscribe: hub.on
-    };
+    }
   }
 }());
