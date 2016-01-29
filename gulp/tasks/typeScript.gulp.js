@@ -10,12 +10,30 @@ var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var messageLogger = require('../utils/messageLogger.gulp')();
+var runSeq = require('run-sequence');
 
-gulp.task('ts:build', function () {
-  var files = config.appFiles.ts;
+/*******************************************************************
+ * Typescript transpiling task
+ * Usage: gulp ts:build      Transpiles all ts files to js
+ * Options:
+ * --notest             Skips the test (.spec.ts) files
+ * --noapp              Skips the app files
+ ******************************************************************/
+gulp.task('ts:build', function (done) {
+  runSeq([
+      'ts:build-app',
+      'ts:build-test'
+    ],
+    done);
+});
+
+gulp.task('ts:build-test', function () {
+  var files = config.testFiles.spec.ts;
+  var dest = config.tstests;
+
   var filter;
   var reporter = $.typescript.reporter.defaultReporter();
-  messageLogger('Transpiling TypeScript files', config.appFiles.ts);
+  messageLogger('Transpiling TypeScript test files'  + config.test, files);
   return gulp
     .src(files, {
       base: config.app
@@ -31,7 +49,38 @@ gulp.task('ts:build', function () {
       "listFiles": false
     }, filter, reporter))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(config.build))
+    .pipe(gulp.dest(dest))
+    .pipe(reload({
+      stream: true
+    }));
+});
+
+gulp.task('ts:build-app', function () {
+  var files =  [].concat(
+    config.appFiles.ts,
+    '!' + config.testFiles.spec.ts
+  );
+  var dest = config.build;
+
+  var filter;
+  var reporter = $.typescript.reporter.defaultReporter();
+  messageLogger('Transpiling TypeScript files', files);
+  return gulp
+    .src(files, {
+      base: config.app
+    })
+    .pipe($.if(args.verbose, $.print()))
+    .pipe($.sourcemaps.init())
+    .pipe($.typescript({
+      "removeComments": false,
+      "preserveConstEnums": true,
+      "target": "ES5",
+      "sourceMap": true,
+      "showOutput": "silent",
+      "listFiles": false
+    }, filter, reporter))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest(dest))
     .pipe(reload({
       stream: true
     }));

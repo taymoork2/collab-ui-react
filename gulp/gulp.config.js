@@ -10,6 +10,7 @@ module.exports = function() {
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
+  var tstests = test + '/ts';
   var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
@@ -22,6 +23,7 @@ module.exports = function() {
     vendor: vendor,
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
+    tstests: tstests,
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -77,6 +79,7 @@ module.exports = function() {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
+        tstests + '/modules/**/*.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -92,6 +95,7 @@ module.exports = function() {
       ],
       spec: {
         all: app + '/**/*.spec.js',
+        ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
