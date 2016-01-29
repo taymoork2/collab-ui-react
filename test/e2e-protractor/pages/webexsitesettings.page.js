@@ -4,14 +4,21 @@
 'use strict';
 
 var SiteSettigsPage = function () {
+  this.testInfo = {
+    describeCount: 0,
+    siteUrl: null,
+    siteType: null,
+    describeText: null,
+    signInText: null,
+  };
 
-  this.testAdmin = {
+  this.testAdmin1 = {
     username: 'sjsite14@mailinator.com',
     password: 'Cisco!23',
   };
 
   this.testAdmin2 = {
-    username: 't30citestprov9@mailinator.com',
+    username: 'cisjsite002@mailinator.com',
     password: 'Cisco!23',
   }
 
@@ -19,8 +26,8 @@ var SiteSettigsPage = function () {
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
-  this.configureSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-settings"));
-  this.configureSJSITE14cog = this.configureSJSITE14.element(by.css(".icon-settings"));
+  this.configureSJSITE14Cog = element(by.id("sjsite14.webex.com_webex-site-settings"));
+  this.configureCISJSITE002Cog = element(by.id("cisjsite002.webex.com_webex-site-settings"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));

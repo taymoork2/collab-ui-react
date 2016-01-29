@@ -942,7 +942,7 @@ angular.module('Core')
           checkPlaceholder();
         },
         edittoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+          if (angular.element(e.relatedTarget).hasClass('invalid')) {
             invalidcount--;
           }
         },

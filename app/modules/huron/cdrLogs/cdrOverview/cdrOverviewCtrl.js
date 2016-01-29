@@ -30,6 +30,14 @@
       autohidemode: "leave"
     };
 
+    vm.openLadderDiagram = function () {
+      $state.go('cdrladderdiagram', {
+        call: $stateParams.call,
+        uniqueIds: $stateParams.uniqueIds,
+        events: $stateParams.events
+      });
+    };
+
     vm.filter = filter;
 
     function init() {
