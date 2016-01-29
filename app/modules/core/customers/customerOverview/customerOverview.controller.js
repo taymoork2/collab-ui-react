@@ -6,8 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService) {
-    /*jshint validthis: true */
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService) {
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
@@ -17,6 +16,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
@@ -24,6 +24,19 @@
     vm.isOwnOrg = isOwnOrg;
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
+
+    var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
+    vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
+      if (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.offerTypes.roomSystems
+          })) {
+          vm.showRoomSystems = result;
+        }
+      }
+    });
 
     initCustomer();
     getLogoSettings();

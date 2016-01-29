@@ -6,7 +6,7 @@
   @extend %content-header;
   position: relative;
 
-  .loading {
+  .loading-container {
     font-size: 3rem;
     text-align: center;
   }
@@ -29,18 +29,6 @@
       font-size: 1.1rem;
     }
 
-    .service-setup-timezone-column {
-      .formly-input-wrapper {
-        width: calc(100% - 1rem);
-      }
-    }
-
-    .formly-field-nested {
-      .formly-template-wrapper {
-        margin-bottom: 1rem;
-      }
-    }
-
     .trash-icon {
       @extend .icon;
       @extend .icon-trash;
@@ -53,29 +41,20 @@
       }
     }
 
-    .formly-template-wrapper {
-      margin-bottom: 3rem;
-    }
-
-    .formly-template-wrapper, .service-setup {
-      label {
-        margin-bottom: 1rem;
-      }
-    }
-
-    .caller-id ng-form {
-      width: 100%;
-      .caller-id-name {
-        width: 70%;
-      }
-      .caller-id-number {
-        width: 40%;
-      }
-    }
-
-    .company-voicemail {
+    .service-setup-container > .formly > .formly-field + .formly-field {
       margin-top: 3rem;
     }
-  }
 
+    .max-width-form ng-form {
+      width: 100%;
+    }
+
+    .international-dialing {
+      margin-top: 3rem;
+    }
+
+   .service-address-buttons {
+     margin-top: 1rem;
+   }
+  }
 }

@@ -11,12 +11,14 @@ var Navigation = function () {
   this.orgTab = element(by.css('a[href="#organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.autoAttendantPage = element(by.css('a[href="#/callrouting/autoattendant"]'));
+  this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
+  this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
+
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
@@ -26,6 +28,14 @@ var Navigation = function () {
   this.mediaFusionMgmtTab = element(by.css('a[href="#mediafusionconnector"]'));
   this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
   this.utilizationTab = element(by.css('a[href="#utilization"]'));
+
+  // hybrid services
+  this.activateService = element(by.id('activateService'));
+  this.deactivateService = element(by.id('deactivateService'));
+  this.calendarServicePage = element(by.css('a[href="#services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="#services/call"]'));
+  this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
+  this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -39,7 +49,9 @@ var Navigation = function () {
   this.settingsMenu = element(by.css('.settings-menu .dropdown-toggle'));
   this.planReview = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Plan Review'));
   this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Invite Users'));
-  this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Communication'));
+  this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Call'));
+  this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
+  this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
@@ -98,8 +110,7 @@ var Navigation = function () {
     this.clickDevelopmentTab();
     utils.click(this.callRoutingTab);
     utils.click(this.autoAttendantPage);
-    this.expectCurrentUrl('/autoattendant');
-    utils.click(autoattendant.autoAttendantDevLink);
+    this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);
   };
 
@@ -150,6 +161,16 @@ var Navigation = function () {
   this.clickCommunicationWizard = function () {
     utils.click(this.settingsMenu);
     utils.click(this.communication);
+  };
+
+  this.clickMessagingSetup = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.messaging);
+  };
+
+  this.clickEnterpriseSettings = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.enterpriseSettings);
   };
 
   this.clickOrgProfile = function () {
@@ -213,6 +234,21 @@ var Navigation = function () {
     utils.click(this.userInfoButton);
     utils.click(this.launchPartnerButton);
   };
+
+  this.ensureHybridService = function (page) {
+    this.clickServicesTab();
+    utils.click(page);
+    utils.wait(navigation.serviceSettings).then(function () {
+      console.log('\tSettings page should show "Deactivate" button');
+      utils.click(navigation.serviceSettings);
+      utils.expectIsDisplayed(navigation.deactivateService);
+    }, function () {
+      console.log('\tSevice disabled, enabling it...');
+      utils.click(navigation.activateService);
+      utils.click(navigation.serviceSettings);
+      utils.expectIsDisplayed(navigation.deactivateService);
+    });
+  }
 };
 
 module.exports = Navigation;

@@ -9,31 +9,26 @@ var runSeq = require('run-sequence');
 
 // Run tasks for Build/Development directory
 gulp.task('build', ['clean'], function (done) {
-  if (args.nolint) {
-    runSeq(
-      [
+  var tasks = [];
+  var runInParallel = [
         'template-cache',
         'scss:build',
         'copy:build',
         'ts:build'
-      ],
-      'processHtml:build',
-      'karma-config',
-      'karma',
-      done
-    );
-  } else {
-    runSeq(
-      'jsb', [
-        'template-cache',
-        'scss:build',
-        'copy:build',
-        'ts:build'
-      ],
-      'processHtml:build',
-      'karma-config',
-      'karma',
-      done
-    );
+      ];
+  if(!args.nolint){
+    tasks.push('analyze');
   }
+  tasks.push(runInParallel);
+  tasks.push('processHtml:build');
+
+  if(args.karmaSplit){
+    tasks.push('karma-all');
+  } else {
+    tasks.push('karma-config');
+    tasks.push('karma');
+  }
+  tasks.push(done);
+
+  runSeq.apply(this,tasks);
 });

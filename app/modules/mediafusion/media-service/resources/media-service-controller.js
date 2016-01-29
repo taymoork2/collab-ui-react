@@ -18,26 +18,38 @@
     vm.deleteSerial = null;
     vm.showPreview = true;
     vm.deleteConnectorName = null;
-    vm.serviceEnabled = false;
+    vm.serviceEnabled = true;
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
+    // Added for cs-page-header
+    vm.pageTitle = $translate.instant('mediaFusion.page_title');
+    vm.tabs = [{
+      title: $translate.instant('common.resources'),
+      state: 'media-service.list',
+    }, {
+      title: $translate.instant('common.settings'),
+      state: 'media-service.settings',
+    }];
     vm.clusters = _.values(MediaClusterService.getClusters());
     vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters());
     vm.clusterLength = clusterLength;
-    //vm.serviceNotInstalled = serviceNotInstalled;
-    //vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
-    //vm.enableService = enableService;
     vm.showClusterDetails = showClusterDetails;
 
     vm.clusterListGridOptions = {
       data: 'med.aggregatedClusters',
       enableSorting: false,
       multiSelect: false,
-      showFilter: false,
-      showFooter: false,
+      enableRowHeaderSelection: false,
+      enableColumnResize: true,
+      enableColumnMenus: false,
       rowHeight: 75,
-      rowTemplate: 'modules/mediafusion/media-service/resources/cluster-list-row-template.html',
-      headerRowHeight: 44,
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          vm.showClusterDetails(row.entity);
+          $log.log("entity", row.entity);
+        });
+      },
       columnDefs: [{
         field: 'groupName',
         displayName: 'Media Clusters',
@@ -53,7 +65,7 @@
 
     if (vm.currentServiceId == "squared-fusion-media") {
       $log.log("checking isServiceEnabled");
-      vm.serviceEnabled = false;
+      //vm.serviceEnabled = false;
       MediaServiceActivation.isServiceEnabled(vm.currentServiceId, function (a, b) {
         vm.serviceEnabled = b;
         vm.loading = false;
@@ -78,13 +90,10 @@
     }
 
     function showClusterDetails(group) {
-      vm.connector = group.clusters[0];
-      vm.connectorId = group.clusters[0].id;
       if (vm.showPreview) {
         $state.go('connector-details', {
-          connectorId: vm.connector.id,
           groupName: group.groupName,
-          roleSelected: vm.connector.properties["mf.role"]
+          selectedClusters: group.clusters
         });
       }
       vm.showPreview = true;
@@ -121,12 +130,12 @@
           //$log.log("Identity Org Id:", response.data.identityOrgId);
           //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
-          // See if org id is already mapped to user org id 
+          // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
             mediaAgentOrgIdsArray.push(orgId);
             updateMediaAgentOrgId = true;
           }
-          // See if "squared" org id is already mapped to user org id 
+          // See if "squared" org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
             mediaAgentOrgIdsArray.push("squared");
             updateMediaAgentOrgId = true;
@@ -166,34 +175,6 @@
   }
 
   /* @ngInject */
-  function HostDetailsController($stateParams, $state, MediaClusterService, XhrNotificationService) {
-    var vm = this;
-    vm.host = $stateParams.host;
-    vm.cluster = MediaClusterService.getClusters()[$stateParams.clusterId];
-    vm.serviceType = $stateParams.serviceType;
-    vm.connector = function () {
-      var service = _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-      return _.find(service.connectors, function (connector) {
-        return connector.host.serial == vm.host.serial;
-      });
-    };
-
-    vm.deleteHost = function () {
-      return MediaClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
-        if (MediaClusterService.getClusters()[vm.cluster.id]) {
-          $state.go('cluster-details', {
-            clusterId: vm.cluster.id
-          });
-        } else {
-          $state.sidepanel.close();
-        }
-      }, XhrNotificationService.notify);
-    };
-  }
-
-  /* @ngInject */
   function MediaClusterSettingsController($modal, $stateParams, MediaClusterService, $scope, XhrNotificationService) {
     var vm = this;
     vm.clusterId = $stateParams.clusterId;
@@ -206,10 +187,6 @@
         service_type: vm.serviceType
       });
     };
-    /*
-        vm.serviceNotInstalled = function () {
-          return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-        };*/
 
     vm.showDeregisterDialog = function () {
       $modal.open({
@@ -229,6 +206,5 @@
     .module('Mediafusion')
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
-    .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController);
+    .controller('AlarmController', AlarmController);
 }());

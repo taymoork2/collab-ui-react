@@ -15,6 +15,6 @@ describe('Directive: aaBuilderActions', function () {
     $rootScope.$digest();
 
     expect(element.html()).toContain("aa-panel");
-    expect(element.html()).toContain("aa-add-step-icon");
+    expect(element.html()).not.toContain("aa-add-step-icon");
   });
 });

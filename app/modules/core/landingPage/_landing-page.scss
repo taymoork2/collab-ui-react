@@ -146,8 +146,6 @@
 
 .monitoring-panel {
   .badge {
-    width: 50px;
-    font-size: 13px;
     font-weight: normal;
 
     @include text-overflow;
@@ -381,18 +379,12 @@ li.monitoring-cell {
 }
 
 #customerListPanel {
-  .ngRow {
-    .col1 .ngCellText, .col2 .ngCellText, .col3 .ngCellText {
-      padding-top: 11px;
-    }
-
+  .ui-grid-cell-contents {
     .badge {
-      width: 60px;
-
-      @include text-overflow;
+      min-width: rem-calc(60);
     }
 
-    .align-center {
+    &.align-center {
       text-align: center;
     }
 
@@ -418,8 +410,8 @@ li.monitoring-cell {
       color: $gray-lighter;
     }
 
-    .label-managed {     
-      margin-left: 12px; 
+    .badge--managed {
+      margin-left: 12px;
     }
 
     .inactive {
@@ -472,7 +464,7 @@ li.monitoring-cell {
 
     &:hover {
       .badge-disabled {
-        @incluce badge-disabled-darker;
+        @include badge-disabled-darker;
       }
 
       .free-disabled {

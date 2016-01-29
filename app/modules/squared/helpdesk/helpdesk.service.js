@@ -2,7 +2,9 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate) {
+
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
+    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -24,6 +26,32 @@
         maxAge: 180 * 1000,
         deleteOnExpire: 'aggressive'
       });
+    }
+
+    //TODO: Useragent detection a probably not a reliable way to detect mobile device...
+    var isMobile = {
+      Android: function () {
+        return navigator.userAgent.match(/Android/i);
+      },
+      BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+      },
+      iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      },
+      Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+      },
+      Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+      },
+      all: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+      }
+    };
+
+    function checkIfMobile() {
+      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
     }
 
     function extractItems(res) {
@@ -59,7 +87,8 @@
     function getCorrectedDisplayName(user) {
       var displayName = '';
       if (user.name != null) {
-        displayName = user.name.givenName + ' ' + user.name.familyName;
+        displayName = user.name.givenName ? user.name.givenName : '';
+        displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
         return user.displayName;
@@ -71,25 +100,43 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
+    function cancelableHttpGET(url) {
+      var config = {
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
+      };
+
+      return $http
+        .get(url, config)
+        .catch(function (error) {
+          error.cancelled = error.config.timeout.cancelled;
+          error.timedout = error.config.timeout.timedout;
+          return $q.reject(error);
+        });
+    }
+
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
+          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
-        deferredResolve(HelpdeskMockData.orgs);
+        return deferredResolve(HelpdeskMockData.orgs);
       }
-      return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
+
+      return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
     }
 
     function getUser(orgId, userId) {
+      if (useMock()) {
+        return deferredResolve(extractAndMassageUser(HelpdeskMockData.user));
+      }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
         .then(extractAndMassageUser);
@@ -136,7 +183,8 @@
 
     var filterRelevantServices = function (services) {
       return _.filter(services, function (service) {
-        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id === 'squared-fusion-mgmt';
+        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id ===
+          'squared-fusion-mgmt';
       });
     };
 
@@ -166,8 +214,9 @@
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
+      var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
-        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -176,13 +225,16 @@
           }
         }
       });
-      return _.sortBy(filteredDevices, 'displayName');
+      return filteredDevices;
     }
 
     function extractAndMassageUser(res) {
-      var user = res.data;
+      var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
+      user.organization = {
+        id: user.orgId
+      };
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
@@ -239,21 +291,45 @@
         .then(extractData);
     }
 
+    function sendVerificationCode(displayName, email) {
+      return $http
+        .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {
+          inviteList: [{
+            displayName: displayName,
+            email: email
+          }]
+        })
+        .then(extractData);
+    }
+
     function getWebExSites(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.webExSites);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.webExSites);
       }
       return $http
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
     }
 
+    function getHybridStatusesForUser(userId, orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.userStatuses);
+      }
+      return USSService2.getStatusesForUserInOrg(userId, orgId);
+    }
+
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
       return deferred.promise;
+    }
+
+    function cancelAllRequests() {
+      return HelpdeskHttpRequestCanceller.cancelAll();
+    }
+
+    function noOutstandingRequests() {
+      return HelpdeskHttpRequestCanceller.empty();
     }
 
     return {
@@ -267,7 +343,14 @@
       getWebExSites: getWebExSites,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock
     };
   }
 

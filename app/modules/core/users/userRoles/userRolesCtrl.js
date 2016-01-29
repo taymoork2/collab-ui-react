@@ -3,43 +3,91 @@ angular.module('Squared')
   .controller('UserRolesCtrl', UserRolesCtrl);
 
 /* @ngInject */
-function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
+function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
   $scope.currentUser = $stateParams.currentUser;
+  $scope.sipAddr = '';
   if ($scope.currentUser) {
+    $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
     $scope.roles = $scope.currentUser.roles;
+    if ($scope.currentUser.sipAddresses) {
+      for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
+        if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
+          $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
+        }
+      }
+    }
   }
-
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
-
+  $scope.isPartner = SessionStorage.get('partnerOrgId');
+  $scope.showHelpDeskRole = !Config.isProd() || Authinfo.isCisco() || _.includes(['21cf6a5e-a63d-485f-8d62-b1d9e6f253c4', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
   $scope.getMessengerSyncStatus = getMessengerSyncStatus;
+  $scope.updateRoles = updateRoles;
+  $scope.clearCheckboxes = clearCheckboxes;
+  $scope.supportCheckboxes = supportCheckboxes;
+  $scope.partialCheckboxes = partialCheckboxes;
+  $scope.resetRoles = resetRoles;
   $scope.rolesObj = {};
+  $scope.noAdmin = {
+    label: $translate.instant('rolesPanel.noAdmin'),
+    value: 0,
+    name: 'adminRoles',
+    id: 'noAdmin'
+  };
+  $scope.fullAdmin = {
+    label: $translate.instant('rolesPanel.fullAdmin'),
+    value: 1,
+    name: 'adminRoles',
+    id: 'fullAdmin'
+  };
+  $scope.partialAdmin = {
+    label: $translate.instant('rolesPanel.partialAdmin'),
+    value: 2,
+    name: 'adminRoles',
+    id: 'partialAdmin'
+  };
 
-  var checkMainRoles = function () {
-    if ($scope.roles) {
-      if (_.includes($scope.roles, Config.backend_roles.full_admin)) {
-        return 1;
-      } else if (_.includes($scope.roles, Config.backend_roles.helpdesk)) {
-        return 3;
+  initView();
+
+  function initView() {
+    setFormValuesToMatchRoles();
+    Orgservice.getOrgCacheOption(function (data, status) {
+      if (data.success) {
+        $scope.dirsyncEnabled = data.dirsyncEnabled;
+        $scope.delegatedAdministration = data.delegatedAdministration;
       } else {
+        Log.debug('Get existing org failed. Status: ' + status);
+      }
+    }, null, {
+      cache: true
+    });
+    if (Authinfo.getOrgId()) {
+      getMessengerSyncStatus();
+    }
+  }
+
+  function setFormValuesToMatchRoles() {
+    $scope.rolesObj.adminRadioValue = checkMainRoles();
+    $scope.rolesObj.salesAdminValue = hasRole(Config.backend_roles.sales);
+    $scope.rolesObj.billingAdminValue = hasRole(Config.backend_roles.billing);
+    $scope.rolesObj.supportAdminValue = hasRole(Config.backend_roles.support);
+    $scope.rolesObj.helpdeskValue = hasRole(Config.backend_roles.helpdesk);
+  }
+
+  function checkMainRoles() {
+    if ($scope.roles) {
+      if (hasRole(Config.backend_roles.full_admin)) {
+        return 1;
+      } else if (hasRole(Config.backend_roles.sales) || hasRole(Config.backend_roles.billing) || hasRole(Config.backend_roles.support) || hasRole(Config.backend_roles.application)) {
         return 2;
       }
-    } else {
-      return 0;
     }
-  };
+    return 0;
+  }
 
-  var checkSubRoles = function (subRole, subRole2) {
-    if ($scope.roles) {
-      if ($scope.roles.indexOf(subRole) > -1 && $scope.roles.indexOf(subRole2) === -1) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return null;
-    }
-  };
+  function hasRole(role) {
+    return $scope.roles && _.includes($scope.roles, role);
+  }
 
   function getMessengerSyncStatus() {
     SyncService.isMessengerSyncEnabled()
@@ -49,105 +97,39 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
         Log.error(errorMsg);
       });
   }
-  if (null !== Authinfo.getOrgId()) {
-    getMessengerSyncStatus();
-  }
 
-  $scope.rolesObj.adminRadioValue = checkMainRoles();
-  $scope.rolesObj.salesAdminValue = checkSubRoles(Config.backend_roles.sales);
-  $scope.rolesObj.billingAdminValue = checkSubRoles(Config.backend_roles.billing);
-  $scope.rolesObj.supportAdminValue = checkSubRoles(Config.backend_roles.support);
-  $scope.rolesObj.cloudAdminValue = checkSubRoles(Config.backend_roles.application);
-
-  $scope.noAdmin = {
-    label: $translate.instant('rolesPanel.noAdmin'),
-    value: 0,
-    name: 'adminRoles',
-    id: 'noAdmin'
-  };
-
-  $scope.fullAdmin = {
-    label: $translate.instant('rolesPanel.fullAdmin'),
-    value: 1,
-    name: 'adminRoles',
-    id: 'fullAdmin'
-  };
-
-  $scope.partialAdmin = {
-    label: $translate.instant('rolesPanel.partialAdmin'),
-    value: 2,
-    name: 'adminRoles',
-    id: 'partialAdmin'
-  };
-
-  $scope.helpdesk = {
-    label: $translate.instant('rolesPanel.helpdesk'),
-    value: 3,
-    name: 'helpdesk',
-    id: 'helpdesk'
-  };
-
-  $scope.sipAddr = "";
-  if ($scope.currentUser.sipAddresses) {
-    for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-      if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
-        $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
-      }
-    }
-  }
-
-  var checkPartialRoles = function (roleEnabled) {
+  function checkPartialRoles(roleEnabled) {
     if (roleEnabled) {
       return Config.roleState.active;
     } else {
       return Config.roleState.inactive;
     }
-  };
-
-  $scope.isPartner = function () {
-    return SessionStorage.get('partnerOrgId');
-  };
-
-  $scope.isNotProd = function () {
-    return !Config.isProd();
-  };
+  }
 
   function resetForm() {
     $scope.rolesEdit.form.$setPristine();
     $scope.rolesEdit.form.$setUntouched();
   }
 
-  $scope.resetRoles = function () {
-    $state.go('user-overview.userProfile');
-    $scope.rolesObj.adminRadioValue = checkMainRoles();
-    if ($scope.rolesObj.adminRadioValue !== 2) {
-      $scope.clearCheckboxes();
-    }
+  function resetRoles() {
+    setFormValuesToMatchRoles();
     resetForm();
-  };
+  }
 
-  Orgservice.getOrg(function (data, status) {
-    if (data.success) {
-      $scope.dirsyncEnabled = data.dirsyncEnabled;
-      $scope.delegatedAdministration = data.delegatedAdministration;
-    } else {
-      Log.debug('Get existing org failed. Status: ' + status);
-    }
-  });
-
-  $scope.updateRoles = function () {
-
+  function updateRoles() {
     var choice = $scope.rolesObj.adminRadioValue;
     var roles = [];
 
     switch ($scope.rolesObj.adminRadioValue) {
     case 0: // No admin
-      for (var roleNames in Config.roles) {
-        var inactiveRoleState = {
-          'roleName': Config.roles[roleNames],
-          'roleState': Config.roleState.inactive
-        };
-        roles.push(inactiveRoleState);
+      for (var roleName in Config.roles) {
+        if (Config.roles[roleName] != Config.roles.helpdesk) {
+          roles.push({
+            'roleName': Config.roles[roleName],
+            'roleState': Config.roleState.inactive
+          });
+        }
+
       }
       break;
     case 1: // Full admin
@@ -155,50 +137,52 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
         'roleName': Config.roles.full_admin,
         'roleState': Config.roleState.active
       });
-
       roles.push({
-        'roleName': Config.roles.all,
+        'roleName': Config.roles.sales,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.billing,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.support,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
+        'roleName': Config.roles.reports,
         'roleState': Config.roleState.inactive
       });
       break;
     case 2: // Some admin roles
       roles.push({
+        'roleName': Config.roles.full_admin,
+        'roleState': Config.roleState.inactive
+      });
+      roles.push({
         'roleName': Config.roles.sales,
         'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.billing,
         'roleState': checkPartialRoles($scope.rolesObj.billingAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.support,
         'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
       });
-
       roles.push({
         'roleName': Config.roles.reports,
         'roleState': checkPartialRoles($scope.rolesObj.supportAdminValue)
       });
-
-      roles.push({
-        'roleName': Config.roles.application,
-        'roleState': checkPartialRoles($scope.rolesObj.cloudAdminValue)
-      });
-      break;
-    case 3: // Helpdesk
-      roles.push({
-        'roleName': Config.roles.helpdesk,
-        'roleState': Config.roleState.active
-      });
-
-      roles.push({
-        'roleName': Config.roles.all,
-        'roleState': Config.roleState.inactive
-      });
       break;
     }
+
+    // Help Desk
+    roles.push({
+      'roleName': Config.roles.helpdesk,
+      'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
+    });
 
     Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
       if (data.success) {
@@ -265,28 +249,32 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
       }
 
     });
-
     $scope.rolesObj.adminRadioValue = choice;
+  }
 
-  };
-
-  $scope.clearCheckboxes = function () {
+  function clearCheckboxes() {
     $scope.rolesObj.userAdminValue = false;
     $scope.rolesObj.billingAdminValue = false;
     $scope.rolesObj.supportAdminValue = false;
     $scope.rolesObj.salesAdminValue = false;
     $scope.isChecked = false;
-  };
+  }
 
-  $scope.supportCheckboxes = function () {
+  function supportCheckboxes() {
+    if ($scope.isEditingSelf) {
+      return;
+    }
     $scope.rolesObj.supportAdminValue = true;
     $scope.rolesObj.adminRadioValue = 2;
     $scope.rolesEdit.form.$dirty = true;
-  };
+  }
 
-  $scope.partialCheckboxes = function () {
+  function partialCheckboxes() {
+    if ($scope.isEditingSelf) {
+      return;
+    }
     $scope.rolesObj.adminRadioValue = 2;
     $scope.rolesEdit.form.$dirty = true;
-  };
+  }
 
 }

@@ -33,7 +33,10 @@
             </div>
             
             <div class="configure-content">
-              <div class="text-center">
+              <div id="licensesUsage"
+                   name="licensesUsage"
+                   class="text-center">
+                   
                 <div class="overview-count">
                   {{infoCardObj.licensesUsage.count}}
                 </div>
@@ -41,12 +44,36 @@
                 <div translate="webexSiteSettingsLabels.activeTitle"></div>
               </div>
                 
-              <div class="text-center">
-                <div class="overview-count">
+              <div ng-if="!infoCardObj.isLicensesOverage"
+                   id="licensesAvailable"
+                   name="licensesAvailable"
+                   class="text-center">
+                   
+                <div class="overview-count" >
                   {{infoCardObj.licensesAvailable.count}}
                 </div>
                   
                 <div translate="webexSiteSettingsLabels.availableTitle"></div>
+              </div>
+              
+              <div ng-if="infoCardObj.isLicensesOverage"
+                   id="licensesOverage"
+                   name="licensesOverage"
+                   class="text-center">
+                   
+                <div class="overview-count" style="color:red">
+                  <b>{{infoCardObj.licensesAvailable.count}}</b>
+                </div>
+                
+                <div>
+                  <b>
+                    <span style="color:red"
+                          translate="webexSiteSettingsLabels.overLimitTitle">&nbsp;
+                    </span>
+                  
+                    <span translate="webexSiteSettingsLabels.upgradeNowTitle"></span>
+                  </b>
+                </div>
               </div>
                 
               <div  class="overview-icon text-center">

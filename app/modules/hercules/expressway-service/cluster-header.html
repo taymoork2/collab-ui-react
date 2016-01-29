@@ -1,15 +1,16 @@
 <cs-sp-header>
   <div class="header-image">
     <div>
-      <i class="icon icon-4x icon-circle-data"/>
+      <i class="icon icon-4x icon-circle-data"></i>
     </div>
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a ui-sref="cluster-details-new.cluster-settings({clusterId:expresswayClusterDetails.clusterId, serviceType:expresswayClusterDetails.serviceType})">
-        <div class="header-title" title="">{{expresswayClusterDetails.cluster.name}}</div>
-        <span ng-if="expresswayClusterDetails.state.current.name === 'cluster-details-new'"
-              class="edit-link">{{'common.edit' | translate | lowercase}}</span>
+      <a ui-sref="cluster-details.cluster-settings({clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">
+        <div class="header-title">
+          {{expresswayClusterDetails.cluster.name}}
+          <i class="edit-button icon icon-edit" ng-if="expresswayClusterDetails.state.current.name === 'cluster-details'"><span class="sr-only" translate="common.edit"></span></i>
+        </div>
       </a>
     </div>
   </div>

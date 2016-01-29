@@ -17,6 +17,7 @@ angular.module('Squared').service('CsdmConverter',
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
       this.isOnline = getIsOnline(obj);
+      this.lastConnectionTime = getLastConnectionTime(obj);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
@@ -30,13 +31,28 @@ angular.module('Squared').service('CsdmConverter',
       this.canReportProblem = true;
       this.hasRemoteSupport = true;
       this.canEditDisplayName = true;
+      this.supportsCustomTags = true;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
       this.image = (function () {
         switch (obj.product) {
+        case "Cisco TelePresence DX80":
+          return "images/devices-hi/dx80.png";
+        case "Cisco TelePresence DX70":
+          return "images/devices-hi/dx70.png";
         case "Cisco TelePresence SX10":
           return "images/devices-hi/sx10.png";
+        case "Cisco TelePresence SX20":
+          return "images/devices-hi/sx20.png";
+        case "Cisco TelePresence SX80":
+          return "images/devices-hi/sx80.png";
+        case "Cisco TelePresence MX200 G2":
+          return "images/devices-hi/mx200g2.png";
+        case "Cisco TelePresence MX300 G2":
+          return "images/devices-hi/mx300g2.png";
+        case "Project Swedish Island":
+          return "images/devices-hi/swedish_island.png";
         default:
           return "images/devices-hi/unknown.png";
         }
@@ -44,16 +60,90 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function HuronDevice(obj) {
-      this.url = getHuronUrl(obj);
+      this.url = obj.url;
       this.mac = obj.mac;
-      this.ip = obj.ipAddress;
-      this.cisUuid = obj.userUuid;
-      this.product = obj.model;
-      this.isOnline = getIsHuronOnline(obj);
-      this.displayName = obj.description;
-      this.cssColorClass = getHuronCssColorClass(obj);
-      this.readableState = getHuronReadableState(obj);
+      this.ip = getIp(obj);
+      this.cisUuid = obj.cisUuid;
+      this.isOnline = getIsOnline(obj);
+      this.canReset = true;
+      this.canDelete = true;
+      this.displayName = obj.displayName;
+      this.cssColorClass = getCssColorClass(obj);
+      this.readableState = getReadableState(obj);
+      this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
+      this.isHuronDevice = true;
+      this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
+      this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
+    }
+
+    var huron_model_map = {
+      "MODEL_CISCO_7811": {
+        displayName: "Cisco 7811",
+        image: "images/devices-hi/cisco_7811.png"
+      },
+      "MODEL_CISCO_7821": {
+        displayName: "Cisco 7821",
+        image: "images/devices-hi/cisco_7821.png"
+      },
+      "MODEL_CISCO_7841": {
+        displayName: "Cisco 7841",
+        image: "images/devices-hi/cisco_7841.png"
+      },
+      "MODEL_CISCO_7861": {
+        displayName: "Cisco 7861",
+        image: "images/devices-hi/cisco_7861.png"
+      },
+      "MODEL_CISCO_8811": {
+        displayName: "Cisco 8811",
+        image: "images/devices-hi/cisco_8811.png"
+      },
+      "MODEL_CISCO_8831": {
+        displayName: "Cisco 8831",
+        image: "images/devices-hi/cisco_8831.png"
+      },
+      "MODEL_CISCO_8841": {
+        displayName: "Cisco 8841",
+        image: "images/devices-hi/cisco_8841.png"
+      },
+      "MODEL_CISCO_8845": {
+        displayName: "Cisco 8845",
+        image: "images/devices-hi/cisco_8845.png"
+      },
+      "MODEL_CISCO_8851": {
+        displayName: "Cisco 8851",
+        image: "images/devices-hi/cisco_8851.png"
+      },
+      "MODEL_CISCO_8851NR": {
+        displayName: "Cisco 8851NR",
+        image: "images/devices-hi/cisco_8851.png"
+      },
+      "MODEL_CISCO_8861": {
+        displayName: "Cisco 8861",
+        image: "images/devices-hi/cisco_8861.png"
+      },
+      "MODEL_CISCO_8865": {
+        displayName: "Cisco 8865",
+        image: "images/devices-hi/cisco_8865.png"
+      }
+    };
+
+    function UnusedAccount(obj) {
+      this.url = obj.url;
+      this.cisUuid = obj.id;
+      this.displayName = obj.displayName;
+      this.product = 'Account';
+      this.cssColorClass = 'device-status-gray';
+      this.readableState = t('CsdmStatus.Inactive');
+      this.isOnline = false;
+      this.isUnused = true;
+      this.canDelete = true;
+      this.hasIssues = true;
       this.image = "images/devices-hi/unknown.png";
+      this.diagnosticsEvents = [{
+        type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
+        message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
+          'device, but no corresponding device or activation code. You can probably delete this account.')
+      }];
     }
 
     function Code(obj) {
@@ -62,7 +152,8 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
-      this.expiryTime = obj.expiryTime;
+      this.expiryTime = convertExpiryTime(obj.expiryTime);
+      this.product = 'Activation Code';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -72,9 +163,15 @@ angular.module('Squared').service('CsdmConverter',
       this.readableActivationCode = getReadableActivationCode(obj);
       this.canDelete = true;
       this.canEditDisplayName = true;
+      this.image = "images/devices-hi/unknown.png";
+      this.supportsCustomTags = true;
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function convertExpiryTime(expiryTime) {
+      return moment().to(expiryTime);
     }
 
     function convertCodes(data) {
@@ -89,12 +186,20 @@ angular.module('Squared').service('CsdmConverter',
       return _.mapValues(data, convertHuronDevice);
     }
 
+    function convertAccounts(data) {
+      return _.mapValues(data, convertAccount);
+    }
+
     function convertDevice(data) {
       return new Device(data);
     }
 
     function convertHuronDevice(data) {
       return new HuronDevice(data);
+    }
+
+    function convertAccount(data) {
+      return new UnusedAccount(data);
     }
 
     function convertCode(data) {
@@ -139,7 +244,6 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function hasIssues(obj) {
-      // return obj.status && obj.status.level && obj.status.level != 'OK';
       return getIsOnline(obj) && obj.status && obj.status.level && obj.status.level != 'OK';
     }
 
@@ -212,37 +316,43 @@ angular.module('Squared').service('CsdmConverter',
       return (obj.status || {}).connectionStatus == 'CONNECTED';
     }
 
+    function getLastConnectionTime(obj) {
+      moment.localeData(moment.locale())._calendar.sameElse = 'lll';
+      return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
+    }
+
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.NeedsActivation');
-      case 'CLAIMED':
+        return t('CsdmStatus.RequiresActivation');
+      default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return t('CsdmStatus.OnlineWithIssues');
+          }
           return t('CsdmStatus.Online');
         default:
           return t('CsdmStatus.Offline');
         }
       }
-      return t('CsdmStatus.Unknown');
     }
 
     function getCssColorClass(obj) {
-      if (hasIssues(obj)) {
-        return 'device-status-red';
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
-        return 'device-status-yellow';
-      case 'CLAIMED':
+        return 'device-status-gray';
+      default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return 'device-status-yellow';
+          }
           return 'device-status-green';
         default:
-          return 'device-status-gray';
+          return 'device-status-red';
         }
       }
-      return 'device-status-yellow';
     }
 
     function t(key) {
@@ -263,33 +373,6 @@ angular.module('Squared').service('CsdmConverter',
       return tags.join(', ');
     }
 
-    function getHuronUrl(obj) {
-      return obj.actions && obj.actions.href;
-    }
-
-    function getIsHuronOnline(obj) {
-      return obj.state == 'Registered';
-    }
-
-    function getHuronCssColorClass(obj) {
-      if (obj.state == 'Registered') {
-        return 'device-status-green';
-      } else if (obj.state == 'Unregistered') {
-        return 'device-status-gray';
-      }
-      return 'device-status-yellow';
-    }
-
-    var getHuronReadableState = function (obj) {
-      switch (obj.state) {
-      case 'Registered':
-        return t('CsdmStatus.Online');
-      case 'Unregistered':
-        return t('CsdmStatus.Offline');
-      }
-      return t('CsdmStatus.Unknown');
-    };
-
     return {
       convertCode: convertCode,
       convertCodes: convertCodes,
@@ -297,6 +380,8 @@ angular.module('Squared').service('CsdmConverter',
       convertDevices: convertDevices,
       convertHuronDevice: convertHuronDevice,
       convertHuronDevices: convertHuronDevices,
+      convertAccount: convertAccount,
+      convertAccounts: convertAccounts
     };
 
   }

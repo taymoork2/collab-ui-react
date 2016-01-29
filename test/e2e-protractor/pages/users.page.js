@@ -23,12 +23,12 @@ var UsersPage = function () {
     password: 'C1sc0123!',
   };
 
-  this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
+  this.servicesPanel = element.all(by.cssContainingText('.section-title-row', 'Services')).first();
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
   this.editServicesModal = element(by.css('.edit-services'));
 
-  this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
+  this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
@@ -44,9 +44,11 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.css('#Messaging .feature-arrow'));
-  this.communicationsService = element(by.css('#Communications .feature-arrow'));
-  this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
+  this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
+  this.meeting25Party = element.all(by.id('CF_50de0558-2246-4a46-a87f-cfe477058fdb'));
+
+  this.communicationsService = element(by.css('#Call .feature-arrow'));
+  this.conferencingService = element(by.css('#Meeting .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
@@ -64,8 +66,8 @@ var UsersPage = function () {
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 
-  this.emailAddressRadio = element(by.cssContainingText("span", "Email address"));
-  this.nameAndEmailRadio = element(by.cssContainingText("span", "Names and Email address"));
+  this.emailAddressRadio = element(by.css('label[for="radioEmail"]'));
+  this.nameAndEmailRadio = element(by.css('label[for="radioNamesAndEmail"]'));
   this.firstName = element(by.id('firstName'));
   this.lastName = element(by.id('lastName'));
   this.emailAddress = element(by.id('emailAddress'));
@@ -79,11 +81,14 @@ var UsersPage = function () {
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
+  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Standard Team Rooms'));
-  this.advancedCommunications = element(by.cssContainingText('label', 'Advanced Spark Call'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Message'));
+  this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
@@ -116,13 +121,12 @@ var UsersPage = function () {
   this.checkBoxEnts = element.all(by.repeater('key in entitlementsKeys'));
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
-  this.userListStatus = element.all(by.binding('userStatus'));
+  this.userListStatus = element(by.css('.ui-grid-row'));
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.css('#resendInviteOption a'));
   this.deleteUserOption = element(by.css('#deleteUserOption a'));
-  this.gridCell = element(by.css('.ngCell'));
   this.userLink = element(by.id('user-profile'));
 
   this.fnameField = element(by.id('fnameField'));
@@ -152,6 +156,17 @@ var UsersPage = function () {
 
   this.selectedRow = element(by.css('[ng-repeat="row in renderedRows"].selected'));
 
+  // Hybrid Services
+  this.hybridServices_Cal = element(by.css('label[for="squared-fusion-cal"]'));
+  this.hybridServices_UC = element(by.css('label[for="squared-fusion-uc"]'));
+
+  this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
+  this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
+
+  this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
+  this.messageService = element(by.id('Message'));
+  this.meetingService = element(by.id('Meeting'));
+
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
       var queryresults = parseInt(value, 10);
@@ -179,10 +194,6 @@ var UsersPage = function () {
   this.retrieveExternalNumber = function () {
     utils.wait(this.externalNumber);
     return this.externalNumber.evaluate('csSelect.selected.pattern');
-  };
-
-  this.clickOnUser = function () {
-    utils.click(element.all(by.repeater('row in renderedRows')).first().all(by.repeater('col in renderedColumns')).first());
   };
 
   this.assertPage = function (page) {
@@ -216,6 +227,16 @@ var UsersPage = function () {
     });
   };
 
+  this.createUser = function (userName) {
+    utils.click(this.addUsers);
+    utils.expectIsDisplayed(this.manageDialog);
+    utils.click(this.nameAndEmailRadio);
+    utils.sendKeys(this.firstName, 'Test');
+    utils.sendKeys(this.lastName, 'User');
+    utils.sendKeys(this.emailAddress, userName);
+    utils.click(this.plusIcon);
+    utils.click(this.nextButton);
+  };
 };
 
 module.exports = UsersPage;

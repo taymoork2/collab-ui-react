@@ -49,28 +49,57 @@
       this.offerCode = parts[0]; // See Config.offerCodes
       this.id = parts[1];
       if (this.offerCode === Config.offerCodes.MC || this.offerCode === Config.offerCodes.SC || this.offerCode === Config.offerCodes.TC || this.offerCode === Config.offerCodes.EC || this.offerCode === Config.offerCodes.EE) {
-        this.volume = parts[2];
+        this.capacity = parts[2];
         this.webExSite = parts[3];
       }
       this.displayName = $translate.instant(Config.confMap[this.offerCode], {
-        capacity: this.volume
+        capacity: this.capacity
       });
     }
 
-    function filterAndExtendLicenses(licenses, type) {
-      var matchingLicenses = _.filter(licenses, {
+    function aggregatedLicenses(licenses, type) {
+      var matchingLicenses = _.clone(_.filter(licenses, {
         type: type
-      });
+      }));
+      var aggregatedLics = [];
       _.each(matchingLicenses, function (l) {
-        l.displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
-          volume: l.volume
+        var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
+          capacity: l.capacity
         });
-        l.usagePrecentage = _.round(((l.usage * 100) / l.volume) || 0);
+        var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? "#" + l.siteUrl : '');
+        var aggregate = _.find(aggregatedLics, {
+          key: key
+        });
+        if (aggregate) {
+          aggregate.totalVolume += l.volume;
+          aggregate.totalUsage += (l.usage || 0);
+          aggregate.licenses.push(l);
+        } else {
+          aggregate = {
+            key: key,
+            displayName: displayName,
+            totalUsage: (l.usage || 0),
+            totalVolume: l.volume,
+            licenses: [l],
+            siteUrl: l.siteUrl
+          };
+          aggregatedLics.push(aggregate);
+        }
+        aggregate.isTrial = _.all(aggregate.licenses, {
+          isTrial: true
+        });
+        aggregate.trialExpiresInDays = _.max(aggregate.licenses, 'trialExpiresInDays').trialExpiresInDays;
+        aggregate.usagePercentage = _.round((aggregate.totalUsage || 0) * 100 / aggregate.totalVolume);
       });
-      return matchingLicenses;
+      return aggregatedLics;
     }
 
     function getUnlicensedUsersCount(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.unlicenseduserscount);
+        return deferred.promise;
+      }
       return $http
         .get(urlBase + 'helpdesk/unlicenseduserscount/' + encodeURIComponent(orgId))
         .then(extractData);
@@ -84,7 +113,7 @@
       userIsEntitledTo: userIsEntitledTo,
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
-      filterAndExtendLicenses: filterAndExtendLicenses,
+      aggregatedLicenses: aggregatedLicenses,
       UserLicense: UserLicense,
       getLicensesInOrg: getLicensesInOrg,
       getUnlicensedUsersCount: getUnlicensedUsersCount

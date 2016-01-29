@@ -1,11 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-/* global protractor */
-
 describe('Self Registration Activation Page', function () {
 
   beforeEach(function () {
@@ -65,7 +59,7 @@ describe('Self Registration Activation Page', function () {
           utils.expectIsNotDisplayed(activate.provisionSuccess);
           utils.expectIsDisplayed(activate.codeExpired);
           utils.expectIsNotDisplayed(activate.resendSuccess);
-          utils.expectText(activate.userEmail, iosData.body.email);
+          // utils.expectText(activate.userEmail, iosData.body.email);
         }
       });
 
@@ -76,7 +70,7 @@ describe('Self Registration Activation Page', function () {
           utils.expectIsNotDisplayed(activate.codeExpired);
           utils.expectIsDisplayed(activate.resendSuccess);
 
-          activate.expectNewEqp();
+          // activate.expectNewEqp();
         }
       });
     });

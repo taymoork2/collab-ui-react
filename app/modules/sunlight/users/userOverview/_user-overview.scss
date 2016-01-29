@@ -10,28 +10,26 @@
     margin-right: 13px;
     line-height: $feature-line-height;
     &:before {
-      content: $icon-cisco-logo;
+      @extend %icon-cisco-logo;
       line-height: $feature-line-height;
     }
   }
 }
 
 .feature-icon {
-
   #chat & {
     &:before {
-      content: $icon-circle-message;
+      @extend %icon-circle-message;
     }
   }
   #voice & {
     &:before {
-      content: $icon-circle-call;
+      @extend %icon-circle-call;
     }
   }
   #email & {
     &:before {
-      content: $icon-circle-email;
+      @extend %icon-circle-email;
     }
   }
-
 }

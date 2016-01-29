@@ -40,7 +40,7 @@
       templateOptions: {
         placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
         inputClass: 'col-sm-12',
-        maxlength: 24,
+        maxLength: '24',
         required: true,
         options: [{
           name: $translate.instant('singleNumberReachPanel.unitedStates'),
@@ -96,7 +96,7 @@
               name: data.name,
               code: data.code,
               number: data.number,
-              phoneNumber: snrInfo.destination
+              phoneNumber: "+" + data.number + snrInfo.destination
             };
           });
       } else {

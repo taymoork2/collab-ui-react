@@ -5,12 +5,15 @@
     .controller('RemDeviceController',
 
       /* @ngInject */
-      function ($scope, $modalInstance, CsdmCodeService, CsdmDeviceService, XhrNotificationService, deviceOrCode) {
+      function ($scope, $modalInstance, CsdmCodeService, CsdmDeviceService, CsdmUnusedAccountsService, XhrNotificationService, deviceOrCode) {
         var rdc = this;
 
         rdc.deleteDeviceOrCode = function () {
           if (deviceOrCode.needsActivation) {
             return CsdmCodeService.deleteCode(deviceOrCode)
+              .then($modalInstance.close, XhrNotificationService.notify);
+          } else if (deviceOrCode.isUnused) {
+            return CsdmUnusedAccountsService.deleteAccount(deviceOrCode)
               .then($modalInstance.close, XhrNotificationService.notify);
           } else {
             return CsdmDeviceService.deleteDevice(deviceOrCode.url)

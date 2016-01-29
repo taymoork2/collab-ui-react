@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function TelephonyOverviewCtrl($stateParams, $state, $rootScope, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
 
@@ -24,6 +23,7 @@
       TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
       TelephonyInfoService.loadInternalNumberPool();
       TelephonyInfoService.loadExternalNumberPool();
+      TelephonyInfoService.getInternationalDialing(vm.currentUser.id);
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
     }
   }

@@ -1,0 +1,22 @@
+<div class="aa-panel">
+  <div class="aa-panel-body">
+    <div class="aa-flex-row">
+      <h3 class="text-info" translate="autoAttendant.builderNumbers"></h3>
+      <span class="aa-help-icon" popover="{{ :: 'autoAttendant.numberInfoPopover' | translate }}" popover-placement="right" popover-animation="true" popover-trigger="mouseenter" popover-append-to-body="false">
+      </span>
+    </div>
+    <div class="row" ng-controller="AABuilderNumbersCtrl as aa">
+      <div class="aa-panel-numbers">
+        <p class="h6" ng-if="aa.ui.ceInfo.getResources().length == 0" translate="autoAttendant.addNumberMsg"></p>
+        <div class="aa-builder-number-tile" ng-repeat="phoneNum in aa.ui.ceInfo.getResources()">
+          <span class="phone-number">{{phoneNum.getNumber() |telephoneNumber}}</span>
+          <i class="icon icon-close" ng-click="aa.removeNumber(phoneNum.getNumber())"></i>
+        </div>
+        <form>
+          <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" labelfield="label" valuefield="value" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" filter="true" on-change-fn="aa.addNumber(value.value)" icon="icon-chevron-down">
+          </cs-select>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

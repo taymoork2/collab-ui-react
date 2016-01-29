@@ -5,7 +5,7 @@
     .controller('PstnProvidersCtrl', PstnProvidersCtrl);
 
   /* @ngInject */
-  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, Notification) {
+  function PstnProvidersCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification) {
     var vm = this;
     vm.providers = [];
     vm.loading = true;
@@ -28,21 +28,27 @@
     }
 
     function goToOrderNumbers() {
-      $state.go('pstnSetup.orderNumbers');
+      if (!PstnSetup.isCustomerExists()) {
+        $state.go('pstnSetup.contractInfo');
+      } else if (!PstnSetup.isSiteExists()) {
+        $state.go('pstnSetup.serviceAddress');
+      } else {
+        $state.go('pstnSetup.orderNumbers');
+      }
     }
 
     function selectProvider(provider) {
       var currentProvider = PstnSetup.getProvider();
       if (!angular.equals(currentProvider, provider)) {
-        // If switching providers, clear the stored numbers
-        PstnSetup.setNumbers([]);
+        // If switching providers, clear provider specific data
+        PstnSetup.clearProviderSpecificData();
       }
       PstnSetup.setProvider(provider || {});
     }
 
-    function init() {
+    function initCarriers() {
       // lookup customer carriers
-      PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
+      return PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
         .then(function (carriers) {
           PstnSetup.setCustomerExists(true);
           if (_.isArray(carriers) && carriers.length > 0) {
@@ -75,36 +81,63 @@
         // process carriers
         .then(function (carriers) {
           _.forEach(carriers, initCarrier);
-          if (PstnSetup.isCustomerExists() && PstnSetup.isCarrierExists() && _.isArray(vm.providers) && vm.providers.length === 1) {
-            selectProvider(vm.providers[0]);
-            goToNumbers();
-          } else if (_.isArray(vm.providers) && vm.providers.length === 1) {
-            PstnSetup.setSingleCarrierReseller(true);
-            selectProvider(vm.providers[0]);
-            goToNumbers();
-          }
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.carrierListError');
+        });
+    }
+
+    function processSelectedProviders() {
+      if (PstnSetup.isCustomerExists() && PstnSetup.isCarrierExists() && _.isArray(vm.providers) && vm.providers.length === 1) {
+        PstnSetup.setProvider(vm.providers[0]);
+        goToNumbers();
+      } else if (_.isArray(vm.providers) && vm.providers.length === 1) {
+        PstnSetup.setSingleCarrierReseller(true);
+        PstnSetup.setProvider(vm.providers[0]);
+        goToNumbers();
+      }
+    }
+
+    function initSites() {
+      return PstnServiceAddressService.listCustomerSites(PstnSetup.getCustomerId())
+        .then(function (sites) {
+          // If we have sites, set the flag and store the first site address
+          if (_.isArray(sites) && _.size(sites)) {
+            PstnSetup.setSiteExists(true);
+          }
         })
+        .catch(function (response) {
+          //TODO temp remove 500 status after terminus if fixed
+          if (response && response.status !== 404 && response.status !== 500) {
+            Notification.errorResponse(response, 'pstnSetup.listSiteError');
+          }
+        });
+    }
+
+    function init() {
+      $q.all([initCarriers(), initSites()])
+        .then(processSelectedProviders)
         .finally(function () {
           vm.loading = false;
         });
     }
 
     function initCarrier(carrier) {
+      var carrierObj = {
+        uuid: carrier.uuid,
+        name: carrier.name,
+        apiExists: carrier.apiExists,
+        vendor: carrier.vendor,
+        countryCode: carrier.countryCode,
+        country: carrier.country,
+        title: carrier.displayName || carrier.name
+      };
       if (carrier.vendor === PstnSetupService.INTELEPEER) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
+
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
           docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
-          title: 'Voice Services Bundle',
           features: [
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
@@ -114,16 +147,9 @@
           selectFn: goToOrderNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TATA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
-          title: 'Tata Smart Voice Bundle',
           features: [
             $translate.instant('tataFeatures.feature1'),
             $translate.instant('tataFeatures.feature2'),
@@ -134,20 +160,14 @@
           selectFn: goToSwivelNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TELSTRA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
-          title: 'Telstra',
           features: [],
           selectFn: goToSwivelNumbers
         });
       }
+      vm.providers.push(carrierObj);
     }
   }
 })();

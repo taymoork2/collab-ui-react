@@ -10,23 +10,15 @@
   <cs-sp-section class="hercules-cluster-settings hercules-fix-paragraphs"
                  ng-if="expresswayClusterSettingsCtrl.activeActiveApplicable">
     <div class="section-title-row">
-      <span class="section-name">
-        Active-Active Mode (High Availability)
-      </span>
+      <span class="section-name" translate="hercules.clusters.activeActiveHeading"></span>
       <cs-toggle-switch class="right"
                         toggle-id="activeActiveEnabledToggle"
                         ng-model="expresswayClusterSettingsCtrl.activeActiveEnabled"
                         ng-if="expresswayClusterSettingsCtrl.activeActivePossible"
                         size="small"></cs-toggle-switch>
     </div>
-    <p ng-if="!expresswayClusterSettingsCtrl.activeActivePossible">
-      Not available as Active-Active Mode requires a cluster with more than 1 host
-    </p>
-
-    <p ng-if="expresswayClusterSettingsCtrl.activeActivePossible">
-      Turn on Active-Active Mode to enable high availability for this service. When enabled, users are assigned to two
-      nodes in the cluster for redundancy.
-    </p>
+    <p ng-if="!expresswayClusterSettingsCtrl.activeActivePossible" translate="hercules.clusters.activeActiveNotPossible"></p>
+    <p ng-if="expresswayClusterSettingsCtrl.activeActivePossible" translate="hercules.clusters.activeActivePossible"></p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -35,8 +27,8 @@
               ng-disabled="saving"
               class="btn btn--negative"
               style="margin-top: 15px;"
-              ng-click="sp.close(); expresswayClusterSettingsCtrl.showDeregisterDialog();">
-        Deregister Cluster
+              ng-click="sp.close(); expresswayClusterSettingsCtrl.showDeregisterDialog();"
+              translate="hercules.clusters.deregister">
       </button>
     </div>
   </cs-sp-section>

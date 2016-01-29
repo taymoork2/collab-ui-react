@@ -1,5 +1,4 @@
 'use strict';
-/* global moment, $:false */
 
 angular.module('Core')
   .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService',
@@ -106,7 +105,10 @@ angular.module('Core')
       $scope.dirsyncStatus = '';
       $scope.gridOptions = {
         data: 'userList',
-        multiSelect: false
+        multiSelect: false,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
       };
 
       $scope.setupTokenfield = function () {

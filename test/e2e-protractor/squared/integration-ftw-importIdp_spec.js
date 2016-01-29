@@ -1,11 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global by */
-/* global element */
-
 describe('First Time Wizard EE selfsign-sso', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -46,6 +40,7 @@ describe('First Time Wizard EE selfsign-sso', function () {
   it('should complete custom sso provider flow', function () {
     utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
+    utils.click(wizard.radiobuttons.first());
     utils.click(wizard.finishBtn);
     utils.expectIsDisplayed(wizard.mainviewTitle);
   });

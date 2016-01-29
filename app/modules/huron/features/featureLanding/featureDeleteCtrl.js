@@ -3,7 +3,6 @@
  */
 (function () {
   'use strict';
-  /* jshint validthis: true */
   angular
     .module('Huron')
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);

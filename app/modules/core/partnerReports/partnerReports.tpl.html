@@ -2,45 +2,44 @@
   <cs-page-header title="{{::'reportsPage.pageTitle' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <span class="sync">
-        <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
-            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === true, 'not-selected': nav.showEngagement === false || nav.showQuality === false}"></a>
+      <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+          <span class="name" ng-if="(nav.showEngagement === true && nav.showQuality === true)" translate="reportsPage.all"></span>
+          <span class="name" ng-if="nav.showEngagement === true && nav.showQuality === false" translate="reportsPage.engagement"></span>
+          <span class="name" ng-if="nav.showEngagement === false && nav.showQuality === true" translate="reportsPage.quality"></span>
+          <i class="icon icon-chevron-down"></i>
         </div>
-        <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = false;" translate="reportsPage.engagement"
-            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === false, 'not-selected': !(nav.showEngagement === true && nav.showQuality === false)}"></a>
-        </div>
-        <div class="report-filter-link">
-          <a id="qualityReports" class="report-link" ng-click="nav.showEngagement = false; nav.showQuality = true;" translate="reportsPage.quality"
-            ng-class="{'selected-link': nav.showEngagement === false && nav.showQuality === true, 'not-selected': !(nav.showEngagement === false && nav.showQuality === true)}"></a>
-        </div>
-      </span>
+        <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
+          <li class="filter" ng-class="{'active' : (nav.showEngagement === true && nav.showQuality === true)}" ng-click=" nav.showHideCards('all');">
+           <a id="allReports"  >
+              <span class="name" translate="reportsPage.all"></span>
+            </a>
+          </li>
+          <li class="filter" ng-class="{'active' : nav.showEngagement === true && nav.showQuality === false}" ng-click=" nav.showHideCards('engagement');">
+             <a id="engagementReports" >
+              <span class="name" translate="reportsPage.engagement"></span>
+            </a>
+          </li>
+          <li class="filter" ng-class="{'active' : nav.showEngagement === false && nav.showQuality === true}" ng-click=" nav.showHideCards('quality');">
+            <a id="qualityReports" >
+              <span class="name" translate="reportsPage.quality"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
-      <cs-select id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
+        <cs-select class="small-2 medium-2 large-3 columns" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
+        <cs-select  class="small-2 medium-2 large-3  columns" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="content-container row">
-    <div class="columns medium-6 report-space">
-      <div class="report-box" ng-show="nav.showEngagement">
-        <uc-active-user></uc-active-user>
-      </div>
-      <div class="report-box" ng-show="nav.showEngagement">
-        <uc-registered-endpoints></uc-registered-endpoints>
-      </div>
-      <div class="report-box" ng-show="nav.showQuality">
-        <uc-call-metrics></uc-call-metrics>
-      </div>
-    </div>
-    <div class="columns medium-6 report-space">
-      <div class="report-box" ng-show="nav.showEngagement">
-        <uc-active-user-population></uc-active-user-population>
-      </div>
-      <div class="report-box" ng-show="nav.showQuality">
-        <uc-media-quality></uc-media-quality>
-      </div>
-    </div>
+  <div class="cs-card-container content-container">
+  <cs-card-layout>
+      <uc-active-user ></uc-active-user>
+      <uc-registered-endpoints  ></uc-registered-endpoints>
+      <uc-call-metrics ></uc-call-metrics>
+      <uc-active-user-population ></uc-active-user-population>
+      <uc-media-quality ></uc-media-quality>
+  </cs-card-layout>
   </div>
 </div>

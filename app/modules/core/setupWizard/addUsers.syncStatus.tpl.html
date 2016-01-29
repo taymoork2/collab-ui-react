@@ -1,10 +1,12 @@
 <h3 translate="firstTimeWizard.syncStatus"></h3>
 <p class="subheading">{{'firstTimeWizard.results' | translate}}: <strong>{{dirsyncStatus}}</strong></p>
-<p class="pull-left"><strong>{{numUsersInSync}}</strong> {{dirsyncUserCountText}}</p>
-<div class="sync-dirsync-refresh-button">
-  {{formatDate(lastEndTime)}}
-  <span id="refreshButton">
-    <a href ng-click="getStatus()"><i class="icon icon-refresh"></i></a>
-  </span>
+<p><strong>{{numUsersInSync}}</strong> {{dirsyncUserCountText}}</p>
+<div class="dirsync-info">
+  <div  class="sync-dirsync-refresh-button">
+    {{formatDate(lastEndTime)}}
+    <span id="refreshButton">
+      <a href ng-click="getStatus()"><i class="icon icon-refresh"></i></a>
+    </span>
+  </div>
+  <div class="ftwdirgridStyle" ui-grid="gridOptions" ></div>
 </div>
-<div class="ftwdirgridStyle" ng-grid="gridOptions"></div>

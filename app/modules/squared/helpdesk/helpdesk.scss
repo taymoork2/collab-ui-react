@@ -1,3 +1,7 @@
+.helpdesklaunch-state {
+  @extend %page-background-white;
+}
+
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
@@ -19,11 +23,13 @@
   }
   .circle-status-icon {
     font-size: 0.575rem;
+    margin-right: 0.5rem;
   }
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
+      word-wrap: break-word;
     }
     h4 {
       margin-top: 1rem;
@@ -63,17 +69,23 @@
       margin-top: -0.5rem;
       margin-bottom: 1rem;
     }
+    .device {
+      margin-top: 1rem;
+      .device-name {
+        color: $gray-dark-4;
+        margin-left: 0.5rem;
+      }
+    }
     .details-heading {
+      color: $gray-dark-4;
       margin-bottom: 1rem;
     }
     .details-value {
       color: $gray-dark-1;
-      overflow-wrap: break-word;
       word-wrap: break-word;
     }
     .details-value-device {
       color: $gray-dark-1;
-      overflow-wrap: break-word;
       word-wrap: break-word;
     }
     .cs-card-layout.cs-card-block {
@@ -86,6 +98,21 @@
     .large-number {
       font-size:2rem;
       color: $color-primary-base;
+      margin-top: 0.4rem;
+    }
+    button {
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+    }
+    .user-img {
+      height: 35px;
+      width: 35px;
+    }
+    .icon-user {
+      color: white;
+      font-size: 30px;
+      line-height: 35px;
+      bottom: -5px;
     }
   }
 }
@@ -133,20 +160,27 @@
   .typeahead-large .input-description:before {
     display: none;
   }
+  .typeahead-large .input-description {
+    padding: 0;
+  }
   .typeahead-large {
     position: relative;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    input {
+    form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
+      margin-bottom: 0rem;
+      max-width: 100%;
       display: block;
+      height: auto;
       position: relative;
       z-index: 1;
+      padding: 0;
     }
     .icon-search {
       position: absolute;
       right: 0;
-      top: 0;
+      bottom: 0.75rem;
       font-size: 1rem;
       width: 2.5rem;
       height: 2.5rem;
@@ -156,28 +190,46 @@
         top: 0 !important;
       }
     }
-    .helpdesk-tile {
-      height: 2.25rem;
-      padding: 0.5rem;
-      margin: 0.125rem 0.5rem 0.125rem 0;
-      border: 1px solid $gray-lighter;
-      border-radius: 0.25rem;
-      color: $brand-white;
-      background-color: $brand-primary;
-      display: inline-block;
-      vertical-align: top;
-      transition: all 0.2s ease-in-out;
+  }
+  .helpdesk-searching-org {
+    margin-top: 1rem;
+    height: 2.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border: 1px solid $gray-lighter;
+    border-radius: 0.25rem;
+    color: $brand-white;
+    background-color: $brand-primary;
+    display: inline-block;
+    vertical-align: top;
+    transition: all 0.2s ease-in-out;
+    .icon {
+      float: right;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+      margin-top: 0.4rem;
       &:hover {
-        background-color: $gray;
-      }
-      .icon {
-        float: right;
-        font-size: 1rem;
-        margin-left: 0.5rem;
+        font-weight: bold;
       }
     }
   }
+  .helpdesk-please-wait {
+    margin-top: 1rem;
+  }
   .search-results {
+    .icon-org-search {
+      font-size: 1rem;
+      border:1px solid;
+      border-radius: 100%;
+      border-color:transparent;
+      padding:0.4rem;
+      &:hover {
+        border-color:$gray-lighter;
+        color:$gray-darker;
+      }
+    }
     .cs-card:first-child {
       margin-top: 0;
     }
@@ -186,10 +238,8 @@
     }
     .cs-card {
       header {
-        h5,
-        h5 a {
+        h5 {
           color: $gray-dark-3;
-          padding-left: 0.5rem;
           font-size: 0.875rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
@@ -275,10 +325,9 @@
     margin-top: 0.5rem;
     color: black;
   }
-  .label {
+  .badge {
     margin-bottom: 0;
     padding: 0.1rem 0.5rem 0.1rem;
-    margin-right: 0.5rem;
   }
   .cs-donut-svg {
     margin-top: 1rem;
@@ -286,6 +335,14 @@
   }
   .cs-donut-text {
     font-size: 4rem;
+  }
+}
+.helpdesk-help {
+  p {
+    margin-bottom: 0;
+  }
+  p~h4 {
+    padding-top: 1rem;
   }
 }
 .helpdesk-red {
@@ -309,11 +366,45 @@
 .helpdesk-warning {
   color: $color-attention-base;
 }
-.helpdesk-search:focus {
+.helpdesk-search:focus, .helpdesk-details:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
 }
+
+.helpdesk-launch {
+  background-color: $brand-white;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 20%;
+  p {
+    margin-top: 1.5rem;
+  }
+}
+
+.helpdesk-history-dropdown-menu {
+  max-height: none;
+  width: 10rem;
+  li {  
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
+  } 
+  .clear-history {
+    color: $color-primary-base;
+  }
+  .search-result {
+    word-wrap: break-word;
+  }
+}
+
+.helpdesk-history-dropdown-menu.dropdown-menu:before {
+  left: 80% !important;
+}
+
+.helpdesk-history-dropdown-menu.dropdown-menu:after {
+  left: 80% !important;
+}
+
 @media only screen and (max-width: 1024px) {
   .helpdesk-details {
     .details-value {
@@ -331,6 +422,18 @@
         width: 100%;
       }
     }
+  }
+}
+@media only screen and (max-width: 960px) {
+  .helpdesk-app-container {
+    .fixed.top-bar- {     
+      .dropdown-menu:before {
+        left: 80% !important;
+      }
+      .dropdown-menu:after {
+        left: 80% !important;
+      }        
+    }  
   }
 }
 @media only screen and (max-width: 800px) {
@@ -351,9 +454,36 @@
       }
       .top-bar .right .dropdown-menu {
         position: fixed !important;
-        right: 0.5rem;
-        top: 3.5rem;
+        right: 0;
+        top: 52px;
+      }      
+      .dropdown-menu:before {
+        display: none;
       }
+      .dropdown-menu:after {
+        display: none;
+      }        
+    }  
+  }
+  .helpdesk-search {
+    padding-top: 0;
+    h1 {
+      font-size: 34px;
+    }
+    .typeahead-large {
+      input {
+        font-size: 26px;
+        width: 100%;
+      }
+      .icon-search {
+        font-size: 1rem;
+        width: 2rem;
+        height: 2rem;
+        min-width: 2rem;
+      }
+    }
+    .search-results {
+      margin-top: 0.5rem;
     }
   }
 }
@@ -380,6 +510,7 @@
     .typeahead-large {
       input {
         font-size: 20px;
+        width: 100%;
       }
       .icon-search {
         font-size: 0.75rem;

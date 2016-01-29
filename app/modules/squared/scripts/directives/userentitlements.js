@@ -27,12 +27,12 @@ angular.module('Squared')
       };
 
       $scope.getServiceName = function (service) {
-        for (var i = 0; i < $rootScope.services.length; i++) {
-          var svc = $rootScope.services[i];
-          if (svc.serviceId === service) {
-            return svc.displayName;
-          }
-        }
+        return _.chain(services)
+          .find({
+            serviceId: service
+          })
+          .get('displayName')
+          .value();
       };
 
       $scope.shouldAddIndent = function (key, reference) {
@@ -40,13 +40,19 @@ angular.module('Squared')
       };
 
       var getUserEntitlementList = function () {
-        return $rootScope.services.map(function (service) {
-          var serviceId = service.serviceId;
-          return {
-            entitlementName: serviceId,
-            entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
-          };
-        });
+        // Build entitlements array from configurable entitlements filtered above
+        return _.chain(services)
+          .filter(function (service) {
+            return !service.isIgnored;
+          })
+          .map(function (service) {
+            var serviceId = service.serviceId;
+            return {
+              entitlementName: serviceId,
+              entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
+            };
+          })
+          .value();
       };
 
       var watchCheckboxes = function () {

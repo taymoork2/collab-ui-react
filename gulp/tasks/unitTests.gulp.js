@@ -9,18 +9,21 @@ var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({ lazy: true });
 var args = require('yargs').argv;
 var karma = require('karma').server;
+var runSeq = require('run-sequence');
 var log = $.util.log;
+var path = require('path')
 
 // Compile the karma template so that changes
 // to its file array aren't managed manually
 gulp.task('karma-config', function (done) {
   if (!args.nounit) {
+    var specs = args.specs || 'all';
     var unitTestFiles = [].concat(
       config.vendorFiles.js,
       config.testFiles.js,
       config.testFiles.app,
       config.testFiles.global,
-      config.testFiles.spec
+      config.testFiles.spec[specs]
       );
 
     return gulp
@@ -36,7 +39,7 @@ gulp.task('karma-config', function (done) {
           }
         }))
       .pipe($.rename({
-        basename: 'karma-unit',
+        basename: 'karma-unit-' + specs,
         extname: '.js'
       }))
       .pipe($.jsbeautifier({
@@ -56,13 +59,14 @@ gulp.task('karma-config', function (done) {
 // Run test once and exit
 gulp.task('karma', function (done) {
   if (!args.nounit) {
-    var dirname = __dirname.split('/');
-    var removed = dirname.splice((dirname.length - 2), 2);
-    var directory = dirname.join('/');
+    var specs = args.specs || 'all';
     var options = {
-      configFile: directory + '/test/karma-unit.js'
+      configFile: path.resolve(__dirname, '../../test/karma-unit-' + specs + '.js')
     };
     if (args.debug) {
+      if (args.watch) {
+        options.autoWatch = true;
+      }
       options.browsers = ['Chrome'];
       options.preprocessors = {};
       options.browserNoActivityTimeout = 600000;
@@ -77,12 +81,62 @@ gulp.task('karma', function (done) {
 });
 
 // Run test once and exit
-gulp.task('karma-watch', ['karma-config-watch'], function (done) {
-  var dirname = __dirname.split('/');
-  var removed = dirname.splice((dirname.length - 2), 2);
-  var directory = dirname.join('/');
+gulp.task('karma-watch', function (done) {
   karma.start({
-    configFile: directory + '/test/karma-watch.js',
+    configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
     singleRun: true
   }, done);
+});
+
+gulp.task('karma-core', function (done) {
+  args.specs = 'core';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-hercules', function (done) {
+  args.specs = 'hercules';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-huron', function (done) {
+  args.specs = 'huron';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-mediafusion', function (done) {
+  args.specs = 'mediafusion';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-messenger', function (done) {
+  args.specs = 'messenger';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-squared', function (done) {
+  args.specs = 'squared';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-sunlight', function (done) {
+  args.specs = 'sunlight';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-webex', function (done) {
+  args.specs = 'webex';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-all', function (done) {
+  runSeq(
+    'karma-core',
+    'karma-hercules',
+    'karma-huron',
+    'karma-mediafusion',
+    'karma-messenger',
+    'karma-squared',
+    'karma-sunlight',
+    'karma-webex',
+    done);
 });

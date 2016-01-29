@@ -245,17 +245,6 @@ td a {
   font-weight: bold;
 }
 
-#download-icon {
-  opacity: 0.5;
-  transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-    transition: opacity 300ms;
-    -webkit-transition: opacity 300ms;
-  }
-}
 
 .center {
   text-align: center;
@@ -711,15 +700,7 @@ a:active.ftwNavLink {
   white-space: pre-wrap;
 }
 
-.ftwdirgridStyle {
-  margin-top: 10px;
-  width: 550px;
-  height: 200px;
-  border: 1px solid lightgray;
-  & >:nth-child(2) {
-    overflow-x: hidden;
-  }
-}
+
 
 .syncStatusText {
   margin-left: 170px;
@@ -727,9 +708,7 @@ a:active.ftwNavLink {
   height: 30px;
 }
 
-.sync-dirsync-refresh-button {
-  margin-left: 53%;
-}
+
 
 #syncNumUsers {
   margin-left: 230px;
@@ -837,10 +816,6 @@ a:active.ftwNavLink {
   border-top: 0px;
 }
 
-.trials-heading-spacing {
-  text-align: right;
-}
-
 .ellipsis-trials {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -849,11 +824,6 @@ a:active.ftwNavLink {
   width: 200px;
 }
 
-.days-left-edit-modal {
-  position: absolute;
-  right: 23px;
-  top: -20px;
-}
 
 .users-edit-modal {
   right: 20px;
@@ -882,12 +852,6 @@ a:active.ftwNavLink {
 .nav > li:active,
 .nav > li.active {
   z-index: 500;
-}
-
-.days-left-trial {
-  position: absolute;
-  left: 17px;
-  top: -20px;
 }
 
 .edit-modal-info {
@@ -948,10 +912,6 @@ a:active.ftwNavLink {
   overflow: inherit;
 }
 
-.support_download {
-  position: absolute;
-  top: 4px;
-}
 
 .profile-path {
   left: 20px;
@@ -1021,4 +981,10 @@ a:active.ftwNavLink {
   background-color: white !important;
   color: #888 !important;
   border: 1px solid #3086BA !important;
+}
+
+.modal-title {
+  span {
+    font-size: inherit;
+  }
 }

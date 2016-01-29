@@ -3,11 +3,11 @@
   <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.servicesPreview"></span>
-      <span class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
-        <button class="actions-button btn--none dropdown-toggle">
+      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
         </button>
-        <ul class="dropdown-menu dropdown-primary actions-services">
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
           <li><a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a></li>
         </ul>
       </span>
@@ -24,16 +24,17 @@
         </li>
       </ul>
     </div>
-    </cs-sp-section>
-    <cs-sp-section ng-if="userOverview.features.length && false">
+  </cs-sp-section>
+  <hercules-cloud-extensions></hercules-cloud-extensions>
+  <cs-sp-section ng-if="userOverview.features.length && false">
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.enabledBetaFeatures"></span>
     </div>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="feature in userOverview.features | orderBy:'key'">
-            <span class="feature-name">{{feature.key}}</span>
-            <span class="feature-status">{{feature.val}}</span>
+          <span class="feature-name">{{feature.key}}</span>
+          <span class="feature-status">{{feature.val}}</span>
         </li>
       </ul>
     </div>
@@ -41,16 +42,15 @@
   <cs-sp-section ng-if="userOverview.isSquaredUC">
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.devicesPreview"></span>
-      <span class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
-        <button class="actions-button btn--none dropdown-toggle">
+      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
         </button>
-        <ul class="dropdown-menu dropdown-primary actions-services">
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
           <li ng-repeat="item in userOverview.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
         </ul>
       </span>
     </div>
     <uc-devices></uc-devices>
   </cs-sp-section>
-  <hercules-cloud-extensions></hercules-cloud-extensions>
 </cs-sp-container>

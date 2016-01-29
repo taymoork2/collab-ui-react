@@ -31,7 +31,7 @@ describe('LicenseService', function () {
         "type": "CONFERENCING",
         "name": "Conferencing",
         "status": "ACTIVE",
-        "volume": 100,
+        "volume": 99,
         "isTrial": true,
         "trialExpiresInDays": 49
       }];
@@ -43,6 +43,7 @@ describe('LicenseService', function () {
       LicenseService.getLicensesInOrg('1234').then(function (res) {
         expect(res.length).toBe(2);
         expect(res[0].volume).toBe(100);
+        expect(res[1].volume).toBe(99);
       });
 
     });
@@ -115,18 +116,95 @@ describe('LicenseService', function () {
     expect(license.offerCode).toEqual('MC');
     expect(license.id).toEqual('f36c1a2c-20d6-460d-9f55-01fc85d52e04');
     expect(license.displayName).toEqual('onboardModal.meetingCenter');
-    expect(license.volume).toEqual('100');
+    expect(license.capacity).toEqual('100');
     expect(license.webExSite).toEqual('t30citest.webex.com');
   });
 
-  it('Should filterAndExtendLicenses correctly', function () {
+  it('Should aggregatedLicenses correctly', function () {
     var licenses = [{
       "offerCode": "MS",
       "type": "MESSAGING",
       "name": "Messaging",
       "status": "ACTIVE",
       "volume": 10,
-      "isTrial": false
+      "isTrial": false,
+      "usage": 5
+    }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 20,
+      "isTrial": false,
+      "usage": 10
+    }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "SUSPENDED",
+      "volume": 100,
+      "isTrial": false,
+      "usage": 50
+    }, {
+      "offerCode": "MC",
+      "type": "CONFERENCING",
+      "name": "Meeting Center",
+      "status": "ACTIVE",
+      "volume": 1000,
+      "isTrial": false,
+      "usage": 50,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "MC",
+      "type": "CONFERENCING",
+      "name": "Meeting Center",
+      "status": "ACTIVE",
+      "volume": 1000,
+      "isTrial": false,
+      "usage": 150,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "MC",
+      "type": "CONFERENCING",
+      "name": "Meeting Center",
+      "status": "ACTIVE",
+      "volume": 300,
+      "isTrial": false,
+      "usage": 15,
+      "capacity": 200,
+      "siteUrl": "ladidadi.webex.com"
+    }, {
+      "offerCode": "TC",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "ACTIVE",
+      "volume": 250,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "TC",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "PENDING",
+      "volume": 1000,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "CMR",
+      "type": "CONFERENCING",
+      "name": "CMR",
+      "status": "ACTIVE",
+      "volume": 250,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
     }, {
       "offerCode": "CF",
       "type": "CONFERENCING",
@@ -135,6 +213,14 @@ describe('LicenseService', function () {
       "volume": 100,
       "isTrial": true,
       "trialExpiresInDays": 49
+    }, {
+      "offerCode": "CF",
+      "type": "CONFERENCING",
+      "name": "Conferencing",
+      "status": "EXPIRED",
+      "volume": 500,
+      "isTrial": true,
+      "trialExpiresInDays": 0
     }, {
       "offerCode": "CO",
       "type": "COMMUNICATIONS",
@@ -150,20 +236,78 @@ describe('LicenseService', function () {
       "volume": 50,
       "isTrial": false
     }];
-    var filtered = LicenseService.filterAndExtendLicenses(licenses, 'MESSAGING');
-    expect(filtered.length).toEqual(1);
-    expect(filtered[0].volume).toEqual(10);
-    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.MS');
 
-    filtered = LicenseService.filterAndExtendLicenses(licenses, 'CONFERENCING');
-    expect(filtered.length).toEqual(1);
-    expect(filtered[0].volume).toEqual(100);
-    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.CF');
+    // MESSAGING
+    var aggregated = LicenseService.aggregatedLicenses(licenses, 'MESSAGING');
+    expect(aggregated.length).toEqual(1);
+    var aggregate = aggregated[0];
+    expect(aggregate.totalVolume).toEqual(130);
+    expect(aggregate.totalUsage).toEqual(65);
+    expect(aggregate.usagePercentage).toEqual(50);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
+    expect(aggregate.isTrial).toBeFalsy();
+    expect(aggregate.licenses.length).toEqual(3);
 
-    filtered = LicenseService.filterAndExtendLicenses(licenses, 'COMMUNICATIONS');
-    expect(filtered.length).toEqual(1);
-    expect(filtered[0].volume).toEqual(1000);
-    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.CO');
+    // CONFERENCING
+    // The conferencing ones should be aggregated into 4: MC-mock.webex.com (2), MC-ladidadi.webex.com (1), TC (2), CMR (1), CF (2)
+    aggregated = LicenseService.aggregatedLicenses(licenses, 'CONFERENCING');
+    expect(aggregated.length).toEqual(5);
+
+    // MC-mock.webex.com
+    aggregate = _.find(aggregated, {
+      key: 'MC#25#mock.webex.com'
+    });
+    expect(aggregate.totalVolume).toEqual(2000);
+    expect(aggregate.totalUsage).toEqual(200);
+    expect(aggregate.usagePercentage).toEqual(10);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
+    expect(aggregate.isTrial).toBeFalsy();
+    expect(aggregate.licenses.length).toEqual(2);
+
+    // MC-ladidadi.webex.com
+    aggregate = _.find(aggregated, {
+      key: 'MC#200#ladidadi.webex.com'
+    });
+    expect(aggregate.totalVolume).toEqual(300);
+    expect(aggregate.totalUsage).toEqual(15);
+    expect(aggregate.usagePercentage).toEqual(5);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
+    expect(aggregate.isTrial).toBeFalsy();
+    expect(aggregate.licenses.length).toEqual(1);
+
+    // TC
+    aggregate = _.find(aggregated, {
+      key: 'TC#25#mock.webex.com'
+    });
+    expect(aggregate.totalVolume).toEqual(1250);
+    expect(aggregate.totalUsage).toEqual(500);
+    expect(aggregate.usagePercentage).toEqual(40);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.TC');
+    expect(aggregate.isTrial).toBeFalsy();
+    expect(aggregate.licenses.length).toEqual(2);
+
+    // CMR
+    aggregate = _.find(aggregated, {
+      key: 'CMR#25#mock.webex.com'
+    });
+    expect(aggregate.totalVolume).toEqual(250);
+    expect(aggregate.totalUsage).toEqual(250);
+    expect(aggregate.usagePercentage).toEqual(100);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.CMR');
+    expect(aggregate.isTrial).toBeFalsy();
+    expect(aggregate.licenses.length).toEqual(1);
+
+    // CF
+    aggregate = _.find(aggregated, {
+      key: 'CF#0'
+    });
+    expect(aggregate.totalVolume).toEqual(600);
+    expect(aggregate.totalUsage).toEqual(0);
+    expect(aggregate.usagePercentage).toEqual(0);
+    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.CF');
+    expect(aggregate.isTrial).toBeTruthy();
+    expect(aggregate.licenses.length).toEqual(2);
+
   });
 
 });

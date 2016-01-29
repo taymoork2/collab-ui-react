@@ -60,6 +60,16 @@ describe('Config', function () {
     expect(Config.roleStates).toBeDefined();
   });
 
+  it('partner_sales_admin should have correct roleStates', function () {
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('customer-overview');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnercustomers');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
+    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
+  });
+
   it('should not have development states assigned to Full_Admin role', function () {
     function getDevelopmentStates() {
       var devStates = [];
@@ -201,10 +211,10 @@ describe('Config', function () {
     });
   });
 
-  it('should always return locus prod service url', function () {
+  it('should return correct feature toggle service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
-      cfe: 'https://locus-a.wbx2.com',
+      cfe: 'https://locus-e.wbx2.com',
       integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com'
     });
@@ -390,12 +400,39 @@ describe('Config', function () {
     });
   });
 
+  it('should return correct calliope url', function () {
+    whenCalling('getCalliopeUrl').expectUrlToBe({
+      dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+      integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+    });
+  });
+
   it('should return correct certs url', function () {
     whenCalling('getCertsUrl').expectUrlToBe({
       dev: 'https://certs-integration.wbx2.com/',
       cfe: 'https://certs-e.wbx2.com/',
       integration: 'https://certs-integration.wbx2.com/',
       prod: 'https://certs-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct wdm url', function () {
+    whenCalling('getWdmUrl').expectUrlToBe({
+      dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+      cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+      integration: 'https://wdm-a.wbx2.com/wdm/api/v1',
+      prod: 'https://wdm-a.wbx2.com/wdm/api/v1'
+    });
+  });
+
+  it('should return correct utilization url', function () {
+    whenCalling('getUtilizationServiceUrl').expectUrlToBe({
+      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
@@ -419,10 +456,10 @@ describe('Config', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      prod: 'https://config.integration-tx1.thunderhead.io/config/v1'
+      dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+      cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+      integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     });
   });
 
@@ -430,13 +467,11 @@ describe('Config', function () {
 
     it('squared-fusion-mgmt should contain fusion states', function () {
       // Preliminary removed until new fusion menues are in place in both integration and production
-      //expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
       //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 
-    it('spark-device-mgmt should contain devices state', function () {
-      expect(Config.serviceStates['spark-device-mgmt'][0]).toBe('devices');
+    it('spark-room-system should contain devices state', function () {
+      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
     });
   });
-
 });

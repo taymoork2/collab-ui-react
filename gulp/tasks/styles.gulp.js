@@ -8,6 +8,7 @@ var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({ lazy: true });
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
+var jsonImporter = require('node-sass-json-importer');
 var reload = browserSync.reload;
 var errorLogger = require('../utils/errorLogger.gulp');
 var messageLogger = require('../utils/messageLogger.gulp')();
@@ -21,13 +22,18 @@ gulp.task('scss:build', ['clean:css'], function() {
     .pipe($.sourcemaps.init())
     .pipe($.plumber(function(error) {
       log(colors.red(error));
-      this.emit('end');
+      if (config.isJenkins()) {
+        console.log('Environment is jenkins, aborting...');
+        process.exit(1);
+      } else {
+        this.emit('end');
+      }
     }))
     .pipe($.sass({
       outputStyle: 'compact',
-      includePaths: config.vendorFiles.scss.paths
+      includePaths: config.vendorFiles.scss.paths,
+      importer: jsonImporter
     }))
-    .on('error', errorLogger)
     .pipe($.autoprefixer({
       browsers: ['last 2 versions', '> 5%']
     }))

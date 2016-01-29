@@ -11,10 +11,7 @@
       <div id="yourDomainDiv" ng-init="getDefaultDomain()">
         <div id="domainDetailDiv">
           <span class="subheading" translate="dirsyncModal.domain"></span>
-          <input type="text" id="dirDomainText" placeholder="{{'dirsyncModal.defaultPlaceholder' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
-          <div id="domainDesc">
-            <span translate="dirsyncModal.domainDesc"></span>
-          </div>
+          <input type="text" id="dirDomainText" placeholder="{{'dirsyncModal.domainDesc' | translate}}" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
         </div>
         <div class="ssoNavBtns">
           <button id="domainCancelBtn" class="btn btn--primary pull-left" ng-click="cancel()"><span translate="ssoModal.cancelBtn"></span></button>
@@ -54,7 +51,7 @@
           </span>
 
           <div id="numUsers"><span class="boldText"> {{numUsersInSync}} </span><span translate="dirsyncModal.syncAgreementText"></span> </div>
-              <div class="dirgridStyle" ng-grid="gridOptions"></div>
+              <div class="dirgridStyle" ui-grid="gridOptions" ui-grid-selection></div>
         </div>
 
         <div class="ssoNavBtns">

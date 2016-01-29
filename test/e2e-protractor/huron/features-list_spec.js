@@ -2,10 +2,6 @@
  * Created by sjalipar on 11/2/15.
  */
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
 
 xdescribe('Admin should be able to', function () {
 

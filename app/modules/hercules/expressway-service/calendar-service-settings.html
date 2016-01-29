@@ -1,32 +1,14 @@
 <div class="hercules typography-airy large-margin">
-
-<div class="row">
+  <div class="row">
     <div class="large-4 columns">
-
+      <schedule-upgrade-configuration service-type="exp.currentServiceType"></schedule-upgrade-configuration>
       <div ng-include src="'modules/hercules/expressway-service/email-notification-setting.html'"></div>
-
       <div ng-include src="'modules/hercules/expressway-service/deactivate-service-setting.html'"></div>
-
     </div>
-
     <div class="large-4 columns">
-
-      <h5>
-        Documentation and software
-      </h5>
-
-      <p>
-        Visit <a href="http://www.cisco.com/go/hybrid-services" target="_blank">Help Central</a> whenever you need further information about Hybrid Services.
-      </p>
-      <p>
-        Download Cisco Expressway software from <a href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
-      </p>
-
+      <div ng-include src="'modules/hercules/expressway-service/documentation.html'"></div>
     </div>
-
     <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
-    <div class="large-4 columns">
-    </div>
-
+    <div class="large-4 columns"></div>
   </div>
 </div>

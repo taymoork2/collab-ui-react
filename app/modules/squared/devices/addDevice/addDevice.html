@@ -36,16 +36,16 @@
       </div>
     </form>
 
-    <div class="device-added clearfix" ng-show="!adc.showAdd">
+    <div class="device-added clearfix" ng-if="!adc.showAdd">
       <h4>
         Activation code for <b>{{adc.deviceName}}</b> has been created:
       </h4>
-
       <div class="clearfix">
         <h3>
           {{adc.activationCode}}
-          <sq-clipboard clip-copy="adc.activationCode"></sq-clipboard>
+          <a class="clipboard-button" sq-clipboard="adc.activationCode"><i class="fa fa-clipboard"></i></a>
         </h3>
+        <p>{{'deviceOverviewPage.expires' | translate}} {{adc.expiryTime}}</p>
       </div>
 
     </div>

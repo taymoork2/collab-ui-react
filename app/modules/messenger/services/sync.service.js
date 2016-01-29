@@ -6,7 +6,7 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, $translate, Authinfo, Log) {
+  function SyncService($http, $q, $translate, Config, Authinfo, Log) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
@@ -45,14 +45,7 @@
       syncMode: syncModes.messenger.off
     };
 
-    var msgrService = {
-      protocol: 'https://',
-      host: 'msgr-admin.webexconnect.com',
-      port: 443,
-      api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-    };
-
-    var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;
+    var serviceUrl = Config.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
 
     var service = {
       getSyncStatus: getSyncStatus,
@@ -235,14 +228,24 @@
     }
 
     function isMessengerSyncEnabled() {
+
       var defer = $q.defer();
 
-      getSyncStatus()
-        .then(function () {
-          defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
-        }, function (errorObj) {
-          defer.reject(errorObj.message);
-        });
+      // This function is called by core/wizard about inviting users w/o checking entitlement
+      // Will check webex-messenger here to prevent unnecessary call to msgr admin service.      
+      if (!Authinfo.isEntitled(Config.entitlements.messenger)) {
+        Log.info('isMessengerSyncEnabled: The Org is not Messenger migrated one, return false.');
+        defer.resolve(false);
+      } else {
+        Log.info('isMessengerSyncEnabled: The Org is Messenger migrated one, call Messenger admin service to check');
+
+        getSyncStatus()
+          .then(function () {
+            defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
+          }, function (errorObj) {
+            defer.reject(errorObj.message);
+          });
+      }
 
       return defer.promise;
     }

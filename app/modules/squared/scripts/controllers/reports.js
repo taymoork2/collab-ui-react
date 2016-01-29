@@ -1,5 +1,4 @@
 'use strict';
-/* global AmCharts, $:false */
 
 angular.module('Squared').controller('ReportsCtrl', [
   '$scope',
@@ -16,6 +15,7 @@ angular.module('Squared').controller('ReportsCtrl', [
   'Userservice',
   'WebExUtilsFact',
   'Storage',
+  'FeatureToggleService',
   function (
     $scope,
     $stateParams,
@@ -30,7 +30,8 @@ angular.module('Squared').controller('ReportsCtrl', [
     CannedDataService,
     Userservice,
     WebExUtilsFact,
-    Storage
+    Storage,
+    FeatureToggleService
   ) {
 
     $scope.webexReportsObject = {};
@@ -106,7 +107,7 @@ angular.module('Squared').controller('ReportsCtrl', [
           var funcName = "promisChainDone()";
           var logMsg = "";
 
-          // if we are displaying the webex reports index page then go ahead with the rest of the code 
+          // if we are displaying the webex reports index page then go ahead with the rest of the code
           if ($scope.showWebexReports) {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
@@ -150,7 +151,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }
@@ -602,5 +603,18 @@ angular.module('Squared').controller('ReportsCtrl', [
     $scope.$on('AuthinfoUpdated', function () {
       $scope.manualReload(true);
     });
+
+    function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasReportTrials).then(function (toggle) {
+        if (toggle) {
+          $scope.repPageHeader_tabs.splice(1, 0, {
+            title: $translate.instant('reportsPage.sparkReports'),
+            state: 'devReports'
+          });
+        }
+      });
+    }
+
+    init();
   }
 ]);

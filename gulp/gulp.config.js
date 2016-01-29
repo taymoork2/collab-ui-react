@@ -7,6 +7,7 @@ module.exports = function() {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
+  var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
   var vendor = 'bower_components';
@@ -84,13 +85,22 @@ module.exports = function() {
         vendor + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
+        vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
       ],
       global: [
         test + '/global.spec.js',
       ],
-      spec: [
-        app + '/modules/**/*.spec.js',
-      ],
+      spec: {
+        all: app + '/**/*.spec.js',
+        core: appModules + '/core/**/*.spec.js',
+        hercules: appModules + '/hercules/**/*.spec.js',
+        huron: appModules + '/huron/**/*.spec.js',
+        mediafusion: appModules + '/mediafusion/**/*.spec.js',
+        messenger: appModules + '/messenger/**/*.spec.js',
+        squared: appModules + '/squared/**/*.spec.js',
+        sunlight: appModules + '/sunlight/**/*.spec.js',
+        webex: appModules + '/webex/**/*.spec.js',
+      },
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
         huron: e2e + '/huron/**/*_spec.js',
@@ -115,10 +125,17 @@ module.exports = function() {
         vendor + '/bootstrap/dist/js/bootstrap.js',
         vendor + '/addressparser/src/addressparser.js',
         vendor + '/alertify.js/lib/alertify.js',
-        vendor + '/amcharts/dist/amcharts/amcharts.js',
-        vendor + '/amcharts/dist/amcharts/pie.js',
-        vendor + '/amcharts/dist/amcharts/serial.js',
-        vendor + '/amcharts/dist/amcharts/funnel.js',
+        vendor + '/amcharts3/amcharts/amcharts.js',
+        vendor + '/amcharts3/amcharts/pie.js',
+        vendor + '/amcharts3/amcharts/serial.js',
+        vendor + '/amcharts3/amcharts/funnel.js',
+        vendor + '/amcharts3/amcharts/plugins/export/export.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/fabric.js/fabric.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/blob.js/blob.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/jszip.js/jszip.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
+        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
         vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
@@ -127,7 +144,6 @@ module.exports = function() {
         vendor + '/nicescroll/jquery.nicescroll.js',
         vendor + '/angular/angular.js',
         vendor + '/angular-animate/angular-animate.js',
-        // vendor + '/angular-bootstrap/ui-bootstrap-tpls.js',
         vendor + '/angular-ui-utils/ui-utils.js',
         vendor + '/angular-cookie/angular-cookie.js',
         vendor + '/angular-cookies/angular-cookies.js',
@@ -150,11 +166,11 @@ module.exports = function() {
         vendor + '/ng-csv/build/ng-csv.min.js',
         vendor + '/api-check/dist/api-check.js',
         vendor + '/angular-formly/dist/formly.js',
-        vendor + '/cisco-formly/dist/cisco-formly-tpls.js',
-        // vendor + '/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
         vendor + '/cisco-ui/dist/js/cisco-ui.js',
+        vendor + '/cisco-ui/dist/js/cisco-formly.js',
         vendor + '/angular-wizard/dist/angular-wizard.js',
         vendor + '/ng-grid/build/ng-grid.js',
+        vendor + '/angular-ui-grid/ui-grid.js',
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
@@ -173,7 +189,10 @@ module.exports = function() {
         vendor + '/imagesloaded/imagesloaded.pkgd.js',
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
-        vendor + '/angular-cache/dist/angular-cache.js'
+        vendor + '/angular-cache/dist/angular-cache.js',
+        vendor + '/parse-address-bobbr/parse-address.min.js',
+        vendor + '/clipboard/dist/clipboard.js',
+        vendor + '/query-command-supported/dist/queryCommandSupported.js'
       ],
       scss: {
         paths: [
@@ -191,6 +210,7 @@ module.exports = function() {
         vendor + '/angular-dialog-service/dialogs.css',
         vendor + '/animate.css/animate.css',
         vendor + '/ng-tags-input/ng-tags-input.css',
+        vendor + '/amcharts3/amcharts/plugins/export/export.css',
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',
@@ -205,9 +225,16 @@ module.exports = function() {
       ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
       ' * Copyright ' + year + ' <%= pkg.author %>\n' +
       ' */\n' +
-      ''
+      '',
 
+    isJenkins: isJenkins,
   };
 
   return config;
+
+  ////////////////
+
+  function isJenkins() {
+    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
+  }
 };

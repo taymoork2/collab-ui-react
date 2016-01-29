@@ -47,18 +47,35 @@
       $state.go('call-service.settings');
     };
 
+    vm.navigateToCurrentServiceSettings = function () {
+      vm.showNotifications = false;
+      $state.go($state.current.name.split('.')[0] + '.settings');
+    };
+
     vm.showUserErrorsDialog = function (serviceId) {
-      $scope.selectedServiceId = serviceId;
       $scope.modal = $modal.open({
-        scope: $scope,
-        controller: 'UserStatusesController',
-        templateUrl: 'modules/hercules/dashboard-info-panel/user-errors.html'
+        controller: 'UserErrorsController',
+        controllerAs: 'userErrorsCtrl',
+        templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        resolve: {
+          serviceId: function () {
+            return serviceId;
+          }
+        }
       });
     };
 
     vm.dismissNewServiceNotification = function (notificationId, serviceId) {
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
+    };
+
+    vm.addResourceButtonClicked = function () {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
     };
   }
 

@@ -1,0 +1,38 @@
+<div ng-form ng-if="!readOnly">
+  <div class="row full">
+    <div class="columns medium-9">
+      <label for="streetAddress" translate="serviceAddress.streetAddress"></label>
+      <input type="text" id="streetAddress" ng-model="address.streetAddress" required>
+    </div>
+    <div class="columns medium-3">
+      <label for="unit" translate="serviceAddress.unit"></label>
+      <input type="text" id="unit" ng-model="address.unit">
+    </div>
+  </div>
+  <div class="row full">
+    <div class="columns medium-6">
+      <label for="city" translate="serviceAddress.city"></label>
+      <input type="text" id="city" ng-model="address.city" required>
+    </div>
+    <div class="columns medium-3">
+      <label for="state" translate="serviceAddress.state"></label>
+      <cs-select ng-model="address.state" options="stateOptions" labelfield="abbreviation" valuefield="abbreviation" required="true"></cs-select>
+    </div>
+    <div class="columns medium-3">
+      <label for="zip" translate="serviceAddress.zipCode"></label>
+      <input type="text" id="zip" ng-model="address.zip" required>
+    </div>
+  </div>
+</div>
+<div ng-if="readOnly">
+  <div class="row collapse full">
+    <div class="columns medium-12">
+      {{address.streetAddress | uppercase}} {{address.unit | uppercase}}
+    </div>
+  </div>
+  <div class="row collapse full">
+    <div class="columns medium-12">
+      {{address.city | uppercase}}<span ng-if="address.state">, {{address.state}}</span>  {{address.zip}}
+    </div>
+  </div>
+</div>

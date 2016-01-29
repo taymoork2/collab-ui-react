@@ -83,6 +83,13 @@ angular.module('Core')
           prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
         },
 
+        messengerServiceUrl: {
+          dev: 'http://localhost:8080/admin-service/messenger/admin/api/v1',
+          cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+          integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+          prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1'
+        },
+
         oauthClientRegistration: {
           atlas: {
             id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
@@ -153,6 +160,13 @@ angular.module('Core')
           prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
         },
 
+        domainManagementUrl: {
+          dev: 'https://identity.webex.com/organization/%s/v1/',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/',
+          integration: 'https://identity.webex.com/organization/%s/v1/',
+          prod: 'https://identity.webex.com/organization/%s/v1/'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
@@ -210,10 +224,10 @@ angular.module('Core')
         },
 
         sunlightConfigServiceUrl: {
-          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+          dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+          cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+          integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+          prod: 'https://config.rciad.ciscoccservice.com/config/v1' //This will change to prod later in future
         },
 
         calliopeUrl: {
@@ -221,6 +235,13 @@ angular.module('Core')
           cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
           integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
           prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+        },
+
+        cdrUrl: {
+          dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
+          integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
         },
 
         scimSchemas: [
@@ -276,7 +297,7 @@ angular.module('Core')
           link: '/users'
         }, {
           tab: 'servicesTab',
-          icon: 'icon-settings',
+          icon: 'icon-cloud',
           title: 'tabs.servicesTab',
           subPages: [{
             title: 'tabs.conferencing',
@@ -297,22 +318,24 @@ angular.module('Core')
             title: 'tabs.expresswayManagementServiceTab',
             desc: 'tabs.expresswayManagementServiceTabDesc',
             state: 'management-service',
-            link: '#/services/expressway-management'
+            link: '#services/expressway-management'
           }, {
             title: 'tabs.calendarServiceTab',
             desc: 'tabs.calendarServiceTabDesc',
             state: 'calendar-service',
-            link: '#/services/calendar'
+            link: '#services/calendar'
           }, {
             title: 'tabs.callServiceTab',
             desc: 'tabs.callServiceTabDesc',
             state: 'call-service',
-            link: '#/services/call'
+            link: '#services/call'
           }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
-            state: 'mediafusionconnector',
-            link: '#mediafusionconnector'
+            //state: 'mediafusionconnector',
+            //link: '#mediafusionconnector'
+            state: 'media-service',
+            link: '#mediaservice'
           }, {
             title: 'tabs.messengerTab',
             desc: 'tabs.messengerTabDesc',
@@ -341,17 +364,8 @@ angular.module('Core')
           tab: 'supportTab',
           icon: 'icon-support',
           title: 'tabs.supportTab',
-          subPages: [{
-            title: 'tabs.logsTab',
-            desc: 'tabs.logsTabDesc',
-            state: 'support',
-            link: '#support'
-          }, {
-            title: 'tabs.billingTab',
-            desc: 'tabs.billingTabDesc',
-            state: 'billing',
-            link: '#orderprovisioning'
-          }]
+          link: '/support/status',
+          state: 'support.status'
         }, {
           tab: 'accountTab',
           icon: 'icon-sliders',
@@ -417,11 +431,6 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
-          }, {
-            title: 'tabs.reportTab',
-            desc: 'reportsPage.devReports',
-            state: 'devReports',
-            link: '#devReports'
           }]
         }],
 
@@ -432,17 +441,31 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
-          device_mgmt: 'spark-device-mgmt',
-          fusion_ec: 'squared-fusion-ec'
+          room_system: 'spark-room-system',
+          fusion_ec: 'squared-fusion-ec',
+          messenger: 'webex-messenger'
         },
 
-        trials: {
+        offerTypes: {
           collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC',
-          webex: 'WEBEXTRIALS',
-          cloudberry: 'ROOMSYSTEMS',
+          spark1: 'SPARK1', //to be depricated; use message
+          webex: 'WEBEX', // to be depricated; use meetings
+          squaredUC: 'SQUAREDUC', // to be depricated; use call
+          message: 'MESSAGE',
+          meetings: 'MEETINGS',
+          call: 'CALL',
+          roomSystems: 'ROOMSYSTEMS'
         },
 
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
+        trials: {
+          message: 'COLLAB',
+          meeting: 'WEBEX',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS'
+        },
+
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
         organizations: {
           collab: 'COLLAB',
           squaredUC: 'SQUAREDUC'
@@ -494,8 +517,13 @@ angular.module('Core')
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
+          primaryColorLight: '#66C5E8',
+          primaryColorBase: '#049FD9',
+          primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
-          dummyGrayLighter: '#FAFAFA'
+          dummyGrayLighter: '#FAFAFA',
+          colorAttentionBase: '#F5A623',
+          colorPeopleBase: '#14A792'
         },
 
         confMap: {
@@ -517,7 +545,9 @@ angular.module('Core')
           SC: 'SC', // Support Center (WebEx)
           TC: 'TC', // Training Center (WebEx)
           EC: 'EC', // Event Center (WebEx)
-          CO: 'CO' // Communication
+          CO: 'CO', // Communication
+          SD: 'SD', // Spark Room System
+          CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         },
 
         licenseTypes: {
@@ -597,6 +627,18 @@ angular.module('Core')
           return scomUrl[this.getEnv()];
         },
 
+        getDomainManagementUrl: function (orgId) {
+          var params = [orgId];
+          var domainManagementUrl = {
+            'dev': Utils.sprintf(this.domainManagementUrl.dev, params),
+            'cfe': Utils.sprintf(this.domainManagementUrl.cfe, params),
+            'integration': Utils.sprintf(this.domainManagementUrl.integration, params),
+            'prod': Utils.sprintf(this.domainManagementUrl.prod, params)
+          };
+
+          return domainManagementUrl[this.getEnv()];
+        },
+
         getAdminServiceUrl: function () {
           var adminServiceUrl = {
             'dev': this.adminServiceUrl.integration,
@@ -623,12 +665,37 @@ angular.module('Core')
           return csdmServiceUrl[this.getEnv()];
         },
 
+        getMessengerServiceUrl: function () {
+          var msgrServiceUrl = {
+            'dev': this.messengerServiceUrl.integration,
+            'cfe': this.messengerServiceUrl.cfe,
+            'integration': this.messengerServiceUrl.integration,
+            'prod': this.messengerServiceUrl.prod
+          };
+
+          return msgrServiceUrl[this.getEnv()];
+        },
+
         getLocusServiceUrl: function () {
-          return this.locusServiceUrl.integration;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.integration,
+            'cfe': this.locusServiceUrl.integration,
+            'integration': this.locusServiceUrl.integration,
+            'prod': this.locusServiceUrl.integration
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getFeatureToggleUrl: function () {
-          return this.locusServiceUrl.prod;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.prod,
+            'cfe': this.locusServiceUrl.cfe,
+            'integration': this.locusServiceUrl.prod,
+            'prod': this.locusServiceUrl.prod
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getEnrollmentServiceUrl: function () {
@@ -852,23 +919,58 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()];
+          var herculesUrl = {
+            'dev': this.herculesUrl.dev,
+            'cfe': this.herculesUrl.cfe,
+            'integration': this.herculesUrl.integration,
+            'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()];
+          var ussUrl = {
+            'dev': this.ussUrl.dev,
+            'cfe': this.ussUrl.cfe,
+            'integration': this.ussUrl.integration,
+            'prod': this.ussUrl.prod
+          };
+
+          return ussUrl[this.getEnv()];
         },
 
         getCalliopeUrl: function () {
-          return this.calliopeUrl[this.getEnv()];
+          var calliopeUrl = {
+            'dev': this.calliopeUrl.dev,
+            'cfe': this.calliopeUrl.cfe,
+            'integration': this.calliopeUrl.integration,
+            'prod': this.calliopeUrl.prod
+          };
+
+          return calliopeUrl[this.getEnv()];
         },
 
         getCertsUrl: function () {
-          return this.certsUrl[this.getEnv()];
+          var certsUrl = {
+            'dev': this.certsUrl.dev,
+            'cfe': this.certsUrl.cfe,
+            'integration': this.certsUrl.integration,
+            'prod': this.certsUrl.prod
+          };
+
+          return certsUrl[this.getEnv()];
         },
 
         getWdmUrl: function () {
-          return this.wdmUrl.dev;
+          var wdmUrl = {
+            'dev': this.wdmUrl.dev,
+            'cfe': this.wdmUrl.cfe,
+            'integration': this.wdmUrl.dev,
+            'prod': this.wdmUrl.dev
+          };
+
+          return wdmUrl[this.getEnv()];
         },
 
         getDefaultEntitlements: function () {
@@ -909,6 +1011,17 @@ angular.module('Core')
           };
 
           return sunlightConfigServiceUrl[this.getEnv()];
+        },
+
+        getCdrUrl: function () {
+          var cdrConfigServiceUrl = {
+            'dev': this.cdrUrl.dev,
+            'cfe': this.cdrUrl.cfe,
+            'integration': this.cdrUrl.integration,
+            'prod': this.cdrUrl.prod
+          };
+
+          return cdrConfigServiceUrl[this.getEnv()];
         }
       };
 
@@ -926,7 +1039,25 @@ angular.module('Core')
       }
 
       config.roleStates = {
-        Full_Admin: [ // Customer Admin
+        // Customer Admin
+        Full_Admin: [
+          'overview',
+          'domainmanagement',
+          'users',
+          'user-overview',
+          'userprofile',
+          'reports',
+          'devReports',
+          'setupwizardmodal',
+          'firsttimewizard',
+          'groups',
+          'profile',
+          'customerprofile',
+          'support',
+          'editService',
+          'trialExtInterest'
+        ],
+        Readonly_Admin: [
           'overview',
           'users',
           'user-overview',
@@ -941,13 +1072,13 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing'],
-        WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support'],
+        Support: ['support', 'reports', 'billing', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
-        PARTNER_SALES_ADMIN: ['partnerreports'],
+        PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -959,7 +1090,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
       };
 
       config.serviceStates = {
@@ -981,25 +1112,24 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'devReports',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'cluster-details-new',
           'management-service',
         ],
-        'spark-device-mgmt': [
+        'spark-room-system': [
           'devices',
           'device-overview',
           'devices-redux'
         ],
         'squared-fusion-uc': [
+          'call-service',
           'devices',
           'device-overview',
-          'devices-redux',
-          'call-service'
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           'calendar-service'
@@ -1016,7 +1146,8 @@ angular.module('Core')
           'fault',
           'alarms',
           'events',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'connector-details'
         ],
         'webex-messenger': [
@@ -1037,7 +1168,8 @@ angular.module('Core')
           'devReports',
           'devices',
           'fusion',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'hurondetails',
           'huronsettings',
           'calendar-service',

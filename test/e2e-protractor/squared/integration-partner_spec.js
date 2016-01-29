@@ -1,12 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
@@ -61,11 +54,6 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.addTrialForm);
       });
 
-      it('should check the Room Systems Checkbox', function () {
-        utils.click(partner.roomSystemsCheckbox);
-        utils.expectIsEnabled(partner.trialRoomSystemsAmount);
-      });
-
       afterEach(function () {
         utils.click(partner.cancelTrialButton);
       });
@@ -78,15 +66,15 @@ describe('Partner flow', function () {
 
       partner.assertDisabled('startTrialButton');
 
-      utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+      utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
+      utils.clickEscape();
     }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
@@ -108,11 +96,13 @@ describe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
 
+        partner.assertDisabled('saveUpdateButton');
+        utils.clear(partner.licenseCountInput);
+        utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
-
         utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });

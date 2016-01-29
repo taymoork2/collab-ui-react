@@ -45,9 +45,7 @@ describe('Service: UserDetails', function () {
       expect(callback.callCount).toBe(1);
       var userDetails = callback.args[0][0];
 
-      expect(userDetails[0].details.id).toBe('111');
       expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
-      //expect(userDetails[0].details.entitled).toBe('Entitled');
       expect(userDetails[0].details.state).toBe('whatever');
 
     });
@@ -77,9 +75,7 @@ describe('Service: UserDetails', function () {
       expect(callback.callCount).toBe(1);
       var userDetails = callback.args[0][0];
 
-      expect(userDetails[0].details.id).toBe('111');
       expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
-      //expect(userDetails[0].details.entitled).toBe('Not Entitled');
       expect(userDetails[0].details.state).toBe('whatever');
 
     });
@@ -113,9 +109,7 @@ describe('Service: UserDetails', function () {
       expect(callback.callCount).toBe(1);
       var userDetails = callback.args[0][0];
 
-      expect(userDetails[0].details.id).toBe('111');
       expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
-      //expect(userDetails[0].details.entitled).toBe('Entitled');
       expect(userDetails[0].details.state).toBe('error');
       expect(userDetails[0].details.message).toBe('The request failed. The SMTP address has no mailbox associated with it.');
 
@@ -143,14 +137,12 @@ describe('Service: UserDetails', function () {
       expect(callback.callCount).toBe(1);
       var userDetails = callback.args[0][0];
 
-      expect(userDetails[0].details.id).toBe('111');
       expect(userDetails[0].details.userName).toBe('Not found');
-      //expect(userDetails[0].details.entitled).toBe('Entitled');
       expect(userDetails[0].details.state).toBe('whatever');
     });
 
     it('fetching multiple users from CI in one request', function () {
-      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" and id eq "222"';
+      var request = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" or id eq "222"';
 
       $httpBackend
         .when('GET', request)
@@ -181,14 +173,10 @@ describe('Service: UserDetails', function () {
       expect(callback.callCount).toBe(1);
       var userDetails = callback.args[0][0];
 
-      expect(userDetails[0].details.id).toBe('111');
       expect(userDetails[0].details.userName).toBe('sparkuser1@gmail.com');
-      //expect(userDetails[0].details.entitled).toBe('Not Entitled');
       expect(userDetails[0].details.state).toBe('whatever');
 
-      expect(userDetails[1].details.id).toBe('222');
       expect(userDetails[1].details.userName).toBe('sparkuser2@gmail.com');
-      //expect(userDetails[1].details.entitled).toBe('Entitled');
       expect(userDetails[1].details.state).toBe('whenever');
 
     });
@@ -203,7 +191,7 @@ describe('Service: UserDetails', function () {
 
     var usersIds = ["1111", "2222", "3333"];
     var filter = UserDetails.multipleUserFilter(usersIds);
-    expect(filter).toEqual('id eq "1111" and id eq "2222" and id eq "3333"');
+    expect(filter).toEqual('id eq "1111" or id eq "2222" or id eq "3333"');
   });
 
   it('creates a user url', function () {

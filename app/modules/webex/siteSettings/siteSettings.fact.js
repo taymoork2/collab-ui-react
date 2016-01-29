@@ -214,13 +214,14 @@
               var funcName = "getWebexLicenseInfoSuccess()";
               var logMsg = "";
 
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseInfo.volume;
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseInfo.usage;
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licenseInfo.available;
+              WebExUtilsFact.setInfoCardLicenseInfo(
+                licenseInfo,
+                _this.webExSiteSettingsObj.siteInfoCardObj
+              );
 
               logMsg = funcName + ": " + "\n" +
                 "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
-              $log.log(logMsg);
+              // $log.log(logMsg);
             }, // getWebexLicenseInfoSuccess()
 
             function getWebexLicenseInfoError(result) {
@@ -377,7 +378,7 @@
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
             var uiSref =
-              "site-settings.site-setting({" +
+              "site-list.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
               "  webexPageId: " + "'" + webexPageId + "'" + "," +
               "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
@@ -609,10 +610,7 @@
         getSiteSettingsInfoXml: function () {
           // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
-          var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
-            true,
-            webExXmlApiInfoObj
-          );
+          var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
 
           return $q.all({
             // siteInfoXml: siteInfoXml,

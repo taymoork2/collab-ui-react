@@ -1,4 +1,4 @@
-<div id="detailsDiv" class="helpdesk-details">
+<div class="helpdesk-details" ng-keyup="helpdeskOrgCtrl.keyPressHandler($event)" tabindex="1">
   <div class="row head full">
     <div class="columns large-12">
       <a id="backToSearchLink" ui-sref="helpdesk.search">
@@ -17,14 +17,6 @@
         <span ng-if="!helpdeskOrgCtrl.org.isPartner" translate="helpdesk.customer"></span>
         <span ng-if="helpdeskOrgCtrl.org.isPartner" translate="helpdesk.partner"></span>
         <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
-      </div>
-      <div class="row">
-        <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
-        </div>
-        <div class="medium-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
-        </div>
       </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.email">
@@ -59,7 +51,7 @@
           <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
-
+      
       <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.managedBy' | translate}}:</span>
@@ -72,6 +64,25 @@
               </a>
             </span>
           </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-12 columns">
+          <span>
+              <a href ng-click="helpdeskOrgCtrl.gotoSearchUsersAndDevices()">
+                <i class="icon icon-search" style="font-size: 0.7rem;"></i> {{'helpdesk.searchUsersDevices'|translate}}
+              </a>
+            </span>
         </div>
       </div>
 

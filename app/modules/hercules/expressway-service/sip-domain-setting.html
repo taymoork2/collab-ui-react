@@ -1,18 +1,14 @@
-<h5 translate="{{'hercules.settings.call.sipDomainHeading'}}">
-</h5>
-
-<p translate="{{'hercules.settings.call.sipDomain'}}">
-</p>
-
-</p>
+<h5 translate="hercules.settings.call.sipDomainHeading"></h5>
+<p translate="hercules.settings.call.sipDomain"></p>
 <form ng-submit="expresswayServiceSettings.updateSipDomain()">
   <input type="text"
-       ng-disabled="expresswayServiceSettings.savingSip"
-       placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
-       class="form-control"
-       id="sipDomain" type="text" ng-model="expresswayServiceSettings.org.sipDomain"/>
+         ng-disabled="expresswayServiceSettings.savingSip"
+         placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
+         class="form-control"
+         id="sipDomain"
+         type="text"
+         ng-model="expresswayServiceSettings.org.sipDomain"/>
 </form>
 <span class=right ng-show="expresswayServiceSettings.savingSip">
   <i class="icon icon-spinner"/>
 </span>
-

@@ -161,6 +161,11 @@
   margin-left: 0px;
 }
 
+.media-service {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+}
+
 .mediafusion-fix-paragraphs {
   p {
     margin-bottom: 1rem;
@@ -204,3 +209,30 @@
 .mediafusion-state-unknown {
   color: $gray-base;
 }
+.mediafusion-settings-table {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+      width: 70px;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}
+.mediafusion-cluster-settings {
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+}
+
+

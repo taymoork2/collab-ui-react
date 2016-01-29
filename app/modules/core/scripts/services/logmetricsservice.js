@@ -1,5 +1,4 @@
 'use strict';
-/* global moment */
 
 angular.module('Core')
   .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
@@ -31,6 +30,7 @@ angular.module('Core')
           trialDidPage: 'TRIALDIDPAGE',
           trialDidEntered: 'TRIALDIDENTERED',
           trialStarted: 'TRIALSTARTED',
+          trialEdited: 'TRIALEDITED',
           organizationPage: 'ORGANIZATIONPAGE',
           organizationCreated: 'ORGANIZATIONCREATED',
           customerLogin: 'CUSTOMERLOGIN',

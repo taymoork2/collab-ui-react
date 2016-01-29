@@ -1,4 +1,4 @@
-<div class="helpdesk-details">
+<div class="helpdesk-details" ng-keyup="helpdeskUserCtrl.keyPressHandler($event)" tabindex="1">
   <div class="row head full">
     <div class="columns large-12">
       <a ui-sref="helpdesk.search">
@@ -11,7 +11,12 @@
   <div class="row full">
     <div class="columns large-4 medium-5">
 
-      <h3>{{helpdeskUserCtrl.user.displayName}}</h3>
+      <h3>
+        <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img"><i class="icon icon-user"></i></span>
+        <img class="user-img" ng-if="helpdeskUserCtrl.user.photos"
+             ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
+        {{helpdeskUserCtrl.user.displayName}}
+      </h3>
 
       <div class="customer-or-partner">
         <span translate="helpdesk.accountCreated"></span>:
@@ -20,10 +25,15 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+          <span>{{'helpdesk.verification' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span>{{helpdeskUserCtrl.user.id}}</span>
+          <span ng-if="helpdeskUserCtrl.verificationCode" style="padding-right: 1rem">{{helpdeskUserCtrl.verificationCode}}</span>
+          <button class="action secondary small" type="button"
+                  ng-click="helpdeskUserCtrl.sendCode()"
+                  translate="helpdesk.sendCode"
+                  ng-if="!helpdeskUserCtrl.verificationCode">
+          </button>
         </div>
       </div>
 
@@ -35,7 +45,8 @@
           <span ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
           <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
                   style="margin-left: 1rem;"
-                  ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send
+                  ng-if="helpdeskUserCtrl.resendInviteEnabled"
+                  translate="helpdesk.resend">
           </button>
         </div>
       </div>
@@ -55,9 +66,9 @@
         </div>
         <div class="medium-7 columns details-value">
           <span ng-if="helpdeskUserCtrl.user.roles.length > 0"
-                ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+                ng-repeat="role in helpdeskUserCtrl.user.roles | orderBy">{{'ciRoles.' + role | translate }}{{$last ? '' : ', '}}</span>
         <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
-              translate="roles.user"></span>
+              translate="ciRoles.user"></span>
         </div>
       </div>
 
@@ -85,6 +96,36 @@
             </a>
           </span>
           <span ng-if="helpdeskUserCtrl.user.isConsumerUser" translate="helpdesk.consumerOrg"></span>
+        </div>
+      </div>
+      
+       <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.id}}</span>
+        </div>
+      </div>
+
+      <div class="row" ng-if="helpdeskUserCtrl.huronDevices && helpdeskUserCtrl.huronDevices.length > 0">
+        <div class="medium-12 columns">
+          <h4 translate="common.devices"></h4>
+
+          <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">
+            <h5 ng-if="device.model">
+              <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/> <span class="device-name">{{device.model}}</span>
+            </h5>             
+            <div ng-if="device.deviceStatus.statusKey">
+              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
+            </div>
+            <div>
+              <span>{{device.name}}</span>
+            </div>      
+            <div ng-if="device.description">
+              <span>{{device.description}}</span>
+            </div>            
+          </div>
         </div>
       </div>
 

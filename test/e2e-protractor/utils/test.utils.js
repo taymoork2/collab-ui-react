@@ -1,22 +1,56 @@
 'use strict';
 
-/* global protractor, log */
-
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var fs = require('fs');
+
+exports.getDateTimeString = function () {
+  var now = new Date();
+  var year = now.getYear() - 100;
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  var second = now.getSeconds();
+  if (month.toString().length == 1) {
+    var month = '0' + month;
+  }
+  if (day.toString().length == 1) {
+    var day = '0' + day;
+  }
+  if (hour.toString().length == 1) {
+    var hour = '0' + hour;
+  }
+  if (minute.toString().length == 1) {
+    var minute = '0' + minute;
+  }
+  if (second.toString().length == 1) {
+    var second = '0' + second;
+  }
+  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
+  return dateTime;
+};
 
 exports.resolvePath = function (filePath) {
   return path.resolve(__dirname, filePath);
+};
+
+exports.writeFile = function (file, text) {
+  return fs.writeFile(file, text);
+};
+
+exports.deleteFile = function (file) {
+  return fs.unlink(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));
 exports.searchbox = element(by.css('.searchbox'));
 
 exports.randomId = function () {
-  return (Math.random() + 1).toString(36).slice(2, 11);
+  return (Math.random() + 1).toString(36).slice(2, 7);
 };
 
 exports.randomDid = function () {
@@ -28,7 +62,11 @@ exports.randomTestRoom = function () {
 };
 
 exports.randomTestGmail = function () {
-  return 'collabctg+' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+};
+
+exports.randomTestGmailwithSalt = function (salt) {
+  return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
@@ -221,7 +259,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   }
 
   function logAndWait() {
-    log('Waiting for element not to be invisible: ' + elem.locator());
+    log('Waiting for element not to be visible: ' + elem.locator());
     return EC.invisibilityOf(elem)().thenCatch(function () {
       // Handle stale element reference
       return EC.stalenessOf(elem)();
@@ -230,7 +268,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
-exports.expectTextToBeSet = function (elem, text) {
+exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
       log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
@@ -238,7 +276,7 @@ exports.expectTextToBeSet = function (elem, text) {
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToBeSet = function (elem, value) {
@@ -441,9 +479,7 @@ exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
     var input = elem.element(by.tagName('input'));
-    return input.isSelected().then(function (isSelected) {
-      return value === isSelected;
-    });
+    expect(input.isSelected()).toBe(value);
   });
 };
 
@@ -473,33 +509,38 @@ exports.findDirectoryNumber = function (message, lineNumber) {
   return null;
 };
 
-exports.search = function (query) {
-  this.click(this.searchbox);
-  this.clear(this.searchField);
-  if (query) {
-    this.sendKeys(this.searchField, query);
-    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
-  }
-};
+// use _searchCount = -1 for unbounded search
+exports.search = function (query, _searchCount) {
+  var spinner = element(by.css('.icon-spinner'));
+  var searchCount = _searchCount || 1;
 
-exports.searchForSingleResult = function (query) {
   function logAndWait() {
-    log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
+    log('Waiting for ' + searchCount + ' search result');
+    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount)().thenCatch(function () {
       // handle a possible stale element
       return false;
-    });;
+    });
   }
-  this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
-  this.click(this.searchbox);
-  this.clear(this.searchField);
-  this.sendKeys(this.searchField, query);
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
-}
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
+
+  exports.click(exports.searchbox);
+  exports.clear(exports.searchField);
+  if (query) {
+    exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
+    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+  }
+
+  if (searchCount > -1) {
+    browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
+  }
+  return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+};
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
 
 exports.searchAndClick = function (query) {
@@ -508,11 +549,10 @@ exports.searchAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
+  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
 };
 
 exports.dumpConsoleErrors = function () {
-  // jshint node:true
   browser.manage().logs().get('browser').then(function (browserLogs) {
     browserLogs.forEach(function (log) {
       if (log.level.value > 900) {
@@ -568,11 +608,9 @@ exports.createHuronUser = function (name, name2) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   if (name2) {
-    this.sendKeys(users.addUsersField, name2);
-    this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    this.sendKeys(users.addUsersField, name2 + protractor.Key.ENTER);
   }
   this.click(users.nextButton);
   this.click(users.advancedCommunications);
@@ -594,8 +632,7 @@ exports.getUserWithDn = function (name) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   this.click(users.nextButton);
 
 };
@@ -607,7 +644,7 @@ exports.loginToOnboardUsers = function (loginName, userName) {
 exports.deleteUser = function (name, name2) {
   this.clickEscape();
   navigation.clickUsers();
-  this.searchForSingleResult(name);
+  this.search(name);
   this.click(users.userListAction);
   this.click(users.deleteUserOption);
   this.expectIsDisplayed(users.deleteUserModal);
@@ -626,12 +663,8 @@ exports.deleteUser = function (name, name2) {
 exports.deleteIfUserExists = function (name) {
   this.clickEscape();
   navigation.clickUsers();
-  this.click(this.searchbox);
-  this.clear(this.searchField);
+  this.search(name);
   if (name) {
-    this.sendKeys(this.searchField, name);
-    utils.expectIsPresent(element(by.css('.icon-spinner')));
-    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
     waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
       exports.click(users.userListAction);
       exports.click(users.deleteUserOption);
@@ -642,6 +675,30 @@ exports.deleteIfUserExists = function (name) {
       log('user is not present');
     });
   }
+
+  function waitUntilElemIsPresent(elem, timeout) {
+    return exports.wait(elem, timeout).then(function () {
+      return elem.isDisplayed();
+    })
+  }
+};
+
+exports.quickDeleteUser = function (bFirst, name) {
+  if (bFirst) {
+    this.search(name, -1);
+  }
+
+  return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+    exports.click(users.userListAction);
+    exports.click(users.deleteUserOption);
+    exports.expectIsDisplayed(users.deleteUserModal);
+    exports.click(users.deleteUserButton);
+    notifications.assertSuccess(name, 'deleted successfully');
+    return true;
+  }, function () {
+    log('user is not preset');
+    return false;
+  });
 
   function waitUntilElemIsPresent(elem, timeout) {
     return exports.wait(elem, timeout).then(function () {

@@ -32,8 +32,44 @@
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
         formattedCard.featureName = 'huronFeatureDetails.aa';
         formattedCard.filterValue = 'AA';
+        formattedCard.hasDepends = false;
+        formattedCard.dependsNames = [];
+        formattedCard.hasReferences = false;
+        formattedCard.referenceNames = [];
         formattedList.push(formattedCard);
         formattedCard = {};
+      });
+
+      _.forEach(data.dependsIds, function (ceid) {
+        var cardToUpdateIndex = 0;
+        _.forEach(formattedList, function (card, index) {
+          if (ceid.aaID === card.id)
+            cardToUpdateIndex = index;
+        });
+        _.forEach(ceid.dependants, function (dependant) {
+          formattedList[cardToUpdateIndex].hasDepends = true;
+          var dependName = '';
+          _.forEach(formattedList, function (card) {
+            if (card.id === dependant.refAaID) {
+              dependName = card.cardName;
+            }
+          });
+          formattedList[cardToUpdateIndex].dependsNames.push(dependName);
+
+          var refCardIndex = 0;
+          _.forEach(formattedList, function (refcard, refindex) {
+            if (dependName === refcard.cardName)
+              refCardIndex = refindex;
+          });
+          formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
+          formattedList[refCardIndex].hasReferences = true;
+
+        });
+
+        formattedList[cardToUpdateIndex].dependsNames.sort(function (a, b) {
+          return a.localeCompare(b);
+        });
+
       });
       return orderByCardName(formattedList);
     }
@@ -46,7 +82,7 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = huntGroup.numbers;
+        formattedCard.numbers = _.pluck(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';

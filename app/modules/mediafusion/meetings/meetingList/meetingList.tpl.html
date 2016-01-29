@@ -21,7 +21,7 @@
 <!-- Chart Creation starts -->
     <div class="meeting-chart">
       <div class="row page-header meeting-chart-title-bar">
-        <div class="col-md-5">      
+        <div class="col-md-5">
             <div class="col-md-1 btn-group meeting-chart-btn-grp">
               <button type="button" class="btn meeting-chart-cal-nav icon icon-chevron-left" ng-disabled="prevDayCheck" ng-click="decrement()"></button>
               <button type="button" class="btn meeting-chart-cal-nav meeting-chart-cal-nav-btn-label" ng-click="defaultDay()" ng-mouseover="hoverInDay()" ng-mouseleave="hoverOutDay()"><span ng-class="{highlet: hoverDay}">Day</span></button>
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="label col-md-5 meeting-chart-date"><h4 class="h4 pull-left">{{latestMeetingChartDate}} {{latestMeetingChartTime}}<h4></div>
+        <div class="badge col-md-5 meeting-chart-date"><h4 class="h4 pull-left">{{latestMeetingChartDate}} {{latestMeetingChartTime}}<h4></div>
         <div class="col-md-2 text-right">
           <select class="meeting-chart-dropdown" ng-model="chartToDisplay" ng-change="changeChart()">
             <option id="allMeetings" value="allMeetings">All Meetings</option>
@@ -74,7 +74,7 @@
 
 <!-- Meeting List Table creation Starts-->
   	<div id="meetingsListPanel" class="row">
-    	<div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
+    	<div gridscrollbar class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
   	</div>
 <!-- Meeting List Table creation Ends-->
 </div>

@@ -28,6 +28,7 @@ angular.module('Core')
       $scope.isMapEnabled = true;
       $scope.processing = false;
       $scope.PATTERN_LIMIT = 50;
+      $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
       $scope.isReset = false;
       $scope.showExtensions = true;
@@ -67,6 +68,7 @@ angular.module('Core')
           .finally(function () {
             if ($scope.showExtensions === true) {
               assignDNForUserList();
+              $scope.validateDnForUser();
             } else {
               mapDidToDn();
             }
@@ -228,20 +230,20 @@ angular.module('Core')
 
       function toggleShowExtensions() {
         return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-          var indexOfDidColumn = _.findIndex($scope.addDnGridColDef, {
+          var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
             field: 'externalNumber'
           });
-          var indexOfDnColumn = _.findIndex($scope.addDnGridColDef, {
+          var indexOfDnColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
             field: 'internalExtension'
           });
           if (response.extensionGenerated === "true") {
             $scope.showExtensions = false;
-            $scope.addDnGridColDef[indexOfDidColumn].visible = false;
-            $scope.addDnGridColDef[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
+            $scope.addDnGridOptions.columnDefs[indexOfDidColumn].visible = false;
+            $scope.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
           } else {
             $scope.showExtensions = true;
-            $scope.addDnGridColDef[indexOfDidColumn].visible = true;
-            $scope.addDnGridColDef[indexOfDnColumn].displayName = $translate.instant('usersPage.extensionHeader');
+            $scope.addDnGridOptions.columnDefs[indexOfDidColumn].visible = true;
+            $scope.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.extensionHeader');
           }
         }).catch(function (response) {
           Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
@@ -325,7 +327,10 @@ angular.module('Core')
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.licenses = [];
-      $scope.isStormBranding = false;
+      $scope.populateConf = populateConf;
+      $scope.oneBilling = false;
+      $scope.selectedSubscription = '';
+      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -334,9 +339,9 @@ angular.module('Core')
       var convertBacked = false;
       var convertPending = false;
 
-      $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
-      $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
-      $scope.communicationFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeComm'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
+      $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.msgFree'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
+      $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.mtgFree'), 0, 'confRadio', new FakeLicense('freeConferencing')));
+      $scope.communicationFeatures.push(new ServiceFeature($translate.instant('onboardModal.callFree'), 0, 'commRadio', new FakeLicense('advancedCommunication')));
       $scope.currentUser = $stateParams.currentUser;
 
       if ($scope.currentUser) {
@@ -348,34 +353,64 @@ angular.module('Core')
         getMessengerSyncStatus();
       }
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        $scope.isStormBranding = result;
-      });
-
-      var populateConf = function () {
-        if (userLicenseIds) {
-
-          for (var ids in userLicenseIds) {
-            var currentId = userLicenseIds[ids];
-
-            for (var conf in $scope.confChk) {
-              var currentConf = $scope.confChk[conf];
-
-              if (currentConf.confFeature) {
-                if (currentConf.confFeature.license.licenseId === currentId) {
-                  currentConf.confModel = true;
-                }
-              }
-
-              if (currentConf.cmrFeature) {
-                if (currentConf.cmrFeature.license.licenseId === currentId) {
-                  currentConf.cmrModel = true;
-                }
-              }
-            }
-          }
+      var getSubscriptions = function () {
+        if (Authinfo.hasAccount()) {
+          Orgservice.getLicensesUsage().then(function (subscriptions) {
+            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
+            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+          });
         }
       };
+
+      $scope.modelChange = function () {
+        $scope.selectedSubscription = this.selectedSubscription;
+      };
+
+      $scope.showMultiSubscriptions = function (billingServiceId) {
+        var isSelected = false;
+        if (_.isArray(billingServiceId)) {
+          for (var i in billingServiceId) {
+            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
+              isSelected = true;
+              break;
+            }
+          }
+        } else {
+          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
+        }
+        var isOneBilling = $scope.oneBilling;
+
+        $scope.licenseExists = isSelected;
+        return isOneBilling || isSelected;
+      };
+
+      function populateConf() {
+        if (userLicenseIds) {
+
+          _.forEach(userLicenseIds, function (userLicenseId) {
+            _.forEach($scope.allLicenses, function (siteObj) {
+              if (siteObj.siteUrl === '' && !siteObj.confModel) {
+                siteObj.confModel = siteObj.licenseId === userLicenseId;
+              }
+              siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+                if (!conf.confModel) {
+                  conf.confModel = conf.licenseId === userLicenseId;
+                }
+                return conf;
+              });
+              siteObj.cmrLic = _.map(siteObj.cmrLic, function (cmr) {
+                if (!cmr.cmrModel) {
+                  cmr.cmrModel = cmr.licenseId === userLicenseId;
+                }
+                return cmr;
+              });
+            });
+          });
+        }
+      }
 
       $scope.radioStates = {
         commRadio: false,
@@ -394,14 +429,61 @@ angular.module('Core')
         }
       }
 
+      function createFeatures(obj) {
+        return {
+          siteUrl: _.get(obj, 'license.siteUrl', ''),
+          billing: _.get(obj, 'license.billingServiceId', ''),
+          volume: _.get(obj, 'license.volume', ''),
+          licenseId: _.get(obj, 'license.licenseId', ''),
+          offerName: _.get(obj, 'license.offerName', ''),
+          label: obj.label,
+          confModel: false,
+          cmrModel: false
+        };
+      }
+
       var generateConfChk = function (confs, cmrs) {
         $scope.confChk = [];
+        $scope.allLicenses = [];
+
         for (var i in confs) {
           var temp = {
             confFeature: confs[i],
             confModel: false,
             confId: 'conf-' + i
           };
+
+          var confNoUrl = _.chain(confs).filter(function (conf) {
+            return conf.license.licenseType !== 'freeConferencing';
+          }).filter(function (conf) {
+            return !_.has(conf, 'license.siteUrl');
+          }).map(createFeatures).remove(undefined).value();
+
+          var confFeatures = _.chain(confs).filter('license.siteUrl')
+            .map(createFeatures).remove(undefined).value();
+          var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
+            .map(createFeatures).remove(undefined).value();
+
+          var siteUrls = _.map(confFeatures, function (lic) {
+            return lic.siteUrl;
+          });
+          siteUrls = _.uniq(siteUrls);
+
+          $scope.allLicenses = _.map(siteUrls, function (site) {
+            var confMatches = _.filter(confFeatures, {
+              siteUrl: site
+            });
+            var cmrMatches = _.filter(cmrFeatures, {
+              siteUrl: site
+            });
+            return {
+              site: site,
+              billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
+              confLic: confMatches,
+              cmrLic: cmrMatches
+            };
+          });
+          $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
           for (var j in cmrs) {
             if (!_.isUndefined(cmrs[j]) && !_.isNull(cmrs[j]) && !_.isUndefined(confs[i].license.siteUrl)) {
@@ -480,6 +562,7 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
+        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {
@@ -535,39 +618,32 @@ angular.module('Core')
         }
       });
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}">' +
-        '<div ng-cell></div>' +
-        '</div>';
-
-      var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
-        '<div ng-header-cell></div>';
-
-      var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
-        '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
+      var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
+        '<span class="email-display-style">{{row.entity.address}}</span></div>';
 
       var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
         '<cs-select name="internalNumber" ' +
-        'ng-model="row.entity.assignedDn" options="internalNumberPool" ' +
-        'refresh-data-fn="returnInternalNumberlist(filter)" wait-time="0" ' +
+        'ng-model="row.entity.assignedDn" options="grid.appScope.internalNumberPool" ' +
+        'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter)" wait-time="0" ' +
         'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
-        'on-change-fn="syncGridDidDn(row.entity, \'internalNumber\')"' +
+        'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
-        ' is-warn="{{checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
+        ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
         '<div ng-show="row.entity.assignedDn === undefined"> ' +
         '<cs-select name="noInternalNumber" ' +
-        'ng-model="noExtInPool" labelfield="noExtInPool" is-disabled="true" > </cs-select>' +
+        'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
         '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
 
       var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
         '<cs-select name="externalNumber" ' +
-        'ng-model="row.entity.externalNumber" options="externalNumberPool" ' +
-        'refresh-data-fn="loadExternalNumberPool(filter)" wait-time="0" ' +
+        'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
+        'refresh-data-fn="grid.appScope.loadExternalNumberPool(filter)" wait-time="0" ' +
         'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
-        'on-change-fn="syncGridDidDn(row.entity, \'externalNumber\')"' +
+        'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'externalNumber\')"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
         '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
-        '<cs-select name="noExternalNumber" ' +
-        'ng-model="row.entity.externalNumber" options="externalNumberPool" class="select-warning"' +
+        '<cs-select name="grid.appScope.noExternalNumber" ' +
+        'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" class="select-warning"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
         '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
 
@@ -633,40 +709,36 @@ angular.module('Core')
       $scope.isResetEnabled = false;
       $scope.validateDnForUser();
 
-      $scope.addDnGridColDef = [{
-        field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
-        sortable: false,
-        cellTemplate: nameTemplate,
-        width: '42%',
-        height: 35
-      }, {
-        field: 'externalNumber',
-        displayName: $translate.instant('usersPage.directLineHeader'),
-        sortable: false,
-        cellTemplate: externalExtensionTemplate,
-        width: '33%',
-        height: 35
-      }, {
-        field: 'internalExtension',
-        displayName: $translate.instant('usersPage.extensionHeader'),
-        sortable: false,
-        cellTemplate: internalExtensionTemplate,
-        width: '25%',
-        height: 35
-      }];
-
       $scope.addDnGridOptions = {
         data: 'usrlist',
         enableRowSelection: false,
         multiSelect: false,
-        showFilter: false,
-        rowHeight: 64,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
-        useExternalSorting: false,
-        columnDefs: 'addDnGridColDef'
+        rowHeight: 45,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        columnDefs: [{
+          field: 'name',
+          displayName: $translate.instant('usersPage.nameHeader'),
+          sortable: false,
+          cellTemplate: nameTemplate,
+          width: '42%',
+          height: 35
+        }, {
+          field: 'externalNumber',
+          displayName: $translate.instant('usersPage.directLineHeader'),
+          sortable: false,
+          cellTemplate: externalExtensionTemplate,
+          width: '33%',
+          height: 35
+        }, {
+          field: 'internalExtension',
+          displayName: $translate.instant('usersPage.extensionHeader'),
+          sortable: false,
+          cellTemplate: internalExtensionTemplate,
+          width: '25%',
+          height: 35
+        }]
       };
       $scope.collabRadio = 1;
 
@@ -677,26 +749,32 @@ angular.module('Core')
       /**
        * get the current license settings for the CF_ licenses
        *
-       * @param state - return license list based on matching state (checked = true)
+       * @param {string[]} state - return license list based on matching state (checked = true)
        */
       var getConfIdList = function (state) {
-        var confId = [];
-        for (var cf in $scope.confChk) {
-          var current = $scope.confChk[cf];
-          if ((current.confModel === state) && angular.isDefined(_.get(current, 'confFeature.license.licenseId'))) {
-            confId.push(current.confFeature.license.licenseId);
+        var idList = [];
+
+        _.forEach($scope.allLicenses, function (license) {
+          if (!_.isArray(license) && license.confModel === state) {
+            idList.push(license.licenseId);
           }
-          if ((current.cmrModel === state) && angular.isDefined(_.get(current, 'cmrFeature.license.licenseId'))) {
-            confId.push(current.cmrFeature.license.licenseId);
-          }
-        }
-        return confId;
+          idList = idList.concat(_(license.confLic).filter({
+            confModel: state
+          }).pluck('licenseId').remove(undefined).value());
+
+          idList = idList.concat(_(license.cmrLic).filter({
+            cmrModel: state
+          }).pluck('licenseId').remove(undefined).value());
+
+        });
+
+        return idList;
       };
 
       /**
        * get the list of selected account licenses on the dialog
        *
-       * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
+       * @param {null|Object[]} action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
        */
       var getAccountLicenses = function (action) {
         var licenseList = [];
@@ -864,7 +942,7 @@ angular.module('Core')
           checkPlaceholder();
         },
         edittoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+          if (angular.element(e.relatedTarget).hasClass('invalid')) {
             invalidcount--;
           }
         },
@@ -881,10 +959,14 @@ angular.module('Core')
       };
 
       function isEmailAlreadyPresent(input) {
-        var inputEmail = getEmailAddress(input);
+        var inputEmail = getEmailAddress(input).toLowerCase();
         if (inputEmail) {
           var userEmails = getTokenEmailArray();
-          return userEmails.indexOf(inputEmail) >= 0;
+          var userEmailsLower = [];
+          for (var i = 0; i < userEmails.length; i++) {
+            userEmailsLower[i] = userEmails[i].toLowerCase();
+          }
+          return userEmailsLower.indexOf(inputEmail) >= 0;
         } else {
           return false;
         }
@@ -998,6 +1080,7 @@ angular.module('Core')
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
             var numAddedUsers = 0;
+            var addedUsersList = [];
 
             for (var num = 0; num < data.userResponse.length; num++) {
               if (data.userResponse[num].status === 200) {
@@ -1021,15 +1104,28 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
+                // Make list of successfully onboarded users
+                var addItem = {
+                  address: data.userResponse[i].email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
-              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
-                userResult.message = $translate.instant('usersPage.userExistsError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
+              } else if (userStatus === 403) {
+                if (data.userResponse[i].message === '400081') {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                } else if (data.userResponse[i].message === '400084') {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                }
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {
@@ -1040,34 +1136,38 @@ angular.module('Core')
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
+
               $scope.results.resultList.push(userResult);
             }
 
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].message;
-                count_e++;
+            // Hybrid Service entitlements must be added after onboarding
+            assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
+              //concatenating the results in an array of strings for notify function
+              var successes = [];
+              var errors = [];
+              var count_s = 0;
+              var count_e = 0;
+              for (var idx in $scope.results.resultList) {
+                if ($scope.results.resultList[idx].alertType === 'success') {
+                  successes[count_s] = $scope.results.resultList[idx].message;
+                  count_s++;
+                } else {
+                  errors[count_e] = $scope.results.resultList[idx].message;
+                  count_e++;
+                }
               }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              $scope.btnOnboardLoading = false;
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-              deferred.resolve();
-            }
-            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-              $scope.$dismiss();
-            }
+              //Displaying notifications
+              if (successes.length + errors.length === usersList.length) {
+                $scope.btnOnboardLoading = false;
+                Notification.notify(successes, 'success');
+                Notification.notify(errors, 'error');
+                deferred.resolve();
+              }
 
+              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+                $scope.$dismiss();
+              }
+            });
           } else {
             Log.warn('Could not onboard the user', data);
             var error = null;
@@ -1137,6 +1237,61 @@ angular.module('Core')
         return deferred.promise;
       }
 
+      $scope.extensionEntitlements = [];
+      $scope.updateExtensionEntitlements = function (entitlements) {
+        $scope.extensionEntitlements = entitlements;
+      };
+
+      function assignHybridServices(entitlements, usersList) {
+        var deferred = $q.defer();
+
+        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
+          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
+        } else {
+          // No hybrid services to assign
+          deferred.resolve();
+        }
+
+        function callback(data) {
+          if (data.success) {
+            var successResponses = [];
+            var failureResponses = [];
+            var userResponses = data.userResponse;
+
+            _.each(userResponses, function (response) {
+              var userStatus = response.status;
+              var msg;
+
+              if (userStatus === 404) {
+                msg = $translate.instant('hercules.hybridServices.result404', {
+                  email: response.email
+                });
+                failureResponses.push(msg);
+              } else if (userStatus === 409) {
+                msg = $translate.instant('hercules.hybridServices.result409');
+                failureResponses.push(msg);
+              } else if (userStatus != 200) {
+                msg = $translate.instant('hercules.hybridServices.resultOther', {
+                  email: response.email,
+                  status: userStatus
+                });
+                failureResponses.push(msg);
+              }
+            });
+
+            Notification.notify(successResponses, 'success');
+            Notification.notify(failureResponses, 'error');
+          } else {
+            Log.error('Failed updating users with entitlements.');
+            Log.error(data);
+            Notification.notify('Failed to update entitlements.', 'error');
+          }
+          deferred.resolve();
+        }
+
+        return deferred.promise;
+      }
+
       function entitleUserCallback(data, status, method) {
         $scope.results = {
           resultList: []
@@ -1157,18 +1312,20 @@ angular.module('Core')
             var userStatus = data.userResponse[i].status;
 
             if (userStatus === 200) {
-              userResult.message = 'entitled successfully';
+              userResult.message = $translate.instant('onboardModal.result.200');
               userResult.alertType = 'success';
             } else if (userStatus === 404) {
-              userResult.message = 'does not exist';
+              userResult.message = $translate.instant('onboardModal.result.404');
               userResult.alertType = 'danger';
               isComplete = false;
             } else if (userStatus === 409) {
-              userResult.message = 'entitlement previously updated';
+              userResult.message = $translate.instant('onboardModal.result.409');
               userResult.alertType = 'danger';
               isComplete = false;
             } else {
-              userResult.message = 'not entitled, status: ' + userStatus;
+              userResult.message = $translate.instant('onboardModal.result.other', {
+                status: userStatus
+              });
               userResult.alertType = 'danger';
               isComplete = false;
             }
@@ -1457,7 +1614,8 @@ angular.module('Core')
       };
 
       $scope.saveConvertList = function () {
-        $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
+        $scope.selectedState = $scope.gridApi.saveState.save();
+        $scope.convertSelectedList = $scope.gridApi.selection.getSelectedRows();
         convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
         convertPending = false;
@@ -1567,8 +1725,8 @@ angular.module('Core')
             if (data.totalResults) {
               $scope.unlicensed = data.totalResults;
               $scope.unlicensedUsersList = data.resources;
-              $('.ngViewport').mouseover(function () {
-                $('.ngViewport').getNiceScroll().resize();
+              $('.ui-grid-viewport').mouseover(function () {
+                $('.ui-grid-viewport').getNiceScroll().resize();
               });
             }
           }
@@ -1576,44 +1734,45 @@ angular.module('Core')
       };
 
       $scope.convertDisabled = function () {
-        return ($scope.convertGridOptions.$gridScope.selectedItems.length === 0) ? true : false;
+        return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
       };
 
       getUnlicensedUsers();
 
-      var givenNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.givenName}}">{{row.entity.name.givenName}}</p></div>';
-      var familyNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.familyName}}">{{row.entity.name.familyName}}</p></div>';
-      var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
-
       $scope.convertGridOptions = {
         data: 'unlicensedUsersList',
         rowHeight: 45,
-        headerRowHeight: 45,
         enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 2,
-        showSelectionCheckbox: true,
-        sortInfo: {
-          fields: ['userName'],
-          directions: ['desc']
+        selectionRowHeaderWidth: 40,
+        enableRowHeaderSelection: true,
+        enableFullRowSelection: true,
+        useExternalSorting: false,
+        enableColumnMenus: false,
+        showFilter: false,
+        saveSelection: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          if ($scope.selectedState) {
+            $timeout(function () {
+              gridApi.saveState.restore($scope, $scope.selectedState);
+            }, 100);
+          }
         },
-        selectedItems: [],
         columnDefs: [{
-          field: 'name.givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader'),
-          cellTemplate: givenNameTemplate,
-          resizable: false,
-          sortable: true
-        }, {
-          field: 'name.familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader'),
-          cellTemplate: familyNameTemplate,
+
+          field: 'displayName',
+          displayName: $translate.instant('usersPage.displayNameHeader'),
           resizable: false,
           sortable: true
         }, {
           field: 'userName',
           displayName: $translate.instant('homePage.emailAddress'),
-          cellTemplate: emailTemplate,
           resizable: false,
+          sort: {
+            direction: 'desc',
+            priority: 0
+          },
+          sortCellFiltered: true
         }]
       };
 
@@ -1736,10 +1895,11 @@ angular.module('Core')
         }
 
         function callback(data, status) {
-          /*jshint validthis:true */
           var params = this;
           if (data.success) {
             if (angular.isArray(data.userResponse)) {
+              var addedUsersList = [];
+
               angular.forEach(data.userResponse, function (user, index) {
                 if (user.status === 200) {
                   if (user.message === 'User Patched') {
@@ -1747,10 +1907,23 @@ angular.module('Core')
                   } else {
                     $scope.model.numNewUsers++;
                   }
+                  // Build list of successful onboards and patches
+                  var addItem = {
+                    address: user.email
+                  };
+                  if (addItem.address.length > 0) {
+                    addedUsersList.push(addItem);
+                  }
                 } else {
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
+
+              // Hybrid Service entitlements must be added after onboarding
+              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
+
+              });
+
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));

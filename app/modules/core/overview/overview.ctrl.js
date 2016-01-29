@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -21,9 +21,7 @@
     ];
 
     function forwardEvent(handlerName) {
-
       var eventArgs = [].slice.call(arguments, 1);
-
       _.each(vm.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);
@@ -50,23 +48,53 @@
     ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     vm.isCalendarAcknowledged = true;
-    vm.isCallAcknowledged = true;
+    vm.isCallAwareAcknowledged = true;
+    vm.isCallConnectAcknowledged = true;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
-      if (response.status === 200 && response.data.items) {
-        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({
-          id: 'sqared-fusion-cal'
-        }).get('acknowledged', true).value();
-        vm.isCallAcknowledged = !!_.chain(response.data.items).find({
-          id: 'sqared-fusion-uc'
-        }).get('acknowledged', true).value();
+      if (response.status === 200) {
+        angular.forEach(response.data.items, function (items) {
+          if (items.id === Config.entitlements.fusion_cal) {
+            vm.isCalendarAcknowledged = items.acknowledged;
+          } else if (items.id === Config.entitlements.fusion_uc) {
+            vm.isCallAwareAcknowledged = items.acknowledged;
+          } else if (items.id === Config.entitlements.fusion_ec) {
+            vm.isCallConnectAcknowledged = items.acknowledged;
+          }
+        });
       } else {
         Log.error("Error in GET service acknowledged status");
       }
     });
 
+    vm.setHybridAcknowledged = function (serviceName) {
+      if (serviceName === 'calendar-service') {
+        vm.isCalendarAcknowledged = true;
+      } else if (serviceName === 'call-aware-service') {
+        vm.isCallAwareAcknowledged = true;
+      } else if (serviceName === 'call-connect-service') {
+        vm.isCallConnectAcknowledged = true;
+      }
+      Orgservice.setHybridServiceAcknowledged(serviceName);
+    };
+
+    vm.showServiceActivationPage = function (serviceName) {
+      if (serviceName === 'calendar-service') {
+        $state.go('calendar-service.list');
+      } else if (serviceName === 'call-aware-service') {
+        $state.go('call-service.list');
+      } else if (serviceName === 'call-connect-service') {
+        $state.go('call-service.list');
+      }
+      vm.setHybridAcknowledged(serviceName);
+    };
+
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
+    };
+
+    vm.openFirstTimeSetupWiz = function () {
+      $state.go('firsttimewizard');
     };
   }
 })();

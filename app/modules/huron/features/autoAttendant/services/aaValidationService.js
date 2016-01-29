@@ -9,7 +9,8 @@
   function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, Notification) {
 
     var service = {
-      isNameValidationSuccess: isNameValidationSuccess
+      isNameValidationSuccess: isNameValidationSuccess,
+      isPhoneMenuValidationSuccess: isPhoneMenuValidationSuccess
     };
 
     return service;
@@ -36,6 +37,47 @@
       }
 
       return true;
+    }
+
+    function checkAllKeys(optionMenu) {
+      var outErrors = [];
+      var entry = _.forEach(optionMenu.entries, function (entry) {
+        if (entry.key && 'goto' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
+            key: entry.key
+          });
+        }
+        if (entry.key && 'routeToHuntGroup' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
+            key: entry.key
+          });
+        }
+      });
+
+      return outErrors;
+
+    }
+
+    function isPhoneMenuValidationSuccess(uiCombinedMenu) {
+      var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
+        return this === entry.type;
+      }, 'MENU_OPTION');
+
+      var errors = [];
+
+      if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
+        errors = checkAllKeys(optionMenu);
+
+        _.forEach(errors, function (err) {
+          Notification.error(err.msg, {
+            key: err.key
+          });
+        });
+      }
+
+      return errors.length === 0;
     }
   }
 })();

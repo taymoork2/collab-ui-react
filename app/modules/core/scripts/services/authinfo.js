@@ -1,3 +1,4 @@
+/* global ll */
 'use strict';
 
 angular.module('Core')
@@ -150,6 +151,8 @@ angular.module('Core')
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
+          //org id of user
+          ll('setCustomDimension', 1, authData.orgId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -169,7 +172,7 @@ angular.module('Core')
           authData.setupDone = null;
           authData.email = null;
         },
-        setEmail: function (data) {
+        setEmails: function (data) {
           authData.email = data;
         },
         getEmail: function () {
@@ -358,6 +361,15 @@ angular.module('Core')
         isHelpDeskUser: function () {
           return this.hasRole(Config.roles.helpdesk);
         },
+        isHelpDeskUserOnly: function () {
+          var roles = this.getRoles();
+          if (roles && this.isHelpDeskUser()) {
+            return _.all(roles, function (role) {
+              return role == Config.roles.helpdesk || role == 'PARTNER_USER' || role == 'User';
+            });
+          }
+          return false;
+        },
         isServiceAllowed: function (service) {
           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
             return false;
@@ -378,7 +390,7 @@ angular.module('Core')
           return isEntitled(Config.entitlements.fusion_cal);
         },
         isDeviceMgmt: function () {
-          return isEntitled(Config.entitlements.device_mgmt);
+          return isEntitled(Config.entitlements.room_system);
         },
         isFusionEC: function () {
           return isEntitled(Config.entitlements.fusion_ec);

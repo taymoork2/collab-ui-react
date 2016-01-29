@@ -1,41 +1,31 @@
 <div class="cards-block">
-<cs-card-layout block-view="true">
-  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures"
-           class="small header-background" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
-    <article>
-      <header>
-        <div class="header-with-right-icon">
-          <p class="h5 ellipsis" title="{{huronFeature.cardName}}"> {{huronFeature.cardName}} </p>
-          <span class="pull-right" dropdown>
-            <button class="btn--none dropdown-toggle">
-              <i class="icon icon-three-dots"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-primary actions-services" role="menu">
-              <li>
-                <a ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))" href="#"><span translate="huronHuntGroup.editAction"></span></a>
-              </li>
-              <li>
-                <a ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))" href="#"><span translate="huronHuntGroup.deleteAction"></span></a>
-              </li>
-            </ul>
-          </span>
-        </div>
-      </header>
-      <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
-        <div class="card-section">
-          <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
-                ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
-          <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
-        </div>
-        <div class="card-footer">
+  <cs-card-layout block-view="true">
+    <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures" class="small header-bar" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
+      <article>
+        <header>
+          <div class="header-with-right-icon ">
+            <p class="h4 ellipsis" title="{{huronFeature.cardName}}"> {{huronFeature.cardName}} </p>
+            <div class="right card-icon-div ">
+              <span class="card-icon card-icon-color-{{huronFeature.filterValue}}">{{:: huronFeature.featureName | translate}}</span>
+            </div>
+          </div>
+        </header>
+        <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
+          <div class="card-section">
+            <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)" ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
+            <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
+          </div>
+        </section>
+        <footer class="card-footer">
           <div class="left"><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
                 {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
-          <div class="right card-icon-div ">
-            <span class="card-icon card-icon-color-{{huronFeature.filterValue}}"><strong>{{:: huronFeature.featureName | translate}}</strong></span>
+          <div class="right">
+            <a class="icon icon-information" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature))"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>
+            <a class="icon icon-edit" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.editAction"></span></a>
+            <a class="icon icon-trash" ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.deleteAction"></span></a>
           </div>
-        </div>
-      </section>
-    </article>
-  </cs-card>
-</cs-card-layout>
+        </footer>
+      </article>
+    </cs-card>
+  </cs-card-layout>
 </div>

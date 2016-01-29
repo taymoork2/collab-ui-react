@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, EmailNotificationConfigService, $log, EmailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, ServiceDescriptor, $log, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -72,32 +72,30 @@
         });
     };
 
-    EmailNotificationConfigService.read(function (err, config) {
-      vm.loading = false;
-      if (err) {
-        return XhrNotificationService.notify(err);
-      }
-      vm.config = config || {};
-      if (vm.config.wx2users.length > 0) {
-        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
+    vm.config = "";
+    ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
+      if (!error) {
+        vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
           return {
             text: user
           };
         });
       } else {
-        vm.wx2users = [];
+        vm.emailSubscribers = [];
       }
     });
 
+    vm.cluster = $stateParams.cluster;
+
     vm.writeConfig = function () {
-      vm.config.wx2users = _.map(vm.wx2users, function (data) {
+      var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
         return data.text;
       }).toString();
-      if (vm.config.wx2users && !EmailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
+      if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        EmailNotificationConfigService.write(vm.config, function (err) {
+        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);

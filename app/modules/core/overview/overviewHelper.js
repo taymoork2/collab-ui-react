@@ -11,23 +11,21 @@
         }
 
         function mapStatus(oldStatus, componentStatus) {
-          if (oldStatus == 'error') return 'error';
-          if (componentStatus == "partial_outage" || oldStatus == 'warning') return "warning";
+          if (oldStatus == 'danger') return 'danger';
+          if (componentStatus == "partial_outage" || componentStatus == 'degraded_performance' || oldStatus == 'warning') return "warning";
           if (componentStatus == "operational") return "success";
-          return "error";
+          return "danger";
         }
 
         var statusIds = {
-          AdministrationPortal: 'j76kyrpvqt0z',
-          ExternalNetworks: 'qlnmz8l9gpj1',
-          HelpAndFeedback: 'f9l0kdsmtxdh',
-          MediaCalling: 'bn5g1kfrkn9z',
-          MobileClients: '3jt3mznmj93f',
-          Rooms: 'g2pw271l0wdx',
-          WebAndDesktopClients: 'nnpr95kck99p',
-          CalendarService: 'kwyx8ylxsbvb',
-          CloudHybridServicesManagement: '46zcdvc5cxcd',
-          SparkDeveloperAPI: 'vn0b18kjj7nf'
+          //Spark
+          SparkMeeting: 'lkjcjdfgfnbk',
+          SparkMessage: '4z5sdybd2jxy',
+          SparkCall: 'gfg7cvjszyw0',
+          CCMAdministration: '7v9ds0q2zfsy',
+          SparkHybridServices: 'f8tnkxbzs12q',
+          DeveloperApi: 'vn0b18kjj7nf',
+          SparkAccount: 'kq245y682023'
         };
 
         return {

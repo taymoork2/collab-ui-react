@@ -1,10 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-
 describe('App flow', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -18,11 +13,8 @@ describe('App flow', function () {
     it('clicking on system health panel should open to status page in a new tab', function () {
       navigation.clickHome();
 
-      utils.expectAttribute(landing.monitoringRows, 'href', 'http://status.ciscospark.com/');
+      utils.expectIsDisplayed(landing.convertButton);
 
-      utils.expectIsDisplayed(landing.reloadedTime);
-      utils.expectIsDisplayed(landing.refreshData);
-      utils.expectIsDisplayed(landing.callsChart);
     });
 
     it('clicking on orgs tab should change the view', function () {

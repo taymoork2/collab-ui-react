@@ -1,32 +1,23 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
-/* global deleteTrialUtils */
-/* global deleteUtils */
+/* global LONG_TIMEOUT, deleteTrialUtils */
 
 //TODO reenable after pstn change
-xdescribe('Spark UC Partner flow', function () {
+describe('Spark UC Partner flow', function () {
   var orgId;
   var accessToken;
 
-  beforeAll(function (done) {
-    login.login('partner-squc-admin', '#/partner/customers');
-    utils.retrieveToken().then(function (token) {
-      accessToken = token;
-      done();
-    });
-  }, 120000);
-
   describe('Add Partner Trial', function () {
 
-    it('should add a new trial', function () {
+    it('should login', function (done) {
+      login.login('huron-e2e-partner', '#/partner/customers');
+      utils.retrieveToken().then(function (token) {
+        accessToken = token;
+        done();
+      });
+    }, 120000);
+
+    it('should add a new trial without advanced spark call', function () {
       utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
@@ -34,15 +25,20 @@ xdescribe('Spark UC Partner flow', function () {
       partner.assertDisabled('startTrialButton');
 
       utils.waitForModal().then(function () {
-        utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+        utils.expectIsDisplayed(partner.messageTrialCheckbox);
         utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
 
         utils.sendKeys(partner.customerNameInput, partner.newSqUCTrial.customerName);
         utils.sendKeys(partner.customerEmailInput, partner.newSqUCTrial.customerEmail);
-        utils.click(partner.squaredTrialCheckbox);
+
+        // uncheck advanced spark call
+        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+        utils.click(partner.squaredUCTrialCheckbox);
+        utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
 
         utils.click(partner.startTrialButton);
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'A trial was successfully started');
+        utils.clickEscape();
       });
     }, LONG_TIMEOUT);
 
@@ -56,7 +52,7 @@ xdescribe('Spark UC Partner flow', function () {
       });
     });
 
-    it('should edit trial with uc entitlements and add one did', function () {
+    it('should edit trial and enable advanced spark call', function () {
       utils.click(partner.newSqUCTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
@@ -66,21 +62,43 @@ xdescribe('Spark UC Partner flow', function () {
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.expectCheckbox(partner.messageTrialCheckbox, true);
+
+        // enabled advanced spark call
+        utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
         utils.click(partner.squaredUCTrialCheckbox);
+        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
 
         utils.click(partner.saveUpdateButton);
-
-        utils.sendKeys(partner.customerDidInput, partner.dids.one);
-        utils.sendKeys(partner.customerDidInput, protractor.Key.ENTER);
-
-        utils.click(partner.startTrialWithSqUCButton);
-
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
       });
     }, LONG_TIMEOUT);
 
-    it('should add two new did to the trial', function () {
+    it('should edit trial and verify services are checked and disabled', function () {
+      utils.click(partner.trialFilter);
+      utils.click(partner.newSqUCTrialRow);
+
+      utils.expectIsDisplayed(partner.previewPanel);
+      utils.click(partner.termsActionButton);
+      utils.click(partner.editTermsButton);
+
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(partner.editTrialForm);
+
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.expectCheckbox(partner.messageTrialCheckbox, true);
+
+        // verify checkbox is checked and disabled
+        utils.expectClass(partner.squaredUCTrialCheckbox, 'disabled');
+        utils.expectCheckbox(partner.squaredUCTrialCheckbox, true);
+
+        utils.click(partner.saveUpdateButton);
+        notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
+      });
+    }, LONG_TIMEOUT);
+
+    xit('should add two new did to the trial', function () {
       utils.click(partner.trialFilter);
       utils.click(partner.newSqUCTrialRow);
 
@@ -106,7 +124,7 @@ xdescribe('Spark UC Partner flow', function () {
       utils.expectTextToBeSet(partner.communicationPhoneNumbersCount, '3');
     });
 
-    it('should delete second did from the trial', function () {
+    xit('should delete second did from the trial', function () {
       utils.click(partner.communicationPhoneNumbers);
       utils.expectTextToBeSet(partner.phoneNumbersCount, '3 Numbers');
       utils.click(partner.phoneNumbersActionButton);
@@ -131,7 +149,7 @@ xdescribe('Spark UC Partner flow', function () {
       utils.expectTextToBeSet(partner.communicationPhoneNumbersCount, '2');
     });
 
-    it('should delete third did from manage numbers list', function () {
+    xit('should delete third did from manage numbers list', function () {
       utils.click(partner.communicationPhoneNumbers);
       utils.expectIsDisplayed(partner.phoneNumbersSection);
       utils.expectTextToBeSet(partner.phoneNumbersCount, '2 Numbers');
@@ -143,7 +161,7 @@ xdescribe('Spark UC Partner flow', function () {
     });
   });
 
-  it('should delete an exisiting org thus deleting trial', function () {
+  afterAll(function () {
     deleteTrialUtils.deleteOrg(orgId, accessToken);
     deleteUtils.deleteSquaredUCCustomer(orgId, accessToken);
   });

@@ -1,12 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global by */
-/* global element */
-/* global wizard */
-/* global users */
 /* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {
@@ -46,6 +39,7 @@ describe('First Time Wizard', function () {
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Import IdP Metadata');
     utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
+    utils.click(wizard.radiobuttons.first());
     utils.click(wizard.finishBtn);
     utils.expectIsDisplayed(wizard.mainviewTitle);
   });
@@ -53,6 +47,7 @@ describe('First Time Wizard', function () {
   it('should complete simple invite users flow', function () {
     wizard.clickAddUsers();
     utils.click(wizard.radiobuttons.first());
+    notifications.clearNotifications();
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
     utils.click(wizard.finishBtn);

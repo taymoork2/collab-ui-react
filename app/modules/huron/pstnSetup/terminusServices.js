@@ -15,6 +15,13 @@
     .factory('TerminusCustomerCarrierService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
     })
+    .factory('TerminusCustomerSiteService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
+        update: {
+          method: 'PUT'
+        }
+      });
+    })
     .factory('TerminusBlockOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/block', {}, {});
     })
@@ -42,6 +49,12 @@
     .factory('TerminusCarrierInventoryRelease', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
     })
+    .factory('TerminusCustomerCarrierInventoryReserve', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/reserve');
+    })
+    .factory('TerminusCustomerCarrierInventoryRelease', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/customers/:customerId/carriers/:carrierId/did/release');
+    })
     .factory('TerminusStateService', function ($resource) {
       return $resource('modules/huron/pstnSetup/states.json', {}, {
         query: {
@@ -50,6 +63,9 @@
           cache: true
         }
       });
+    })
+    .factory('TerminusLookupE911Service', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
     });
 
 })();

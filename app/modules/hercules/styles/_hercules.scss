@@ -2,11 +2,10 @@
  *      Hercules Style imports
  ************************************/
 @import '../popover/popover';
-@import '../dashboard/dashboard';
-@import '../dashboard-header/dashboard-header';
 @import '../activation-status/activation-status';
-@import '../dashboard-info-panel/dashboard-info-panel';
-@import '../userPreview/hybrid-services';
+@import '../hybridServices/hybrid-services';
 @import '../expressway-service/expressway-service';
 @import '../notifications/hercules-notifications';
+@import '../schedule-upgrade-configuration/schedule-upgrade-configuration';
+@import '../redirect-target/redirect-target';
 @import 'shared';

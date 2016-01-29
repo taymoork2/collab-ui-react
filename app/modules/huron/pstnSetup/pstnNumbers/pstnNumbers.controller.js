@@ -31,8 +31,8 @@
 
     vm.removeOrder = removeOrder;
     vm.goToReview = goToReview;
-    vm.hasCarriers = PstnSetup.isCarrierExists;
-    vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
+    vm.hasBackButton = hasBackButton;
+    vm.goBack = goBack;
 
     vm.isConsecutiveArray = isConsecutiveArray;
     vm.formatTelephoneNumber = formatTelephoneNumber;
@@ -163,22 +163,20 @@
         id: 'consecutiveChk',
         label: $translate.instant('pstnSetup.consecutive')
       },
-      expressionProperties: {
-        'hide': function () {
-          var shouldHide = angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2;
-          if (shouldHide) {
-            // uncheck the consecutive checkbox
-            vm.model.consecutive = false;
-          }
-          return shouldHide;
+      hideExpression: function () {
+        var shouldHide = angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2;
+        if (shouldHide) {
+          // uncheck the consecutive checkbox
+          vm.model.consecutive = false;
         }
+        return shouldHide;
       }
     }];
 
     ////////////////////////
 
     function removeOrder(order) {
-      PstnSetupService.releaseCarrierInventory(PstnSetup.getProviderId(), order)
+      PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order, PstnSetup.isCustomerExists())
         .then(function () {
           _.pull(vm.orderCart, order);
         });
@@ -205,7 +203,6 @@
     }
 
     function searchCarrierInventory() {
-      /*jshint validthis: true */
       var field = this;
       var params = {
         npa: vm.model.areaCode.code,
@@ -282,7 +279,7 @@
           var searchResultsIndex = vm.paginateOptions.currentPage * vm.paginateOptions.pageSize + key;
           if (searchResultsIndex < vm.searchResults.length) {
             var numbers = vm.searchResults[searchResultsIndex];
-            var promise = PstnSetupService.reserveCarrierInventory(PstnSetup.getProviderId(), numbers)
+            var promise = PstnSetupService.reserveCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers, PstnSetup.isCustomerExists())
               .then(function () {
                 vm.orderCart.push(numbers);
                 // return the index to be used in the promise callback
@@ -308,13 +305,16 @@
           }
         });
       }).finally(function () {
-        // workaround for cs-btn so button is set by ng-disabled
-        delete vm.addLoading;
+        vm.addLoading = false;
         // check if we need to decrement current page
         if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
           vm.paginateOptions.currentPage--;
         }
       });
+    }
+
+    function hasBackButton() {
+      return (!PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller()) || !PstnSetup.isCustomerExists() || !PstnSetup.isSiteExists();
     }
 
     function getOrderNumbers() {
@@ -323,6 +323,16 @@
 
     function getOrderNumbersTotal() {
       return _.size(_.flatten(getOrderNumbers()));
+    }
+
+    function goBack() {
+      if (!PstnSetup.isSiteExists()) {
+        $state.go('pstnSetup.serviceAddress');
+      } else if (!PstnSetup.isCustomerExists()) {
+        $state.go('pstnSetup.contractInfo');
+      } else {
+        $state.go('pstnSetup');
+      }
     }
 
     function goToReview() {

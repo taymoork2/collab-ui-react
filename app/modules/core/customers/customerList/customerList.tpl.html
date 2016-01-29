@@ -2,41 +2,29 @@
   <cs-page-header title="{{::'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <div dropdown class="grid-filter" ng-if="!isCustomerPartner" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+      <div cs-dropdown class="grid-filter" ng-if="!isCustomerPartner">
+        <div cs-dropdown-toggle class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'">
           <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>
           <span class="name" ng-if="activeFilter === 'trials'" translate="customerPage.trial"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
-        <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-          <li class="filter" ng-class="{'active' : activeFilter === 'all'}">
-            <a ng-href="" ng-click="setFilter('all')">
-              <span class="name" translate="customerPage.all"></span>
-              <span class="count">{{totalOrgs}}</span>
-            </a>
-          </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'trials'}">
-            <a ng-href="" ng-click="setFilter('trials')">
-              <span class="name" translate="customerPage.trial"></span>
-              <span class="count">{{totalTrials}}</span>
-            </a>
-          </li>
-        </ul>
+        <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" cs-dropdown-menu ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'"></div>
+        <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" ng-if="breakpoint === 'screen-lg'"></div>
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <div ng-controller="ExportCSVCtrl">
-        <button id="addTrial" class="btn btn--people add-button" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" translate="customerPage.addTrial"></button>
+      <div class="center" ng-controller="ExportCSVCtrl">
         <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}">
           <span id="export-icon" class="icon-export"><i class="icon icon-content-share icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
         </a>
         <a id="export-in-progress" class="export-users" ng-if="exporting">
           <span id="exporting-icon" class="icon-export"><i class="icon icon-spinner icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
         </a>
+        <button id="addTrial" class="btn btn--people add-button" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" translate="customerPage.addTrial"></button>
       </div>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-    <div id="customerListPanel" gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
+    <div id="customerListPanel" gridscrollbar class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
     <div class="grid-refresh" ng-if="showManagedOrgsRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>

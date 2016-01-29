@@ -81,9 +81,6 @@
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    // initialize tab for ng-controller
-    init();
-
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
       if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
@@ -248,8 +245,14 @@
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
           updateStep();
-        } else if (getTab().name === 'communications' && getStep().name === 'claimSipUrl') {
+        } else if ((getTab().name === 'communications' || getTab().name === 'serviceSetup') && getStep().name === 'claimSipUrl') {
           $rootScope.$broadcast('wizard-claim-sip-uri-event');
+          updateStep();
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
+          updateStep();
+          vm.isNextDisabled = true;
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
+          $rootScope.$broadcast('wizard-set-sso-event');
           updateStep();
         } else {
           updateStep();
@@ -258,9 +261,6 @@
         vm.wizardNextLoad = false;
       });
 
-      //if(getTab()==='enterpriseSetting'){
-      //call service setup.
-      //}
     }
 
     function updateStep() {
@@ -324,9 +324,9 @@
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
+      } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
-      } else if (isLastStep() && isFirstStep()) {
+      } else if (isLastStep()) {
         vm.nextText = $translate.instant('common.save');
       } else {
         vm.nextText = $translate.instant('common.next');
@@ -359,7 +359,7 @@
       if (action == 'next') {
         vm.nextText = $translate.instant('common.next');
       } else if (action == 'finish') {
-        vm.nextText = $translate.instant('common.finish');
+        vm.nextText = $translate.instant('common.save');
       }
     });
 

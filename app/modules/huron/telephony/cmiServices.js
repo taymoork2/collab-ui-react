@@ -97,12 +97,8 @@
     });
   })
 
-  /*
-   * TODO: UserSearchServiceV2 is a temp setup until UserServiceCommonV2's GET/search functionality is implemented.
-   */
   .factory('UserSearchServiceV2', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getMockHgUrl() + '/customers/:customerId/users/:userId', {
-      secret: 'sunlight',
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       name: '@name',
       userId: '@userId',
@@ -110,10 +106,7 @@
   })
 
   .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getMockHgUrl();
-    //var baseUrl = HuronConfig.getCmiV2Url();
-    return $resource(baseUrl + '/customers/:customerId/numbers', {
-      secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers', {
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned'
@@ -121,13 +114,30 @@
   })
 
   .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
-      //secret: 'sunlight', // TODO: Remove this parameter when Mock is no more needed.
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
     }, {
+      update: {
+        method: 'PUT'
+      },
+      delete: {
+        method: 'DELETE'
+      }
+    });
+  })
+
+  .factory('AssignAutoAttendantService', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
+      customerId: '@customerId',
+      cesId: '@cesId'
+    }, {
+      query: {
+        method: 'GET',
+        isArray: true
+      },
       update: {
         method: 'PUT'
       },
@@ -245,6 +255,10 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
       siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
@@ -336,21 +350,13 @@
     });
   })
 
-  .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
-      clusterId: '@clusterId',
-    }, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true
-      }
-    });
-  })
-
   .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
@@ -365,6 +371,27 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
       clusterId: '@clusterId',
       dialPlanId: '@dialPlanId'
+    });
+  })
+
+  .factory('UserCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      userId: '@userId',
+      restrictionId: '@restrictionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
+  .factory('CustomerCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      restrictionId: '@restrictionId'
     });
   });
 

@@ -7,9 +7,14 @@
 
   /* @ngInject */
 
-  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer) {
+  function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService, UserServiceCommon, UserDirectoryNumberService, AlternateNumberService, InternalNumberPoolService, ExternalNumberPoolService, ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing, FeatureToggleService) {
 
     var broadcastEvent = "telephonyInfoUpdated";
+
+    var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
+    var cbUseGlobal = $translate.instant('internationalDialingPanel.useGlobal');
+    var cbAlwaysAllow = $translate.instant('internationalDialingPanel.alwaysAllow');
+    var cbNeverAllow = $translate.instant('internationalDialingPanel.neverAllow');
 
     var telephonyInfo = {
       services: [],
@@ -36,7 +41,8 @@
       steeringDigit: '',
       siteSteeringDigit: '',
       siteCode: '',
-      hasCustomerVoicemail: undefined
+      hasCustomerVoicemail: undefined,
+      internationalDialingEnabled: cbUseGlobal
     };
 
     var internalNumberPool = [];
@@ -61,7 +67,8 @@
       loadExtPoolWithMapping: loadExtPoolWithMapping,
       getPrimarySiteInfo: getPrimarySiteInfo,
       checkCustomerVoicemail: checkCustomerVoicemail,
-      getTelephonyInfoObject: getTelephonyInfoObject
+      getTelephonyInfoObject: getTelephonyInfoObject,
+      getInternationalDialing: getInternationalDialing
     };
 
     return telephonyInfoService;
@@ -111,6 +118,7 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       };
+      telephonyInfo.internationalDialingEnabled = cbUseGlobal;
     }
 
     /**
@@ -398,5 +406,48 @@
       });
     }
 
+    function getInternationalDialing(userUuid) {
+      return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestrictions) {
+        var overRide = null;
+        var custRestriction = null;
+        var cosRestriction = null;
+
+        for (var i = 0; i < cosRestrictions.length; i++) {
+          cosRestriction = cosRestrictions[i];
+          if (cosRestriction.user.length > 0) {
+            for (var j = 0; j < cosRestriction.user.length; j++) {
+              if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
+                overRide = true;
+                break;
+              }
+            }
+          }
+          if (cosRestriction.customer.length > 0) {
+            for (var k = 0; k < cosRestriction.customer.length; k++) {
+              if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
+                custRestriction = true;
+                break;
+              }
+            }
+          }
+        }
+        if (overRide) {
+          if (cosRestriction.user[0].blocked) {
+            telephonyInfo.internationalDialingEnabled = cbNeverAllow;
+          } else {
+            telephonyInfo.internationalDialingEnabled = cbAlwaysAllow;
+          }
+        }
+        var globalText;
+        if (custRestriction) {
+          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.off') + ")";
+        } else {
+          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.on') + ")";
+        }
+        if (!overRide) {
+          telephonyInfo.internationalDialingEnabled = globalText;
+        }
+      });
+    }
   }
 })();

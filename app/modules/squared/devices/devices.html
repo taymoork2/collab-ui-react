@@ -11,7 +11,7 @@
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
- <div class="content-container">
+ <div class="content-container" cs-scroll>
   <cs-accordion
       id="licenseWarning"
       ng-show="sc.showLicenseWarning">
@@ -44,12 +44,11 @@
   <div ng-if="sc.shouldShowList()">
     <div ng-hide="sc.updateListAndFilter().length" class="message-container">
       <div class="empty-devices-content">
-        <img ng-src="images/devices/cisco_sx10.png" />
         <h2 class="empty-device-message" translate="spacesPage.noDevices"></h2>
       </div>
     </div>
     <div id="roomsListPanel" class="row">
-      <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
+      <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
     </div>
   </div>
   <squared-add-device></squared-add-device>

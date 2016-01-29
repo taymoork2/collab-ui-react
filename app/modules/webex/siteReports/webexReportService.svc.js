@@ -384,13 +384,14 @@ angular.module('WebExReports').service('WebexReportService', [
           var funcName = "getWebexLicenseInfoSuccess()";
           var logMsg = "";
 
-          reportsObject.infoCardObj.licensesTotal.count = licenseInfo.volume;
-          reportsObject.infoCardObj.licensesUsage.count = licenseInfo.usage;
-          reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
+          WebExUtilsFact.setInfoCardLicenseInfo(
+            licenseInfo,
+            reportsObject.infoCardObj
+          );
 
           logMsg = funcName + ": " + "\n" +
             "reportInfoCardObj=" + JSON.stringify(reportsObject.siteInfoCardObj);
-          $log.log(logMsg);
+          // $log.log(logMsg);
         }, // getWebexLicenseInfoSuccess()
 
         function getWebexLicenseInfoError(result) {
@@ -481,10 +482,7 @@ angular.module('WebExReports').service('WebexReportService', [
     }; //end initReportsObject
 
     this.getNaviationInfo = function () {
-      var reportPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
-        false,
-        webExXmlApiInfoObj
-      );
+      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(webExXmlApiInfoObj);
 
       return $q.all({
         // siteInfoXml: siteInfoXml,

@@ -37,7 +37,8 @@
       setServiceSortOrder: setServiceSortOrder,
       setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
-      exportCSV: exportCSV
+      exportCSV: exportCSV,
+      parseLicensesAndOffers: parseLicensesAndOffers
     };
 
     return factory;
@@ -86,19 +87,10 @@
       return angular.isUndefined(license.isTrial);
     }
 
-    function getLicense(licenses, licenseTypeField) {
-      var offerNames;
-      if (licenseTypeField === 'messaging') {
-        offerNames = ['MS'];
-      } else if (licenseTypeField === 'conferencing') {
-        offerNames = ['MC', 'CF', 'EE', 'TC', 'SC'];
-      } else if (licenseTypeField === 'communications') {
-        offerNames = ['CO'];
-      }
-
+    function getLicense(licenses, offerCode) {
       if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
-        return _.find(licenses, function (license) {
-          return offerNames.indexOf(license.offerName) !== -1;
+        return _.find(licenses, {
+          offerName: offerCode
         }) || {};
       }
       return {};
@@ -170,50 +162,38 @@
           daysLeft: 0,
           usage: 0,
           licenses: 0,
+          deviceLicenses: 0,
           licenseList: [],
           messaging: null,
           conferencing: null,
           communications: null,
+          roomSystems: null,
+          sparkConferencing: null,
+          webexEEConferencing: null,
+          webexCMR: null,
           daysUsed: 0,
           percentUsed: 0,
           duration: data.trialPeriod,
-          offer: '',
+          offer: {},
+          offers: data.offers,
           status: data.state,
           state: data.state,
           isAllowedToManage: true,
           isSquaredUcOffer: false
         };
 
+        var licensesAndOffersData = parseLicensesAndOffers(data);
+        angular.extend(dataObj, licensesAndOffersData);
+
         dataObj.isAllowedToManage = isTrialData || data.isAllowedToManage;
-
-        if (data.offers) {
-          dataObj.offers = data.offers;
-          var offerNames = [];
-          for (var cnt in data.offers) {
-            var offer = data.offers[cnt];
-            if (!offer) {
-              continue;
-            }
-            switch (offer.id) {
-            case Config.trials.collab:
-              offerNames.push($translate.instant('trials.collab'));
-              break;
-            case Config.trials.squaredUC:
-              dataObj.isSquaredUcOffer = true;
-              offerNames.push($translate.instant('trials.squaredUC'));
-              break;
-            }
-            dataObj.usage = offer.usageCount;
-            dataObj.licenses = offer.licenseCount;
-          }
-          dataObj.offer = offerNames.join(', ');
-        }
-
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);
         dataObj.licenseList = data.licenses;
-        dataObj.messaging = getLicense(data.licenses, 'messaging');
-        dataObj.conferencing = getLicense(data.licenses, 'conferencing');
-        dataObj.communications = getLicense(data.licenses, 'communications');
+        dataObj.messaging = getLicense(data.licenses, Config.offerCodes.MS);
+        dataObj.communications = getLicense(data.licenses, Config.offerCodes.CO);
+        dataObj.roomSystems = getLicense(data.licenses, Config.offerCodes.SD);
+        dataObj.sparkConferencing = getLicense(data.licenses, Config.offerCodes.CF);
+        dataObj.webexEEConferencing = getLicense(data.licenses, Config.offerCodes.EE);
+        dataObj.webexCMR = getLicense(data.licenses, Config.offerCodes.CMR);
 
         var now = moment().format('MMM D, YYYY');
         var then = edate;
@@ -238,11 +218,24 @@
           customerName: dataObj.customerName
         };
         angular.extend(dataObj.messaging, tmpServiceObj);
-        angular.extend(dataObj.conferencing, tmpServiceObj);
         angular.extend(dataObj.communications, tmpServiceObj);
+        angular.extend(dataObj.roomSystems, tmpServiceObj);
+        angular.extend(dataObj.sparkConferencing, tmpServiceObj);
+        angular.extend(dataObj.webexEEConferencing, tmpServiceObj);
+        angular.extend(dataObj.webexCMR, tmpServiceObj);
+
+        // 12/17/2015 - Timothy Trinh
+        // setting conferencing to sparkConferencing for now to preserve how
+        // the customer list page currently works.
+        dataObj.conferencing = dataObj.sparkConferencing;
+
         setServiceSortOrder(dataObj.messaging);
-        setServiceSortOrder(dataObj.conferencing);
         setServiceSortOrder(dataObj.communications);
+        setServiceSortOrder(dataObj.roomSystems);
+        setServiceSortOrder(dataObj.sparkConferencing);
+        setServiceSortOrder(dataObj.webexEEConferencing);
+        setServiceSortOrder(dataObj.conferencing);
+        setServiceSortOrder(dataObj.webexCMR);
 
         dataObj.notes = {};
         setNotesSortOrder(dataObj);
@@ -276,12 +269,15 @@
             Log.debug('No lines found.');
           } else {
             // header line for CSV file
+            // 12/17/2015 - Timothy Trinh
+            // Did not bother to add webex entitlements to this section because it may change.
             var header = {};
             header.customerName = $translate.instant('customerPage.csvHeaderCustomerName');
             header.adminEmail = $translate.instant('customerPage.csvHeaderAdminEmail');
             header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
             header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
             header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
+            header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
             exportedCustomers.push(header);
 
             // data to export for CSV file customer.conferencing.features[j]
@@ -293,6 +289,7 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
+              exportedCustomer.roomSystemsEntitlements = '';
 
               var messagingLicense = _.find(customers[i].licenses, {
                 licenseType: "MESSAGING"
@@ -303,6 +300,9 @@
               var communicationsLicense = _.find(customers[i].licenses, {
                 licenseType: "COMMUNICATIONS"
               });
+              var roomSystemsLicense = _.find(customers[i].licenses, {
+                licenseType: "SHARED_DEVICES"
+              });
               if (messagingLicense && angular.isArray(messagingLicense.features)) {
                 exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
               }
@@ -311,6 +311,9 @@
               }
               if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
                 exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
+              }
+              if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+                exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);
             }
@@ -323,6 +326,60 @@
       });
 
       return deferred.promise;
+    }
+
+    function parseLicensesAndOffers(customer) {
+      var partial = {
+        licenses: 0,
+        deviceLicenses: 0,
+        isSquaredUcOffer: false,
+        usage: 0,
+        offer: {}
+      };
+
+      var deviceServiceText = [];
+      var userServices = [];
+
+      for (var offer in _.get(customer, 'offers', [])) {
+        var offerInfo = customer.offers[offer];
+        if (!offerInfo) {
+          continue;
+        }
+
+        partial.usage = offerInfo.usageCount;
+        if (offerInfo.id === Config.offerTypes.roomSystems) {
+          partial.deviceLicenses = offerInfo.licenseCount;
+        } else {
+          partial.licenses = offerInfo.licenseCount;
+        }
+
+        switch (offerInfo.id) {
+        case Config.offerTypes.spark1:
+        case Config.offerTypes.message:
+          userServices.push($translate.instant('trials.message'));
+          break;
+        case Config.offerTypes.collab:
+          userServices.push($translate.instant('trials.collab'));
+          break;
+        case Config.offerTypes.call:
+        case Config.offerTypes.squaredUC:
+          partial.isSquaredUcOffer = true;
+          userServices.push($translate.instant('trials.squaredUC'));
+          break;
+        case Config.offerTypes.webex:
+        case Config.offerTypes.meetings:
+          userServices.push($translate.instant('customerPage.EE'));
+          break;
+        case Config.offerTypes.roomSystems:
+          deviceServiceText.push($translate.instant('trials.roomSystem'));
+          break;
+        }
+      }
+
+      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
+      partial.offer.userServices = _.uniq(userServices).join(', ');
+
+      return partial;
     }
   }
 })();

@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Partner Service', function () {
+describe('Partner Service -', function () {
   beforeEach(module('Core'));
 
-  var $httpBackend, $rootScope, PartnerService, Authinfo, Config;
+  var $httpBackend, $translate, $rootScope, PartnerService, Authinfo, Config;
 
   var testData;
 
@@ -19,8 +19,9 @@ describe('Partner Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
     $httpBackend = _$httpBackend_;
+    $translate = _$translate_;
     PartnerService = _PartnerService_;
     Config = _Config_;
     Authinfo = _Authinfo_;
@@ -90,9 +91,9 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return the corresponding license object or an empty object from calling getLicense', function () {
-    expect(PartnerService.getLicense(testData.licenses, "messaging")).toEqual(testData.licenses[0]);
-    expect(PartnerService.getLicense(testData.licenses, "conferencing")).toEqual(testData.licenses[1]);
-    expect(PartnerService.getLicense(testData.licenses, "communications")).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
@@ -191,6 +192,17 @@ describe('Partner Service', function () {
     expect(activeList[1].messaging.features.length).toBe(4);
   });
 
+  it('should verify that every org has a list of offers', function () {
+    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
+    var offers = _.pluck(returnList, 'offers');
+
+    expect(offers.length).toBe(returnList.length);
+
+    for (var i = 0; i < returnList.length; i++) {
+      expect(returnList[i].licenses).not.toBe(0);
+    }
+  });
+
   it('should successfully return an array of customers from calling exportCSV', function () {
     $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
 
@@ -200,5 +212,194 @@ describe('Partner Service', function () {
     });
 
     $httpBackend.flush();
+  });
+
+  describe('helper functions -', function () {
+    describe('parseLicensesAndOffers -', function () {
+      it('should never return null if input is not an object that has a truthy "offers" property', function () {
+        expect(PartnerService.parseLicensesAndOffers(null)).not.toBeNull();
+        expect(PartnerService.parseLicensesAndOffers({})).not.toBeNull();
+        expect(PartnerService.parseLicensesAndOffers({
+          offers: null
+        })).not.toBeNull();
+        expect(PartnerService.parseLicensesAndOffers({
+          offers: []
+        })).not.toBeNull();
+      });
+
+      it('should return a default object if "offers" property is an empty list', function () {
+        var data = PartnerService.parseLicensesAndOffers();
+        expect(data.licenses).toBe(0);
+        expect(data.deviceLicenses).toBe(0);
+        expect(data.isSquaredUcOffer).toBe(false);
+        expect(data.usage).toBe(0);
+        expect(data.offer).toEqual({
+          userServices: '',
+          deviceBasedServices: ''
+        });
+      });
+
+      it('should return an object with "usage" copied from the input\'s "offers" last element\'s "usageCount" property', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            usageCount: 1
+          }]
+        });
+        expect(data.usage).toBe(1);
+      });
+
+      it('should return an object with "license" copied from the input\'s "offers" last element\'s "licenseCount" property', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            licenseCount: 10
+          }]
+        });
+        expect(data.licenses).toBe(10);
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            licenseCount: 10
+          }, {
+            licenseCount: 30
+          }, {
+            licenseCount: 20
+          }]
+        });
+        expect(data.licenses).toBe(20);
+      });
+
+      it('should return an object with "deviceLicenses" copied from the input\'s "offers" last element\'s "licenseCount" property, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.roomSystems,
+            licenseCount: 10,
+          }]
+        });
+        expect(data.deviceLicenses).toBe(10);
+      });
+
+      it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.message" l10n key, if the offers "id" property matches `Config.offerTypes.spark1` or `Config.offerTypes.message`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.spark1
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.message
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.spark1
+          }, {
+            id: Config.offerTypes.message
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
+      });
+
+      it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.collab" l10n key, if the offers "id" property matches `Config.offerTypes.collab`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.collab
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.collab'));
+      });
+
+      it('should return an object with its "offer.userServices" property as a populated list with the translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.call
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.squaredUC
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.call
+          }, {
+            id: Config.offerTypes.squaredUC
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+      });
+
+      it('should return an object with "isSquaredUcOffer" property set to `true`, only if any of the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.call
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.squaredUC
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+              id: Config.offerTypes.spark1
+            }, {
+              id: Config.offerTypes.squaredUC
+            }, // presence anywhere in this list will set the property to true
+            {
+              id: Config.offerTypes.collab
+            },
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+      });
+
+      it('should return an object with its "offer.userServices" property as a populated list with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.webex
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.meetings
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+
+        data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.webex
+          }, {
+            id: Config.offerTypes.meetings
+          }]
+        });
+        expect(data.offer.userServices).toContain($translate.instant('customerPage.EE'));
+      });
+
+      it('should return an object with its "offer.deviceBasedServices" property as a populated list with the translated "trials.roomSystem" l10n key, if the offers "id" property matches `Config.offerTypes.roomSystems`', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          offers: [{
+            id: Config.offerTypes.roomSystems
+          }]
+        });
+        expect(data.offer.deviceBasedServices).toContain($translate.instant('trials.roomSystem'));
+      });
+    });
   });
 });

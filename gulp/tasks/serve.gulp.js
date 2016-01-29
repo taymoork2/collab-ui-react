@@ -11,6 +11,7 @@ var browserSync = require('browser-sync');
 var messageLogger = require('../utils/messageLogger.gulp')();
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
+var compression = require('compression');
 var testFiles;
 var changedFiles;
 
@@ -62,7 +63,8 @@ gulp.task('browser-sync', function () {
     host: '127.0.0.1',
     port: 8000,
     server: {
-      baseDir: baseDir
+      baseDir: baseDir,
+      middleware: [compression()]
     },
     ghostMode: args.browserall ? ghostMode : false,
     injectChanges: true,

@@ -7,8 +7,6 @@ angular.module('Core')
       $scope.label = $filter('translate')('leaderBoard.licenseUsage');
       $scope.state = 'license'; // Possible values are license, warning or error
 
-      $scope.buckets = [];
-
       $scope.bucketKeys = [
         'messaging',
         'cf',
@@ -19,13 +17,9 @@ angular.module('Core')
         'sites'
       ];
 
-      $scope.isStormBranding = false;
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        $scope.isStormBranding = result;
-      });
-
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
+          $scope.buckets = [];
           for (var index in subscriptions) {
             var licenses = subscriptions[index]['licenses'];
             var subscription = {};

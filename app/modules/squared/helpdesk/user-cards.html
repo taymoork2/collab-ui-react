@@ -7,7 +7,7 @@
         </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.messageCard.entitlements">
           <span translate="{{entitlement}}"></span>
@@ -24,7 +24,7 @@
         </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.meetingCard.entitlements">
           <span translate="{{entitlement}}"></span>
@@ -50,10 +50,18 @@
         </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.callCard.entitlements">
           <span translate="{{entitlement}}"></span>
+        </div>
+        
+        <div ng-if="helpdeskUserCtrl.callCard.huronNumbers">
+          <h5 translate="helpdesk.numbers"></h5>
+          
+          <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers">
+            <span>{{number.internal}}</span> <span ng-if="number.external">({{number.external}})</span>
+          </div>
         </div>
       </section>
     </article>
@@ -71,19 +79,25 @@
           <h5 translate="hercules.serviceNames.squared-fusion-cal"></h5>
           <span ng-if="!helpdeskUserCtrl.hybridServicesCard.cal.status" translate="common.on"></span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status"
+                ng-class="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error' ? 'helpdesk-red' : ''"
                 translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.cal.status.collapsedState}}"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status.state === 'error'">- {{helpdeskUserCtrl.hybridServicesCard.cal.status.description.defaultMessage}}</span>
         </div>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-uc.full"></h5>
           <span ng-if="!helpdeskUserCtrl.hybridServicesCard.uc.status" translate="common.on"></span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status"
+                ng-class="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error' ? 'helpdesk-red' : ''"
                 translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.uc.status.collapsedState}}"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status.state === 'error'">- {{helpdeskUserCtrl.hybridServicesCard.uc.status.description.defaultMessage}}</span>
         </div>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.ec.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-ec"></h5>
           <span ng-if="!helpdeskUserCtrl.hybridServicesCard.ec.status" translate="common.on"></span>
           <span ng-if="helpdeskUserCtrl.hybridServicesCard.ec.status"
+                ng-class="helpdeskUserCtrl.hybridServicesCard.ec.status.state === 'error' ? 'helpdesk-red' : ''"
                 translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.ec.status.collapsedState}}"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.ec.status.state === 'error'">- {{helpdeskUserCtrl.hybridServicesCard.ec.status.description.defaultMessage}}</span>
         </div>
       </section>
     </article>

@@ -1,23 +1,13 @@
 <div class="hercules typography-airy large-margin">
   <div class="row">
     <div class="large-4 columns">
-
-      <h5 translate="{{'hercules.settings.call.featureHeading'}}">
-      </h5>
-
-      <p translate="{{'hercules.settings.call.feature'}}">
-      </p>
-
-      <h6>
-        <strong translate="{{'hercules.settings.call.awareHeading'}}"></strong>
-      </h6>
-
-      <p translate="{{'hercules.settings.call.aware'}}">
-        <br><span  style="color:#CCC">On by default</span>
-      </p>
-
+      <schedule-upgrade-configuration service-type="exp.currentServiceType"></schedule-upgrade-configuration>
+      <h5 translate="hercules.settings.call.featureHeading"></h5>
+      <p translate="hercules.settings.call.feature"></p>
+      <h6><strong translate="hercules.settings.call.awareHeading"></strong></h6>
+      <p><span translate="hercules.settings.call.aware"></span><br><span style="color:#CCC" translate="hercules.settings.call.on"></span></p>
       <h6 ng-if="expresswayServiceSettings.squaredFusionEcEntitled">
-        <strong translate="{{'hercules.settings.call.connectHeading'}}"></strong>
+        <strong translate="hercules.settings.call.connectHeading"></strong>
         <span class="switch small right">
           <cs-toggle-switch ng-click="expresswayServiceSettings.storeEc(expresswayServiceSettings.squaredFusionEc)"
                             ng-model="expresswayServiceSettings.squaredFusionEc"
@@ -25,39 +15,21 @@
           </cs-toggle-switch>
         </span>
       </h6>
-
-      <p>
-        <span translate="{{'hercules.settings.call.connect'}}"></span>
-      </p>
-
-      <div ng-if="expresswayServiceSettings.squaredFusionEc" ng-include
+      <p translate="hercules.settings.call.connect"></p>
+      <div ng-if="expresswayServiceSettings.squaredFusionEc"
+           ng-include
            src="'modules/hercules/expressway-service/sip-domain-setting.html'"></div>
-
-      <div ng-if="expresswayServiceSettings.squaredFusionEc" ng-include
+      <div ng-if="expresswayServiceSettings.squaredFusionEc"
+           ng-include
            src="'modules/hercules/expressway-service/certificates.html'"></div>
-
     </div>
-
     <div class="large-4 columns">
       <div ng-include src="'modules/hercules/expressway-service/email-notification-setting.html'"></div>
       <div ng-include src="'modules/hercules/expressway-service/deactivate-service-setting.html'"></div>
-
-      <h5>
-        Documentation and software
-      </h5>
-
-      <p>
-        Visit <a href="http://www.cisco.com/go/hybrid-services" target="_blank">Help Central</a> whenever you need further information about Hybrid Services.
-      </p>
-      <p>
-        Download Cisco Expressway software from <a href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
-      </p>
-
+      <div ng-include src="'modules/hercules/expressway-service/documentation.html'"></div>
     </div>
-
     <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
     <div class="large-4 columns">
     </div>
   </div>
-
 </div>

@@ -1,9 +1,4 @@
 .call-metrics {
-  min-width: 520px;
-  position: relative;
-  .graph-match {
-    margin: 0 15px;
-  }
   .donut-hover-text {
     font-family: $font-family-sans-serif;
     font-size: 20px;
@@ -13,4 +8,12 @@
     position: relative;
     top: -275px;
   }
+  .amExportButton {
+    left: 60%;
+    top: rem-calc(40);
+  }
+}
+.partner-reports .call-metrics .amExportButton {
+  left: 80%;
+  top: rem-calc(40);
 }
