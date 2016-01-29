@@ -192,7 +192,7 @@
           return vm.roomSystemTrial.enabled;
         },
         'templateOptions.disabled': function () {
-          return !vm.roomSystemTrial.enabled || vm.preset.roomSystemsValue;
+          return !vm.roomSystemTrial.enabled;
         },
       },
       validators: {
@@ -205,22 +205,6 @@
           }
         }
       }
-    }];
-
-    vm.trialTermsFields = [{
-      model: vm.details,
-      key: 'licenseDuration',
-      type: 'select',
-      defaultValue: 30,
-      templateOptions: {
-        labelfield: 'label',
-        required: true,
-        label: $translate.instant('partnerHomePage.duration'),
-        secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-4',
-        options: [30, 60, 90],
-      },
     }];
 
     vm.hasCallEntitlement = Authinfo.isSquaredUC;
@@ -467,6 +451,9 @@
       }
       if (!proceedable && !vm.preset.roomSystems) {
         proceedable = vm.roomSystemTrial.enabled;
+      }
+      if (!proceedable && vm.preset.roomSystems) {
+        proceedable = vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity;
       }
       if (!proceedable) {
         proceedable = vm.preset.licenseCount !== vm.details.licenseCount;
