@@ -1260,6 +1260,7 @@ angular.module('Core')
             _.each(userResponses, function (response) {
               var userStatus = response.status;
               var msg;
+              var errorMsg = response.message;
 
               if (userStatus === 404) {
                 msg = $translate.instant('hercules.hybridServices.result404', {
@@ -1270,10 +1271,14 @@ angular.module('Core')
                 msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
-                msg = $translate.instant('hercules.hybridServices.resultOther', {
-                  email: response.email,
-                  status: userStatus
-                });
+                if (errorMsg === 40087) {
+                  msg = $translate.instant('hercules.hybridServices.result40087');
+                } else {
+                  msg = $translate.instant('hercules.hybridServices.resultOther', {
+                    email: response.email,
+                    status: userStatus
+                  });
+                }
                 failureResponses.push(msg);
               }
             });
