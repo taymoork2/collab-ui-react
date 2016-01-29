@@ -3384,8 +3384,8 @@
       "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not a valid email address.",
       "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
-      "learn":"<a href=''>Learn more</a> about how to enter the DNS verification code.",
-      "beforeVerify":"Before you verify",
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     },
     "verify": {
@@ -3394,7 +3394,7 @@
       "beforeVerify": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn":"<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     },
     "claim": {
@@ -3404,17 +3404,17 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions":"Show code and instructions",
-      "mail":"Mail code and instructions",
-      "unverify":"Remove enforcement",
-      "unclaim":"Release domain",
-      "delete":"Remove"
+      "instructions": "Show code and instructions",
+      "mail": "Mail code and instructions",
+      "unverify": "Remove enforcement",
+      "unclaim": "Release domain",
+      "delete": "Remove"
     },
     "instructions": {
-      "title":"Code and instructions",
+      "title": "Code and instructions",
       "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto":"Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done":"Done"
+      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
+      "done": "Done"
     }
   }
 }
