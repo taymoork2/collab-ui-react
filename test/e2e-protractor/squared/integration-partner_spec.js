@@ -60,7 +60,7 @@ describe('Partner flow', function () {
     });
 
     it('should add a new trial', function () {
-      //utils.click(partner.trialFilter);
+      utils.click(partner.trialFilter);
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
@@ -78,8 +78,8 @@ describe('Partner flow', function () {
     });
 
     it('should find new trial', function (done) {
-      //utils.click(partner.trialFilter);
-      //utils.expectIsDisplayed(partner.newTrialRow);
+      utils.click(partner.trialFilter);
+      utils.expectIsDisplayed(partner.newTrialRow);
 
       partner.retrieveOrgId(partner.newTrialRow).then(function (_orgId) {
         orgId = _orgId;

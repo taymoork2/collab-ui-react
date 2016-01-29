@@ -16,31 +16,28 @@ describe('Remove partner trials from partner org page', function () {
   });
 
   it('should remove all trials', function () {
-    for ( var i = 0; i < 1; i++ )
-    {
+    for (var i = 0; i < 1; i++) {
       navigation.clickCustomers();
       utils.expectIsNotDisplayed(element(by.css('.icon-spinner')));
-//      utils.click(element(by.css('.ui-grid-icon-up-dir')));
+      //      utils.click(element(by.css('.ui-grid-icon-up-dir')));
 
       element.all(by.css('.ui-grid .ui-grid-row')).each(function (elem, index) {
         elem.getText().then(function (text) {
           var id = text.split('\n');
-          if ((id[0] !== undefined) && (id[0].length > 0)
-            && (id[0] !== 'Atlas Test Partner Organization My Organization')) {
-              var a = element(by.id(id[0]+'LaunchCustomerButton'));
-              a.getInnerHtml().then( function(inner) {
-                var patt = /href="#\/login\/\s*(.*?)\s*\//;
-                var result=patt.exec(inner);
-                if ( result.length == 2 )
+          if ((id[0] !== undefined) && (id[0].length > 0) && (id[0] !== 'Atlas Test Partner Organization My Organization')) {
+            var a = element(by.id(id[0] + 'LaunchCustomerButton'));
+            a.getInnerHtml().then(function (inner) {
+              var patt = /href="#\/login\/\s*(.*?)\s*\//;
+              var result = patt.exec(inner);
+              if (result.length == 2) {
+                //if ( id[0] === "ABC1" )
                 {
-                  //if ( id[0] === "ABC1" )
-                  {
-                    deleteTrialUtils.deleteOrg(result[1], accessToken).then( function() {
-                      console.log('Removed ' + id[0] + ' - ' + result[1] + '\n' );
-                    });
-                  }
+                  deleteTrialUtils.deleteOrg(result[1], accessToken).then(function () {
+                    console.log('Removed ' + id[0] + ' - ' + result[1] + '\n');
+                  });
                 }
-              });
+              }
+            });
           }
         });
       });
