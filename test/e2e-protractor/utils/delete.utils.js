@@ -39,7 +39,7 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
 exports.deleteSquaredUCCustomer = function (customerUuid, token) {
   var options = {
     method: 'delete',
-    url: config.ServiceUrl() + 'common/customers/' + customerUuid,
+    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
