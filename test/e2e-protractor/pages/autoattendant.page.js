@@ -50,41 +50,13 @@ var AutoAttendantPage = function () {
 
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
-  this.waitForElementPresent = waitForElementPresent;
-
-  function waitForElementPresent(someElmFinder) {
-    var i = 0;
-    var _retryOnErr = function (err) {
-      console.log(' <<< warning: wait retrying iteration: ' + i + ' >>> ');
-      browser.sleep(500);
-      return false;
-    };
-
-    browser.driver.wait(function () {
-      i++;
-      return someElmFinder.isPresent().then(function (present) {
-        if (present) {
-          return true;
-        } else {
-          return _retryOnErr();
-        }
-      }, _retryOnErr);
-    }, 120 * 1000, 'Error waiting for element present: ').
-    then(function (waitRetValue) {
-      return waitRetValue; // usually just `true`
-    }, function (err) {
-      throw err + ' after ' + i + ' iterations.';
-    });
-  }
 
   function assertUpdateSuccess() {
-    waitForElementPresent(notifications.successAlert);
-    expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' updated successfully');
+    notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
   }
 
   function assertCreateSuccess() {
-    waitForElementPresent(notifications.successAlert);
-    expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' created successfully');
+    notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
   }
 
 };
