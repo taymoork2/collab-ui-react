@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceController(XhrNotificationService, ServiceStateChecker, ServiceDescriptor, $state,
-    $modal, $scope, $translate, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService, ScheduleUpgradeChecker) {
 
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -14,11 +13,10 @@
     });
 
     var vm = this;
-    vm.loading = true;
-    vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType);
-    vm.selectedRow = -1;
+    vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
+    vm.loadingClusters = true;
 
     //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
@@ -33,7 +31,6 @@
       state: vm.route + '.settings({serviceType:vm.currentServiceType})'
     }];
 
-    vm.notificationTag = vm.currentServiceId;
     vm.clusters = ClusterService.getExpresswayClusters();
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
     vm.clusterLength = clusterLength;
@@ -45,6 +42,7 @@
     vm.enableService = enableService;
     vm.showClusterDetails = showClusterDetails;
     vm.openUserErrorsModal = openUserErrorsModal;
+    vm.addResourceButtonClicked = addResourceButtonClicked;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -73,20 +71,21 @@
       }]
     };
 
+    ScheduleUpgradeChecker.check(vm.currentServiceType, vm.currentServiceId, vm.route + '.settings({serviceType:vm.currentServiceType})');
+
     if (vm.currentServiceId == "squared-fusion-mgmt") {
       ServiceDescriptor.services(function (error, services) {
         if (!error) {
           vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
             enabled: true
           });
-          vm.loading = false;
         }
       });
     } else {
-      vm.serviceEnabled = false;
-      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
+      ServiceDescriptor.isServiceEnabled(vm.currentServiceId, function (error, enabled) {
+        if (!error) {
+          vm.serviceEnabled = enabled;
+        }
       });
     }
 
@@ -114,11 +113,12 @@
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
       vm.clusters = ClusterService.getExpresswayClusters();
+      vm.loadingClusters = false;
     }
 
     function extractSummaryForAService() {
       vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
-        serviceId: HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType)
+        serviceId: vm.currentServiceId
       });
     }
 
@@ -163,6 +163,14 @@
             return vm.currentServiceId;
           }
         }
+      });
+    }
+
+    function addResourceButtonClicked() {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
     }
   }

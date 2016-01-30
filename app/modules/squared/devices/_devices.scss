@@ -1,9 +1,6 @@
-.devices-page {
-  @extend %page-background-white;
-}
-
 .sq-devices-page {
   @extend %grid-subheader;
+  @extend %page-background-white;
 }
 
 .sq-devices-page-overview {
@@ -71,11 +68,6 @@
 }
 
 .device-img {
-  img {
-    border-radius: 50%;
-    overflow: hidden;
-  }
-
   i {
     top: 15px;
   }
@@ -188,11 +180,24 @@
   }
 }
 
+.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
+  border-right: 0;
+}
+
+.ui-grid-cell .space_avatar {
+  margin: 4px 5px 4px 30px;
+  width: 35px;
+}
+
 #addDeviceModal {
   .device-added {
     h3 {
       color: #00c1aa;
       margin: 10px 0;
+
+      a {
+        padding-left: 10px;
+      }
     }
   }
   .btn {
@@ -207,6 +212,11 @@
   input {
     margin-right: 15px;
   }
+}
+
+.device-status {
+  font-size: 0.6rem;
+  padding-right: 3px;
 }
 
 .device-status-red {

@@ -45,6 +45,8 @@ var UsersPage = function () {
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
+  this.meeting25Party = element.all(by.id('CF_50de0558-2246-4a46-a87f-cfe477058fdb'));
+
   this.communicationsService = element(by.css('#Call .feature-arrow'));
   this.conferencingService = element(by.css('#Meeting .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
@@ -79,10 +81,13 @@ var UsersPage = function () {
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
+  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Spark Message'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Message'));
   this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
@@ -160,7 +165,7 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
-  this.paidMsg = element(by.id('paidMsg'));
+  this.meetingService = element(by.id('Meeting'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
@@ -189,10 +194,6 @@ var UsersPage = function () {
   this.retrieveExternalNumber = function () {
     utils.wait(this.externalNumber);
     return this.externalNumber.evaluate('csSelect.selected.pattern');
-  };
-
-  this.clickOnUser = function () {
-    utils.click(element(by.css('.ui-grid-row')));
   };
 
   this.assertPage = function (page) {

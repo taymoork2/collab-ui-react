@@ -47,6 +47,11 @@
       $state.go('call-service.settings');
     };
 
+    vm.navigateToCurrentServiceSettings = function () {
+      vm.showNotifications = false;
+      $state.go($state.current.name.split('.')[0] + '.settings');
+    };
+
     vm.showUserErrorsDialog = function (serviceId) {
       $scope.modal = $modal.open({
         controller: 'UserErrorsController',
@@ -63,6 +68,14 @@
     vm.dismissNewServiceNotification = function (notificationId, serviceId) {
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
+    };
+
+    vm.addResourceButtonClicked = function () {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
     };
   }
 

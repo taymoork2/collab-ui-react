@@ -328,6 +328,9 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
       $scope.populateConf = populateConf;
+      $scope.oneBilling = false;
+      $scope.selectedSubscription = '';
+      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -350,11 +353,48 @@ angular.module('Core')
         getMessengerSyncStatus();
       }
 
+      var getSubscriptions = function () {
+        if (Authinfo.hasAccount()) {
+          Orgservice.getLicensesUsage().then(function (subscriptions) {
+            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
+            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+          });
+        }
+      };
+
+      $scope.modelChange = function () {
+        $scope.selectedSubscription = this.selectedSubscription;
+      };
+
+      $scope.showMultiSubscriptions = function (billingServiceId) {
+        var isSelected = false;
+        if (_.isArray(billingServiceId)) {
+          for (var i in billingServiceId) {
+            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
+              isSelected = true;
+              break;
+            }
+          }
+        } else {
+          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
+        }
+        var isOneBilling = $scope.oneBilling;
+
+        $scope.licenseExists = isSelected;
+        return isOneBilling || isSelected;
+      };
+
       function populateConf() {
         if (userLicenseIds) {
 
           _.forEach(userLicenseIds, function (userLicenseId) {
             _.forEach($scope.allLicenses, function (siteObj) {
+              if (siteObj.siteUrl === '' && !siteObj.confModel) {
+                siteObj.confModel = siteObj.licenseId === userLicenseId;
+              }
               siteObj.confLic = _.map(siteObj.confLic, function (conf) {
                 if (!conf.confModel) {
                   conf.confModel = conf.licenseId === userLicenseId;
@@ -392,9 +432,9 @@ angular.module('Core')
       function createFeatures(obj) {
         return {
           siteUrl: _.get(obj, 'license.siteUrl', ''),
-          billing: obj.license.billingServiceId,
-          volume: obj.license.volume,
-          licenseId: obj.license.licenseId,
+          billing: _.get(obj, 'license.billingServiceId', ''),
+          volume: _.get(obj, 'license.volume', ''),
+          licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
           confModel: false,
@@ -438,6 +478,7 @@ angular.module('Core')
             });
             return {
               site: site,
+              billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
               confLic: confMatches,
               cmrLic: cmrMatches
             };
@@ -521,6 +562,7 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
+        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {
@@ -710,21 +752,23 @@ angular.module('Core')
        * @param {string[]} state - return license list based on matching state (checked = true)
        */
       var getConfIdList = function (state) {
-        var confId = [];
-        var cmrId = [];
+        var idList = [];
 
         _.forEach($scope.allLicenses, function (license) {
-          confId = confId.concat(_(license.confLic).filter({
+          if (!_.isArray(license) && license.confModel === state) {
+            idList.push(license.licenseId);
+          }
+          idList = idList.concat(_(license.confLic).filter({
             confModel: state
           }).pluck('licenseId').remove(undefined).value());
 
-          cmrId = cmrId.concat(_(license.cmrLic).filter({
+          idList = idList.concat(_(license.cmrLic).filter({
             cmrModel: state
           }).pluck('licenseId').remove(undefined).value());
 
         });
 
-        return confId.concat(cmrId);
+        return idList;
       };
 
       /**
@@ -898,7 +942,7 @@ angular.module('Core')
           checkPlaceholder();
         },
         edittoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+          if (angular.element(e.relatedTarget).hasClass('invalid')) {
             invalidcount--;
           }
         },
@@ -915,10 +959,14 @@ angular.module('Core')
       };
 
       function isEmailAlreadyPresent(input) {
-        var inputEmail = getEmailAddress(input);
+        var inputEmail = getEmailAddress(input).toLowerCase();
         if (inputEmail) {
           var userEmails = getTokenEmailArray();
-          return userEmails.indexOf(inputEmail) >= 0;
+          var userEmailsLower = [];
+          for (var i = 0; i < userEmails.length; i++) {
+            userEmailsLower[i] = userEmails[i].toLowerCase();
+          }
+          return userEmailsLower.indexOf(inputEmail) >= 0;
         } else {
           return false;
         }
@@ -1067,11 +1115,17 @@ angular.module('Core')
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
-              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
-                userResult.message = $translate.instant('usersPage.userExistsError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
+              } else if (userStatus === 403) {
+                if (data.userResponse[i].message === '400081') {
+                  userResult.message = $translate.instant('usersPage.userExistsError', {
+                    email: userResult.email
+                  });
+                } else if (data.userResponse[i].message === '400084') {
+                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                    email: userResult.email,
+                    domain: userResult.email.split('@')[1]
+                  });
+                }
                 userResult.alertType = 'danger';
                 isComplete = false;
               } else {

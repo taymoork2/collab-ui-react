@@ -58,7 +58,7 @@ angular.module('Core')
                 state = 'partneroverview';
 
               } else if (Authinfo.isSupportUser()) {
-                state = 'support';
+                state = 'support.status';
               } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
                 state = 'helpdesk.search';
               } else if (Authinfo.isPartnerUser()) {
@@ -98,5 +98,19 @@ angular.module('Core')
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();
       }
+
+      // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).
+      function isIe() {
+        return false || ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
+      }
+
+      $scope.checkForIeWorkaround = function () {
+        if (isIe()) {
+          return "vertical-ie-workaround";
+        } else {
+          return "";
+        }
+      };
+
     }
   ]);

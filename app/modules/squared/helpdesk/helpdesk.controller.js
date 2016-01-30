@@ -47,6 +47,10 @@
     function loadSearch(search) {
       _.assign(vm.currentSearch, search);
       vm.searchString = search.searchString;
+      HelpdeskService.findAndResolveOrgsForUserResults(
+        vm.currentSearch.userSearchResults,
+        vm.currentSearch.orgFilter,
+        vm.currentSearch.userLimit);
       $state.go('helpdesk.search');
     }
 
@@ -121,7 +125,7 @@
             vm.currentSearch.userSearchResults,
             vm.currentSearch.orgFilter,
             vm.currentSearch.userLimit);
-          HelpdeskSearchHistoryService.saveUserSearch(vm.currentSearch);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForUsers = false;
@@ -146,7 +150,7 @@
           vm.currentSearch.orgSearchResults = res;
           vm.currentSearch.orgSearchFailure = null;
           vm.searchingForOrgs = false;
-          HelpdeskSearchHistoryService.saveOrgSearch(vm.currentSearch);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err, status) {
           vm.searchingForOrgs = false;
@@ -184,6 +188,8 @@
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
@@ -202,10 +208,16 @@
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          if (err.status === 404) {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+          } else {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
         });
       }
     }

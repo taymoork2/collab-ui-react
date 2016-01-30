@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService) {
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
@@ -24,12 +24,14 @@
     vm.isOwnOrg = isOwnOrg;
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
-    vm.offer = vm.currentCustomer.offer = getAtlasStormBrandingOffer();
+
+    var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
+    vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       if (result) {
         if (_.find(vm.currentCustomer.offers, {
-            id: Config.trials.roomSystems
+            id: Config.offerTypes.roomSystems
           })) {
           vm.showRoomSystems = result;
         }
@@ -159,43 +161,6 @@
 
     function isOwnOrg() {
       return vm.currentCustomer.customerName === Authinfo.getOrgName();
-    }
-
-    function getAtlasStormBrandingOffer() {
-      var offerUserServices = [];
-      var offerDeviceBasedServices = [];
-      var offerCodes = _.pluck(vm.currentCustomer.licenseList, 'offerName');
-      for (var index in offerCodes) {
-        var offerCode = offerCodes[index];
-        if (!offerCode) {
-          continue;
-        }
-        switch (offerCode) {
-        case Config.offerCodes.MS:
-          offerUserServices.push($translate.instant('customerPage.MS'));
-          break;
-        case Config.offerCodes.CF:
-          offerUserServices.push($translate.instant('customerPage.CF'));
-          break;
-        case Config.offerCodes.CO:
-          offerUserServices.push($translate.instant('customerPage.CO'));
-          break;
-        case Config.offerCodes.EE:
-          offerUserServices.push($translate.instant('customerPage.EE'));
-          break;
-        case Config.offerCodes.CMR:
-          offerUserServices.push($translate.instant('customerPage.CMR'));
-          break;
-        case Config.offerCodes.SD:
-          offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
-          break;
-        }
-      }
-
-      return {
-        'userServices': offerUserServices.sort().join(', '),
-        'deviceBasedServices': offerDeviceBasedServices.sort().join(', ')
-      };
     }
   }
 })();

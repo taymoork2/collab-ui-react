@@ -2,13 +2,16 @@
 
 describe('Controller: Customer Reports Ctrl', function () {
   var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExUtilsFact, Userservice;
-  var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+  var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
   var SET = 'set';
   var EMPTY = 'empty';
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  var responseActiveData = activeData.activeResponse;
+  var responseMostActiveData = activeData.mostActiveResponse;
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
@@ -17,6 +20,9 @@ describe('Controller: Customer Reports Ctrl', function () {
   dummyMetrics.dummy = true;
 
   var headerTabs = [{
+    title: 'reportsPage.engagement',
+    state: 'reports'
+  }, {
     title: 'reportsPage.sparkReports',
     state: 'devReports'
   }];
@@ -59,6 +65,9 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
         'dataProvider': fileData.response
       });
+      spyOn(CustomerGraphService, 'setMediaQualityGraph').and.returnValue({
+        'dataProvider': mediaData.response
+      });
       spyOn(CustomerGraphService, 'setMetricsGraph').and.returnValue({
         'dataProvider': metricsData.dataProvider
       });
@@ -69,14 +78,12 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
       spyOn(DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
 
+      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(responseActiveData));
+      spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when(responseMostActiveData));
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
       spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
-      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when({
-        activeUserGraph: [],
-        mostActiveUserData: []
-      }));
 
       // Webex Requirements
       WebexReportService = {
@@ -158,6 +165,7 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
 
           expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
           expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
@@ -166,7 +174,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
 
       it('should set all page variables', function () {
-        expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
         expect(controller.showWebexTab).toBeFalsy();
 
         expect(controller.activeUserDescription).toEqual('activeUsers.customerPortalDescription');
@@ -177,7 +184,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeUserReverse).toBeTruthy();
         expect(controller.activeUsersTotalPages).toEqual(0);
         expect(controller.activeUserCurrentPage).toEqual(0);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[2]);
+        expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
 
         expect(controller.avgRoomsDescription).toEqual('avgRooms.avgRoomsDescription');
@@ -220,7 +227,8 @@ describe('Controller: Customer Reports Ctrl', function () {
     describe('helper functions', function () {
       describe('activePage', function () {
         it('should return true when called with the same value as activeUserCurrentPage', function () {
-          expect(controller.activePage(1)).toBeTruthy();
+          controller.activeUserCurrentPage = 1;
+          expect(controller.activePage(controller.activeUserCurrentPage)).toBeTruthy();
         });
 
         it('should return false when called with a different value as activeUserCurrentPage', function () {
@@ -273,7 +281,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         it('should sort by posts', function () {
           controller.mostActiveSort(2);
           expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-          expect(controller.activeUserReverse).toBeFalsy();
+          expect(controller.activeUserReverse).toBeTruthy();
         });
       });
 

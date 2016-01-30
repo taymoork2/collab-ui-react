@@ -1,3 +1,4 @@
+/* global ll */
 'use strict';
 
 angular.module('Core')
@@ -150,6 +151,8 @@ angular.module('Core')
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
+          //org id of user
+          ll('setCustomDimension', 1, authData.orgId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -169,7 +172,7 @@ angular.module('Core')
           authData.setupDone = null;
           authData.email = null;
         },
-        setEmail: function (data) {
+        setEmails: function (data) {
           authData.email = data;
         },
         getEmail: function () {

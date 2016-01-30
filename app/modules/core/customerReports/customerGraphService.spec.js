@@ -93,7 +93,9 @@ describe('Service: Customer Graph Service', function () {
         validateData: validateService.validate
       });
       mediaChart = null;
-      mediaChart = CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart);
+      mediaChart = CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart, {
+        value: 0
+      });
     });
 
     it('should have created a graph when setMediaQualityGraph is called the first time', function () {
@@ -101,7 +103,9 @@ describe('Service: Customer Graph Service', function () {
     });
 
     it('should update graph when setMediaQualityGraph is called a second time', function () {
-      CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart);
+      CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart, {
+        value: 0
+      });
       expect(validateService.validate).toHaveBeenCalled();
     });
   });

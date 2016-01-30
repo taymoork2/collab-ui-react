@@ -478,21 +478,18 @@
         "userId": "58852083@qq.com"
       }
     }],
-    huronNumbersSearchResult: {
-      "url": "https://cmi.huron-int.com/api/v2/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/numbers?number=223",
-      "numbers": [{
-        "uuid": "5e33df41-2031-4a42-8870-b73ff7ba1dba",
-        "number": "2223",
-        "type": "internal"
-      }, {
-        "uuid": "62f90838-8169-4774-931b-c46e95529354",
-        "number": "2230",
-        "type": "internal"
-      }, {
-        "uuid": "9642ac0a-1795-47f5-bbab-e84e349e1c8f",
-        "number": "+14084744450",
-        "type": "external"
-      }]
+    huronDevice: {
+      "uuid": "17a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP1CDEA7DBF740",
+      "description": "373323613@qq.com (Cisco 8861 SIP)",
+      "product": "Cisco 8861",
+      "model": "Cisco 8861",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      },
+      "registrationStatus": "registered"
     }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);

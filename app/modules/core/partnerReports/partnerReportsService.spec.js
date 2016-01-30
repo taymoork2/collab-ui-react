@@ -68,6 +68,7 @@ describe('Service: Partner Reports Service', function () {
     orgName: 'Test Org One',
     numCalls: 5,
     totalActivity: 14,
+    sparkMessages: 9,
     userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
     userName: 'havard.nigardsoy@vijugroup.com'
   };

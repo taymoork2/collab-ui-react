@@ -1,6 +1,6 @@
 'use strict';
-
-describe(
+// deactivating in anticipation of this page being deprecated
+xdescribe(
   'Controller: ReportsCtrl',
   function () {
 

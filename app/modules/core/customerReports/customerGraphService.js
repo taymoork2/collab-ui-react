@@ -39,11 +39,6 @@
       'valueWidth': 0,
       'verticalGap': 20
     };
-    var numFormatBase = {
-      'precision': 0,
-      'decimalSeparator': '.',
-      'thousandsSeparator': ','
-    };
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -57,7 +52,7 @@
 
     // variables for the files shared section
     var filesSharedDiv = 'filesSharedDiv';
-    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
+    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.filesShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
 
     // variables for media Quality
     var mediaQualityDiv = 'mediaQualityDiv';
@@ -67,16 +62,20 @@
     var metricsBalloonText = '<span class="graph-text">[[numCalls]] [[callCondition]] ([[percentage]]%)</span>';
     var metricsLabelText = '[[percents]]%<br>[[callCondition]]';
 
+    // variables for device registration
+    var devicesDiv = 'devicesDiv';
+
     return {
       setActiveUsersGraph: setActiveUsersGraph,
       setAvgRoomsGraph: setAvgRoomsGraph,
       setFilesSharedGraph: setFilesSharedGraph,
       setMediaQualityGraph: setMediaQualityGraph,
+      setDeviceGraph: setDeviceGraph,
       setMetricsGraph: setMetricsGraph
     };
 
     // bar charts
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, startDuration) {
       var chartData = {
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
@@ -114,6 +113,11 @@
           number: 1e+12,
           prefix: "T"
         }],
+        'numberFormatter': {
+          'precision': 0,
+          'decimalSeparator': '.',
+          'thousandsSeparator': ','
+        },
         'export': {
           "enabled": true,
           "libs": {
@@ -134,9 +138,6 @@
 
       if (angular.isDefined(legend) && legend !== null) {
         chartData.legend = legend;
-      }
-      if (angular.isDefined(numFormat) && numFormat !== null) {
-        chartData.numberFormatter = numFormat;
       }
 
       return AmCharts.makeChart(div, chartData);
@@ -164,7 +165,7 @@
         startDuration = 0;
       }
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), startDuration);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, startDuration);
     }
 
     function activeUserGraphs(data) {
@@ -247,8 +248,7 @@
         startDuration = 0;
       }
 
-      var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), numFormat, startDuration);
+      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), startDuration);
     }
 
     function avgRoomsGraphs(data) {
@@ -313,13 +313,12 @@
         startDuration = 0;
       }
 
-      var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, numFormat, startDuration);
+      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, startDuration);
     }
 
     function filesSharedGraphs(data) {
       var graph = angular.copy(columnBase);
-      graph.title = $translate.instant('filesShared.contentShared');
+      graph.title = $translate.instant('filesShared.filesShared');
       graph.fillColors = data[0].color;
       graph.colorField = data[0].color;
       graph.valueField = 'contentShared';
@@ -329,7 +328,7 @@
       return [graph];
     }
 
-    function setMediaQualityGraph(data, mediaChart) {
+    function setMediaQualityGraph(data, mediaChart, mediaFilter) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (mediaChart !== null && angular.isDefined(mediaChart)) {
@@ -339,21 +338,21 @@
         }
 
         mediaChart.dataProvider = data;
-        mediaChart.graphs = mediaGraphs(data);
+        mediaChart.graphs = mediaGraphs(data, mediaFilter);
         mediaChart.startDuration = startDuration;
         mediaChart.validateData();
       } else {
-        mediaChart = createMediaGraph(data);
+        mediaChart = createMediaGraph(data, mediaFilter);
       }
       return mediaChart;
     }
 
-    function createMediaGraph(data) {
+    function createMediaGraph(data, mediaFilter) {
       if (data.length === 0) {
         return;
       }
 
-      var graphs = mediaGraphs(data);
+      var graphs = mediaGraphs(data, mediaFilter);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
@@ -367,13 +366,21 @@
         startDuration = 0;
       }
 
-      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), angular.copy(numFormatBase), startDuration);
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), startDuration);
     }
 
-    function mediaGraphs(data) {
+    function mediaGraphs(data, mediaFilter) {
+      var values = ['totalDurationSum', 'partialSum', 'poorAudioQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorAudioQualityDurationSum'];
+      if (mediaFilter.value === 1) {
+        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorQualityDurationSum'];
+        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorQualityDurationSum'];
+      } else if (mediaFilter.value === 2) {
+        values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
+        balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];
+      }
+
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
@@ -388,11 +395,68 @@
         graphs[i].valueField = values[i];
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
-        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[totalDurationSum]]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
+        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[' + values[0] + ']]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
         graphs[i].clustered = false;
       }
 
       return graphs;
+    }
+
+    function setDeviceGraph(data, chart, filter) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
+      } else if (chart !== null && angular.isDefined(chart)) {
+        var startDuration = 1;
+        if (!data[0].balloon) {
+          startDuration = 0;
+        }
+
+        chart.dataProvider = data[0].graph;
+        chart.graphs = deviceGraphs(data, filter);
+        chart.startDuration = startDuration;
+        chart.validateData();
+      } else {
+        chart = createDeviceGraph(data, filter);
+      }
+      return chart;
+    }
+
+    function createDeviceGraph(data, filter) {
+      if (data.length === 0) {
+        return;
+      }
+
+      var graphs = deviceGraphs(data, filter);
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+
+      var startDuration = 1;
+      if (!data[0].balloon) {
+        startDuration = 0;
+      }
+
+      return createGraph(data[0].graph, devicesDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, startDuration);
+    }
+
+    function deviceGraphs(data, filter) {
+      var color = Config.chartColors.colorPeopleBase;
+      if (!data[0].balloon) {
+        color = Config.chartColors.grayLighter;
+      }
+
+      var graph = angular.copy(columnBase);
+      graph.title = $translate.instant('registeredEndpoints.registeredEndpoints');
+      graph.fillColors = color;
+      graph.colorField = color;
+      graph.valueField = 'totalRegisteredDevices';
+      graph.balloonText = activeUsersBalloonText;
+      graph.showBalloon = data[0].balloon;
+
+      return [graph];
     }
 
     // donut charts

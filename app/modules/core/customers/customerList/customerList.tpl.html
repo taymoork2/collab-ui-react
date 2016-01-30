@@ -2,26 +2,14 @@
   <cs-page-header title="{{::'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <div cs-dropdown class="grid-filter" ng-if="!isCustomerPartner" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+      <div cs-dropdown class="grid-filter" ng-if="!isCustomerPartner">
+        <div cs-dropdown-toggle class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'">
           <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>
           <span class="name" ng-if="activeFilter === 'trials'" translate="customerPage.trial"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
-        <ul cs-dropdown-menu ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
-          <li class="filter" ng-class="{'active' : activeFilter === 'all'}">
-            <a ng-href="" ng-click="setFilter('all')">
-              <span class="name" translate="customerPage.all"></span>
-              <span class="count">{{totalOrgs}}</span>
-            </a>
-          </li>
-          <li class="filter" ng-class="{'active' : activeFilter === 'trials'}">
-            <a ng-href="" ng-click="setFilter('trials')">
-              <span class="name" translate="customerPage.trial"></span>
-              <span class="count">{{totalTrials}}</span>
-            </a>
-          </li>
-        </ul>
+        <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" cs-dropdown-menu ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'"></div>
+        <div ng-include="'modules/core/customers/customerList/customerFilters.tpl.html'" ng-if="breakpoint === 'screen-lg'"></div>
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
