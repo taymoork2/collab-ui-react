@@ -86,9 +86,12 @@
       return getUser(uuid).then(function (user) {
         var userObj = user;
         return getUserExtension(user.id).then(
-
           function (extension) {
-            return formatName(userObj, extension);
+            if (extension != null) {
+              return formatName(userObj, extension);
+            } else {
+              return formatName(userObj, '');
+            }
           },
           function (error) {
             return formatName(userObj, '');
@@ -107,7 +110,7 @@
           if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
             return response.primaryDirectoryNumber.pattern;
           else
-            return "";
+            return null;
         },
         function (response) {
           // failure
@@ -125,11 +128,15 @@
           vm.users = [];
           _.each(data.Resources, function (aUser) {
             getUserExtension(aUser.id).then(function (extension) {
-              vm.users.push({
-                description: formatName(aUser, extension),
-                id: aUser.id
-              });
+              // only add to the user if they have a primary extension
+              if (extension) {
+                vm.users.push({
+                  description: formatName(aUser, extension),
+                  id: aUser.id
+                });
+              }
             }, function (error) {
+              // CMI user call failed, not clear if user has extension or not, show just the user in the UI
               vm.users.push({
                 description: formatName(aUser, ''),
                 id: aUser.id

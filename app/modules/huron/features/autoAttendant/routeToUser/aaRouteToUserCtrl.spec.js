@@ -300,7 +300,7 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    it('should initialize the options list and format them correctly', function () {
+    it('should initialize the options list, format extensions and filter out users without extension', function () {
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope
       });
@@ -309,17 +309,13 @@ describe('Controller: AARouteToUserCtrl', function () {
       var nameNumber1 = users[0].displayName.concat(' (')
         .concat(users[0].extension).concat(')');
 
-      // when those are blank, they should be ommitted and fallback to username which should always be there
-      var nameNumber2 = users[1].userName;
-
       $httpBackend.flush();
 
       $scope.$apply();
 
-      expect(controller.users.length).toEqual(2);
+      expect(controller.users.length).toEqual(1);
 
       expect(controller.users[0].description).toEqual(nameNumber1);
-      expect(controller.users[1].description).toEqual(nameNumber2);
 
     });
 
