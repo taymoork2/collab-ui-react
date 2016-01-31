@@ -301,7 +301,7 @@
     /////////////////////
 
     function addAvailableFeatures() {
-      if (Config.isDev()) {
+      if (Config.isDev() || Config.isIntegration()) {
         vm.keyActions.push({
           label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
           name: 'phoneMenuRouteToExtNum',

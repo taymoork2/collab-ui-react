@@ -118,7 +118,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber);
+        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
       });
 
       it('should write UI entry back into UI model when phone number changes', function () {
@@ -138,7 +138,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         controller.model.phoneNumberInput.phoneNumber = phoneNumber2;
         $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ' + phoneNumber2);
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber2);
+        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber2.replace(/\D/g, ''));
       });
 
     });
