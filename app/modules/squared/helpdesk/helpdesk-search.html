@@ -154,7 +154,7 @@
           <cs-card class="full pointer"
                    ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit">
             <article tabindex="{{$index * 10 + 3}}"
-                     ui-sref="helpdesk.device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})">
+                     ui-sref="{{device.isHuronDevice ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}">
               <header>
                 <h5>{{device.displayName}}</h5>
               </header>
@@ -162,6 +162,7 @@
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+                <div ng-if="device.description"><span>{{device.description}}</span></div>
                 <div ng-if="device.organization.displayName" class="right">
                   <span class="belongs-to-org">{{device.organization.displayName}}</span>
                 </div>

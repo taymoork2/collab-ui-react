@@ -5,13 +5,21 @@
 
 var SiteReportsPage = function () {
 
-  this.testAdmin = {
+  this.testInfo = {
+    describeCount: 0,
+    siteUrl: null,
+    siteType: null,
+    describeText: null,
+    signInText: null,
+  };
+
+  this.testAdmin1 = {
     username: 'sjsite14@mailinator.com',
     password: 'Cisco!23',
   };
 
   this.testAdmin2 = {
-    username: 't30citestprov9@mailinator.com',
+    username: 'cisjsite002@mailinator.com',
     password: 'Cisco!23',
   }
 

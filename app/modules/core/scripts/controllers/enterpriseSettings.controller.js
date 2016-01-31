@@ -124,6 +124,9 @@ angular.module('Core')
                   if (data.data[datum].entityId === newEntityId) {
                     metaUrl = data.data[datum].url;
                     break;
+                  } else {
+                    SSOService.deleteMeta(data.data[datum].url);
+                    break;
                   }
                 }
 
@@ -190,9 +193,6 @@ angular.module('Core')
                 });
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-                Notification.error('ssoModal.disableFailed', {
-                  status: status
-                });
               }
             });
           }

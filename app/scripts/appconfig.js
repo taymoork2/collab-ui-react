@@ -205,7 +205,21 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.instructions', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageInstructionsCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +233,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +247,21 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.claim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageClaimCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +274,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {
@@ -1123,10 +1152,21 @@ angular
             id: null
           }
         })
-        .state('helpdesk.device', {
-          url: '/device/:orgId/:id',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
-          controller: 'HelpdeskDeviceController',
+        .state('helpdesk.cloudberry-device', {
+          url: '/cloudberryDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
+          controller: 'HelpdeskCloudberryDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
+          }
+        })
+        .state('helpdesk.huron-device', {
+          url: '/huronDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
+          controller: 'HelpdeskHuronDeviceController',
           controllerAs: 'helpdeskDeviceCtrl',
           params: {
             device: null,
@@ -1160,10 +1200,29 @@ angular
           },
           params: {
             cdrData: {},
-            call: []
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
+          }
+        })
+        .state('cdrladderdiagram', {
+          parent: 'modalFull',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
+              controller: 'CdrLadderDiagramCtrl',
+              controllerAs: 'cdrLadderDiagram'
+            }
+          },
+          params: {
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           }
         })
         .state('callroutingBase', {

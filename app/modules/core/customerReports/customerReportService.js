@@ -19,7 +19,7 @@
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
     var mostActiveUrl = 'useractivity';
-    var registeredEndpoints = 'trend/registeredEndpoints';
+    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -603,10 +603,10 @@
       deviceCancelPromise = $q.defer();
       var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
 
-      return getService(deviceUrl, deviceCancelPromise).success(function (response, status) {
+      return getService(deviceUrl, deviceCancelPromise).then(function (response) {
         return [];
-      }).error(function (response, status) {
-        return returnErrorCheck(status, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
+      }, function (response) {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
       });
     }
 

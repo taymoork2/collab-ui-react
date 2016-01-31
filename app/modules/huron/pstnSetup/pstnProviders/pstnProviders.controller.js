@@ -123,18 +123,21 @@
     }
 
     function initCarrier(carrier) {
+      var carrierObj = {
+        uuid: carrier.uuid,
+        name: carrier.name,
+        apiExists: carrier.apiExists,
+        vendor: carrier.vendor,
+        countryCode: carrier.countryCode,
+        country: carrier.country,
+        title: carrier.displayName || carrier.name
+      };
       if (carrier.vendor === PstnSetupService.INTELEPEER) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
+
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
           docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
-          title: 'Voice Services Bundle',
           features: [
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
@@ -144,16 +147,9 @@
           selectFn: goToOrderNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TATA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
-          title: 'Tata Smart Voice Bundle',
           features: [
             $translate.instant('tataFeatures.feature1'),
             $translate.instant('tataFeatures.feature2'),
@@ -164,20 +160,14 @@
           selectFn: goToSwivelNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TELSTRA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          apiExists: carrier.apiExists,
-          vendor: carrier.vendor,
-          countryCode: carrier.countryCode,
-          country: carrier.country,
+        _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
-          title: 'Telstra',
           features: [],
           selectFn: goToSwivelNumbers
         });
       }
+      vm.providers.push(carrierObj);
     }
   }
 })();

@@ -479,9 +479,7 @@ exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
     var input = elem.element(by.tagName('input'));
-    return input.isSelected().then(function (isSelected) {
-      return value === isSelected;
-    });
+    expect(input.isSelected()).toBe(value);
   });
 };
 

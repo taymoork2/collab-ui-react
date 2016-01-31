@@ -1,7 +1,6 @@
 'use strict';
 
-describe('WebEx user settings', function () {
-
+xdescribe('WebEx user settings', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -68,46 +67,42 @@ describe('WebEx user settings', function () {
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
 
-  /**
-    xit('should allow edit in 4th panel', function () {
-      utils.click(usersettings.userPrivilegesLink);
-      utils.wait(usersettings.userPrivilegesPanel);
-      expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
-      expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
-      if (usersettings.userPrivilegesPanel.telephonyPrivileges.isPresent()) {
-        expect(usersettings.callInTeleconfCheckbox.isPresent());
-      }
+  xit('should allow edit in 4th panel', function () {
+    utils.click(usersettings.userPrivilegesLink);
+    utils.wait(usersettings.userPrivilegesPanel);
+    expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
+    expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
+    if (usersettings.userPrivilegesPanel.telephonyPrivileges.isPresent()) {
+      expect(usersettings.callInTeleconfCheckbox.isPresent());
+    }
 
-    });
+  });
 
-    xit('should not allow save of mc AUO without mc PRO', function () {
-      if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
-        usersettings.unSelectAllMcSessionTypeByPrefix('PRO');
-        usersettings.selectAllMcSessionTypeByPrefix('AUO');
-        expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
-        usersettings.save();
-        expect(usersettings.alertError.isDisplayed()).toBeTruthy();
-        usersettings.alertError.click();
-      }
-    });
+  xit('should not allow save of mc AUO without mc PRO', function () {
+    if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
+      usersettings.unSelectAllMcSessionTypeByPrefix('PRO');
+      usersettings.selectAllMcSessionTypeByPrefix('AUO');
+      expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
+      usersettings.save();
+      expect(usersettings.alertError.isDisplayed()).toBeTruthy();
+      usersettings.alertError.click();
+    }
+  });
 
-    xit('should allow save of mc AUO with mc PRO', function () {
-      if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
-        usersettings.selectAllMcSessionTypeByPrefix('PRO');
-        usersettings.selectAllMcSessionTypeByPrefix('AUO');
-        expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
-        usersettings.save();
-        expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
-        usersettings.alertSuccess.click();
-      }
-    });
-  **/
+  xit('should allow save of mc AUO with mc PRO', function () {
+    if (usersettings.mc.isPresent() && usersettings.mc.isDisplayed()) {
+      usersettings.selectAllMcSessionTypeByPrefix('PRO');
+      usersettings.selectAllMcSessionTypeByPrefix('AUO');
+      expect(usersettings.saveButton.isDisplayed()).toBeTruthy();
+      usersettings.save();
+      expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
+      usersettings.alertSuccess.click();
+    }
+  });
 
-  /**
-    it('should pause', function () {
-      browser.pause();
-    });
-  **/
+  // it('should pause', function () {
+  //   browser.pause();
+  // });
 
   it('should allow log out', function () {
     navigation.logout();

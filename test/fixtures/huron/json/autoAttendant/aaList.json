@@ -1,0 +1,36 @@
+{
+  "ceInfos": [{
+    "name": "Main AA",
+    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc71111",
+    "resources": [{
+      "id": "1111",
+      "number": "1111",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }]
+  }, {
+    "name": "Second AA",
+    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc72222",
+    "resources": [{
+      "id": "2222",
+      "number": "2222",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }]
+  }, {
+    "name": "Third AA",
+    "ceUrl": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc73333",
+    "resources": [{
+      "id": "3333",
+      "number": "3333",
+      "type": "directoryNumber",
+      "trigger": "incomingCall"
+    }]
+  }],
+  "dependsIds": [{
+    "aaID": "c16a6027-caef-4429-b3af-9d61ddc71111",
+    "dependants": [{
+      "refAaID": "c16a6027-caef-4429-b3af-9d61ddc72222"
+    }]
+  }]
+}
