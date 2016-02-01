@@ -2275,10 +2275,19 @@
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
+      "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
+      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+    },
+    "reassign": {
+      "reassignHost": "Reassign Host",
+      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignErrorHeader": "Unexpected Error",
+      "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2324,7 +2333,9 @@
     "offline": "Offline",
     "active": "Active",
     "noCluster": "No Media Service Clusters Connected to Spark",
-    "close": "Close"
+    "close": "Close",
+    "reassignCluster": "Reassign to Cluster",
+    "moveHost": "MOVE HOST"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
