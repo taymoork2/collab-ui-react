@@ -112,19 +112,24 @@
         <div class="medium-12 columns">
           <h4 translate="common.devices"></h4>
 
-          <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">
+          <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">   
             <h5 ng-if="device.model">
-              <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/> <span class="device-name">{{device.model}}</span>
-            </h5>             
-            <div ng-if="device.deviceStatus.statusKey">
-              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
-            </div>
-            <div>
-              <span>{{device.name}}</span>
-            </div>      
+              <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/>
+              <span class="device-name">
+                <a ui-sref="helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskUserCtrl.org.id})">
+                  {{device.name}}
+                </a>
+              </span>
+            </h5>   
+             <div>
+              <span>{{device.model}}</span>
+            </div>                                
             <div ng-if="device.description">
               <span>{{device.description}}</span>
-            </div>            
+            </div>  
+             <div ng-if="device.deviceStatus.statusKey">
+              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
+            </div>           
           </div>
         </div>
       </div>
