@@ -2071,14 +2071,13 @@
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
     "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires",
+    "expires": "This activation code expires",
     "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
