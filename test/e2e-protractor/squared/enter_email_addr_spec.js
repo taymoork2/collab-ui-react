@@ -35,7 +35,7 @@ describe('Test the enterEmailAddr page', function () {
     var randomEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
     enterEmailAddrPage.email.sendKeys(randomEmail);
     enterEmailAddrPage.nextButton.click();
-    browser.driver.sleep(8000);
+    browser.driver.sleep(12000);
     browser.getCurrentUrl().
     then(function (url) {
       expect(url).toContain('/#/createAccount');
