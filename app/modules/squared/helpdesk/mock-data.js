@@ -57,8 +57,15 @@
         "uri": "https://identity.webex.com/identity/scim/1eb65fdf-9643-417f-9974-ad72cae0e10f/v1/Users/b78903e2-39e6-45fa-af0f-5d31de45934f"
       },
       "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation", "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge", "meetings", "ciscouc", "cloudmeetings"],
-      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'],
+      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation",
+        "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge",
+        "meetings", "ciscouc", "cloudmeetings"
+      ],
+      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com',
+        'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'
+      ],
       "photos": [{
         "type": "thumbnail",
         "value": "https://1efa7a94ed216783e352-c62266528714497a17239ececf39e9e2.ssl.cf1.rackcdn.com/V1~b1403a2d9a639ca7700dae70fd5a18f8~NxFT-HKtSbK02T8H-kQZGg==~80"
@@ -490,6 +497,22 @@
         "userId": "58852083@qq.com"
       },
       "registrationStatus": "registered"
+    },
+    logs: {
+      search: [{
+        filename: "logFile1",
+        timestamp: "2016-04-25T11:46:24.757Z"
+      }, {
+        filename: "logFile2",
+        timestamp: "2016-02-25T11:46:24.757Z"
+      }, {
+        filename: "logFile3",
+        timestamp: "2016-01-25T11:46:24.757Z"
+      }, {
+        filename: "logFile4",
+        timestamp: "2016-04-25T11:46:25.757Z"
+      }],
+      download: "http://someverylongurl.txt"
     }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
