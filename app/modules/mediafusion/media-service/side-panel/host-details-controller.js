@@ -14,8 +14,6 @@ angular.module('Mediafusion')
       vm.options = ["Switching", "Transcoding"];
       vm.selectPlaceholder = 'Select One';
 
-      $log.log("count of hosts", vm.hostscount);
-
       vm.reassignCluster = function () {
         $modal.open({
           resolve: {
@@ -55,7 +53,6 @@ angular.module('Mediafusion')
 
       vm.showDeregisterHostDialog = function () {
         if (vm.hostscount == 1) {
-          $log.log("idod");
           $modal.open({
             resolve: {
               cluster: function () {
@@ -67,7 +64,6 @@ angular.module('Mediafusion')
             templateUrl: 'modules/mediafusion/media-service/side-panel/host-deregister-cluster-delete-dialog.html'
           });
         } else {
-          $log.log("count is not 1");
           $modal.open({
             resolve: {
               cluster: function () {

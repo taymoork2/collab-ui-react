@@ -5,7 +5,6 @@
   function ReassignClusterController(cluster, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
     var vm = this;
     window.x = $window;
-    $log.log("cluster details:", cluster);
 
     vm.options = [];
     vm.selectPlaceholder = 'Select a Cluster';
