@@ -1,5 +1,5 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
-fdescribe('DomainManagementService', function () {
+describe('DomainManagementService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
@@ -13,9 +13,11 @@ fdescribe('DomainManagementService', function () {
         }
       };
 
-      XhrNotificationService = {getMessages: function (ar) {
-        return ['formatted err msg: ' + ar[0] ];
-      }};
+      XhrNotificationService = {
+        getMessages: function (ar) {
+          return ['formatted err msg: ' + ar[0]];
+        }
+      };
 
       $provide.value('Authinfo', Authinfo);
       $provide.value('XhrNotificationService', XhrNotificationService);
@@ -30,23 +32,22 @@ fdescribe('DomainManagementService', function () {
   }));
 
   afterEach(function () {
-    $httpBackend.verifyNoOutstandingRequest();
-    $httpBackend.verifyNoOutstandingExpectation();
+    setTimeout($httpBackend.verifyNoOutstandingExpectation, 0);
+    setTimeout($httpBackend.verifyNoOutstandingRequest, 0);
   });
 
   var $httpBackend, Authinfo, Config;
 
-  it('should fail to get an organization for a given orgId1', function () {
+  it('should produce a list of domains with tokens for the pending.', function (done) {
 
     let orgId = 'mockOrgId';
     let scomUrl = Config.getScomUrl() + '/' + orgId;
-    let getTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
 
     $httpBackend
       .expectGET(scomUrl)
       .respond({
         id: "theid",
-        meta:{ created: "adfd"},
+        meta: {created: "adfd"},
         displayName: "org",
         domains: [
           "claimed1.grodum.org",
@@ -59,38 +60,58 @@ fdescribe('DomainManagementService', function () {
         ],
         pendingDomains: [
           "verified1.grodum.org",
-          "claimed2.grodum.org",
+          "claimed1.grodum.org",
           "pending1.grodum.org",
-          "pending2.grodum.org"
         ]
       });
 
-    $httpBackend
-      .when(
-        'POST',
-        getTokenUrl
-      )
+
+   /* If we want to expand the test to test tokens:
+    let getTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
+
+   $httpBackend
+      .expectPOST(getTokenUrl)
       .respond({
         token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke"
-      });
+      });*/
 
-    let promise = DomainManagementService.getVerifiedDomains();
+    DomainManagementService.getVerifiedDomains().then(function (data) {
+      let expectedRes = [{
+        text: 'claimed1.grodum.org',
+        token: '',
+        status: DomainManagementService.states.claimed
+      }, {
+        text: 'claimed2.grodum.org',
+        token: '',
+        status: DomainManagementService.states.claimed
+      }, {
+        text: 'verified1.grodum.org',
+        token: '',
+        status: DomainManagementService.states.verified
+      }, {
+        text: 'verified2.grodum.org',
+        token: '',
+        status: DomainManagementService.states.verified
+      }, {
+        text: 'pending1.grodum.org',
+        token: 'mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke',
+        status: DomainManagementService.states.pending
+      }];
 
-    $httpBackend.flush();
+      console.log("got res:", data);
+      expect(data.length).toBe(expectedRes.length);
 
-    var res;
-    promise.then(r => {
-      res = r;
+      for(var i=0;i<data.length;i++){
+
+        expect(data[i].text).toBe(expectedRes[i].text);
+        expect(data[i].status).toBe(expectedRes[i].status);
+        expect(data[i].token).toBeFalsy(); //not set yet
+      }
+      done();
+    }, function (err) {
+      expect(err).toBe(null);
     });
 
-    let expectedRes = [{
-      text: 'verified1.grodum.org',
-      code: '',
-      status: DomainManagementService.states.pending
-    }];
-
-  //  expect(res.length).toBe(expectedRes.length);
-  //  expect(res[0].text).toBe(expectedRes[0].text);
- //   expect(res[0].status).toBe(expectedRes[0].status);
+    $httpBackend.flush();
   });
 });
