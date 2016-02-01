@@ -1,12 +1,14 @@
 <div class="wizard-main">
-  <div id="wizardTitle" class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
-    <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-  </div>
-  <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
-    <div ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
+  <div class="wizard-main-inner">
+    <div id="wizardTitle" class="wizard-main-title"><span translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
+      <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
+        <span class="sr-only" translate="common.close"></span>
+      </button>
     </div>
+    <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
+      <div ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
+      </div>
+    </div>
+    <cr-wizard-buttons></cr-wizard-buttons>
   </div>
-  <cr-wizard-buttons></cr-wizard-buttons>
 </div>
