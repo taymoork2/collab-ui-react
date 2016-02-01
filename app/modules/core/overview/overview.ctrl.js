@@ -44,7 +44,6 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-    ReportsService.huronHealthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 

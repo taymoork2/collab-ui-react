@@ -8,6 +8,7 @@
     vm.deviceId = $stateParams.id;
     vm.orgId = $stateParams.orgId;
     vm.device = $stateParams.device;
+    vm.ownerUser = vm.device ? vm.device.user : null;
     vm.keyPressHandler = keyPressHandler;
     if ($stateParams.device && $stateParams.device.organization) {
       vm.org = $stateParams.device.organization;
@@ -27,7 +28,7 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
-      if (vm.device.ownerUser && vm.device.ownerUser.uuid) {
+      if (!vm.ownerUser && vm.device.ownerUser && vm.device.ownerUser.uuid) {
         HelpdeskService.getUser(vm.orgId, vm.device.ownerUser.uuid).then(function (ownerUser) {
           vm.ownerUser = ownerUser;
         }, XhrNotificationService.notify);

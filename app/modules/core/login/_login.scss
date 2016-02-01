@@ -26,3 +26,10 @@
   margin: 50px auto 0 auto;
   width: 280px;
 }
+
+/* Remove when Microsoft fixes flexbox problem *\
+   when min-height is defined.  See 
+\* messagebox-small in ToolKit.                */
+.vertical-ie-workaround {
+  height: 0px;
+}

@@ -161,10 +161,10 @@ angular.module('Core')
         },
 
         domainManagementUrl: {
-          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
-          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
-          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
-          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+          dev: 'https://identity.webex.com/organization/%s/v1/',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/',
+          integration: 'https://identity.webex.com/organization/%s/v1/',
+          prod: 'https://identity.webex.com/organization/%s/v1/'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',
@@ -188,13 +188,6 @@ angular.module('Core')
           cfe: 'https://ciscospark.statuspage.io/index.json',
           integration: 'https://ciscospark.statuspage.io/index.json',
           prod: 'https://ciscospark.statuspage.io/index.json'
-        },
-
-        huronHealthCheckUrl: {
-          dev: 'https://squareduc.statuspage.io/index.json',
-          cfe: 'https://squareduc.statuspage.io/index.json',
-          integration: 'https://squareduc.statuspage.io/index.json',
-          prod: 'https://squareduc.statuspage.io/index.json'
         },
 
         herculesUrl: {
@@ -242,6 +235,13 @@ angular.module('Core')
           cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
           integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
           prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+        },
+
+        cdrUrl: {
+          dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
+          integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
         },
 
         scimSchemas: [
@@ -886,17 +886,6 @@ angular.module('Core')
           return healthCheckServiceUrl[this.getEnv()];
         },
 
-        getHuronHealthCheckUrlServiceUrl: function () {
-          var healthCheckServiceUrl = {
-            'dev': this.huronHealthCheckUrl.dev,
-            'cfe': this.huronHealthCheckUrl.cfe,
-            'integration': this.huronHealthCheckUrl.integration,
-            'prod': this.huronHealthCheckUrl.prod
-          };
-
-          return healthCheckServiceUrl[this.getEnv()];
-        },
-
         getLogMetricsUrl: function () {
           return this.logMetricUrl;
         },
@@ -1022,6 +1011,17 @@ angular.module('Core')
           };
 
           return sunlightConfigServiceUrl[this.getEnv()];
+        },
+
+        getCdrUrl: function () {
+          var cdrConfigServiceUrl = {
+            'dev': this.cdrUrl.dev,
+            'cfe': this.cdrUrl.cfe,
+            'integration': this.cdrUrl.integration,
+            'prod': this.cdrUrl.prod
+          };
+
+          return cdrConfigServiceUrl[this.getEnv()];
         }
       };
 
@@ -1113,7 +1113,8 @@ angular.module('Core')
           'huronHuntGroup',
           'huntgroupedit',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
