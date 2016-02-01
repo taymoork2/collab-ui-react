@@ -111,14 +111,7 @@
          Details
       </strong>
 
-      <div class="para" ng-if="deviceDetails.device.readableActivationCode">
-        <div class="row">
-          <div class="small-4 columns">Activation Code:</div>
-          <div class="small-8 columns ellipsis readable-activation-code">
-            <span ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search"></span>
-            <a class="clipboard-button" sq-clipboard="deviceDetails.device.readableActivationCode"><i class="fa fa-clipboard"></i></a>
-          </div>
-        </div>
+      <div class="para" ng-if="deviceDetails.device.needsActivation">
         <div class="row" ng-if="deviceDetails.device.expiryTime">
           <div class="small-4 columns">Expiry Time:</div>
           <div class="small-8 columns ellipsis" ng-bind-html="deviceDetails.device.expiryTime | date : 'medium'"></div>
@@ -126,7 +119,7 @@
       </div>
 
 
-      <div class="para" ng-if="!deviceDetails.device.readableActivationCode">
+      <div class="para" ng-if="!deviceDetails.device.needsActivation">
         <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
           <div class="small-4 columns">{{name}}:</div>
           <div class="small-8 columns ellipsis" ng-bind-html="deviceDetails.device[key] | highlight:devices.search"></div>
