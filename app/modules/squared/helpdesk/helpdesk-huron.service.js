@@ -67,13 +67,13 @@
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
         .then(extractDevices);
     }
-    
+
     function setOwnerUserOnDeviceSearchResults(deviceSearchResults) {
       _.each(deviceSearchResults, function (device) {
         if (device.isHuronDevice && !device.user) {
-           HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function(user) {
+          HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
             device.user = user;
-           }, angular.noop);
+          }, angular.noop);
         }
       });
     }
