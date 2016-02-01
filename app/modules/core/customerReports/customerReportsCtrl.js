@@ -65,8 +65,15 @@
 
     var deviceChart = null;
     var deviceCard = null;
+    var currentDeviceGraphs = [];
+    var defaultDeviceFilter = {
+      value: 0,
+      label: $translate.instant('registeredEndpoints.allDevices')
+    };
     vm.deviceStatus = REFRESH;
     vm.deviceDescription = '';
+    vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+    vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
     var metricsCard = null;
@@ -102,6 +109,7 @@
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
+    vm.deviceUpdate = deviceUpdate;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -452,20 +460,36 @@
     }
 
     function setDeviceData() {
+      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.selectedDevice = vm.deviceFilter[0];
+      currentDeviceGraphs = [];
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
-          // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
-          //   deviceChart = tempDeviceChart;
-          // }
+          vm.deviceFilter = response.filterArray;
+          vm.selectedDevice = vm.deviceFilter[0];
+          currentDeviceGraphs = response.graphData;
+
+          var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+          if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+            deviceChart = tempDevicesChart;
+          }
           vm.deviceStatus = SET;
         }
         deviceCard = document.getElementById('device-card');
       });
+    }
+
+    function deviceUpdate() {
+      if (currentDeviceGraphs.length > 0) {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+      }
     }
 
     // WEBEX side of the page has been copied from the existing reports page
