@@ -169,24 +169,15 @@ angular.module('Core')
 
         sparkDomainManagementUrl: {
           dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
           integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
           prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
         },
 
         sparkDomainCheckUrl: {
           dev: '.wbx2.com',
+          cfe: '.wbx2.com',
           integration: '.wbx2.com',
-          prod: '.ciscospark.com'
-        },
-
-        sparkDomainManagementUrl: {
-          dev: 'http://171.68.20.140:8080/atlas-server/admin/api/v1/',
-          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
-        },
-
-        sparkDomainCheckUrl: {
-          dev: '.koalabait.com',
           prod: '.ciscospark.com'
         },
 
@@ -676,6 +667,8 @@ angular.module('Core')
         getSparkDomainManagementUrl: function () {
           var sparkDomainManagementUrl = {
             'dev': this.sparkDomainManagementUrl.dev,
+            'cfe': this.sparkDomainManagementUrl.cfe,
+            'integration': this.sparkDomainManagementUrl.integration,
             'prod': this.sparkDomainManagementUrl.prod
           };
 
@@ -685,6 +678,8 @@ angular.module('Core')
         getSparkDomainCheckUrl: function () {
           var sparkDomainCheckUrl = {
             'dev': this.sparkDomainCheckUrl.dev,
+            'cfe': this.sparkDomainCheckUrl.cfe,
+            'integration': this.sparkDomainCheckUrl.integration,
             'prod': this.sparkDomainCheckUrl.prod
           };
 
