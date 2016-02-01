@@ -7,7 +7,9 @@
 
 describe('Test the createAccount page', function () {
 
-  var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
+  // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
+
+  /*var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
   browser.get('#/createAccount?email=' + newEmail);
 
   it('should have the right title', function () {
@@ -95,6 +97,6 @@ describe('Test the createAccount page', function () {
     then(function (url) {
       expect(url).not.toContain('/#/createAccount');
     });
-  });
+  });*/
 
 });
