@@ -1,11 +1,11 @@
 'use strict';
 
 /* eslint-disable */
-/* global xdescribe */
+/* global describe */
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
-describe('Test the createAccount page', function () {
+xdescribe('Test the createAccount page', function () {
 
   // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
