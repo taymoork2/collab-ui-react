@@ -1862,7 +1862,8 @@ angular
           params: {
             clusterId: null,
             properties: null,
-            connector: null
+            connector: null,
+            hostLength: null
           }
         })
         .state('connector-details.group-settings', {
