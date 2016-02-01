@@ -20,7 +20,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
-  $scope.showHelpDeskRole = !Config.isProd() || Authinfo.isCisco() || Authinfo.getOrgId() == '21cf6a5e-a63d-485f-8d62-b1d9e6f253c4';
+  $scope.showHelpDeskRole = !Config.isProd() || Authinfo.isCisco() || _.includes(['21cf6a5e-a63d-485f-8d62-b1d9e6f253c4', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
   $scope.getMessengerSyncStatus = getMessengerSyncStatus;
   $scope.updateRoles = updateRoles;
   $scope.clearCheckboxes = clearCheckboxes;

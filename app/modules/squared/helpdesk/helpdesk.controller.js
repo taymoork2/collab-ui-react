@@ -208,6 +208,7 @@
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
           HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
@@ -276,6 +277,7 @@
         break;
       case 'device':
         vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
+        HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         break;
       }
     }

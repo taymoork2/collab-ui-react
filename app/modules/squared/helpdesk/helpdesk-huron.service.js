@@ -68,6 +68,16 @@
         .then(extractDevices);
     }
 
+    function setOwnerUserOnDeviceSearchResults(deviceSearchResults) {
+      _.each(deviceSearchResults, function (device) {
+        if (device.isHuronDevice && !device.user) {
+          HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
+            device.user = user;
+          }, angular.noop);
+        }
+      });
+    }
+
     function extractNumbers(res) {
       return res.data ? res.data.numbers : res.numbers;
     }
@@ -126,7 +136,8 @@
       getDevices: getDevices,
       getUserNumbers: getUserNumbers,
       searchDevices: searchDevices,
-      getDevice: getDevice
+      getDevice: getDevice,
+      setOwnerUserOnDeviceSearchResults: setOwnerUserOnDeviceSearchResults
     };
   }
 
