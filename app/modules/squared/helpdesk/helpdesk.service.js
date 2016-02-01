@@ -146,7 +146,6 @@
       }
       var cachedUser = userCache.get(userId);
       if (cachedUser) {
-        console.log('user cache hit');
         return deferredResolve(cachedUser);
       }
       return $http
