@@ -1173,12 +1173,12 @@
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomain": "We recommend that you not use a single IP address/hostname when multiple Expressway nodes are configured to accept calls from the cloud.  Instead, use a domain or a subdomain name paired with a service SRV record to allow for the most flexibility and high availability for the service.",
-        "sipDomainInformationUl1": "Example values:",
-        "sipDomainInformationUl2": "Domain or subdomain name configured for Service SRV Record",
-        "sipDomainInformationUl3": "Expressway-E Hostname:port",
-        "sipDomainInformationUl4": "Expressway-E IP:port",
-        "sipDomainPlaceholder": "example.com:5060"
+        "sipDomainInformationUl1": "Enter an SRV domain,",
+        "sipDomainInformationUl2": "hostname:port, or IP address:port",
+        "sipDomainInformationUl3": "that resolves to your Expressway-E",
+        "sipDomainInformationUl4": "for mutual TLS.",
+        "sipDomainPlaceholder": "Enter a SIP Destination",
+        "sipDomainExample": "For example: acme.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",

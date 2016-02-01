@@ -213,11 +213,8 @@ Special stuff currently used for out own mail input field...
 }
 
 .hercules-sip-settings {
-  /*.tooltip {
-    width: 400px;
-  }*/
-  .tooltip {
-    width: 100%;
+  .tooltip-inner {
+    max-width: 300px;
   }
   .sip-domain-tooltip {
     text-align: left;
@@ -230,5 +227,9 @@ Special stuff currently used for out own mail input field...
 }
 
 .add-resource-button {
+  margin-left: 30px;
+}
+
+.sip-domain-icon {
   margin-left: 30px;
 }
