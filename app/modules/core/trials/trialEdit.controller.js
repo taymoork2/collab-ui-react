@@ -302,6 +302,9 @@
       setViewState('trialEdit.meeting', !vm.preset.meeting && vm.meetingTrial.enabled);
 
       addRemoveStates();
+      _.forEach(vm.individualServices, function (service) {
+        service.runExpressions();
+      });
     }
 
     function addRemoveStates() {
