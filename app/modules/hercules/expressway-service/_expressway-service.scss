@@ -216,20 +216,11 @@ Special stuff currently used for out own mail input field...
   .tooltip-inner {
     max-width: 300px;
   }
-  .sip-domain-tooltip {
-    text-align: left;
-    text-wrap: avoid;
-    width: 300px;
-    list-style-type: none;
-    text-align: left;
-    height: 100%;
+  .sip-domain-icon {
+    margin-left: 30px;
   }
 }
 
 .add-resource-button {
-  margin-left: 30px;
-}
-
-.sip-domain-icon {
   margin-left: 30px;
 }
