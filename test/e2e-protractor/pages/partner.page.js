@@ -111,6 +111,7 @@ var PartnerHomePage = function () {
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
+  this.closeBtnOnModal = element(by.css('button.close'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -149,6 +150,24 @@ var PartnerHomePage = function () {
       return orgId;
     });
   };
+
+  this.isPaused = function () {
+    return browser.executeScript(function () {
+      return document.getElementById('videoId').paused;
+    });
+  };
+
+  this.playVideo = function () {
+    browser.executeScript(function () {
+      document.getElementById('videoId').play();
+    });
+  };
+
+  this.videoLoadError = function () {
+    return browser.executeScript(function () {
+      return document.getElementById('videoId').onerror;
+    });
+  }
 };
 
 module.exports = PartnerHomePage;
