@@ -6,17 +6,17 @@ namespace domainManagement {
     private _error;
 
     /* @ngInject */
-    constructor(private $state, private DomainManagementService, $translate) {
+    constructor(private $state, private $previousState, private DomainManagementService, $translate) {
       this._domain = $state.params.domain;
       this._loggedOnUser = $state.params.loggedOnUser;
 
       //if any domain is already verified, it is safe to verify more:
       if (DomainManagementService.domainList.length == 0
-        || _.all(DomainManagementService.domainList, {status: DomainManagementService.states.pending})){
+        || _.all(DomainManagementService.domainList, {status: DomainManagementService.states.pending})) {
 
         //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
         if (this.domainName != this._loggedOnUser.domain)
-          this._error = $translate.instant('domainManagement.verify.preventLockoutError', { domain: this._loggedOnUser.domain});
+          this._error = $translate.instant('domainManagement.verify.preventLockoutError', {domain: this._loggedOnUser.domain});
       }
     }
 
@@ -45,10 +45,14 @@ namespace domainManagement {
 
     public verify() {
       this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
-        this.$state.go('domainmanagement');
+        this.$previousState.go();
       }, err => {
         this._error = err;
       });
+    }
+
+    public cancel() {
+      this.$previousState.go();
     }
   }
   angular

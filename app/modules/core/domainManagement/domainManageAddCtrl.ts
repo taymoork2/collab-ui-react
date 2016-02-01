@@ -7,7 +7,7 @@ namespace domainManagement {
     private _adding = false;
 
     /* @ngInject */
-    constructor($stateParams, private $state, private DomainManagementService) {
+    constructor($stateParams, private $previousState, private DomainManagementService) {
 
       this._loggedOnUser = $stateParams.loggedOnUser;
     }
@@ -21,7 +21,7 @@ namespace domainManagement {
 
       this.DomainManagementService.addDomain(this.domainToAdd).then(
         ()=> {
-          this.$state.go('domainmanagement');
+          this.$previousState.go();
           this._adding = false;
         },
         err => {
@@ -38,7 +38,7 @@ namespace domainManagement {
     }
 
     public cancel() {
-      this.$state.go('domainmanagement');
+      this.$previousState.go();
     }
 
     get exampleDomain() {

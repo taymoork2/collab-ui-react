@@ -8,7 +8,7 @@ namespace domainManagement {
     private _progress;
 
     /* @ngInject */
-    constructor($stateParams, private $state, private DomainManagementService) {
+    constructor($stateParams, private $previousState, private DomainManagementService) {
 
       this._domain = $stateParams.domain;
       this._loggedOnUser = $stateParams.loggedOnUser;
@@ -16,7 +16,7 @@ namespace domainManagement {
     }
 
     public cancel() {
-      this.$state.go('domainmanagement');
+      this.$previousState.go();
     }
 
     public sendEmail() {
