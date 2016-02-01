@@ -41,7 +41,7 @@ namespace domainManagement {
         this._loggedOnUser.isLoaded = true;
       });
 
-      this.DomainManagementService.getVerifiedDomains().then(DomainManagementService.getVerificationTokens);
+      this.DomainManagementService.getVerifiedDomains().then(DomainManagementService.getVerificationTokens.bind(DomainManagementService));
     }
 
     get domains() {
