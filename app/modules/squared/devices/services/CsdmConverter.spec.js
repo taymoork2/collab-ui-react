@@ -17,13 +17,6 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertDevice(obj).tags[0]).toBe('foo');
   });
 
-  it('should format activation code', function () {
-    var arr = [{
-      activationCode: '1111222233334444'
-    }];
-    expect(converter.convertDevices(arr)[0].readableActivationCode).toBe('1111 2222 3333 4444');
-  });
-
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'

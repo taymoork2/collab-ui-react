@@ -1166,16 +1166,16 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
-        "sipDomainHeading": "SIP Domain",
-        "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
-        "sipDomainPlaceholder": "Enter a single domain or subdomain"
+        "sipDomainHeading": "SIP Destination",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port, that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainPlaceholder": "Enter a SIP Destination",
+        "sipDomainExample": "For example: acme.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
@@ -2071,14 +2071,13 @@
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
     "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires",
+    "expires": "This activation code expires",
     "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
