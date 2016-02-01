@@ -56,6 +56,7 @@
       vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
     }
 
+    // format name with extension
     function formatName(user, extension) {
       var name;
       if (angular.isDefined(user.displayName))
@@ -69,6 +70,7 @@
         return name;
     }
 
+    // get user by uuid
     function getUser(uuid) {
       var deferred = $q.defer();
       Userservice.getUser(uuid, function (user) {
@@ -82,6 +84,8 @@
       return deferred.promise;
     }
 
+    // get the formatted user and extension provided the user uuid
+    // used on load to populate the UI model
     function getFormattedUserAndExtension(uuid) {
       return getUser(uuid).then(function (user) {
         var userObj = user;
@@ -100,6 +104,7 @@
       });
     }
 
+    // get user's primary extension via CMI users API property primaryDirectoryNumber
     function getUserExtension(uuid) {
       return UserServiceVoice.query({
         customerId: Authinfo.getOrgId(),
@@ -110,6 +115,7 @@
           if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
             return response.primaryDirectoryNumber.pattern;
           else
+          // the user actually has no extension - represented as null in the json, which works here as well
             return null;
         },
         function (response) {
@@ -119,6 +125,8 @@
       );
     }
 
+    // get list of users for the provided search string
+    // also retrieves extension for user for display, but not for searching
     function getUsers(searchStr) {
 
       var defer = $q.defer();
@@ -128,7 +136,7 @@
           vm.users = [];
           _.each(data.Resources, function (aUser) {
             getUserExtension(aUser.id).then(function (extension) {
-              // only add to the user if they have a primary extension
+              // only add to the user list if they have a primary extension
               if (extension) {
                 vm.users.push({
                   description: formatName(aUser, extension),
