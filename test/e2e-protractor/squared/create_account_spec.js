@@ -1,7 +1,7 @@
 'use strict';
 
 /* eslint-disable */
-/* global describe */
+/* global xdescribe */
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
@@ -9,7 +9,7 @@ describe('Test the createAccount page', function () {
 
   // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
-  /*var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
+  var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
   browser.get('#/createAccount?email=' + newEmail);
 
   it('should have the right title', function () {
@@ -97,6 +97,6 @@ describe('Test the createAccount page', function () {
     then(function (url) {
       expect(url).not.toContain('/#/createAccount');
     });
-  });*/
+  });
 
 });

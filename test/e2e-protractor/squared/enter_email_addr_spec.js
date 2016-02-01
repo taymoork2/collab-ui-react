@@ -1,7 +1,7 @@
 'use strict';
 
 /* eslint-disable */
-/* global describe */
+/* global xdescribe */
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
@@ -9,7 +9,7 @@ describe('Test the enterEmailAddr page', function () {
 
   // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
-  /*browser.get('#/enterEmailAddr');
+  browser.get('#/enterEmailAddr');
 
   it('should have the right title', function () {
     expect(enterEmailAddrPage.pageTitle.getInnerHtml()).toEqual('Atlas Portal Shopping Cart Login (APSCL)');
@@ -42,6 +42,6 @@ describe('Test the enterEmailAddr page', function () {
     then(function (url) {
       expect(url).toContain('/#/createAccount');
     });
-  });*/
+  });
 
 });
