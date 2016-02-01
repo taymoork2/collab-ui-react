@@ -70,7 +70,7 @@ describe('Test the createAccount page', function () {
     createAccountPage.password1.sendKeys('P@ssword123');
     createAccountPage.password2.sendKeys('P@ssword123');
     createAccountPage.nextButton.click();
-    browser.driver.sleep(3000);
+    browser.driver.sleep(8000);
     browser.getCurrentUrl().
     then(function (url) {
       expect(url).toContain('digitalriver');
