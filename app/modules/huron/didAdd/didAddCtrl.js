@@ -50,8 +50,6 @@
     vm.checkForDuplicates = checkForDuplicates;
     vm.submit = submit;
     vm.goBackToAddNumber = goBackToAddNumber;
-    vm.startTrial = startTrial;
-    vm.editTrial = editTrial;
     vm.sendEmail = sendEmail;
     vm.backtoStartTrial = backtoStartTrial;
     vm.backtoEditTrial = backtoEditTrial;
@@ -280,32 +278,12 @@
 
     function backtoEditTrial() {
       $state.go('trialEdit.info', {
-        currentTrial: vm.currentTrial,
-        showPartnerEdit: true
+        currentTrial: vm.currentTrial
       });
     }
 
     function backtoStartTrial() {
       $state.go('trialAdd.info');
-    }
-
-    function startTrial(customerOrgId) {
-      populateDidArrays();
-      return submit(customerOrgId);
-    }
-
-    function editTrial() {
-      if ($scope.trial && angular.isFunction($scope.trial.editTrial)) {
-        vm.startTrialLoad = true;
-        $q.when($scope.trial.editTrial(true)).then(function (customerId) {
-          populateDidArrays();
-          return submit(customerId);
-        }).then(function () {
-          $state.modal.close();
-        }).catch(function () {
-          vm.startTrialLoad = false;
-        });
-      }
     }
 
     function sendEmail() {
