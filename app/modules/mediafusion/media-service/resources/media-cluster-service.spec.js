@@ -107,6 +107,96 @@ describe('Service: MediaClusterService', function () {
     expect(callback.callCount).toBe(1);
   });
 
+  it('should delete a group', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/property_sets/propertysetid'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.deleteGroup('propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle faliures in deleting a group', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/property_sets/propertysetid'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.deleteGroup('propertysetid').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should update a group assignment', function () {
+    $httpBackend
+      .when(
+        'POST',
+        rootPath + '/clusters/clusterid/assigned_property_sets'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.updateGroupAssignment('clusterid', 'propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle failures in updating a group assignment', function () {
+    $httpBackend
+      .when(
+        'POST',
+        rootPath + '/clusters/clusterid/assigned_property_sets'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.updateGroupAssignment('clusterid', 'propertysetid').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should delete group assignment', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/clusters/clusterid/assigned_property_sets/propertysetid'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.removeGroupAssignment('clusterid', 'propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle failures in deleting group assignment', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/clusters/clusterid/assigned_property_sets/propertysetid'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.removeGroupAssignment('clusterid', 'propertysetid').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
   it('should call error callback on failure', function () {
     $httpBackend
       .when('GET', rootPath + '/clusters')
