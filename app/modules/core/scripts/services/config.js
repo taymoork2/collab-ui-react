@@ -1043,6 +1043,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
+          'drLoginForward',
           'users',
           'user-overview',
           'userprofile',
