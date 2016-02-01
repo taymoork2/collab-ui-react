@@ -19,11 +19,6 @@
         {{helpdeskUserCtrl.user.displayName}}
       </h3>
 
-      <div class="customer-or-partner">
-        <span translate="helpdesk.accountCreated"></span>:
-        <span class="date-created user-value">{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
-      </div>
-
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.verification' | translate}}:</span>
@@ -31,6 +26,15 @@
         <div class="medium-7 columns details-value">
           <span ng-if="helpdeskUserCtrl.verificationCode" style="padding-right: 1rem">{{helpdeskUserCtrl.verificationCode}}</span>
           <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.sendCode()" translate="helpdesk.sendCode" ng-if="!helpdeskUserCtrl.verificationCode"></button>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.accountCreated' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
         </div>
       </div>
 
