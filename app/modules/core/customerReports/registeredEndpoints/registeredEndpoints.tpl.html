@@ -6,6 +6,7 @@
     <section>
       <div class="customer-devices">
         <p class="report-description">{{nav.deviceDescription}}</p>
+        <cs-select id="deviceFilter" name="deviceFilter" class='customer-report-filter device-filter' ng-model="nav.selectedDevice" options="nav.deviceFilter" on-change-fn="nav.deviceUpdate()"></cs-select>
         <div id="devicesDiv" class="barchart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.deviceStatus)">
           <i class='icon icon-spinner icon-2x'></i>
