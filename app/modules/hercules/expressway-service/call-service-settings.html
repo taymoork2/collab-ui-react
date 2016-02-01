@@ -17,6 +17,9 @@
       </h6>
       <p translate="hercules.settings.call.connect"></p>
       <div ng-if="expresswayServiceSettings.squaredFusionEc"
+           ng-controller="DomainManagementCtrl as dv"
+           ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
+      <div ng-if="expresswayServiceSettings.squaredFusionEc"
            ng-include
            src="'modules/hercules/expressway-service/sip-domain-setting.html'"></div>
       <div ng-if="expresswayServiceSettings.squaredFusionEc"
