@@ -1,0 +1,14 @@
+<div class="tab-content center">
+  <div class="total-count">
+    <span translate="{{::countTranslateKey}}" translate-values="{count: numbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
+  </div>
+  <div class="filter">
+    <input type="text" class="form-control" ng-model="externalNumbers.filter" ng-model-options="{ debounce: 250 }">
+    <i class="icon icon-search"></i>
+  </div>
+  <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: filteredNumbers.length}" translate-interpolation="messageformat">
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item list-token" ng-class="{'invalid-token': number.pattern === number.label}" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'"><span ng-bind="::number.label"></span><button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)"><span class="sr-only" translate="common.delete"></span></button></li>
+  </ul>
+</div>

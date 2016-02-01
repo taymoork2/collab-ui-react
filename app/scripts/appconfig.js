@@ -1354,7 +1354,6 @@ angular
             }
           },
           params: {
-            showPartnerEdit: false,
             currentTrial: {}
           }
         })
@@ -1363,7 +1362,7 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: false,
+            fromEditTrial: true,
             currentOrg: {}
           }
         })
