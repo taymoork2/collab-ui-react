@@ -83,7 +83,7 @@ namespace domainManagement {
         return {valid: false, empty: !this._domain};
       }
 
-      if (!(/^(([^\.]+\.)+[^\.]{2,})$/g.test(domain))) {
+      if (!(/^(([^\.,]+\.)+[^\.,]{2,})$/g.test(domain))) {
         return {valid: false, empty: !this._domain};
       }
       //if (/^(([a-åA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
