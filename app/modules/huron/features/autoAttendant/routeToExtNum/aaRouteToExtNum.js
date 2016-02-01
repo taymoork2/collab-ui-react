@@ -16,9 +16,6 @@
       phoneNumber: ''
     };
 
-    // when country code options are undefined, the cs-country-select control will populate it with all countries
-    // we must explicitly define and set it to undefined or we get exception Expression 'undefined' used with directive 'csCountrySelect' is non-assignable!
-    vm.options = undefined;
     vm.countryList = [{
       key: 'phoneNumberInput',
       type: 'countrylist',
@@ -47,7 +44,11 @@
     }
 
     function saveUiModel() {
-      vm.menuKeyEntry.actions[0].setValue(vm.model.phoneNumberInput.phoneNumber.replace(/\D/g, ''));
+      var num = vm.model.phoneNumberInput.phoneNumber;
+      if (num) {
+        num = num.replace(/\D/g, '');
+      }
+      vm.menuKeyEntry.actions[0].setValue(num);
       AACommonService.setPhoneMenuStatus(true);
     }
 
