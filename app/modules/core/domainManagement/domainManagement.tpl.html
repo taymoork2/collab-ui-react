@@ -1,7 +1,7 @@
 <div id="domainManagement" ng-if="dv.feature">
   <article>
     <header>
-      <h4 translate="domainManagement.title"/>
+      <h5><strong translate="domainManagement.title" /></h5>
     </header>
     <section>
       <span translate="domainManagement.description"></span>
@@ -54,7 +54,7 @@
           </td>
         </tr>
       </table>
-      <button class="btn--primary" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain"
+      <button class="btn--primary addDomain" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain"
               ui-sref="domainmanagement.add({loggedOnUser: dv.loggedOnUser})"></button>
 
     </section>
