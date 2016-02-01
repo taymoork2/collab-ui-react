@@ -606,7 +606,10 @@
       return getService(deviceUrl, deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
-        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+          graphData: [],
+          filterArray: []
+        });
       });
     }
 
