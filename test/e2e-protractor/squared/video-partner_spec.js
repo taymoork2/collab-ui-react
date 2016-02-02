@@ -22,17 +22,10 @@ describe('Video play spec', function () {
     });
 
     it('should play video', function () {
-      // make sure it's not playing
       expect(partner.isPaused()).toBe(true);
-
       expect(partner.videoLoadError()).toBe(null);
-
-      // play video
       partner.playVideo();
-
-      browser.sleep(3000);
       expect(partner.isPaused()).toBe(false);
-      browser.sleep(3000);
     });
 
     it('click on close button of video modal', function () {
