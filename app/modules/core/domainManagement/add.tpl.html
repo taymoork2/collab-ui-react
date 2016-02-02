@@ -13,7 +13,7 @@
 
     <p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty" class="error">
       <i class="icon icon-error"></i>
-      <span translate="domainManagement.add.invalidDomain"></span>
+      <span>{{dmpopup.validate().error ? dmpopup.validate().error:  'domainManagement.add.invalidDomain' | translate}}</span>
     </p>
 
     <p ng-if="dmpopup.error" class="error">

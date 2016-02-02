@@ -3372,7 +3372,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "invalidDomainInt": "This is not a valid domain name. International domain names must be encoded.",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",

@@ -79,19 +79,18 @@ namespace domainManagement {
     public validate() {
       let domain = this.domainToAdd;
 
-      if (domain.length < 3){
-        return {valid: false, empty: !this._domain};
+      if (domain.length < 3) {
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainInt'};
       }
 
-      if (!(/^(([^\.,]+\.)+[^\.,]{2,})$/g.test(domain))) {
-        return {valid: false, empty: !this._domain};
+      if (!(/^(([a-z0-9\-]+\.)+[a-z0-9\-]{2,})$/g.test(domain))) {
+        if (/.*(xn--).+/.test(domain))
+          return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainInt'};
       }
-      //if (/^(([a-åA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
-      //  return {valid: true, empty: false};
-      //}
 
-      if (!this._adding && _.some(this.DomainManagementService.domainList, {text: domain})){
-        return {valid: false, empty: !this._domain}; //already added!
+      if (!this._adding && _.some(this.DomainManagementService.domainList, {text: domain})) {
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainAdded'}; //already added!
       }
 
       return {valid: true, empty: false};
