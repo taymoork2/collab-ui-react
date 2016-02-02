@@ -137,10 +137,6 @@ var PartnerHomePage = function () {
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
 
-  this.assertDisabled = function (id) {
-    expect(element(by.id(id)).isEnabled()).toBeFalsy();
-  };
-
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(1);

@@ -44,7 +44,7 @@
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat="connector in expresswayClusterDetails.selectedService().connectors"
+        <li class="feature" ng-repeat="connector in expresswayClusterDetails.selectedService().connectors | orderBy:'host.host_name'"
             ng-class="{'list-item': !$first}">
           <a
             ui-sref="cluster-details.host-details({host: connector.host, clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">

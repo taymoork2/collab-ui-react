@@ -25,9 +25,9 @@
     }
 
     function getCustomerDialPlanCountryCode(customerId) {
-      return getCustomerVoice(customerId)
-        .then(function (response) {
-          return _.trimLeft(response.dialPlanDetails.countryCode, '+');
+      return getCustomerDialPlanDetails(customerId)
+        .then(function (dialPlanDetails) {
+          return _.trimLeft(dialPlanDetails.countryCode, '+');
         });
     }
 

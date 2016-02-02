@@ -9,6 +9,15 @@ var AutoAttendantPage = function () {
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css(' .aa-selected-phones .select-options')).all(by.tagName('li'));
   this.saveButton = element(by.name('saveButton'));
+  this.closeEditButton = element(by.css('button.close'));
+  this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+
+  this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+
+  this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
+
+  this.deleteModalConfirmButton = element(by.id('deleteFeature'));
+
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 
@@ -31,10 +40,25 @@ var AutoAttendantPage = function () {
   this.phoneMenuKeyOptions = element.all(by.css('div.aa-pm-key-select .dropdown-menu'));
   this.phoneMenuAction = element.all(by.css('div.aa-pm-action-select .icon-chevron-down'));
   this.phoneMenuActionOptions = element.all(by.css('div.aa-pm-action-select div.dropdown-menu'));
+
+  this.phoneMenuActionTargets = element.all(by.css('div.aa-key-action'));
+
   this.phoneMenuTimeout = element(by.css('div.aa-pm-timeout .icon-chevron-down'));
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
+
+  this.assertUpdateSuccess = assertUpdateSuccess;
+  this.assertCreateSuccess = assertCreateSuccess;
+
+  function assertUpdateSuccess() {
+    notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+  }
+
+  function assertCreateSuccess() {
+    notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
+  }
+
 };
 
 module.exports = AutoAttendantPage;

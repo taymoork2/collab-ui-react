@@ -134,6 +134,11 @@
       //.success(callback);
     };
 
+    var deleteGroup = function (propertySetId) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySetId;
+      return $http.delete(url);
+    };
+
     var changeRole = function (role, clusterId) {
       var grp = {
         'mf.role': role
@@ -170,6 +175,7 @@
       updateGroupAssignment: updateGroupAssignment,
       removeGroupAssignment: removeGroupAssignment,
       createGroup: createGroup,
+      deleteGroup: deleteGroup,
       changeRole: changeRole,
       subscribe: hub.on,
       getAggegatedClusters: getAggegatedClusters,

@@ -129,6 +129,7 @@
     function addKeyAction() {
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
+      keyAction.key = _.head(keyAction.keys);
       vm.selectedActions.push(keyAction);
 
       // update global UI Model
@@ -136,7 +137,11 @@
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
       menuEntry.addAction(action);
       menuEntry.setType('MENU_OPTION');
+      menuEntry.key = keyAction.key;
       vm.menuEntry.entries.push(menuEntry);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
       setPhonemenuFormDirty();
     }
 
@@ -285,6 +290,7 @@
 
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
+      keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
@@ -293,6 +299,9 @@
       vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
       vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
       vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
     }
 
     function setPhonemenuFormDirty() {
