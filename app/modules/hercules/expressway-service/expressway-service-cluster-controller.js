@@ -35,7 +35,7 @@
           .value();
         vm.upgradeDetails = {
           numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
-          upgradingHostname: findHostname(vm.clusterAggregates.hosts)
+          upgradingHostname: findUpgradingHostname(vm.clusterAggregates.hosts)
         };
       }
 
@@ -78,19 +78,20 @@
       $scope.$on('$destroy', function () {
         $timeout.cancel(promise);
       });
-
-      function findHostname(hostnames) {
-        var upgrading = _.chain(vm.clusterAggregates.hosts)
-          .find('upgradeState', 'upgrading')
-          .value();
-        if (!upgrading) {
-          upgrading = _.chain(vm.clusterAggregates.hosts)
-            .find('upgradeState', 'pending')
-            .value();
-        }
-        return upgrading.hostname;
-      }
     };
+
+    function findUpgradingHostname(hostnames) {
+      var upgrading = _.chain(vm.clusterAggregates.hosts)
+        .find('upgradeState', 'upgrading')
+        .value();
+      // if we are in bad luck we may have none upgrading, just pending
+      if (!upgrading) {
+        upgrading = _.chain(vm.clusterAggregates.hosts)
+          .find('upgradeState', 'pending')
+          .value();
+      }
+      return upgrading.hostname;
+    }
   }
 
   /* @ngInject */
