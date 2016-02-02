@@ -28,7 +28,7 @@
           <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.sendCode()" translate="helpdesk.sendCode" ng-if="!helpdeskUserCtrl.verificationCode"></button>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.accountCreated' | translate}}:</span>
@@ -107,13 +107,13 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>Last Log:</span>
+          <span>{{'helpdesk.lastLog' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
           <span>
             <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'medium'}}</a>
           </span>
-          <span ng-if="!helpdeskUserCtrl.lastPushedLog">No Log Available</span>
+          <span ng-if="!helpdeskUserCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
         </div>
       </div>
 
