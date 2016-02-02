@@ -243,7 +243,11 @@
               vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
             }
           }
+        } else {
+          // if attempts is not specified, menu defaults to first timeout
+          vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
         }
+
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
