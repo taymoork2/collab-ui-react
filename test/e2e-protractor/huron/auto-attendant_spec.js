@@ -117,7 +117,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
 
-    }, 60000);
+    });
 
     it('should add Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -127,7 +127,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuAction.first());
       utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
 
-    }, 60000);
+    });
 
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -142,9 +142,9 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
 
-    }, 60000);
+    });
 
-    it('should delete one Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should delete one Phone Menu Repeat from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Delete one repeatMenu
       utils.click(autoattendant.trash);
