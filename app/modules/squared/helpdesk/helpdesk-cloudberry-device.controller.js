@@ -31,9 +31,7 @@
       if (Authinfo.isSupportUser()) {
         HelpdeskLogService.searchForLastPushedLog(vm.device.cisUuid).then(function (log) {
           vm.lastPushedLog = log;
-        }, function (reason) {
-
-        });
+        }, angular.noop);
       }
 
       angular.element(".helpdesk-details").focus();
