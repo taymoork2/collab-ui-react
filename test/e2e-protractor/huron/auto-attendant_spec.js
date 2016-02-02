@@ -176,7 +176,13 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "4084741234");
 
-    });
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
 
     it('should close AA edit and return to landing page', function () {
 
