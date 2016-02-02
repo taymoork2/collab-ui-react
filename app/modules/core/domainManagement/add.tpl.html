@@ -6,6 +6,7 @@
   <div class="modal-body">
     <p translate="domainManagement.add.description"/>
 
+    <span ng-if="dmpopup.intDomain.show">{{dmpopup.intDomain.text}}</span>
     <input type="text"
            placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}"
            ng-model="dmpopup.domain"

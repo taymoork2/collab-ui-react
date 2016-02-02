@@ -1,13 +1,16 @@
 namespace domainManagement {
+  declare var punycode: any;
 
   class DomainManageAddCtrl {
     private _loggedOnUser;
     private _domain;
     private _error;
     private _adding = false;
+    private _encoded;
+
 
     /* @ngInject */
-    constructor($stateParams, private $previousState, private DomainManagementService) {
+    constructor($stateParams, private $previousState, private DomainManagementService, private $translate) {
 
       this._loggedOnUser = $stateParams.loggedOnUser;
     }
@@ -59,9 +62,22 @@ namespace domainManagement {
       return this._domain;
     }
 
+    get intDomain() {
+      let encodedDomain = this.encodedDomain;
+      let domain = (this.domain || '').toLowerCase();
+      return {
+        show: encodedDomain !== domain,
+        text: this.$translate.instant('domainManagement.add.encodedIDN', {domain: encodedDomain})
+      };
+    }
+
+    get encodedDomain() {
+      return punycode.toASCII((this._domain || '').toLowerCase());
+    }
+
     get domainToAdd() {
       if (this._domain || !this._loggedOnUser.domain || !this._loggedOnUser.isLoaded || this._loggedOnUser.isPartner)
-        return (this._domain || '').toLowerCase();
+        return this.encodedDomain;
 
       return this._loggedOnUser.domain.toLowerCase();
     }
@@ -80,20 +96,18 @@ namespace domainManagement {
       let domain = this.domainToAdd;
 
       if (domain.length < 3) {
-        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainInt'};
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
       }
 
       if (!(/^(([a-z0-9\-]+\.)+[a-z0-9\-]{2,})$/g.test(domain))) {
-        if (/.*(xn--).+/.test(domain))
-          return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
-        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainInt'};
+        return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomain'};
       }
 
       if (!this._adding && _.some(this.DomainManagementService.domainList, {text: domain})) {
         return {valid: false, empty: !this._domain, error: 'domainManagement.add.invalidDomainAdded'}; //already added!
       }
 
-      return {valid: true, empty: false};
+      return {valid: true, empty: false, error: undefined};
     }
 
     get isValid() {
