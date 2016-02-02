@@ -7,12 +7,14 @@
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var fileListParser = require('../utils/fileListParser.gulp');
-var $ = require('gulp-load-plugins')({ lazy: true });
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
-var karma = require('karma').server;
+var Server = require('karma').Server;
 var runSeq = require('run-sequence');
 var log = $.util.log;
-var path = require('path')
+var path = require('path');
 
 // Compile the karma template so that changes
 // to its file array aren't managed manually
@@ -73,8 +75,6 @@ gulp.task('karma-config', function (done) {
   }
 });
 
-
-
 // Run test once and exit
 gulp.task('karma', function (done) {
   if (!args.nounit) {
@@ -94,7 +94,8 @@ gulp.task('karma', function (done) {
         options.singleRun = true;
       }
     }
-    karma.start(options, done);
+    var server = new Server(options, done);
+    server.start();
   } else {
     log($.util.colors.yellow('--nounit **Skipping Karma Tests'));
     return done();
@@ -103,50 +104,51 @@ gulp.task('karma', function (done) {
 
 // Run test once and exit
 gulp.task('karma-watch', function (done) {
-  karma.start({
+  var server = new Server({
     configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
     singleRun: true
   }, done);
+  server.start();
 });
 
 gulp.task('karma-core', function (done) {
   args.specs = 'core';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-hercules', function (done) {
   args.specs = 'hercules';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-huron', function (done) {
   args.specs = 'huron';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-mediafusion', function (done) {
   args.specs = 'mediafusion';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-messenger', function (done) {
   args.specs = 'messenger';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-squared', function (done) {
   args.specs = 'squared';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-sunlight', function (done) {
   args.specs = 'sunlight';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-webex', function (done) {
   args.specs = 'webex';
-  runSeq('karma-config','karma', done);
+  runSeq('karma-config', 'karma', done);
 });
 
 gulp.task('karma-custom', function (done) {
