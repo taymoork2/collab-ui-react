@@ -4,7 +4,8 @@ describe('Service: ClusterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, $location, Service, authinfo;
-  var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
+  var rootPathV1 = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
+  var rootPathV2 = 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/orgId';
 
   beforeEach(function () {
     module(function ($provide) {
@@ -32,13 +33,14 @@ describe('Service: ClusterService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + '?fields=@wide')
+      .when('GET', rootPathV2 + '?fields=@wide')
       .respond({
         id: 'org_0',
         name: 'Org',
         clusters: [{
           id: 'cluster_0',
           name: 'Cluster',
+          state: 'fused',
           connectors: [{
             alarms: [],
             hostname: 'host.example.com',
@@ -60,13 +62,14 @@ describe('Service: ClusterService', function () {
   it('should aggregates useful data and prove it with getClustersById', function () {
     // should be several tests to make it more clear
     $httpBackend
-      .when('GET', rootPath + '?fields=@wide')
+      .when('GET', rootPathV2 + '?fields=@wide')
       .respond({
         id: 'org_0',
         name: 'Org',
         clusters: [{
           id: 'cluster_0',
           name: 'Cluster',
+          state: 'fused',
           connectors: [{
             alarms: [{
               description: ''
@@ -140,13 +143,14 @@ describe('Service: ClusterService', function () {
   it('should give clusters by connector type', function () {
     // should be several tests to make it more clear
     $httpBackend
-      .when('GET', rootPath + '?fields=@wide')
+      .when('GET', rootPathV2 + '?fields=@wide')
       .respond({
         id: 'org_0',
         name: 'Org',
         clusters: [{
           id: 'cluster_0',
-          name: 'Cluster',
+          name: 'Cluster 0',
+          state: 'fused',
           connectors: [{
             alarms: [],
             hostname: 'host1.example.com',
@@ -164,7 +168,8 @@ describe('Service: ClusterService', function () {
         },
         {
           id: 'cluster_1',
-          name: 'Cluster',
+          name: 'Cluster 1',
+          state: 'fused',
           connectors: [{
             alarms: [],
             hostname: 'host2.example.com',
@@ -185,9 +190,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('should upgrade software using the correct backend', function () {
-    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
+    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when('POST', rootPath + '/clusters/foo/services/bar/upgrade', {})
+      .when('POST', rootPathV1 + '/clusters/foo/services/bar/upgrade', {})
       .respond({
         foo: 'bar'
       });
@@ -201,9 +206,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('software upgrade should fail on 500 errors', function () {
-    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
+    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when('POST', rootPath + '/clusters/foo/services/bar/upgrade', {})
+      .when('POST', rootPathV1 + '/clusters/foo/services/bar/upgrade', {})
       .respond(500, {
         foo: 'bar'
       });
@@ -217,9 +222,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('should get a connector', function () {
-    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
+    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when('GET', rootPath + '/connectors/123', {})
+      .when('GET', rootPathV1 + '/connectors/123', {})
       .respond({
         foo: 'bar'
       });
@@ -233,9 +238,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('should delete a host', function () {
-    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
+    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when('DELETE', rootPath + '/clusters/clusterid/hosts/serial')
+      .when('DELETE', rootPathV1 + '/clusters/clusterid/hosts/serial')
       .respond(200);
 
     var callback = sinon.stub();
@@ -246,9 +251,9 @@ describe('Service: ClusterService', function () {
   });
 
   it('should handle host deletion failures', function () {
-    $httpBackend.when('GET', rootPath + '?fields=@wide').respond({}); // please $httpBackend
+    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
     $httpBackend
-      .when('DELETE', rootPath + '/clusters/clusterid/hosts/serial')
+      .when('DELETE', rootPathV1 + '/clusters/clusterid/hosts/serial')
       .respond(500);
 
     var callback = sinon.stub();
@@ -260,7 +265,7 @@ describe('Service: ClusterService', function () {
 
   it('should call error callback on failure', function () {
     $httpBackend
-      .when('GET', rootPath + '?fields=@wide')
+      .when('GET', rootPathV2 + '?fields=@wide')
       .respond(500, null);
 
     var callback = sinon.stub();
