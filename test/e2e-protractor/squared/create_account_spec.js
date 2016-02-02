@@ -5,7 +5,9 @@
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
-describe('Test the createAccount page', function () {
+xdescribe('Test the createAccount page', function () {
+
+  // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
   var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
   browser.get('#/createAccount?email=' + newEmail);
