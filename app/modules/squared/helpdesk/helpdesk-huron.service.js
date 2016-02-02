@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskHuronService(HelpdeskService, $http, Config, $q, HelpdeskMockData, DeviceService, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
+  function HelpdeskHuronService(HelpdeskService, $http, Config, $q, HelpdeskMockData, DeviceService, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService, $translate) {
 
     function getDevices(userId, orgId) {
       if (HelpdeskService.useMock()) {
@@ -49,6 +49,24 @@
       return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true').then(extractDevice);
     }
 
+    function getDeviceNumbers(deviceId, orgId) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(HelpdeskMockData.huronDeviceNumbers);
+      }
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
+        .then(extractData);
+    }
+
+    function getNumber(directoryNumberId, orgId) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(HelpdeskMockData.huronDeviceNumbers);
+      }
+      return $http
+        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/directorynumbers/' + directoryNumberId)
+        .then(extractData);
+    }
+
     function getUserNumbers(userId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractNumbers(HelpdeskMockData.huronUserNumbers));
@@ -56,7 +74,21 @@
       return UserServiceCommonV2.get({
         customerId: orgId,
         userId: userId
-      }).$promise.then(extractNumbers);
+      }).$promise.then(function (res) {
+        var userNumbers = extractNumbers(res);
+        $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + "/directorynumbers")
+          .then(function (res) {
+            _.each(res.data, function (directoryNumber) {
+              var matchingUserNumber = _.find(userNumbers, function (userNumber) {
+                return userNumber.uuid === directoryNumber.directoryNumber.uuid;
+              });
+              if (matchingUserNumber && directoryNumber.dnUsage) {
+                matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
+              }
+            });
+          });
+        return userNumbers;
+      });
     }
 
     function searchDevices(searchString, orgId, limit) {
@@ -68,6 +100,15 @@
         .then(extractDevices);
     }
 
+    function searchNumbers(searchString, orgId, limit) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve([]);
+      }
+      return $http
+        .get(HuronConfig.getCmiV2Url() + '/customers/' + orgId + '/numbers?number=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
+        .then(extractNumbers);
+    }
+
     function setOwnerUserOnDeviceSearchResults(deviceSearchResults) {
       _.each(deviceSearchResults, function (device) {
         if (device.isHuronDevice && !device.user) {
@@ -76,6 +117,10 @@
           }, angular.noop);
         }
       });
+    }
+
+    function extractData(res) {
+      return res.data;
     }
 
     function extractNumbers(res) {
@@ -135,9 +180,11 @@
     return {
       getDevices: getDevices,
       getUserNumbers: getUserNumbers,
+      getDeviceNumbers: getDeviceNumbers,
       searchDevices: searchDevices,
       getDevice: getDevice,
-      setOwnerUserOnDeviceSearchResults: setOwnerUserOnDeviceSearchResults
+      setOwnerUserOnDeviceSearchResults: setOwnerUserOnDeviceSearchResults,
+      getNumber: getNumber
     };
   }
 

@@ -25,6 +25,7 @@
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var activeUserCard = null;
+    var previousSearch = "";
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
@@ -123,11 +124,6 @@
       return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
-      resizeCards();
-    };
-
     vm.mostActiveSort = function (num) {
       if (vm.activeUserPredicate === activeUsersSort[num]) {
         vm.activeUserReverse = !vm.activeUserReverse;
@@ -141,28 +137,26 @@
       }
     };
 
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
       }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
-        vm.changePage(vm.activeUserCurrentPage + 1);
-      }
+      vm.activeUserCurrentPage = num;
       resizeCards();
     };
 
-    vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
+        vm.changePage(vm.activeUserCurrentPage + 1);
       }
-      if (vm.activeUserCurrentPage !== 1) {
+    };
+
+    vm.pageBackward = function () {
+      if (vm.activeUserCurrentPage > 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
-      resizeCards();
     };
 
     function init() {
@@ -344,6 +338,7 @@
       vm.activeUsersTotalPages = 0;
       vm.activeUserCurrentPage = 0;
       vm.searchField = "";
+      previousSearch = "";
       vm.showMostActiveUsers = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
@@ -365,6 +360,7 @@
               vm.activeUserPredicate = activeUsersSort[3];
               vm.mostActiveUsers = response;
               vm.activeUserCurrentPage = 1;
+              vm.activeButton = [1, 2, 3];
               vm.mostActiveUserStatus = SET;
             }
             resizeCards();
@@ -383,7 +379,12 @@
           returnArray.push(item);
         }
       });
-      vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      if (vm.activeUsersTotalPages !== Math.ceil(returnArray.length / 5) || previousSearch !== vm.searchField) {
+        vm.activeUserCurrentPage = 1;
+        vm.activeButton = [1, 2, 3];
+        vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+        previousSearch = vm.searchField;
+      }
       $timeout(function () {
         resizeCards();
       }, 10);
