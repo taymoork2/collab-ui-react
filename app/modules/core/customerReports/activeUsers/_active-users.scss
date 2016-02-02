@@ -4,7 +4,7 @@
   }
   .barchart {
     position: relative;
-    top: -35px;
+    top: rem-calc(-35);
   }
   .active-search {
     margin-bottom: rem-calc(20);

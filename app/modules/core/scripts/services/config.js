@@ -457,7 +457,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
-        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
+        //WARNING: Deprecated, use offerTypes
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -1043,6 +1043,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
+          'drLoginForward',
           'users',
           'user-overview',
           'userprofile',

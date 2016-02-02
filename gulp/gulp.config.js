@@ -36,6 +36,7 @@ module.exports = function() {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js',
+        app + '!**/*.spec.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
