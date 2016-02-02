@@ -156,44 +156,33 @@ angular.module('Core')
       function deleteSSO() {
         var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
         var metaUrl = null;
+        var success = true;
         SSOService.getMetaInfo(function (data, status) {
           if (data.success && data.data.length > 0) {
             //check if data already exists for this entityId
-            var newEntityId = checkNewEntityId(data);
-            if (newEntityId.startsWith('http')) {
-              for (var datum in data.data) {
-                if (data.data[datum].entityId === newEntityId) {
-                  metaUrl = data.data[datum].url;
-                  break;
+            metaUrl = _.get(data, 'data[0].url');
+            if (metaUrl !== null) {
+              SSOService.deleteMeta(metaUrl, function (status) {
+                if (status !== 204) {
+                  success = false;
                 }
-              }
-
-              if (metaUrl !== null) {
-                SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, false, function (data, status) {
-                  if (data.success) {
-                    Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-                    Notification.success('ssoModal.disableSuccess', {
-                      status: status
-                    });
-                  } else {
-                    Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-                    Notification.error('ssoModal.disableFailed', {
-                      status: status
-                    });
-                  }
-                });
-              }
+                if (success === true) {
+                  Log.debug('Single Sign-On (SSO) successfully disabled for all users');
+                  Notification.success('ssoModal.disableSuccess', {
+                    status: status
+                  });
+                } else {
+                  Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
+                  Notification.error('ssoModal.disableFailed', {
+                    status: status
+                  });
+                }
+              });
             }
           } else {
-            SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, false, function (data, status) {
-              if (data.success) {
-                Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-                Notification.success('ssoModal.disableSuccess', {
-                  status: status
-                });
-              } else {
-                Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-              }
+            Log.debug('Failed to retrieve meta url. Status: ' + status);
+            Notification.error('ssoModal.disableFailed', {
+              status: status
             });
           }
         });

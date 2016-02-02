@@ -62,7 +62,7 @@ describe('Controller: DidAddCtrl', function () {
       'uuid': '12145558881-id'
     }]);
 
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
 
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
@@ -88,22 +88,6 @@ describe('Controller: DidAddCtrl', function () {
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  describe('launchCustomerPortal', function () {
-    beforeEach(function () {
-      controller.launchCustomerPortal();
-    });
-    it('should create proper url', function () {
-      expect($state.href).toHaveBeenCalledWith('login_swap', {
-        customerOrgId: trial.model.customerOrgId,
-        customerOrgName: trial.model.customerName
-      });
-    });
-
-    it('should call $window.open', function () {
-      expect($window.open).toHaveBeenCalled();
-    });
   });
 
   describe('DidAddCtrl controller', function () {
@@ -186,7 +170,7 @@ describe('Controller: DidAddCtrl', function () {
           expect(controller.submit).toBeDefined();
         });
 
-        describe('Added & Deleted DIDs', function () {
+        describe('Added DIDs', function () {
           beforeEach(function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
               'pattern': '+12145559999'
@@ -203,21 +187,12 @@ describe('Controller: DidAddCtrl', function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
               'pattern': '+12145555555'
             }).respond(201);
-            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/12145559991-id')
-              .respond(204);
-            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/12145558881-id')
-              .respond(204);
-            controller.confirmSubmit();
             controller.submit();
             $httpBackend.flush();
           });
 
           it('should have a newCount of 5', function () {
             expect(controller.addedCount).toEqual(5);
-          });
-
-          it('should have a deleteCount of 2', function () {
-            expect(controller.deletedCount).toEqual(2);
           });
 
           it('should have a existCount of 0', function () {
@@ -232,8 +207,6 @@ describe('Controller: DidAddCtrl', function () {
             $httpBackend.whenPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools', {
               'pattern': '+12145558888'
             }).respond(201);
-            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/12145558881-id').respond(204);
-            controller.confirmSubmit();
             controller.submit();
             $httpBackend.flush();
           });
@@ -242,31 +215,20 @@ describe('Controller: DidAddCtrl', function () {
             expect(controller.addedCount).toEqual(1);
           });
 
-          it('should have a deleteCount of 1', function () {
-            expect(controller.deletedCount).toEqual(1);
-          });
-
           it('should have a existCount of 1', function () {
             expect(controller.unchangedCount).toEqual(1);
           });
 
         });
 
-        describe('Deleted DIDs', function () {
+        describe('Existing DIDs', function () {
           beforeEach(function () {
             controller.unsavedTokens = '+12145559991';
-            $httpBackend.whenDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools/12145558881-id').respond(204);
-            controller.confirmSubmit();
             controller.submit();
-            $httpBackend.flush();
           });
 
           it('should have a newCount of 0', function () {
             expect(controller.addedCount).toEqual(0);
-          });
-
-          it('should have a deleteCount of 1', function () {
-            expect(controller.deletedCount).toEqual(1);
           });
 
           it('should have a existCount of 1', function () {

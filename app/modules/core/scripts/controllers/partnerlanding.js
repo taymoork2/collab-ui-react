@@ -37,7 +37,6 @@ angular.module('Core')
 
       $scope.openEditTrialModal = function () {
         $state.go('trialEdit.info', {
-          showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
           $state.modal.result.finally(function () {

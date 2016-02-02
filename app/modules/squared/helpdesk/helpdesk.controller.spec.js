@@ -49,6 +49,10 @@ describe('Controller: HelpdeskController', function () {
     httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
+
+    httpBackend
+      .when('GET', 'https://ciscospark.statuspage.io/index.json')
+      .respond({});
   }));
 
   afterEach(function () {

@@ -1144,7 +1144,6 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service.",
-      "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
@@ -1173,7 +1172,7 @@
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port, that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: acme.com"
       },
@@ -1717,7 +1716,6 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
-    "addNumbers": "Manage Numbers",
     "editNumbers": "Edit Phone Numbers",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
@@ -1979,7 +1977,6 @@
     "expiring": "Trial Expiring",
     "expiresToday": "Expires Today",
     "unused": "unused licenses",
-    "uploadNumbers": "Manage Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
     "none": "None",
@@ -2029,14 +2026,11 @@
     "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
-    "title": "Manage Phone Numbers",
-    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "buttonText": "Add Numbers",
+    "title": "Add Phone Numbers",
     "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
-    "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
-    "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
@@ -2077,8 +2071,8 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
+    "lastSeen": "Offline since:",
     "expires": "This activation code expires",
-    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -3267,6 +3261,8 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
+    "lastLog": "Last Log",
+    "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
@@ -3345,7 +3341,9 @@
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
-    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
