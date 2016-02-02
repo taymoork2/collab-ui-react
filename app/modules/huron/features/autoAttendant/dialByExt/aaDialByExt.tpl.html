@@ -1,2 +1,2 @@
 <label class="control-label" for="dialByExtMsg{{ schedule + index + keyIndex }}" translate="{{ :: 'autoAttendant.sayMessage' }} "></label>
-<textarea class="aa-message-textarea" aa-key="$index" type="text" id="dialByExtMsg{{ schedule + index + keyIndex }}" ng-model="aaDialByExtCtrl.message" placeholder="{{ :: aaDialByExtCtrl.placeholder }}" ng-blur="aaDialByExtCtrl.saveUiModel()" cols="50" rows="4" maxlength="2000"></textarea>
+<textarea aa-key="$index" type="text" id="dialByExtMsg{{ schedule + index + keyIndex }}" ng-model="aaDialByExtCtrl.message" placeholder="{{ :: aaDialByExtCtrl.placeholder }}" ng-change="aaDialByExtCtrl.saveUiModel()" cols="50" rows="4" maxlength="2000"></textarea>

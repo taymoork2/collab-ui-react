@@ -6,7 +6,7 @@ module.exports = function(context) {
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
   'notifications', 'landing', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup'
+  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup',
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -63,6 +63,9 @@ module.exports = function(context) {
       // Disallow page element functions
       if (node.callee.type == 'MemberExpression') {
 
+        if (node.callee.object.name == 'Math')
+          return;
+
         // Allow specific page element functions
         if (node.callee.property.type == 'Identifier' &&
             allowedPageElementMethods.indexOf(node.callee.property.name) > -1) {
@@ -80,7 +83,7 @@ module.exports = function(context) {
           return;
         }
 
-        context.report(node, 'Declare functions in page objects (test/e2e-protractor/pages), also make sure the page name is added to the allowedIdentifiers in protractor-guidlines.js, otherwise this rule completely blows.');
+        context.report(node, 'Declare functions in page objects (test/e2e-protractor/pages), also make sure the page name is added to the allowedIdentifiers in protractor-guidelines.js, otherwise this rule completely blows.');
         return;
       }
 

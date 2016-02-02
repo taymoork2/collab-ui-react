@@ -179,6 +179,7 @@ angular.module('Core')
             });
         },
 
+
 	getUserAuthToken: function (userid) {
 	      return Auth.setAccessToken().then(function () {
 		      return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid, {
@@ -187,36 +188,18 @@ angular.module('Core')
 		  });
 	},
 
-        getUserFromEmail: function (email, callback) {
-          $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/userexists/" + email, {
+        getUserFromEmail: function (email) {
+          return Auth.setAccessToken().then(function () {
+            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
               cache: false
-            })
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
             });
+          });
         },
 
-        addDrUser: function (emailPassword, callback) {
-          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user", emailPassword)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+        addDrUser: function (emailPassword) {
+          return Auth.setAccessToken().then(function () {
+            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
+          });
         },
 
         updateUserProfile: function (userid, userData, callback) {

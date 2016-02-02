@@ -1,9 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('Invite User and Check Buckets', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -11,7 +7,7 @@ describe('Invite User and Check Buckets', function () {
 
   //log in as admin with an account
   describe('Account Add User', function () {
-    var addEmail = utils.randomTestGmail();
+    var addEmail = utils.randomTestGmailwithSalt('buckets');
 
     it('should login and view users', function () {
       login.login('account-admin', '#/users');
@@ -36,7 +32,7 @@ describe('Invite User and Check Buckets', function () {
         utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
         utils.click(users.clearButton);
         utils.expectTextToBeSet(users.addUsersField, '');
-        utils.expectIsEnabled(users.nextButton);
+        utils.expectIsDisabled(users.nextButton);
       });
 
       it('click on enable services individually', function () {

@@ -1,15 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
-/* global deleteTrialUtils */
-/* global deleteUtils */
+/* global LONG_TIMEOUT, deleteTrialUtils */
 
 //TODO reenable after pstn change
 describe('Spark UC Partner flow', function () {
@@ -34,7 +25,7 @@ describe('Spark UC Partner flow', function () {
       partner.assertDisabled('startTrialButton');
 
       utils.waitForModal().then(function () {
-        utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+        utils.expectIsDisplayed(partner.messageTrialCheckbox);
         utils.expectIsDisplayed(partner.squaredUCTrialCheckbox);
 
         utils.sendKeys(partner.customerNameInput, partner.newSqUCTrial.customerName);
@@ -71,8 +62,8 @@ describe('Spark UC Partner flow', function () {
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
-        utils.expectCheckbox(partner.squaredTrialCheckbox, true);
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.expectCheckbox(partner.messageTrialCheckbox, true);
 
         // enabled advanced spark call
         utils.expectCheckbox(partner.squaredUCTrialCheckbox, false);
@@ -95,8 +86,8 @@ describe('Spark UC Partner flow', function () {
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
 
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
-        utils.expectCheckbox(partner.squaredTrialCheckbox, true);
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
+        utils.expectCheckbox(partner.messageTrialCheckbox, true);
 
         // verify checkbox is checked and disabled
         utils.expectClass(partner.squaredUCTrialCheckbox, 'disabled');

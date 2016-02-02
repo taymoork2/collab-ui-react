@@ -16,6 +16,10 @@
     var avgUrl = '/avgConversations';
     var contentShared = '/contentShared';
     var contentShareSizes = '/contentShareSizes';
+    var mediaQuality = '/callQuality';
+    var callMetrics = '/callMetrics';
+    var mostActiveUrl = 'useractivity';
+    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -35,11 +39,18 @@
     var avgCancelPromise = null;
     var contentSharedCancelPromise = null;
     var contentShareSizesCancelPromise = null;
+    var metricsCancelPromise = null;
+    var mediaCancelPromise = null;
+    var deviceCancelPromise = null;
 
     return {
       getActiveUserData: getActiveUserData,
+      getMostActiveUserData: getMostActiveUserData,
       getAvgRoomData: getAvgRoomData,
-      getFilesSharedData: getFilesSharedData
+      getFilesSharedData: getFilesSharedData,
+      getCallMetricsData: getCallMetricsData,
+      getMediaQualityData: getMediaQualityData,
+      getDeviceData: getDeviceData
     };
 
     function getActiveUserData(filter) {
@@ -47,106 +58,71 @@
       if (activePromse !== null && angular.isDefined(activePromse)) {
         activePromse.resolve(ABORT);
       }
+      activePromse = $q.defer();
+
+      var query = getQuery(filter);
+      var activeUrl = urlBase + detailed + activeUserUrl + query;
+      return getService(activeUrl, activePromse).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
+          return adjustActiveUserData(response.data.data[0].data, filter);
+        } else {
+          return [];
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
+      });
+    }
+
+    function getMostActiveUserData(filter) {
+      // cancel any currently running jobs
       if (mostActivePromise !== null && angular.isDefined(mostActivePromise)) {
         mostActivePromise.resolve(ABORT);
       }
-      activePromse = $q.defer();
       mostActivePromise = $q.defer();
 
-      var promises = [];
-      var query = getQuery(filter);
-      var activeUrl = urlBase + detailed + activeUserUrl + query;
-      var mostActiveUrl = urlBase + topn + activeUserUrl + query;
-
-      var activeUserData = [];
-      var activeUserPromise = getService(activeUrl, activePromse).success(function (response, status) {
-        activeUserData = adjustActiveUserData(response.data[0].data, filter);
-        return;
-      }).error(function (response, status) {
-        activeUserData = returnErrorCheck(status, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
-        return;
-      });
-      promises.push(activeUserPromise);
-
-      var mostActiveUserData = [];
-      // var mostActiveUserPromise = getService(mostActiveUrl, mostActivePromise).success(function (response, status) {
-      //   // TODO: Fill in actions to parse the data in the response
-      //   return;
-      // }).error(function (response, status) {
-      //   mostActiveUserData = returnErrorCheck(status, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
-      //   return;
-      // });
-      // promises.push(mostActiveUserPromise);
-
-      return $q.all(promises).then(function () {
-        if (activeUserData !== ABORT) {
-          return {
-            activeUserGraph: activeUserData,
-            mostActiveUserData: mostActiveUserData
-          };
-        } else {
-          return ABORT;
+      var query = "?type=weeklyUsage&cache=";
+      if (filter.value === 1) {
+        query = "?type=monthlyUsage&cache=";
+      } else if (filter.value === 2) {
+        query = "?type=threeMonthUsage&cache=";
+      }
+      var url = urlBase + mostActiveUrl + query + cacheValue;
+      return getService(url, mostActivePromise).then(function (response) {
+        var data = [];
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
+          angular.forEach(response.data.data, function (item, index, array) {
+            data.push({
+              'numCalls': parseInt(item.details.sparkCalls) + parseInt(item.details.sparkUcCalls),
+              'totalActivity': parseInt(item.details.totalActivity),
+              'sparkMessages': parseInt(item.details.sparkMessages),
+              'userId': item.details.userId,
+              'userName': item.details.userName
+            });
+          });
         }
-      }, function () {
-        if (activeUserData !== ABORT) {
-          return {
-            activeUserGraph: activeUserData,
-            mostActiveUserData: mostActiveUserData
-          };
-        } else {
-          return ABORT;
-        }
+        return data;
+      }, function (response) {
+        return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
       });
     }
 
     function adjustActiveUserData(activeData, filter) {
-      var returnGraph = [];
       var emptyGraph = true;
-
-      if (filter.value === 0) {
-        for (var i = 6; i >= 0; i--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0,
-            colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark,
-            balloon: true
-          });
-        }
-      } else if (filter.value === 1) {
-        var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'));
-        if (dayOffset >= 4) {
-          dayOffset = 7 - dayOffset;
-        } else {
-          dayOffset = -dayOffset;
-        }
-
-        for (var x = 3; x >= 0; x--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0,
-            colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark,
-            balloon: true
-          });
-        }
+      var graphItem = {
+        totalRegisteredUsers: 0,
+        activeUsers: 0,
+        percentage: 0,
+        colorOne: Config.chartColors.brandSuccessLight,
+        colorTwo: Config.chartColors.brandSuccessDark,
+        balloon: true
+      };
+      var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'));
+      if (dayOffset >= 4) {
+        dayOffset = 7 - dayOffset;
       } else {
-        for (var y = 2; y >= 0; y--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat),
-            totalRegisteredUsers: 0,
-            activeUsers: 0,
-            percentage: 0,
-            colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark,
-            balloon: true
-          });
-        }
+        dayOffset = -dayOffset;
       }
+      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
       angular.forEach(activeData, function (item, index, activeArray) {
         var date = moment.tz(item.date, timezone).format(dayFormat);
@@ -157,8 +133,8 @@
         var activeUsers = parseInt(item.details.activeUsers);
         var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-        // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
-        if (totalRegisteredUsers < 0) {
+        // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+        if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
           if (index !== 0) {
@@ -243,7 +219,7 @@
         avgData = response.data;
         return;
       }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms per user data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
+        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
         return;
       });
       promises.push(avgPromise);
@@ -264,54 +240,37 @@
     }
 
     function combineAvgRooms(groupData, oneToOneData, avgData, filter) {
-      var returnGraph = [];
       var emptyGraph = true;
-      if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(i, 'day').format(dayFormat),
-            balloon: true,
-            groupRooms: 0,
-            oneToOneRooms: 0,
-            totalRooms: 0,
-            avgRooms: 0
-          });
-        }
-      } else if (filter.value === 1) {
-        var dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
-        if (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1]) {
+      var graphItem = {
+        balloon: true,
+        groupRooms: 0,
+        oneToOneRooms: 0,
+        totalRooms: 0,
+        avgRooms: 0
+      };
+      var dayOffset = 0;
+      if (groupData.length > 0) {
+        dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
+        if ((oneToOneData.length > 0) && (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1])) {
           dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
-        } else if (groupData[groupData.length - 1] < avgData[avgData.length - 1]) {
+        } else if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
           dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
         }
-        if (dayOffset >= 4) {
-          dayOffset = 7 - dayOffset;
-        } else {
-          dayOffset = -dayOffset;
+      } else if (oneToOneData.length > 0) {
+        dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
+        if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
+          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
         }
-
-        for (var x = 3; x >= 0; x--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat),
-            balloon: true,
-            groupRooms: 0,
-            oneToOneRooms: 0,
-            totalRooms: 0,
-            avgRooms: 0
-          });
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(y, 'month').format(monthFormat),
-            balloon: true,
-            groupRooms: 0,
-            oneToOneRooms: 0,
-            totalRooms: 0,
-            avgRooms: 0
-          });
-        }
+      } else if (avgData.length > 0) {
+        dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
       }
+
+      if (dayOffset >= 4) {
+        dayOffset = 7 - dayOffset;
+      } else {
+        dayOffset = -dayOffset;
+      }
+      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
       angular.forEach(groupData, function (groupItem, groupIndex, groupArray) {
         var modDate = moment.tz(groupItem.date, timezone).format(dayFormat);
@@ -429,49 +388,30 @@
     }
 
     function combineFilesShared(contentSharedData, contentShareSizesData, filter) {
-      var returnGraph = [];
       var emptyGraph = true;
-      if (filter.value === 0) {
-        for (var i = 7; i >= 1; i--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(i, 'day').format(dayFormat),
-            balloon: true,
-            contentShared: 0,
-            contentShareSizes: 0,
-            color: Config.chartColors.brandSuccess
-          });
-        }
-      } else if (filter.value === 1) {
-        var dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
-        if (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1]) {
+      var graphItem = {
+        balloon: true,
+        contentShared: 0,
+        contentShareSizes: 0,
+        color: Config.chartColors.brandSuccess
+      };
+
+      var dayOffset = 0;
+      if (contentSharedData.length > 0) {
+        dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
+        if ((contentShareSizesData.length > 0) && (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1])) {
           dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
         }
-        if (dayOffset >= 4) {
-          dayOffset = 7 - dayOffset;
-        } else {
-          dayOffset = -dayOffset;
-        }
-
-        for (var x = 3; x >= 0; x--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat),
-            balloon: true,
-            contentShared: 0,
-            contentShareSizes: 0,
-            color: Config.chartColors.brandSuccess
-          });
-        }
-      } else {
-        for (var y = 2; y >= 0; y--) {
-          returnGraph.push({
-            modifiedDate: moment().tz(timezone).subtract(y, 'month').format(monthFormat),
-            balloon: true,
-            contentShared: 0,
-            contentShareSizes: 0,
-            color: Config.chartColors.brandSuccess
-          });
-        }
+      } else if (contentShareSizesData.length > 0) {
+        dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
       }
+
+      if (dayOffset >= 4) {
+        dayOffset = 7 - dayOffset;
+      } else {
+        dayOffset = -dayOffset;
+      }
+      var returnGraph = getReturnGraph(filter, dayOffset, graphItem);
 
       angular.forEach(contentSharedData, function (contentItem, contentIndex, contentArray) {
         var modDate = moment.tz(contentItem.date, timezone).format(dayFormat);
@@ -515,6 +455,243 @@
       }
     }
 
+    function getCallMetricsData(filter) {
+      // cancel any currently running jobs
+      if (metricsCancelPromise !== null && angular.isDefined(metricsCancelPromise)) {
+        metricsCancelPromise.resolve(ABORT);
+      }
+      metricsCancelPromise = $q.defer();
+      var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
+
+      var returnArray = {
+        dataProvider: [],
+        displayData: {}
+      };
+
+      return getService(callMetricsUrl, metricsCancelPromise).then(function (response, status) {
+        if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
+          var details = response.data.data[0].data[0].details;
+          var totalCalls = parseInt(details.totalCalls);
+          if (totalCalls > 0) {
+            returnArray.dataProvider = [{
+              "callCondition": $translate.instant('callMetrics.audioCalls'),
+              "numCalls": parseInt(details.sparkUcAudioCalls),
+              "percentage": Math.round((parseInt(details.sparkUcAudioCalls) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "color": Config.chartColors.colorAttentionBase
+            }, {
+              "callCondition": $translate.instant('callMetrics.videoCalls'),
+              "numCalls": parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls),
+              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls)) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "color": Config.chartColors.primaryColorBase
+            }];
+
+            returnArray.displayData.totalCalls = totalCalls;
+            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration);
+            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * 100).toFixed(2);
+          }
+        }
+        return returnArray;
+      }, function (response, status) {
+        return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
+      });
+    }
+
+    function getMediaQualityData(filter) {
+      // cancel any currently running jobs
+      if (mediaCancelPromise !== null && angular.isDefined(mediaCancelPromise)) {
+        metricsCancelPromise.resolve(ABORT);
+      }
+      mediaCancelPromise = $q.defer();
+      var mediaUrl = urlBase + detailed + mediaQuality + getQuery(filter);
+
+      return getService(mediaUrl, mediaCancelPromise).then(function (response, status) {
+        var emptyGraph = true;
+        if (response !== null && angular.isDefined(response)) {
+          var data = response.data.data[0].data;
+          var graphItem = {
+            totalDurationSum: 0,
+            goodQualityDurationSum: 0,
+            fairQualityDurationSum: 0,
+            poorQualityDurationSum: 0,
+            partialSum: 0,
+            totalAudioDurationSum: 0,
+            goodAudioQualityDurationSum: 0,
+            fairAudioQualityDurationSum: 0,
+            poorAudioQualityDurationSum: 0,
+            partialAudioSum: 0,
+            totalVideoDurationSum: 0,
+            goodVideoQualityDurationSum: 0,
+            fairVideoQualityDurationSum: 0,
+            poorVideoQualityDurationSum: 0,
+            partialVideoSum: 0,
+            balloon: true
+          };
+          var dayOffset = parseInt(moment.tz(data[(data.length - 1)].date, timezone).format('e'));
+          if (dayOffset >= 4) {
+            dayOffset = 7 - dayOffset;
+          } else {
+            dayOffset = -dayOffset;
+          }
+          var graph = getReturnGraph(filter, dayOffset, graphItem);
+
+          angular.forEach(data, function (item, index, array) {
+            var totalSum = parseInt(item.details.totalDurationSum);
+            var goodSum = parseInt(item.details.goodQualityDurationSum);
+            var fairSum = parseInt(item.details.fairQualityDurationSum);
+            var poorSum = parseInt(item.details.poorQualityDurationSum);
+            var partialSum = fairSum + poorSum;
+
+            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum) + parseInt(item.details.sparkUcGoodVideoDurationSum);
+            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum) + parseInt(item.details.sparkUcFairVideoDurationSum);
+            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum) + parseInt(item.details.sparkUcPoorVideoDurationSum);
+            var totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
+            var partialVideoSum = fairVideoQualityDurationSum + poorVideoQualityDurationSum;
+
+            var goodAudioQualityDurationSum = goodSum - goodVideoQualityDurationSum;
+            var fairAudioQualityDurationSum = fairSum - fairVideoQualityDurationSum;
+            var poorAudioQualityDurationSum = poorSum - poorVideoQualityDurationSum;
+            var totalAudioDurationSum = goodAudioQualityDurationSum + fairAudioQualityDurationSum + poorAudioQualityDurationSum;
+            var partialAudioSum = fairAudioQualityDurationSum + poorAudioQualityDurationSum;
+
+            if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
+              var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
+              if (filter.value === 0 || filter.value === 1) {
+                modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
+              }
+
+              for (var i = 0; i < graph.length; i++) {
+                if (graph[i].modifiedDate === modifiedDate) {
+                  graph[i].totalDurationSum = totalSum;
+                  graph[i].goodQualityDurationSum = goodSum;
+                  graph[i].fairQualityDurationSum = fairSum;
+                  graph[i].poorQualityDurationSum = poorSum;
+                  graph[i].partialSum = partialSum;
+
+                  graph[i].totalAudioDurationSum = totalAudioDurationSum;
+                  graph[i].goodAudioQualityDurationSum = goodAudioQualityDurationSum;
+                  graph[i].fairAudioQualityDurationSum = fairAudioQualityDurationSum;
+                  graph[i].poorAudioQualityDurationSum = poorAudioQualityDurationSum;
+                  graph[i].partialAudioSum = partialAudioSum;
+
+                  graph[i].totalVideoDurationSum = totalVideoDurationSum;
+                  graph[i].goodVideoQualityDurationSum = goodVideoQualityDurationSum;
+                  graph[i].fairVideoQualityDurationSum = fairVideoQualityDurationSum;
+                  graph[i].poorVideoQualityDurationSum = poorVideoQualityDurationSum;
+                  graph[i].partialVideoSum = partialVideoSum;
+
+                  emptyGraph = false;
+                  break;
+                }
+              }
+            }
+          });
+          if (emptyGraph) {
+            return [];
+          }
+        }
+        return graph;
+      }, function (response) {
+        return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+      });
+    }
+
+    function getDeviceData(filter) {
+      // cancel any currently running jobs
+      if (deviceCancelPromise !== null && angular.isDefined(deviceCancelPromise)) {
+        deviceCancelPromise.resolve(ABORT);
+      }
+      deviceCancelPromise = $q.defer();
+      var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
+
+      return getService(deviceUrl, deviceCancelPromise).then(function (response) {
+        return analyzeDeviceData(response, filter);
+      }, function (response) {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+          graphData: [],
+          filterArray: []
+        });
+      });
+    }
+
+    function analyzeDeviceData(response, filter) {
+      var deviceArray = {
+        graphData: [],
+        filterArray: []
+      };
+      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isArray(response.data) && angular.isDefined(response.data[0].data) && angular.isArray(response.data[0].data)) {
+        var data = response.data[0].data;
+        var graphItem = {
+          totalRegisteredDevices: 0
+        };
+        var dayOffset = 0;
+        var responseLength = 0;
+
+        angular.forEach(data, function (item, index, array) {
+          if (responseLength < item.details.length) {
+            responseLength = item.details.length;
+            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].date, timezone).format('e'));
+          }
+        });
+        if (dayOffset >= 4) {
+          dayOffset = 7 - dayOffset;
+        } else {
+          dayOffset = -dayOffset;
+        }
+        // change to filter after dummy data removed
+        var baseGraph = getReturnGraph({
+          value: 0
+        }, dayOffset, graphItem);
+        deviceArray.graphData.push({
+          deviceType: $translate.instant('registeredEndpoints.allDevices'),
+          graph: angular.copy(baseGraph),
+          emptyGraph: true,
+          balloon: true
+        });
+        var filterIndex = 0;
+        deviceArray.filterArray.push({
+          value: filterIndex,
+          label: deviceArray.graphData[0].deviceType
+        });
+        filterIndex++;
+
+        angular.forEach(data, function (item, index, array) {
+          deviceArray.filterArray.push({
+            value: filterIndex,
+            label: item.deviceType
+          });
+          filterIndex++;
+          var tempGraph = {
+            deviceType: item.deviceType,
+            graph: angular.copy(baseGraph),
+            emptyGraph: true,
+            balloon: true
+          };
+
+          angular.forEach(item.details, function (detail, detailIndex, detailArray) {
+            if (detail.totalRegisteredDevices > 0) {
+              tempGraph.emptyGraph = false;
+              deviceArray.graphData[0].emptyGraph = false;
+              var modifiedDate = moment.tz(detail.recordTime, timezone).format(monthFormat);
+              if (filter.value === 0 || filter.value === 1) {
+                modifiedDate = moment.tz(detail.recordTime, timezone).format(dayFormat);
+              }
+
+              for (var i = 0; i < baseGraph.length; i++) {
+                if (baseGraph[i].modifiedDate === modifiedDate) {
+                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices);
+                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices);
+                  break;
+                }
+              }
+            }
+          });
+          deviceArray.graphData.push(tempGraph);
+        });
+      }
+
+      return deviceArray;
+    }
+
     function getQuery(filter) {
       if (filter.value === 0) {
         return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
@@ -523,6 +700,42 @@
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
       }
+    }
+
+    function getAltQuery(filter) {
+      if (filter.value === 0) {
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+      } else if (filter.value === 1) {
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
+      } else {
+        return '?&intervalCount=93&intervalType=day&spanCount=93&spanType=day&cache=' + cacheValue;
+      }
+    }
+
+    function getReturnGraph(filter, dayOffset, graphItem) {
+      var returnGraph = [];
+
+      if (filter.value === 0) {
+        for (var i = 6; i >= 0; i--) {
+          var tmpItem = angular.copy(graphItem);
+          tmpItem.modifiedDate = moment().tz(timezone).subtract(i + 1, 'day').format(dayFormat);
+          returnGraph.push(tmpItem);
+        }
+      } else if (filter.value === 1) {
+        for (var x = 3; x >= 0; x--) {
+          var temp = angular.copy(graphItem);
+          temp.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          returnGraph.push(temp);
+        }
+      } else {
+        for (var y = 2; y >= 0; y--) {
+          var item = angular.copy(graphItem);
+          item.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          returnGraph.push(item);
+        }
+      }
+
+      return returnGraph;
     }
 
     function getService(url, canceler) {

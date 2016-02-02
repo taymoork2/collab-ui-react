@@ -1,7 +1,6 @@
 'use strict';
 
-/* jshint loopfunc: true */
-/* global describe, it, browser, LONG_TIMEOUT, roles */
+/* global LONG_TIMEOUT */
 
 describe('Org Entitlement flow', function () {
   var newLastName = 'Doe';

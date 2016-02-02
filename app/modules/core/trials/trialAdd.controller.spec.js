@@ -24,6 +24,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -87,6 +88,30 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should notify success', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      });
+
+      it('should have a customer org id set', function () {
+        expect(controller.customerOrgId).toBeDefined();
+      });
+    });
+
+    describe('with atlas-webex-trial feature-toggle enabled', function () {
+      beforeEach(function () {
+        controller.meetingTrial.enabled = true;
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
+      it('should not send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('with atlas-webex-trial feature-toggle disabled', function () {
+      beforeEach(function () {
+        controller.meetingTrial.enabled = false;
+        controller.startTrial(callback);
+        $scope.$apply();
       });
 
       it('should send an email', function () {

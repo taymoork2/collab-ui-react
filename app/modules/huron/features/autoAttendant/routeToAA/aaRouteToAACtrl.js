@@ -6,7 +6,7 @@
     .controller('AARouteToAACtrl', AARouteToAACtrl);
 
   /* @ngInject */
-  function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -15,6 +15,7 @@
 
     // cs-select associated inputs:
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAAPlaceHolder');
+    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.options = [];
     vm.aaName = '';
 
@@ -58,6 +59,7 @@
 
     function saveUiModel() {
       vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
+      AACommonService.setPhoneMenuStatus(true);
     }
 
     function activate() {

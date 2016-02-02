@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils', '$translate',
-    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate) {
+  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils', '$translate', 'WebExUtilsFact', '$timeout',
+    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
       var getAuthinfoData = function () {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
@@ -29,7 +29,7 @@ angular.module('Core')
             Authinfo.setUserId(data.id);
           }
           if (data.emails) {
-            Authinfo.setEmail(data.emails);
+            Authinfo.setEmails(data.emails);
           }
           if (data.photos) {
             for (var i in data.photos) {
@@ -44,7 +44,19 @@ angular.module('Core')
       });
 
       $scope.logout = function () {
-        Auth.logout();
+        var logoutPromise = WebExUtilsFact.logoutSite();
+
+        var timeoutPromise = $timeout(function () {
+          Auth.logout();
+        }, 300);
+
+        logoutPromise.then(function () {
+          $timeout.cancel(timeoutPromise);
+          Auth.logout();
+        }, function () {
+          $timeout.cancel(timeoutPromise);
+          Auth.logout();
+        });
         $scope.loggedIn = false;
       };
 

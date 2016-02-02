@@ -1,5 +1,4 @@
 'use strict';
-/* global $ */
 
 angular.module('Core')
   .controller('ListOrganizationsCtrl', ['$scope', '$rootScope', '$state', '$dialogs', '$timeout', '$translate', 'Log', 'Config', 'Orgservice',
@@ -40,17 +39,9 @@ angular.module('Core')
         // if the side panel is closing unselect the user
         $rootScope.$on('$stateChangeSuccess', function () {
           if ($state.includes('organizations')) {
-            if ($scope.gridOptions.$gridScope) {
-              $scope.gridOptions.$gridScope.toggleSelectAll(false, true);
+            if ($scope.gridApi.selection) {
+              $scope.gridApi.selection.clearSelectedRows();
             }
-          }
-        });
-
-        $scope.$on('ngGridEventScroll', function () {
-          if ($scope.load) {
-            $scope.currentDataPosition++;
-            $scope.load = false;
-            getOrgList($scope.currentDataPosition * Config.orgsPerPage + 1);
           }
         });
 
@@ -82,13 +73,8 @@ angular.module('Core')
           order: 'ascending'
         };
 
-        var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showOrganizationDetails(row.entity)">' +
-          '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-          '<div ng-cell></div>' +
-          '</div>';
-
-        var actionsTemplate = '<span dropdown>' +
-          '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        var actionsTemplate = '<span cs-dropdown>' +
+          '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
           '<i class="icon icon-three-dots"></i>' +
           '</button>' +
           '</span>';
@@ -96,13 +82,24 @@ angular.module('Core')
         $scope.gridOptions = {
           data: 'gridData',
           multiSelect: false,
-          showFilter: false,
           rowHeight: 44,
-          rowTemplate: rowTemplate,
-          headerRowHeight: 44,
-          useExternalSorting: false,
           enableColumnResize: true,
-
+          enableRowHeaderSelection: false,
+          enableColumnMenus: false,
+          onRegisterApi: function (gridApi) {
+            $scope.gridApi = gridApi;
+            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+              $scope.showOrganizationDetails(row.entity);
+            });
+            gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+              if ($scope.load) {
+                $scope.currentDataPosition++;
+                $scope.load = false;
+                getOrgList($scope.currentDataPosition * Config.orgsPerPage + 1);
+                $scope.gridApi.infiniteScroll.dataLoaded();
+              }
+            });
+          },
           columnDefs: [{
             field: 'displayName',
             displayName: $translate.instant('organizationsPage.displayName'),

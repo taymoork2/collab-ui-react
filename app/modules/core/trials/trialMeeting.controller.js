@@ -6,65 +6,106 @@
     .controller('TrialMeetingCtrl', TrialMeetingCtrl);
 
   /* @ngInject */
-  function TrialMeetingCtrl($translate, TrialMeetingService) {
+  function TrialMeetingCtrl($q, $translate, TrialMeetingService, WebexTrialService) {
     var vm = this;
 
     var _trialData = TrialMeetingService.getData();
 
     vm.details = _trialData.details;
     vm.siteUrl = _trialData.details.siteUrl;
-    vm.timezone = _trialData.details.timezone;
+    vm.validatingUrl = false;
+    vm.validateSiteUrl = validateSiteUrl;
 
     vm.siteUrlFields = [{
       model: vm.details,
       key: 'siteUrl',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('trialModal.meeting.siteUrl'),
-        labelClass: 'small-3 columns',
-        inputClass: 'small-8 columns left',
-        placeholder: 'http://',
-        type: 'url',
         required: true,
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
+        label: $translate.instant('trialModal.meeting.siteUrl'),
+        placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
+      },
+      modelOptions: {
+        'updateOn': 'blur'
+      },
+      asyncValidators: {
+        siteUrl: {
+          expression: vm.validateSiteUrl,
+          message: function () {
+            var errors = {
+              'domainInvalid': $translate.instant('trialModal.meeting.domainInvalid'),
+              'duplicateSite': $translate.instant('trialModal.meeting.duplicateSite'),
+              'invalidSite': $translate.instant('trialModal.meeting.invalidSite')
+            };
+
+            return errors[vm.siteUrlErrorCode];
+          }
+        }
       },
     }];
 
     vm.timezoneFields = [{
       model: vm.details,
-      key: 'setDefault',
-      type: 'checkbox',
-      hide: true,
-      templateOptions: {
-        label: $translate.instant('trialModal.meeting.default'),
-        id: 'setTimezoneDefault',
-        class: 'small-offset-1 columns',
-      },
-    }, {
-      model: vm.details,
-      key: 'timezone',
+      key: 'timeZone',
       type: 'select',
+      defaultValue: {
+        'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
+        'timeZoneId': undefined
+      },
       templateOptions: {
-        labelfield: 'label',
         required: true,
-        label: $translate.instant('trialModal.meeting.timezone'),
-        labelClass: 'small-3 columns',
-        inputClass: 'small-8 columns left',
-        //TODO: Demo data for now. Webex supposedly has a specific list.
-        options: ['America/Los Angeles (UTC-08:00)', 'America/Denver (UTC-07:00)', 'America/Chicago (UTC-06:00)', 'America/New York (UTC-05:00)', 'Europe/London (UTC+00:00)', 'Europe/Berlin (UTC+01:00)', 'Asia/Jerusalem (UTC+02:00)', 'Asia/Kolkata (UTC+05:30)', 'Asia/Shanghai (UTC+08:00)'],
-        placeholder: $translate.instant('trialModal.meeting.timezonePlaceholder'),
+        labelfield: 'label',
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
+        labelProp: 'label',
+        valueProp: 'timeZoneId',
+        label: $translate.instant('trialModal.meeting.timezone')
       },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          // Keep select disabled if default setting is enabled
-          // return vm.details.setDefault;
+        'templateOptions.options': function () {
+          var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
+          var timeZones = WebexTrialService.getTimeZones();
+          return _.filter(timeZones, function (timeZone) {
+            return _.includes(validTimeZoneIds, timeZone.timeZoneId);
+          });
         }
       },
+      validators: {
+        'timezone': {
+          expression: function ($viewValue, $modelValue) {
+            var timezone = $modelValue || $viewValue;
+            return !_.isUndefined(timezone.timeZoneId);
+          }
+        }
+      }
     }];
-
-    init();
 
     ////////////////
 
-    function init() {}
+    function validateSiteUrl($viewValue, $modelValue) {
+      var siteUrl = $modelValue || $viewValue;
+      if (!siteUrl) {
+        return false;
+      }
+      vm.validatingUrl = true;
+      return $q(function (resolve, reject) {
+        WebexTrialService.validateSiteUrl(siteUrl).then(function (site) {
+            vm.siteUrlErrorCode = site.errorCode;
+            if (site.isValid) {
+              resolve();
+            } else {
+              reject();
+            }
+          })
+          .catch(function () {
+            reject();
+          })
+          .finally(function () {
+            vm.validatingUrl = false;
+          });
+      });
+    }
   }
 })();

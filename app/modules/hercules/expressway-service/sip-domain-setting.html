@@ -1,5 +1,11 @@
-<h5 translate="hercules.settings.call.sipDomainHeading"></h5>
-<p translate="hercules.settings.call.sipDomain"></p></p>
+<h5>
+  <span translate="hercules.settings.call.sipDomainHeading"></span>
+  <i  tooltip="{{'hercules.settings.call.sipDomainButtonTooltip' |
+  translate}}"
+  tooltip-placement="right"
+  tooltip-trigger="mouseenter" 
+  class="icon icon-information sip-domain-icon"></i>
+</h5>
 <form ng-submit="expresswayServiceSettings.updateSipDomain()">
   <input type="text"
          ng-disabled="expresswayServiceSettings.savingSip"
@@ -9,6 +15,7 @@
          type="text"
          ng-model="expresswayServiceSettings.org.sipDomain"/>
 </form>
+<p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
 <span class=right ng-show="expresswayServiceSettings.savingSip">
   <i class="icon icon-spinner"/>
 </span>

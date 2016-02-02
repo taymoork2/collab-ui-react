@@ -17,13 +17,6 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertDevice(obj).tags[0]).toBe('foo');
   });
 
-  it('should format activation code', function () {
-    var arr = [{
-      activationCode: '1111222233334444'
-    }];
-    expect(converter.convertDevices(arr)[0].readableActivationCode).toBe('1111 2222 3333 4444');
-  });
-
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'
@@ -111,7 +104,7 @@ describe('CsdmConverterSpec', function () {
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {
-    it('should convert device with issues red color but keep status', function () {
+    it('should convert device with issues yellow color and show status', function () {
       var arr = [{
         state: 'CLAIMED',
         status: {
@@ -119,29 +112,27 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
-    it('should convert device with issues red color but keep status', function () {
+    it('should convert device with issues yellow color but keep status', function () {
       var arr = [{
         status: {
           level: "error",
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
-    it('should convert state UNCLAIMED to Needs Activation and yellow', function () {
+    it('should convert state UNCLAIMED to Requires Activation and gray', function () {
       var arr = [{
         state: 'UNCLAIMED'
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.NeedsActivation');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.RequiresActivation');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
     });
 
     it('should convert state CLAIMED and connection status CONNECTED to Online and green', function () {
@@ -153,8 +144,6 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
     it('should convert connection status CONNECTED to Online and green', function () {
@@ -165,11 +154,9 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
-    it('should convert state CLAIMED and connection status UNKNOWN to Offline and gray', function () {
+    it('should convert state CLAIMED and connection status UNKNOWN to Offline and red', function () {
       var arr = [{
         state: 'CLAIMED',
         status: {
@@ -177,27 +164,25 @@ describe('CsdmConverterSpec', function () {
         }
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
-    it('should convert connection status UNKNOWN to Offline and gray', function () {
+    it('should convert connection status UNKNOWN to Offline and red', function () {
       var arr = [{
         status: {
           connectionStatus: 'UNKNOWN'
         }
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
-    it('should convert state CLAIMED and no connection status to Offline and gray', function () {
+    it('should convert state CLAIMED and no connection status to Offline and red', function () {
       var arr = [{
         state: 'CLAIMED'
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
   }); // aggregatedState & cssColorClass
@@ -305,6 +290,37 @@ describe('CsdmConverterSpec', function () {
     });
   });
 
+  describe("lastConnectionTime", function () {
+    it('when long ago', function () {
+      var arr = [{
+        status: {
+          lastConnectionTime: '2015-01-09T08:00:00Z',
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 11) == "Jan 9, 2015").toBeTruthy();
+    });
+
+    it('when today', function () {
+      var arr = [{
+        status: {
+          lastConnectionTime: new Date(),
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 8) == "Today at").toBeTruthy();
+    });
+
+    it('when null', function () {
+      var arr = [{
+        status: {
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].lastConnectionTime).toBeFalsy();
+    });
+  });
+
   describe("remote support user", function () {
     it('rsuKey is taken from remoteSupportUser on device', function () {
       var token = 'this_is_a_very_secret_token';
@@ -361,7 +377,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('NA');
+      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
     });
 
     it('should set state to Non existent', function () {

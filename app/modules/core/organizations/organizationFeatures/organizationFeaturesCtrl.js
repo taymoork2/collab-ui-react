@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $scope, $q, FeatureToggleService, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, FeatureToggleService, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.defaults = [];
@@ -14,6 +14,7 @@
 
     vm.resetForm = resetForm;
     vm.updateToggles = updateToggles;
+    vm.handleClick = handleClick;
 
     init();
     ////////////////
@@ -23,16 +24,26 @@
     }
 
     function getOrgFeatureToggles() {
-      // TODO complete once the feature toggle api is smoothened out
-      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id)
+      function convertToTogglable(value) {
+        return {
+          toggleId: value.key || value,
+          name: value.key || value,
+          model: value.val || false,
+        };
+      }
+
+      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id, true)
         .then(function (result) {
-          vm.defaults = _.map(result.data.featureToggles, function (value) {
-            return {
-              toggleId: value.key,
-              name: value.key,
-              model: value.val,
-            };
+          var stdFeatures = _.map(FeatureToggleService.features, convertToTogglable);
+          var dbFeatures = _.map(result.featureToggles, convertToTogglable);
+
+          _.remove(stdFeatures, function (obj) {
+            return _.filter(dbFeatures, {
+              name: obj.name
+            })[0];
           });
+
+          vm.defaults = dbFeatures.concat(stdFeatures);
         })
         .catch(function (err) {
           Notification.error('organizationsPage.errorGettingToggles');
@@ -41,35 +52,31 @@
     }
 
     function resetForm() {
-      $scope.orgFeatureToggles.form.$setPristine();
-      $scope.orgFeatureToggles.form.$setUntouched();
       vm.toggles = angular.copy(vm.defaults);
     }
 
     function updateToggles() {
-      var deferred = $q.defer();
       var changedToggles = findDifference();
-      var successfulToggles = 0;
-      _.map(changedToggles, function (toggle) {
-        // The toggle service API only accepts one toggle at a time
-        FeatureToggleService.setFeatureToggle(false, vm.currentOrganization.id, toggle.key, toggle.val)
-          .catch(function () {
-            Notification.error('organizationsPage.errorSettingToggle', {
-              key: toggle.key
-            });
-            deferred.reject();
-          })
-          .then(function () {
-            successfulToggles++;
-            if (successfulToggles === changedToggles.length) {
-              deferred.resolve();
-            }
-          });
+
+      var featureToggleRules = _.map(changedToggles, function (toggle) {
+        return FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id, toggle.name, toggle.model);
       });
 
-      deferred.promise.then(function () {
-        Notification.success('organizationsPage.toggleModSuccess');
-      });
+      if (featureToggleRules.length) {
+        FeatureToggleService.setFeatureToggles(false, featureToggleRules)
+          .catch(function () {
+            Notification.error('organizationsPage.errorSettingToggle');
+          })
+          .then(function () {
+            _.forEach(featureToggleRules, function (ftr) {
+              _.find(vm.defaults, {
+                name: ftr.key
+              }).model = ftr.val;
+            });
+            Notification.success('organizationsPage.toggleModSuccess');
+          })
+          .finally(resetForm);
+      }
     }
 
     function findDifference() {
@@ -82,6 +89,10 @@
           return val;
         }
       });
+    }
+
+    function handleClick() {
+      updateToggles();
     }
   }
 })();

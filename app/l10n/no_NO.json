@@ -1,7 +1,7 @@
 {
   "loginPage": {
     "title": "Administrasjon av skybasert samarbeid",
-    "login": "Logg inns",
+    "login": "Logg inn",
     "loading": "Laster"
   },
   "usersPage": {
@@ -134,16 +134,16 @@
     "collabService": "Velg lisenser for samarbeidstjenestene som skal gis til brukerne i gruppen.",
     "addEntitleError": "utilstrekkelig rettighet til å legge til eller gi rettigheter til en bruker.",
     "freeMsg": "Gratis Spark-meldinger",
-    "freeConf": "Gratis Spark-møter for tre deltagere",
+    "freeConf": "Gratis møter for tre deltagere",
     "freeComm": "Gratis 1:1 Spark-samtale",
     "msgFree": "Gratismelding",
     "mtgFree": "Gratismelding tredjepart",
     "callFree": "Ring gratis",
     "freeContactCenter": "Gratis chat, e-post, tale",
-    "paidMsg": "Standard grupperom",
+    "paidMsg": "Spark-melding",
     "paidConf": "Møte med 25 deltagere",
     "paidConfWebEx": "WebEx-møter",
-    "paidComm": "Avansert Spark-samtale",
+    "paidComm": "Spark-samtale",
     "paidContactCenter": "Chat, e-post, tale",
     "freeSpark": "Gratis Spark-meldinger",
     "enterpriseEdition": "Enterprise-utgave {{capacity}}",
@@ -153,7 +153,13 @@
     "eventCenter": "Aktivitetssenter {{capacity}}",
     "communication": "Kommunikasjon",
     "cloudExtensions": "Hybridtjenester",
-    "cmr": "Møterom for samarbeid"
+    "cmr": "Møterom for samarbeid",
+    "result": {
+      "200": "berettiget",
+      "404": "finnes ikke",
+      "409": "berettigelse tidligere oppdatert",
+      "other": "ikke berettiget, status: {{status}}"
+    }
   },
   "usersPreview": {
     "groupPreview": "Gruppe:",
@@ -172,7 +178,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generer aktiveringskode",
     "generateActivationCodeText": "Generer en aktiveringskode for å aktivere en ny enhet for denne brukeren.",
-    "activationCodeTitle": "Aktiveringskode for ny enhet",
+    "activationCodeTitle": "Aktiveringskode",
     "expires": "Utløper",
     "editServices": "Rediger tjenester",
     "editServiceTitle": "Tjenester aktivert for {{firstName}} {{lastName}}",
@@ -180,7 +186,8 @@
     "webex": "Webex",
     "spark": "Spark",
     "calling": "Ringer",
-    "enabledBetaFeatures": "Aktiverte betafunksjoner"
+    "enabledBetaFeatures": "Aktiverte betafunksjoner",
+    "otpShareButton": "Del"
   },
   "messagingPanel": {
     "title": "Meldinger"
@@ -246,7 +253,8 @@
     "callServiceTab": "Hybridtjenester: Samtaler",
     "callServiceTabDesc": "Samtaletjeneste",
     "expresswayManagementServiceTab": "Hybridtjenester: Administrasjon",
-    "expresswayManagementServiceTabDesc": "Expressway-administrasjonstjeneste"
+    "expresswayManagementServiceTabDesc": "Expressway-administrasjonstjeneste",
+    "helpdesk": "Brukerstøtte"
   },
   "index": {
     "welcome": "Velkommen!",
@@ -269,7 +277,8 @@
     "install": "Installer Spark ved å følge",
     "link": "denne koblingen.",
     "using": "Begynn å bruke",
-    "squared": "Spark."
+    "squared": "Spark.",
+    "active": "Konto aktiv"
   },
   "invitePage": {
     "redirect": "Viderekobler ...",
@@ -320,6 +329,9 @@
     "addSuccess": "En organisasjon ble startet for {{customerOrgName}} med {{licenseCount}} lisenser i {{duration}} dager.",
     "manageBetaFeatures": "Administrer betafunksjoner",
     "betaFeatures": "Betafunksjoner",
+    "errorGettingToggles": "Det oppsto et problem med å hente den valgte organisasjonens funksjonsbrytere",
+    "errorSettingToggle": "Det oppsto et problem med å stille inn {{key}} for den valgte organisasjonen",
+    "toggleModSuccess": "Alle endrede brytere ble oppdatert",
     "startSearching": "Søk etter en organisasjon å begynne",
     "noSearchResults": "Søket gav ingen resultater"
   },
@@ -350,15 +362,18 @@
     "leastQuality": "5 lavest kvalitet",
     "customerLoadError": "Det oppstod en feil under innlasting av kundelisten.",
     "unauthorizedError": "Bruker er ikke autorisert for tilgang til kunderapporter.",
-    "webex": "Webex-rapporter",
+    "webex": "WebEx-rapporter",
     "devReports": "Utviklings-kunderapporter",
-    "sparkReports": "Spark-rapporter"
+    "sparkReports": "Spark-rapporter",
+    "downloadOptions": "Nedlastingsalternativer",
+    "saveAs": "Lagre som"
   },
   "activeUsers": {
     "active": "Aktiv",
     "activeUsers": "Aktive brukere",
     "overallActiveUserGraphError": "Det oppsto en feil under lasting av detaljerte aktive brukerdata.",
     "activeUserTableError": "Det oppsto en feil under lasting av mest aktive brukerdata for {{customer}}.",
+    "mostActiveError": "Det oppsto en feil under lasting av data for mest aktive brukere.",
     "calls": "Anrop",
     "customer": "Kunde",
     "hideActiveUsers": "Skjul mest aktive brukere",
@@ -369,7 +384,28 @@
     "user": "Bruker",
     "users": "Brukere",
     "description": "En aktiv bruker er definert som en som har foretatt eller mottatt en samtale via en enhet eller har brukt Spark-applikasjonen. I denne rapporten kan du sammenligne totalt antall registrerte brukere med antallet aktive brukere hos valgt(e) kunde(r) de {{time}}.",
-    "mostActiveDescription": "I løpet av de {{time}}, er dette de mest aktive brukerne for {{customer}}."
+    "mostActiveDescription": "I løpet av de {{time}}, er dette de mest aktive brukerne for {{customer}}.",
+    "customerPortalDescription": "En aktiv bruker er definert som en som har foretatt eller mottatt en samtale via en enhet eller har brukt Spark-applikasjonen. I denne rapporten kan du sammenligne totalt antall registrerte brukere med antallet aktive brukere hos valgt(e) kunde(r) de {{time}}.",
+    "customerMostActiveDescription": "Tabellen under viser brukeraktivitet for alle brukere. Den kan sorteres på brukerens navn, totalt antall samtaler og total aktivitet. I tillegg søkefeltet "
+  },
+  "avgRooms": {
+    "avgRooms": "Totalt antall rom",
+    "avgRoomsDescription": "Fremstillingen viser totalt antall Spark-rom brukt til meldingsutveksling og/eller fildeling gjennom {{time}}. Hold pekeren over kolonnene for en oppsummering av totalt antall grupperom og 1:1-rom i tillegg til gjennomsnittlig antall rom per bruker.",
+    "groupError": "Det oppsto en feil under lasting av data for grupperom.",
+    "oneToOneError": "Det oppsto en feil under lasting av data for en-til-en rom.",
+    "avgError": "Det oppsto en feil under lasting av data for gjennomsnittlig antall rom per bruker.",
+    "group": "Totalt antall grupperom",
+    "oneToOne": "Totalt antall 1:1-rom",
+    "avgTotal": "Gjennomsnittlig antall rom per bruker"
+  },
+  "filesShared": {
+    "filesShared": "Delte filer",
+    "filesSharedDescription": "Diagrammet viser antall filer og gigabytes delt over {{time}}.",
+    "contentSharedError": "Det oppsto en feil under lasting av data for antall delte filer.",
+    "contentShareSizesDataError": "Det oppsto en feil under lasting av data for størrelse på delte filer.",
+    "contentShared": "Delte filer",
+    "fileSizes": "Mengde delt",
+    "gb": "NO"
   },
   "mediaQuality": {
     "mediaQuality": "Enhetens mediakvalitet",
@@ -379,6 +415,7 @@
     "poor": "Dårlig",
     "description": "Mediakvalitet bestemmes ved å måle antall pakketap rapportert av de registrerte enhetene, for alle samtaler av mer enn femten sekunders varighet.",
     "mediaQualityGraphError": "Det oppsto en feil under innlasting av samtalekvalitetsdata for {{customer}}.",
+    "customerError": "Det oppstod en feil under innlasting av data for mediekvalitet.",
     "minutes": "Minutter"
   },
   "callMetrics": {
@@ -387,8 +424,13 @@
     "callConditionPoorMedia": "Dårlige medier",
     "callConditionSuccessful": "Vellykket",
     "callMetrics": "Samtalestatistikk",
+    "audioTitle": "Måledata for samtale – Lyd",
+    "videoTitle": "Måledata for samtale – Video",
     "callMetricsChartError": "Det oppsto en feil under innlasting av metriske samtaledata for {{customer}}.",
+    "customerError": "Det oppsto en feil under lasting av måledata for samtale.",
     "callMetricsDesc": "Denne oversikten viser antall samtaler foretatt og antall minutter brukt på disse samtalene de {{time}}. Du kan også fastsette prosentandelen av vellykkede og mislykkede samtaler for de valgte kundene.",
+    "audioDescription": "Dette diagrammet viser totalt antall samtaler foretatt, antall minutter brukt på disse samtalene, og prosentandelen vellykkede og mislykkede samtaler over {{time}}.",
+    "videoDescription": "Dette diagrammet viser totalt antall videosamtaler foretatt, antall minutter brukt på disse samtalene, og prosentandelen vellykkede og mislykkede samtaler over {{time}}.",
     "totalCalls": "Totalt antall samtaler",
     "totalCallMinutes": "Totale samtaleminutter"
   },
@@ -612,7 +654,9 @@
     "or": "eller",
     "search": "Søke",
     "edit": "Rediger",
+    "remove": "Fjerne",
     "confirm": "Bekreft",
+    "deactivate": "Deaktiver",
     "firstName": "Fornavn",
     "lastName": "Etternavn",
     "email": "E-post",
@@ -622,7 +666,10 @@
     "users": "Brukere",
     "settings": "Innstillinger",
     "resources": "Ressurser",
-    "download": "Last ned"
+    "download": "Last ned",
+    "quantity": "Ant.",
+    "modify": "Endre",
+    "submit": "Send inn"
   },
   "notifications": {
     "success": "Godkjent-meldinger",
@@ -762,8 +809,10 @@
     "customerGetError": "Kunne ikke få tak i kundestøtte.",
     "customerPutError": "Kunne ikke oppdatere kundestøtte.",
     "customerDialPlanDetailsGetError": "Kunne ikke få tak i kundens detaljer for ringeplaner.",
+    "carrierCountryGetError": "Kunne ikke få tak i opplysninger fra tjenesteleverandør.",
     "voicemailGetError": "Kunne ikke få tak i firmaets talepostnummer.",
     "voicemailUpdateError": "Kunne ikke oppdatere firmaets talepostnummer.",
+    "voicemailNoExternalNumbersError": "Du må ha ledige direktelinjer for å slå på talepost. Kontakt din kollega eller administrator.",
     "timezoneUpdateError": "Kunne ikke oppdatere firmaets tidssone.",
     "extensionDeleteSuccess": "Internnummer {{extension}} ble slettet.",
     "extensionDeleteError": "Kunne ikke slette internnummer {{extension}}.",
@@ -773,7 +822,8 @@
     "rangeOverlap": "Spektere for internnummer må ikke overlappe hverandre.",
     "rangeDuplicate": "Spektere for internnummer kan ikke ha duplikater.",
     "fieldValidationFailed": "Det finnes feil på siden. Korriger og prøv på nytt.",
-    "singleNumberRangeError": "Spektere for internnummer kan ikke starte og slutte med samme tall."
+    "singleNumberRangeError": "Spektere for internnummer kan ikke starte og slutte med samme tall.",
+    "mapCompanyVoicemailToExternalNumberError": "Bedriftens eksisterende talepostnummer ble ikke funnet i listen over bedriftens direktelinjer."
   },
   "dirsyncModal": {
     "chooseSync": "Velg synkronisering",
@@ -854,6 +904,9 @@
     "actionsHeader": "Handlinger",
     "activationCodeHeader": "Aktiveringskode",
     "activationDateHeader": "Aktiveringsdato",
+    "informationHeader": "Informasjon",
+    "customTagsHeader": "Tilpasset merkelapp",
+    "newCustomTagPlaceholder": "Oppgi merkelapp …",
     "addDeviceStep1": "Hvor vil denne enheten bli installert?",
     "addDeviceStep1Desc": "Det anbefales at du bruker navnet på konferanserommet eller fellesområdet slik det vises i firmakatalogen. Videoadressen for denne enheten vil bruke dette navnet. Det vil også være den enkleste måten å søke etter og finne enheten i systemet senere.",
     "addDeviceStep2": "Aktiveringskoden din har blitt opprettet",
@@ -861,15 +914,19 @@
     "emptyDevices1": "Når du legger til en ny enhet,",
     "emptyDevices2": "vil du se den oppført her.",
     "deleteDevice": "Slett enhet",
-    "reportProblem": "Rapporter et problem",
+    "rebootDevice": "Start enhet på nytt",
+    "reboot": "Starte på nytt",
+    "reportProblem": "Rapportere problem",
     "deleteDeviceConfText": "Er du sikker på at du vil slette denne enheten?",
+    "rebootDeviceConfText": "Er du sikker på at du vil starte denne enheten på nytt?",
     "videoQTitle": "Mulig tap av videokvalitet",
     "videoQMsg": "Denne enheten kommuniserer via TCP-protokollen, noe som kan medføre mer ventetid (latens) og dermed redusert kvalitet på direkteavspilling (streaming). Hvis du har problemer med direkteavspillingen, kan du prøve å åpne UDP port 33434 i din lokale brannmur for å avhjelpe problemet.",
     "needsActivation": "Trenger aktivering",
     "active": "Aktiv",
     "offline": "Ikke pålogget",
     "issuesDetected": "Oppdaget problemer",
-    "remoteSupport": "Ekstern støtte",
+    "ciscoSupport": "Cisco brukerstøtte",
+    "remoteAccessKey": "Remote Access Key",
     "rsuKey": "Del denne nøkkelen med Cisco Support ved å lime den inn i en melding.",
     "rsuKeyDesc": "Dette gir Cisco Support full tilgang til enheten. Bruk «nullstill»-knappen for å opprette en ny tilgangsnøkkel for ekstern støtte og kansellere alle tidligere nøkler du har delt med Cisco Support.",
     "reset": "Tilbakestill",
@@ -878,13 +935,13 @@
     "noDevices": "Ingen enheter funnet ...",
     "licenseWarningTitle": "Lisens",
     "licenseWarningHeader": "Det er et problem med lisensen for denne tjenesten.",
-    "licenseSuspendedWarning": "Din cloudberry-lisens er suspendert."
+    "licenseSuspendedWarning": "Systemlisensen for rom er stoppet."
   },
   "hercules": {
     "page_title": "Kontaktadministrasjon",
     "connectors": {
       "group_by": "Gruppetjenester etter:",
-      "cluster_id": "Klynge",
+      "cluster_id": "Gruppe",
       "host_name": "Vert",
       "display_name": "Tjenestenavn",
       "connector_type": "Koblingstype",
@@ -896,6 +953,23 @@
       "hosts": "Verter",
       "goToHost": "Gå til vert",
       "remove": "Fjerne"
+    },
+    "export": {
+      "modalTitle": "Statusrapport for brukere",
+      "modalText1": "Den eksporterte rapporten vil være en kommaseparert liste over brukere, tilstand og relaterte detaljer.",
+      "modalText2": "Velg hvilken type informasjon du ønsker skal være med i rapporten:",
+      "modalNote": "Merk: Jo flere brukere som er inkludert, desto lenger tid tar det å generere rapporten.",
+      "modalCTA": "Eksporter til CSV",
+      "csvFilename": "user_status_report.csv"
+    },
+    "overview": {
+      "activated": "{{number}} aktivert",
+      "pending": "{{number}} er under behandling",
+      "error": "{number, plural, one{# feil} other{# feil}}",
+      "loading": "Laster, vennligst vent …",
+      "upgrade-available": "Oppgradering tilgjengelig",
+      "clusters-title": "Expressway grupper",
+      "status-title": "Tjenestestatus"
     },
     "activateService": {
       "ingress": "Utvid skyen til ditt lokale driftsmiljø",
@@ -911,7 +985,7 @@
     },
     "clusters": {
       "listing": {
-        "no_clusters_heading": "Ingen Cisco Expressway-klynger registrert",
+        "no_clusters_heading": "Ingen Cisco Expressway-grupper registrert",
         "no_clusters_text": "Se krevde handlinger ovenfor og dokumentasjonen for å komme i gang."
       },
       "deregister": "Avregistrer",
@@ -923,7 +997,11 @@
       "deregisterCausesListItem2": "Alle kontakter og tilhørende konfigurasjon vil bli fjernet fra {{clusterName}}.",
       "deregisterCausesListItem3": "Hvis systemet er i en gruppe, trenger du ikke å avregistrere de andre deltagerne. Dette vil skje automatisk.",
       "deregisterErrorGeneric": "Kunne ikke avregistrere {{clusterName}}. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Kan ikke avregistrere {{clusterName}}. Den aktuelle versjonen av programvaren for administrasjonskontakt støtter ikke avregistrering fra skyen. Oppgrader kontakten eller avregistrer gjennom Cisco Expressway webgrensesnitt."
+      "deregisterErrorNoDeregisterSupport": "Kan ikke avregistrere {{clusterName}}. Den aktuelle versjonen av programvaren for administrasjonskontakt støtter ikke avregistrering fra skyen. Oppgrader kontakten eller avregistrer gjennom Cisco Expressway webgrensesnitt.",
+      "notInstalled": "{{serviceName}} er ikke installert i denne gruppen.",
+      "activeActiveHeading": "«Active-Active»-modus (høy tilgjengelighet)",
+      "activeActiveNotPossible": "Ikke tilgjengelig som «Active-Active»-modus krever en gruppe med mer enn én tjener",
+      "activeActivePossible": "Slå på «Active-Active»-modus for å aktivere høy tilgjengelighet for denne tjenesten. Når den er aktivert, blir brukere tildelt to noder i gruppen for økt driftssikkerhet."
     },
     "status": {
       "unknown": "Status ukjent",
@@ -953,12 +1031,12 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Samtaletjeneste",
-      "squared-fusion-uc.full": "Samtaletjeneste Aware",
+      "squared-fusion-uc.full": "Samtaletjeneste: Aware",
       "squared-fusion-cal": "Kalendertjeneste",
       "squared-fusion-media": "Mediatjeneste",
       "contact-center-context": "Context Center-tjeneste",
-      "squared-fusion-ec": "Koble til samtaletjeneste",
-      "squared-fusion-mgmt": "Expressway-administrasjonstjeneste"
+      "squared-fusion-ec": "Samtaletjeneste: Koble til",
+      "squared-fusion-mgmt": "Expressway-administrasjonstjeneste "
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lar dine brukere dele skrivebordet umiddelbart fra Cisco Spark-klienter mens de er i en telefonsamtale. Call Service Connect lar brukerne besvare samtaler til sine jobbtelefoner på Cisco Spark-klienten, og foreta oppringninger til andres jobbtelefoner fra Cisco Spark-klienten.",
@@ -1002,28 +1080,50 @@
       "softwareUpgrade": "Programvareoppdatering",
       "currentVersion": "Nåværende versjon",
       "newVersion": "Ny versjon",
+      "explanation": "Du er i ferd med å oppgradere programvaren for {{serviceName}} på alle tjenere i valgt Cisco Expressway Cluster:",
       "upgrade": "Oppgradere"
     },
     "settings": {
       "deactivateServiceHeading": "Deaktiver tjeneste",
       "deactivateService": "Brukerne vil ikke lengre kunne bruke denne tjenesten. Du bør også fjerne koblingen fra ditt anleggsmiljø.",
+      "visitHelpCentral": "Gå til <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Hjelpesentralen</a> hvis du trenger ytterligere informasjon om hybridtjenestene.",
       "deactivate": "Deaktiver",
       "emailNotificationsHeading": "E-postvarsler",
       "emailNotifications": "Angi en liste over e-postadresser for personer som må varsles om tjenesterelaterte alarmer og oppgraderinger.",
+      "emailNotificationsSaving": "Lagrer.",
+      "documentationHeading": "Dokumentasjon og programvare",
+      "documentationHelpLink": "Gå til <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Hjelpesentralen</a> hvis du trenger ytterligere informasjon om hybridtjenestene.",
+      "documentationDownloadLink": "Last ned Cisco Expressway programvare fra <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
+      "documentationSaving": "Lagrer.",
       "call": {
         "featureHeading": "Funksjonsinnstillinger",
         "feature": "Aktiver eller deaktiver funksjoner for samtaletjeneste.",
         "awareHeading": "Klar",
         "aware": "Brukere kan dele sine skrivebord sitt fra Cisco Spark-klienter mens de snakker på jobbtelefonen.",
+        "on": "På som standard",
         "connectHeading": "Koble til",
         "connect": "Brukere kan motta samtaler eller ringe kolleger via jobbtelefon fra Cisco Spark.",
         "certificatesHeading": "Sertifikater",
         "certificates": "Bruk sertifikater fra Cisco Collaborations standard klareringsliste for krypterte SIP-anrop, eller last opp dine egne sertifikater.",
         "certificatesUpload": "Last opp",
+        "certificatesModalHeading": "Slette sertifikat",
+        "certificatesModalText": "Er du sikker på at du vil slette følgende sertifikat?",
+        "sipDomainHeading": "SIP-domene",
+        "disableConfirmDialogText1": "Du er i ferd med å fjerne følgende hybridtjeneste for organisasjonen din:",
+        "disableConfirmDialogText2": "Hvis du klikker på Bekreft:",
+        "disableConfirmDialogText3": "Tjenesten vil bli deaktivert for alle brukerne dine.",
+        "disableConfirmDialogText4": "Din Cisco Expressway vil avinstallere tjenestetilkobleren.",
+        "disableConfirmDialogText5": "Alle data for tjenestetilkobleren vil bli slettet.",
+        "disableConfirmDialogText6": "Hvis din Cisco Expressway ikke har noen andre tjenester installert, må du avregistrere den. Logg på og avregistrer fra Applikasjoner &gt; Hybridtjenester &gt; Tilkobler-administrasjon.",
         "sipDomainHeading": "SIP-domene",
         "sipDomain": "Angi SRV-domenet til Expressway edge serveren(e) slik at anrop sendes riktig til og fra der.",
         "sipDomainPlaceholder": "Angi ett enkelt domene eller underdomene"
       }
+    },
+    "hybridServices": {
+      "result404": "Det finnes ikke rettigheter for {{email}}.",
+      "result409": "Rettighet(er) tidligere oppdatert.",
+      "resultOther": "Rettigheter for {{email}} ble ikke oppdatert. Status: {{status}}."
     }
   },
   "firstTimeWizard": {
@@ -1084,6 +1184,7 @@
     "needHelp": "Trenger hjelp - ",
     "needHelpExplain": "Søke i kunnskapsbasen.",
     "planReview": "Plangjennomgang",
+    "subscriptionId": "Abonnement ID-er",
     "spark": "Spark",
     "sparkMsg": "Gratis Spark-meldinger",
     "sparkStub": "Konfigurer Spark",
@@ -1099,11 +1200,11 @@
     "conferencing": "Konferanser",
     "communications": "Kommunikasjoner",
     "roomSystems": "Romsystemer",
-    "sparkRoomSystem": "Spark Romsystem",
+    "sparkRoomSystem": "Spark Rom-system",
     "freeMsg": "Gratismelding",
     "freeMtg": "Gratismelding tredjepart",
     "freeCall": "Ring gratis",
-    "confMsg": "Gratis Spark-møter for tre deltagere",
+    "confMsg": "Gratis møter for tre deltagere",
     "commMsg": "Gratis 1:1 Spark-samtale",
     "communicationsSub": "Oppsett for samtaletjeneste",
     "claimSipUrl": "Tilpasse SIP URI domene",
@@ -1124,6 +1225,7 @@
     "serviceSetupSub": "Telefonrelaterte innstillinger",
     "unifiedCommunication": "Samordnet kommunikasjon",
     "addUsers": "Inviter brukere",
+    "addUsersSubDescription": "Inviter brukere og tildel tjenester",
     "addUsersDescription": "Velg en metode for opplasting av brukerne dine.",
     "addUsersSimple": "Invitere brukere | Enkelt",
     "addUsersAdvanced": "Invitere brukere | Avansert",
@@ -1148,11 +1250,11 @@
     "syncStatus": "Synkroniseringsstatus",
     "domain": "Domene",
     "defaultPlaceholder": "Standard",
-    "domainDesc": "Identifiser Active Directory-domenet du vil synkronisere.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Last ned </a> og installer Cisco Cloud Connector i din bedrift.",
-    "installStep2": "2. Konfigurer synkroniseringsavtalen for Active Directory.",
+    "installStep1": "1. <a href='{{download}}' download> Last ned </a> og installer Cisco Cloud Connector i din bedrift.",
     "installStep3": "3. Test synkroniseringsavtalen.",
-    "nextSteps": "Trykk på «Neste»-knappen når du er klar til å bekrefte at identitetsinformasjon blir synkronisert.",
+    "installWarning": "Advarsel:",
+    "installWarningDescription": "Hvis du allerede har lagt til brukere manuelt, kan en synkronisering med Active Directory forårsake at brukere som er lagt til tidligere blir slettet. Du bør sjekke Cisco Cloud Connector testkjøringsrapporter for å bekrefte at alle brukere er registrert.",
+    "nextSteps": "Trykk på «Neste» når du er klar til å bekrefte at identitetsinformasjon blir synkronisert.",
     "results": "Resultater",
     "syncNotConfigured": "Katalogsynkronisering er ikke aktivert. Gå tilbake til forrige trinn i installasjonsanvisningene.",
     "syncAgreementText": "brukere i synkroniseringsavtale",
@@ -1177,8 +1279,8 @@
     "setupSSODesc": "Velg det aktuelle alternativet for din SSO-konfigurasjon.",
     "manualInvite": "Skriv inn e-postadressene til personene i din bedrift som skal motta samarbeidstjenester. De vil motta en e-postinvitasjon til å registrere seg.",
     "assignServices": "Velg hvilke rettigheter du vil gi brukere.",
-    "domainEntry": "Domeneoppføring",
-    "domainSubDesc": "Skriv inn AD-domenet som det skal synkroniseres med:",
+    "domainEntry": "Active Directory",
+    "domainSubDesc": "Angi Active Directory domenet:",
     "connectorSteps": "Følg disse trinnene for å installere «Directory Connector»:",
     "readyToGo": "Du er klar!",
     "finishDesc": "Du har fullført konfigurasjonsveiviseren. Hvis du har hoppet over trinn eller trenger å endre noen av innstillingene, klikk på tannhjulikonet øverst i høyre hjørne på siden for å få tilgang til dette panelet igjen.",
@@ -1386,10 +1488,15 @@
     "phoneMenuRepeatFour": "Fire ganger",
     "phoneMenuRepeatFive": "Fem ganger",
     "phoneMenuHelp": "Velg ønsket språk og stemme som brukes for å si frasene til innringeren. Si melding er valgfritt. Hvis ingen melding angis så vil vi fremdeles lytte etter innringerens svar.",
+    "phoneMenuErrorRouteToAATargetMissing": "Nøkkelen {{key}} mangler en rute til auto-ledsager.",
+    "phoneMenuErrorRouteToHGTargetMissing": "Nøkkelen {{key}} mangler en rute til auto-ledsager.",
+    "phoneMenuErrorDialByExtMessageMissing": "Nøkkelen {{key}} mangler melding for ring via internnummer.",
     "addNumberMsg": "Denne auto-ledsageren vil besvare alle samtaler til følgende numre. Du kan legge til eller fjerne numre når som helst.",
     "numberInfoPopover": "Hvis du ikke oppgir et nummer her, er det greit. Samtaler kan likevel komme gjennom fra en annen auto-ledsager.",
     "selectPlaceHolder": "Søk etter, eller velg, et nummer",
     "inputPlaceHolder": "Start å skrive her",
+    "selectHGPlaceHolder": "Søk eller velg en auto-ledsager",
+    "selectAAPlaceHolder": "Søk eller velg en auto-ledsager",
     "sayMessage": "Send melding til",
     "sayMessagePlaceholder": "Angi din melding her.",
     "sayMessageUninterrupt": "Avspilling av melding kan ikke avbrytes.",
@@ -1463,7 +1570,16 @@
       "sven": "Sven",
       "empar": "Empar"
     },
-    "sayMessageHelp": "Velg ønsket språk og stemme som brukes for å si frasene til innringeren. Si melding er valgfritt. Hvis ingen melding angis så vil samtalen fortsette til neste trinn."
+    "sayMessageHelp": "Velg ønsket språk og stemme som brukes for å si frasene til innringeren. Si melding er valgfritt. Hvis ingen melding angis så vil samtalen fortsette til neste trinn.",
+    "errorReadCMI": "Kan ikke laste tildelte telefonnumre",
+    "errorAddCMI": "Kan ikke tildele telefonnummer {{phoneNumber}}: {{statusText}} ({{status}}).",
+    "errorRemoveCMI": "Kan ikke slette tildelte telefonnummer/telefonnumre.",
+    "errorResetCMI": "Kan ikke tilbakestille til tidligere tildelte telefonnummer/telefonnumre.",
+    "errorFailedToAssignNumbers": "Kan ikke tildele nummeret/numrene: {{phoneNumbers}}",
+    "errorNumbersCMIOnly": "Nummer/numre er tildelt men ikke i auto-ledsager: {{phoneNumbers}}",
+    "errorNumbersCESOnly": "Nummer/numre er i auto-ledsager men er ikke tildelt: {{phoneNumbers}}",
+    "errorInvalidTemplate": "Kunne ikke laste mal: {{template}}.",
+    "errorInvalidTemplateDef": "Ugyldig mal-definisjon for mal: {{template}}."
   },
   "callPark": {
     "code": "SP",
@@ -1501,7 +1617,8 @@
     "features": "Funksjoner",
     "or": "eller",
     "voicemail": "Talepost",
-    "singleNumberReach": "Single Number Reach"
+    "singleNumberReach": "Single Number Reach",
+    "internationalDialing": "Internasjonal oppringning"
   },
   "directoryNumberPanel": {
     "title": "Linjekonfigurasjon",
@@ -1585,7 +1702,20 @@
     "removeSuccess": "Konfigurasjon av Single Number Reach ble fjernet",
     "error": "Konfigurasjon av Single Number Reach mislyktes.",
     "unitedStates": "USA",
-    "austrailia": "Austrailia"
+    "austrailia": "Australia"
+  },
+  "internationalDialingPanel": {
+    "success": "Internasjonal oppringningskonfigurasjon lagret",
+    "error": "Internasjonal oppringningskonfigurasjon mislyktes. ",
+    "title": "Internasjonal oppringning",
+    "toggle": "Internasjonal oppringning",
+    "disableInternationalDialingTitle": "Deaktivere internasjonal oppringning",
+    "disableInternationalDialingDialogue": "Deaktivering av internasjonal oppringning vil forhindre brukeren i å foreta internasjonale samtaler. Vil du deaktivere denne brukerens mulighet til å foreta internasjonale oppringninger?",
+    "useGlobal": "Globale innstillinger",
+    "alwaysAllow": "Alltid tillate",
+    "neverAllow": "Aldri tillate",
+    "on": "PÅ",
+    "off": "AV"
   },
   "voicemailPanel": {
     "success": "Konfigurasjon av talepost lagret",
@@ -1598,7 +1728,7 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Telefonnumre",
-    "addNumbers": "Legg til numre",
+    "addNumbers": "Administrere numre",
     "editNumbers": "Redigere telefonnumre",
     "listError": "Kunne ikke laste telefonnummerliste.",
     "deleteNumber": "Slett nummer",
@@ -1608,6 +1738,13 @@
     "pendingNumbers": "{count, plural, one{# nummer i påvente} other{# nummer i påvente}}",
     "unassignedNumbers": "{count, plural, one{# ledig nummer} other{# ledige nummer}}",
     "searchResults": "{count, plural, one{# søkeresultat} other{# søkeresultater}}"
+  },
+  "serviceAddress": {
+    "streetAddress": "Gateadresse",
+    "unit": "Avdeling",
+    "city": "Sted",
+    "state": "Sted",
+    "zipCode": "Postnummer"
   },
   "pstnSetup": {
     "setupPstn": "Oppsett av PSTN",
@@ -1636,6 +1773,7 @@
     "checkOrderStatus": "Sjekk ordrestatus",
     "launchPortal": "Lanser firmaportal",
     "carrierListError": "Kunne ikke hente transportørliste for denne kunden.",
+    "listSiteError": "Kunne ikke hente transportørliste for denne kunden.",
     "orderNumbersPrompt": "Du må legge til nummer for å fortsette.",
     "invalidNumberPrompt": "Fiks ugyldig nummer før du fortsetter.",
     "duplicateNumber": "{{number}} er et duplikatnummer.",
@@ -1645,8 +1783,22 @@
     "swivelDuplicateError": "Kunne ikke legge til {{number}}. Nummeret finnes allerede.",
     "customerCreateError": "Kunne ikke opprette kunde med transportør.",
     "customerUpdateError": "Kunne ikke oppdatere kunde med transportør.",
+    "siteCreateError": "Kunne ikke opprette service-adressen.",
     "searchResults": "Søkeresultater",
-    "noSearchResults": "Ingen søkeresultater"
+    "noSearchResults": "Ingen søkeresultater",
+    "emergencyAcknowledge": "Kunden erkjenner at oppringning til nødnumre kanskje ikke fungerer i et IP-telefoninett for bedrifter.",
+    "serviceAddress": "Tjenesteadresse",
+    "serviceAddressPrompt": "I tilfelle en nødsamtale, vil representanter for lokale nødetater bruke denne adressen for å lokalisere oppringeren.",
+    "serviceAddressConfirmation": "Er dette adressen?",
+    "serviceAddressNotFound": "Kan ikke finne adressen. Oppdater og prøv på nytt."
+  },
+  "pstnContractInformation": {
+    "title": "Kontraktinformasjon for offentlige svitsjede telefoninett",
+    "prompt": "Denne informasjonen vil bli brukt i kontrakten mellom kunden og leverandøren av offentlige svitsjede telefoninett.",
+    "companyName": "Juridisk selskapsnavn",
+    "firstName": "Undertegnedes fornavn",
+    "lastName": "Undertegnedes etternavn",
+    "emailAddress": "Undertegnedes e-postadresse"
   },
   "intelepeerFeatures": {
     "feature1": "Ubegrenset innkommende/utgående anrop til USAs 50 stater og Canada",
@@ -1665,7 +1817,7 @@
     "trialsHeading": "Aktive prøveversjoner",
     "noResults": "Ingen resultater",
     "expiredHeading": "Utløpte prøveversjoner",
-    "addTrial": "Ny prøveversjon",
+    "addTrial": "Start prøveversjon",
     "trialsCustomerName": "Kunde",
     "trialsEndDate": "Dag(er) igjen",
     "trialsNumUsers": "Brukere/lisenser",
@@ -1693,7 +1845,7 @@
     "trialServices": "Prøveversjonstjenester",
     "sparkRoomSystem": "Spark Rom-system",
     "trialButton": "Legg til kunde for prøveversjon",
-    "dialogTitle": "Legg til ny prøveversjon",
+    "dialogTitle": "Start prøveversjon",
     "customerName": "Bedriftsnavn",
     "customerEmail": "Administrators e-post",
     "startDate": "Startdato",
@@ -1707,6 +1859,7 @@
     "contentSharedTitle": "Delte filer",
     "errGetPhoneNumberCount": "Kunne ikke hente antall telefonnummer.",
     "invalidTrialLicenseCount": "Antall lisenser må være mer enn 0 og færre enn 1000.",
+    "invalidTrialRoomSystemQuantity": "Antall lisenser må være mellom 1 og 20.",
     "individualUserServices": "Individuelle brukertjenester",
     "roomSystems": "Romsystemer",
     "roomSystem": "Romsystem",
@@ -1718,23 +1871,32 @@
       "title": "Start ny Prøveversjon"
     },
     "meeting": {
-      "title": "Oppsett av Prøveversjon – Møter og WebEx",
-      "webexHeader": "WebEx Lisenstype",
-      "webexDetails": "Møte- og WebEx-prøveversjoner aktiverer Enterprise-versjonen av WebEx-lisenser.",
+      "title": "Start ny prøveversjon – Møter og WebEx-oppsett",
+      "webexHeader": "Møte og WebEx-lisenstype",
+      "meetingDetails": "Møte med 25 deltagere",
+      "webexDetails": "WebEx Enterprise-versjon med møterom for samarbeid",
       "siteUrl": "Nettsted-URL",
       "timezone": "Tidssone",
+      "webexSiteUrl": "URL for WebEx-nettside",
+      "webexTimezone": "WebEx-tidssone",
       "default": "Sett som standard",
-      "timezonePlaceholder": "Velg en tidssone"
+      "tzDescription": "Velg tidssonen nærmest kunden din. Dette vil sikre at WebEx-nettstedet legges inn i rett datasenter.",
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Søk etter en tidssone …",
+      "invalidSite": "SiteUrl er ugyldig.",
+      "duplicateSite": "SiteUrl er allerede i bruk.",
+      "domainInvalid": "SiteUrl må inneholde webex.com domenenavnet.",
+      "validationHttpError": "Kunne ikke nå server for å validere siteUrl. Prøv på nytt."
     },
     "call": {
-      "title": "Oppsett av Prøveversjon – Legg til Enheter",
+      "title": "Start ny prøveversjon – Send enheter",
       "selectDevicesHeader": "Velg Enheter",
       "meetingRoomCamera": "Spark Rom-system",
       "deskPhones": "Personlige og delte bordtelefoner",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
-      "phone7861": "7861",
+      "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Ant.",
       "shippingInfo": "Forsendelsesinformasjon",
@@ -1743,22 +1905,26 @@
       "customer": "Kunde",
       "partner": "Partner"
     },
+    "numbers": {
+      "title": "Start ny prøveversjon – Legg til numre"
+    },
     "trialSuccess": "Prøveversjonen din er klar.",
     "nextStepPrompt": "Vil du sette opp tjenestene for kunden?",
     "setupLater": "Nei takk",
     "setupNow": "Ja, sett opp tjenestene",
     "squareducError": "Opprettet prøveversjon, men kunne ikke effektuere Spark UC",
-    "addSuccess": "En prøveperiode ble startet for {{customerName}} med {{licenseCount}} lisenser i {{licenseDuration}} dager.",
-    "editSuccess": "Du har redigert en prøveperiode for {{customerName}} med {{licenseCount}} lisenser i {{licenseDuration}} dager."
+    "addSuccess": "En prøveversjon ble startet for {{customerName}}.",
+    "editSuccess": "Du har redigert en prøveversjon for {{customerName}}."
   },
   "trials": {
     "collab": "Standard grupperom + møter med 25 deltagere",
     "squaredUC": "Avansert Spark-samtale",
     "licenses": "Lisenser",
-    "meet": "Møter og WebEx",
     "message": "Send melding til",
+    "messageAndMeeting": "Melding og Møte",
     "meeting": "Møter og WebEx",
-    "call": "Anrop"
+    "call": "Anrop",
+    "roomSystem": "Spark Rom-system"
   },
   "status": {
     "noResults": "Ingen resultater tilgjengelig.",
@@ -1787,7 +1953,7 @@
     "statusHeader": "Status",
     "statusDaysLeft": "Dag(er) igjen",
     "actionHeader": "Handlinger",
-    "addTrial": "Start en prøveversjon",
+    "addTrial": "Start prøveversjon",
     "csvBtnTitle": "Eksporter til CSV",
     "csvBtnExportingTitle": "Eksport pågår",
     "csvFilename": "exported_customers.csv",
@@ -1796,6 +1962,7 @@
     "csvHeaderMessagingEntitlements": "Meldingsrettigheter",
     "csvHeaderConferencingEntitlements": "Konferanserettigheter",
     "csvHeaderCommunicationsEntitlements": "Kommunikasjonsrettigheter",
+    "csvHeaderRoomSystemsEntitlements": "Romsystemrettigheter",
     "custDetail": "Kundeopplysninger",
     "contactName": "Kontaktnavn",
     "contactEmail": "E-post",
@@ -1803,7 +1970,7 @@
     "launchButton": "Vis kunde",
     "setupButton": "Konfigurer kunde",
     "myOrgButton": "Vis min organisasjon",
-    "edit": "Redigere betingelser for prøveperiode",
+    "edit": "Redigere prøveversjon",
     "trialTerms": "Vilkår for prøveversjon",
     "trialOverview": "Prøveversjon",
     "licenses": "Antall lisenser",
@@ -1816,14 +1983,31 @@
     "expiring": "Prøveversjon utløper",
     "expiresToday": "Utløper i dag",
     "unused": "ubrukte lisenser",
-    "uploadNumbers": "Last opp numre",
+    "uploadNumbers": "Administrere numre",
     "overPlan": "over plangrensen",
     "phoneNumbers": "Telefonnumre",
     "none": "Ingen",
     "partnerLogo": "Partnerlogo",
     "logoOverride": "Overstyring av kundelogo",
     "allowCustomerLogo": "Aktiver kundelogo for {{customer}}",
-    "myOrganization": "Min Organisasjon"
+    "myOrganization": "Min Organisasjon",
+    "message": "Send melding til",
+    "meeting": "Møte med 25 deltagere",
+    "call": "Anrop",
+    "roomSystem": "Spark Rom-system",
+    "branding": "Kunde-merkevare",
+    "MS": "Send melding til",
+    "CF": "Møte med 25 deltagere",
+    "MC": "Møte med 25 deltagere",
+    "WebExMC": "WebEx Møtesenter",
+    "SC": "WebEx Hjelpesenter",
+    "TC": "WebEx Treningssenter",
+    "EC": "WebEx Hendelsessenter",
+    "EE": "WebEx Enterprise versjon",
+    "CMR": "WebEx Samarbeid-møterom",
+    "CO": "Anrop",
+    "ST": "Lagring",
+    "SD": "Spark Rom-system"
   },
   "didAddModal": {
     "title": "Legg til telefonnumre (Valgfritt)"
@@ -1834,9 +2018,21 @@
     "callerIdName": "Innringer-ID-navn",
     "callerIdNumber": "Innringer-ID-nummer"
   },
+  "internationalDialing": {
+    "internationalDialing": "Internasjonal oppringning",
+    "internationalDialingDesc": "Brukere arver denne innstillingen som standard. Unntak kan gjøres i individuelle brukeres innstillinger."
+  },
   "huronSettings": {
     "saveSuccess": "Innstillinger lagret.",
-    "companyCallerIdsaveError": "Bedriftens innringer-ID kunne ikke lagres."
+    "companyCallerIdsaveError": "Bedriftens innringer-ID kunne ikke lagres.",
+    "internationalDialingSaveError": "Internasjonal oppringning kunne ikke lagres."
+  },
+  "settingsServiceAddress": {
+    "label": "Adresse til nødetat",
+    "description": "I tilfelle en nødssituasjon, vil representanter fra lokal nødetat bruke denne adressen for å lokalisere oppringeren.",
+    "savePrompt": "Lagre denne adressen?",
+    "saveSuccess": "Adresse til nødetat oppdatert.",
+    "saveError": "En feil oppsto under oppdatering av adresse til nødetat."
   },
   "didManageModal": {
     "title": "Administrere telefonnumre",
@@ -1887,12 +2083,10 @@
     "serial": "Serie",
     "ipAddr": "IP-adresse",
     "macAddr": "MAC-adresse",
-    "issues": "Problemer"
-  },
-  "deviceUpgradeChannelEditPage": {
-    "instructions": "Velg kanalen du ønsker at denne enheten automatisk skal oppgraderes med:",
-    "deviceUpdated": "Enhet ble oppdatert",
-    "updateFailed": "Enheten oppdaterte ikke sin oppdateringskanal for programvare tidsnok"
+    "issues": "Problemer",
+    "expires": "utløper",
+    "channelUpdated": "Oppdateringskanal for programvare oppdatert.",
+    "channelUpdateFailed": "Enheten oppdaterte ikke sin oppdateringskanal for programvare tidsnok"
   },
   "generateActivationCodeModal": {
     "title": "Aktiveringskode",
@@ -2020,7 +2214,7 @@
     "page_title": "Mediatjeneste",
     "connectors": {
       "group_by": "Gruppetjenester etter:",
-      "cluster_id": "Klynge",
+      "cluster_id": "Gruppe",
       "host_name": "Vert",
       "display_name": "Tjenestenavn",
       "connector_type": "Koblingstype",
@@ -2029,7 +2223,11 @@
       "status": "Status",
       "alarms": "Alarmer",
       "reportAlarm": "rapportert alarm.",
-      "reportAlarms": "rapporterte alarmer."
+      "reportAlarms": "rapporterte alarmer.",
+      "software": "Programvare",
+      "deregister_host": "AVREGISTRERE VERT",
+      "goToHost": "Gå til vert",
+      "hosts": "Verter"
     },
     "activateService": {
       "ingress": "Utvid skyen til ditt lokale driftsmiljø",
@@ -2052,7 +2250,10 @@
       "deactivate": "DEAKTIVER",
       "cancelCaps": "AVBRYT",
       "deactivateBody_1": "Du er i ferd med å fjerne følgende hybridtjeneste for organisasjonen din:",
-      "deactivateBody_2": "Deaktivering av en tjeneste vil fjerne all service-relatert aktivitet knyttet til dine brukere. Ytterligere trinn er nødvendige for å fjerne tjenesten fra våre ressurser på stedet."
+      "deactivateBody_2": "Deaktivering av en tjeneste vil fjerne all service-relatert aktivitet knyttet til dine brukere. Ytterligere trinn er nødvendige for å fjerne tjenesten fra våre ressurser på stedet.",
+      "removeCluster": "FJERNE GRUPPE",
+      "schedule": "Definere en tidsplan",
+      "scheduleText": "Velg en frigivningskanal som du vil denne gruppen skal oppdatere med:"
     },
     "serviceStatus": {
       "unknown": "Status ukjent",
@@ -2073,7 +2274,28 @@
       "listing": {
         "no_clusters_heading": "Ingen mediatjenestegrupper er registrert",
         "no_clusters_text": "Se krevde handlinger ovenfor og dokumentasjonen for å komme i gang."
-      }
+      },
+      "deregister": "Avregistrer",
+      "deregisterCancel": "Avbryt",
+      "deregisterConfirm": "Bekreft",
+      "deregisterHeader": "Bekreft avregistrering",
+      "deregisterAreYouSure": "Du er i ferd med å avregistrere {{clusterName}} fra Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "Dette systemet vil ikke lenger akseptere nye samtaler.",
+      "deregisterCausesListItem2": "Tidligere samtaler vil fortsette.",
+      "deregisterErrorGeneric": "Kunne ikke avregistrere {{clusterName}}. {{errorMessage}}"
+    },
+    "alarms": {
+      "alarms": "Alarmer",
+      "critical": "Kritisk",
+      "error": "Feil",
+      "warning": "Advarsel",
+      "alert": "Varsel",
+      "severity": "Alvorlighetsgrad",
+      "firstReported": "Først rapportert",
+      "lastReported": "Sist rapportert",
+      "description": "Beskrivelse",
+      "noAlarms": "Ingen alarmer rapportert",
+      "hostImpact": "Vert påvirket"
     },
     "mediaServiceActivationFailure": "Problemer ved aktivering av tjenesten",
     "mediaAgentOrgMappingFailure": "Problemer ved aktivering av Orpheus for MediaFusion",
@@ -2092,14 +2314,14 @@
     "groupAssignmentFailure": "Gruppe ikke tildelt",
     "roleAssignmentSuccess": "Rolle ble tildelt",
     "roleAssignmentFailure": "Rolle ikke tildelt",
-    "cluster": "Klynge",
+    "cluster": "Gruppe",
     "role": "Rolle",
     "switching": "Omkobling",
     "transcoding": "Transkoding",
     "confirmCluster": "Trykk lagre for å bekrefte endring av gruppe.",
     "disconnect": "Frakoblet. Prøver å koble til igjen …",
     "name": "Navn",
-    "ipAddr": "Vertsnavn/IP-adresse",
+    "ipAddr": "IP-adresse",
     "status": "Status",
     "actions": "Handlinger",
     "offline": "Ikke pålogget",
@@ -2245,9 +2467,11 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Konfigurer",
     "siteSettingsIndexPageTitleFull": "Konfigurer {{siteUrl}}",
-    "hostAccountsTitle": "VERTSKONTOER",
+    "hostAccountsTitle": "Vertskontoer",
     "activeTitle": "Aktiv",
     "availableTitle": "Tilgjengelig",
+    "overLimitTitle": "Over grensen:",
+    "upgradeNowTitle": "Oppgradere nå ",
     "emailAllHostsBtnTitle": "Send e-post til alle verter",
     "commonSettingsCardTitle": "Fellesinnstillinger",
     "commonSettingsCardNote": "Disse innstillingene gjelder på tvers av sentrene.",
@@ -2466,7 +2690,7 @@
     "SC": "WebEx Hjelpesenter",
     "TC": "WebEx Treningssenter",
     "EC": "WebEx Hendelsessenter",
-    "EE": "Møte for 25 deltakere med WebEx Enterprise-versjon",
+    "EE": "WebEx Enterprise versjon",
     "CMR": "WebEx Samarbeid-møterom",
     "CO": "Anrop",
     "ST": "Lagring",
@@ -2625,6 +2849,7 @@
     "Online": "Online",
     "Offline": "Ikke pålogget",
     "Unknown": "Ukjent",
+    "Inactive": "Inaktiv konto",
     "NeedsActivation": "Trenger aktivering",
     "issuesDetected": "Oppdaget problemer",
     "upgradeChannels": {
@@ -2635,7 +2860,7 @@
     },
     "errorCodes": {
       "mediaProtocol": {
-        "type": "Nettverksporter Blokkert",
+        "type": "Nettverksporter blokkert",
         "message": "Brannmuren kan blokkere media på UDP-port 33434. Samtalekvaliteten kan bli påvirket."
       },
       "TCPMediaFallback": {
@@ -2657,6 +2882,10 @@
       "noupgrade": {
         "type": "Automatiske oppdateringer deaktivert",
         "message": "Systemprogramvaren vil ikke bli oppdatert."
+      },
+      "inactive": {
+        "type": "Inaktiv konto",
+        "message": "Det fins en konto for en enhet, men ingen tilhørende enhet eller aktiveringskode. Du kan antagelig slette denne kontoen."
       },
       "unknown": {
         "type": "En ukjent feil oppsto",
@@ -2711,6 +2940,8 @@
     "cp": "SP",
     "editAction": "Rediger",
     "deleteAction": "Slett",
+    "aaDependsTitle": "{{featureName}} Auto-ledsager avhengige",
+    "aaDeleteBlocked": "Operasjonen kan ikke fullføres fordi denne auto-ledsageren refereres av {{aaNames}}",
     "deleteFeature": "Slette {{ featureType }}",
     "deleteConfirmText": "Er du sikker på at du vil slette {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} har blitt slettet",
@@ -2805,6 +3036,8 @@
     "numberFetchFailure": "Kan ikke hente numre.",
     "newFeatureButtonText": "Ny",
     "newFeatureModalTitle": "Opprett ny funksjon",
+    "noFeatures": "Funksjoner er ikke tilgjengelig for nåværende pålogging",
+    "noFeature": "Denne funksjonen er ikke aktivert for nåværende pålogging",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Ingenting å se her ennå.",
       "letsCustomize": "La oss tilpasse ringeopplevelsen"
@@ -2866,12 +3099,13 @@
     "pageTitle": "Oversikt",
     "thisMonth": "Denne måneden",
     "lastMonth": "Forrige måned:",
-    "contactPartner": "Kontakt din partner eller Cisco salgsavdeling for mer informasjon",
+    "contactPartner": "Kontakt din partner eller Cisco salgsavdeling for mer informasjon.",
+    "nonotifications": "Det er for øyeblikket ingen varsler å vise.",
     "cards": {
       "users": {
         "title": "Brukere",
         "directorySynchronization": "Katalogsynkronisering",
-        "singleSignOn": "Single Sign On",
+        "singleSignOn": "Engangspålogging",
         "convertButton": "Konverter",
         "convertText": "Brukere som muligens ikke tilhører din organisasjon"
       },
@@ -2898,27 +3132,56 @@
       "hybrid": {
         "title": "Hybridtjenester",
         "notEnabledText": "Hybridtjenester lar deg integrere systemer på din egen avdeling til Cisco samarbeidsplattform.",
-        "notEnabledActionText": "Lær mer"
+        "notEnabledActionText": "Lær mer.",
+        "serviceHeader": "Status for egen avdeling",
+        "services": {
+          "squared-fusion-cal": "Kalender",
+          "squared-fusion-uc": "Anrop",
+          "squared-fusion-mgmt": "Administrasjon"
+
+        }
       }
     }
   },
-  "roles": {
-    "atlas-portal.support": "Faktureringsadministrator",
-    "atlas-portal.reports": "Støtteadministrator",
+  "ciRoles": {
+    "atlas-portal.support": "Brukerstøtte",
+    "atlas-portal.reports": "Rapporter",
+    "atlas-portal.billing": "Fakturering",
     "atlas-portal.partner.helpdesk": "Brukerstøtte",
-    "id_full_admin": "Fullstendig administrator",
+    "atlas-portal.application": "Applikasjon",
+    "atlas-portal.partner.salesadmin": "Salgsadministrasjon",
+    "id_full_admin": "Full Admin",
+    "id_readonly_admin": "Skrivebeskyttet admin",
     "user": "Bruker"
+  },
+  "atlasRoles": {
+    "Full_Admin": "Full Admin",
+    "Support": "Brukerstøtte",
+    "Reports": "Rapporter",
+    "Billing": "Fakturering",
+    "Help_Desk": "Brukerstøtte",
+    "Application": "Applikasjon",
+    "Sales_Admin": "Salgsadministrasjon",
+    "User": "Bruker",
+    "PARTNER_USER": "Bruker",
+    "PARTNER_ADMIN": "Partner admin",
+    "PARTNER_SALES_ADMIN": "Partner salgsadmin",
+    "CUSTOMER_PARTNER": "Kundepartner",
+    "WX2_Support": "WX2-støtte",
+    "WX2_User": "WX2-bruker",
+    "Site_Admin": "Nettsted admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Brukerstøtte for skybasert samarbeid",
     "helpdesk": "Brukerstøtte",
+    "searchHeading": "Brukerstøtte",
     "users": "Brukere",
     "customers": "Kunder",
-    "badUserSearchInput": "Søk etter brukere kreves minst tre tegn. Søk etter navn og e-post kreve minst to or, f.eks. ola.nordmann eller Ola Nordmann.",
+    "badUserSearchInput": "Oppgi minst tre tegn. For å søke på navn eller e-post, oppgi to ord, for eksempel John Doe eller john.doe.",
     "unexpectedError": "Det oppstod en uventet feil",
+    "cancelled": "Søket ble avbrutt",
     "searchingPleaseWait": "Søker, vennligst vent …",
-    "noSearchHits": "Inger matcher funnet. Prøv å begrense søket …",
-    "searchInputDescription": "Søk og vis en bruker eller en kunde.",
+    "noSearchHits": "Ingen treff. Prøv et annet søk.",
     "roles": "Roller",
     "backToSearchResults": "Tilbake til søkeresultater",
     "sso": "Single Sign On (SSO)",
@@ -2926,9 +3189,7 @@
     "type": "Type",
     "partner": "Partner",
     "customer": "Kunde",
-    "searchCriteriaLink": "Vis støttede søkekriterier.",
-    "searchInfo": "Søk etter brukere via e-post, telefonnummer eller visningsnavn (to ord påkrevet). Søk etter bedrifter via visningsnavn. Søk etter enheter via visningsnavn, serienummer eller MAC-adresse (Merk: søk etter enheter støttes kun ved søk etter en bestemt kunde).",
-    "devices": "Enheter",
+    "helpLink": "Hjelp",
     "mobile": "mobil",
     "work": "arbeid",
     "fax": "faks",
@@ -2936,7 +3197,7 @@
     "status": "Status",
     "organization": "Kunde",
     "accountCreated": "Konto Opprettet",
-    "customerPortalLaunch": "Start kundeportal",
+    "customerPortalLaunch": "Se kundeportal",
     "contact": "Kontakt",
     "claimedDomain": "Påberopt Domene",
     "managedBy": "Administrert Av",
@@ -2954,7 +3215,8 @@
       "squared-room-moderation.paid": "Standard teamrom",
       "squared-room-moderation.free": "Gratis Spark-meldinger",
       "ciscouc.paid": "Avansert Spark-samtale",
-      "ciscouc.free": "Gratis 1:1 Spark-samtale"
+      "ciscouc.free": "Gratis 1:1 Spark-samtale",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Aktiv",
@@ -2964,7 +3226,6 @@
       "fraud": "Fusk",
       "compliance": "Overholdelse"
     },
-    "entitlementsHeading": "Rettigheter",
     "enabledServices": "Aktiv",
     "availableServices": "Tilgjengelig",
     "none": "Ingen",
@@ -2973,23 +3234,23 @@
     "software": "Programvare",
     "serial": "Serie",
     "macAddress": "MAC-adresse",
-    "badOrgSearchInput": "Søk etter kunder krever minimum tre tegn.",
+    "badOrgSearchInput": "Oppgi minst tre tegn.",
     "unknown": "Ukjent",
     "showMore": "Vis flere resultater",
     "delegatedAdministration": "administrerer {{numManages}} organisasjoner",
     "licenses": "Lisenser",
     "licenseDisplayNames": {
-      "MC": "{{volume}} x Møtesenter {{capacity}}",
-      "TC": "{{volume}} x Treningssenter {{capacity}}",
-      "MS": "{{volume}} x Standard Grupperom",
-      "CF": "{{volume}} x Møter med 25 deltakere",
-      "EE": "{{volume}} x Enterprise-versjon {{capacity}}",
-      "SC": "{{volume}} x Hjelpesenter {{capacity}}",
-      "EC": "{{volume}} x Hendelsessenter {{capacity}}",
-      "CO": "{{volume}} x Avansert Spark-samtale",
-      "CMR": "{{volume}} x Samarbeids-møterom",
-      "SD": "{{volume}} x Rom-enheter",
-      "ST": "{{volume}} x Lagring"
+      "MC": "Møtesenter {{capacity}}",
+      "TC": "Opplæringssenter {{capacity}}",
+      "MS": "Standard teamrom",
+      "CF": "Møter med 25 deltakere",
+      "EE": "Enterprise-utgave {{capacity}}",
+      "SC": "Brukerstøttesenter {{capacity}}",
+      "EC": "Aktivitetssenter {{capacity}}",
+      "CO": "Avansert Spark-samtale",
+      "CMR": "Møterom for samarbeid",
+      "SD": "Rom-enheter",
+      "ST": "Lagring"
     },
     "trial": "Prøveversjon",
     "adminUsers": "Administratorer",
@@ -2997,12 +3258,44 @@
     "hideAllAdminUsers": "Skjul administratorer",
     "numDaysLeft": "{{days}} dag(er) igjen",
     "licenseStatus": {
+      "active": "Aktiv",
       "expired": "Utløpt",
       "cancelled": "Avbrutt",
       "suspended": "Suspendert",
       "pending": "Ventende"
     },
     "consumerOrg": "Forbruker",
-    "unlicensedUsers": "Brukere uten lisens"
+    "unlicensedUsers": "Brukere uten lisens",
+    "searchUsersDevices": "Gå til bruker- og enhetssøk",
+    "help": {
+      "title": "Hjelp",
+      "navigation-title": "Navigering med tastatur",
+      "navigation-info": "Trykk på <strong>Tab</strong> eller ↑ ↓ ← → tastene for å bla i resultater, ↵ for å velge, og <strong>Esc</strong> for å gå tilbake til resultater eller for å slette søkekriteriene. Trykk <strong>s</strong> etter at du velger en kunde (eller fra kundevisningssiden) for å filtrere søket ditt kun til denne kunden. ",
+      "search-criterias-title": "Søkekriterier",
+      "search-criterias-users": "<strong>Brukere</strong>: E-post, Navn (Fornavn, Etternavn), Telefonnummer og Visningsnavn (to ord påkrevet)",
+      "search-criterias-customers": "<strong>Kunder</strong>: Visningsnavn",
+      "search-criterias-devices": "<strong>Enheter</strong>: Visningsnavn, Serienummer eller MAC-adresse",
+      "search-criterias-note": "Merk: For å søke etter en enhet, må du først velge en kunde.",
+      "narrow-title": "Velg en kunde",
+      "narrow-info": "For å begrense søket til kun én kunde, start på hovedsøkesiden og søk etter kunde med visningsnavn. Klikk så <i class='icon icon-search'></i> på"
+    },
+    "verification": "Bekreftelse",
+    "resend": "Send på nytt",
+    "sendCode": "Send kode",
+    "more": "Flere",
+    "usage": "{{usage}} av {{volume}} i bruk",
+    "launchHelpdesk": "Brukerstøtte",
+    "launchHelpdeskDesc": "Åpne Brukerstøtte-portalen i en ny fane"
+  },
+  "activation": {
+    "verificationComplete": "Bekreftelse ferdig",
+    "returnToApp": "Gå tilbake til Spark på mobilenheten og fullfør registreringen.",
+    "codeExpired": "Aktiveringskoden utløpt",
+    "requestNewCode": "Spark-aktiveringskode sendt til {{userEmail}} for {{deviceName}} er utløpt! For å be om en ny kode, klikk under.",
+    "sendCodeLink": "Send ny aktiveringskode",
+    "newCodeSent": "Bekreftelseskode sendt",
+    "useLatestCode": "En ny kode har blitt sendt til {{userEmail}}",
+    "unexpectedError": "Uventet feil ved behandling av forespørsel.",
+    "usage": "{{usage}} av {{volume}} i bruk"
   }
 }

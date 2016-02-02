@@ -27,9 +27,8 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.trials.roomSystems,
+        'type': Config.offerTypes.roomSystems,
         'enabled': false,
-        'readonly': false,
         'details': {
           'quantity': 0,
         },

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WizardCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice, FeatureToggleService;
+  var controller, $scope, $state, $q, $translate, Authinfo, SessionStorage, $stateParams, tabs, Userservice, FeatureToggleService, rootScope;
 
   var getUserMe, getMyFeatureToggles;
 
@@ -21,7 +21,7 @@ describe('Controller: WizardCtrl', function () {
     }]
   }, {
     name: 'messagingSetup',
-    label: 'firstTimeWizard.messaging',
+    label: 'firstTimeWizard.messageSettings',
     description: 'firstTimeWizard.messagingSetupSub',
     icon: 'icon-convo',
     title: 'firstTimeWizard.messagingSetup',
@@ -32,7 +32,7 @@ describe('Controller: WizardCtrl', function () {
     }]
   }, {
     name: 'communications',
-    label: 'firstTimeWizard.communications',
+    label: 'firstTimeWizard.call',
     description: 'firstTimeWizard.communicationsSub',
     icon: 'icon-phone',
     title: 'firstTimeWizard.claimSipUrl',
@@ -47,8 +47,11 @@ describe('Controller: WizardCtrl', function () {
     description: 'firstTimeWizard.enterpriseSettingsSub',
     icon: 'icon-settings',
     title: 'firstTimeWizard.enterpriseSettings',
-    controller: 'setupSSODialogCtrl',
+    controller: 'EnterpriseSettingsCtrl',
     steps: [{
+      name: 'enterpriseSipUrl',
+      template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html'
+    }, {
       name: 'init',
       template: 'modules/core/setupWizard/enterprise.init.tpl.html'
     }, {
@@ -95,10 +98,23 @@ describe('Controller: WizardCtrl', function () {
         template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html'
       }]
     }]
+  }, {
+    name: 'serviceSetup',
+    label: 'firstTimeWizard.callSettings',
+    description: 'firstTimeWizard.serviceSetupSub',
+    icon: 'icon-tools',
+    title: 'firstTimeWizard.unifiedCommunication',
+    controller: 'ServiceSetupCtrl as squaredUcSetup',
+    controllerAs: 'squaredUcSetup',
+    steps: [{
+      name: 'claimSipUrl',
+      template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
+    }]
   }];
 
   beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Authinfo_, _SessionStorage_, $stateParams, _Userservice_, _FeatureToggleService_) {
-    $scope = $rootScope.$new();
+    rootScope = $rootScope;
+    $scope = rootScope.$new();
     Authinfo = _Authinfo_;
     $scope.tabs = tabs;
     $state = _$state_;
@@ -114,8 +130,10 @@ describe('Controller: WizardCtrl', function () {
     spyOn($state, 'go');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(rootScope, '$broadcast').and.callThrough();
 
     controller = $controller('WizardCtrl', {
+      $rootScope: rootScope,
       $scope: $scope,
       $translate: $translate,
       $stateParams: $stateParams,
@@ -137,6 +155,29 @@ describe('Controller: WizardCtrl', function () {
       controller.loadOverview();
       $scope.$apply();
       expect($state.go).toHaveBeenCalledWith("overview");
+    });
+
+  });
+
+  describe('claimSipUriEvent', function () {
+    it('should broadcast claimSipUriEvent from Communications Tab', function () {
+      controller.setTab(_.find($scope.tabs, {
+        name: 'communications',
+      }));
+      controller.nextStep();
+      $scope.$apply();
+
+      expect(rootScope.$broadcast).toHaveBeenCalledWith("wizard-claim-sip-uri-event");
+    });
+
+    it('should broadcast claimSipUriEvent from ServiceSetup Tab', function () {
+      controller.setTab(_.find($scope.tabs, {
+        name: 'serviceSetup',
+      }));
+      controller.nextStep();
+      $scope.$apply();
+
+      expect(rootScope.$broadcast).toHaveBeenCalledWith("wizard-claim-sip-uri-event");
     });
 
   });

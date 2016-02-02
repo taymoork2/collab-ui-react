@@ -9,7 +9,8 @@
     var vm = this;
 
     vm.hasCarriers = PstnSetup.isCarrierExists;
-    vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
+    vm.hasBackButton = hasBackButton;
+    vm.goBack = goBack;
     vm.validateSwivelNumbers = validateSwivelNumbers;
     vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
@@ -103,6 +104,14 @@
         PstnSetup.setNumbers(tokens);
         $state.go('pstnSetup.review');
       }
+    }
+
+    function hasBackButton() {
+      return !PstnSetup.isCarrierExists() && !PstnSetup.isSingleCarrierReseller();
+    }
+
+    function goBack() {
+      $state.go('pstnSetup');
     }
 
   }

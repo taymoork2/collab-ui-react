@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Core')
   .controller('OrganizationOverviewCtrl', ['$stateParams', '$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Notification', '$dialogs',
     function ($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, Notification, $dialogs) {

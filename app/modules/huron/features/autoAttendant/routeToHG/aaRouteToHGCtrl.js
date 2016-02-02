@@ -6,7 +6,7 @@
     .controller('AARouteToHGCtrl', AARouteToHGCtrl);
 
   /* @ngInject */
-  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -16,6 +16,7 @@
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectHGPlaceHolder');
+    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.huntGroups = [];
 
     vm.aaModel = {};
@@ -42,6 +43,7 @@
 
     function saveUiModel() {
       vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+      AACommonService.setPhoneMenuStatus(true);
     }
 
     function getHuntGroups() {
@@ -49,7 +51,7 @@
       return HuntGroupService.getListOfHuntGroups().then(function (hgPool) {
         _.each(hgPool, function (aHuntGroup) {
           vm.huntGroups.push({
-            description: aHuntGroup.name.concat(' (').concat(aHuntGroup.numbers[0]).concat(')'),
+            description: aHuntGroup.name.concat(' (').concat(_.head(_.pluck(aHuntGroup.numbers, 'number'))).concat(')'),
             id: aHuntGroup.uuid
           });
         });

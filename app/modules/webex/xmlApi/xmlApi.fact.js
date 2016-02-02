@@ -82,15 +82,35 @@
           });
         }, //getMeetingTypeInfo()
 
-        getAdminPagesInfo: function (getConfig, xmlApiAccessInfo) {
-          var requestTemplate = (getConfig) ? xmlApiConstants.settingPagesInfoRequest : xmlApiConstants.reportPagesInfoRequest;
+        getSettingPagesInfo: function (xmlApiAccessInfo) {
+          var requestTemplate = xmlApiConstants.settingPagesInfoRequest;
 
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
             var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
-        }, // getAdminPagesInfo()
+        }, // getSettingPagesInfo()
+
+        getReportPagesInfo: function (xmlApiAccessInfo) {
+          var requestTemplate = xmlApiConstants.reportPagesInfoRequest;
+
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getReportPagesInfo()
+
+        getEnableT30UnifiedAdminInfo: function (xmlApiAccessInfo) {
+          var requestTemplate = xmlApiConstants.enableT30UnifiedAdminInfoRequest;
+
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getEnableT30UnifiedAdminInfo()
 
         updateUserSettings: function (xmlApiAccessInfo, userSettings) {
           var funcName = "updateUserSettings()";
@@ -339,16 +359,16 @@
             function getSessionTicketInfoSuccess(result) {
               funcName = "getSessionTicketInfoSuccess()";
 
-              logMsg = funcName + ".success()" + ": " + "\n" + "data=" + result;
-              $log.log(logMsg);
+              logMsg = funcName + ": " + "\n" + "data=" + result;
+              // $log.log(logMsg);
 
               var JsonData = _this.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
               logMsg = funcName + ".success()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData);
-              $log.log(logMsg);
+              // $log.log(logMsg);
               result = JsonData.body.serv_header.serv_response.serv_result;
               if (result != "SUCCESS") {
                 logMsg = funcName + ".error()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData) + " , result=" + result;
-                $log.log(logMsg);
+                // $log.log(logMsg);
 
                 var exceptionId = JsonData.body.serv_header.serv_response.serv_exceptionID;
 

@@ -39,11 +39,17 @@
       data: 'med.aggregatedClusters',
       enableSorting: false,
       multiSelect: false,
-      showFilter: false,
-      showFooter: false,
+      enableRowHeaderSelection: false,
+      enableColumnResize: true,
+      enableColumnMenus: false,
       rowHeight: 75,
-      rowTemplate: 'modules/mediafusion/media-service/resources/cluster-list-row-template.html',
-      headerRowHeight: 44,
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          vm.showClusterDetails(row.entity);
+          $log.log("entity", row.entity);
+        });
+      },
       columnDefs: [{
         field: 'groupName',
         displayName: 'Media Clusters',
@@ -124,12 +130,12 @@
           //$log.log("Identity Org Id:", response.data.identityOrgId);
           //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
-          // See if org id is already mapped to user org id 
+          // See if org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
             mediaAgentOrgIdsArray.push(orgId);
             updateMediaAgentOrgId = true;
           }
-          // See if "squared" org id is already mapped to user org id 
+          // See if "squared" org id is already mapped to user org id
           if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
             mediaAgentOrgIdsArray.push("squared");
             updateMediaAgentOrgId = true;

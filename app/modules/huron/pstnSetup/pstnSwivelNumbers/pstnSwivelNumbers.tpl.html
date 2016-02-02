@@ -14,7 +14,10 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn" ng-if="!pstnSwivelNumbers.hasCarriers()" ui-sref="pstnSetup" translate="common.back"></button>
-    <button class="btn btn--primary" ng-click="pstnSwivelNumbers.validateSwivelNumbers()" translate="common.next"></button>
+    <cs-checkbox ckid="swivelEmergencyAcknowledge" ng-model="pstnSwivelNumbers.emergencyAcknowledge" label="{{::'pstnSetup.emergencyAcknowledge' | translate}}"></cs-checkbox>
+    <div class="buttons">
+      <button class="btn" ng-if="::pstnSwivelNumbers.hasBackButton()" ng-click="pstnSwivelNumbers.goBack()" translate="common.back"></button>
+      <button class="btn btn--primary" ng-disabled="!pstnSwivelNumbers.emergencyAcknowledge" ng-click="pstnSwivelNumbers.validateSwivelNumbers()" translate="common.next"></button>
+    </div>
   </div>
 </div>

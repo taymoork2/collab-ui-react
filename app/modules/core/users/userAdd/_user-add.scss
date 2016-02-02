@@ -152,7 +152,8 @@
 
 .onboard-fieldset,
 .onboard-radio {
-  margin-bottom: 10px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .collab-svc-radio {
@@ -382,6 +383,23 @@
   @extend %plan-container;
 }
 
+.add-users {
+  .modal-body {
+    background-color: $color-white;
+  }
+
+  .license-wrapper {
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-top: -20px;
+  }
+
+  .hybrid-services-panel {
+	margin-left: -20px;
+    margin-right: -20px;
+  }
+}
+
 .wizard-main {
   .title-separator-pipe {
     color: $gray-light;
@@ -518,7 +536,7 @@
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
-        content: char-from-code($icon-error);
+        @extend %icon-error;
         top: 0;
         left: -12px;
         position: absolute;
@@ -536,7 +554,7 @@
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
-        content: char-from-code($icon-warning);
+        @extend %icon-warning;
         top: 0;
         left: -12px;
         position: absolute;

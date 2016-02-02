@@ -67,6 +67,14 @@
         "trustIframeUrl=" + $scope.trustIframeUrl;
       $log.log(_this.logMsg);
 
+      $rootScope.lastSite = $stateParams.siteUrl;
+      $log.log("last site " + $rootScope.lastSite);
+
+      var parser = document.createElement('a');
+      parser.href = $scope.iframeUrl;
+      $rootScope.nginxHost = parser.hostname;
+      $log.log("nginxHost " + $rootScope.nginxHost);
+
       $timeout(
         function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
@@ -80,17 +88,20 @@
         var funcName = "iframeLoaded()";
         var logMsg = funcName;
 
+        var currScope = angular.element(iframeId).scope();
+        var phase = currScope.$$phase;
+
         logMsg = funcName + "\n" +
-          'iframeId=' + iframeId;
+          "phase=" + phase;
         $log.log(logMsg);
 
-        var currScope = angular.element(iframeId).scope();
-
-        currScope.$apply(
-          function updateScope() {
-            currScope.isIframeLoaded = true;
-          }
-        );
+        if (!phase) {
+          currScope.$apply(
+            function updateScope() {
+              currScope.isIframeLoaded = true;
+            }
+          );
+        }
       }; // iframeLoaded()
     } // reportsIframeCtrl()
   ]); // angular.module().controller()

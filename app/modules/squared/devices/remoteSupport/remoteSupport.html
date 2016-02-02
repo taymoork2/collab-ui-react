@@ -8,7 +8,7 @@
     </button>
     <h3
       class="modal-title"
-      translate="spacesPage.remoteSupport">
+      translate="spacesPage.remoteAccessKey">
     </h3>
   </div>
 
@@ -28,8 +28,8 @@
 
     <div class="clearfix">
       <h3>
-        <input type="text" ng-model="rs.currentDevice.rsuKey" readonly select-text="rs.currentDevice.rsuKey">
-        <sq-clipboard clip-copy="rs.currentDevice.rsuKey"></sq-clipboard>
+        <input id="display-key" type="text" ng-model="rs.currentDevice.rsuKey" readonly>
+        <a class="clipboard-button" sq-clipboard="rs.currentDevice.rsuKey"><i class="fa fa-clipboard"></i></a>
       </h3>
     </div>
 

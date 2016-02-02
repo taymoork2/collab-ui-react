@@ -107,37 +107,37 @@ angular.module('Mediafusion')
 
       };
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showVtsDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
+      var nameTemplate = '<div class="ui-grid-cell-contents"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
 
-      var nameTemplate = '<div class="ngCellText"><div class="device-name-desc">{{row.getProperty(col.field)}}</div></div>';
-
-      var statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
+      var statusTemplate = '<i class="fa fa-circle device-status-icon ui-grid-cell-contents" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
-      var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
-        '<button id="actionlink" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+      var actionsTemplate = '<span cs-dropdown class="device-align-ellipses">' +
+        '<button cs-dropdown-toggle id="actionlink" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +
         '<li id="setStateAction"><a ng-click="setState(row.entity.id,row.entity.mgmtStatus)"><span translate="{{row.entity.mgmtStatus|suspendResume}}"></span></a></li>' +
         '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="setDeleteResource(row.entity.id)"><span translate="vtsPage.delete"></span></a></li>' +
         '</ul>' +
         '</span>';
 
-      statusTemplate = '<i class="fa fa-circle device-status-icon ngCellText" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
+      statusTemplate = '<i class="fa fa-circle device-status-icon ui-grid-cell-contents" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
       $scope.gridOptions = {
         data: 'queryvtslist',
         multiSelect: false,
-        showFilter: true,
-        rowHeight: 75,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: false,
+        rowHeight: 44,
+        enableSelectAll: false,
+        enableFullRowSelection: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showVtsDetails(row.entity);
+          });
+        },
 
         columnDefs: [{
           field: 'ipAddress',

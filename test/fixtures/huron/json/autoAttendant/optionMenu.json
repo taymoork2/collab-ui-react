@@ -23,7 +23,6 @@
               "voice": "menu instruction"
             }]
           },
-          "timeoutInSeconds": 30,
           "language": "",
           "voice": "",
           "inputs": [{
@@ -130,7 +129,6 @@
               "voice": "menu instruction"
             }]
           },
-          "timeoutInSeconds": 30,
           "language": "",
           "voice": "",
           "inputs": [{

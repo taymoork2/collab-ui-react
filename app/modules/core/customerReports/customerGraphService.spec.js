@@ -2,7 +2,7 @@
 
 describe('Service: Customer Graph Service', function () {
   var CustomerGraphService;
-  var activeUsersChart, avgRoomsChart, filesSharedChart;
+  var activeUsersChart, avgRoomsChart, filesSharedChart, mediaChart, metricsChart;
   var validateService = {
     validate: function () {}
   };
@@ -11,6 +11,8 @@ describe('Service: Customer Graph Service', function () {
   var dummyActiveUserData = angular.copy(dummyData.activeUser.four);
   var dummyAvgRoomsData = angular.copy(dummyData.avgRooms.one);
   var dummyFilesSharedData = angular.copy(dummyData.filesShared.one);
+  var dummyMediaData = angular.copy(dummyData.mediaQuality.one);
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
 
   beforeEach(module('Core'));
 
@@ -80,6 +82,50 @@ describe('Service: Customer Graph Service', function () {
 
     it('should update graph when setFilesSharedGraph is called a second time', function () {
       CustomerGraphService.setFilesSharedGraph(dummyFilesSharedData, filesSharedChart);
+      expect(validateService.validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('Media Quality graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': dummyMediaData,
+        validateData: validateService.validate
+      });
+      mediaChart = null;
+      mediaChart = CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart, {
+        value: 0
+      });
+    });
+
+    it('should have created a graph when setMediaQualityGraph is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should update graph when setMediaQualityGraph is called a second time', function () {
+      CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart, {
+        value: 0
+      });
+      expect(validateService.validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('Call Metrics graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': metricsData.response,
+        validateData: validateService.validate
+      });
+      metricsChart = null;
+      metricsChart = CustomerGraphService.setMetricsGraph(metricsData.response, metricsChart);
+    });
+
+    it('should have created a graph when setMetricsGraph is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should update graph when setMetricsGraph is called a second time', function () {
+      CustomerGraphService.setMetricsGraph(metricsData.response, metricsChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
   });

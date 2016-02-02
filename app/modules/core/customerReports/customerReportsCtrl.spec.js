@@ -2,17 +2,27 @@
 
 describe('Controller: Customer Reports Ctrl', function () {
   var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExUtilsFact, Userservice;
-  var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+  var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
   var SET = 'set';
   var EMPTY = 'empty';
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
+  var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  var responseActiveData = activeData.activeResponse;
+  var responseMostActiveData = activeData.mostActiveResponse;
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  var dummyMetrics = angular.copy(metricsData);
+  dummyMetrics.dummy = true;
 
   var headerTabs = [{
+    title: 'reportsPage.engagement',
+    state: 'reports'
+  }, {
     title: 'reportsPage.sparkReports',
     state: 'devReports'
   }];
@@ -55,17 +65,25 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
         'dataProvider': fileData.response
       });
+      spyOn(CustomerGraphService, 'setMediaQualityGraph').and.returnValue({
+        'dataProvider': mediaData.response
+      });
+      spyOn(CustomerGraphService, 'setMetricsGraph').and.returnValue({
+        'dataProvider': metricsData.dataProvider
+      });
 
       spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
       spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
+      spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
+      spyOn(DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
 
+      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when(responseActiveData));
+      spyOn(CustomerReportService, 'getMostActiveUserData').and.returnValue($q.when(responseMostActiveData));
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
-      spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when({
-        activeUserGraph: [],
-        mostActiveUserData: []
-      }));
+      spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
+      spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
 
       // Webex Requirements
       WebexReportService = {
@@ -140,16 +158,22 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
           expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
 
-          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalled();
-          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalled();
+          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalled();
-          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalled();
+          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getMostActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
         }, 30);
       });
 
       it('should set all page variables', function () {
-        expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
         expect(controller.showWebexTab).toBeFalsy();
 
         expect(controller.activeUserDescription).toEqual('activeUsers.customerPortalDescription');
@@ -160,11 +184,19 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeUserReverse).toBeTruthy();
         expect(controller.activeUsersTotalPages).toEqual(0);
         expect(controller.activeUserCurrentPage).toEqual(0);
-        expect(controller.activeUserPredicate).toEqual(activeUsersSort[2]);
+        expect(controller.activeUserPredicate).toEqual(activeUsersSort[3]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
 
         expect(controller.avgRoomsDescription).toEqual('avgRooms.avgRoomsDescription');
         expect(controller.avgRoomStatus).toEqual(REFRESH);
+        expect(controller.filesSharedDescription).toEqual('filesShared.filesSharedDescription');
+        expect(controller.filesSharedStatus).toEqual(REFRESH);
+        expect(controller.mediaQualityStatus).toEqual(REFRESH);
+        expect(controller.deviceDescription).toEqual('registeredEndpoints.description');
+        expect(controller.deviceStatus).toEqual(REFRESH);
+        expect(controller.metricsDescription).toEqual('callMetrics.customerDescription');
+        expect(controller.metricStatus).toEqual(REFRESH);
+        expect(controller.metrics).toEqual({});
 
         expect(controller.headerTabs).toEqual(headerTabs);
         expect(controller.timeOptions).toEqual(timeOptions);
@@ -180,16 +212,23 @@ describe('Controller: Customer Reports Ctrl', function () {
 
         expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
         expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
 
         expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[1]);
       });
     });
 
     describe('helper functions', function () {
       describe('activePage', function () {
         it('should return true when called with the same value as activeUserCurrentPage', function () {
-          expect(controller.activePage(1)).toBeTruthy();
+          controller.activeUserCurrentPage = 1;
+          expect(controller.activePage(controller.activeUserCurrentPage)).toBeTruthy();
         });
 
         it('should return false when called with a different value as activeUserCurrentPage', function () {
@@ -242,48 +281,48 @@ describe('Controller: Customer Reports Ctrl', function () {
         it('should sort by posts', function () {
           controller.mostActiveSort(2);
           expect(controller.activeUserPredicate).toBe(activeUsersSort[2]);
-          expect(controller.activeUserReverse).toBeFalsy();
+          expect(controller.activeUserReverse).toBeTruthy();
         });
       });
 
       describe('pageForward', function () {
         it('should change carousel button numbers', function () {
           controller.activeUsersTotalPages = 4;
-          controller.activeUserCurrentPage = controller.activeButton[2];
-          controller.pageForward();
-          expect(controller.activeButton[0]).toBe(2);
-          expect(controller.activeButton[1]).toBe(3);
-          expect(controller.activeButton[2]).toBe(4);
-        });
+          controller.activeUserCurrentPage = 1;
 
-        it('should not change carousel button numbers', function () {
-          controller.activeUsersTotalPages = 3;
-          controller.activeUserCurrentPage = controller.activeButton[2];
           controller.pageForward();
           expect(controller.activeButton[0]).toBe(1);
           expect(controller.activeButton[1]).toBe(2);
           expect(controller.activeButton[2]).toBe(3);
+          expect(controller.activeUserCurrentPage).toBe(2);
+
+          controller.pageForward();
+          expect(controller.activeButton[0]).toBe(2);
+          expect(controller.activeButton[1]).toBe(3);
+          expect(controller.activeButton[2]).toBe(4);
+          expect(controller.activeUserCurrentPage).toBe(3);
         });
       });
 
       describe('pageBackward', function () {
         it('should change carousel button numbers', function () {
+          controller.activeUsersTotalPages = 4;
           controller.activeButton[0] = 2;
           controller.activeButton[1] = 3;
           controller.activeButton[2] = 4;
-          controller.activeUserCurrentPage = 2;
+          controller.activeUserCurrentPage = 3;
 
           controller.pageBackward();
           expect(controller.activeButton[0]).toBe(1);
           expect(controller.activeButton[1]).toBe(2);
           expect(controller.activeButton[2]).toBe(3);
-        });
+          expect(controller.activeUserCurrentPage).toBe(2);
 
-        it('should not change carousel button numbers', function () {
           controller.pageBackward();
           expect(controller.activeButton[0]).toBe(1);
           expect(controller.activeButton[1]).toBe(2);
           expect(controller.activeButton[2]).toBe(3);
+          expect(controller.activeUserCurrentPage).toBe(1);
         });
       });
     });

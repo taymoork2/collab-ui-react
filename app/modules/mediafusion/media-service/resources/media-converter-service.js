@@ -192,15 +192,23 @@
     var clusterArray = [];
 
     _.each(clusters, function (cluster) {
-      clusterArray.push(cluster);
+      if (cluster.properties["mf.group.displayName"] != null) {
+        clusterArray.push(cluster);
+      }
     });
 
     function sortOn(collection, name) {
       collection.sort(function (a, b) {
-        if (a.properties["mf.group.displayName"] <= b.properties["mf.group.displayName"]) {
+        var groupA = a.properties["mf.group.displayName"];
+        var groupB = b.properties["mf.group.displayName"];
+
+        if (groupA < groupB) {
           return (-1);
         }
-        return (1);
+        if (groupA > groupB) {
+          return (1);
+        }
+        return (0);
       });
     }
 

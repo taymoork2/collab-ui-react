@@ -2,7 +2,13 @@
 
 describe('Service: Customer Reports Service', function () {
   var $httpBackend, CustomerReportService, Config, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl;
+  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl;
+
+  var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
+  var activeUserData = activeData.activeDetailed;
+  var responseActiveData = activeData.activeResponse;
+  var mostActiveData = activeData.mostActive;
+  var responseMostActiveData = activeData.mostActiveResponse;
 
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var groupRoomData = roomData.groupRooms;
@@ -14,6 +20,14 @@ describe('Service: Customer Reports Service', function () {
   var contentData = fileData.content;
   var contentSizeData = fileData.contentSize;
   var responseFileData = fileData.response;
+
+  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  var mediaContent = mediaData.callQuality;
+  var mediaResponse = mediaData.response;
+
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  var metricsContent = metricsData.data;
+  var metricsResponse = metricsData.response;
 
   beforeEach(module('Core'));
 
@@ -61,6 +75,13 @@ describe('Service: Customer Reports Service', function () {
     oneToOneRoomsUrl = baseUrl + 'timeCharts/convOneOnOne?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     contentUrl = baseUrl + 'timeCharts/contentShared?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     contentSizeUrl = baseUrl + 'timeCharts/contentShareSizes?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
+    mediaUrl = baseUrl + 'detailed/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+    metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+    activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+    mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
+
+    activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
+    responseActiveData = updateDates(responseActiveData, dayFormat);
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);
@@ -70,6 +91,9 @@ describe('Service: Customer Reports Service', function () {
     contentData.data = updateDates(contentData.data);
     contentSizeData.data = updateDates(contentSizeData.data);
     responseFileData = updateDates(responseFileData, dayFormat);
+
+    mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
+    mediaResponse = updateDates(mediaResponse, dayFormat);
   }));
 
   afterEach(function () {
@@ -79,6 +103,50 @@ describe('Service: Customer Reports Service', function () {
 
   it('should exist', function () {
     expect(CustomerReportService).toBeDefined();
+  });
+
+  describe('Active User Services', function () {
+    it('should getActiveUserData', function () {
+      $httpBackend.whenGET(activeUserDetailedUrl).respond(activeUserData);
+
+      CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
+        expect(response).toEqual(responseActiveData);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getActiveUserData', function () {
+      $httpBackend.whenGET(activeUserDetailedUrl).respond(500, error);
+
+      CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should getMostActiveUserData', function () {
+      $httpBackend.whenGET(mostActiveUrl).respond(mostActiveData);
+
+      CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
+        expect(response).toEqual(responseMostActiveData);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getMostActiveUserData', function () {
+      $httpBackend.whenGET(mostActiveUrl).respond(500, error);
+
+      CustomerReportService.getMostActiveUserData(timeFilter).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
   });
 
   describe('Rooms Service', function () {
@@ -126,6 +194,52 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Media Service', function () {
+    it('should getMediaQualityData', function () {
+      $httpBackend.whenGET(mediaUrl).respond(mediaContent);
+
+      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
+        expect(response).toEqual(mediaResponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getMediaQualityData', function () {
+      $httpBackend.whenGET(mediaUrl).respond(500, error);
+
+      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Call Metrics Service', function () {
+    it('should getCallMetricsData', function () {
+      $httpBackend.whenGET(metricsUrl).respond(metricsContent);
+
+      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
+        expect(response).toEqual(metricsResponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getCallMetricsData', function () {
+      $httpBackend.whenGET(metricsUrl).respond(500, error);
+
+      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
+        expect(response.dataProvider).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 

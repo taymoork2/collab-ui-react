@@ -1,0 +1,36 @@
+{
+  "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+  "userName": "collabctg+config_solo_160114_122140_m676g@gmail.com",
+  "emails": [{
+    "primary": true,
+    "type": "work",
+    "value": "collabctg+config_solo_160114_122140_m676g@gmail.com"
+  }],
+  "name": {
+    "givenName": "Test",
+    "familyName": "User"
+  },
+  "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared"],
+  "userStatus": "pending",
+  "id": "951da123-6b7e-43dd-91cf-39afed3d65bc",
+  "meta": {
+    "created": "2016-01-14T20:22:06.567Z",
+    "lastModified": "2016-01-26T17:07:35.745Z",
+    "version": "16240799228",
+    "location": "https://identity.webex.com/identity/scim/58f01b76-2b3f-4c91-ad8a-e2af626fc7a5/v1/Users/951da123-6b7e-43dd-91cf-39afed3d65bc",
+    "organizationID": "58f01b76-2b3f-4c91-ad8a-e2af626fc7a5"
+  },
+  "ims": [{
+    "type": "webex-squared-jid",
+    "value": "collabctg+config_solo_160114_122140_m676g@gmail.com"
+  }, {
+    "type": "webex-messenger-jid",
+    "value": "collabctg+config_solo_160114_122140_m676g@gmail.com",
+    "primary": true
+  }],
+  "displayName": "collabctg+config_solo_160114_122140_m676g@gmail.com",
+  "active": true,
+  "accountStatus": ["pending"],
+  "licenseID": ["MS_a9444b41-cf98-4761-bfee-d07418ef5f34"],
+  "avatarSyncEnabled": false
+}

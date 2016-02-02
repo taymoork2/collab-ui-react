@@ -25,7 +25,7 @@
               <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
               <th class="vertical-center col-md-4 bold pointer" translate="activeUsers.customer" ng-click="nav.mostActiveSort(1)"></th>
               <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(2)"></th>
-              <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.squaredActivity" ng-click="nav.mostActiveSort(3)"></th>
+              <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(3)"></th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +33,7 @@
               <td class="vertical-center">{{user.userName}}</td>
               <td class="vertical-center">{{user.orgName}}</td>
               <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
-              <td class="vertical-center horizontal-center">{{user.totalActivity}}</td>
+              <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
             </tr>
           </tbody>
         </table>

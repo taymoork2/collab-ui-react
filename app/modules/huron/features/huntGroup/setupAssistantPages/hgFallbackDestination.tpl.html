@@ -1,6 +1,6 @@
 <div>
   <div class="typeahead-large">
-    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber"
+    <input ng-model="huntGroupSA.selectedFallbackNumber"
            ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
            typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectFallback($item)"
@@ -22,7 +22,7 @@
                 <h5 class="ellipsis"
                     title="{{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}">
                   {{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}</h5>
-              <span dropdown>
+              <span cs-dropdown>
                 <i class="icon icon-chevron-down icon-lg"></i>
               </span>
               </div>
@@ -49,13 +49,15 @@
     <div class="text-center fallback-container-item">
       <cs-checkbox ng-if="huntGroupSA.selectedFallbackMember" ckid="checkbox"
                    ng-model="huntGroupSA.selectedFallbackMember.sendToVoicemail"
-                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}">
+                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"
+                   isdisabled="huntGroupSA.disableVoicemail">
       </cs-checkbox>
     </div>
     <div class="text-center fallback-container-item">
       <button class="btn" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{btn--success: (huntGroupSA.isFallbackValid()), disabled: (!huntGroupSA.isFallbackValid())}">
+              ng-class="{'btn--success': (huntGroupSA.isFallbackValid())}""
+              ng-disabled="!huntGroupSA.isFallbackValid()">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>

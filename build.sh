@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # import helper functions
-source ./bin/pid-helpers
+source ./bin/include/pid-helpers
 
 # -----
 # Phase 1: Pre-setup
@@ -17,13 +17,15 @@ done
 # - setup a .cache dir
 mkdir -p ./.cache
 
+
 # -----
 # Phase 2: Setup
-source ./bin/setup-helpers
+source ./bin/include/setup-helpers
 
 # ex.
 echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
+
 
 echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
 dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
@@ -42,18 +44,36 @@ if [ "$checksums_ok"    = "true" -a \
     echo "Install manifests haven't changed, dependency dirs still exist, and not yet time to" \
         "refresh, skipping 'setup.sh'..."
 else
-    ./setup.sh
+    # use the '--quick' option to retain existing dependency dirs
+    ./setup.sh --quick
 
-    if [ $? -ne 0 ]; then
-        # setup failed, cleanup checksums file and abort
-        rm -f $manifest_checksums_file
-        exit 1
-    else
-        # setup succeeded, update checksums file and timestamp of last refresh
+    # setup succeeded
+    if [ $? -eq 0 ]; then
+        # - regenerate .manifest-checksums
+        # - regenerate .last-refreshed
         mk_checksum_file $manifest_checksums_file $manifest_files
         mk_last_refreshed_file $last_refreshed_file
+
+    # setup failed
+    else
+        # setup was triggered because one of the manifest files changed
+        if [ "$checksums_ok" = "false" ]; then
+            exit 1
+        fi
+
+        # setup was triggered only because refresh window has expired
+        if [ "$time_to_refresh" = "true" ]; then
+            echo "'setup.sh' failed, but was triggered only because the refresh window expired," \
+                "falling back to recent successfully built dependencies..."
+            # re-use deps from previous successful build (if possible)
+            ./setup.sh --restore
+        else
+            # refresh window hasn't expired
+            exit 1
+        fi
     fi
 fi
+
 
 # -----
 # Phase 3: Build
@@ -64,6 +84,7 @@ gulp e2e --sauce --production-backend --nolint | tee ./.cache/e2e-sauce-logs || 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
+
 
 # -----
 # Phase 4: Package

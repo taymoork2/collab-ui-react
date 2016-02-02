@@ -6,31 +6,51 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state) {
-    /*jshint validthis: true */
+  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
     var vm = $scope;
 
-    vm.features = [{
-        cssClass: 'AA',
-        code: 'autoAttendant.code',
-        label: 'autoAttendant.title',
-        description: 'autoAttendant.modalDescription'
-      }, {
-        cssClass: 'HG',
-        code: 'huronHuntGroup.code',
-        label: 'huronHuntGroup.modalTitle',
-        description: 'huronHuntGroup.modalDescription'
-      }
-      //  , {
-      //  cssClass: 'CP',
-      //  code: 'callPark.code',
-      //  label: 'callPark.title',
-      //  description: 'callPark.modalDescription'
-      //}
-    ];
+    vm.features = [];
+
+    vm.autoAttendant = {
+      cssClass: 'AA',
+      code: 'autoAttendant.code',
+      label: 'autoAttendant.title',
+      description: 'autoAttendant.modalDescription',
+      toggle: 'huronAutoAttendant'
+    };
+
+    vm.huntGroup = {
+      cssClass: 'HG',
+      code: 'huronHuntGroup.code',
+      label: 'huronHuntGroup.modalTitle',
+      description: 'huronHuntGroup.modalDescription',
+      toggle: 'huronHuntGroup'
+    };
 
     vm.ok = ok;
     vm.cancel = cancel;
+    vm.loading = true;
+
+    init();
+
+    function init() {
+
+      vm.loading = true;
+
+      var aaToggle = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
+
+      var hgToggle = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
+
+      $q.all([aaToggle, hgToggle]).then(function (toggle) {
+        if (toggle[0]) {
+          vm.features.push(vm.autoAttendant);
+        }
+        if (toggle[1]) {
+          vm.features.push(vm.huntGroup);
+        }
+        vm.loading = false;
+      });
+    }
 
     function ok(featureCode) {
       if (featureCode === 'HG') {

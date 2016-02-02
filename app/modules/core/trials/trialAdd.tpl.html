@@ -11,25 +11,29 @@
   <!-- body -->
   <section class="modal-body collapse-fields row">
     <h5 translate="partnerHomePage.customerInformation"></h5>
-    <formly-form model="trial.details" fields="trial.custInfoFields" class="small-11 small-offset-1 columns">
+    <formly-form model="trial.details" fields="trial.custInfoFields"
+      class="small-12 columns indent">
     </formly-form>
   </section>
   <section class="modal-body collapse-fields">
     <h5 translate="partnerHomePage.trialServices"></h5>
-    <section class="row">
-      <h6 translate="partnerHomePage.individualUserServices" class="small-11 small-offset-1 columns"></h6>
-      <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show" class="small-10 small-offset-2 columns">
+    <section class="row indent">
+      <h6 class="small-12 columns" translate="partnerHomePage.individualUserServices"></h6>
+      <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show"
+        class="small-12 columns indent">
       </formly-form>
     </section>
-    <section class="row" ng-if="trial.showRoomSystems">
-      <h6 translate="partnerHomePage.deviceBasedServices" class="small-11 small-offset-1 columns"></h6>
-      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show" class="small-10 small-offset-2 columns">
+    <section class="row indent" ng-if="trial.showRoomSystems">
+      <h6 class="small-12 columns" translate="partnerHomePage.deviceBasedServices"></h6>
+      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show"
+        class="small-12 columns indent">
       </formly-form>
     </section>
   </section>
   <section class="modal-body row">
     <h5 translate="partnerHomePage.termsOfTrial"></h5>
-    <formly-form model="trial.details" fields="trial.trialTermsFields" class="small-11 small-offset-1 columns">
+    <formly-form model="trial.details" fields="trial.trialTermsFields"
+      class="small-12 columns indent">
     </formly-form>
   </section>
 

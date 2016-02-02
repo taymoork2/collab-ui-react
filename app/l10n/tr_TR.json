@@ -134,16 +134,16 @@
     "collabService": "Gruptaki kullanıcılara verilmesi gereken işbirliği hizmeti lisanslarını seçin.",
     "addEntitleError": "kullanıcıyı eklemek veya yetkilendirmek için yetersiz ayrıcalık.",
     "freeMsg": "Ücretsiz Spark Mesajlaşma",
-    "freeConf": "Ücretsiz 3 Taraflı Spark Buluşması",
+    "freeConf": "Ücretsiz 3 Taraflı Toplantılar",
     "freeComm": "Ücretsiz 1'e 1 Spark Çağrısı",
     "msgFree": "Mesaj Ücretsiz",
     "mtgFree": "Toplantı Ücretsiz 3 Taraflı",
     "callFree": "Çağrı Ücretsiz",
     "freeContactCenter": "Ücretsiz Sohbet, E-posta, Ses",
-    "paidMsg": "Standart Ekip Odaları",
+    "paidMsg": "Spark Mesajı",
     "paidConf": "25 Taraflı Toplantı",
     "paidConfWebEx": "WebEx Meetings",
-    "paidComm": "Gelişmiş Spark Çağrısı",
+    "paidComm": "Spark Çağrısı",
     "paidContactCenter": "Sohbet, E-posta, Ses",
     "freeSpark": "Ücretsiz Spark Mesajlaşma",
     "enterpriseEdition": "Kurumsal Sürüm {{capacity}}",
@@ -153,7 +153,13 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "İletişim",
     "cloudExtensions": "Karma Hizmetler",
-    "cmr": "İş Birliği Toplantı Odası"
+    "cmr": "İş Birliği Toplantı Odası",
+    "result": {
+      "200": "başarıyla yetkilendirildi",
+      "404": "mevcut değil",
+      "409": "yetkilendirme daha önce güncellendi",
+      "other": "yetkilendirilmedi, durum: {{status}}"
+    }
   },
   "usersPreview": {
     "groupPreview": "Grup:",
@@ -172,7 +178,7 @@
     "fullAdmin": "Tam Yönetici",
     "generateActivationCode": "Etkinleştirme Kodu Oluştur",
     "generateActivationCodeText": "Bu kullanıcı için yeni bir cihazı etkinleştirecek Etkinleştirme Kodu oluşturun.",
-    "activationCodeTitle": "Yeni Cihaz için Etkinleştirme Kodu",
+    "activationCodeTitle": "Etkinleştirme Kodu",
     "expires": "Son Kullanma Tarihi",
     "editServices": "Servisleri düzenle",
     "editServiceTitle": "{{firstName}} {{lastName}} için etkinleştirilen hizmetler",
@@ -180,7 +186,8 @@
     "webex": "WebEx",
     "spark": "Spark",
     "calling": "Arıyor",
-    "enabledBetaFeatures": "Etkinleştirilen Beta Özellikleri"
+    "enabledBetaFeatures": "Etkinleştirilen Beta Özellikleri",
+    "otpShareButton": "Paylaş"
   },
   "messagingPanel": {
     "title": "Mesajlaşma"
@@ -246,7 +253,8 @@
     "callServiceTab": "Karma Hizmetler: Çağrı",
     "callServiceTabDesc": "Çağrı Hizmeti",
     "expresswayManagementServiceTab": "Karma Hizmetler: Yönetim",
-    "expresswayManagementServiceTabDesc": "Expressway Yönetim Hizmeti"
+    "expresswayManagementServiceTabDesc": "Expressway Yönetim Hizmeti",
+    "helpdesk": "Yardım Masası"
   },
   "index": {
     "welcome": "Hoş geldiniz!",
@@ -269,7 +277,8 @@
     "install": "Lütfen Spark'ı yüklemek için",
     "link": "tıklayın.",
     "using": "Lütfen Spark",
-    "squared": "kullanmaya başlayın."
+    "squared": "kullanmaya başlayın.",
+    "active": "Hesap etkin"
   },
   "invitePage": {
     "redirect": "Yeniden yönlendiriliyor...",
@@ -320,6 +329,9 @@
     "addSuccess": "{{customerOrgName}} için {{licenseCount}} lisans ile {{duration}} boyunca geçerli olacak bir kuruluş başarıyla başlatıldı.",
     "manageBetaFeatures": "Beta Özelliklerini Yönet",
     "betaFeatures": "Beta Özellikleri",
+    "errorGettingToggles": "Seçili kuruluşların özellik düğmesini seçmede bir sorun oldu",
+    "errorSettingToggle": "Seçili kuruluş için {{key}} anahtarını ayarlamada bir sorun oldu",
+    "toggleModSuccess": "Tüm değiştirilen düğmeler güncellendi",
     "startSearching": "Başlamak için kuruluş arayın",
     "noSearchResults": "Arama sonuç getirmedi"
   },
@@ -350,15 +362,18 @@
     "leastQuality": "En Düşük Kaliteli 5",
     "customerLoadError": "Müşteri listesi yüklenirken bir hata oluştu.",
     "unauthorizedError": "Kullanıcının müşteri raporlarına erişmek için yetkisi yok.",
-    "webex": "Webex Raporları",
+    "webex": "WebEx Raporları",
     "devReports": "Geliştirme Müşteri Raporları",
-    "sparkReports": "Spark Raporları"
+    "sparkReports": "Spark Raporları",
+    "downloadOptions": "İndirme Seçenekleri",
+    "saveAs": "Farklı Kaydet"
   },
   "activeUsers": {
     "active": "Etkin",
     "activeUsers": "Etkin Kullanıcılar",
     "overallActiveUserGraphError": "Ayrıntılı etkin kullanıcı verileri yüklenirken bir hata oluştu.",
     "activeUserTableError": "{{customer}} için en etkin kullanıcı verileri yüklenirken bir hata oluştu.",
+    "mostActiveError": "En Etkin Kullanıcılar için verileri yüklerken bir sorun oldu.",
     "calls": "Çağrılar",
     "customer": "Müşteri",
     "hideActiveUsers": "En Etkin Kullanıcıları Gizle",
@@ -369,7 +384,28 @@
     "user": "Kullanıcı",
     "users": "Kullanıcılar",
     "description": "Etkin kullanıcı, bir cihaz kullanarak çağrı yapan, çağrı alan ya da Spark uygulamasını kullanmış biri olarak tanımlanır. Bu raporda toplam kayıtlı kullanıcı sayısını, {{time}} boyunca seçili müşteri/müşterilerdeki etkin kullanıcı sayısıyla kıyaslayabilirsiniz.",
-    "mostActiveDescription": "Bunlar, {{time}} boyunca {{customer}} için en etkin olan kullanıcılardır."
+    "mostActiveDescription": "Bunlar, {{time}} boyunca {{customer}} için en etkin olan kullanıcılardır.",
+    "customerPortalDescription": "Etkin kullanıcı, bir cihaz kullanarak çağrı yapan, çağrı alan ya da Spark uygulamasını kullanmış biri olarak tanımlanır. Bu raporda toplam kayıtlı kullanıcı sayısını, {{time}} boyunca etkin kullanıcı sayısıyla kıyaslayabilirsiniz.",
+    "customerMostActiveDescription": "Aşağıdaki tabloda tüm kullanıcıların kullanıcı etkinliği gösterilir. Kullanıcı adına, toplam çağrıya ve toplam etkinliğe göre sıralanabilir. Ek olarak arama alanı "
+  },
+  "avgRooms": {
+    "avgRooms": "Toplam Toplantı Odası",
+    "avgRoomsDescription": "Grafikte {{time}} süresi boyunca mesajlaşma ve/veya dosya paylaşımı için kullanılan toplam spark odası sayısı gösterilir. Kullanıcı başına ortalama oda sayısının yanı sıra grup odalarının ve 1:1 odaların tam bir dökümünü görmek için fareyi sütunlar üzerinde gezdirin.",
+    "groupError": "Grup Odaları verileri yüklenirken bir hata oluştu.",
+    "oneToOneError": "Bire Bir Oda verileri yüklenirken bir hata oluştu.",
+    "avgError": "Kullanıcı Başına Ortalama Oda verileri yüklenirken bir hata oluştu.",
+    "group": "Toplam Grup Odası",
+    "oneToOne": "Toplam 1:1 Oda",
+    "avgTotal": "Kullanıcı başına Ort. Oda"
+  },
+  "filesShared": {
+    "filesShared": "Paylaşılan Dosyalar",
+    "filesSharedDescription": "Grafikte {{time}} süresi boyunca paylaşılan dosya ve gigabayt miktarı gösterilir.",
+    "contentSharedError": "Paylaşılan Dosyalar için verileri yüklerken bir sorun oldu.",
+    "contentShareSizesDataError": "Paylaşılan Dosyaların Boyutu için verileri yüklerken bir sorun oldu.",
+    "contentShared": "Paylaşılan Dosyalar",
+    "fileSizes": "Paylaşılan Miktar",
+    "gb": "GB"
   },
   "mediaQuality": {
     "mediaQuality": "Cihaz Ortam Kalitesi",
@@ -379,6 +415,7 @@
     "poor": "Kötü",
     "description": "Ortam kalitesi, 15 saniyeden daha uzun olan tüm çağrılar sırasında kayıtlı cihazlar tarafından raporlanmış, kaybedilen paket miktarını ölçerek belirlenir.",
     "mediaQualityGraphError": "{{customer}} için çağrı kalitesi verileri yüklenirken bir hata oluştu.",
+    "customerError": "Çağrı kalitesi verileri yüklenirken bir hata oluştu.",
     "minutes": "Dakika"
   },
   "callMetrics": {
@@ -387,8 +424,13 @@
     "callConditionPoorMedia": "Kötü Ortam",
     "callConditionSuccessful": "Başarılı",
     "callMetrics": "Çağrı Ölçümleri",
+    "audioTitle": "Çağrı Metrikleri - Ses",
+    "videoTitle": "Çağrı Metrikleri - Video",
     "callMetricsChartError": "{{customer}} için çağrı ölçüm verileri yüklenirken bir hata oluştu.",
+    "customerError": "Çağrı metrikleri verileri yüklenirken bir hata oluştu.",
     "callMetricsDesc": "Bu grafikte, {{time}} boyunca yapılan toplam çağrı sayısı ve bu çağrılara harcanan toplam dakika gösterilir. Ayrıca seçili müşteriler için başarılı ve başarısız çağrı yüzdesini belirleyebilirsiniz.",
+    "audioDescription": "Bu grafikte, {{time}} boyunca yapılan toplam sesli çağrı sayısı, bu çağrılara harcanan toplam dakika ve başarılı ve başarısız çağrıların yüzdesi gösterilir.",
+    "videoDescription": "Bu grafikte, {{time}} boyunca yapılan toplam görüntülü çağrı sayısı, bu çağrılara harcanan toplam dakika ve başarılı ve başarısız çağrıların yüzdesi gösterilir.",
     "totalCalls": "Toplam Çağrı Sayısı",
     "totalCallMinutes": "Toplam Çağrı Dakikası"
   },
@@ -454,7 +496,7 @@
     "attributes": "Öznitelikler",
     "value": "Değer",
     "userId": "userId",
-    "emailAddress": "e-posta adresi",
+    "emailAddress": "emailAddress",
     "orgId": "orgId",
     "locusCallStartTime": "locusCallStartTime",
     "deviceId": "deviceId",
@@ -612,7 +654,9 @@
     "or": "veya",
     "search": "Arama",
     "edit": "Düzenle",
+    "remove": "Kaldır",
     "confirm": "Onayla",
+    "deactivate": "Devre dışı bırak",
     "firstName": "Adı",
     "lastName": "Soyadı",
     "email": "E-posta",
@@ -622,7 +666,10 @@
     "users": "Kullanıcılar",
     "settings": "Ayarlar",
     "resources": "Kaynaklar",
-    "download": "İndir"
+    "download": "İndir",
+    "quantity": "Mkt",
+    "modify": "Değiştir",
+    "submit": "Gönder"
   },
   "notifications": {
     "success": "Başarı bildirimleri",
@@ -711,7 +758,7 @@
     "testSSOSetupDesc": "SSO yapılandırmanızı test etmek için hazırsınız. Yeni bir pencere açmak için aşağıdaki düğmeye basın. Başarıyla oturum açabiliyorsanız bu ekrana dönebilir veya SSO kurulumunuzu sonlandırmak için ileri seçeneğine basabilirsiniz.",
     "enableSSODesc": "Tüm kullanıcılar için Çoklu Oturum Açma'yı (SSO) etkinleştirmeye hazırsanız, son düğmesine basın. Tüm kullanıcı kimlik doğrulama işlemleri, artık yeni SSO sağlayıcınızla yapılacaktır.",
     "IdPFileLabel": "IdP Meta Veri Dosyası",
-    "chooseFilePlaceHolder": "Dosya Seçin...",
+    "chooseFilePlaceHolder": "Dosya Seç...",
     "browseBtn": "Gözat...",
     "importBtn": "İçe Aktar",
     "cancelBtn": "İptal",
@@ -762,8 +809,10 @@
     "customerGetError": "Müşteri hizmetleri alınamadı.",
     "customerPutError": "Müşteri hizmetleri güncellenemedi.",
     "customerDialPlanDetailsGetError": "Müşteri çağrı planı ayrıntıları alınamadı.",
+    "carrierCountryGetError": "Telefon operatörü bilgisi alınamadı.",
     "voicemailGetError": "Şirket sesli mesaj numarası alınamadı.",
     "voicemailUpdateError": "Şirket sesli mesaj numarası güncellenemedi.",
+    "voicemailNoExternalNumbersError": "Sesli postayı açmak için atanmamış doğrudan hatlarınız olmalı. Lütfen ortağınız veya yöneticinizle irtibata geçin.",
     "timezoneUpdateError": "Şirket saat dilimi güncellenemedi.",
     "extensionDeleteSuccess": "{{extension}} eklentisi başarıyla silindi.",
     "extensionDeleteError": "{{extension}} eklentisi silinemedi.",
@@ -773,7 +822,8 @@
     "rangeOverlap": "Dahili Numara Aralıkları çakışmamalıdır.",
     "rangeDuplicate": "Dahili Numara Aralıklarında yineleme olamaz.",
     "fieldValidationFailed": "Sayfada hatalar var. Lütfen düzeltin ve yeniden deneyin.",
-    "singleNumberRangeError": "Dahili Numara Aralıkları, aynı sayıyla başlayıp bitemez."
+    "singleNumberRangeError": "Dahili Numara Aralıkları, aynı sayıyla başlayıp bitemez.",
+    "mapCompanyVoicemailToExternalNumberError": "Mevcut şirket sesli posta numarası, şirket doğrudan hatları listesinde bulunamadı."
   },
   "dirsyncModal": {
     "chooseSync": "Senkronizasyon Seçin",
@@ -854,6 +904,9 @@
     "actionsHeader": "Eylemler",
     "activationCodeHeader": "Etkinleştirme Kodu",
     "activationDateHeader": "Etkinleştirme Tarihi",
+    "informationHeader": "Bilgi",
+    "customTagsHeader": "Özel Etiketler",
+    "newCustomTagPlaceholder": "Etiket girin...",
     "addDeviceStep1": "Bu cihaz nereye yüklenecek?",
     "addDeviceStep1Desc": "Konferans odanızın veya paylaşılan odanızın şirket dizininizde gösterilen adını kullanmanızı öneririz. Bu cihazın video adresinde bu ad kullanılacaktır. Ayrıca daha sonra cihazı sistemde kolayca arayabilir ve bulabilirsiniz.",
     "addDeviceStep2": "Etkinleştirme kodunuz oluşturuldu",
@@ -861,15 +914,19 @@
     "emptyDevices1": "Yeni bir cihaz ekledikten sonra,",
     "emptyDevices2": "burada listelendiğini göreceksiniz.",
     "deleteDevice": "Cihazı Sil",
-    "reportProblem": "Sorun Bildirin",
+    "rebootDevice": "Cihazı Yeniden Başlat",
+    "reboot": "Yeniden başlat",
+    "reportProblem": "Sorun Bildir",
     "deleteDeviceConfText": "Bu cihazı silmek istediğinizden emin misiniz?",
+    "rebootDeviceConfText": "Bu cihazı yeniden başlatmak istediğinizden emin misiniz?",
     "videoQTitle": "Olası Video Kalitesi Kaybı",
     "videoQMsg": "Bu cihaz, TCP protokolü üzerinden iletişim kurmaktadır; bu da daha yüksek gecikme süresine ve dolayısıyla daha kısıtlı bir medya akışı deneyimine neden olabilmektedir. Ortam akışı sorunlarına yardımcı olması için, yerel güvenlik duvarınızda 33434 numaralı UDP bağlantı noktasını açmayı deneyebilirsiniz.",
     "needsActivation": "Etkinleştirme Gerekiyor",
     "active": "Etkin",
     "offline": "Çevrimdışı",
     "issuesDetected": "Algılanan Sorunlar",
-    "remoteSupport": "Remote Support",
+    "ciscoSupport": "Cisco Desteği",
+    "remoteAccessKey": "Remote Access Anahtarı",
     "rsuKey": "Bu anahtarı mesaja yapıştırarak Cisco Destek ile paylaşın.",
     "rsuKeyDesc": "Bu, Cisco Destek'e cihazınız için tam erişim verir. Yeni Remote Support Erişim Anahtarını oluşturmak ve Cisco Destek ile paylaşmış olabileceğiniz önceki anahtarları geçersiz kılmak için 'Sıfırla' düğmesini kullanın.",
     "reset": "Sıfırla",
@@ -878,7 +935,7 @@
     "noDevices": "Hiçbir cihaz bulunamadı...",
     "licenseWarningTitle": "Lisans",
     "licenseWarningHeader": "Bu hizmetin lisansında bir sorun var.",
-    "licenseSuspendedWarning": "Cloudberry lisansınız askıya alındı."
+    "licenseSuspendedWarning": "Oda sistemleri lisansınız askıya alındı."
   },
   "hercules": {
     "page_title": "Bağlayıcı Yönetimi",
@@ -896,6 +953,23 @@
       "hosts": "Toplantı Sahipleri",
       "goToHost": "Toplantı Sahibine Git",
       "remove": "Kaldır"
+    },
+    "export": {
+      "modalTitle": "Kullanıcı Durumu Raporu",
+      "modalText1": "Dışa aktarılan rapor, kullanıcıların, durumlarının ve ilgili ayrıntıların virgülle ayrılmış listesi olacaktır.",
+      "modalText2": "Rapora dahil etmek istediğiniz bilgilerin türünü seçin:",
+      "modalNote": "Not: Ne kadar çok kullanıcı eklenirse, raporun oluşturulması o kadar zaman alır.",
+      "modalCTA": "CSV'ye aktar",
+      "csvFilename": "user_status_report.csv"
+    },
+    "overview": {
+      "activated": "{{number}} etkinleştirildi",
+      "pending": "{{number}} bekleniyor",
+      "error": "{number, plural, one{# error} other{# errors}}",
+      "loading": "Yükleniyor, lütfen bekleyin...",
+      "upgrade-available": "Yükseltme mevcut",
+      "clusters-title": "Expressway Kümeleri",
+      "status-title": "Hizmet Durumu"
     },
     "activateService": {
       "ingress": "Bulutu Şirket İçi Ortamınıza Genişletin",
@@ -923,7 +997,11 @@
       "deregisterCausesListItem2": "Tüm bağlayıcılar ve ilgili yapılandırma {{clusterName}} kümesinden silinecek.",
       "deregisterCausesListItem3": "Sistem bir kümedeyse, diğer eşlerin kaydını silmenize gerek yoktur. Bu, otomatik olarak gerçekleşecektir.",
       "deregisterErrorGeneric": "{{clusterName}} kaydı silinemiyor. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "{{clusterName}} kaydı silinemiyor. Yönetici bağlayıcı yazılım sürümü, Buluttan kaydın silinmesini desteklemiyor. Bağlayıcıyı yükseltin veya Cisco Expressway web arayüzünden kaydı silin."
+      "deregisterErrorNoDeregisterSupport": "{{clusterName}} kaydı silinemiyor. Yönetici bağlayıcı yazılım sürümü, Buluttan kaydın silinmesini desteklemiyor. Bağlayıcıyı yükseltin veya Cisco Expressway web arayüzünden kaydı silin.",
+      "notInstalled": "{{serviceName}} bu kümede kurulu değil.",
+      "activeActiveHeading": "Etkin-Etkin Modu (Yüksek Erişilebilirlik)",
+      "activeActiveNotPossible": "Etkin-Etkin Modu, 1'den fazla toplantı sahibi olan bir küme gerektirdiği için erişilebilir değil",
+      "activeActivePossible": "Bu hizmette yüksek erişilebilirliğe izin vermek için Etkin-Etkin Modunu açın. Bu izinle kullanıcılar, boşluklar için kümedeki iki düğüme atanır."
     },
     "status": {
       "unknown": "Bilinmeyen durum",
@@ -953,12 +1031,12 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Çağrı Hizmeti",
-      "squared-fusion-uc.full": "Çağrı Hizmeti Uyarısı",
+      "squared-fusion-uc.full": "Çağrı Hizmeti: Uyarı",
       "squared-fusion-cal": "Takvim Hizmeti",
       "squared-fusion-media": "Ortam Hizmeti",
       "contact-center-context": "Bağlam Merkezi Hizmeti",
-      "squared-fusion-ec": "Çağrı Hizmetiyle Bağlantı",
-      "squared-fusion-mgmt": "Expressway Yönetim Hizmeti"
+      "squared-fusion-ec": "Çağrı Hizmeti: Bağlantı",
+      "squared-fusion-mgmt": "Expressway Yönetim Hizmeti "
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Çağrı Hizmeti Uyarısı, kullanıcılarınızın çağrı yaparken masaüstlerini Cisco Spark istemcilerinden anında paylaşmasını sağlar. Çağrı Hizmetiyle Bağlantı, kullanıcıların Cisco Spark istemcilerindeki iş telefonlarına gelen çağrıları cevaplamasını ve Cisco Spark istemcilerinden diğer kişilerin iş telefonlarına çağrı yapmasını sağlar.",
@@ -1002,28 +1080,50 @@
       "softwareUpgrade": "Yazılım Güncellemesi",
       "currentVersion": "Mevcut Sürüm",
       "newVersion": "Yeni Sürüm",
+      "explanation": "Seçili Cisco Expressway Kümesi için {{serviceName}} hizmetindeki tüm toplantı sahiplerinde yazılımı yükseltmek üzeresiniz:",
       "upgrade": "Yükseltme"
     },
     "settings": {
       "deactivateServiceHeading": "Hizmeti Devre Dışı Bırak",
       "deactivateService": "Kullanıcılarınız artık bu hizmeti kullanamayacak. Bağlayıcıyı da şirket içi ortamınızdan kaldırmanız gerekir.",
+      "visitHelpCentral": "Karma Servislerle ilgili bilgiye ihtiyacınız olduğu zaman <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Yardım Merkezini</a> ziyaret edin.",
       "deactivate": "Devre dışı bırak",
       "emailNotificationsHeading": "E-posta Bildirimleri",
       "emailNotifications": "Hizmete özgü alarmlar ve yükseltmeler hakkında bilgilendirilmesi gereken kişiler için e-posta adresi listesini girin.",
+      "emailNotificationsSaving": "Kaydediliyor.",
+      "documentationHeading": "Belgeler ve yazılım",
+      "documentationHelpLink": "Karma Servislerle ilgili bilgiye ihtiyacınız olduğu zaman <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Yardım Merkezini</a> ziyaret edin.",
+      "documentationDownloadLink": "<a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a> adresinden Cisco Expressway yazılımını indirin.",
+      "documentationSaving": "Kaydediliyor.",
       "call": {
         "featureHeading": "Özellik Ayarları",
         "feature": "Çağrı Hizmeti özelliklerini etkinleştirin veya devre dışı bırakın.",
         "awareHeading": "Farkında",
         "aware": "Kullanıcılar, iş telefonlarındayken masaüstlerini Cisco Spark istemcilerinden paylaşabilir.",
+        "on": "Varsayılan olarak açık",
         "connectHeading": "Bağlan",
         "connect": "Kullanıcılar Cisco Spark'tan iş telefonlarını yanıtlayabilir veya iş arkadaşlarını arayabilir.",
         "certificatesHeading": "Sertifikalar",
         "certificates": "Şifrelenmiş SIP çağrıları için Cisco İşbirliği varsayılan güven listesinden sağlanan sertifikaları kullanın veya kendi sertifikalarınızı yükleyin.",
         "certificatesUpload": "Yükle",
+        "certificatesModalHeading": "Sertifikayı Kaldır",
+        "certificatesModalText": "Aşağıdaki sertifikayı kaldırmak istediğinizden emin misiniz?",
+        "sipDomainHeading": "SIP Etki Alanı",
+        "disableConfirmDialogText1": "Kuruluşunuz için aşağıdaki Karma Hizmeti kaldırmak üzeresiniz:",
+        "disableConfirmDialogText2": "Onayla seçeneğine tıklarsanız:",
+        "disableConfirmDialogText3": "Hizmet, tüm kullanıcılarınızda devre dışı bırakılacak.",
+        "disableConfirmDialogText4": "Cisco Expressway'iniz, hizmet bağlayıcınızı kaldıracak.",
+        "disableConfirmDialogText5": "Hizmet bağlayıcısı verileri silinecek.",
+        "disableConfirmDialogText6": "Cisco Expressway'inizde başka hiçbir hizmet kurulu değilse kaydını silmeniz gerekecek. Oturum açın ve Uygulamalar &gt; Karma Hizmetler &gt; Bağlayıcı Yönetimi üzerinden kaydı silin.",
         "sipDomainHeading": "SIP Etki Alanı",
         "sipDomain": "Çağrıların doğru bir şekilde yönlendirilmesi için Expressway uç sunucularınızın SRV etki alanını girin.",
         "sipDomainPlaceholder": "Tek bir etki alanı veya alt etki alanı girin"
       }
+    },
+    "hybridServices": {
+      "result404": "{{email}} için yetkilendirme yok.",
+      "result409": "Yetkilendirmeler daha önce güncellendi.",
+      "resultOther": "{{email}} için yetkilendirmeler güncellenmedi. Durum: {{status}}."
     }
   },
   "firstTimeWizard": {
@@ -1084,6 +1184,7 @@
     "needHelp": "Yardıma ihtiyacınız var mı? - ",
     "needHelpExplain": "Bilgi tabanında arama yapın.",
     "planReview": "Plan İncelemesi",
+    "subscriptionId": "Abonelik kimlikleri",
     "spark": "Spark",
     "sparkMsg": "Ücretsiz Spark Mesajlaşma",
     "sparkStub": "Spark'ı kur",
@@ -1103,7 +1204,7 @@
     "freeMsg": "Mesaj Ücretsiz",
     "freeMtg": "Toplantı Ücretsiz 3 Taraflı",
     "freeCall": "Çağrı Ücretsiz",
-    "confMsg": "Ücretsiz 3 Taraflı Spark Buluşması",
+    "confMsg": "Ücretsiz 3 Taraflı Toplantılar",
     "commMsg": "Ücretsiz 1'e 1 Spark Çağrısı",
     "communicationsSub": "Çağrı hizmetini kur",
     "claimSipUrl": "SIP URI Etki Alanını Özelleştir",
@@ -1124,6 +1225,7 @@
     "serviceSetupSub": "Telefonla ilgili ayarlar",
     "unifiedCommunication": "Birleşik İletişim",
     "addUsers": "Kullanıcıları Davet Et",
+    "addUsersSubDescription": "Kullanıcı davet edin ve hizmet atayın",
     "addUsersDescription": "Kullanıcılarınızı yüklemek için bir yöntem seçin.",
     "addUsersSimple": "Kullanıcıları Davet Et | Basit",
     "addUsersAdvanced": "Kullanıcıları Davet Et | Gelişmiş",
@@ -1148,10 +1250,10 @@
     "syncStatus": "Senkronizasyon Durumu",
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
-    "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. Cisco Cloud Connector'ı kuruluşunuza <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>indirin</a> ve yükleyin.",
-    "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
+    "installStep1": "1. Cisco Cloud Connector'ı kuruluşunuza <a href='{{download}}' download>indirin</a> ve yükleyin.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
+    "installWarning": "Uyarı:",
+    "installWarningDescription": "Kullanıcıları zaten elle eklediyseniz Etkin Dizin senkronizasyonu gerçekleştirmek, daha önce eklenen kullanıcıların kaldırılmasına sebep olabilir. Lütfen tüm beklenen kullanıcıların mevcut olduğunu doğrulamak için Cisco Cloud Connector Sınama Raporlarını kontrol edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",
     "results": "Sonuçlar",
     "syncNotConfigured": "Dizin Senkronizasyonu etkin değil. Kurulum talimatlar için önceki adıma bakın.",
@@ -1177,8 +1279,8 @@
     "setupSSODesc": "Lütfen SSO yapılandırmanız için uygun seçeneği belirleyin.",
     "manualInvite": "Şirketinizde İşbirliği Hizmetleri alacak kişilerin e-posta adreslerini girin. Kaydolmak için bir e-posta daveti alacaklardır.",
     "assignServices": "Kullanıcılara vermek istediğiniz yetkilendirmeleri seçin.",
-    "domainEntry": "Etki Alanı Girişi",
-    "domainSubDesc": "Senkronize edilecek AD etki alanını girin:",
+    "domainEntry": "Active Directory",
+    "domainSubDesc": "Active Directory etki alanını girin:",
     "connectorSteps": "Directory Connector'ı yüklemek için bu adımları uygulayın:",
     "readyToGo": "Artık başlayabilirsiniz!",
     "finishDesc": "Kurulum sihirbazını tamamladınız. Adımları atladıysanız veya ayarlardan herhangi birini değiştirmeniz gerekiyorsa, sağ üst köşedeki dişli simgesine tıklayarak bu panele yeniden erişin.",
@@ -1386,10 +1488,15 @@
     "phoneMenuRepeatFour": "Dört Kez",
     "phoneMenuRepeatFive": "Beş Kez",
     "phoneMenuHelp": "İstediğiniz dili ve ifadeyi arayana söylemek için kullanılan sesi seçin. Mesaj söyleme isteğe bağlıdır. Mesaj girilmezse, arayanın girişini dinleriz.",
+    "phoneMenuErrorRouteToAATargetMissing": "{{key}} anahtarında Otomatik Santrale Yönlendir hedefi eksik.",
+    "phoneMenuErrorRouteToHGTargetMissing": "{{key}} anahtarında Çağrı Yakalama Grubuna Yönlendir hedefi eksik.",
+    "phoneMenuErrorDialByExtMessageMissing": "{{key}} anahtarında Dahili Numarayı Ara Mesajı eksik.",
     "addNumberMsg": "Bu otomatik santral, aşağıdaki numaralara yapılan tüm çağrıları cevaplayacaktır. İstediğiniz zaman numara ekleyip çıkarabilirsiniz.",
     "numberInfoPopover": "Buraya bir numara girmeseniz de sorun değil. Başka bir Otomatik Santralden hâlâ çağrı gelebilir.",
     "selectPlaceHolder": "Numara Aratın veya Seçin",
     "inputPlaceHolder": "Yazmaya buradan başlayın",
+    "selectHGPlaceHolder": "Çağrı Yakalama Grubu Ara veya Seç",
+    "selectAAPlaceHolder": "Otomatik Santral Ara veya Seç",
     "sayMessage": "Mesaj gönder",
     "sayMessagePlaceholder": "Mesajınızı buraya girin.",
     "sayMessageUninterrupt": "Mesaj oynatma kesilemeyecektir.",
@@ -1463,7 +1570,16 @@
       "sven": "Sven",
       "empar": "Empar"
     },
-    "sayMessageHelp": "İstediğiniz dili ve ifadeyi arayana söylemek için kullanılan sesi seçin. Mesaj söyleme isteğe bağlıdır. Mesaj girilmezse, görüşme sonraki adıma geçecektir."
+    "sayMessageHelp": "İstediğiniz dili ve ifadeyi arayana söylemek için kullanılan sesi seçin. Mesaj söyleme isteğe bağlıdır. Mesaj girilmezse, görüşme sonraki adıma geçecektir.",
+    "errorReadCMI": "Atanmış telefon numaraları yüklenemiyor",
+    "errorAddCMI": "{{phoneNumber}} numarası atanamıyor: {{statusText}} ({{status}}).",
+    "errorRemoveCMI": "Atanmış telefon numarası/numaraları kaldırılamıyor.",
+    "errorResetCMI": "Daha önce atanmış telefon numarası/numaraları sıfırlanamıyor.",
+    "errorFailedToAssignNumbers": "Numara(lar) atanamıyor: {{phoneNumbers}}",
+    "errorNumbersCMIOnly": "Numara(lar) atanmış ama Otomatik Santralde değil: {{phoneNumbers}}",
+    "errorNumbersCESOnly": "Numara(lar) Otomatik Santralde ama atanmamış: {{phoneNumbers}}",
+    "errorInvalidTemplate": "Şablon yükleme başarısız oldu: {{template}}.",
+    "errorInvalidTemplateDef": "Şablon için geçersiz şablon tanımı: {{template}}."
   },
   "callPark": {
     "code": "CP",
@@ -1501,7 +1617,8 @@
     "features": "Özellikler",
     "or": "veya",
     "voicemail": "Sesli mesaj",
-    "singleNumberReach": "Tek Numarayla Ulaşma"
+    "singleNumberReach": "Tek Numarayla Ulaşma",
+    "internationalDialing": "Uluslararası Arama"
   },
   "directoryNumberPanel": {
     "title": "Hat Yapılandırması",
@@ -1587,6 +1704,19 @@
     "unitedStates": "Amerika Birleşik Devletleri",
     "austrailia": "Avustralya"
   },
+  "internationalDialingPanel": {
+    "success": "Uluslararası Arama yapılandırması başarıyla kaydedildi",
+    "error": "Uluslararası Arama yapılandırması başarısız. ",
+    "title": "Uluslararası Arama",
+    "toggle": "Uluslararası Arama",
+    "disableInternationalDialingTitle": "Uluslararası Aramayı Devre Dışı Bırak",
+    "disableInternationalDialingDialogue": "Uluslararası Aramayı devre dışı bırakmak kullanıcının uluslararası çağrılar yapmasını engelleyecektir. Bu kullanıcının Uluslararası Aramasını devre dışı bırakmak istiyor musunuz?",
+    "useGlobal": "Genel Ayarlar",
+    "alwaysAllow": "Her Zaman İzin Ver",
+    "neverAllow": "Hiçbir Zaman İzin Verme",
+    "on": "AÇIK",
+    "off": "KAPALI"
+  },
   "voicemailPanel": {
     "success": "Sesli mesaj yapılandırması başarıyla kaydedildi",
     "error": "Sesli mesaj yapılandırması başarısız oldu. ",
@@ -1598,7 +1728,7 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Telefon Numaraları",
-    "addNumbers": "Numaralar Ekle",
+    "addNumbers": "Numaraları Yönet",
     "editNumbers": "Telefon Numaralarını Düzenle",
     "listError": "Telefon numarası listesi yüklenemedi.",
     "deleteNumber": "Numarayı Sil",
@@ -1608,6 +1738,13 @@
     "pendingNumbers": "{count, plural, one{# Bekleyen numarası} other{# Bekleyen numaraları}}",
     "unassignedNumbers": "{count, plural, one{# Atanmamış numarası} other{# Atanmamış numaraları}}",
     "searchResults": "{count, plural, one{# search result} other{# Arama sonucu}}"
+  },
+  "serviceAddress": {
+    "streetAddress": "Adres",
+    "unit": "Birim",
+    "city": "Şehir",
+    "state": "Eyalet",
+    "zipCode": "Posta Kodu"
   },
   "pstnSetup": {
     "setupPstn": "PSTN Kurulumu",
@@ -1636,6 +1773,7 @@
     "checkOrderStatus": "Sipariş Durumunu Kontrol Et",
     "launchPortal": "Şirket Portalını Başlat",
     "carrierListError": "Bu müşteri için operatör listesi alınamadı.",
+    "listSiteError": "Bu müşteri için site listesi alınamadı.",
     "orderNumbersPrompt": "İlerlemek için numaralar eklenmelidir.",
     "invalidNumberPrompt": "Devam etmeden önce lütfen geçersiz numaraları düzeltin.",
     "duplicateNumber": "{{number}} yinelenen bir numara.",
@@ -1645,8 +1783,22 @@
     "swivelDuplicateError": "{{number} eklenemedi. Numara zaten var.",
     "customerCreateError": "Müşteri, operatörle oluşturulamadı.",
     "customerUpdateError": "Müşteri, operatörle güncellenemedi.",
+    "siteCreateError": "Hizmet adresi oluşturulamadı.",
     "searchResults": "Arama Sonuçları",
-    "noSearchResults": "Sonuç Yok"
+    "noSearchResults": "Arama Sonucu Yok",
+    "emergencyAcknowledge": "Müşterinin acil durum numaralarının aranmasını onaylaması, kurumsal sınıf IP telefon ağında geçerli olmayabilir.",
+    "serviceAddress": "Hizmet Adresi",
+    "serviceAddressPrompt": "Acil durum aramasında, yerel acil durum yanıt ekibi arayanı bulmak için bu adresi kullanır.",
+    "serviceAddressConfirmation": "Adres bu mu?",
+    "serviceAddressNotFound": "Adres bulunamıyor. Lütfen güncelleyin ve tekrar deneyin."
+  },
+  "pstnContractInformation": {
+    "title": "PSTN İletişim Bilgileri",
+    "prompt": "Müşteri ve PSTN sağlayıcısı arasında PSTN sözleşmesini doldurmak için bu bilgiler kullanılacaktır.",
+    "companyName": "Yasal Şirket Adı",
+    "firstName": "İmzalayanın Adı",
+    "lastName": "İmzalayanın Soyadı",
+    "emailAddress": "İmzalayanın E-posta Adresi"
   },
   "intelepeerFeatures": {
     "feature1": "50 ABD eyaletine + Kanada'ya sınırsız gelen/giden arama",
@@ -1665,7 +1817,7 @@
     "trialsHeading": "Etkin Deneme Sürümleri",
     "noResults": "Sonuç Yok",
     "expiredHeading": "Süresi Dolan Deneme Sürümleri",
-    "addTrial": "Yeni Deneme Sürümü",
+    "addTrial": "Deneme Süresini Başlat",
     "trialsCustomerName": "Müşteri",
     "trialsEndDate": "Kalan Gün",
     "trialsNumUsers": "Kullanıcılar/Lisanslar",
@@ -1693,7 +1845,7 @@
     "trialServices": "Deneme Hizmetleri",
     "sparkRoomSystem": "Spark Oda Sistemi",
     "trialButton": "Deneme Sürümü Müşterisi Ekle",
-    "dialogTitle": "Yeni Deneme Sürümü Ekle",
+    "dialogTitle": "Deneme Süresini Başlat",
     "customerName": "Şirket Adı",
     "customerEmail": "Yönetici E-postası",
     "startDate": "Başlangıç Tarihi",
@@ -1707,6 +1859,7 @@
     "contentSharedTitle": "Paylaşılan Dosyalar",
     "errGetPhoneNumberCount": "Telefon numarası sayısı alınamadı.",
     "invalidTrialLicenseCount": "Lisans sayısı 0'dan büyük ve 1000'den küçük olmalıdır.",
+    "invalidTrialRoomSystemQuantity": "Lisans sayısı 1 ile 20 arasında olmalıdır.",
     "individualUserServices": "Bireysel Kullanıcı Hizmetleri",
     "roomSystems": "Oda Sistemleri",
     "roomSystem": "Oda Sistemi",
@@ -1718,23 +1871,32 @@
       "title": "Yeni Deneme Sürümünü Başlat"
     },
     "meeting": {
-      "title": "Kurulum Deneme Sürümü - Meeting ve WebEx",
-      "webexHeader": "WebEx Lisans Türü",
-      "webexDetails": "Meeting ve WebEx deneme sürümleri, Kurumsal Sürüm WebEx lisanslarını etkinleştirir.",
+      "title": "Yeni Deneme Sürümünü Başlat - Meeting ve WebEx Kurulumu",
+      "webexHeader": "Meeting ve WebEx Lisans Türü",
+      "meetingDetails": "25 taraflı toplantı",
+      "webexDetails": "İşbirliği Toplantı Odasına sahip WebEx Kurumsal Sürüm",
       "siteUrl": "Site URL'si",
       "timezone": "Saat Dilimi",
+      "webexSiteUrl": "WebEx Site URL'si",
+      "webexTimezone": "WebEx Saat Dilimi",
       "default": "Varsayılan olarak ayarla",
-      "timezonePlaceholder": "Saat dilimi seçin"
+      "tzDescription": "Müşterinize en yakın saat dilimini seçin. Bu, WebEx sitesinin uygun veri merkezinde dağıtılmasını sağlayacaktır.",
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Bir saat dilimi için arama yap...",
+      "invalidSite": "SiteUrl geçersiz.",
+      "duplicateSite": "SiteUrl zaten kullanılıyor.",
+      "domainInvalid": "SiteUrl, webex.com etki alanı adını içermelidir.",
+      "validationHttpError": "SiteUrl'yi doğrulamak için sunucuya ulaşılamadı. Tekrar deneyin."
     },
     "call": {
-      "title": "Kurulum Deneme Sürümü - Cihaz Ekle",
+      "title": "Yeni Deneme Sürümünü Başlat - Cihazları Gönder",
       "selectDevicesHeader": "Cihaz Seç",
       "meetingRoomCamera": "Spark Oda Sistemi",
       "deskPhones": "Kişisel ve Paylaşılan Masa Telefonları",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
-      "phone7861": "7861",
+      "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Mkt",
       "shippingInfo": "Gönderim Bilgisi",
@@ -1743,22 +1905,26 @@
       "customer": "Müşteri",
       "partner": "İş Ortağı"
     },
+    "numbers": {
+      "title": "Yeni Deneme Sürümünü Başlat - Numaraları Ekle"
+    },
     "trialSuccess": "Deneme sürümünüz hazır.",
     "nextStepPrompt": "Bu müşteri için hizmetleri kurmak istiyor musunuz?",
     "setupLater": "Hayır teşekkürler",
     "setupNow": "Evet, hizmetleri kur",
     "squareducError": "Deneme sürümü oluşturuldu, ancak Spark UC sağlanamıyor",
-    "addSuccess": "{{customerName}} için {{licenseCount}} lisans ile {{licenseDuration}} boyunca geçerli olacak bir deneme sürümü başarıyla başlatıldı.",
-    "editSuccess": "{customerName} için {licenseCount} lisans ile {licenseDuration} boyunca geçerli olacak bir deneme sürümünü başarıyla düzenlediniz."
+    "addSuccess": "{{customerName}} için başarıyla bir deneme sürümü başlatıldı.",
+    "editSuccess": "{{customerName}} için bir deneme sürümünü başarıyla düzenlediniz."
   },
   "trials": {
     "collab": "Standart Ekip Odaları + 25 Taraflı Toplantılar",
     "squaredUC": "Gelişmiş Spark Çağrısı",
     "licenses": "Lisanslar",
-    "meet": "Meeting ve WebEx",
     "message": "Mesaj gönder",
+    "messageAndMeeting": "Mesaj ve Toplantı",
     "meeting": "Meeting ve WebEx",
-    "call": "Ara"
+    "call": "Ara",
+    "roomSystem": "Spark Oda Sistemi"
   },
   "status": {
     "noResults": "Sonuç yok.",
@@ -1787,7 +1953,7 @@
     "statusHeader": "Durum",
     "statusDaysLeft": "Kalan Gün",
     "actionHeader": "Eylemler",
-    "addTrial": "Bir Deneme Süresi Başlat",
+    "addTrial": "Deneme Süresini Başlat",
     "csvBtnTitle": "CSV'ye aktar",
     "csvBtnExportingTitle": "Dışa aktarma sürüyor",
     "csvFilename": "exported_customers.csv",
@@ -1796,6 +1962,7 @@
     "csvHeaderMessagingEntitlements": "Mesajlaşma Yetkilendirmeleri",
     "csvHeaderConferencingEntitlements": "Konferans Yetkilendirmeleri",
     "csvHeaderCommunicationsEntitlements": "İletişim Yetkilendirmeleri",
+    "csvHeaderRoomSystemsEntitlements": "Oda Sistemleri Yetkilendirmeleri",
     "custDetail": "Müşteri Ayrıntısı",
     "contactName": "Kişi Adı",
     "contactEmail": "E-posta",
@@ -1803,7 +1970,7 @@
     "launchButton": "Müşteriyi Görüntüle",
     "setupButton": "Müşteriyi Ayarla",
     "myOrgButton": "Kuruluşumu Görüntüle",
-    "edit": "Deneme Sürümünün Koşulları Düzenle",
+    "edit": "Deneme Sürümünü Düzenle",
     "trialTerms": "Deneme Sürümünün Koşulları",
     "trialOverview": "Deneme Sürümü",
     "licenses": "Lisans Sayısı",
@@ -1816,14 +1983,31 @@
     "expiring": "Süresi Dolacak Deneme Sürümü",
     "expiresToday": "Bugün Sona Eriyor",
     "unused": "kullanılmamış lisanslar",
-    "uploadNumbers": "Yükleme Numaraları",
+    "uploadNumbers": "Numaraları Yönet",
     "overPlan": "plan limitinin üzerinde",
     "phoneNumbers": "Telefon Numaraları",
     "none": "Hiçbiri",
     "partnerLogo": "İş Ortağı Logosu",
     "logoOverride": "Müşteri Logosu Geçersiz Kılma",
     "allowCustomerLogo": "{{customer}} için Müşteri Logosunu etkinleştir",
-    "myOrganization": "Kuruluşum"
+    "myOrganization": "Kuruluşum",
+    "message": "Mesaj gönder",
+    "meeting": "25 Taraflı Toplantı",
+    "call": "Ara",
+    "roomSystem": "Spark Oda Sistemi",
+    "branding": "Müşteri Markalama",
+    "MS": "Mesaj gönder",
+    "CF": "25 Taraflı Toplantı",
+    "MC": "25 Taraflı Toplantı",
+    "WebExMC": "WebEx Meeting Center",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
+    "EE": "WebEx Kurumsal Sürüm",
+    "CMR": "WebEx İş Birliği Toplantı Odası",
+    "CO": "Ara",
+    "ST": "Depolama",
+    "SD": "Spark Oda Sistemi"
   },
   "didAddModal": {
     "title": "Telefon Numaraları Ekle (İsteğe Bağlı)"
@@ -1834,9 +2018,21 @@
     "callerIdName": "Arayan Kimliği Adı",
     "callerIdNumber": "Arayan Kimliği Numarası"
   },
+  "internationalDialing": {
+    "internationalDialing": "Uluslararası Arama",
+    "internationalDialingDesc": "Kullanıcılar bu ayarı varsayılan olarak edinirler. İstisnalar, kişisel kullanıcı ayarlarından yapılabilir."
+  },
   "huronSettings": {
     "saveSuccess": "Ayarlar başarılı şekilde kaydedildi.",
-    "companyCallerIdsaveError": "Şirket Arayan Kimliği kaydedilemedi."
+    "companyCallerIdsaveError": "Şirket Arayan Kimliği kaydedilemedi.",
+    "internationalDialingSaveError": "Uluslararası Arama kaydedilemedi."
+  },
+  "settingsServiceAddress": {
+    "label": "Acil Durum Hizmeti Adresi",
+    "description": "Acil durum sırasında, yerel acil durum yanıt ekibi arayanı bulmak için bu adresi kullanır.",
+    "savePrompt": "Bu adres kaydedilsin mi?",
+    "saveSuccess": "Acil Durum Hizmeti Adresi başarıyla güncellendi.",
+    "saveError": "Acil Durum Hizmeti Adresi güncellenirken hata oluştu."
   },
   "didManageModal": {
     "title": "Telefon Numaralarını Yönet",
@@ -1887,12 +2083,10 @@
     "serial": "Seri",
     "ipAddr": "IP Adresi",
     "macAddr": "MAC Adresi",
-    "issues": "Sorunlar"
-  },
-  "deviceUpgradeChannelEditPage": {
-    "instructions": "Bu cihazın hangi kanaldan otomatik olarak güncellenmesini istediğinizi seçin:",
-    "deviceUpdated": "Cihaz güncellendi",
-    "updateFailed": "Cihaz, Yazılım Güncelleme Kanalını zamanında güncellemedi"
+    "issues": "Sorunlar",
+    "expires": "son kullanma tarihi",
+    "channelUpdated": "Yazılım Güncelleme Kanalı güncellendi",
+    "channelUpdateFailed": "Cihaz, Yazılım Güncelleme Kanalını zamanında güncellemedi"
   },
   "generateActivationCodeModal": {
     "title": "Etkinleştirme Kodu",
@@ -1928,7 +2122,7 @@
     "supportAdmin": "Destek Yöneticisi",
     "save": "Kaydet",
     "roles": "Roller",
-    "helpdesk": "Yardım Masası Desteği"
+    "helpdesk": "Yardım Masası"
   },
   "mohManagement": {
     "title": "Bekletilen Ortam",
@@ -2029,7 +2223,11 @@
       "status": "Durum",
       "alarms": "Alarmlar",
       "reportAlarm": "bildirilen alarm.",
-      "reportAlarms": "bildirilen alarmlar."
+      "reportAlarms": "bildirilen alarmlar.",
+      "software": "Yazılım",
+      "deregister_host": "TOPLANTI SAHİBİNİN KAYDINI SİL",
+      "goToHost": "Toplantı Sahibine Git",
+      "hosts": "Toplantı Sahipleri"
     },
     "activateService": {
       "ingress": "Bulutu Şirket İçi Ortamınıza Genişletin",
@@ -2052,7 +2250,10 @@
       "deactivate": "DEVRE DIŞI BIRAK",
       "cancelCaps": "İPTAL",
       "deactivateBody_1": "Kuruluşunuz için aşağıdaki Karma Hizmeti kaldırmak üzeresiniz:",
-      "deactivateBody_2": "Bir hizmeti devre dışı bırakmak, hizmetle ilgili tüm etkinlikleri kullanıcılarınızdan kaldıracaktır. Hizmeti şirket içi kaynaklarınızdan kaldırmak için ek adımlar gereklidir."
+      "deactivateBody_2": "Bir hizmeti devre dışı bırakmak, hizmetle ilgili tüm etkinlikleri kullanıcılarınızdan kaldıracaktır. Hizmeti şirket içi kaynaklarınızdan kaldırmak için ek adımlar gereklidir.",
+      "removeCluster": "KÜMEYİ KALDIR",
+      "schedule": "Bir Plan Belirle",
+      "scheduleText": "Bu kümenin güncellenmesi için bir sürüm kanalı seçin:"
     },
     "serviceStatus": {
       "unknown": "Bilinmeyen durum",
@@ -2073,7 +2274,28 @@
       "listing": {
         "no_clusters_heading": "Kayıtlı Ortam Hizmeti kümesi yok",
         "no_clusters_text": "Başlamak için yukarıdaki ilgili eylemlere ve belgelere bakın."
-      }
+      },
+      "deregister": "Kaydı sil",
+      "deregisterCancel": "İptal",
+      "deregisterConfirm": "Onayla",
+      "deregisterHeader": "Kayıt Silmeyi Onayla",
+      "deregisterAreYouSure": "{{clusterName}} kaydını Cisco Collaboration Cloud'dan silmek üzeresiniz.",
+      "deregisterCausesListItem1": "Bu sistem artık yeni çağrı kabul etmeyecek.",
+      "deregisterCausesListItem2": "Daha önceki çağrılar devam edecek.",
+      "deregisterErrorGeneric": "{{clusterName}} kaydı silinemiyor. {{errorMessage}}"
+    },
+    "alarms": {
+      "alarms": "Alarmlar",
+      "critical": "Kritik",
+      "error": "Hata",
+      "warning": "Uyarı",
+      "alert": "Uyarı",
+      "severity": "Ciddiyet",
+      "firstReported": "İlk Bildirilen Tarih",
+      "lastReported": "Son Bildirilen Tarih",
+      "description": "Açıklama",
+      "noAlarms": "Bildirilen alarm yok",
+      "hostImpact": "Toplantı Sahibi Etkilendi"
     },
     "mediaServiceActivationFailure": "Hizmeti etkinleştirme sorunları",
     "mediaAgentOrgMappingFailure": "MediaFusion için Orpheus'u etkinleştirme sorunları",
@@ -2099,7 +2321,7 @@
     "confirmCluster": "Lütfen küme değişikliğini onaylamak için kaydet tuşuna basın.",
     "disconnect": "Bağlantı kesildi. Yeniden bağlantı kurulmaya çalışılıyor...",
     "name": "Ad",
-    "ipAddr": "Toplantı Sahibi Adı / IP Adresi",
+    "ipAddr": "IP Adresi",
     "status": "Durum",
     "actions": "Eylemler",
     "offline": "Çevrimdışı",
@@ -2234,7 +2456,7 @@
     "priviligesLable": "Ayrıcalıklar",
     "userPriviligesLabel": "Kullanıcı Ayrıcalıkları",
     "teleCLIAuthEnabledLabel": "Arayan Numaranın Tanınması (CLI)",
-    "pmrLabel": "Kişisel Oda",
+    "pmrLabel": "Kişisel Toplantı Odası",
     "OtherPrivilegesLabel": "Diğer Ayrıcalıklar",
     "advancedLinkLabel": "Gelişmiş Ayarlar"
   },
@@ -2245,9 +2467,11 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Yapılandır",
     "siteSettingsIndexPageTitleFull": "{{siteUrl}} öğesini yapılandır",
-    "hostAccountsTitle": "TOPLANTI SAHİBİ HESAPLARI",
+    "hostAccountsTitle": "Toplantı Sahibi Hesapları",
     "activeTitle": "Etkin",
     "availableTitle": "Kullanılabilir",
+    "overLimitTitle": "Limit Aşımı:",
+    "upgradeNowTitle": "Şimdi Güncelle ",
     "emailAllHostsBtnTitle": "Tüm Toplantı Sahiplerine E-posta Gönder",
     "commonSettingsCardTitle": "Ortak Ayarlar",
     "commonSettingsCardNote": "Bu ayarlar tüm merkezlerde geçerlidir.",
@@ -2466,7 +2690,7 @@
     "SC": "WebEx Support Center",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
-    "EE": "WebEx Kurumsal Sürümle 25 Taraflı Toplantı",
+    "EE": "WebEx Kurumsal Sürüm",
     "CMR": "WebEx İş Birliği Toplantı Odası",
     "CO": "Ara",
     "ST": "Depolama",
@@ -2625,6 +2849,7 @@
     "Online": "Çevrimiçi",
     "Offline": "Çevrimdışı",
     "Unknown": "Bilinmiyor",
+    "Inactive": "Etkin Olmayan Hesap",
     "NeedsActivation": "Etkinleştirme Gerekiyor",
     "issuesDetected": "Algılanan Sorunlar",
     "upgradeChannels": {
@@ -2657,6 +2882,10 @@
       "noupgrade": {
         "type": "Otomatik Güncellemeler Devre Dışı Bırakıldı",
         "message": "Sistem yazılımı güncellenmeyecek."
+      },
+      "inactive": {
+        "type": "Etkin Olmayan Hesap",
+        "message": "Bir cihaz için bir hesap mevcut ama karşılık gelen cihaz veya etkinleştirme kodu yok. Bu hesabı muhtemelen silebilirsiniz."
       },
       "unknown": {
         "type": "Bilinmeyen Hata Oluştu",
@@ -2711,6 +2940,8 @@
     "cp": "CP",
     "editAction": "Düzenle",
     "deleteAction": "Sil",
+    "aaDependsTitle": "{{featureName}} Otomatik Santrale Bağlı Olanlar",
+    "aaDeleteBlocked": "İşlem, {{aaNames}} bu otomatik santrale başvurduğu için tamamlanamıyor",
     "deleteFeature": "{{ featureType }} sil",
     "deleteConfirmText": "{{ featureName }} {{ featureType }} öğesini silmek istediğinizden emin misiniz?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} başarılı şekilde silindi",
@@ -2747,7 +2978,7 @@
     "errorFailedCheckingCustSuccessRole": "Kullanıcının Müşteri Başarısı Yönetici CI Rolü olup olmadığı kontrol edilemedi: ",
     "errorFailedGettingCISyncStatus": "Messenger Senkronizasyon durumu alınamadı: ",
     "errorFailedRefreshingCISyncStatus": "Messenger Senkronizasyon durumu yenilenemedi: ",
-    "errorFailedUpdatingCISync": "Messenger Senkronizasyon durumu gücellenemedi: ",
+    "errorFailedUpdatingCISync": "Messenger Senkronizasyon durumu güncellenemedi: ",
     "errorLacksEntitlements": "Kullanıcının bu içeriği görüntülemek için Müşteri Başarısı Yönetici Rolü veya Genel Kimlik ayrıcalıkları bulunmuyor: ",
     "errorLacksFullAdmin": "Kullanıcının bu içeriği görüntülemek için Genel Kimlikteki Tam Yönetici rolü bulunmuyor",
     "errorUnauthorizedToView": "Bu içeriği görüntülemek için yetkilendirilmemiş",
@@ -2805,6 +3036,8 @@
     "numberFetchFailure": "Numaralar alınamıyor.",
     "newFeatureButtonText": "Yeni",
     "newFeatureModalTitle": "Yeni Özellik Oluştur",
+    "noFeatures": "Geçerli oturum için özellikler kullanılamıyor",
+    "noFeature": "Bu özellik geçerli oturum için etkin değil",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Burada görülecek bir şey yok.",
       "letsCustomize": "Hadi arama deneyimini özelleştirelim"
@@ -2866,7 +3099,8 @@
     "pageTitle": "Genel Bakış",
     "thisMonth": "Bu ay",
     "lastMonth": "Geçtiğimiz ay:",
-    "contactPartner": "Ayrıntılı bilgi için ortağınızla veya Cisco Satış ile irtibata geçin",
+    "contactPartner": "Ayrıntılı bilgi için ortağınızla veya Cisco Satış ile irtibata geçin.",
+    "nonotifications": "Şu anda görüntülenecek bildirim yok.",
     "cards": {
       "users": {
         "title": "Kullanıcılar",
@@ -2897,28 +3131,57 @@
       },
       "hybrid": {
         "title": "Karma Hizmetler",
-        "notEnabledText": "Karma Hizmetler, şirket içi sistemleri Cisco İş Birliği Platformuna entegre etmenize izin verir.",
-        "notEnabledActionText": "Daha Fazla Bilgi"
+        "notEnabledText": "Karma Hizmetler, şirket içi sistemlerinizi Cisco İş Birliği Platformuna entegre etmenize imkan tanır.",
+        "notEnabledActionText": "Daha Fazla Bilgi.",
+        "serviceHeader": "Şirket İçi Durum",
+        "services": {
+          "squared-fusion-cal": "Takvim",
+          "squared-fusion-uc": "Ara",
+          "squared-fusion-mgmt": "Yönetim"
+
+        }
       }
     }
   },
-  "roles": {
-    "atlas-portal.support": "Fatura Yöneticisi",
-    "atlas-portal.reports": "Destek Yöneticisi",
+  "ciRoles": {
+    "atlas-portal.support": "Destek",
+    "atlas-portal.reports": "Raporlar",
+    "atlas-portal.billing": "Faturalandırma",
     "atlas-portal.partner.helpdesk": "Yardım Masası Desteği",
+    "atlas-portal.application": "Uygulama",
+    "atlas-portal.partner.salesadmin": "Satış Yöneticisi",
     "id_full_admin": "Tam Yönetici",
+    "id_readonly_admin": "Saltokunur Yönetici",
     "user": "Kullanıcı"
+  },
+  "atlasRoles": {
+    "Full_Admin": "Tam Yönetici",
+    "Support": "Destek",
+    "Reports": "Raporlar",
+    "Billing": "Faturalandırma",
+    "Help_Desk": "Yardım Masası",
+    "Application": "Uygulama",
+    "Sales_Admin": "Satış Yöneticisi",
+    "User": "Kullanıcı",
+    "PARTNER_USER": "Kullanıcı",
+    "PARTNER_ADMIN": "Ortak Yönetici",
+    "PARTNER_SALES_ADMIN": "Ortak Satış Yöneticisi",
+    "CUSTOMER_PARTNER": "Müşteri Ortağı",
+    "WX2_Support": "WX2 Desteği",
+    "WX2_User": "WX2 Kullanıcısı",
+    "Site_Admin": "Site Yöneticisi"
   },
   "helpdesk": {
     "navHeaderTitle": "Bulut İşbirliği Yardım Masası",
-    "helpdesk": "Yardım Masası Desteği",
+    "helpdesk": "Yardım Masası",
+    "searchHeading": "Yardım Masası Desteği",
     "users": "Kullanıcılar",
     "customers": "Müşteriler",
-    "badUserSearchInput": "Kullanıcı arama, en az üç karakter gerektirir. Ad ve e-posta arama, john.doe veya John Doe gibi en az iki sözcük gerektirir.",
+    "badUserSearchInput": "En az üç karakter girin. İsme veya e-postaya göre aratmak için iki kelime girin, örneğin John Doe veya john.doe.",
     "unexpectedError": "Beklenmedik bir hata oluştu",
+    "cancelled": "Arama iptal edildi",
     "searchingPleaseWait": "Aranıyor, lütfen bekleyin...",
-    "noSearchHits": "Eşleşme bulunamadı. Aramanızı daraltmayı deneyin...",
-    "searchInputDescription": "Kullanıcı veya müşteri arayın ve görüntüleyin.",
+    "noSearchHits": "Eşleşme bulunamadı. Farklı bir arama deneyin.",
     "roles": "Roller",
     "backToSearchResults": "Arama sonuçlarına dön",
     "sso": "Çoklu Oturum Açma (SSO)",
@@ -2926,9 +3189,7 @@
     "type": "Tür",
     "partner": "İş Ortağı",
     "customer": "Müşteri",
-    "searchCriteriaLink": "Desteklenen arama ölçütlerini gösterin.",
-    "searchInfo": "Kullanıcıları E-posta, Telefon Numarası veya Görüntülenen İsme (iki kelime gerekir) göre aratın. Şirketi, Görüntülenen İsme göre aratın. Cihazları, Görüntülenen İsme, Seri Numarasına veya MAC Adresine göre aratın (Not: cihaz araması, yalnızca belli bir müşteriyi aratırken desteklenir).",
-    "devices": "Cihazlar",
+    "helpLink": "Yardım",
     "mobile": "mobil",
     "work": "iş",
     "fax": "faks",
@@ -2936,7 +3197,7 @@
     "status": "Durum",
     "organization": "Müşteri",
     "accountCreated": "Hesap Oluşturuldu",
-    "customerPortalLaunch": "Müşteri Portalını Başlat",
+    "customerPortalLaunch": "Müşteriyi Portalını Görüntüle",
     "contact": "İrtibat",
     "claimedDomain": "Talep Edilen Etki Alanı",
     "managedBy": "Şu Kişi Tarafından Yönetiliyor:",
@@ -2944,7 +3205,7 @@
     "message": "Mesaj gönder",
     "meeting": "Toplantı",
     "call": "Ara",
-    "rooms": "Oda",
+    "rooms": "Odalar",
     "claimedDomain": "Talep Edilen Etki Alanları",
     "hybridServices": "Karma Hizmetler",
     "entitlements": {
@@ -2954,7 +3215,8 @@
       "squared-room-moderation.paid": "Standart Ekip Odaları",
       "squared-room-moderation.free": "Ücretsiz Spark Mesajlaşma",
       "ciscouc.paid": "Gelişmiş Spark Çağrısı",
-      "ciscouc.free": "Ücretsiz 1'e 1 Spark Çağrısı"
+      "ciscouc.free": "Ücretsiz 1'e 1 Spark Çağrısı",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Etkin",
@@ -2964,7 +3226,6 @@
       "fraud": "Sahtekarlık",
       "compliance": "Uyumluluk"
     },
-    "entitlementsHeading": "Yetkilendirmeler",
     "enabledServices": "Etkin",
     "availableServices": "Kullanılabilir",
     "none": "Hiçbiri",
@@ -2973,23 +3234,23 @@
     "software": "Yazılım",
     "serial": "Seri",
     "macAddress": "MAC Adresi",
-    "badOrgSearchInput": "Müşteri aratmak için en az üç karaktere ihtiyaç vardır.",
+    "badOrgSearchInput": "En az üç karakter girin.",
     "unknown": "Bilinmiyor",
     "showMore": "Daha fazla sonuç göster",
     "delegatedAdministration": "{{numManages}} kuruluş yönetiyor",
     "licenses": "Lisanslar",
     "licenseDisplayNames": {
-      "MC": "{{volume}} x Meeting Center {{capacity}}",
-      "TC": "{{volume}} x Training Center {{capacity}}",
-      "MS": "{{volume}} x Standart Ekip Odaları",
-      "CF": "{{volume}} x 25 Taraflı Toplantılar",
-      "EE": "{{volume}} x Kurumsal Sürüm {{capacity}}",
-      "SC": "{{volume}} x Support Center {{capacity}}",
-      "EC": "{{volume}} x Event Center {{capacity}}",
-      "CO": "{{volume}} x İleri Düzey Spark Çağrısı",
-      "CMR": "{{volume}} x İş Birliği Toplantı Odaları",
-      "SD": "{{volume}} x Toplantı Odası Cihazları",
-      "ST": "{{volume}} x Depolama"
+      "MC": "Meeting Center {{capacity}}",
+      "TC": "Training Center {{capacity}}",
+      "MS": "Standart Ekip Odaları",
+      "CF": "25 Taraflı Toplantılar",
+      "EE": "Kurumsal Sürüm {{capacity}}",
+      "SC": "Support Center {{capacity}}",
+      "EC": "Event Center {{capacity}}",
+      "CO": "Gelişmiş Spark Çağrısı",
+      "CMR": "İşbirliği Toplantı Odaları",
+      "SD": "Toplantı Odası Cihazları",
+      "ST": "Depolama"
     },
     "trial": "Deneme Sürümü",
     "adminUsers": "Yöneticiler",
@@ -2997,12 +3258,44 @@
     "hideAllAdminUsers": "Yöneticileri gizle",
     "numDaysLeft": "{{days}} gün kaldı",
     "licenseStatus": {
+      "active": "Etkin",
       "expired": "Sona Erdi",
       "cancelled": "İptal Edildi",
       "suspended": "Askıya Alındı",
       "pending": "Bekliyor"
     },
     "consumerOrg": "Tüketici",
-    "unlicensedUsers": "Lisanssız Kullanıcılar"
+    "unlicensedUsers": "Lisanssız Kullanıcılar",
+    "searchUsersDevices": "Kullanıcı ve cihaz aramaya git",
+    "help": {
+      "title": "Yardım",
+      "navigation-title": "Klavyeye göre Gezinme",
+      "navigation-info": "Sonuçlarda gezinmek için <strong>Tab</strong> veya ↑ ↓ ← → tuşlarına, seçmek için ↵ tuşuna ve sonuçlara geri dönmek veya arama terimlerini temizlemek için <strong>Esc</strong> tuşuna basın. Müşteri seçtikten sonra (veya müşteri görüntüleme sayfasından) aramanızı sadece o müşteriyle sınırlı tutmak için <strong>s</strong> tuşuna basın. ",
+      "search-criterias-title": "Arama Kriteri",
+      "search-criterias-users": "<strong>Kullanıcılar</strong>: E-posta, Ad (Ad, Soyadı), Telefon Numarası ve Görüntülenen Ad (iki kelime gereklidir)",
+      "search-criterias-customers": "<strong>Müşteriler</strong>: Görüntülenen Ad",
+      "search-criterias-devices": "<strong>Cihazlar</strong>: Görüntülenen Ad, Seri Numarası veya MAC Adresi",
+      "search-criterias-note": "Not: Bir cihaz aratmak için öncelikle bir müşteri seçmeniz gerekir.",
+      "narrow-title": "Müşteri seçin",
+      "narrow-info": "Aramayı sadece bir müşteriyle sınırlandırmak için ana arama araç sayfasından başlayıp müşteriyi görüntülenen adına göre aratın. Sonra <i class='icon icon-search'></i>müşterinin arama sonucu kartına tıklayın."
+    },
+    "verification": "Doğrulama",
+    "resend": "Yeniden gönder",
+    "sendCode": "Kodu Gönder",
+    "more": "Kişi Daha",
+    "usage": "{{usage}} hacminden {{volume}} kullanılıyor",
+    "launchHelpdesk": "Yardım Masası",
+    "launchHelpdeskDesc": "Yardım Masası portalını yeni bir sekmede aç"
+  },
+  "activation": {
+    "verificationComplete": "Doğrulama Tamamlandı",
+    "returnToApp": "Mobil cihazınızdaki Spark'a dönün ve kaydı tamamlayın.",
+    "codeExpired": "Etkinleştirme Kodunun Süresi Doldu",
+    "requestNewCode": "{{userEmail}} kullanıcısına {{deviceName}} cihazı için gönderilen Spark etkinleştirme kodunun süresi doldu! Yeni bir kod istemek için aşağıya tıklayın.",
+    "sendCodeLink": "Yeni etkinleştirme kodu gönder",
+    "newCodeSent": "Doğrulama Kodu Gönderildi",
+    "useLatestCode": "{{userEmail}} kullanıcısına yeni bir kod gönderildi",
+    "unexpectedError": "İstek işlenirken beklenmeyen bir hata oluştu.",
+    "usage": "{{usage}} hacminden {{volume}} kullanılıyor"
   }
 }

@@ -26,12 +26,12 @@
         <td translate="mediaFusion.connectors.software"></td>
         <td><span>{{hostDetails.connector.version}}</span></td>
       </tr>
-      <tr>
+      <!--tr>
         <td translate="mediaFusion.connectors.serial"></td>
         <td><span>{{hostDetails.connector.host.serial}}</span></td>
-      </tr> 
+      </tr--> 
 
-      <tr>
+      <!--tr>
         <td translate="mediaFusion.role"></td>
         <td>
           <div class="row">
@@ -45,12 +45,12 @@
             </div>
           </div>
         </td>
-      </tr>
+      </tr-->
       </tbody>
     </table>
   </cs-sp-section>
 
-  <cs-sp-section>
+  <!--cs-sp-section>
     <div class="section-title-row section-name" translate="mediaFusion.actionsHeader"></div>
     <div>
       <table>
@@ -64,6 +64,19 @@
           </tr>
         <tbody>
       </table>
+    </div>
+  </cs-sp-section-->
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="mediaFusion.reassignCluster"></div>
+    <div>
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--primary"
+              style="margin-top: 15px;"
+              ng-click="sp.close(); hostDetails.reassignCluster();"
+              translate="mediaFusion.moveHost">
+      </button>
     </div>
   </cs-sp-section>
 

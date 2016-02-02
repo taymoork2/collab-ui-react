@@ -1,0 +1,144 @@
+{
+  "disabled": {
+    "details": {
+      "customerName": "Cyberdyne Systems, Inc.",
+      "customerEmail": "arnoldbeback@terminator.org",
+      "licenseDuration": 90,
+      "licenseCount": 100
+    },
+    "trials": {
+      "messageTrial": {
+        "type": "COLLAB",
+        "enabled": false,
+        "details": {}
+      },
+      "meetingTrial": {
+        "type": "MEETINGS",
+        "enabled": false,
+        "details": {
+          "siteUrl": "now.istomorrow.org",
+          "timeZone": {
+            "label": "(GMT -8:00) Los Angeles",
+            "timeZoneId": "4",
+            "timeZoneName": "Los Angeles",
+            "DCName": "SJC",
+            "DCID": "PM"
+          }
+        }
+      },
+      "callTrial": {
+        "type": "SQUAREDUC",
+        "enabled": false,
+        "details": {
+          "roomSystems": [{
+            "model": "sx10",
+            "enabled": false,
+            "quantity": 0
+          }],
+          "phones": [{
+            "model": "8865",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "8845",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "8841",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "7841",
+            "enabled": false,
+            "quantity": 0
+          }],
+          "shippingInfo": [{
+            "isPrimary": true,
+            "name": "John Connors",
+            "phoneNumber": "+1 206 256 3000",
+            "address": "2901 3rd Ave Seattle WA 98121",
+            "recipientType": "CUSTOMER"
+          }]
+        }
+      },
+      "roomSystemTrial": {
+        "type": "ROOMSYSTEMS",
+        "enabled": false,
+        "details": {
+          "quantity": 0
+        }
+      }
+    }
+  },
+  "enabled": {
+    "details": {
+      "customerName": "Cyberdyne Systems, Inc.",
+      "customerEmail": "arnoldbeback@terminator.org",
+      "licenseDuration": 90,
+      "licenseCount": 100
+    },
+    "trials": {
+      "messageTrial": {
+        "type": "COLLAB",
+        "enabled": true,
+        "details": {}
+      },
+      "meetingTrial": {
+        "type": "MEETINGS",
+        "enabled": true,
+        "details": {
+          "siteUrl": "now.istomorrow.org",
+          "timeZone": {
+            "label": "(GMT -8:00) Los Angeles",
+            "timeZoneId": "4",
+            "timeZoneName": "Los Angeles",
+            "DCName": "SJC",
+            "DCID": "PM"
+          }
+        }
+      },
+      "callTrial": {
+        "type": "SQUAREDUC",
+        "enabled": true,
+        "details": {
+          "roomSystems": [{
+            "model": "sx10",
+            "enabled": true,
+            "quantity": 2
+          }],
+          "phones": [{
+            "model": "8865",
+            "enabled": true,
+            "quantity": 3
+          }, {
+            "model": "8845",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "8841",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "7841",
+            "enabled": false,
+            "quantity": 0
+          }],
+          "shippingInfo": [{
+            "isPrimary": true,
+            "name": "John Connors",
+            "phoneNumber": "+1 206 256 3000",
+            "address": "2901 3rd Ave Seattle WA 98121",
+            "recipientType": "CUSTOMER"
+          }]
+        }
+      },
+      "roomSystemTrial": {
+        "type": "ROOMSYSTEMS",
+        "enabled": false,
+        "details": {
+          "quantity": 0
+        }
+      }
+    }
+  }
+}

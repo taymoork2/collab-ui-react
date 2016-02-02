@@ -9,55 +9,67 @@
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
-    vm.showPartnerEdit = $stateParams.showPartnerEdit;
 
-    vm.editTerms = true;
-    vm.disableSquaredUCCheckBox = false;
-    $scope.offers = {};
-    vm.showWebex = false;
+    vm.customerOrgId = undefined;
+
+    vm.showMeeting = false;
+    vm.canEditMessage = true;
+    vm.canEditMeeting = true;
     vm.showRoomSystems = false;
-    vm.model = {
-      roomSystems: 0,
+
+    var _messageTemplateOptionId = 'messageTrial';
+
+    vm.trialData = TrialService.getData();
+    vm.details = vm.trialData.details;
+    vm.messageTrial = vm.trialData.trials.messageTrial;
+    vm.meetingTrial = vm.trialData.trials.meetingTrial;
+    vm.callTrial = vm.trialData.trials.callTrial;
+    vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+
+    vm.preset = {
+      licenseCount: _.get(vm, 'currentTrial.licenses', 0),
+      message: hasOfferType(Config.trials.message) || hasOfferType(Config.offerTypes.message),
+      meeting: hasOfferType(Config.trials.meeting) || hasOfferType(Config.offerTypes.meetings),
+      call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
+      roomSystems: hasOfferType(Config.offerTypes.roomSystems),
+      roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
+      licenseDuration: _.get(vm, 'currentTrial.duration', 0)
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-      vm.showRoomSystems = result;
-    });
+    vm.details.licenseCount = vm.preset.licenseCount;
+    vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (result) {
-      vm.showWebex = result;
-      if (result) {
-        vm.individualServices.splice(2, 0, webexField);
-      }
-    });
+    vm.trialStates = [{
+      'name': 'trialEdit.meeting',
+      'trials': [vm.meetingTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialEdit.call',
+      'trials': [vm.callTrial, vm.roomSystemTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialEdit.addNumbers',
+      'trials': [vm.callTrial],
+      'enabled': true,
+    }];
+    // Navigate trial modal in this order
+    // TODO: addNumbers must be last page for now due to controller destroy.
+    // This page "should" be refactored or become obsolete with PSTN
+    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navStates = ['trialEdit.info'];
 
-    var webexField = {
-      key: Config.trials.meeting,
-      type: 'checkbox',
-      model: $scope.offers,
-      templateOptions: {
-        label: $translate.instant('trials.meeting'),
-        id: 'webexTrialCB',
-        class: 'columns medium-12 checkbox-group'
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled();
-        }
-      }
-    };
-
-    vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.individualServices = [{
+      model: vm.details,
       key: 'licenseCount',
       type: 'input',
-      defaultValue: vm.currentTrial.licenses,
+
+      className: 'columns medium-12 license-count',
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-5',
+        labelClass: 'columns medium-6',
         inputClass: 'columns medium-3',
         type: 'number',
-        required: true
+        required: true,
       },
       validators: {
         count: {
@@ -66,54 +78,67 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
-        }
-      }
+          },
+        },
+      },
     }, {
-      key: Config.trials.message,
+      // Message Trial
+      model: vm.messageTrial,
+      key: 'enabled',
       type: 'checkbox',
-      model: $scope.offers,
-      defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
+      className: 'columns medium-12',
       templateOptions: {
-        label: $translate.instant('trials.collab'),
-        id: 'squaredTrial',
+        label: $translate.instant('trials.messageAndMeeting'),
+        id: _messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+          return !vm.canEditMessage;
         },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
-          });
-        }
-      }
+      },
     }, {
-      key: Config.trials.call,
+      // Meeting Trial
+      model: vm.meetingTrial,
+      key: 'enabled',
       type: 'checkbox',
-      model: $scope.offers,
+      className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
+        label: $translate.instant('trials.meeting'),
+        id: 'meetingTrial',
+        class: 'columns medium-12',
+      },
+      'hideExpression': function () {
+        return !vm.showMeeting;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.canEditMeeting;
+        },
+      },
+    }, {
+      // Call Trial
+      model: vm.callTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: 'columns medium-12 checkbox-group',
+      templateOptions: {
+        label: $translate.instant('trials.call'),
         id: 'squaredUCTrial',
-        class: 'columns medium-12 checkbox-group',
+        class: 'columns medium-12',
+      },
+      'hideExpression': function () {
+        return !vm.hasCallEntitlement();
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.disableSquaredUCCheckBox;
+          return vm.preset.call;
         },
-        'hide': function () {
-          return !vm.isSquaredUC();
-        },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
-          });
-        }
-      }
+      },
     }];
 
     vm.trialTermsFields = [{
+      model: vm.details,
       key: 'licenseDuration',
       type: 'select',
       defaultValue: vm.currentTrial.duration,
@@ -125,81 +150,229 @@
         labelClass: 'columns medium-4',
         inputClass: 'columns medium-4',
         options: [30, 60, 90]
+      },
+    }];
+
+    // Room Systems Trial
+    vm.roomSystemFields = [{
+      model: vm.roomSystemTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: "columns medium-6",
+      templateOptions: {
+        label: $translate.instant('trials.roomSystem'),
+        id: 'trialRoomSystem',
+        class: 'columns medium-12',
+      },
+      watcher: {
+        listener: function (field, newValue, oldValue, scope, stopWatching) {
+          if (newValue !== oldValue) {
+            field.model.details.quantity = newValue ? 5 : 0;
+          }
+        }
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.preset.roomSystems;
+        },
+      },
+    }, {
+      model: vm.roomSystemTrial.details,
+      key: 'quantity',
+      type: 'input',
+      className: "columns medium-6",
+      templateOptions: {
+        id: 'trialRoomSystemsAmount',
+        inputClass: 'columns medium-10',
+        secondaryLabel: $translate.instant('trials.licenses'),
+        type: 'number'
+      },
+      expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.roomSystemTrial.enabled;
+        },
+        'templateOptions.disabled': function () {
+          return !vm.roomSystemTrial.enabled;
+        },
+      },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
+          }
+        }
       }
     }];
 
-    vm.isSquaredUC = Authinfo.isSquaredUC;
-    vm.getDaysLeft = getDaysLeft;
+    vm.hasCallEntitlement = Authinfo.isSquaredUC;
+    vm.hasNextStep = hasNextStep;
+    vm.previousStep = previousStep;
+    vm.nextStep = nextStep;
+    vm.finishSetup = finishSetup;
+    vm.closeDialogBox = closeDialogBox;
     vm.editTrial = editTrial;
-    vm.squaredUCOfferID = Config.trials.call;
-    vm.roomSystemsOfferID = Config.trials.roomSystems;
-    vm.isSquaredUCEnabled = isSquaredUCEnabled;
-    vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
-    vm.gotoAddNumber = gotoAddNumber;
-    vm.clickUpdateButton = clickUpdateButton;
+    vm.isProceedDisabled = isProceedDisabled;
+    vm.getDaysLeft = getDaysLeft;
 
-    $scope.$watchCollection('offers', function (newOffers) {
-      if (newOffers[Config.trials.roomSystems] || newOffers[Config.trials.call]) {
-        $scope.offers[Config.trials.message] = true;
-        if (vm.showWebex) {
-          $scope.offers[Config.trials.meeting] = true;
+    init();
+
+    ///////////////////////
+
+    function init() {
+      $q.all([
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+        FeatureToggleService.supportsPstnSetup(),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+      ]).then(function (results) {
+        vm.showRoomSystems = results[0];
+        vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
+        vm.meetingTrial.enabled = results[1] && vm.preset.meeting;
+        vm.showMeeting = results[1];
+        vm.supportsPstnSetup = results[2];
+        vm.callTrial.enabled = vm.hasCallEntitlement() && vm.preset.call;
+        vm.messageTrial.enabled = vm.preset.message;
+
+        if (vm.showMeeting) {
+          updateTrialService(_messageTemplateOptionId);
         }
-      }
-    });
 
-    initializeOffers();
-
-    /////////////////
-
-    function initializeOffers() {
-      if (vm.currentTrial && vm.currentTrial.offers) {
-        for (var i in vm.currentTrial.offers) {
-          var offer = vm.currentTrial.offers[i];
-          if (offer && offer.id) {
-            $scope.offers[offer.id] = true;
-            if (offer.id === vm.squaredUCOfferID) {
-              vm.disableSquaredUCCheckBox = true;
-            } else if (offer.id === vm.roomSystemsOfferID) {
-              vm.model.roomSystemsEnabled = true;
-              vm.model.roomSystems = offer.licenseCount;
-            }
+        setViewState('trialEdit.call', results[3] && results[1]);
+        setViewState('trialEdit.meeting', results[1]);
+        setViewState('trialEdit.addNumbers', !vm.supportsPstnSetup); //only show step if not supportsPstnSetup
+      }).finally(function () {
+        $scope.$watch(function () {
+          return vm.trialData.trials;
+        }, function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+            toggleTrial();
           }
+        }, true);
+
+        // Capture modal close and clear service
+        if ($state.modal) {
+          $state.modal.result.finally(function () {
+            TrialService.reset();
+          });
         }
-      }
-    }
 
-    function isSquaredUCEnabled() {
-      return $scope.offers[Config.trials.call] || false;
-    }
+        vm.roomSystemFields[1].model.quantity = (vm.roomSystemTrial.enabled && vm.preset.roomSystems) ? vm.preset.roomSystemsValue : 0;
 
-    function isRoomSystemsTrialsEnabled() {
-      return $scope.offers[Config.trials.roomSystems] || false;
-    }
-
-    vm.roomSystemsChecked = function () {
-      vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
-      $scope.offers[Config.trials.roomSystems] = vm.model.roomSystemsEnabled;
-    };
-
-    function clickUpdateButton() {
-      if (isSquaredUCEnabled() && !vm.disableSquaredUCCheckBox) {
-        FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
-          if (isSupported) {
-            editTrial();
-          } else {
-            gotoAddNumber();
-          }
-        });
-      } else {
-        editTrial();
-      }
-    }
-
-    function gotoAddNumber() {
-      $state.go('trialEdit.addNumbers', {
-        fromEditTrial: true,
-        currentOrg: vm.currentTrial
+        toggleTrial();
       });
+    }
+
+    // If Webex Trials are enabled, we switch out offerType Collab for Message
+    // This requires changing the label it contains as well
+    function updateTrialService(templateOptionsId) {
+      var index = _.findIndex(vm.individualServices, function (individualService) {
+        return individualService.templateOptions.id === templateOptionsId;
+      });
+      if (index) {
+        switch (templateOptionsId) {
+        case _messageTemplateOptionId:
+          vm.individualServices[index].model.type = Config.offerTypes.message;
+          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
+          break;
+        }
+      }
+    }
+
+    function toggleTrial() {
+      if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+        vm.canEditMessage = false;
+        vm.canEditMeeting = false;
+        if (vm.showMeeting) {
+          vm.meetingTrial.enabled = true;
+        }
+        vm.messageTrial.enabled = true;
+      } else {
+        vm.canEditMessage = true;
+        vm.canEditMeeting = true;
+      }
+
+      vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
+      vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
+
+      setViewState('trialEdit.call', ((!vm.preset.roomSystems && vm.roomSystemTrial.enabled) || (!vm.preset.call && vm.callTrial.enabled)));
+      setViewState('trialEdit.addNumbers', (!vm.preset.call && vm.callTrial.enabled && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
+      setViewState('trialEdit.meeting', !vm.preset.meeting && vm.meetingTrial.enabled);
+
+      addRemoveStates();
+      _.forEach(vm.individualServices, function (service) {
+        service.runExpressions();
+      });
+    }
+
+    function addRemoveStates() {
+      _.forEach(vm.trialStates, function (state) {
+        if (!state.enabled || _.every(state.trials, {
+            enabled: false
+          })) {
+          removeNavState(state.name);
+        } else {
+          addNavState(state.name);
+        }
+      });
+    }
+
+    function hasNextStep() {
+      return !_.isUndefined(getNextState());
+    }
+
+    function finishSetup() {
+      $state.go('trialEdit.finishSetup');
+    }
+
+    function previousStep() {
+      var state = getBackState();
+      if (state) {
+        $state.go(state);
+      }
+    }
+
+    function getBackState() {
+      return _.chain(vm.navStates)
+        .indexOf($state.current.name)
+        .thru(function (index) {
+          return _.slice(vm.navStates, 0, index);
+        })
+        .findLast(function (state) {
+          return !_.isUndefined(state);
+        })
+        .value();
+    }
+
+    function nextStep(callback) {
+      if (!hasNextStep()) {
+        return editTrial(callback);
+      } else {
+        return $state.go(getNextState());
+      }
+    }
+
+    function getNextState() {
+      return _.chain(vm.navStates)
+        .indexOf($state.current.name)
+        .thru(function (index) {
+          return _.slice(vm.navStates, index + 1);
+        })
+        .find(function (state) {
+          return !_.isUndefined(state);
+        })
+        .value();
+    }
+
+    function addNavState(state) {
+      vm.navStates[_.indexOf(vm.navOrder, state)] = state;
+    }
+
+    function removeNavState(state) {
+      // just null out the position in array
+      delete vm.navStates[_.indexOf(vm.navStates, state)];
     }
 
     function getDaysLeft(daysLeft) {
@@ -212,25 +385,24 @@
       }
     }
 
-    function editTrial(keepModal) {
+    function closeDialogBox() {
+      $state.modal.close();
+    }
+
+    function editTrial(callback) {
       vm.saveUpdateButtonLoad = true;
+      var custId = vm.currentTrial.customerOrgId;
+      var trialId = vm.currentTrial.trialId;
 
-      var offersList = [];
-      for (var i in $scope.offers) {
-        if ($scope.offers[i]) {
-          offersList.push(i);
-        }
-      }
-
-      return TrialService.editTrial(vm.currentTrial.trialId, vm.model.licenseDuration, vm.model.licenseCount, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
+      return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
           vm.saveUpdateButtonLoad = false;
-          Notification.notify([response.data.message], 'error');
+          Notification.error(response.data.message);
           return $q.reject();
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if ((offersList.indexOf(Config.trials.call) !== -1) && !vm.disableSquaredUCCheckBox) {
+          if (vm.callTrial.enabled && !vm.preset.call) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 vm.saveUpdateButtonLoad = false;
@@ -242,14 +414,60 @@
         .then(function () {
           vm.saveUpdateButtonLoad = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
-          var successMessage = [$translate.instant('trialModal.editSuccess', {
+          Notification.success('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName
-          })];
-          Notification.notify(successMessage, 'success');
-          if (!keepModal) {
-            $state.modal.close();
+          });
+
+          if (callback) {
+            return callback(vm.customerOrgId)
+              .catch(_.noop); //don't throw an error
           }
-        });
+        })
+        .then($state.modal.close);
+    }
+
+    function hasOfferType(configOption) {
+      return _.some(vm.currentTrial.offers, {
+        id: configOption
+      });
+    }
+
+    function findOffer(configOption) {
+      return _.find(vm.currentTrial.offers, {
+        id: configOption
+      });
+    }
+
+    function setViewState(modalStage, value) {
+      var addNumbersModal = _.find(vm.trialStates, {
+        'name': modalStage
+      }).enabled = value;
+    }
+
+    function isProceedDisabled() {
+      var proceedable = false;
+      if (!proceedable && !vm.preset.message) {
+        proceedable = vm.messageTrial.enabled;
+      }
+      if (!proceedable && !vm.preset.meeting) {
+        proceedable = vm.meetingTrial.enabled;
+      }
+      if (!proceedable && !vm.preset.call) {
+        proceedable = vm.callTrial.enabled;
+      }
+      if (!proceedable && !vm.preset.roomSystems) {
+        proceedable = vm.roomSystemTrial.enabled;
+      }
+      if (!proceedable && vm.preset.roomSystems) {
+        proceedable = vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity;
+      }
+      if (!proceedable) {
+        proceedable = vm.preset.licenseCount !== vm.details.licenseCount;
+      }
+      if (!proceedable) {
+        proceedable = vm.preset.licenseDuration !== vm.details.licenseDuration;
+      }
+      return !proceedable;
     }
   }
 })();

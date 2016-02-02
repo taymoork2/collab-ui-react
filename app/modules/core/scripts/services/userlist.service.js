@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-  /* global $ */
 
   angular
     .module('Core')
@@ -144,6 +143,8 @@
             data.success = true;
             Log.debug('UserListService.getUserReport - executing callback...');
             callback(data, status);
+            // delete the cached report, so that the next one will be fresh.
+            $http.delete(userReportsUrl);
           }
         })
         .error(function (data, status) {

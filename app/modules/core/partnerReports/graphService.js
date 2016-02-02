@@ -103,7 +103,23 @@
         }, {
           number: 1e+12,
           prefix: "T"
-        }]
+        }],
+        'export': {
+          "enabled": true,
+          "libs": {
+            "autoLoad": false
+          },
+          "menu": [{
+            "class": "export-main",
+            "label": $translate.instant('reportsPage.downloadOptions'),
+            "menu": [{
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
+              "class": "export-list",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
       };
 
       if (angular.isDefined(legend) && legend !== null) {

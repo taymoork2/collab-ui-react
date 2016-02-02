@@ -2,11 +2,11 @@
   <cs-sp-section>
     <div class="section-title-row">
       <span class="section-name" translate="telephonyPreview.lines"></span>
-      <span class="actions-menu dropdown pull-right">
-        <button class="actions-button btn--none dropdown-toggle">
+      <span cs-dropdown class="actions-menu dropdown pull-right">
+        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
           <i class="icon icon-three-dots"></i>
         </button>
-        <ul class="dropdown-menu dropdown-primary actions-services">
+        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
           <li><a ui-sref="user-overview.communication.directorynumber({directoryNumber: 'new'})" translate="usersPreview.addNewLinePreview"></a></li>
         </ul>
       </span>
@@ -45,7 +45,7 @@
             <i class="feature-arrow"></i>
           </a>
         </li>
-        <li class="feature" ng-if="telephonyOverview.telephonyInfo.CosFeatureEnabled">
+        <li class="feature">
           <a ui-sref="user-overview.communication.internationalDialing">
             <span class="feature-name" translate="telephonyPreview.internationalDialing"></span>
             <span class="feature-status">{{telephonyOverview.telephonyInfo.internationalDialingEnabled}}</span>

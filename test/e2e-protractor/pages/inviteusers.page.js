@@ -1,7 +1,8 @@
 'use strict';
 
 var InviteUsers = function () {
-  this.bulkUpload = element(by.cssContainingText('span', 'Bulk upload users using CSV'));
+  this.manualUpload = element(by.id('syncSimple.id'));
+  this.bulkUpload = element(by.id('syncUpload.id'));
   this.submenuCSV = element(by.cssContainingText('.wizard-menu-subtitle', 'Upload CSV'));
   this.advancedSparkCall = element(by.cssContainingText('span', 'Advanced Call'));
   this.nextButton = element(by.id('wizardSaveNextBtn'));

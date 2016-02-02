@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -85,6 +85,10 @@
         name: 'phoneMenuRepeatMenu',
         action: 'repeatActionsOnInput'
       }, {
+        label: $translate.instant('autoAttendant.actionSayMessage'),
+        name: 'phoneMenuSayMessage',
+        action: 'say'
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuDialExt'),
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
@@ -125,6 +129,7 @@
     function addKeyAction() {
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
+      keyAction.key = _.head(keyAction.keys);
       vm.selectedActions.push(keyAction);
 
       // update global UI Model
@@ -132,7 +137,12 @@
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
       menuEntry.addAction(action);
       menuEntry.setType('MENU_OPTION');
+      menuEntry.key = keyAction.key;
       vm.menuEntry.entries.push(menuEntry);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
+      setPhonemenuFormDirty();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -140,6 +150,7 @@
       vm.selectedActions.splice(index, 1);
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
+      setPhonemenuFormDirty();
     }
 
     // the user has changed the key for an existing action
@@ -147,6 +158,7 @@
       vm.selectedActions[index].key = keyValue;
       vm.menuEntry.entries[index].key = keyValue;
       setAvailableKeys();
+      setPhonemenuFormDirty();
     }
 
     // the user has changed the action for an existing key
@@ -165,6 +177,7 @@
           // by inputType
           action.inputType = _keyAction.inputType;
         }
+        setPhonemenuFormDirty();
       }
     }
 
@@ -211,6 +224,7 @@
     function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
       if (entry.type == "MENU_OPTION") {
+        setPhonemenuFormDirty();
         // this is number of times to repeat the timeout/invalid menu
         if (vm.selectedTimeout.value === 1) {
           entry.attempts = vm.selectedTimeout.value;
@@ -247,7 +261,7 @@
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
-            if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
+            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
@@ -276,6 +290,7 @@
 
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
+      keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
@@ -284,9 +299,25 @@
       vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
       vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
       vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
     }
 
+    function setPhonemenuFormDirty() {
+      AACommonService.setPhoneMenuStatus(true);
+    }
     /////////////////////
+
+    function addAvailableFeatures() {
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+          name: 'phoneMenuRouteToExtNum',
+          action: 'route'
+        });
+      }
+    }
 
     function activate() {
       vm.schedule = $scope.schedule;
@@ -294,6 +325,8 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
+
+      addAvailableFeatures();
 
       if (vm.menuEntry.type === '') {
         createOptionMenu();

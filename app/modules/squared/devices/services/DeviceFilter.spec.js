@@ -24,12 +24,14 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
+    }).count).toBe(5);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(1);
@@ -56,7 +58,9 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
@@ -92,6 +96,151 @@ describe('Service: DeviceFilter', function () {
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
       expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+    });
+
+    it('should search on product', function () {
+      var arr = [{
+        product: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xfoox');
+    });
+
+    it('should search on status', function () {
+      var arr = [{
+        readableState: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].readableState).toBe('xfoox');
+    });
+
+    it('should search on ip', function () {
+      var arr = [{
+        ip: '192.168.0.5'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('168');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].ip).toBe('192.168.0.5');
+    });
+
+    it('should search on mac', function () {
+      var arr = [{
+        mac: '1A:2B:3C:4D:5E:6F'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('2B:3C');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].mac).toBe('1A:2B:3C:4D:5E:6F');
+    });
+
+    it('should search on mac without colon', function () {
+      var arr = [{
+        mac: '1A:2B:3C:4D:5E:6F'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('2B3C4D');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].mac).toBe('1A:2B:3C:4D:5E:6F');
+    });
+
+    it('should search on tags', function () {
+      var arr = [{
+        tags: ['foo', 'bar', 'oof']
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].tags).toBe(arr[0].tags);
+    });
+
+    it('should search on serial', function () {
+      var arr = [{
+        serial: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].serial).toBe('xfoox');
+    });
+
+    it('should search on upgrade channel', function () {
+      var arr = [{
+        upgradeChannel: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel).toBe('xfoox');
+    });
+
+    it('should search on issue types', function () {
+      var arr = [{
+        diagnosticsEvents: [{
+          type: "foo"
+        }, {
+          type: "bar"
+        }]
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].diagnosticsEvents).toBe(arr[0].diagnosticsEvents);
+    });
+
+    it('should search on issue messages', function () {
+      var arr = [{
+        diagnosticsEvents: [{
+          message: "foo"
+        }, {
+          message: "bar"
+        }]
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].diagnosticsEvents).toBe(arr[0].diagnosticsEvents);
+    });
+
+    it('should search on multiple terms', function () {
+      var arr = [{
+        displayName: 'xfoox',
+        product: 'xbarx'
+      }, {
+        displayName: 'xfoox'
+      }];
+
+      DeviceFilter.setCurrentSearch('foo,bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
+
+      DeviceFilter.setCurrentSearch('foo bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
+
+      DeviceFilter.setCurrentSearch('foo, bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
     });
 
     it('should return all when all filter', function () {
@@ -146,12 +295,35 @@ describe('Service: DeviceFilter', function () {
 
     it('should filter devices in error', function () {
       var arr = [{
-        hasIssues: true
+        hasIssues: true,
+        isOnline: true
       }, {}];
 
       DeviceFilter.setCurrentFilter('issues');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+    });
+
+    it('inactive accounts are not counted as devices with issues', function () {
+      var arr = [{
+        hasIssues: true,
+        isUnused: true
+      }, {}];
+
+      DeviceFilter.setCurrentFilter('issues');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
+    });
+
+    it('offline devices are not counted as devices with issues', function () {
+      var arr = [{
+        hasIssues: true,
+        isUnused: true
+      }, {}];
+
+      DeviceFilter.setCurrentFilter('issues');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(0);
     });
 
   });

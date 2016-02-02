@@ -63,6 +63,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
+    vm.disableVoicemail = false;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -268,6 +269,9 @@
     function selectFallback($item) {
       vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
+      HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
+        vm.disableVoicemail = isVoicemailDisabled;
+      });
     }
 
     function isFallbackValid() {
@@ -296,6 +300,9 @@
       HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(vm.selectedFallbackMember, 'member.selectableNumber.uuid')).then(function (isVoicemailDisabled) {
+            vm.disableVoicemail = isVoicemailDisabled;
+          });
         });
     }
 
@@ -336,6 +343,11 @@
     function populateHuntPilotNumbers(data) {
       data.numbers = [];
       vm.selectedPilotNumbers.forEach(function (number) {
+        if (number.type === 'internal') {
+          number.type = 'NUMBER_FORMAT_EXTENSION';
+        } else if (number.type === 'external') {
+          number.type = 'NUMBER_FORMAT_DIRECT_LINE';
+        }
         data.numbers.push({
           type: number.type,
           number: number.number

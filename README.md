@@ -15,7 +15,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 **Additional Conventions**
 * Indent using spaces not tabs
   * 2 space indentation - Javascript, HTML, and CSS
-* When using the bard.js test helper you need to add a jshint globals comment at the
+* When using the bard.js test helper you need to add a ESLint globals comment at the
     top of the file containing the dependencies in the spec, example:
       `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
 
@@ -73,7 +73,7 @@ To summarize, this is the process:
     'git push origin'
     'gulp e2e --nofailfaist'
     Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')    
+    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
 4. You create a pull request
 5. Someone reviews your code and gives you feedback
 6. Eventually, your code will get approved
@@ -100,7 +100,7 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
     'git push -f origin'
     'gulp e2e --nofailfaist'
     Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')    
+    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
 7. When your pull request gets accepted and you need to push to Jenkins, you'll want to push your specific branch: `git push jenkins de123:master`
   - Prior to pushing, repeat the sync steps outlined in step #6
 
@@ -114,10 +114,9 @@ When contributing, it's important to keep your fork up-to-date with the master. 
 Setup the environment (If necessary)
 ------------------------------------
 
-* Run `./setup.sh` (found in the root directory) or, if it fails:
-  * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
-* Run package managers in the cloned project to pull dependencies:
-* `npm install && bower install`
+* Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
+* Run `./setup.sh` (found in the root directory)
+  * Use `./setup.sh --restore` if ever needing to restore 'node_modules' and 'bower_components' dirs from the most recently successfully built dependencies (requires at least 1 successful run)
 * Launch the app: `gulp serve`
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
@@ -178,7 +177,7 @@ Adding a simple page ("Hello World")
   * **+**`.../hello-world/say-hello`
 * create a html template file to write `<span>{{hello}}</span>`:
   * **+**`.../say-hello/say-hello.tpl.html`
-* create the controller that writes "Hello World" to the scope: `$scope.hello = 'Hello World!';`
+* create the controller that writes "Hello World" to the scope: `angular.module('hello-world').controller('HelloWorldController', ['$scope', function ($scope) { $scope.hello = 'Hello world'; }]);`
   * **+**`.../say-hello/say-hello.controller.js`
 * add an entry for the module for the app to bootstrap in: `app/scripts/app.js`
 * add a state for the route to your page in: `app/scripts/appconfig.js`
@@ -276,13 +275,13 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 ### `gulp analyze`
 
-* Runs `gulp analyze:jshint, analyze:jslint` and `gulp plato tasks`
+* Runs `gulp analyze:eslint, analyze:jslint` and `gulp plato tasks`
 * Creates an analysis report of the JavaScript code using the plato analyzer tool
 * Creates an HTML report at `/report/plato/index.html` of the results
 
 ### `gulp jsb`
 
-* Runs `gulp analyze:jshint` and `gulp jsBeautifier:beautify` tasks
+* Runs `gulp analyze:eslint` and `gulp jsBeautifier:beautify` tasks
 
 Run the protractor e2e test:
 ----------------------------
@@ -381,8 +380,3 @@ List of All Optional Arguments
 
 * `gulp serve` specific.
 * When running 'gulp serve', use `--safari` to open Safari
-
-Grunt Tasks:
-------------
-
-#### GRUNT HAS BEEN DEPRECIATED FROM THE PROJECT. PLEASE USE GULP INSTEAD.

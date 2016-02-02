@@ -1,8 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
 
 describe('Configuring Contact Center services per user', function () {
   // We need to use an existing user since only they will have an activated profile'

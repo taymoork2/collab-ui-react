@@ -1,33 +1,47 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('createAccountController', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log', 'Userservice', '$cookies',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log, Userservice, $cookies) {
+  angular
+    .module('Core')
+    .controller('createAccountController', createAccountController);
 
-      $scope.email1 = $location.search().email;
+  /* @ngInject */
+  function createAccountController($location, $window, $cookies, $translate, Userservice) {
 
-      $scope.handleCreateAccount = function () {
-        if ($scope.email1 != $scope.email2) {
-          $scope.error = "Emails do not match";
-          return;
-        } else if ($scope.password1 != $scope.password2) {
-          $scope.error = "Passwords do not match";
-          return;
-        }
-        Userservice.addDrUser(
-          {
-            'email': $scope.email1,
-            'password': $scope.password1
-          },
-          function (data, status) {
-            if (status != 200 || !data.success) {
-              $scope.error = data.message;
-            } else {
-              $cookies.atlasDrCookie = data.data;
-              $window.location.href = "https://www.digitalriver.com/";
-            }
-          });
-      };
+    var vm = this;
 
-    }
-  ]);
+    vm.email1 = $location.search().email;
+
+    vm.handleCreateAccount = function () {
+
+      if (!vm.email1 || 0 === vm.email1.trim().length) {
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emptyEmail');
+        return;
+      } else if (!vm.password1 || 0 === vm.password1.trim()) {
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emptyPassword');
+        return;
+      } else if (vm.email1 !== vm.email2) {
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.emailsDontMatch');
+        return;
+      } else if (vm.password1 != vm.password2) {
+        vm.error = $translate.instant('digitalRiver.createAccount.validation.passwordsDontMatch');
+        return;
+      }
+
+      Userservice.addDrUser({
+          'email': vm.email1,
+          'password': vm.password1
+        })
+        .then(function (result) {
+          if (result.data.success === true) {
+            $cookies.atlasDrCookie = _.get(result, 'data.data.token', 'error');
+            $window.location.href = "https://www.digitalriver.com/";
+          } else {
+            vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+          }
+        }, function (result, status) {
+          vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+        });
+    };
+  }
+})();

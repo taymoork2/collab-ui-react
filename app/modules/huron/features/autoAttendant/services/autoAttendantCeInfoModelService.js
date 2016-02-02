@@ -104,7 +104,7 @@
   };
 
   /* @ngInject */
-  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService) {
+  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService, AAModelService) {
 
     var service = {
       getAllCeInfos: getAllCeInfos,
@@ -140,28 +140,33 @@
     // New get method for Huron Features Page
     function getCeInfosList() {
       var aaModel = {};
+      aaModel.ceInfos = [];
+
       return AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (angular.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
-          _.forEach(aaModel.aaRecords, function (aaRecord) {
-            _.forEach(aaRecord.assignedResources, function (assignedResource) {
-              setDirectoryNumber(assignedResource);
-            });
-          });
+
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
-
-          // aaModel.ceInfos.sort(function (a, b) {
-          //   return a.callExperienceName.localeCompare(b.callExperienceName);
-          // });
         }
-
-        // aaModel.ceInfos = aaModel.ceInfos.sort(function (a, b) {
-        //   return a.callExperienceName.localeCompare(b.callExperienceName);
-        // });
-        return aaModel;
-      }).catch(function (response) {
-        aaModel = {};
+        return AACeDependenciesService.readCeDependencies();
+      }, function (response) {
+        // init the model and move the chain the forward
+        aaModel = AAModelService.newAAModel();
+        aaModel.ceInfos = [];
         return $q.reject(response);
+      }).then(function (depends) {
+        aaModel.dependsIds = depends.dependencies;
+        return aaModel;
+      }, function (response) {
+        aaModel.dependsIds = {};
+        if (response.status === 404) {
+          // there are no CEs or no dependencies between CEs; this is OK
+          return aaModel;
+        }
+        return $q.reject(response);
+      }).finally(function () {
+        // always set the aaModel for UI access, even if empty
+        AAModelService.setAAModel(aaModel);
       });
     }
 
@@ -225,20 +230,6 @@
         return '';
       }
       return ceURL.substr(uuidPos + 1);
-    }
-
-    ////////////
-
-    function setDirectoryNumber(resource) {
-      resource.number = resource.id;
-      /* workaround for Tropo-AA integraiton
-      return DirectoryNumberService.get({
-        customerId: Authinfo.getOrgId(),
-        directoryNumberId: resource.id
-      }).$promise.then(function (data) {
-        resource.number = data.pattern;
-      });
-      */
     }
 
   }

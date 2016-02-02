@@ -3,67 +3,117 @@
 
   <cs-sp-container>
     <cs-sp-section>
-      <div class="feature-list">
-        <table>
-          <tbody>
-            <tr ng-if="deviceOverview.currentDevice.product">
-              <td style="font-weight: bold" colspan="2">
-                <span>
-                  {{deviceOverview.currentDevice.product}}
-                </span>
-                <img
-                  ng-if="deviceOverview.currentDevice.image"
-                  ng-src="{{deviceOverview.currentDevice.image}}"
-                  style="width: 60px; padding-left: 10px"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td translate="common.status"></td>
-              <td>
-                <i
-                  class="fa fa-circle device-status device-status"
-                  ng-class="deviceOverview.currentDevice.cssColorClass">
-                </i>
-                <span>{{deviceOverview.currentDevice.readableState}}</span>
-              </td>
-            </tr>
-            <tr ng-show="deviceOverview.currentDevice.software">
-              <td translate="deviceOverviewPage.software"></td>
-              <td>
-                {{deviceOverview.currentDevice.software}}
-                (<span ng-model="deviceOverview.currentDevice.upgradeChannel" translate="CsdmStatus.upgradeChannels.{{deviceOverview.currentDevice.upgradeChannel}}" />)
-                <a href ui-sref="device-overview.edit({currentDevice: deviceOverview.currentDevice})" ng-if="deviceOverview.canChangeUpgradeChannel"><i class="icon icon-edit" /></a>
-              </td>
-            </tr>
-            <tr ng-show="deviceOverview.currentDevice.ip">
-              <td translate="deviceOverviewPage.ipAddr"></td>
-              <td>{{deviceOverview.currentDevice.ip}}</td>
-            </tr>
-            <tr ng-show="deviceOverview.currentDevice.serial">
-              <td translate="deviceOverviewPage.serial"></td>
-              <td>{{deviceOverview.currentDevice.serial}}</td>
-            </tr>
-            <tr ng-show="deviceOverview.currentDevice.mac">
-              <td translate="deviceOverviewPage.macAddr"></td>
-              <td>{{deviceOverview.currentDevice.mac}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div id="overview">
+        <img
+          id="overviewImage"
+          ng-if="deviceOverview.currentDevice.image"
+          ng-src="{{deviceOverview.currentDevice.image}}"
+        />
+        <div id="overviewDescription">
+          <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
+          <i
+            class="fa fa-circle device-status device-status"
+            ng-class="deviceOverview.currentDevice.cssColorClass">
+          </i>
+          <span>{{deviceOverview.currentDevice.readableState}}</span>
+          <p ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.actionsHeader"></span>
+      </div>
+      <div class="form-group">
+        <button
+          ng-click="deviceOverview.resetDevice()"
+          class="btn btn-action"
+          ng-if="deviceOverview.currentDevice.canReset"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
+          <span
+            translate="spacesPage.reboot">
+          </span>
+        </button>
+
+        <button
+          class="btn btn-action"
+          sq-click-promise="deviceOverview.reportProblem()"
+          ng-if="deviceOverview.currentDevice.canReportProblem"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
+          <span translate="spacesPage.reportProblem"></span>
+        </button>
+
+        <button
+          ng-click="deviceOverview.deleteDevice()"
+          class="btn btn-action"
+          ng-if="deviceOverview.currentDevice.canDelete">
+          <span
+            translate="spacesPage.delete">
+          </span>
+        </button>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-show="deviceOverview.deviceHasInformation">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.ip">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.ipAddr"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.ip}}</p>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.mac">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.macAddr"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.mac}}</p>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.serial"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.software">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
+        <div class="col-sm-3" ng-show="deviceOverview.canChangeUpgradeChannel">
+          <cs-select
+            ng-model="deviceOverview.selectedUpgradeChannel"
+            options="deviceOverview.upgradeChannelOptions"
+            is-disabled="deviceOverview.updatingUpgradeChannel"
+            labelfield="label"
+            valuefield="value"
+            on-change-fn="deviceOverview.saveUpgradeChannelAndWait()"
+          >
+          </cs-select>
+        </div>
+        <div class="col-sm-4" ng-show="deviceOverview.updatingUpgradeChannel">
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
+        <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
+        <div class="col-sm-8">
+          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
+        </div>
       </div>
       <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
-        <p translate="deviceOverviewPage.newDeviceActivation"></p>
-        <h3>{{deviceOverview.currentDevice.readableActivationCode}}</h3>
         <p>{{'deviceOverviewPage.expires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
       </div>
     </cs-sp-section>
 
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
-      <div class="section-name" style="padding: 15px 0;" translate="deviceOverviewPage.issues"></div>
+      <div class="section-title-row">
+        <span class="section-name" translate="deviceOverviewPage.issues"></span>
+      </div>
       <div>
-        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
+        <div class="deviceIssue" ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
           <p>
             <i
               class="fa fa-circle device-status device-status-red">
@@ -75,39 +125,30 @@
       </div>
     </cs-sp-section>
 
-    <cs-sp-section>
-      <div class="panel-buttons">
-        <button
-          ng-click="deviceOverview.deleteDevice()"
-          class="btn btn--primary"
-          ng-if="deviceOverview.currentDevice.canDelete">
-          <span
-            translate="spacesPage.delete">
-          </span>
-        </button>
-
-        <button
-          ng-click="deviceOverview.resetDevice()"
-          class="btn btn--primary"
-          ng-if="deviceOverview.currentDevice.canReset">
-          <span
-            translate="spacesPage.reset">
-          </span>
-        </button>
-
-        <button
-          class="btn btn--primary"
-          sq-click-promise="deviceOverview.reportProblem()"
-          ng-if="deviceOverview.currentDevice.canReportProblem">
-          <span translate="spacesPage.reportProblem"></span>
-        </button>
-
-        <button
-          class="btn btn--primary"
-          sq-click-promise="deviceOverview.showRemoteSupportDialog()"
-          ng-if="deviceOverview.currentDevice.hasRemoteSupport">
-          <span translate="spacesPage.remoteSupport"></span>
-        </button>
+    <cs-sp-section ng-show="deviceOverview.currentDevice.supportsCustomTags">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.customTagsHeader"></span>
+      </div>
+      <div class="tag-container" ng-show="deviceOverview.currentDevice.tagString">
+        <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
+          <span ng-bind-html="tag"></span>
+          <i class="icon icon-close" ng-click="deviceOverview.removeTag(tag)"></i>
+        </span>
+      </div>
+      <div class="tag-container">
+        <span class="tag add-tag" ng-hide="deviceOverview.isAddingTag" ng-click="deviceOverview.isAddingTag = true">
+          <span translate="common.add"></span>
+          <i class="icon icon-plus"></i>
+        </span>
+        <input
+          type="text"
+          placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
+          ng-model="deviceOverview.newTag"
+          ng-show="deviceOverview.isAddingTag"
+          focus-on="deviceOverview.isAddingTag"
+          ng-blur="deviceOverview.isAddingTag = false"
+          ng-keyup="deviceOverview.addTag($event)"
+        />
       </div>
     </cs-sp-section>
   </cs-sp-container>

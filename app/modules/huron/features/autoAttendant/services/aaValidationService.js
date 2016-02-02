@@ -54,9 +54,9 @@
             key: entry.key
           });
         }
-        if (entry.key && 'runActionsOnInput' === entry.actions[0].name && 2 === entry.actions[0].inputType && !entry.actions[0].value) {
+        if (entry.key && 'route' === entry.actions[0].name && !entry.actions[0].value) {
           outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorDialByExtMessageMissing',
+            msg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
             key: entry.key
           });
         }

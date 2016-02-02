@@ -245,17 +245,6 @@ td a {
   font-weight: bold;
 }
 
-#download-icon {
-  opacity: 0.5;
-  transition: opacity 300ms;
-  -webkit-transition: opacity 300ms;
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-    transition: opacity 300ms;
-    -webkit-transition: opacity 300ms;
-  }
-}
 
 .center {
   text-align: center;
@@ -923,10 +912,6 @@ a:active.ftwNavLink {
   overflow: inherit;
 }
 
-.support_download {
-  position: absolute;
-  top: 4px;
-}
 
 .profile-path {
   left: 20px;

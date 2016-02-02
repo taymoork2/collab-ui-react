@@ -1,20 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Create Account</title>
+		<title id="title" translate="digitalRiver.createAccount.title"/>
 	</head>
 	<body>
-		<h2>Create Account</h2>
-		<input type="text" ng-model="error" readonly="readonly" style="color:red">
+		<h2 id="h2" translate="digitalRiver.createAccount.title"/>
+		<input type="text" ng-model="createAccountController.error" readonly="readonly" style="color:red">
 		<table>
-			<tr><td>Enter your email address:</td><td><input type="text" ng-model="email1"></td></tr>
-			<tr><td></td><td><input type="text" ng-model="email2" placeholder="confirm"></td></tr>
+			<tr><td id="emailLabel" translate="digitalRiver.emailLabel"/><td><input type="email" ng-model="createAccountController.email1"></td></tr>
+			<tr><td></td><td><input type="email" ng-model="createAccountController.email2" placeholder="confirm"></td></tr>
 			<tr></tr>
-			<tr><td>Enter your password:</td><td><input type="password" ng-model="password1"></td></tr>
-			<tr><td></td><td><input type="password" ng-model="password2" placeholder="confirm"></td></tr>
+			<tr><td id="passwordLabel" translate="digitalRiver.createAccount.passwordLabel"/><td><input type="password" ng-model="createAccountController.password1"></td></tr>
+			<tr><td></td><td><input type="password" ng-model="createAccountController.password2" placeholder="confirm"></td></tr>
 			<tr></tr>
-			<tr><td><button ng-click="handleCreateAccount()">Next</button></td><td></td></tr>
+			<tr><td><button ng-click="createAccountController.handleCreateAccount()" id="next" translate="digitalRiver.nextButton"/></td><td></td></tr>
 		</table>
 		
 	</body>
