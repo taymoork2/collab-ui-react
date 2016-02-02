@@ -500,18 +500,27 @@
       },
       "registrationStatus": "registered"
     },
-    huronDeviceNumbers: [
-      {"directoryNumber":{"uuid":"0472df70-779b-4819-8c35-a2f7abc69fe8",
-      "pattern":"2900",
-      "routePartition":{"uuid":"cd2002a3-9de4-4a5f-96e3-a74ab658aac9",
-      "name":"7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"}},
-      "e164Mask":"+14084744520"},
-      {"directoryNumber":{"uuid":"3472df70-779b-4819-8c35-a2f7abc69fe8",
-      "pattern":"3300",
-      "routePartition":{"uuid":"cd2002a3-9de4-4a5f-96e3-a74ab658aac9",
-      "name":"7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"}},
-      "e164Mask":null}
-      ],
+    huronDeviceNumbers: [{
+      "directoryNumber": {
+        "uuid": "0472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "2900",
+        "routePartition": {
+          "uuid": "cd2002a3-9de4-4a5f-96e3-a74ab658aac9",
+          "name": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+        }
+      },
+      "e164Mask": "+14084744520"
+    }, {
+      "directoryNumber": {
+        "uuid": "3472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "3300",
+        "routePartition": {
+          "uuid": "cd2002a3-9de4-4a5f-96e3-a74ab658aac9",
+          "name": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2_000001_EXT_RP"
+        }
+      },
+      "e164Mask": null
+    }],
     logs: {
       search: [{
         filename: "logFile1",

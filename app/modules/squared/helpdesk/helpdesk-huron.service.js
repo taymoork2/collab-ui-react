@@ -48,21 +48,21 @@
       }
       return $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true').then(extractDevice);
     }
-    
+
     function getDeviceNumbers(deviceId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(HelpdeskMockData.huronDeviceNumbers);
       }
-       return $http
+      return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
         .then(extractData);
     }
-    
+
     function getNumber(directoryNumberId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(HelpdeskMockData.huronDeviceNumbers);
       }
-       return $http
+      return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/directorynumbers/' + directoryNumberId)
         .then(extractData);
     }
@@ -74,19 +74,19 @@
       return UserServiceCommonV2.get({
         customerId: orgId,
         userId: userId
-      }).$promise.then(function(res) {
+      }).$promise.then(function (res) {
         var userNumbers = extractNumbers(res);
         $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + "/directorynumbers")
-        .then(function(res) {
-         _.each(res.data, function(directoryNumber) {
-           var matchingUserNumber = _.find(userNumbers, function(userNumber) {
-             return userNumber.uuid === directoryNumber.directoryNumber.uuid;
-           });
-           if (matchingUserNumber && directoryNumber.dnUsage) {
-             matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
-           } 
-         });
-        });
+          .then(function (res) {
+            _.each(res.data, function (directoryNumber) {
+              var matchingUserNumber = _.find(userNumbers, function (userNumber) {
+                return userNumber.uuid === directoryNumber.directoryNumber.uuid;
+              });
+              if (matchingUserNumber && directoryNumber.dnUsage) {
+                matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
+              }
+            });
+          });
         return userNumbers;
       });
     }
@@ -99,7 +99,7 @@
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
         .then(extractDevices);
     }
-    
+
     function searchNumbers(searchString, orgId, limit) {
       if (HelpdeskService.useMock()) {
         return deferredResolve([]);
@@ -118,7 +118,7 @@
         }
       });
     }
-    
+
     function extractData(res) {
       return res.data;
     }
