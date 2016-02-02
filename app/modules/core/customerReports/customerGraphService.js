@@ -64,6 +64,7 @@
 
     // variables for device registration
     var devicesDiv = 'devicesDiv';
+    var deviceBalloonText = '<span class="graph-text">' + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="graph-number">[[totalRegisteredDevices]]</span></span>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
@@ -406,12 +407,17 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (chart !== null && angular.isDefined(chart)) {
+        var graphNumber = 0;
+        if (angular.isDefined(filter) && (filter.value > 0)) {
+          graphNumber = filter.value;
+        }
+
         var startDuration = 1;
-        if (!data[0].balloon) {
+        if (!data[graphNumber].balloon) {
           startDuration = 0;
         }
 
-        chart.dataProvider = data[0].graph;
+        chart.dataProvider = data[graphNumber].graph;
         chart.graphs = deviceGraphs(data, filter);
         chart.startDuration = startDuration;
         chart.validateData();
@@ -426,20 +432,25 @@
         return;
       }
 
+      var graphNumber = 0;
+      if (angular.isDefined(filter) && (filter.value > 0)) {
+        graphNumber = filter.value;
+      }
+
       var graphs = deviceGraphs(data, filter);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
       var valueAxes = [angular.copy(axis)];
-      valueAxes[0].integersOnly = true;
-      valueAxes[0].minimum = 0;
+      valueAxes[graphNumber].integersOnly = true;
+      valueAxes[graphNumber].minimum = 0;
 
       var startDuration = 1;
-      if (!data[0].balloon) {
+      if (!data[graphNumber].balloon) {
         startDuration = 0;
       }
 
-      return createGraph(data[0].graph, devicesDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, startDuration);
+      return createGraph(data[graphNumber].graph, devicesDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, startDuration);
     }
 
     function deviceGraphs(data, filter) {
@@ -448,13 +459,18 @@
         color = Config.chartColors.grayLighter;
       }
 
+      var graphNumber = 0;
+      if (angular.isDefined(filter) && (filter.value > 0)) {
+        graphNumber = filter.value;
+      }
+
       var graph = angular.copy(columnBase);
       graph.title = $translate.instant('registeredEndpoints.registeredEndpoints');
       graph.fillColors = color;
       graph.colorField = color;
       graph.valueField = 'totalRegisteredDevices';
-      graph.balloonText = activeUsersBalloonText;
-      graph.showBalloon = data[0].balloon;
+      graph.balloonText = deviceBalloonText;
+      graph.showBalloon = data[graphNumber].balloon;
 
       return [graph];
     }

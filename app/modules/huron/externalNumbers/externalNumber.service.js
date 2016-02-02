@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, FeatureToggleService, Notification) {
+  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, TelephoneNumberService, FeatureToggleService, Notification) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -26,6 +26,7 @@
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.listPendingNumbers(customerId)
+              .then(formatNumberLabels)
               .then(function (numbers) {
                 pendingNumbers = numbers;
               })
@@ -39,6 +40,7 @@
         })
         .then(function () {
           return ExternalNumberPool.getAll(customerId)
+            .then(formatNumberLabels)
             .then(function (numbers) {
               unassignedNumbers = filterUnassigned(numbers);
               allNumbers = pendingNumbers.concat(numbers);
@@ -67,16 +69,21 @@
       unassignedNumbers = [];
     }
 
-    function filterUnassigned(numbers) {
-      return numbers.filter(function (number) {
-        return angular.isUndefined(number.directoryNumber) || number.directoryNumber === null;
+    function formatNumberLabels(numbers) {
+      _.forEach(numbers, function (number) {
+        number.label = TelephoneNumberService.getDIDLabel(number.pattern);
       });
+      return numbers;
+    }
+
+    function filterUnassigned(numbers) {
+      // return numbers that do not contain a directoryNumber
+      return _.reject(numbers, 'directoryNumber');
     }
 
     function filterPending(numbers) {
-      return numbers.filter(function (number) {
-        return !number.uuid;
-      });
+      // return numbers that do not contain a uuid
+      return _.reject(numbers, 'uuid');
     }
 
     function setAllNumbers(_allNumbers) {

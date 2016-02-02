@@ -1173,7 +1173,7 @@
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port, that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: acme.com"
       },
@@ -1717,7 +1717,6 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
-    "addNumbers": "Manage Numbers",
     "editNumbers": "Edit Phone Numbers",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
@@ -1979,7 +1978,6 @@
     "expiring": "Trial Expiring",
     "expiresToday": "Expires Today",
     "unused": "unused licenses",
-    "uploadNumbers": "Manage Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
     "none": "None",
@@ -2029,14 +2027,11 @@
     "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
-    "title": "Manage Phone Numbers",
-    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "buttonText": "Add Numbers",
+    "title": "Add Phone Numbers",
     "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
-    "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
-    "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
@@ -2077,8 +2072,8 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
+    "lastSeen": "Offline since:",
     "expires": "This activation code expires",
-    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -3117,6 +3112,30 @@
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
+  },
+  "digitalRiver": {
+    "enterEmailAddr": {
+      "title": "Atlas Portal Shopping Cart Login (APSCL)",
+      "header": "Enter eMail Addr",
+      "validation": {
+        "emptyEmail": "The email address cannot be blank"
+      }
+    },
+    "createAccount": {
+      "title": "Create Account",
+      "passwordLabel": "Enter your password:",
+      "validation": {
+        "emptyEmail": "Empty email",
+        "emptyPassword": "Empty password",
+        "emailsDontMatch": "Emails do not match",
+        "passwordsDontMatch": "Passwords do not match"
+      }
+    },
+    "validation": {
+      "unexpectedError": "Unexpected error"
+    },
+    "emailLabel": "Enter your email address:",
+    "nextButton": "Next"
   },
   "overview": {
     "pageTitle": "Overview",

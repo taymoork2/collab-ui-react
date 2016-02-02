@@ -70,16 +70,14 @@
     </div>
   </section>
   <div class="modal-footer">
-    <div ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
-        <span translate="partnerHomePage.cancel"></span>
-      </button>
+    <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
+      <span translate="partnerHomePage.cancel"></span>
+    </button>
     <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.saveUpdateButtonLoad"
       ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trial.isProceedDisabled()">
         <span ng-if="!trial.hasNextStep()" translate="common.save"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>
-    </div>
   </div>
 
 </form>
