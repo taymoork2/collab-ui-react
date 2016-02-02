@@ -23,10 +23,7 @@
       startAt: 0
     };
 
-    if (angular.isDefined($scope.voicemail) && $scope.voicemail)
-      vm.selectPlaceholder = $translate.instant('autoAttendant.routeToMailboxPlaceholder');
-    else
-      vm.selectPlaceholder = $translate.instant('autoAttendant.selectUserPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectUserPlaceHolder');
 
     vm.aaModel = {};
     vm.uiMenu = {};
