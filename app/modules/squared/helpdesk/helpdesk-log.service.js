@@ -2,11 +2,13 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskLogService($q, LogService) {
+  function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
 
     function searchForLastPushedLog(term) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
+      }
       var deferred = $q.defer();
-
       LogService.searchLogs(term, function (data, status) {
         if (data.success) {
           if (data.metadataList && data.metadataList.length > 0) {
@@ -22,6 +24,10 @@
     }
 
     function getLastPushedLogForUser(uuid) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(findLastLog(HelpdeskMockData.logs.search));
+      }
+
       var deferred = $q.defer();
       LogService.listLogs(uuid, function (data, status) {
         if (data.success) {
@@ -38,6 +44,10 @@
     }
 
     function downloadLog(filename) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(HelpdeskMockData.logs.download);
+      }
+
       var deferred = $q.defer();
       LogService.downloadLog(filename, function (data, status) {
         if (data.success) {
@@ -57,6 +67,12 @@
         timestamp: lastLog.timestamp,
         filename: lastLog.filename
       };
+    }
+
+    function deferredResolve(resolved) {
+      var deferred = $q.defer();
+      deferred.resolve(resolved);
+      return deferred.promise;
     }
 
     return {

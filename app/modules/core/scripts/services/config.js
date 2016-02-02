@@ -161,10 +161,10 @@ angular.module('Core')
         },
 
         domainManagementUrl: {
-          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
-          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
-          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
-          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+          dev: 'https://identity.webex.com/organization/%s/v1/',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/',
+          integration: 'https://identity.webex.com/organization/%s/v1/',
+          prod: 'https://identity.webex.com/organization/%s/v1/'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',
@@ -188,13 +188,6 @@ angular.module('Core')
           cfe: 'https://ciscospark.statuspage.io/index.json',
           integration: 'https://ciscospark.statuspage.io/index.json',
           prod: 'https://ciscospark.statuspage.io/index.json'
-        },
-
-        huronHealthCheckUrl: {
-          dev: 'https://squareduc.statuspage.io/index.json',
-          cfe: 'https://squareduc.statuspage.io/index.json',
-          integration: 'https://squareduc.statuspage.io/index.json',
-          prod: 'https://squareduc.statuspage.io/index.json'
         },
 
         herculesUrl: {
@@ -464,7 +457,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
-        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
+        //WARNING: Deprecated, use offerTypes
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -893,17 +886,6 @@ angular.module('Core')
           return healthCheckServiceUrl[this.getEnv()];
         },
 
-        getHuronHealthCheckUrlServiceUrl: function () {
-          var healthCheckServiceUrl = {
-            'dev': this.huronHealthCheckUrl.dev,
-            'cfe': this.huronHealthCheckUrl.cfe,
-            'integration': this.huronHealthCheckUrl.integration,
-            'prod': this.huronHealthCheckUrl.prod
-          };
-
-          return healthCheckServiceUrl[this.getEnv()];
-        },
-
         getLogMetricsUrl: function () {
           return this.logMetricUrl;
         },
@@ -1061,6 +1043,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
+          'drLoginForward',
           'users',
           'user-overview',
           'userprofile',

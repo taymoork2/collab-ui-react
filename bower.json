@@ -22,7 +22,7 @@
     "ui-router-extras": "=0.1.0",
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
-    "cisco-ui": "~2.15.0",
+    "cisco-ui": "~2.15.7",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",

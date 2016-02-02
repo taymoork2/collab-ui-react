@@ -43,16 +43,6 @@
               {{device.product}}
             </span>
           </div>
-          <!-- activation code -->
-          <div class="ellipsis" ng-if="device.needsActivation && devices.search">
-            <span ng-if="device.filterMatch && device.filterMatch != 'readableActivationCode'">
-              {{devices.deviceProps[device.filterMatch]}}:
-            </span>
-            <span ng-bind-html="device[device.filterMatch || 'readableActivationCode'] | highlight:devices.search"></span>
-          </div>
-          <div class="ellipsis" ng-if="device.needsActivation && !devices.search">
-            <span ng-bind-html="device.readableActivationCode"></span>
-          </div>
         </div>
       </div>
     </div>

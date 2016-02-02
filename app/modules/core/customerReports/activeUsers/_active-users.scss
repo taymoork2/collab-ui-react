@@ -4,7 +4,7 @@
   }
   .barchart {
     position: relative;
-    top: -35px;
+    top: rem-calc(-35);
   }
   .active-search {
     margin-bottom: rem-calc(20);
@@ -48,6 +48,28 @@
     }
     th:last-of-type, td:last-of-type {
       border-right: none;
+    }
+  }
+  .carousel-control {
+    padding: 9px 16px;
+    background-color: $white;
+    i {
+      color: $color-primary-base;
+    }
+  }
+  .carousel-control:focus {
+    box-shadow: none;
+  }
+  .carousel-control:hover {
+    background-color: $color-primary-base;
+    i {
+      color: $white;
+    }
+  }
+  .carousel-control[disabled] {
+    background-color: $gray-light-2;
+    i {
+      color: $gray-base;
     }
   }
   .active-carousel {

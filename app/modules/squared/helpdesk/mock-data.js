@@ -57,8 +57,15 @@
         "uri": "https://identity.webex.com/identity/scim/1eb65fdf-9643-417f-9974-ad72cae0e10f/v1/Users/b78903e2-39e6-45fa-af0f-5d31de45934f"
       },
       "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation", "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge", "meetings", "ciscouc", "cloudmeetings"],
-      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'],
+      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation",
+        "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge",
+        "meetings", "ciscouc", "cloudmeetings"
+      ],
+      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com',
+        'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'
+      ],
       "photos": [{
         "type": "thumbnail",
         "value": "https://1efa7a94ed216783e352-c62266528714497a17239ececf39e9e2.ssl.cf1.rackcdn.com/V1~b1403a2d9a639ca7700dae70fd5a18f8~NxFT-HKtSbK02T8H-kQZGg==~80"
@@ -447,12 +454,14 @@
         "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
         "internal": "1234",
         "external": "+14084744520",
-        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
+        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "dnUsage": "primary"
       }, {
         "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/baa07921-6ed8-4e2b-99f9-08c457fe4c18",
         "internal": "2345",
         "external": null,
-        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18"
+        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "dnUsage": "shared"
       }]
     },
     huronDeviceSearchResult: [{
@@ -490,6 +499,35 @@
         "userId": "58852083@qq.com"
       },
       "registrationStatus": "registered"
+    },
+    huronDeviceNumbers: [{
+      "directoryNumber": {
+        "uuid": "0472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "2900"
+      },
+      "e164Mask": "+14084744520"
+    }, {
+      "directoryNumber": {
+        "uuid": "3472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "3300"
+      },
+      "e164Mask": null
+    }],
+    logs: {
+      search: [{
+        filename: "logFile1",
+        timestamp: "2016-04-25T11:46:24.757Z"
+      }, {
+        filename: "logFile2",
+        timestamp: "2016-02-25T11:46:24.757Z"
+      }, {
+        filename: "logFile3",
+        timestamp: "2016-01-25T11:46:24.757Z"
+      }, {
+        filename: "logFile4",
+        timestamp: "2016-04-25T11:46:25.757Z"
+      }],
+      download: "http://someverylongurl.txt"
     }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);

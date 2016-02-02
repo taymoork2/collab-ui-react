@@ -28,6 +28,28 @@ angular
           },
           authenticate: false
         })
+        .state('enterEmailAddr', {
+          url: '/enterEmailAddr',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController',
+              controllerAs: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
+        .state('createAccount', {
+          url: '/createAccount',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController',
+              controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {
@@ -205,7 +227,21 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.instructions', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageInstructionsCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +255,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +269,21 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.claim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageClaimCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +296,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {
@@ -1303,7 +1354,6 @@ angular
             }
           },
           params: {
-            showPartnerEdit: false,
             currentTrial: {}
           }
         })
@@ -1312,7 +1362,7 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: false,
+            fromEditTrial: true,
             currentOrg: {}
           }
         })
@@ -1833,7 +1883,8 @@ angular
           params: {
             clusterId: null,
             properties: null,
-            connector: null
+            connector: null,
+            hostLength: null
           }
         })
         .state('connector-details.group-settings', {
