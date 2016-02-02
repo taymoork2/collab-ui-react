@@ -20,7 +20,10 @@ gulp.task('clean:dist', function (done) {
 
 // Delete build directory files
 gulp.task('clean:build', function (done) {
-  var files = config.build;
+  var files = [
+    config.build,
+    config.tstests
+  ];
   messageLogger('Cleaning build directory', files);
   del(files, done);
 });
