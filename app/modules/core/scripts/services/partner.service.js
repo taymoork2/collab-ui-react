@@ -356,15 +356,13 @@
         switch (offerInfo.id) {
         case Config.offerTypes.spark1:
         case Config.offerTypes.message:
-          userServices.push($translate.instant('trials.message'));
-          break;
         case Config.offerTypes.collab:
-          userServices.push($translate.instant('trials.collab'));
+          userServices.push($translate.instant('trials.message'));
           break;
         case Config.offerTypes.call:
         case Config.offerTypes.squaredUC:
           partial.isSquaredUcOffer = true;
-          userServices.push($translate.instant('trials.squaredUC'));
+          userServices.push($translate.instant('trials.call'));
           break;
         case Config.offerTypes.webex:
         case Config.offerTypes.meetings:
