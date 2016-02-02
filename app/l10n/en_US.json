@@ -1183,11 +1183,6 @@
         "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
       }
     },
-    "hybridServices": {
-      "result404": "Entitlements for {{email}} do not exist.",
-      "result409": "Entitlement(s) previously updated.",
-      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
-    },
     "notifications": {
       "scheduleUpgrade": {
         "title": "Confirm the Schedule for Automatic Software Upgrades",
