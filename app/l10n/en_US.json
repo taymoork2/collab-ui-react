@@ -1530,7 +1530,7 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "selectUserPlaceHolder": "Type the desired User"
+    "selectUserPlaceHolder": "Enter full name"
   },
   "callPark": {
     "code": "CP",
