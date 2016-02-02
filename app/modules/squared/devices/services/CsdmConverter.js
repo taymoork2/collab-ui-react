@@ -25,7 +25,6 @@ angular.module('Squared').service('CsdmConverter',
       this.upgradeChannel = getUpgradeChannel(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
-      this.readableActivationCode = getReadableActivationCode(obj);
       this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
       this.canDelete = true;
       this.canReportProblem = true;
