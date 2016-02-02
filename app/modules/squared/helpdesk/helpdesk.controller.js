@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(ReportsService, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
@@ -31,6 +31,11 @@
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
     vm.showSearchHelp = showSearchHelp;
     vm.populateHistory = populateHistory;
+    vm.sparkStatusShow = false;
+    vm.healthyStatus = "unknown";
+    vm.statusPageUrl = Config.getStatusPageUrl();
+
+    getHealthMetrics();
 
     function populateHistory() {
       vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
@@ -359,6 +364,23 @@
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
+    }
+
+    function getHealthMetrics() {
+      ReportsService.healthMonitor(function (data, status) {
+        if (data.success) {
+          vm.healthMetrics = data.components;
+          // check Squared for error
+          for (var health in vm.healthMetrics) {
+            if (vm.healthMetrics[health].status !== 'operational') {
+              vm.healthyStatus = "error";
+              return;
+            }
+          }
+          vm.healthyStatus = "ok";
+
+        }
+      });
     }
 
   }

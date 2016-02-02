@@ -1173,7 +1173,7 @@
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port, that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
         "sipDomainExample": "For example: acme.com"
       },
@@ -2072,8 +2072,8 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
+    "lastSeen": "Offline since:",
     "expires": "This activation code expires",
-    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -3342,7 +3342,9 @@
     "noMoreResults": "Max results limit reached. Try a different search.",
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
     "primary": "Primary",
-    "shared": "Shared"
+    "shared": "Shared",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
