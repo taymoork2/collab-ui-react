@@ -35,10 +35,7 @@
           .value();
         vm.upgradeDetails = {
           numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
-          upgradingHostname: _.chain(vm.clusterAggregates.hosts)
-            .find('upgradeState', 'upgrading')
-            .value()
-            .hostname
+          upgradingHostname: findHostname(vm.clusterAggregates.hosts)
         };
       }
 
@@ -81,6 +78,18 @@
       $scope.$on('$destroy', function () {
         $timeout.cancel(promise);
       });
+
+      function findHostname(hostnames) {
+        var upgrading = _.chain(vm.clusterAggregates.hosts)
+          .find('upgradeState', 'upgrading')
+          .value();
+        if (!upgrading) {
+          upgrading = _.chain(vm.clusterAggregates.hosts)
+            .find('upgradeState', 'pending')
+            .value();
+        }
+        return upgrading.hostname;
+      }
     };
   }
 
