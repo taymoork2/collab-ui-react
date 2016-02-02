@@ -365,7 +365,6 @@
       }
     }
 
-
     function getHealthMetrics() {
       ReportsService.healthMonitor(function (data, status) {
         if (data.success) {
@@ -381,7 +380,7 @@
 
         }
       });
-    };
+    }
 
   }
 
