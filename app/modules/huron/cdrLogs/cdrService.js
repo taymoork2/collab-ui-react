@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($translate, $http, $q, Authinfo, Config, Notification, Log) {
+  function CdrService($rootScope, $translate, $http, $q, Authinfo, Config, Notification, Log) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';
@@ -25,16 +25,12 @@
     var cancelPromise = null;
     var currentJob = null;
 
-    var cdrUrl = {
-      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
-    };
-
     return {
       query: query,
       formDate: formDate,
-      createDownload: createDownload
+      createDownload: createDownload,
+      extractUniqueIds: extractUniqueIds,
+      proxy: proxy
     };
 
     function getUser(userName, calltype) {
@@ -59,16 +55,6 @@
       });
 
       return defer.promise;
-    }
-
-    function getCdrUrl() {
-      if (Config.isDev()) {
-        return cdrUrl.dev;
-      } else if (Config.isIntegration()) {
-        return cdrUrl.integration;
-      } else {
-        return cdrUrl.prod;
-      }
     }
 
     function createDownload(call) {
@@ -433,12 +419,16 @@
       return callLegs;
     }
 
+    function setCurrentJobId(jobId) {
+      currentJob = jobId;
+    }
+
     function proxy(query, thisJob) {
       var defer = $q.defer();
       if (thisJob === currentJob) {
         $http({
           method: "POST",
-          url: getCdrUrl(),
+          url: Config.getCdrUrl(),
           data: query,
           timeout: cancelPromise.promise
         }).success(function (response) {
@@ -448,7 +438,7 @@
           if (status === 500 && response === retryError) {
             $http({
               method: "POST",
-              url: getCdrUrl(),
+              url: Config.getCdrUrl(),
               data: query,
               timeout: cancelPromise.promise
             }).success(function (secondaryResponse) {

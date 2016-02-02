@@ -1,8 +1,14 @@
 namespace domainManagement {
 
   class DomainManagementCtrl {
-    private _adminDomain;
-    private _adminEmail;
+
+    private _loggedOnUser = {
+      domain: null,
+      email:null,
+      isLoaded:false,
+      isPartner:false
+  };
+
     private _feature = false;
 
     /* @ngInject */
@@ -24,31 +30,26 @@ namespace domainManagement {
 
         if (curUser.managedOrgs && _.some(curUser.managedOrgs, {orgId: myOrgId})) {
           //Partner is logged on, skip verification test
-          this._adminEmail = null;
-          this._adminDomain = null;
+          this._loggedOnUser.isPartner = true;
         } else {
-          this._adminEmail = curUser.userName;
-          if (this._adminEmail) {
-            this._adminDomain = this._adminEmail.split('@')[1];
+          this._loggedOnUser.email = curUser.userName;
+          if (this._loggedOnUser.email && this._loggedOnUser.email.indexOf('@') > 0) {
+            this._loggedOnUser.domain = this._loggedOnUser.email.split('@')[1];
           }
         }
+
+        this._loggedOnUser.isLoaded = true;
       });
+
+      this.DomainManagementService.refreshDomainList();
     }
 
     get domains() {
       return this.DomainManagementService.domainList;
     }
 
-    get adminDomain() {
-      return this._adminDomain;
-    }
-
-    delete(domain) {
-      this.DomainManagementService.deleteDomain(domain);
-    }
-
-    get adminEmail() {
-      return this._adminEmail;
+    get loggedOnUser() {
+      return this._loggedOnUser;
     }
 
     get feature() {

@@ -383,6 +383,23 @@
   @extend %plan-container;
 }
 
+.add-users {
+  .modal-body {
+    background-color: $color-white;
+  }
+
+  .license-wrapper {
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-top: -20px;
+  }
+
+  .hybrid-services-panel {
+	margin-left: -20px;
+    margin-right: -20px;
+  }
+}
+
 .wizard-main {
   .title-separator-pipe {
     color: $gray-light;

@@ -1,6 +1,6 @@
 <!-- dont show if there is only one option, aka if webex does not show -->
 <div class="customer-reports">
-  <cs-page-header id="reportsPanel" title="reportsPage.pageTitle" back="false" tabs="nav.headerTabs"></cs-page-header>
+  <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
   <cs-page-sub-header ng-if="nav.showEngagement">
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
@@ -39,6 +39,7 @@
         <uc-avg-rooms></uc-avg-rooms>
         <uc-active-user-customer></uc-active-user-customer>
         <uc-files-shared></uc-files-shared>
+        <uc-devices-customer></uc-devices-customer>
         <uc-media-quality-customer></uc-media-quality-customer>
         <uc-call-metrics-customer></uc-call-metrics-customer>
       </cs-card-layout>

@@ -36,6 +36,7 @@ module.exports = function() {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js',
+        app + '!**/*.spec.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -190,7 +191,9 @@ module.exports = function() {
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
         vendor + '/angular-cache/dist/angular-cache.js',
-        vendor + '/parse-address-bobbr/parse-address.min.js'
+        vendor + '/parse-address-bobbr/parse-address.min.js',
+        vendor + '/clipboard/dist/clipboard.js',
+        vendor + '/query-command-supported/dist/queryCommandSupported.js'
       ],
       scss: {
         paths: [

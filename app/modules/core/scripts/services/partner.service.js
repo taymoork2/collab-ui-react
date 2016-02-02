@@ -37,7 +37,8 @@
       setServiceSortOrder: setServiceSortOrder,
       setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
-      exportCSV: exportCSV
+      exportCSV: exportCSV,
+      parseLicensesAndOffers: parseLicensesAndOffers
     };
 
     return factory;
@@ -181,60 +182,10 @@
           isSquaredUcOffer: false
         };
 
+        var licensesAndOffersData = parseLicensesAndOffers(data);
+        angular.extend(dataObj, licensesAndOffersData);
+
         dataObj.isAllowedToManage = isTrialData || data.isAllowedToManage;
-
-        if (data.licenses) {
-          var offerUserServices = [];
-          var offerDeviceBasedServices = [];
-          var offerCodes = _.pluck(data.licenses, 'offerName');
-          var offer = {};
-          for (var cnt in offerCodes) {
-            var offerCode = offerCodes[cnt];
-            if (!offerCode) {
-              continue;
-            }
-            switch (offerCode) {
-            case Config.offerCodes.MS:
-              offerUserServices.push($translate.instant('trials.collab'));
-              offer = _.find(data.offers, {
-                id: Config.trials.message
-              });
-              break;
-            case Config.offerCodes.CO:
-              dataObj.isSquaredUcOffer = true;
-              offerUserServices.push($translate.instant('trials.squaredUC'));
-              offer = _.find(data.offers, {
-                id: Config.trials.call
-              });
-              break;
-            case Config.offerCodes.EE:
-              offerUserServices.push($translate.instant('customerPage.EE'));
-              offer = _.find(data.offers, {
-                id: Config.trials.webex
-              });
-              break;
-            case Config.offerCodes.SD:
-              offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
-              offer = _.find(data.offers, {
-                id: Config.trials.roomSystems
-              });
-              break;
-            }
-
-            if (offer) {
-              dataObj.usage = offer.usageCount;
-              if (offer.id === Config.trials.roomSystems) {
-                dataObj.deviceLicenses = offer.licenseCount;
-              } else {
-                dataObj.licenses = offer.licenseCount;
-              }
-            }
-          }
-
-          dataObj.offer.userServices = offerUserServices.join(', ');
-          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.join(', ');
-        }
-
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);
         dataObj.licenseList = data.licenses;
         dataObj.messaging = getLicense(data.licenses, Config.offerCodes.MS);
@@ -375,6 +326,58 @@
       });
 
       return deferred.promise;
+    }
+
+    function parseLicensesAndOffers(customer) {
+      var partial = {
+        licenses: 0,
+        deviceLicenses: 0,
+        isSquaredUcOffer: false,
+        usage: 0,
+        offer: {}
+      };
+
+      var deviceServiceText = [];
+      var userServices = [];
+
+      for (var offer in _.get(customer, 'offers', [])) {
+        var offerInfo = customer.offers[offer];
+        if (!offerInfo) {
+          continue;
+        }
+
+        partial.usage = offerInfo.usageCount;
+        if (offerInfo.id === Config.offerTypes.roomSystems) {
+          partial.deviceLicenses = offerInfo.licenseCount;
+        } else {
+          partial.licenses = offerInfo.licenseCount;
+        }
+
+        switch (offerInfo.id) {
+        case Config.offerTypes.spark1:
+        case Config.offerTypes.message:
+        case Config.offerTypes.collab:
+          userServices.push($translate.instant('trials.message'));
+          break;
+        case Config.offerTypes.call:
+        case Config.offerTypes.squaredUC:
+          partial.isSquaredUcOffer = true;
+          userServices.push($translate.instant('trials.call'));
+          break;
+        case Config.offerTypes.webex:
+        case Config.offerTypes.meetings:
+          userServices.push($translate.instant('customerPage.EE'));
+          break;
+        case Config.offerTypes.roomSystems:
+          deviceServiceText.push($translate.instant('trials.roomSystem'));
+          break;
+        }
+      }
+
+      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
+      partial.offer.userServices = _.uniq(userServices).join(', ');
+
+      return partial;
     }
   }
 })();

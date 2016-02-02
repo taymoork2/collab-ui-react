@@ -60,6 +60,12 @@
             key: entry.key
           });
         }
+        if (entry.key && 'route' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
+            key: entry.key
+          });
+        }
       });
 
       return outErrors;

@@ -14,7 +14,6 @@ namespace devicesRedux {
       ip: 'IP',
       serial: 'Serial',
       mac: 'Mac',
-      readableActivationCode: 'Activation Code',
       readableState: 'Status',
       diagnosticsEvent: 'Event',
       tagString: 'Tags'
@@ -108,7 +107,6 @@ namespace devicesRedux {
         'ip',
         'mac',
         'readableState',
-        'readableActivationCode',
         'product',
         'diagnosticsEvent',
         'tagString'
@@ -133,7 +131,7 @@ namespace devicesRedux {
     increaseOffsetForGroup(group) {
       this.currentOffset[group.displayName] = this.offsetForGroup(group) + this.pageSize;
     };
-    
+
     clearSearch () {
       this.search = undefined;
       this.searchChanged();
@@ -173,7 +171,7 @@ namespace devicesRedux {
     }
 
     exportToCsv() {
-      const fields = ['cisUuid', 'displayName', 'needsActivation', 'readableState', 'readableActivationCode', 'ip', 'mac', 'serial', 'software'];
+      const fields = ['cisUuid', 'displayName', 'needsActivation', 'readableState', 'ip', 'mac', 'serial', 'software'];
 
       const devices = _(this.groupedDevices)
         .pluck('devices')
