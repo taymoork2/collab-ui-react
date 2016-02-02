@@ -63,15 +63,17 @@ gulp.task('karma', function (done) {
     var options = {
       configFile: path.resolve(__dirname, '../../test/karma-unit-' + specs + '.js')
     };
-    if (args.debug) {
-      if (args.watch) {
-        options.autoWatch = true;
-      }
-      options.browsers = ['Chrome'];
-      options.preprocessors = {};
-      options.browserNoActivityTimeout = 600000;
+    if (args.watch) {
+      options.autoWatch = true;
+      options.singleRun = false;
     } else {
-      options.singleRun = true;
+      if (args.debug) {
+        options.browsers = ['Chrome'];
+        options.preprocessors = {};
+        options.browserNoActivityTimeout = 600000;
+      } else {
+        options.singleRun = true;
+      }
     }
     karma.start(options, done);
   } else {
