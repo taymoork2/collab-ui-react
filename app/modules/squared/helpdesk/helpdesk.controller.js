@@ -51,6 +51,7 @@
         vm.currentSearch.userSearchResults,
         vm.currentSearch.orgFilter,
         vm.currentSearch.userLimit);
+      HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
       $state.go('helpdesk.search');
     }
 

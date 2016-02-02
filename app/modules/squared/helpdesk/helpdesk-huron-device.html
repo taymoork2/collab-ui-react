@@ -53,6 +53,17 @@
         </div>
       </div>
       
+      <div class="row" ng-if="helpdeskDeviceCtrl.deviceNumbers">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.numbers' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers">
+            {{number.directoryNumber.pattern}} <span ng-if="number.e164Mask">({{number.e164Mask}})</span>{{$last ? '' : ', '}}
+          </span>
+        </div>
+      </div>
+      
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.user' | translate}}:</span>
