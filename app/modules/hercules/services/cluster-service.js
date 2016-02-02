@@ -165,7 +165,7 @@
 
     function fetch() {
       return $http
-        .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(ConfigService.getUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
           return addAggregatedData(response.clusters);

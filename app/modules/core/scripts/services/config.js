@@ -211,6 +211,13 @@ angular.module('Core')
           prod: 'https://hercules-a.wbx2.com/v1'
         },
 
+        herculesUrlV2: {
+          dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+          integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          prod: 'https://hercules-a.wbx2.com/hercules/api/v2'
+        },
+
         ussUrl: {
           dev: 'https://uss-integration.wbx2.com/',
           cfe: 'https://uss-e.wbx2.com/',
@@ -960,6 +967,17 @@ angular.module('Core')
             'cfe': this.herculesUrl.cfe,
             'integration': this.herculesUrl.integration,
             'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
+        },
+
+        getHerculesUrlV2: function () {
+          var herculesUrl = {
+            'dev': this.herculesUrlV2.dev,
+            'cfe': this.herculesUrlV2.cfe,
+            'integration': this.herculesUrlV2.integration,
+            'prod': this.herculesUrlV2.prod
           };
 
           return herculesUrl[this.getEnv()];
