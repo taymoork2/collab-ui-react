@@ -33,11 +33,11 @@
           vm.ownerUser = ownerUser;
         }, XhrNotificationService.notify);
       }
-      
+
       HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId).then(function (deviceNumbers) {
         vm.deviceNumbers = deviceNumbers;
       }, XhrNotificationService.notify);
-      
+
       angular.element(".helpdesk-details").focus();
     }
 
