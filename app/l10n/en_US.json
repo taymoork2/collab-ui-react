@@ -1140,6 +1140,7 @@
       "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
       "pending": "Pending",
       "upgrade": "Upgrade",
+      "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!"
     },
