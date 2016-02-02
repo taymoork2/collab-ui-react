@@ -208,12 +208,17 @@
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
           HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          if (err.status === 404) {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+          } else {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
         });
       }
     }
@@ -272,6 +277,7 @@
         break;
       case 'device':
         vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
+        HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         break;
       }
     }

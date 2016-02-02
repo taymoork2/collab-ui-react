@@ -57,8 +57,15 @@
         "uri": "https://identity.webex.com/identity/scim/1eb65fdf-9643-417f-9974-ad72cae0e10f/v1/Users/b78903e2-39e6-45fa-af0f-5d31de45934f"
       },
       "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation", "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge", "meetings", "ciscouc", "cloudmeetings"],
-      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'],
+      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation",
+        "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge",
+        "meetings", "ciscouc", "cloudmeetings"
+      ],
+      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com',
+        'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com',
+        'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'
+      ],
       "photos": [{
         "type": "thumbnail",
         "value": "https://1efa7a94ed216783e352-c62266528714497a17239ececf39e9e2.ssl.cf1.rackcdn.com/V1~b1403a2d9a639ca7700dae70fd5a18f8~NxFT-HKtSbK02T8H-kQZGg==~80"
@@ -478,21 +485,34 @@
         "userId": "58852083@qq.com"
       }
     }],
-    huronNumbersSearchResult: {
-      "url": "https://cmi.huron-int.com/api/v2/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/numbers?number=223",
-      "numbers": [{
-        "uuid": "5e33df41-2031-4a42-8870-b73ff7ba1dba",
-        "number": "2223",
-        "type": "internal"
+    huronDevice: {
+      "uuid": "17a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP1CDEA7DBF740",
+      "description": "373323613@qq.com (Cisco 8861 SIP)",
+      "product": "Cisco 8861",
+      "model": "Cisco 8861",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      },
+      "registrationStatus": "registered"
+    },
+    logs: {
+      search: [{
+        filename: "logFile1",
+        timestamp: "2016-04-25T11:46:24.757Z"
       }, {
-        "uuid": "62f90838-8169-4774-931b-c46e95529354",
-        "number": "2230",
-        "type": "internal"
+        filename: "logFile2",
+        timestamp: "2016-02-25T11:46:24.757Z"
       }, {
-        "uuid": "9642ac0a-1795-47f5-bbab-e84e349e1c8f",
-        "number": "+14084744450",
-        "type": "external"
-      }]
+        filename: "logFile3",
+        timestamp: "2016-01-25T11:46:24.757Z"
+      }, {
+        filename: "logFile4",
+        timestamp: "2016-04-25T11:46:25.757Z"
+      }],
+      download: "http://someverylongurl.txt"
     }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);

@@ -354,6 +354,10 @@
       var onlyResources = [];
       var onlyCMI = [];
 
+      // if we don't have a record (as in new) then there's nothing to check
+      if (!vm.aaModel.aaRecordUUID)
+        return;
+
       var currentResources = [];
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
         currentResources = vm.ui.ceInfo.getResources();

@@ -19,7 +19,7 @@
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
     var mostActiveUrl = 'useractivity';
-    var registeredEndpoints = 'trend/registeredEndpoints';
+    var registeredEndpoints = 'trend/registeredEndpointsByDeviceType';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -603,11 +603,93 @@
       deviceCancelPromise = $q.defer();
       var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
 
-      return getService(deviceUrl, deviceCancelPromise).success(function (response, status) {
-        return [];
-      }).error(function (response, status) {
-        return returnErrorCheck(status, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
+      return getService(deviceUrl, deviceCancelPromise).then(function (response) {
+        return analyzeDeviceData(response, filter);
+      }, function (response) {
+        return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
+          graphData: [],
+          filterArray: []
+        });
       });
+    }
+
+    function analyzeDeviceData(response, filter) {
+      var deviceArray = {
+        graphData: [],
+        filterArray: []
+      };
+      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isArray(response.data) && angular.isDefined(response.data[0].data) && angular.isArray(response.data[0].data)) {
+        var data = response.data[0].data;
+        var graphItem = {
+          totalRegisteredDevices: 0
+        };
+        var dayOffset = 0;
+        var responseLength = 0;
+
+        angular.forEach(data, function (item, index, array) {
+          if (responseLength < item.details.length) {
+            responseLength = item.details.length;
+            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].date, timezone).format('e'));
+          }
+        });
+        if (dayOffset >= 4) {
+          dayOffset = 7 - dayOffset;
+        } else {
+          dayOffset = -dayOffset;
+        }
+        // change to filter after dummy data removed
+        var baseGraph = getReturnGraph({
+          value: 0
+        }, dayOffset, graphItem);
+        deviceArray.graphData.push({
+          deviceType: $translate.instant('registeredEndpoints.allDevices'),
+          graph: angular.copy(baseGraph),
+          emptyGraph: true,
+          balloon: true
+        });
+        var filterIndex = 0;
+        deviceArray.filterArray.push({
+          value: filterIndex,
+          label: deviceArray.graphData[0].deviceType
+        });
+        filterIndex++;
+
+        angular.forEach(data, function (item, index, array) {
+          deviceArray.filterArray.push({
+            value: filterIndex,
+            label: item.deviceType
+          });
+          filterIndex++;
+          var tempGraph = {
+            deviceType: item.deviceType,
+            graph: angular.copy(baseGraph),
+            emptyGraph: true,
+            balloon: true
+          };
+
+          angular.forEach(item.details, function (detail, detailIndex, detailArray) {
+            if (detail.totalRegisteredDevices > 0) {
+              tempGraph.emptyGraph = false;
+              deviceArray.graphData[0].emptyGraph = false;
+              var modifiedDate = moment.tz(detail.recordTime, timezone).format(monthFormat);
+              if (filter.value === 0 || filter.value === 1) {
+                modifiedDate = moment.tz(detail.recordTime, timezone).format(dayFormat);
+              }
+
+              for (var i = 0; i < baseGraph.length; i++) {
+                if (baseGraph[i].modifiedDate === modifiedDate) {
+                  tempGraph.graph[i].totalRegisteredDevices = parseInt(detail.totalRegisteredDevices);
+                  deviceArray.graphData[0].graph[i].totalRegisteredDevices += parseInt(detail.totalRegisteredDevices);
+                  break;
+                }
+              }
+            }
+          });
+          deviceArray.graphData.push(tempGraph);
+        });
+      }
+
+      return deviceArray;
     }
 
     function getQuery(filter) {

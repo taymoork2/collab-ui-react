@@ -7,7 +7,7 @@ angular
       return {
         scope: false,
         restrict: 'E',
-        templateUrl: 'modules/huron/callRouting/autoAttendant/aaNewCardCustom.tpl.html',
+        templateUrl: 'modules/huron/features/autoAttendant/aaNewCardCustom.tpl.html'
       };
     }
   ]);

@@ -17,6 +17,23 @@
     color: $brand-danger;
   }
 
+  .status {
+    i {
+      padding-right: 0.5em;
+      font-size: 0.75em;
+    }
+
+    i.icon-circle {
+      &.trial-pending {
+        color: $color-attention-base;
+      }
+    }
+
+    span {
+      font-size: 0.875em;
+    }
+  }
+
   // .progress {
   //   margin-bottom: auto;
   // }

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskDeviceController($stateParams, HelpdeskService, XhrNotificationService) {
+  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -24,7 +24,7 @@
       if (!vm.org.displayName) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
-          vm.org = displayName;
+          vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
       angular.element(".helpdesk-details").focus();
@@ -39,5 +39,5 @@
 
   angular
     .module('Squared')
-    .controller('HelpdeskDeviceController', HelpdeskDeviceController);
+    .controller('HelpdeskCloudberryDeviceController', HelpdeskCloudberryDeviceController);
 }());

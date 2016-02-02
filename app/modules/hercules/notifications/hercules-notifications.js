@@ -69,6 +69,14 @@
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
     };
+
+    vm.addResourceButtonClicked = function () {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
+    };
   }
 
   function herculesNotificationsDirective() {

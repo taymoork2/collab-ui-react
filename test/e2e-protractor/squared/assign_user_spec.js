@@ -54,37 +54,44 @@ describe('Squared Invite User and Assign Services User Flow', function () {
         utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
         notifications.assertSuccess('entitled successfully');
-        utils.expectIsDisplayed(users.servicesPanel);
-        utils.expectIsDisplayed(users.messageService);
+        utils.click(users.closeSidePanel);
       });
     });
 
-    it('should check if licenses saved successfully', function () {
+    it('should check if licenses saved successfully, then uncheck them', function () {
+      utils.clickUser(inviteEmail);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsDisplayed(users.messageService);
+      utils.expectIsDisplayed(users.meetingService);
+
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
       utils.waitForModal().then(function () {
         utils.expectCheckbox(users.paidMsgCheckbox, true);
         utils.expectCheckbox(users.paidMtgCheckbox, true);
-      });
-    });
 
-    it('should uncheck licenses successfully', function () {
-      utils.waitForModal().then(function () {
+        // Uncheck licenses...
         utils.click(users.paidMsgCheckbox);
         utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
-        utils.expectIsDisplayed(users.servicesPanel);
+        notifications.assertSuccess('entitled successfully');
+        utils.click(users.closeSidePanel);
       });
     });
 
-    it('should check if licenses were saved successfully after being unchecked', function () {
+    it('should check if licenses removed successfully', function () {
+      utils.clickUser(inviteEmail);
+      utils.expectIsDisplayed(users.servicesPanel);
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
 
       utils.waitForModal().then(function () {
         utils.expectCheckbox(users.paidMsgCheckbox, false);
         utils.expectCheckbox(users.paidMtgCheckbox, false);
-        utils.click(users.saveButton);
+        utils.click(users.cancelButton);
+        utils.expectIsNotDisplayed(users.manageDialog);
+        utils.click(users.closeSidePanel);
       });
     });
 

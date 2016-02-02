@@ -12,16 +12,12 @@
     <div class="columns large-4 medium-5">
 
       <h3>
-        <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img"><i class="icon icon-user"></i></span>
-        <img class="user-img" ng-if="helpdeskUserCtrl.user.photos"
-             ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
+        <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img">
+          <i class="icon icon-user"></i>
+        </span>
+        <img class="user-img" ng-if="helpdeskUserCtrl.user.photos" ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
         {{helpdeskUserCtrl.user.displayName}}
       </h3>
-
-      <div class="customer-or-partner">
-        <span translate="helpdesk.accountCreated"></span>:
-        <span class="date-created user-value">{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
-      </div>
 
       <div class="row">
         <div class="medium-5 columns details-heading">
@@ -29,11 +25,16 @@
         </div>
         <div class="medium-7 columns details-value">
           <span ng-if="helpdeskUserCtrl.verificationCode" style="padding-right: 1rem">{{helpdeskUserCtrl.verificationCode}}</span>
-          <button class="action secondary small" type="button"
-                  ng-click="helpdeskUserCtrl.sendCode()"
-                  translate="helpdesk.sendCode"
-                  ng-if="!helpdeskUserCtrl.verificationCode">
-          </button>
+          <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.sendCode()" translate="helpdesk.sendCode" ng-if="!helpdeskUserCtrl.verificationCode"></button>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.accountCreated' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
         </div>
       </div>
 
@@ -43,11 +44,7 @@
         </div>
         <div class="large-7 columns details-value">
           <span ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
-          <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
-                  style="margin-left: 1rem;"
-                  ng-if="helpdeskUserCtrl.resendInviteEnabled"
-                  translate="helpdesk.resend">
-          </button>
+          <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()" style="margin-left: 1rem;" ng-if="helpdeskUserCtrl.resendInviteEnabled" translate="helpdesk.resend"></button>
         </div>
       </div>
 
@@ -56,7 +53,9 @@
           <span>{{'common.email' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span><a ng-href="mailto:{{helpdeskUserCtrl.user.userName}}">{{helpdeskUserCtrl.user.userName}}</a></span>
+          <span>
+            <a ng-href="mailto:{{helpdeskUserCtrl.user.userName}}">{{helpdeskUserCtrl.user.userName}}</a>
+          </span>
         </div>
       </div>
 
@@ -65,10 +64,8 @@
           <span>{{'helpdesk.roles' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span ng-if="helpdeskUserCtrl.user.roles.length > 0"
-                ng-repeat="role in helpdeskUserCtrl.user.roles | orderBy">{{'ciRoles.' + role | translate }}{{$last ? '' : ', '}}</span>
-        <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
-              translate="ciRoles.user"></span>
+          <span ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles | orderBy">{{'ciRoles.' + role | translate }}{{$last ? '' : ', '}}</span>
+          <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="ciRoles.user"></span>
         </div>
       </div>
 
@@ -78,19 +75,10 @@
         </div>
         <div class="medium-7 columns details-value">
           <span ng-repeat="number in helpdeskUserCtrl.user.phoneNumbers">
-            {{number.value}} ({{'helpdesk.' + number.type | translate}}){{$last ? '' : ', '}}
+            {{number.value}}
+            ({{'helpdesk.' + number.type | translate}}){{$last ? '' : ', '}}
           </span>
-          <span ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0"
-                translate="helpdesk.none"></span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
-        </div>
-        <div class="medium-7 columns details-value">
-          <span>{{helpdeskUserCtrl.user.id}}</span>
+          <span ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
 
@@ -108,26 +96,50 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.id}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>Last Log:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>
+            <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'medium'}}</a>
+          </span>
+          <span ng-if="!helpdeskUserCtrl.lastPushedLog">No Log Available</span>
+        </div>
+      </div>
+
       <div class="row" ng-if="helpdeskUserCtrl.huronDevices && helpdeskUserCtrl.huronDevices.length > 0">
         <div class="medium-12 columns">
           <h4 translate="common.devices"></h4>
 
           <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">
-            <h5>
-              <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/> <span class="device-name">{{device.model}}</span>
-            </h5>             
+            <h5 ng-if="device.model">
+              <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/>
+              <span class="device-name">
+                <a ui-sref="helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskUserCtrl.org.id})">
+                  {{device.name}}
+                </a>
+              </span>
+            </h5>
             <div>
-              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.status}}</span>
+              <span>{{device.model}}</span>
             </div>
-            <div>
-              <span>{{device.name}}</span>
-            </div>
-            <div ng-if="device.deviceStatus.ipAddress">
-              <span>{{device.deviceStatus.ipAddress}}</span>
-            </div>       
             <div ng-if="device.description">
               <span>{{device.description}}</span>
-            </div>            
+            </div>
+            <div ng-if="device.deviceStatus.statusKey">
+              <span>
+                <i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
+            </div>
           </div>
         </div>
       </div>

@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config,
+    LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -25,6 +26,7 @@
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
+    vm.downloadLog = downloadLog;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -76,13 +78,33 @@
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
         HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function (devices) {
           vm.huronDevices = devices;
-        }, XhrNotificationService.notify);
+        }, handleHuronError);
         HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function (numbers) {
           vm.callCard.huronNumbers = numbers;
-        }, XhrNotificationService.notify);
+        }, handleHuronError);
+      }
+
+      if (Authinfo.isSupportUser()) {
+        HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
+          vm.lastPushedLog = log;
+        }, function (reason) {
+
+        });
       }
 
       angular.element(".helpdesk-details").focus();
+    }
+
+    function downloadLog(filename) {
+      HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
+        window.location.assign(tempURL);
+      });
+    }
+
+    function handleHuronError(err) {
+      if (err.status !== 404) {
+        XhrNotificationService.notify(err);
+      }
     }
   }
 

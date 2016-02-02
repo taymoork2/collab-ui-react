@@ -28,8 +28,7 @@
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
-      overflow-wrap: break-word;
+      margin-bottom: 1.5rem;
       word-wrap: break-word;
     }
     h4 {
@@ -108,6 +107,7 @@
     .user-img {
       height: 35px;
       width: 35px;
+      margin-right: 0.5rem;
     }
     .icon-user {
       color: white;
@@ -392,6 +392,9 @@
   } 
   .clear-history {
     color: $color-primary-base;
+  }
+  .search-result {
+    word-wrap: break-word;
   }
 }
 

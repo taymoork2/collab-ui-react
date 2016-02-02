@@ -4,23 +4,32 @@
     <h4 class="modal-title" translate="domainManagement.verify.header"></h4>
   </div>
   <div class="modal-body">
-    <section class="domainVerificationInfo">
+    <section>
       <p translate="domainManagement.verify.verifyThis"></p>
       <p class="domainInput">{{dmpopup.domainName}}</p>
       <p translate="domainManagement.verify.beforeVerify"/>
+      <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
+      <p translate="domainManagement.verify.learn"></p>
     </section>
   </div>
 
-  <div class="modal-body domWarning">
+  <div ng-if="!dmpopup.error" class="modal-body domWarning">
     <section>
       <i class="icon icon-warning"></i>
       <p translate="domainManagement.verify.warning"></p>
     </section>
   </div>
 
+  <div ng-if="dmpopup.error" class="modal-body domWarning domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p>{{dmpopup.error}}</p>
+    </section>
+  </div>
+
   <div class="modal-footer">
     <button ui-sref="domainmanagement" translate="common.cancel"></button>
-    <button ng-click="dmpopup.verify()" class="btn--attention"
+    <button ng-click="dmpopup.verify()" ng-disabled="!dmpopup.operationAllowed" class="btn--attention"
             translate="domainManagement.verify.verify"></button>
   </div>
 </div>

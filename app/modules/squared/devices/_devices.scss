@@ -4,10 +4,6 @@
 }
 
 .sq-devices-page-overview {
-  .activation-code-pane {
-    padding-top: 10px;
-  }
-
   .activation-code-pane h3 {
     color: #00c1aa;
   }
@@ -194,6 +190,10 @@
     h3 {
       color: #00c1aa;
       margin: 10px 0;
+
+      a {
+        padding-left: 10px;
+      }
     }
   }
   .btn {
@@ -208,6 +208,11 @@
   input {
     margin-right: 15px;
   }
+}
+
+.device-status {
+  font-size: 0.6rem;
+  padding-right: 3px;
 }
 
 .device-status-red {

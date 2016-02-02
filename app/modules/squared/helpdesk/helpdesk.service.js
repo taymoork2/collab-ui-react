@@ -5,7 +5,7 @@
 
   function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
     $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller) {
-    var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
+    var urlBase = Config.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
@@ -24,6 +24,13 @@
     if (!devicesInOrgCache) {
       devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
         maxAge: 180 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+    var userCache = CacheFactory.get('helpdeskUserCache');
+    if (!userCache) {
+      userCache = new CacheFactory('helpdeskUserCache', {
+        maxAge: 60 * 1000,
         deleteOnExpire: 'aggressive'
       });
     }
@@ -137,6 +144,10 @@
       if (useMock()) {
         return deferredResolve(extractAndMassageUser(HelpdeskMockData.user));
       }
+      var cachedUser = userCache.get(userId);
+      if (cachedUser) {
+        return deferredResolve(cachedUser);
+      }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
         .then(extractAndMassageUser);
@@ -232,6 +243,9 @@
       var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
+      user.organization = {
+        id: user.orgId
+      };
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
@@ -244,6 +258,7 @@
           return 'helpdesk.userStatuses.' + status;
         });
       }
+      userCache.put(user.id, user);
       return user;
     }
 
