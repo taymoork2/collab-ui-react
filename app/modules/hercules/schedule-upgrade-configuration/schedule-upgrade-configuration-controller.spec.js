@@ -1,16 +1,22 @@
 'use strict';
 
-describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
+fdescribe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var vm, $rootScope, $httpBackend, Authinfo, ScheduleUpgradeService, NotificationService;
+  var vm, $rootScope, $translate, $httpBackend, Authinfo, ScheduleUpgradeService, NotificationService;
 
   var UIDataFixture = {
-    scheduleTime: '03:00',
-    scheduleTimeZone: 'America/New_York',
+    scheduleTime: {
+      label: '03:00 a.m.',
+      value: '03:00'
+    },
     scheduleDay: {
       label: 'Every Monday',
       value: 1
+    },
+    scheduleTimeZone: {
+      label: 'United States: America/New_York',
+      value: 'America/New_York'
     }
   };
 
@@ -28,9 +34,14 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     $provide.value('Authinfo', Authinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $q, $controller, _$httpBackend_) {
+  beforeEach(inject(function (_$rootScope_, $q, $controller, _$httpBackend_, _$translate_) {
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
+    $translate = _$translate_;
+
+    sinon.stub($translate, 'use', function () {
+      return 'en_US';
+    });
 
     ScheduleUpgradeService = {
       get: sinon.stub().returns($q.when(angular.copy(serverDataFixture))),
@@ -45,6 +56,7 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
 
     vm = $controller('ScheduleUpgradeConfigurationCtrl', {
       $scope: $rootScope.$new(),
+      $translate: $translate,
       Authinfo: Authinfo,
       ScheduleUpgradeService: ScheduleUpgradeService,
       NotificationService: NotificationService
@@ -71,15 +83,13 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
 
   it('should have all the 24 time options', function () {
     var timeOptions = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
-    expect(vm.timeOptions).toEqual(timeOptions);
+    expect(_.map(vm.timeOptions, 'value')).toEqual(timeOptions);
   });
 
   it('should have all the 7 day options', function () {
     var valueOptions = [7, 1, 2, 3, 4, 5, 6];
     expect(vm.dayOptions.length).toEqual(7);
-    expect(vm.dayOptions.map(function (option) {
-      return option.value;
-    })).toEqual(valueOptions);
+    expect(_.map(vm.dayOptions, 'value')).toEqual(valueOptions);
   });
 
   it('should have many timezone options', function () {
