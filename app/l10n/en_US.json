@@ -3342,6 +3342,8 @@
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "primary": "Primary",
+    "shared": "Shared",
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help"
   },

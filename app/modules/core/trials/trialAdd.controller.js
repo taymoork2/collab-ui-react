@@ -407,7 +407,7 @@
           // handled by the backend process once provisioning is complete)
           if (!vm.meetingTrial.enabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-                vm.details.licenseDuration, vm.customerOrgId)
+                vm.details.licenseDuration, Authinfo.getOrgId())
               .catch(function (response) {
                 Notification.error('didManageModal.emailFailText');
               })
