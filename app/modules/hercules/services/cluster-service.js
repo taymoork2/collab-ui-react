@@ -168,7 +168,11 @@
         .get(ConfigService.getUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
-          return addAggregatedData(response.clusters);
+          // only keep fused clusters
+          return _.filter(response.clusters, 'state', 'fused');
+        })
+        .then(function (clusters) {
+          return addAggregatedData(clusters);
         })
         .then(function (clusters) {
           // todo extract as a service function
