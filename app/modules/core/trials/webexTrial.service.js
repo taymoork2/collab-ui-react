@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function WebexTrialService($http, $translate, Config, Notification, WebexOrderStatusResource) {
+  function WebexTrialService($http, Config, Notification, WebexOrderStatusResource) {
     var service = {
       getTimeZones: getTimeZones,
       validateSiteUrl: validateSiteUrl,
@@ -68,7 +68,7 @@
         'trialId': trialId
       }).$promise.then(function (data) {
         var orderStatus = data.provOrderStatus !== 'PROVISIONED';
-        var timeZoneId = data.timeZoneId && timeZoneId.toString();
+        var timeZoneId = data.timeZoneId && data.timeZoneId.toString();
 
         return {
           siteUrl: data.siteUrl,

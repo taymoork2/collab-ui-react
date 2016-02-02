@@ -51,7 +51,7 @@
         value: Authinfo.getOrgId()
       }, {
         key: 'Email',
-        value: Authinfo.getEmail()
+        value: Authinfo.getEmails()
       }, {
         key: 'User ID',
         value: Authinfo.getUserId()

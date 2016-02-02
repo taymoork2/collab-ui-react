@@ -8,59 +8,32 @@
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
           <li cr-feature-toggle feature-show="huron-pstn-setup"><a ui-sref="pstnSetup({customerId: externalNumbers.currentCustomer.customerOrgId, customerName: externalNumbers.currentCustomer.customerName, customerEmail: externalNumbers.currentCustomer.customerEmail})" translate="pstnSetup.setupPstn"></a></li>
-          <li cr-feature-toggle feature-hide="huron-pstn-setup"><a ui-sref="didadd({currentOrg: externalNumbers.currentCustomer})" translate="externalNumberPanel.addNumbers"></a></li>
+          <li cr-feature-toggle feature-hide="huron-pstn-setup"><a ui-sref="didadd({currentOrg: externalNumbers.currentCustomer})" translate="didManageModal.buttonText"></a></li>
         </ul>
       </span>
     </div>
 
     <tabset justified="true">
       <tab heading="{{::externalNumbers.allText}}">
-        <div class="tab-content center">
-          <div class="total-count">
-            <span translate="externalNumberPanel.allNumbers" translate-values="{count: externalNumbers.allNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
-          </div>
-          <div class="filter">
-            <input type="text" class="form-control" ng-model="externalNumbers.filter">
-            <i class="icon icon-search"></i>
-          </div>
-          <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: externalNumbers.filteredAllNumbers.length}" translate-interpolation="messageformat">
-          </div>
-          <ul class="list-group">
-            <li class="list-group-item list-token" ng-class="{'invalid-token': !externalNumbers.isNumberValid(number.pattern)}" ng-repeat="number in externalNumbers.filteredAllNumbers = (externalNumbers.allNumbers | filter: {pattern: externalNumbers.filter}) | orderBy: 'pattern'"><span>{{::number.pattern | telephoneNumber}}</span><button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)"><span class="sr-only" translate="common.delete"></span></button></li>
-          </ul>
-        </div>
+        <hr-external-number-list
+          numbers="externalNumbers.allNumbers"
+          count-translate-key="externalNumberPanel.allNumbers"
+          external-numbers="externalNumbers">
+        </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.pendingText}}">
-        <div class="tab-content center">
-          <div class="total-count">
-            <span translate="externalNumberPanel.pendingNumbers" translate-values="{count: externalNumbers.pendingNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
-          </div>
-          <div class="filter">
-            <input type="text" class="form-control" ng-model="externalNumbers.filter">
-            <i class="icon icon-search"></i>
-          </div>
-          <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: externalNumbers.filteredPendingNumbers.length}" translate-interpolation="messageformat">
-          </div>
-          <ul class="list-group">
-            <li class="list-group-item list-token" ng-class="{'invalid-token': !externalNumbers.isNumberValid(number.pattern)}" ng-repeat="number in externalNumbers.filteredPendingNumbers = (externalNumbers.pendingNumbers | filter: {pattern: externalNumbers.filter}) | orderBy:'pattern'"><span>{{::number.pattern | telephoneNumber}}</span><button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)"><span class="sr-only" translate="common.delete"></span></button></li>
-          </ul>
-        </div>
+        <hr-external-number-list
+          numbers="externalNumbers.pendingNumbers"
+          count-translate-key="externalNumberPanel.pendingNumbers"
+          external-numbers="externalNumbers">
+        </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.unassignedText}}">
-        <div class="tab-content center">
-          <div class="total-count">
-            <span translate="externalNumberPanel.unassignedNumbers" translate-values="{count: externalNumbers.unassignedNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
-          </div>
-          <div class="filter">
-            <input type="text" class="form-control" ng-model="externalNumbers.filter">
-            <i class="icon icon-search"></i>
-          </div>
-          <div ng-class="{invisible: !externalNumbers.filter}" class="filter-count" translate="externalNumberPanel.searchResults" translate-values="{count: externalNumbers.filteredUnassignedNumbers.length}" translate-interpolation="messageformat">
-          </div>
-          <ul class="list-group">
-            <li class="list-group-item list-token" ng-class="{'invalid-token': !externalNumbers.isNumberValid(number.pattern)}" ng-repeat="number in externalNumbers.filteredUnassignedNumbers = (externalNumbers.unassignedNumbers | filter: {pattern: externalNumbers.filter}) | orderBy:'pattern'"><span>{{::number.pattern | telephoneNumber}}</span><button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)"><span class="sr-only" translate="common.delete"></span></button></li>
-          </ul>
-        </div>
+        <hr-external-number-list
+          numbers="externalNumbers.unassignedNumbers"
+          count-translate-key="externalNumberPanel.unassignedNumbers"
+          external-numbers="externalNumbers">
+        </hr-external-number-list>
       </tab>
     </tabset>
 

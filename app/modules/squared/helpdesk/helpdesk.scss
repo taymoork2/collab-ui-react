@@ -28,7 +28,7 @@
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       word-wrap: break-word;
     }
     h4 {
@@ -107,6 +107,7 @@
     .user-img {
       height: 35px;
       width: 35px;
+      margin-right: 0.5rem;
     }
     .icon-user {
       color: white;

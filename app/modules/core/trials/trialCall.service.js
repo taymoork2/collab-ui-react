@@ -57,7 +57,7 @@
             'name': '',
             'phoneNumber': '',
             'address': '',
-            'recipientType': ''
+            'recipientType': 'CUSTOMER'
           }]
         }
       };
