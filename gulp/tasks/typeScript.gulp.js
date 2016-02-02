@@ -29,30 +29,9 @@ gulp.task('ts:build', function (done) {
 
 gulp.task('ts:build-test', function () {
   var files = config.testFiles.spec.ts;
-  var dest = config.tstests;
 
-  var filter;
-  var reporter = $.typescript.reporter.defaultReporter();
-  messageLogger('Transpiling TypeScript test files'  + config.test, files);
-  return gulp
-    .src(files, {
-      base: config.app
-    })
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.sourcemaps.init())
-    .pipe($.typescript({
-      "removeComments": false,
-      "preserveConstEnums": true,
-      "target": "ES5",
-      "sourceMap": true,
-      "showOutput": "silent",
-      "listFiles": false
-    }, filter, reporter))
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(dest))
-    .pipe(reload({
-      stream: true
-    }));
+  messageLogger('Transpiling TypeScript test files', files);
+  return buildts(files, config.tstests);
 });
 
 gulp.task('ts:build-app', function () {
@@ -60,11 +39,15 @@ gulp.task('ts:build-app', function () {
     config.appFiles.ts,
     '!' + config.testFiles.spec.ts
   );
-  var dest = config.build;
 
+  messageLogger('Transpiling TypeScript files', files);
+  return buildts(files, config.build);
+});
+
+function buildts(files, dest){
   var filter;
   var reporter = $.typescript.reporter.defaultReporter();
-  messageLogger('Transpiling TypeScript files', files);
+
   return gulp
     .src(files, {
       base: config.app
@@ -84,5 +67,5 @@ gulp.task('ts:build-app', function () {
     .pipe(reload({
       stream: true
     }));
-});
+}
 
