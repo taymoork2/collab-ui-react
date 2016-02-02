@@ -377,9 +377,9 @@
         action = new Action('routeToUser', inAction.routeToUser.id);
         setDescription(action, inAction.routeToUser);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToMailbox)) {
-        action = new Action('routeToMailbox', inAction.routeToMailbox.mailbox);
-        setDescription(action, inAction.routeToMailbox);
+      } else if (angular.isDefined(inAction.routeToVoiceMail)) {
+        action = new Action('routeToVoiceMail', inAction.routeToVoiceMail.id);
+        setDescription(action, inAction.routeToVoiceMail);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
@@ -775,8 +775,8 @@
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
-            } else if (actionName === 'routeToMailbox') {
-              newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToVoiceMail') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
@@ -832,8 +832,8 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToExtension') {
           newActionArray[i][actionName].destination = val;
-        } else if (actionName === 'routeToMailbox') {
-          newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'routeToVoiceMail') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToHuntGroup') {
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToUser') {

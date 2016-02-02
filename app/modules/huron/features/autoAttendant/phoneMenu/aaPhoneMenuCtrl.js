@@ -296,7 +296,7 @@
         }, {
           label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
           name: 'phoneMenuRouteMailbox',
-          action: 'routeToMailbox'
+          action: 'routeToVoiceMail'
         });
       }
     }

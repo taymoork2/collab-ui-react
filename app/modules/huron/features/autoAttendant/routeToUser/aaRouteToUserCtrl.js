@@ -176,7 +176,7 @@
         vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         var action;
         if (angular.isDefined($scope.voicemail) && $scope.voicemail)
-          action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToMailbox', '');
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToVoiceMail', '');
         else
           action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', '');
         vm.menuKeyEntry.addAction(action);
