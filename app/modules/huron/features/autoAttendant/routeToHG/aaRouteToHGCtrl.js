@@ -29,12 +29,19 @@
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
+    vm.fromRouteCall = "false";
+
     var rtHG = 'routeToHuntGroup';
 
     /////////////////////
 
     function populateUiModel() {
-      vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+      if (!vm.fromRouteCall) {
+        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+      } else {
+        vm.hgSelected.id = '';
+      }
+
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         'id': vm.hgSelected.id
       }), 'description', '');
@@ -60,18 +67,25 @@
     }
 
     function activate() {
+
+      vm.fromRouteCall = $scope.fromRouteCall;
+
       vm.aaModel = AAModelService.getAAModel();
       var ui = AAUiModelService.getUiModel();
 
       vm.uiMenu = ui[$scope.schedule];
-      vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
-      if ($scope.keyIndex < vm.menuEntry.entries.length) {
-        vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
-      } else {
-        vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
-        vm.menuKeyEntry.addAction(action);
+      if (!vm.fromRouteCall) {
+        vm.menuEntry = vm.uiMenu.entries[$scope.index];
+
+        if ($scope.keyIndex < vm.menuEntry.entries.length) {
+          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+        } else {
+          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+          vm.menuKeyEntry.addAction(action);
+        }
+
       }
 
       getHuntGroups().then(function () {

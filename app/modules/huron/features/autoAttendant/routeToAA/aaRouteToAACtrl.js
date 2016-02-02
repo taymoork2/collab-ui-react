@@ -10,6 +10,8 @@
 
     var vm = this;
 
+    vm.fromRouteCall = "false";
+
     vm.aaModel = {};
     vm.menuEntry = {};
 
@@ -54,7 +56,10 @@
     }
 
     function populateUiModel() {
-      vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
+      if (!vm.fromRouteCall) {
+        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
+      }
+
     }
 
     function saveUiModel() {
@@ -69,12 +74,15 @@
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
       // Read an existing routeToAA entry if exist or initialize it if not
-      if ($scope.keyIndex < uiPhoneMenu.entries.length) {
-        vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
-      } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-        vm.menuEntry.addAction(action);
+      if (!vm.fromRouteCall) {
+        if ($scope.keyIndex < uiPhoneMenu.entries.length) {
+          vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
+        } else {
+          vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          vm.menuEntry.addAction(action);
+        }
+
       }
 
       // Deduce list of Auto Attendants

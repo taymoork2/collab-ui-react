@@ -24,9 +24,9 @@
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
-      controller: '',
-      url: '',
-      help: '',
+      controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
+      url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
+      help: $translate.instant('autoAttendant.routeCallMenuHelp'),
       actions: ['route', 'goto', 'routeToExtension']
     }];
 
@@ -37,7 +37,7 @@
     vm.getTemplateUrl = getTemplateUrl;
     vm.removeAction = removeAction;
 
-    vm.allowStepAddsDeletes = false;
+    vm.allowStepAddsDeletes = true;
 
     /////////////////////
 
