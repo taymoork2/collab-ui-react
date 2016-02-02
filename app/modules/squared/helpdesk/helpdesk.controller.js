@@ -379,8 +379,6 @@
           }
           vm.healthyStatus = "ok";
 
-        } else {
-          //console.error('Get health metrics failed. Status: ' + status);
         }
       });
     };

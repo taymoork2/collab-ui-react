@@ -5,7 +5,7 @@
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
         <button cs-dropdown-toggle class="btn--user dropdown-toggle" tabindex="0">
-          <div ng-class="{'gray': helpdeskCtrl.healthyStatus === 'unknown', 'red': helpdeskCtrl.healthyStatus === 'error', 'green': helpdeskCtrl.healthyStatus === 'ok'}">
+          <div ng-class="{unknown:  'gray', error: 'red', ok: 'green'}[helpdeskCtrl.healthyStatus]">
             <i class="icon icon-circle"></i>
           </div>
         </button>
