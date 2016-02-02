@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
+describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var vm, $rootScope, $translate, $httpBackend, Authinfo, ScheduleUpgradeService, NotificationService;
