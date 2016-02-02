@@ -3340,7 +3340,9 @@
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
-    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
