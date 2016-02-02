@@ -1464,6 +1464,7 @@
     "phoneMenuPlaySubmenu": "Play Submenu",
     "phoneMenuRepeatMenu": "Repeat this Menu",
     "phoneMenuDialExt": "Dial by Extension",
+    "phoneMenuRouteToExtNum": "Route to Phone Number",
     "phoneMenuRouteUser": "Route to User",
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
@@ -1478,6 +1479,7 @@
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
@@ -1567,7 +1569,8 @@
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
-    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
     "code": "CP",

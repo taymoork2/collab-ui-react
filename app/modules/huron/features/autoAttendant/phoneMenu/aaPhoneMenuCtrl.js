@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -309,12 +309,24 @@
     }
     /////////////////////
 
+    function addAvailableFeatures() {
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+          name: 'phoneMenuRouteToExtNum',
+          action: 'route'
+        });
+      }
+    }
+
     function activate() {
       vm.schedule = $scope.schedule;
       var ui = AAUiModelService.getUiModel();
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
+
+      addAvailableFeatures();
 
       if (vm.menuEntry.type === '') {
         createOptionMenu();
