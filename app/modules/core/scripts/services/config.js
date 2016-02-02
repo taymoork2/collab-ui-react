@@ -20,7 +20,7 @@ angular.module('Core')
         },
 
         adminServiceUrl: {
-          dev: 'http://localhost:8080/atlas-server/admin/api/v1/',
+          dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
           cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
           integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
           prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
@@ -617,7 +617,7 @@ angular.module('Core')
 
         getAdminServiceUrl: function () {
           var adminServiceUrl = {
-            'dev': this.adminServiceUrl.dev,
+            'dev': this.adminServiceUrl.integration,
             'cfe': this.adminServiceUrl.cfe,
             'integration': this.adminServiceUrl.integration,
             'prod': this.adminServiceUrl.prod

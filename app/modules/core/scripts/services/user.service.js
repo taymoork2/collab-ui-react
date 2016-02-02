@@ -179,6 +179,14 @@ angular.module('Core')
             });
         },
 
+	getUserAuthToken: function (userid) {
+	      return Auth.setAccessToken().then(function () {
+		      return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid, {
+			      cache: false
+				  });
+		  });
+	},
+
         getUserFromEmail: function (email, callback) {
           $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/userexists/" + email, {
               cache: false
