@@ -45,7 +45,6 @@ gulp.task('ts:build-app', function () {
 });
 
 function buildts(files, dest){
-  var filter;
   var reporter = $.typescript.reporter.defaultReporter();
 
   return gulp
@@ -61,7 +60,7 @@ function buildts(files, dest){
       "sourceMap": true,
       "showOutput": "silent",
       "listFiles": false
-    }, filter, reporter))
+    }, undefined, reporter))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
     .pipe(reload({
