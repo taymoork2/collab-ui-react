@@ -15,7 +15,7 @@ while (1 >= sitereports.testInfo.describeCount) {
     sitereports.testInfo.describeText = 'WebEx site reports iframe test for T31 site ' + sitereports.testInfo.siteUrl;
   }
 
-  describe(sitereports.testInfo.describeText, function () {
+  xdescribe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
