@@ -31,7 +31,7 @@ gulp.task('ts:build-test', function () {
   var files = config.testFiles.spec.ts;
 
   messageLogger('Transpiling TypeScript test files', files);
-  return buildts(files, config.tstests);
+  return buildts(files, config.tsTestOutputFolder);
 });
 
 gulp.task('ts:build-app', function () {

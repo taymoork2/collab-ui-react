@@ -22,7 +22,7 @@ gulp.task('clean:dist', function (done) {
 gulp.task('clean:build', function (done) {
   var files = [
     config.build,
-    config.tstests
+    config.tsTestOutputFolder
   ];
   messageLogger('Cleaning build directory', files);
   del(files, done);
