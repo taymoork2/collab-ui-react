@@ -838,8 +838,8 @@ angular.module('Core')
       // Hybrid Services entitlements
       var getExtensionEntitlements = function (action) {
         var entitleList = [];
-        $scope.extensionEntitlements.forEach( function(entry) {
-          if ( action === 'add' && entry.entitlementState === 'ACTIVE' ) {
+        $scope.extensionEntitlements.forEach(function (entry) {
+          if (action === 'add' && entry.entitlementState === 'ACTIVE') {
             entitleList.push(new Feature(entry.entitlementName, entry.entitlementState));
           }
         });
@@ -1143,6 +1143,32 @@ angular.module('Core')
 
               $scope.results.resultList.push(userResult);
             }
+            
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].message;
+                count_e++;
+              }
+            }
+            //Displaying notifications
+            if (successes.length + errors.length === usersList.length) {
+              $scope.btnOnboardLoading = false;
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+              deferred.resolve();
+            }
+            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+              $scope.$dismiss();
+            }
+
           } else {
             Log.warn('Could not onboard the user', data);
             var error = null;
@@ -1197,7 +1223,7 @@ angular.module('Core')
           } else {
             entitleList = getEntitlements('add');
           }
-          entitleList.push( getExtensionEntitlements('add') );
+          entitleList = entitleList.concat( getExtensionEntitlements('add') );
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
             Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
