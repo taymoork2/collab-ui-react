@@ -13,9 +13,8 @@
 
     vm.uniqueIds = $stateParams.uniqueIds;
     vm.call = $stateParams.call;
-    vm.eventInfo = $stateParams.events;
+    vm.events = $stateParams.events;
     vm.imported = $stateParams.imported;
-    vm.events = {};
 
     vm.diagramXML = "";
     vm.diagramHTML = "";
@@ -52,8 +51,8 @@
     }
 
     function extractXmlDiagramInfo() {
-       var htmlString = vm.diagramHTML.toString();
-       vm.diagramXML = $sce.trustAsHtml(htmlString.substring(htmlString.indexOf("<?xml"), htmlString.indexOf("</svg>") + 6));
+      var htmlString = vm.diagramHTML.toString();
+      vm.diagramXML = $sce.trustAsHtml(htmlString.substring(htmlString.indexOf("<?xml"), htmlString.indexOf("</svg>") + 6));
     }
 
     function generateDownloads() {
