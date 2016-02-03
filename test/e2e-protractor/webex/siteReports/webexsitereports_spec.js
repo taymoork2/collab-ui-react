@@ -17,7 +17,7 @@ while (1 >= sitesettings.testInfo.describeCount) {
     sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin1.username + ' for T31 site config test';
   }
 
-  xdescribe(sitereports.testInfo.describeText, function () {
+  describe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });

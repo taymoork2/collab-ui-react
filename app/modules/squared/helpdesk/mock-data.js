@@ -454,12 +454,14 @@
         "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
         "internal": "1234",
         "external": "+14084744520",
-        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
+        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "dnUsage": "primary"
       }, {
         "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/baa07921-6ed8-4e2b-99f9-08c457fe4c18",
         "internal": "2345",
         "external": null,
-        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18"
+        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "dnUsage": "shared"
       }]
     },
     huronDeviceSearchResult: [{
@@ -498,6 +500,19 @@
       },
       "registrationStatus": "registered"
     },
+    huronDeviceNumbers: [{
+      "directoryNumber": {
+        "uuid": "0472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "2900"
+      },
+      "e164Mask": "+14084744520"
+    }, {
+      "directoryNumber": {
+        "uuid": "3472df70-779b-4819-8c35-a2f7abc69fe8",
+        "pattern": "3300"
+      },
+      "e164Mask": null
+    }],
     logs: {
       search: [{
         filename: "logFile1",

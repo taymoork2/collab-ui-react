@@ -1144,7 +1144,6 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service.",
-      "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
@@ -1286,6 +1285,8 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
+    "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -1465,6 +1466,7 @@
     "phoneMenuPlaySubmenu": "Play Submenu",
     "phoneMenuRepeatMenu": "Repeat this Menu",
     "phoneMenuDialExt": "Dial by Extension",
+    "phoneMenuRouteToExtNum": "Route to Phone Number",
     "phoneMenuRouteUser": "Route to User",
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
@@ -1479,7 +1481,9 @@
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1568,7 +1572,9 @@
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
-    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "selectUserPlaceHolder": "Enter full name",
+    "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
     "code": "CP",
@@ -2072,8 +2078,8 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
+    "lastSeen": "Offline since:",
     "expires": "This activation code expires",
-    "lastSeen": "Last seen",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -3262,6 +3268,8 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
+    "lastLog": "Last Log",
+    "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
@@ -3340,7 +3348,11 @@
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
-    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "primary": "Primary",
+    "shared": "Shared",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help"
   },
   "activation": {
     "verificationComplete": "Verification Complete",

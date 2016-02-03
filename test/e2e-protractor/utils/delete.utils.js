@@ -63,6 +63,36 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     }
   };
   return utils.sendRequest(options).then(function () {
+    return 200;
+  });
+};
+
+exports.extractUUID = function (ceURL) {
+  var uuidPos = ceURL.lastIndexOf("/");
+  if (uuidPos === -1) {
+    return '';
+  }
+  return ceURL.substr(uuidPos + 1);
+};
+
+// deleteNumberAssignments - Delete AA CMI number assignments
+//
+// Called by deleteTestAA below.
+exports.deleteNumberAssignments = function (aaUrl, token) {
+
+  var ceId = exports.extractUUID(aaUrl);
+
+  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['huron-int1'].org + '/features/autoattendants/' + ceId + '/numbers';
+
+  var options = {
+    method: 'delete',
+    url: cmiUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  return utils.sendRequest(options).then(function () {
     return 204;
   });
 };
@@ -81,9 +111,15 @@ exports.testAAName = 'e2e AA Test Name';
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAA = function (bearer, data) {
+
   for (var i = 0; i < data.length; i++) {
     if (data[i].callExperienceName === this.testAAName) {
-      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer);
+
+      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
+
+        return exports.deleteNumberAssignments(data[i].callExperienceURL, bearer);
+
+      });
     }
   }
 };

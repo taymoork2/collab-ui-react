@@ -87,9 +87,7 @@
       if (Authinfo.isSupportUser()) {
         HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
           vm.lastPushedLog = log;
-        }, function (reason) {
-
-        });
+        }, angular.noop);
       }
 
       angular.element(".helpdesk-details").focus();

@@ -36,6 +36,20 @@ exports.getCmiServiceUrl = function () {
   }
 };
 
+exports.cmiV2ServiceUrl = {
+  dev: 'https://cmi.huron-int.com/api/v2/',
+  integration: 'https://cmi.huron-int.com/api/v2/',
+  prod: 'https://cmi.huron-dev.com/api/v2/'
+};
+
+exports.getCmiV2ServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.cmiV2ServiceUrl.prod;
+  } else {
+    return this.cmiV2ServiceUrl.integration;
+  }
+};
+
 exports.deviceUserAgent = {
   android: 'wx2-android/1 (Android 4.4.2; LGE Hammerhead / Google Nexus 5; )[preload=false;locale=en_US;clientidbase=android-google]',
   iPhone: 'wx2_iOS',

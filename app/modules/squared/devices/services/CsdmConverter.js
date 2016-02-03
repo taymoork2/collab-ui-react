@@ -155,9 +155,11 @@ angular.module('Squared').service('CsdmConverter',
       this.product = 'Activation Code';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
+      this.activationCode = obj.activationCode;
       this.readableState = getReadableState(obj);
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
+      this.readableActivationCode = getReadableActivationCode(obj);
       this.canDelete = true;
       this.canEditDisplayName = true;
       this.image = "images/devices-hi/unknown.png";
@@ -301,6 +303,12 @@ angular.module('Squared').service('CsdmConverter',
 
     function getNeedsActivation(obj) {
       return obj.state == 'UNCLAIMED';
+    }
+
+    function getReadableActivationCode(obj) {
+      if (obj.activationCode) {
+        return obj.activationCode.match(/.{4}/g).join(' ');
+      }
     }
 
     function getIsOnline(obj) {
