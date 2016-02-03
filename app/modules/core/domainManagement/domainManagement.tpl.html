@@ -35,7 +35,7 @@
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"  ng-if="domain.status==='pending'" translate="domainManagement.actions.delete"></a>
                 </li>
                 <li>
-                  <a ui-sref="domainmanagement.email({domain: domain, loggedOnUser: dv.loggedOnUser})" ng-show="domain.status==='pending' && domain.token" translate="domainManagement.actions.mail"></a>
+                  <a ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})" ng-show="domain.status==='pending' && domain.token" translate="domainManagement.actions.instructions"></a>
                 </li>
               </ul>
             </span>
