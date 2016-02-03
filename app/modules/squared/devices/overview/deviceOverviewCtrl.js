@@ -24,10 +24,17 @@
     };
 
     deviceOverview.reportProblem = function () {
-      var feedbackId = Utils.getUUID();
+      var uploadLogsPromise;
+      var feedbackId;
+      if (deviceOverview.currentDevice.isHuronDevice) {
+        feedbackId = Math.floor((1 + Math.random()) * 0x100000000000000000000000000000000).toString(16).substring(1);
+        uploadLogsPromise = CsdmHuronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
+      } else {
+        feedbackId = Utils.getUUID();
+        uploadLogsPromise = CsdmDeviceService.uploadLogs(deviceOverview.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail());
+      }
 
-      return CsdmDeviceService.uploadLogs(deviceOverview.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail())
-        .then(function () {
+      uploadLogsPromise.then(function () {
           var appType = 'Atlas_' + $window.navigator.userAgent;
           return FeedbackService.getFeedbackUrl(appType, feedbackId);
         })
