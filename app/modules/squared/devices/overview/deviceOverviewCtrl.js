@@ -27,7 +27,9 @@
       var uploadLogsPromise;
       var feedbackId;
       if (deviceOverview.currentDevice.isHuronDevice) {
-        feedbackId = Math.floor((1 + Math.random()) * 0x100000000000000000000000000000000).toString(16).substring(1);
+        for (feedbackId = ''; feedbackId.length < 32;) {
+          feedbackId += Math.random().toString(36).substr(2, 1);
+        }
         uploadLogsPromise = CsdmHuronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
       } else {
         feedbackId = Utils.getUUID();
