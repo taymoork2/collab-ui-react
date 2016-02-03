@@ -189,7 +189,6 @@ angular
         })
         .state('domainmanagement', {
           //abstract: true,
-          url: '/domainmanagement',
           templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
           controller: 'DomainManagementCtrl',
           controllerAs: 'dv',
