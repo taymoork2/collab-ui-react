@@ -167,11 +167,11 @@ describe('Partner flow', function () {
       });
     });
 
-    it('Should close customer portal', function() {
+    it('Should close customer portal', function () {
       browser.close();
       browser.switchTo().window(appWindow);
     });
-    
+
   }, LONG_TIMEOUT);
 
   afterAll(function () {
