@@ -2825,7 +2825,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

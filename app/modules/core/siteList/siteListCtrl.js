@@ -173,7 +173,7 @@ angular.module('Core')
       if (adminUserSupportCSV) {
         vm.gridOptions.columnDefs.push({
           field: 'siteCSV',
-          displayName: 'CSV',
+          displayName: $translate.instant('siteList.siteCsv'),
           cellTemplate: siteCSVColumn,
           sortable: false
         });
