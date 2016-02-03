@@ -58,7 +58,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       expect(controller).toBeDefined();
     });
     it('should call the Orgservice and set the displayName', function () {
-      var displayName = orgServiceJSONFixture.getOrg.displayName;
       expect($scope.cloudSipUriField.inputValue).not.toBe('');
     });
   });
@@ -77,9 +76,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   });
 
   describe('test if checkSipUriAvailability function sets isUrlAvailable to true', function () {
-    beforeEach(function () {
-      initController();
-    });
+    beforeEach(initController);
 
     it('should check if checkSipUriAvailability in success state sets isUrlAvailable to true ', function (done) {
       $scope.cloudSipUriField.inputValue = 'shatest1';

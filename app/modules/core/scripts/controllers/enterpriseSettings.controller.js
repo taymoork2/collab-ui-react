@@ -33,8 +33,6 @@
             displayName = data.verifiedDomains[0];
           } else if (data.displayName) {
             displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
-          } else {
-            displayName = '';
           }
         } else {
           Log.debug('Get existing org failed. Status: ' + status);

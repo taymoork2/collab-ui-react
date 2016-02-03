@@ -27,12 +27,12 @@ describe('SparkDomainManagementService: Service', function () {
   });
 
   it('should verify that a domain is passed for checkAvailability and addSipUriDomain calls', function () {
-    SparkDomainManagementService.checkDomainAvailability().catch(function (data) {
-      expect(data).toBe('A Sip Uri Domain input value must be entered');
+    SparkDomainManagementService.checkDomainAvailability().catch(function (response) {
+      expect(response).toBe('A SIP URI Domain input value must be entered');
     });
 
-    SparkDomainManagementService.addSipUriDomain().catch(function (data) {
-      expect(data).toBe('A Sip Uri Domain input value must be entered');
+    SparkDomainManagementService.addSipUriDomain().catch(function (response) {
+      expect(response).toBe('A SIP URI Domain input value must be entered');
     });
   });
 
