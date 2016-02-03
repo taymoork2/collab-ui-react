@@ -210,7 +210,7 @@ angular.module('Core')
             if (adminUserSupportCSV) {
               var columnObj = {
                 field: 'siteCSV',
-                displayName: 'CSV',
+                displayName: $translate.instant('siteList.siteCsv'),
                 cellTemplate: siteCSVColumn,
                 sortable: false
               };
