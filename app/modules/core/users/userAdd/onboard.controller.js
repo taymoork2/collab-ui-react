@@ -371,9 +371,7 @@ angular.module('Core')
 
       $scope.showMultiSubscriptions = function (billingServiceId, isTrial) {
         var isSelected = false;
-        if (billingServiceId === undefined && isTrial === true) {
-          isSelected = true;
-        }
+        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
         if (_.isArray(billingServiceId)) {
           for (var i in billingServiceId) {
             if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
@@ -387,7 +385,7 @@ angular.module('Core')
         var isOneBilling = $scope.oneBilling;
 
         $scope.licenseExists = isSelected;
-        return isOneBilling || isSelected;
+        return isOneBilling || isSelected || isTrialSubscription;
       };
 
       function populateConf() {
@@ -440,7 +438,7 @@ angular.module('Core')
           licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
-          isTrial: false,
+          isTrial: _.get(obj, 'license.isTrial', false),
           confModel: false,
           cmrModel: false
         };

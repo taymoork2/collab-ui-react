@@ -97,20 +97,21 @@
         var trial = '';
 
         var result = [];
-        for (var index in usageLicenses) {
-          var licenses = _.filter(usageLicenses[index].licenses, function (license) {
+        _.forEach(usageLicenses, function (index) {
+          var licenses = _.filter(index.licenses, function (license) {
             var match = _.find(statusLicenses, {
               'licenseId': license.licenseId
             });
+            trial = license.isTrial ? 'Trial' : 'unknown';
             return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
-          trial = usageLicenses[index].isTrial ? 'Trial' : 'unknown';
+          
           var subscription = {
-            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : trial,
+            "subscriptionId": index.subscriptionId ? index.subscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
-        }
+        });
         return result;
       }).catch(function (err) {
         Log.debug('Get existing admin org failed. Status: ' + err);
