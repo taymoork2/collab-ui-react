@@ -50,6 +50,28 @@
       border-right: none;
     }
   }
+  .carousel-control {
+    padding: 9px 16px;
+    background-color: $white;
+    i {
+      color: $color-primary-base;
+    }
+  }
+  .carousel-control:focus {
+    box-shadow: none;
+  }
+  .carousel-control:hover {
+    background-color: $color-primary-base;
+    i {
+      color: $white;
+    }
+  }
+  .carousel-control[disabled] {
+    background-color: $gray-light-2;
+    i {
+      color: $gray-base;
+    }
+  }
   .active-carousel {
     position: relative;
     top: rem-calc(-10);

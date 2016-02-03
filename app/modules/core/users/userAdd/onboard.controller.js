@@ -1204,7 +1204,6 @@ angular.module('Core')
               return (user.address == usersList[i].address);
             });
 
-            var internalExtension, directLine;
             if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
               usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
             }
