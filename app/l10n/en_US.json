@@ -1,7 +1,7 @@
 {
   "loginPage": {
     "title": "Cloud Collaboration Management",
-    "login": "Login",
+    "login": "Sign In",
     "loading": "Loading"
   },
   "usersPage": {
@@ -921,11 +921,20 @@
   },
   "unauthorizedPage": {
     "title": "Unauthorized",
-    "text": "Sorry! Your account is not authorized to access this page."
+    "text": "You're not authorized to access this page."
   },
   "404Page": {
-    "title": "404 Not Found",
+    "title": "Not Found",
     "text": "The page you requested cannot be found."
+  },
+  "loginErrorPage": {
+    "title": "Sign In Failure",
+    "text": "An error has occurred."
+  },
+  "stateRedirect": {
+    "goBackButton": "Go Back",
+    "tryAgainButton": "Try Again",
+    "signInButton": "Sign In Again"
   },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",

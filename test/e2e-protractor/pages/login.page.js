@@ -39,7 +39,7 @@ var LoginPage = function () {
     expect(browser.driver.findElement(by.css('.generic-error')).getText()).toContain(msg);
   };
 
-  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Login'));
+  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Sign In'));
 
   function getLoginUrl(expectedUrl) {
     var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
