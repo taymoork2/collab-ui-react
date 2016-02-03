@@ -13,6 +13,7 @@ angular.module('Core')
         $scope.roles = roles;
         $scope.orgId = Authinfo.getOrgId();
         $scope.isPartner = Authinfo.isPartnerAdmin();
+        $scope.isPartnerSales = Authinfo.isPartnerSalesAdmin();
         $scope.roleList = _.map(roles, function (role) {
           return $translate.instant('atlasRoles.' + role);
         }).sort().join(', ');
