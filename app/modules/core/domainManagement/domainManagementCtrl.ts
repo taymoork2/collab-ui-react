@@ -4,16 +4,16 @@ namespace domainManagement {
 
     private _loggedOnUser = {
       domain: null,
-      email:null,
-      isLoaded:false,
-      isPartner:false
-  };
+      email: null,
+      isLoaded: false,
+      isPartner: false
+    };
 
     private _feature = false;
 
     /* @ngInject */
     constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
-      this._feature = true;/*
+
       FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
         .then(dmEnabled => {
             if (dmEnabled) {
@@ -22,7 +22,7 @@ namespace domainManagement {
               this.$state.go('unauthorized');
             }
           }
-        );*/
+        );
 
       CiService.getUser().then(curUser => {
 

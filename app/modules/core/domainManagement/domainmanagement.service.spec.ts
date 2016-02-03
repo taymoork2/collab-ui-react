@@ -3,7 +3,7 @@ describe('DomainManagementService', function () {
 
   beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, DomainManagementService, Config, Authinfo, XhrNotificationService;
+  let $httpBackend, DomainManagementService, Config, Authinfo, XhrNotificationService;
 
   beforeEach(function () {
     angular.mock.module(function ($provide) {
@@ -35,8 +35,6 @@ describe('DomainManagementService', function () {
     setTimeout($httpBackend.verifyNoOutstandingExpectation, 0);
     setTimeout($httpBackend.verifyNoOutstandingRequest, 0);
   });
-
-  var $httpBackend, Authinfo, Config;
 
   it('should produce a list of domains with tokens for the pending.', function (done) {
 
@@ -98,7 +96,6 @@ describe('DomainManagementService', function () {
         status: DomainManagementService.states.pending
       }];
 
-      console.log("got res:", data);
       expect(data.length).toBe(expectedRes.length);
 
       for(var i=0;i<data.length;i++){

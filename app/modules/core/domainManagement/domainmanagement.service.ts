@@ -132,7 +132,6 @@ class DomainManagementService {
               domainInList.status = this.states.verified;
             deferred.resolve();
           }, err => {
-            console.log("dfdsfdsfds", err);
             this.Log.error('Failed to verify domain:' + domain, err);
             deferred.reject(this.getErrorMessage(err));
           });
@@ -147,8 +146,6 @@ class DomainManagementService {
   claimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
-
-      console.log("claim", domain);
 
       if (this._mock) {
         let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
