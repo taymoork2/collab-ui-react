@@ -47,13 +47,4 @@ describe('Controller: CdrOverviewCtrl', function () {
   it('should be defined', function () {
     expect(controller).toBeDefined();
   });
-
-  it('should return a filtered list based on the search filter', function () {
-    expect(controller.filter()).toEqual(formatCdr(callLegs[0][0][0]));
-
-    controller.searchField = "calling_customerUUID";
-    expect(controller.filter()).toEqual({
-      calling_customerUUID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2'
-    });
-  });
 });
