@@ -8,8 +8,7 @@ var SiteSettigsPage = function () {
     describeCount: 0,
     siteUrl: null,
     siteType: null,
-    describeText: null,
-    signInText: null,
+    describeText: null
   };
 
   this.testAdmin1 = {
@@ -28,6 +27,9 @@ var SiteSettigsPage = function () {
   this.siteSettingPanel = element(by.id('siteSetting'));
   this.configureSJSITE14Cog = element(by.id("sjsite14.webex.com_webex-site-settings"));
   this.configureCISJSITE002Cog = element(by.id("cisjsite002.webex.com_webex-site-settings"));
+  this.sjsite14CardsSectionId = element(by.id("sjsite14.webex.com-cardsSection"));
+  this.cisjsite002CardsSectionId = element(by.id("cisjsite002.webex.com-cardsSection"));
+
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));

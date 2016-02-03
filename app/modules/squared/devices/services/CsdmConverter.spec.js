@@ -17,13 +17,6 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertDevice(obj).tags[0]).toBe('foo');
   });
 
-  it('should format activation code', function () {
-    var arr = [{
-      activationCode: '1111222233334444'
-    }];
-    expect(converter.convertDevices(arr)[0].readableActivationCode).toBe('1111 2222 3333 4444');
-  });
-
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'
@@ -106,6 +99,13 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertDevices(arr)[0].cisUuid).toBe('foo');
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
+    });
+
+    it('huronId', function () {
+      var arr = [{
+        url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6'
+      }];
+      expect(converter.convertHuronDevices(arr)[0].huronId).toBe('f0b72ba5-0121-452b-a0c8-f6680f660de6');
     });
 
   }); // pass thru fields

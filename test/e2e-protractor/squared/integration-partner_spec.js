@@ -64,7 +64,7 @@ describe('Partner flow', function () {
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
-      partner.assertDisabled('startTrialButton');
+      utils.expectIsDisabled(partner.startTrialButton);
 
       utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
@@ -75,7 +75,7 @@ describe('Partner flow', function () {
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
       utils.clickEscape();
-    }, LONG_TIMEOUT);
+    });
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
@@ -98,7 +98,7 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.editTrialForm);
         utils.expectClass(partner.messageTrialCheckbox, 'disabled');
 
-        partner.assertDisabled('saveUpdateButton');
+        utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);
         utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
@@ -164,11 +164,14 @@ describe('Partner flow', function () {
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
-
-        browser.close();
-        browser.switchTo().window(appWindow);
       });
     });
+
+    it('Should close customer portal', function () {
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
+
   }, LONG_TIMEOUT);
 
   afterAll(function () {
