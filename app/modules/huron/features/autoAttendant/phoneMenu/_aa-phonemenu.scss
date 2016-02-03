@@ -50,6 +50,12 @@
     }
   }
 
+  & .country-list {
+    .dropdown-menu {
+      width: inherit;
+    }
+  }
+
   & .select-toggle {
     width: auto;
 
