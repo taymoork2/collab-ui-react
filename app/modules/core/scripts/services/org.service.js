@@ -97,17 +97,17 @@
         var trial = '';
 
         var result = [];
-        _.forEach(usageLicenses, function (index) {
-          var licenses = _.filter(index.licenses, function (license) {
+        _.forEach(usageLicenses, function (usageLicense) {
+          var licenses = _.filter(usageLicense.licenses, function (license) {
             var match = _.find(statusLicenses, {
               'licenseId': license.licenseId
             });
             trial = license.isTrial ? 'Trial' : 'unknown';
             return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
-          
+
           var subscription = {
-            "subscriptionId": index.subscriptionId ? index.subscriptionId : trial,
+            "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
