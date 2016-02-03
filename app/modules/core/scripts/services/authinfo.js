@@ -174,11 +174,8 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
-          if (this.getPrimaryEmail() === 'null') {
-            ll('setCustomDimension', 0, 'No primary email exists for this user');
-          } else {
-            ll('setCustomDimension', 0, this.getPrimaryEmail());
-          }
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          ll('setCustomDimension', 0, msg);
         },
         getEmails: function () {
           return authData.emails;
