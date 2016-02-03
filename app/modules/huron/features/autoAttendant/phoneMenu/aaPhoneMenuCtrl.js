@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -93,23 +93,11 @@
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
         inputType: 2
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      //   name: 'phoneMenuRouteUser',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
         name: 'phoneMenuRouteHunt',
         action: 'routeToHuntGroup'
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      //   name: 'phoneMenuRouteVM',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'
@@ -307,6 +295,28 @@
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
+
+    function addAvailableFeatures() {
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+          name: 'phoneMenuRouteUser',
+          action: 'routeToUser'
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          name: 'phoneMenuRouteMailbox',
+          action: 'routeToVoiceMail'
+        });
+
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+          name: 'phoneMenuRouteToExtNum',
+          action: 'route'
+        });
+
+      }
+    }
+
     /////////////////////
 
     function activate() {
@@ -315,6 +325,8 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
+
+      addAvailableFeatures();
 
       if (vm.menuEntry.type === '') {
         createOptionMenu();
