@@ -92,9 +92,9 @@
     function getLicensesUsage() {
       return getAdminOrgUsage().then(function (response) {
 
-        var usageLicenses = [];
-        usageLicenses = response.data || [];
+        var usageLicenses = response.data || [];
         var statusLicenses = Authinfo.getLicenses();
+        var trial = '';
 
         var result = [];
         for (var index in usageLicenses) {
@@ -104,8 +104,9 @@
             });
             return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
+          trial = usageLicenses[index].isTrial ? 'Trial' : 'unknown';
           var subscription = {
-            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : 'undefined',
+            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
