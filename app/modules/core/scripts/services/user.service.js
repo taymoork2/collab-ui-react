@@ -77,19 +77,32 @@ angular.module('Core')
 
         updateUsers: function (usersDataArray, licenses, entitlements, method, callback) {
           var userData = {
-            'users': []
+            users: []
           };
 
           for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
+            var userInfo = usersDataArray[i];
+            var userEmail = userInfo.address.trim();
             if (userEmail.length > 0) {
               var user = {
-                'email': userEmail,
-                'userEntitlements': entitlements,
-                'licenses': licenses,
-                'assignedDn': usersDataArray[i].assignedDn,
-                'externalNumber': usersDataArray[i].externalNumber
+                email: userEmail,
+                userEntitlements: entitlements,
+                licenses: licenses
               };
+
+              var userLic = {};
+
+              userLic.internalExtension = _.get(userInfo, 'assignedDn.pattern');
+              if (userInfo.externalNumber && userInfo.externalNumber.pattern !== 'None') {
+                userLic.directLine = userInfo.externalNumber.pattern;
+              }
+
+              if (_.isArray(entitlements) && entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userLic, entitlements);
+              }
+              if (_.isArray(licenses) && licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userLic, licenses);
+              }
               userData.users.push(user);
             }
           }

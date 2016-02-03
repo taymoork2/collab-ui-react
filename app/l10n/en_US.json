@@ -3268,7 +3268,7 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
-    "lastLog": "Last Log",
+    "lastLog": "Last Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
