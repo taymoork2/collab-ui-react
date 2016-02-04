@@ -2,7 +2,7 @@
 
 describe('Service: Customer Reports Service', function () {
   var $httpBackend, CustomerReportService, Config, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl;
+  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl, activeUserDetailedUrl, mostActiveUrl, devicesUrl;
 
   var activeData = getJSONFixture('core/json/customerReports/activeUser.json');
   var activeUserData = activeData.activeDetailed;
@@ -29,6 +29,10 @@ describe('Service: Customer Reports Service', function () {
   var metricsContent = metricsData.data;
   var metricsResponse = metricsData.response;
 
+  var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  var devicesData = devicesJson.deviceData;
+  var deviceResponse = devicesJson.response;
+
   beforeEach(module('Core'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
@@ -38,10 +42,14 @@ describe('Service: Customer Reports Service', function () {
     value: 0
   };
 
-  var updateDates = function (data, filter) {
+  var updateDates = function (data, filter, altDate) {
     for (var i = data.length - 1; i >= 0; i--) {
       if (filter === null || angular.isUndefined(filter)) {
-        data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+        if (altDate === null || angular.isUndefined(altDate)) {
+          data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
+        } else {
+          data[i][altDate] = moment().tz(timezone).subtract(data.length - i, 'day').format();
+        }
       } else {
         data[i].modifiedDate = moment().tz(timezone).subtract(data.length - i, 'day').format(filter);
       }
@@ -79,6 +87,7 @@ describe('Service: Customer Reports Service', function () {
     metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
+    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
     activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
     responseActiveData = updateDates(responseActiveData, dayFormat);
@@ -94,6 +103,13 @@ describe('Service: Customer Reports Service', function () {
 
     mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
     mediaResponse = updateDates(mediaResponse, dayFormat);
+
+    angular.forEach(devicesData.data[0].data, function (item, index, array) {
+      item.details = updateDates(item.details, null, 'recordTime');
+    });
+    angular.forEach(deviceResponse.graphData, function (item, index, array) {
+      item.graph = updateDates(item.graph, dayFormat);
+    });
   }));
 
   afterEach(function () {
@@ -240,6 +256,32 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
         expect(response.dataProvider).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Registered Endpoints Service', function () {
+    it('should getDeviceData', function () {
+      $httpBackend.whenGET(devicesUrl).respond(devicesData);
+
+      CustomerReportService.getDeviceData(timeFilter).then(function (response) {
+        expect(response).toEqual(deviceResponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getDeviceData', function () {
+      $httpBackend.whenGET(devicesUrl).respond(500, error);
+
+      CustomerReportService.getDeviceData(timeFilter).then(function (response) {
+        expect(response).toEqual({
+          graphData: [],
+          filterArray: []
+        });
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 

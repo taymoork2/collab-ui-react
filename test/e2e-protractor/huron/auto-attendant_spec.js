@@ -165,6 +165,25 @@ describe('Huron Auto Attendant', function () {
 
     });
 
+    it('should add route to external number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.repeatPlus);
+      //Add Route to Phone Number
+      utils.click(autoattendant.phoneMenuKeys.last());
+      utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "4084741234");
+
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
     it('should close AA edit and return to landing page', function () {
 
       utils.click(autoattendant.closeEditButton);

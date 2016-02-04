@@ -45,8 +45,8 @@
             "description": "Leave voicemail",
             "input": "2",
             "actions": [{
-              "routeToMailbox": {
-                "mailbox": "1111"
+              "routeToVoiceMail": {
+                "id": "1111"
               }
             }]
           }, {
@@ -194,8 +194,8 @@
             "description": "Leave voicemail",
             "input": "2",
             "actions": [{
-              "routeToMailbox": {
-                "mailbox": "1111"
+              "routeToVoiceMail": {
+                "id": "1111"
               }
             }]
           }, {
@@ -293,7 +293,7 @@
       "isTouched": false,
       "key": "2",
       "actions": [{
-        "name": "routeToMailbox",
+        "name": "routeToVoiceMail",
         "value": "1111",
         "description": "",
         "voice": ""

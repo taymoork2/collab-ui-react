@@ -289,7 +289,7 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.collab
           }]
         });
-        expect(data.offer.userServices).toContain($translate.instant('trials.collab'));
+        expect(data.offer.userServices).toContain($translate.instant('trials.message'));
       });
 
       it('should return an object with its "offer.userServices" property as a comma separated with the translated "trials.squaredUC" l10n key, if the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {
@@ -298,14 +298,14 @@ describe('Partner Service -', function () {
             id: Config.offerTypes.call
           }]
         });
-        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
 
         data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.squaredUC
           }]
         });
-        expect(data.offer.userServices).toContain($translate.instant('trials.squaredUC'));
+        expect(data.offer.userServices).toContain($translate.instant('trials.call'));
       });
 
       it('should return an object with "isSquaredUcOffer" property set to `true`, only if any of the offers "id" property matches `Config.offerTypes.call` or `Config.offerTypes.squaredUC`', function () {

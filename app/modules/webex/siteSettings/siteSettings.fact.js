@@ -43,6 +43,7 @@
 
             siteUrl: siteUrl,
             siteName: siteName,
+            cardsSectionId: siteUrl + "-" + "cardsSection",
 
             // siteInfo: null,
             // meetingTypesInfo: null,
