@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   /* @ngInject */
@@ -27,6 +27,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
+    vm.isAuthorizedForLog = isAuthorizedForLog;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -35,7 +36,7 @@
     }
 
     function sendCode() {
-      HelpdeskService.sendVerificationCode(vm.user.displayName, vm.user.userName).then(function (code) {
+      HelpdeskService.sendVerificationCode(vm.user.displayName, vm.user.userName).then(function(code) {
         vm.verificationCode = code;
         vm.sendingVerificationCode = false;
       }, XhrNotificationService.notify);
@@ -50,19 +51,19 @@
       vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
 
       if (vm.hybridServicesCard.entitled) {
-        HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
-          _.each(statuses, function (status) {
+        HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function(statuses) {
+          _.each(statuses, function(status) {
             status.collapsedState = USSService2.decorateWithStatus(status);
             switch (status.serviceId) {
-            case 'squared-fusion-cal':
-              vm.hybridServicesCard.cal.status = status;
-              break;
-            case 'squared-fusion-uc':
-              vm.hybridServicesCard.uc.status = status;
-              break;
-            case 'squared-fusion-ec':
-              vm.hybridServicesCard.ec.status = status;
-              break;
+              case 'squared-fusion-cal':
+                vm.hybridServicesCard.cal.status = status;
+                break;
+              case 'squared-fusion-uc':
+                vm.hybridServicesCard.uc.status = status;
+                break;
+              case 'squared-fusion-ec':
+                vm.hybridServicesCard.ec.status = status;
+                break;
             }
           });
         }, XhrNotificationService.notify);
@@ -70,22 +71,22 @@
 
       if (!vm.org.displayName && vm.org.id !== Config.consumerOrgId) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
-        HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
+        HelpdeskService.getOrgDisplayName(vm.orgId).then(function(displayName) {
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
 
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
-        HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function (devices) {
+        HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function(devices) {
           vm.huronDevices = devices;
         }, handleHuronError);
-        HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function (numbers) {
+        HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function(numbers) {
           vm.callCard.huronNumbers = numbers;
         }, handleHuronError);
       }
 
-      if (Authinfo.isSupportUser()) {
-        HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
+      if (isAuthorizedForLog()) {
+        HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function(log) {
           vm.lastPushedLog = log;
         }, angular.noop);
       }
@@ -93,8 +94,12 @@
       angular.element(".helpdesk-details").focus();
     }
 
+    function isAuthorizedForLog() {
+      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
+    }
+
     function downloadLog(filename) {
-      HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
+      HelpdeskLogService.downloadLog(filename).then(function(tempURL) {
         window.location.assign(tempURL);
       });
     }
