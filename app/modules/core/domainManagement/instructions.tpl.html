@@ -4,17 +4,17 @@
     <h4 class="modal-title" translate="domainManagement.instructions.title"></h4>
   </div>
   <div class="modal-body">
-    <section class="domainVerificationInfo">
-      <p translate="domainManagement.instructions.instructions" translate-value-name="{{dmpopup.domain.text}}"></p>
-      <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
-      <p translate="domainManagement.instructions.howto"></p>
-    </section>
+    <p translate="domainManagement.instructions.beforeVerify"></p>
+    <p class="domainInput">{{dmpopup.domain.text}}</p>
+    <p translate="domainManagement.instructions.instructions" translate-value-name="{{dmpopup.domain.text}}"></p>
+    <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
+    <p translate="domainManagement.instructions.howto"></p>
   </div>
 
 
   <div class="modal-footer">
-    <button ui-sref="domainmanagement" translate="common.cancel"></button>
-    <button ui-sref="domainmanagement" class="btn--primary"
+    <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
+    <button ng-click="dmpopup.cancel()" class="btn--primary"
             translate="domainManagement.instructions.done"></button>
   </div>
 </div>

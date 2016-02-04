@@ -28,7 +28,7 @@
   </div>
 
   <div class="modal-footer">
-    <button ui-sref="domainmanagement" translate="common.cancel"></button>
+    <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
     <button ng-click="dmpopup.verify()" ng-disabled="!dmpopup.operationAllowed" class="btn--attention"
             translate="domainManagement.verify.verify"></button>
   </div>
