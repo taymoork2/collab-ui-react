@@ -25,7 +25,9 @@ describe('Service: CsvDownloadService', function () {
   });
 
   describe('getCsv(template)', function () {
-    var templateFile = {"some": "template"};
+    var templateFile = {
+      "some": "template"
+    };
     beforeEach(function () {
       $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateFile);
     });
@@ -39,7 +41,9 @@ describe('Service: CsvDownloadService', function () {
   });
 
   describe('getCsv(user)', function () {
-    var userFile = {"some": "user"};
+    var userFile = {
+      "some": "user"
+    };
     beforeEach(function () {
       $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/export').respond(userFile);
     });
@@ -53,7 +57,9 @@ describe('Service: CsvDownloadService', function () {
   });
 
   describe('getCsv(headers)', function () {
-    var headersFile = {"some": "headers"};
+    var headersFile = {
+      "some": "headers"
+    };
     beforeEach(function () {
       $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersFile);
     });
