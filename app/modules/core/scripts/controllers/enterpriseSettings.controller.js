@@ -25,9 +25,10 @@
     $scope.setSipUri = function () {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
+        var sparkDomainStr = Config.getSparkDomainCheckUrl();
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
-            displayName = data.orgSettings.sipCloudDomain.split('.')[0];
+            displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr,'');
             $scope.cloudSipUriField.isDisabled = true;
           } else if (data.verifiedDomains) {
             displayName = data.verifiedDomains[0];
