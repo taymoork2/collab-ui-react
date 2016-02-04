@@ -1783,8 +1783,11 @@ angular.module('Core')
       var isCsvValid = false;
       var cancelDeferred;
       var saveDeferred;
-      // var MAX_USERS = 250;
       var csvHeaders;
+      var isDirSync = false;
+      FeatureToggleService.supportsDirSync().then(function (enabled) {
+        isDirSync = enabled;
+      });
 
       $scope.onFileSizeError = function () {
         Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
@@ -1807,7 +1810,6 @@ angular.module('Core')
             if (userArray[0][0] === 'First Name') {
               csvHeaders = userArray.shift();
             }
-            // if (userArray.length > 0 && userArray.length <= MAX_USERS) {
             if (userArray.length > 0) {
               isCsvValid = true;
             }
@@ -1835,9 +1837,6 @@ angular.module('Core')
           deferred.resolve();
         } else {
           var error;
-          // if (userArray.length > MAX_USERS) {
-          //   error = [$translate.instant('firstTimeWizard.csvMaxLinesError')];
-          // } else {
           if (userArray.length === 0) {
             error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
           }
@@ -2079,12 +2078,6 @@ angular.module('Core')
 
             // TODO
             // deal with AUDP -- only one column - Phone Number
-            // unit tests
-            // test large number of users
-            //xx move 3-message and non true/false to the loop below to save multiple loops
-            //xx ignore the FALSE, for now, until the manage user feature
-            //xx true/false format check
-            //xx remove 250 restriction
 
             _.forEach(userArray, function (userRow, j) {
               processingError = false;
@@ -2177,6 +2170,12 @@ angular.module('Core')
                     addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
                   } else {
                     uniqueEmails.push(id);
+                    // Do not send name and displayName if it's a DirSync org
+                    if (isDirSync) {
+                      firstName = '';
+                      lastName = '';
+                      displayName = '';
+                    }
                     tempUserArray.push({
                       'address': id,
                       'name': firstName + NAME_DELIMITER + lastName,
@@ -2266,9 +2265,9 @@ angular.module('Core')
           if ($scope.userList && $scope.userList.length > 0) {
             userArray = $scope.userList.map(function (user, idx) {
               var userData = [];
-              userData.push($scope.useNameList[idx].firstName);
-              userData.push($scope.useNameList[idx].lastName);
-              userData.push(user.Name);
+              userData.push(''); // DirSync can't change first name
+              userData.push(''); // DirSync can't change last name
+              userData.push(''); // DirSync can't change display name
               userData.push(user.Email);
               userData.push(''); // No Directory Number
               userData.push(''); // No Direct Line

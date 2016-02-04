@@ -401,6 +401,9 @@ angular.module('Core')
 
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
               if (displayName) {
                 user.displayName = displayName;
               }
@@ -442,6 +445,9 @@ angular.module('Core')
             if (userEmail.length > 0) {
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
               if (displayName) {
                 user.displayName = displayName;
               }
