@@ -2,10 +2,10 @@
  * Domain Management Page
  */
 #domainManagement {
-  padding-top: 3rem;
+  //padding-top: 3rem;
   article {
-    width: 500px;
-    padding-left: 2rem;
+    //width: 500px;
+    //padding-left: 2rem;
 
     table.table {
       margin-top: 1rem;
@@ -52,9 +52,7 @@
             padding: 0 !important;
             padding-top: 2px !important;
           }
-          .dropdown{
-            margin-left: -5rem;
-          }
+
           .dropdown-toggle{
             font-size: 0.85rem;
             position:relative;
@@ -94,6 +92,9 @@
       }
 
     }
+    .addDomain{
+      margin-top: -2rem;
+    }
   }
 }
 
@@ -120,6 +121,9 @@
     margin-top: 0.5rem;
     color: $color-people-base;
     font-size: 0.85rem;
+    text-align: justify;
+    word-break: break-all;
+    width:103%;
   }
   .modal-body.domWarning {
     background-color: $color-attention-base;
@@ -151,6 +155,36 @@
     height: 240px !important;
     p{
       margin-bottom: 2rem;
+    }
+  }
+}
+@media screen and (max-width: 500px){
+
+  #domainManagement #domainMenu span.actions-menu.dropdown.pull-right {
+    margin-left: -1rem;
+  }
+  #domainManagement button.btn--cta.verify-btn.ng-scope {
+    margin-left: -1.5rem;
+  }
+}
+
+@media screen and (max-width: 460px){
+  #domainManagement {
+    table.table{
+      #domainMenu{
+        display: none;
+      }
+    }
+  }
+  #domainManagement button.btn--cta.verify-btn.ng-scope {
+    margin-left: 1rem !important;
+  }
+}
+
+@media screen and (max-width: 440px){
+  #domainManagement{
+    .domain-status{
+      display: none;
     }
   }
 }

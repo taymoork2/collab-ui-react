@@ -147,6 +147,7 @@ module.exports = function() {
         vendor + '/moment/moment.js',
         vendor + '/base64/base64.js',
         vendor + '/nicescroll/jquery.nicescroll.js',
+        vendor + '/punycode/punycode.js',
         vendor + '/angular/angular.js',
         vendor + '/angular-animate/angular-animate.js',
         vendor + '/angular-ui-utils/ui-utils.js',

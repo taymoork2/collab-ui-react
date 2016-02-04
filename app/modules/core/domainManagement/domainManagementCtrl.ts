@@ -16,11 +16,7 @@ namespace domainManagement {
 
       FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
         .then(dmEnabled => {
-            if (dmEnabled) {
-              this._feature = true;
-            } else {
-              this.$state.go('unauthorized');
-            }
+            this._feature = !!dmEnabled;
           }
         );
 
