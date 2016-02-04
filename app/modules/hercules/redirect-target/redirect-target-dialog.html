@@ -5,18 +5,17 @@
     </button>
     <h5 class="modal-title"><span translate="hercules.redirect-target-dialog.title"></span></h5>
   </div>
-  <form name="inputHostNameForm">
+  <form name="inputHostNameForm" ng-submit="redirectTarget.addRedirectTargetClicked(redirectTarget.hostName)">
     <div class="modal-body" ng-hide="redirectTarget.enableRedirectToTarget">
       <p><span
         translate="hercules.redirect-target-dialog.instructions-grant-registration"></span></p>
       <input type="text" placeholder="{{'hercules.redirect-target-dialog.hostname-placeholder' | translate}} "
-             ng-model="redirectTarget.hostName" required>
+             ng-model="redirectTarget.hostName" required autofocus>
   </div>
   </form>
   <div class="modal-body" ng-show="redirectTarget.enableRedirectToTarget">
     <h3><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
               translate-values="{hostname: redirectTarget.hostName || ''}"></span></h3>
-
     <p><span
       translate="hercules.redirect-target-dialog.grant-success-information"></span></p>
   </div>
