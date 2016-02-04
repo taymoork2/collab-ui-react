@@ -1574,6 +1574,12 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('services-landing', {
+          url: '/services/landing',
+          templateUrl: 'modules/hercules/servicesLanding/servicesLanding.html',
+          controller: 'servicesLandingController',
+          parent: 'main'
+        })
         .state('calendar-service', {
           templateUrl: 'modules/hercules/expressway-service/overview.html',
           controller: 'ExpresswayServiceController',

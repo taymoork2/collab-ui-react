@@ -342,6 +342,8 @@ angular.module('Core')
             state: 'messenger',
             link: '#messenger'
           }]
+         // state: 'services-landing', // The new services-landing page.
+         // link: '/services/landing'
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
@@ -1101,11 +1103,13 @@ angular.module('Core')
           'huntgroupedit',
           'devReports',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'services-landing'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
           'management-service',
+          'services-landing'
         ],
         'spark-room-system': [
           'devices',
@@ -1116,10 +1120,12 @@ angular.module('Core')
           'call-service',
           'devices',
           'device-overview',
-          'devices-redux'
+          'devices-redux',
+          'services-landing'
         ],
         'squared-fusion-cal': [
-          'calendar-service'
+          'calendar-service',
+          'services-landing'
         ],
         'squared-team-member': [
           'organization'
@@ -1135,7 +1141,8 @@ angular.module('Core')
           'events',
           //'mediafusionconnector',
           'media-service',
-          'connector-details'
+          'connector-details',
+          'services-landing'
         ],
         'webex-messenger': [
           'messenger'
