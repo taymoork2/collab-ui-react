@@ -178,23 +178,6 @@
           return !vm.phone7841.enabled;
         }
       },
-
-    }];
-
-    vm.shippingFields = [{
-      model: vm.shippingInfo,
-      key: 'address',
-      type: 'textarea',
-      templateOptions: {
-        inputClass: 'columns medium-11 noresize',
-        placeholder: $translate.instant('trialModal.call.address'),
-        required: true,
-      },
-      ngModelAttrs: {
-        '{{7}}': {
-          value: 'rows'
-        }
-      },
     }];
 
     vm.shippingFields = [{
@@ -204,7 +187,7 @@
       templateOptions: {
         labelClass: 'columns medium-2',
         inputClass: 'columns medium-10',
-        label: 'Name',
+        label: $translate.instant('trialModal.call.name'),
         type: 'text',
       },
     }, {
@@ -214,7 +197,7 @@
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
-        label: 'Phone',
+        label: $translate.instant('trialModal.call.phone'),
       },
     }, {
       key: 'country',
@@ -226,7 +209,7 @@
       templateOptions: {
         labelClass: 'columns medium-2',
         inputClass: 'columns medium-10',
-        label: 'Country',
+        label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
         labelfield: 'country',
@@ -245,7 +228,7 @@
       templateOptions: {
         labelClass: 'columns medium-2',
         inputClass: 'columns medium-10',
-        label: 'Address',
+        label: $translate.instant('trialModal.call.address'),
         type: 'text',
         required: true,
       },
@@ -256,7 +239,7 @@
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
-        label: 'City',
+        label: $translate.instant('trialModal.call.city'),
         type: 'text',
         required: true,
       },
@@ -267,7 +250,7 @@
       templateOptions: {
         labelClass: 'columns medium-4',
         inputClass: 'columns medium-8',
-        label: 'State',
+        label: $translate.instant('trialModal.call.state'),
         type: 'text',
         required: true,
         labelfield: 'abbr',
@@ -286,7 +269,7 @@
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
-        label: 'Zip',
+        label: $translate.instant('trialModal.call.zip'),
         type: 'number',
         max: 99999,
         min: 0,

@@ -1900,7 +1900,14 @@
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
-      "partner": "Partner"
+      "partner": "Partner",
+      "name": "Name",
+      "phone": "Phone",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
