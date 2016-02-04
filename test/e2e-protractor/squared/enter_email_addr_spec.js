@@ -5,11 +5,11 @@
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
-xdescribe('Test the enterEmailAddr page', function () {
+describe('Test the enterEmailAddr page', function () {
 
   // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
-  browser.get('#/enterEmailAddr');
+  browser.get('#/enter-email-addr');
 
   it('should have the right title', function () {
     expect(enterEmailAddrPage.pageTitle.getInnerHtml()).toEqual('Atlas Portal Shopping Cart Login (APSCL)');
@@ -40,7 +40,7 @@ xdescribe('Test the enterEmailAddr page', function () {
     browser.driver.sleep(12000);
     browser.getCurrentUrl().
     then(function (url) {
-      expect(url).toContain('/#/createAccount');
+      expect(url).toContain('/#/create-account');
     });
   });
 

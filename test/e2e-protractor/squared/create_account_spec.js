@@ -5,12 +5,12 @@
 /* global it */
 /* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
 
-xdescribe('Test the createAccount page', function () {
+describe('Test the createAccount page', function () {
 
   // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
 
   var newEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
-  browser.get('#/createAccount?email=' + newEmail);
+  browser.get('#/create-account?email=' + newEmail);
 
   it('should have the right title', function () {
     expect(createAccountPage.pageTitle.getInnerHtml()).toEqual('Create Account');
@@ -80,7 +80,7 @@ xdescribe('Test the createAccount page', function () {
   });
 
   it('should validate existing user', function () {
-    browser.get('#/createAccount?email=' + newEmail);
+    browser.get('#/create-account?email=' + newEmail);
     createAccountPage.email2.sendKeys(newEmail);
     createAccountPage.password1.sendKeys('P@ssword123');
     createAccountPage.password2.sendKeys('P@ssword123');
@@ -90,12 +90,12 @@ xdescribe('Test the createAccount page', function () {
   });
 
   it('should validate existing user for the checkEmailAddr page too', function () {
-    browser.get('#/enterEmailAddr');
+    browser.get('#/enter-email-addr');
     enterEmailAddrPage.email.sendKeys(newEmail);
     createAccountPage.nextButton.click();
     browser.getCurrentUrl().
     then(function (url) {
-      expect(url).not.toContain('/#/createAccount');
+      expect(url).not.toContain('/#/create-account');
     });
   });
 
