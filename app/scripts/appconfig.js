@@ -210,7 +210,6 @@ angular
           authenticate: false
         })
         .state('domainmanagement', {
-          //abstract: true,
           templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
           controller: 'DomainManagementCtrl',
           controllerAs: 'dv',
