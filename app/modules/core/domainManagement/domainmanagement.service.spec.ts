@@ -73,7 +73,7 @@ describe('DomainManagementService', function () {
      token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke"
      });*/
 
-    DomainManagementService.getVerifiedDomains().then(function (data) {
+    DomainManagementService.getVerifiedDomains().then(data=> {
       let expectedRes = [{
         text: 'claimed1.grodum.org',
         token: '',
@@ -97,13 +97,12 @@ describe('DomainManagementService', function () {
       }];
 
       expect(data.length).toBe(expectedRes.length);
-
-      for (var i = 0; i < data.length; i++) {
-
-        expect(data[i].text).toBe(expectedRes[i].text);
-        expect(data[i].status).toBe(expectedRes[i].status);
-        expect(data[i].token).toBeFalsy(); //not set yet
-      }
+      console.log(data);
+      data.forEach((v:any, i)=> {
+        expect(v.text).toBe(expectedRes[i].text);
+        expect(v.status).toBe(expectedRes[i].status);
+        expect(v.token).toBeFalsy(); //not set yet
+      });
       done();
     }, function (err) {
       expect(err).toBe(null);
