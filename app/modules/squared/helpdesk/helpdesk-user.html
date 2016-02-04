@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" ng-if="helpdeskUserCtrl.isAuthorizedForLog()">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.lastLog' | translate}}:</span>
         </div>

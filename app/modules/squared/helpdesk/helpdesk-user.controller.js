@@ -27,6 +27,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
     vm.downloadLog = downloadLog;
+    vm.isAuthorizedForLog = isAuthorizedForLog;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -84,13 +85,17 @@
         }, handleHuronError);
       }
 
-      if (Authinfo.isSupportUser()) {
+      if (isAuthorizedForLog()) {
         HelpdeskLogService.searchForLastPushedLog(vm.userId).then(function (log) {
           vm.lastPushedLog = log;
         }, angular.noop);
       }
 
       angular.element(".helpdesk-details").focus();
+    }
+
+    function isAuthorizedForLog() {
+      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
     }
 
     function downloadLog(filename) {

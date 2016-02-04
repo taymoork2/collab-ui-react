@@ -164,11 +164,14 @@ describe('Partner flow', function () {
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
-
-        browser.close();
-        browser.switchTo().window(appWindow);
       });
     });
+
+    it('Should close customer portal', function () {
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
+
   }, LONG_TIMEOUT);
 
   afterAll(function () {

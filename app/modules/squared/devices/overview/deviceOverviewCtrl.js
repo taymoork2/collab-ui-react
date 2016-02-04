@@ -27,8 +27,10 @@
       var uploadLogsPromise;
       var feedbackId;
       if (deviceOverview.currentDevice.isHuronDevice) {
-        for (feedbackId = ''; feedbackId.length < 32;) {
-          feedbackId += Math.random().toString(36).substr(2, 1);
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        feedbackId = '';
+        for (var i = 32; i > 0; --i) {
+          feedbackId += chars[Math.floor(Math.random() * chars.length)];
         }
         uploadLogsPromise = CsdmHuronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
       } else {

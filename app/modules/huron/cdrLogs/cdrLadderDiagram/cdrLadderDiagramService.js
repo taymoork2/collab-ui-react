@@ -154,33 +154,6 @@
       return defer.promise;
     };
 
-    svc.getLadderDiagram = function (message) {
-      var defer = $q.defer();
-      $http({
-          method: "POST",
-          url: callflowDiagramUrl,
-          data: {
-            "data": message
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml',
-            'Authorization': access_token
-          }
-        })
-        .success(function (response) {
-          defer.resolve(response);
-        })
-        .error(function (response, status) {
-          Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
-          defer.reject({
-            'response': response,
-            'status': status
-          });
-        });
-      return defer.promise;
-    };
-
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
