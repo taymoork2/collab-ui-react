@@ -97,7 +97,6 @@ describe('DomainManagementService', () => {
       }];
 
       expect(data.length).toBe(expectedRes.length);
-      console.log(data);
       data.forEach((v:any, i)=> {
         expect(v.text).toBe(expectedRes[i].text);
         expect(v.status).toBe(expectedRes[i].status);
