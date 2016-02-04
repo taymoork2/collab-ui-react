@@ -6,6 +6,7 @@
   <div class="modal-body">
     <p translate="domainManagement.add.description"/>
 
+    <span ng-if="dmpopup.intDomain.show">{{dmpopup.intDomain.text}}</span>
     <input type="text"
            placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}"
            ng-model="dmpopup.domain"
@@ -13,7 +14,7 @@
 
     <p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty" class="error">
       <i class="icon icon-error"></i>
-      <span translate="domainManagement.add.invalidDomain"></span>
+      <span>{{dmpopup.validate().error ? dmpopup.validate().error:  'domainManagement.add.invalidDomain' | translate}}</span>
     </p>
 
     <p ng-if="dmpopup.error" class="error">

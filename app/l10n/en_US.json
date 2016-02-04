@@ -1107,7 +1107,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1160,6 +1160,8 @@
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -3327,8 +3329,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3368,7 +3370,7 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
+    "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
@@ -3382,7 +3384,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",
@@ -3416,7 +3421,7 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Show code and instructions",
+      "instructions": "Code and instructions",
       "mail": "Mail code and instructions",
       "unverify": "Remove enforcement",
       "unclaim": "Release domain",
@@ -3424,9 +3429,11 @@
     },
     "instructions": {
       "title": "Code and instructions",
-      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done": "Done"
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

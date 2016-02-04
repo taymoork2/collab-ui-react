@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(ReportsService, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskService, $interval, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, HelpdeskSparkStatusService) {
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
@@ -31,11 +31,10 @@
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
     vm.showSearchHelp = showSearchHelp;
     vm.populateHistory = populateHistory;
-    vm.sparkStatusShow = false;
-    vm.healthyStatus = "unknown";
+    vm.overallSparkStatus = "unknown";
     vm.statusPageUrl = Config.getStatusPageUrl();
 
-    getHealthMetrics();
+    initiateHealthStatusPoller();
 
     function populateHistory() {
       vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
@@ -400,23 +399,20 @@
       }
     }
 
-    function getHealthMetrics() {
-      ReportsService.healthMonitor(function (data, status) {
-        if (data.success) {
-          vm.healthMetrics = data.components;
-          // check Squared for error
-          for (var health in vm.healthMetrics) {
-            if (vm.healthMetrics[health].status !== 'operational') {
-              vm.healthyStatus = "error";
-              return;
-            }
-          }
-          vm.healthyStatus = "ok";
-
-        }
+    function initiateHealthStatusPoller() {
+      getHealthMetrics();
+      var healthStatusPoller = $interval(getHealthMetrics, 60000);
+      $scope.$on('$destroy', function () {
+        $interval.cancel(healthStatusPoller);
       });
     }
 
+    function getHealthMetrics() {
+      HelpdeskSparkStatusService.getHealthStatuses().then(function (result) {
+        vm.healthMetrics = result;
+        vm.overallSparkStatus = HelpdeskSparkStatusService.highestSeverity(vm.healthMetrics);
+      });
+    }
   }
 
   angular
