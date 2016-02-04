@@ -2,8 +2,6 @@ class DomainManagementService {
 
   private _domainList = [];
 
-  private _mock = false;
-
   private _states = {
     pending: 'pending',
     verified: 'verified',
@@ -55,7 +53,6 @@ class DomainManagementService {
   }
 
   addDomain(domainToAdd) {
-    let deferred = this.$q.defer();
 
     //we always normalize to lowercase.
     domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
@@ -63,74 +60,50 @@ class DomainManagementService {
     let existingDomain = _.find(this._domainList, {text: domainToAdd});
 
     if ((!domainToAdd) || existingDomain) {
-      deferred.reject();
-      return deferred.promise;
+      //TODO: Add already added translated message if existingDomain.
+      return this.$q.reject();
     }
 
-    if (this._mock) {
-      this._domainList.push({
-        text: domainToAdd,
-        token: '',
-        status: this.states.pending
-      });
-      deferred.resolve();
-    } else {
-      return this.getToken(domainToAdd);
-    }
-    return deferred.promise;
+    return this.getToken(domainToAdd);
   }
 
   unverifyDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
 
-      if (this._mock) {
+      this.$http.post(this._invokeUnverifyDomainUrl, {
+        'domain': domain
+      }).then(res => {
         _.remove(this._domainList, {text: domain});
         deferred.resolve();
-      } else {
-        this.$http.post(this._invokeUnverifyDomainUrl, {
-          'domain': domain
-        }).then(res => {
-          _.remove(this._domainList, {text: domain});
-          deferred.resolve();
-        }, err => {
-          this.Log.error('Failed to unverify domain:' + domain, err);
-          deferred.reject(this.getErrorMessage(err));
-        });
-      }
+      }, err => {
+        this.Log.error('Failed to unverify domain:' + domain, err);
+        deferred.reject(this.getErrorMessage(err));
+      });
+
     } else {
       deferred.reject();
     }
     return deferred.promise;
   }
 
-
   public verifyDomain(domain) {
     let deferred = this.$q.defer();
 
     if (domain) {
-
-      if (this._mock) {
-        let domainInList = _.find(this._domainList, {text: domain, status: this.states.pending});
-        if (domainInList)
-          domainInList.status = this.states.verified;
-        deferred.resolve();
-      } else {
-
-        this.$http.post(this._invokeVerifyDomainUrl, {
-            "domain": domain,
-            "claimDomain": false
-          })
-          .then(res => {
-            let domainInList = _.find(this._domainList, {text: domain, status: this.states.pending});
-            if (domainInList)
-              domainInList.status = this.states.verified;
-            deferred.resolve();
-          }, err => {
-            this.Log.error('Failed to verify domain:' + domain, err);
-            deferred.reject(this.getErrorMessage(err));
-          });
-      }
+      this.$http.post(this._invokeVerifyDomainUrl, {
+          "domain": domain,
+          "claimDomain": false
+        })
+        .then(res => {
+          let domainInList = _.find(this._domainList, {text: domain, status: this.states.pending});
+          if (domainInList)
+            domainInList.status = this.states.verified;
+          deferred.resolve();
+        }, err => {
+          this.Log.error('Failed to verify domain:' + domain, err);
+          deferred.reject(this.getErrorMessage(err));
+        });
     } else {
       this.Log.error('attempt to delete a domain not in list:' + domain);
       deferred.reject();
@@ -141,31 +114,21 @@ class DomainManagementService {
   claimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
+      this.$http.post(this._claimDomainUrl, {
+          data: [{'domain': domain}]
+        })
+        .then(res => {
 
-      if (this._mock) {
-        let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
+          let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
 
-        if (claimedDomain)
-          claimedDomain.status = this.states.claimed;
+          if (claimedDomain)
+            claimedDomain.status = this.states.claimed;
 
-        deferred.resolve();
-      } else {
-        this.$http.post(this._claimDomainUrl, {
-            data: [{'domain': domain}]
-          })
-          .then(res => {
-
-            let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
-
-            if (claimedDomain)
-              claimedDomain.status = this.states.claimed;
-
-            deferred.resolve();
-          }, err => {
-            this.Log.error('Failed to claim domain:' + domain, err);
-            deferred.reject(this.getErrorMessage(err));
-          });
-      }
+          deferred.resolve();
+        }, err => {
+          this.Log.error('Failed to claim domain:' + domain, err);
+          deferred.reject(this.getErrorMessage(err));
+        });
     } else {
       deferred.reject();
     }
@@ -175,28 +138,18 @@ class DomainManagementService {
   unclaimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
+      this.$http.delete(this._claimDomainUrl + '/' + window.btoa(domain)).then(() => {
 
-      if (this._mock) {
         let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.claimed});
 
         if (claimedDomain)
           claimedDomain.status = this.states.verified;
 
         deferred.resolve();
-      } else {
-        this.$http.delete(this._claimDomainUrl + '/' + window.btoa(domain)).then(() => {
-
-          let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.claimed});
-
-          if (claimedDomain)
-            claimedDomain.status = this.states.verified;
-
-          deferred.resolve();
-        }, err => {
-          this.Log.error('Failed to unclaim domain:' + domain, err);
-          deferred.reject(this.getErrorMessage(err));
-        });
-      }
+      }, err => {
+        this.Log.error('Failed to unclaim domain:' + domain, err);
+        deferred.reject(this.getErrorMessage(err));
+      });
     } else {
       deferred.reject();
     }
@@ -210,30 +163,6 @@ class DomainManagementService {
     this.$http.get(scomUrl).then(res => {
       let data = res.data;
       this._domainList = [];
-
-      if (this._mock) {
-        data =
-        {
-          id: "theid",
-          meta: {created: "adfd"},
-          displayName: "org",
-          domains: [
-            "claimed1.grodum.org",
-            "claimed2.grodum.org"
-          ],
-          verifiedDomains: [
-            "claimed1.grodum.org",
-            "verified1.grodum.org",
-            "verified2.grodum.org"
-          ],
-          pendingDomains: [
-            "verified1.grodum.org",
-            "claimed2.grodum.org",
-            "pending1.grodum.org",
-            "pending2.grodum.org"
-          ]
-        };
-      }
 
       this.loadDomainlist(data.domains, this.states.claimed, overrideIf => (overrideIf.status != this.states.claimed));
 
@@ -285,23 +214,6 @@ class DomainManagementService {
   private getToken(domain) {
 
     let deferred = this.$q.defer();
-
-    if (this._mock) {
-      let pendingDomain = _.find(this._domainList, {text: domain, status: this.states.pending});
-
-      if (!pendingDomain) {
-        this._domainList.push({
-          text: domain,
-          token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke",
-          status: this.states.pending
-        });
-      } else {
-        pendingDomain.token = "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke";
-      }
-
-      deferred.resolve("mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke");
-      return deferred.promise;
-    }
 
     this.$http.post(this._invokeGetTokenUrl, {
       'domain': domain
