@@ -103,38 +103,40 @@
     function findDevicesMatchingNumber(searchString, orgId, limit) {
       var deferred = $q.defer();
       searchNumbers(searchString, orgId, limit).then(function (numbers) {
-          if (_.size(numbers) === 0) {
-            deferred.resolve([]);
-          } else {
-            var devices = [];
-            var promises = [];
-            _.each(numbers, function (num) {
-              if (num.directoryNumber) {             
-                promises.push(getDevicesForNumber(num.directoryNumber.uuid, orgId).then(function (deviceNumberAssociations) {
-                  if (_.size(deviceNumberAssociations) > 0) {
-                    _.each(deviceNumberAssociations, function (deviceNumberAssociation) {
-                      var device = {
-                        uuid: deviceNumberAssociation.endpoint.uuid,
-                        name: deviceNumberAssociation.endpoint.name,
-                        number: num.number
-                      };
-                      // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
-                      if (_.startsWith(device.name, 'SEP') && !_.find(devices, { id: device.uuid })) {
-                        devices.push(massageDevice(device));   
-                      }             
-                    });
-                  }
-                }));               
-              }
-            });
-            $q.all(promises).then(function (data) {
-              deferred.resolve(devices);
-            });
-          }
-        });
-        return deferred.promise;
+        if (_.size(numbers) === 0) {
+          deferred.resolve([]);
+        } else {
+          var devices = [];
+          var promises = [];
+          _.each(numbers, function (num) {
+            if (num.directoryNumber) {
+              promises.push(getDevicesForNumber(num.directoryNumber.uuid, orgId).then(function (deviceNumberAssociations) {
+                if (_.size(deviceNumberAssociations) > 0) {
+                  _.each(deviceNumberAssociations, function (deviceNumberAssociation) {
+                    var device = {
+                      uuid: deviceNumberAssociation.endpoint.uuid,
+                      name: deviceNumberAssociation.endpoint.name,
+                      number: num.number
+                    };
+                    // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
+                    if (_.startsWith(device.name, 'SEP') && !_.find(devices, {
+                        id: device.uuid
+                      })) {
+                      devices.push(massageDevice(device));
+                    }
+                  });
+                }
+              }));
+            }
+          });
+          $q.all(promises).then(function (data) {
+            deferred.resolve(devices);
+          });
+        }
+      });
+      return deferred.promise;
     }
-    
+
     function searchNumbers(searchString, orgId, limit) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractNumbers(HelpdeskMockData.huronNumberSearch));
@@ -143,7 +145,7 @@
         .get(HuronConfig.getCmiV2Url() + '/customers/' + orgId + '/numbers?number=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
         .then(extractNumbers);
     }
-    
+
     function getDevicesForNumber(numberId, orgId) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(HelpdeskMockData.huronDevicesForNumber);
@@ -152,30 +154,33 @@
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/directorynumbers/' + numberId + '/endpoints')
         .then(extractData);
     }
-    
+
     function setOwnerAndDeviceDetails(devices) {
       _.each(devices, function (device) {
         if (device.isHuronDevice) {
           if (!device.user && device.ownerUser) {
-          HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
-            device.user = user;
-          }, angular.noop);
-        } else {
-          SipEndpointService.get({ customerId: device.organization.id, sipEndpointId: device.uuid })
-          .$promise.then(function (endpoint) {
-            this.model = endpoint.model;
-            this.product = endpoint.product;
-            this.description = endpoint.description; 
-            this.ownerUser = endpoint.ownerUser;              
-            massageDevice(this);
-            if (this.ownerUser) {
-              HelpdeskService.getUser(this.organization.id, this.ownerUser.uuid).then(function (user) {
-                this.user = user;
-              }.bind(device), angular.noop);
-            }
-          }.bind(device));
-        }       
-       } 
+            HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
+              device.user = user;
+            }, angular.noop);
+          } else {
+            SipEndpointService.get({
+                customerId: device.organization.id,
+                sipEndpointId: device.uuid
+              })
+              .$promise.then(function (endpoint) {
+                this.model = endpoint.model;
+                this.product = endpoint.product;
+                this.description = endpoint.description;
+                this.ownerUser = endpoint.ownerUser;
+                massageDevice(this);
+                if (this.ownerUser) {
+                  HelpdeskService.getUser(this.organization.id, this.ownerUser.uuid).then(function (user) {
+                    this.user = user;
+                  }.bind(device), angular.noop);
+                }
+              }.bind(device));
+          }
+        }
       });
     }
 

@@ -189,7 +189,7 @@
         searchForHuronDevices(searchString, org);
       }
     }
-    
+
     function searchForCloudberryDevices(searchString, org) {
       vm.searchingForCloudberryDevices = true;
       HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
@@ -210,7 +210,7 @@
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
       });
     }
-    
+
     function searchForHuronDevices(searchString, org) {
       vm.searchingForHuronDevices = true;
       HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
@@ -235,7 +235,7 @@
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
       });
-      
+
       if (!Config.isProd()) {
         vm.searchingForHuronDevicesMatchingNumber = true;
         HelpdeskHuronService.findDevicesMatchingNumber(searchString, org.id, vm.searchResultsLimit).then(function (res) {
