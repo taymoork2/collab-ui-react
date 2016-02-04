@@ -9,12 +9,6 @@
 
   .export-users {
     .icon-content-share {
-/*
-      font-size: 1.5rem;
-      margin-left: 1rem;
-      margin-top: rem(10);
-      color: $color-people-base;
-*/
       color: $gray;
       font-size: 1.5rem;
       padding-left: .5rem;
@@ -28,19 +22,6 @@
         text-decoration: none;
       }
     }
-/*
-    i {
-      color: $gray;
-      font-size: 1.5rem;
-      padding-right: .5rem;
-      margin-right: .5rem;
-      cursor: pointer;
-      &:hover {
-        color: $brand-primary;
-        text-decoration: none;
-      }
-    }
-*/
   }
 
   .too-many-users {
