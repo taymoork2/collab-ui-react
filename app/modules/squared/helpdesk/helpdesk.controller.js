@@ -257,7 +257,7 @@
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
-      });     
+      });
     }
 
     function initSearchWithOrgFilter(org) {
