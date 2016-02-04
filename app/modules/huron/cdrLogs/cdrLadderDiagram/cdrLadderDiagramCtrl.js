@@ -17,6 +17,7 @@
     vm.imported = $stateParams.imported;
 
     vm.diagramXML = "";
+    vm.diagramHTML = "";
     vm.downloadReady = false;
     vm.isFilterCollapsed = true;
     vm.isDownloadCollapsed = true;
@@ -49,6 +50,11 @@
       populateHostNamefilterOptions();
     }
 
+    function extractXmlDiagramInfo() {
+      var htmlString = vm.diagramHTML.toString();
+      vm.diagramXML = $sce.trustAsHtml(htmlString.substring(htmlString.indexOf("<?xml"), htmlString.indexOf("</svg>") + 6));
+    }
+
     function generateDownloads() {
       var jsonFileData = {
         cdrs: vm.call,
@@ -64,10 +70,10 @@
       });
       vm.csvUrl = (window.URL || window.webkitURL).createObjectURL(csvBlob);
 
-      var xmlBlob = new Blob([vm.diagramXML], {
-        type: 'text/xml'
+      var htmlBlob = new Blob([vm.diagramHTML], {
+        type: 'text/html'
       });
-      vm.xmlUrl = (window.URL || window.webkitURL).createObjectURL(xmlBlob);
+      vm.htmlUrl = (window.URL || window.webkitURL).createObjectURL(htmlBlob);
 
       vm.downloadReady = true;
     }
@@ -81,8 +87,8 @@
         (window.URL || window.webkitURL).revokeObjectURL(vm.csvUrl);
       }
 
-      if (vm.xmlUrl !== null) {
-        (window.URL || window.webkitURL).revokeObjectURL(vm.xmlUrl);
+      if (vm.htmlUrl !== null) {
+        (window.URL || window.webkitURL).revokeObjectURL(vm.htmlUrl);
       }
     }
 
@@ -299,9 +305,10 @@
       CdrLadderDiagramService.createLadderDiagram(vm.events).then(
         function (response) {
           Log.debug('Success to retrieve ladder diagram');
-          vm.diagramXML = $sce.trustAsHtml(response);
+          vm.diagramHTML = $sce.trustAsHtml(response);
           vm.spin = false;
           vm.diagramGenerated = true;
+          extractXmlDiagramInfo();
           generateDownloadFilterOptions();
         },
         function (response) {
@@ -315,6 +322,7 @@
       vm.error = '';
       vm.spin = true;
       vm.diagramXML = '';
+      vm.diagramHTML = '';
       if (filterType === 'callId') {
         vm.filteredEvents = callIdFilter();
       } else if (filterType === 'sessionPair') {
@@ -329,9 +337,10 @@
 
       CdrLadderDiagramService.createLadderDiagram(vm.filteredEvents).then(
         function (response) {
-          vm.diagramXML = $sce.trustAsHtml(response);
+          vm.diagramHTML = $sce.trustAsHtml(response);
           vm.spin = false;
           vm.diagramGenerated = true;
+          extractXmlDiagramInfo();
         },
         function (response) {
           vm.error = 'Error Code: ' + response.status;

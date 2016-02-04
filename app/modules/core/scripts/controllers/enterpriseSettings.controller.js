@@ -47,8 +47,8 @@
       var domain = sipField.inputValue;
       sipField.isUrlAvailable = false;
       return SparkDomainManagementService.checkDomainAvailability(domain)
-        .then(function (data, status) {
-          if (data.isDomainAvailable) {
+        .then(function (response) {
+          if (response.data.isDomainAvailable) {
             sipField.isUrlAvailable = true;
             sipField.urlValue = sipField.inputValue;
             sipField.isError = false;
@@ -56,7 +56,7 @@
             sipField.isError = true;
           }
         })
-        .catch(function (data, status) {
+        .catch(function (response) {
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         });
     };
@@ -65,14 +65,14 @@
       var domain = sipField.inputValue;
       if (sipField.isUrlAvailable && !sipField.isDisabled) {
         SparkDomainManagementService.addSipUriDomain(domain)
-          .then(function (data, status) {
-            if (data.isDomainReserved) {
+          .then(function (response) {
+            if (response.data.isDomainReserved) {
               sipField.isError = false;
               sipField.isDisabled = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
             }
           })
-          .catch(function () {
+          .catch(function (response) {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
           });
       }

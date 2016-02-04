@@ -1,51 +1,71 @@
 'use strict';
 
 sitereports.testInfo.describeCount = 0;
-while (1 >= sitesettings.testInfo.describeCount) {
-  switch (sitesettings.testInfo.describeCount) {
+while (1 >= sitereports.testInfo.describeCount) {
+  switch (sitereports.testInfo.describeCount) {
   case 1:
     sitereports.testInfo.siteType = 'T30';
     sitereports.testInfo.siteUrl = "cisjsite002.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T30 site ' + sitesettings.siteUrl;
-    sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin2.username + ' for T30 site config test';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T30 site ' + sitereports.testInfo.siteUrl;
     break;
 
   default:
     sitereports.testInfo.siteType = 'T31';
     sitereports.testInfo.siteUrl = "sjsite14.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T31 site ' + sitesettings.siteUrl;
-    sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin1.username + ' for T31 site config test';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T31 site ' + sitereports.testInfo.siteUrl;
   }
 
-  describe(sitereports.testInfo.describeText, function () {
+  xdescribe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
 
     if (sitereports.testInfo.siteType == "T31") {
-      it(sitereports.testInfo.signInText, function () {
+      it('should signin as ' + sitereports.testAdmin1.username + ' for T31 site config test', function () {
         login.loginThroughGui(sitereports.testAdmin1.username, sitereports.testAdmin1.password);
       });
     } else {
-      it(sitereports.testInfo.signInText, function () {
+      it('should signin as ' + sitereports.testAdmin2.username + ' for T30 site config test', function () {
         login.loginThroughGui(sitereports.testAdmin2.username, sitereports.testAdmin2.password);
+      });
+    }
+
+    it('should navigate to webex site list', function () {
+      navigation.clickServicesTab();
+      utils.click(sitereports.conferencing);
+    });
+
+    if (sitereports.testInfo.siteType == "T31") {
+      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.configureSJSITE14Cog);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.sjsite14CardsSectionId);
+      });
+    } else {
+      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.configureCISJSITE002Cog);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.cisjsite002CardsSectionId);
       });
     }
 
     it('should navigate to reports engagement', function () {
       navigation.clickReports();
-      utils.wait(sitereports.webexReportsLink);
     });
 
-    it('should navigate to webex reports index', function () {
-      utils.click(sitereports.webexReportsLink);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('should navigate to webex reports index', function () {
-      utils.click(sitereports.webexReportsLink);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
+    if (sitereports.testInfo.siteType == "T31") {
+      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
+        utils.click(sitereports.webexReportsLink);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.sjsite14CardsSectionId);
+      });
+    } else {
+      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
+        utils.click(sitereports.webexReportsLink);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.cisjsite002CardsSectionId);
+      });
+    }
 
     it('should not see last sync text or link', function () {
       expect(sitereports.lastSyncElement.isPresent()).toBeFalsy();
@@ -120,5 +140,5 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
   });
 
-  ++sitesettings.testInfo.describeCount;
+  ++sitereports.testInfo.describeCount;
 }

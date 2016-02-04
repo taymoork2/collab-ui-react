@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(ReportsService, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskService, $interval, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, HelpdeskSparkStatusService) {
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
@@ -31,11 +31,10 @@
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
     vm.showSearchHelp = showSearchHelp;
     vm.populateHistory = populateHistory;
-    vm.sparkStatusShow = false;
-    vm.healthyStatus = "unknown";
+    vm.overallSparkStatus = "unknown";
     vm.statusPageUrl = Config.getStatusPageUrl();
 
-    getHealthMetrics();
+    initiateHealthStatusPoller();
 
     function populateHistory() {
       vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
@@ -56,7 +55,7 @@
         vm.currentSearch.userSearchResults,
         vm.currentSearch.orgFilter,
         vm.currentSearch.userLimit);
-      HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+      HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
       $state.go('helpdesk.search');
     }
 
@@ -183,43 +182,77 @@
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.noDeviceEntitlements');
       }
       if (orgIsEntitledToCloudBerry) {
-        vm.searchingForCloudberryDevices = true;
-        HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
-          if (vm.currentSearch.deviceSearchResults) {
-            res = vm.currentSearch.deviceSearchResults.concat(res);
-          }
-          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
-            return device.displayName ? device.displayName.toLowerCase() : '';
-          });
-          vm.searchingForCloudberryDevices = false;
-          vm.searchingForDevices = vm.searchingForHuronDevices;
-          setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
-          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
-          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-        }, function (err) {
-          vm.searchingForCloudberryDevices = false;
-          vm.searchingForDevices = vm.searchingForHuronDevices;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
-        });
+        searchForCloudberryDevices(searchString, org);
       }
       if (orgIsEntitledToHuron) {
-        vm.searchingForHuronDevices = true;
-        HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+        searchForHuronDevices(searchString, org);
+      }
+    }
+
+    function searchForCloudberryDevices(searchString, org) {
+      vm.searchingForCloudberryDevices = true;
+      HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+        if (vm.currentSearch.deviceSearchResults) {
+          res = vm.currentSearch.deviceSearchResults.concat(res);
+        }
+        vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+          return device.displayName ? device.displayName.toLowerCase() : '';
+        });
+        vm.searchingForCloudberryDevices = false;
+        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
+        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+        HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+        vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+      }, function (err) {
+        vm.searchingForCloudberryDevices = false;
+        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
+        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+      });
+    }
+
+    function searchForHuronDevices(searchString, org) {
+      vm.searchingForHuronDevices = true;
+      HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+        if (vm.currentSearch.deviceSearchResults) {
+          res = vm.currentSearch.deviceSearchResults.concat(res);
+        }
+        vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+          return device.displayName ? device.displayName.toLowerCase() : '';
+        });
+        vm.searchingForHuronDevices = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
+        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+        HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+        HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+        vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+      }, function (err) {
+        vm.searchingForHuronDevices = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
+        if (err.status === 404) {
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+        } else {
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        }
+      });
+
+      if (!Config.isProd()) {
+        vm.searchingForHuronDevicesMatchingNumber = true;
+        HelpdeskHuronService.findDevicesMatchingNumber(searchString, org.id, vm.searchResultsLimit).then(function (res) {
           if (vm.currentSearch.deviceSearchResults) {
             res = vm.currentSearch.deviceSearchResults.concat(res);
           }
           vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
             return device.displayName ? device.displayName.toLowerCase() : '';
           });
-          vm.searchingForHuronDevices = false;
-          vm.searchingForDevices = vm.searchingForCloudberryDevices;
+          vm.searchingForHuronDevicesMatchingNumber = false;
+          vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
-          HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+          HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
           HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
-          vm.searchingForHuronDevices = false;
-          vm.searchingForDevices = vm.searchingForCloudberryDevices;
+          vm.searchingForHuronDevicesMatchingNumber = false;
+          vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
           if (err.status === 404) {
             vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
           } else {
@@ -283,7 +316,7 @@
         break;
       case 'device':
         vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
-        HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+        HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         break;
       }
     }
@@ -366,23 +399,20 @@
       }
     }
 
-    function getHealthMetrics() {
-      ReportsService.healthMonitor(function (data, status) {
-        if (data.success) {
-          vm.healthMetrics = data.components;
-          // check Squared for error
-          for (var health in vm.healthMetrics) {
-            if (vm.healthMetrics[health].status !== 'operational') {
-              vm.healthyStatus = "error";
-              return;
-            }
-          }
-          vm.healthyStatus = "ok";
-
-        }
+    function initiateHealthStatusPoller() {
+      getHealthMetrics();
+      var healthStatusPoller = $interval(getHealthMetrics, 60000);
+      $scope.$on('$destroy', function () {
+        $interval.cancel(healthStatusPoller);
       });
     }
 
+    function getHealthMetrics() {
+      HelpdeskSparkStatusService.getHealthStatuses().then(function (result) {
+        vm.healthMetrics = result;
+        vm.overallSparkStatus = HelpdeskSparkStatusService.highestSeverity(vm.healthMetrics);
+      });
+    }
   }
 
   angular

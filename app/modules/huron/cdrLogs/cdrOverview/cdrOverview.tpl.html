@@ -46,11 +46,11 @@
           <col class="medium-5">
         </colgroup>
         <tbody>
-          <tr  ng-repeat="(key, value) in cdrpanel.filter()">
-            <td>{{::key}}</td>
-            <td>{{::value}}</td>
+          <tr  ng-repeat="item in cdrpanel.cdr | filter:cdrpanel.searchField">
+            <td>{{::item.key}}</td>
+              <td>{{::item.value}}</td>
           </tr>
-        </tbody>
+          </tbody>
       </table>
     </div>
   </cs-sp-section>
