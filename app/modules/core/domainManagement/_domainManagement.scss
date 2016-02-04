@@ -2,11 +2,7 @@
  * Domain Management Page
  */
 #domainManagement {
-  padding-top: 3rem;
   article {
-    width: 500px;
-    padding-left: 2rem;
-
     table.table {
       margin-top: 1rem;
       margin-bottom: 1.5rem;
@@ -29,7 +25,7 @@
           .icon-circle.pending {
             color: $color-attention-base;
           }
-          .icon-circle.verified {
+          .icon-circle.verified, .icon-circle.claimed {
             color: $color-cta-base;
           }
           .icon-email {
@@ -43,7 +39,7 @@
           button {
             position: relative;
             top: -0.05rem;
-            margin-left: -1rem;
+            margin-left: 0rem;
             text-transform: uppercase;
             font-size: 0.625rem;
             width: 50px !important;
@@ -51,15 +47,49 @@
             min-width: 50px !important;
             padding: 0 !important;
             padding-top: 2px !important;
+          }
 
+          .dropdown-toggle {
+            font-size: 0.85rem;
+            position: relative;
+            top: 0.1rem;
+          }
+        }
+        .tokenCell {
+          width: 6rem;
+          .token {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 4rem;
+          }
+          .copy {
+            width: 1rem;
+            color: $color-primary;
+          }
+          span {
+            float: left;
           }
         }
         .tableMail {
           display: block;
           width: 1.2rem !important;
-
         }
       }
+    }
+    .verifyDomainInput {
+      margin-top: 2rem;
+      input {
+        max-width: 60% !important;
+        margin-right: 1rem;
+      }
+      input, button {
+        float: left;
+      }
+
+    }
+    .addDomain {
+      margin-top: -2rem;
     }
   }
 }
@@ -68,12 +98,28 @@
  * Domain Management New Popup
  */
 .domainModal {
+  .error {
+    color: $color-negative-base !important;
+    span {
+      margin-left: 0.5rem;
+    }
+  }
   .domainVerificationInfo {
     padding-bottom: 3rem;
-    .domainInput {
-      font-size: 1.5rem;
-      padding-bottom: 2rem !important;
-    }
+
+  }
+  .domainInput {
+    font-size: 1.5rem;
+    padding-bottom: 1rem !important;
+  }
+  .domainToken {
+    padding-bottom: 1rem;
+    margin-top: 0.5rem;
+    color: $color-people-base;
+    font-size: 0.85rem;
+    text-align: justify;
+    word-break: break-all;
+    width: 103%;
   }
   .modal-body.domWarning {
     background-color: $color-attention-base;
@@ -91,6 +137,52 @@
     p, i {
       float: left;
       color: white;
+    }
+  }
+  .modal-body.domError {
+    background-color: $color-negative-base !important;
+  }
+  .tokenInfo {
+    margin-bottom: 1rem;
+  }
+}
+
+#domainModalAdd {
+  .modal-body {
+    height: 240px !important;
+    p {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+
+  #domainManagement #domainMenu span.actions-menu.dropdown.pull-right {
+    margin-left: -1rem;
+  }
+  #domainManagement button.btn--cta.verify-btn.ng-scope {
+    margin-left: -1.5rem;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  #domainManagement {
+    table.table {
+      #domainMenu {
+        display: none;
+      }
+    }
+  }
+  #domainManagement button.btn--cta.verify-btn.ng-scope {
+    margin-left: 1rem !important;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  #domainManagement {
+    .domain-status {
+      display: none;
     }
   }
 }

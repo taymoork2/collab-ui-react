@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskService, $interval, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, HelpdeskSparkStatusService) {
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
@@ -31,6 +31,10 @@
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
     vm.showSearchHelp = showSearchHelp;
     vm.populateHistory = populateHistory;
+    vm.overallSparkStatus = "unknown";
+    vm.statusPageUrl = Config.getStatusPageUrl();
+
+    initiateHealthStatusPoller();
 
     function populateHistory() {
       vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
@@ -51,6 +55,7 @@
         vm.currentSearch.userSearchResults,
         vm.currentSearch.orgFilter,
         vm.currentSearch.userLimit);
+      HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
       $state.go('helpdesk.search');
     }
 
@@ -208,12 +213,17 @@
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
           HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          if (err.status === 404) {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+          } else {
+            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
         });
       }
     }
@@ -272,6 +282,7 @@
         break;
       case 'device':
         vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
+        HelpdeskHuronService.setOwnerUserOnDeviceSearchResults(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         break;
       }
     }
@@ -354,6 +365,20 @@
       }
     }
 
+    function initiateHealthStatusPoller() {
+      getHealthMetrics();
+      var healthStatusPoller = $interval(getHealthMetrics, 60000);
+      $scope.$on('$destroy', function () {
+        $interval.cancel(healthStatusPoller);
+      });
+    }
+
+    function getHealthMetrics() {
+      HelpdeskSparkStatusService.getHealthStatuses().then(function (result) {
+        vm.healthMetrics = result;
+        vm.overallSparkStatus = HelpdeskSparkStatusService.highestSeverity(vm.healthMetrics);
+      });
+    }
   }
 
   angular

@@ -10,12 +10,43 @@ var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var messageLogger = require('../utils/messageLogger.gulp')();
+var runSeq = require('run-sequence');
 
-gulp.task('ts:build', function () {
-  var files = config.appFiles.ts;
-  var filter;
+/*******************************************************************
+ * Typescript transpiling task
+ * Usage: gulp ts:build      Transpiles all ts files to js
+ * Options:
+ * --notest             Skips the test (.spec.ts) files
+ * --noapp              Skips the app files
+ ******************************************************************/
+gulp.task('ts:build', function (done) {
+  runSeq([
+      'ts:build-app',
+      'ts:build-test'
+    ],
+    done);
+});
+
+gulp.task('ts:build-test', function () {
+  var files = config.testFiles.spec.ts;
+
+  messageLogger('Transpiling TypeScript test files', files);
+  return buildts(files, config.tsTestOutputFolder);
+});
+
+gulp.task('ts:build-app', function () {
+  var files =  [].concat(
+    config.appFiles.ts,
+    '!' + config.testFiles.spec.ts
+  );
+
+  messageLogger('Transpiling TypeScript files', files);
+  return buildts(files, config.build);
+});
+
+function buildts(files, dest){
   var reporter = $.typescript.reporter.defaultReporter();
-  messageLogger('Transpiling TypeScript files', config.appFiles.ts);
+
   return gulp
     .src(files, {
       base: config.app
@@ -29,11 +60,11 @@ gulp.task('ts:build', function () {
       "sourceMap": true,
       "showOutput": "silent",
       "listFiles": false
-    }, filter, reporter))
+    }, undefined, reporter))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(config.build))
+    .pipe(gulp.dest(dest))
     .pipe(reload({
       stream: true
     }));
-});
+}
 

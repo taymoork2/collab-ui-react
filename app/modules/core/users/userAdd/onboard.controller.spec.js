@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -12,12 +12,16 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMigrateUsers;
   var getMyFeatureToggles;
   var sites;
+  var getLicensesUsage;
+  var getLicensesUsageSpy;
+  var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_) {
     $scope = $rootScope.$new();
+    $controller = _$controller_;
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
@@ -29,6 +33,7 @@ describe('OnboardCtrl: Ctrl', function () {
     TelephonyInfoService = _TelephonyInfoService_;
     FeatureToggleService = _FeatureToggleService_;
     SyncService = _SyncService_;
+    Authinfo = _Authinfo_;
     var current = {
       step: {
         name: 'fakeStep'
@@ -51,6 +56,11 @@ describe('OnboardCtrl: Ctrl', function () {
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     sites = getJSONFixture('huron/json/settings/sites.json');
 
+    getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
+    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
+
+    spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+    spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
@@ -69,19 +79,19 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
+  }));
+
+  function initController() {
     controller = $controller('OnboardCtrl', {
       $scope: $scope,
       $state: $state
     });
 
     $scope.$apply();
-  }));
-
-  it('should be defined', function () {
-    expect(controller).toBeDefined();
-  });
+  }
 
   describe('Bulk Users CSV', function () {
+    beforeEach(initController);
     var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001,1-555-555-5001\nJane,Doe,Jane Doe,janedoe@example.com,5002,1-555-555-5002";
     var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001\nJane,Doe,Jane Doe,janedoe@example.com,5002";
 
@@ -246,6 +256,7 @@ describe('OnboardCtrl: Ctrl', function () {
   });
 
   describe('With Assigning Users', function () {
+    beforeEach(initController);
     beforeEach(function () {
       $scope.allLicenses = [{
         billing: 'testOrg1',
@@ -280,7 +291,45 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('getLicensesUsage', function () {
+
+    describe('for single subscriptions', function () {
+      beforeEach(function () {
+        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.singleSub));
+        initController();
+      });
+
+      it('should verify that there is one subscriptionId', function () {
+        expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
+        expect(Authinfo.isInitialized).toHaveBeenCalled();
+        expect($scope.oneBilling).toEqual(true);
+        expect($scope.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
+        expect($scope.showMultiSubscriptions('srvcid-integ-uitest-1a', false)).toEqual(true);
+      });
+    });
+
+    describe('for multiple subscriptions', function () {
+      beforeEach(function () {
+        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.multiSub));
+        initController();
+      });
+
+      it('should verify that there are multiple subscriptionIds', function () {
+        expect($scope.oneBilling).toEqual(false);
+        expect($scope.subscriptionOptions).toEqual(['svcid-integ-sunnyway-1a', 'svcid-integ-sunnyway-1', undefined]);
+        expect($scope.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
+        expect($scope.showMultiSubscriptions('svcid-integ-sunnyway-1a', false)).toEqual(true);
+      });
+
+      it('should verify that there is a trial subscription', function () {
+        expect($scope.oneBilling).toEqual(false);
+        expect($scope.showMultiSubscriptions('', true)).toEqual(true);
+      });
+    });
+  });
+
   describe('UserAdd DID and DN assignment', function () {
+    beforeEach(initController);
     beforeEach(function () {
       $scope.usrlist = [{
         "name": "dntodid",
@@ -373,6 +422,8 @@ describe('OnboardCtrl: Ctrl', function () {
 
   });
   describe('403 errors during onboarding', function () {
+    beforeEach(initController);
+
     function testOnboardUsers(successFlag, statusCode, responseMessage) {
       return function (userArray, entitleList, licenseList, callback) {
         var data = {

@@ -186,6 +186,36 @@ describe('Service: DeviceFilter', function () {
       expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel).toBe('xfoox');
     });
 
+    it('should search on issue types', function () {
+      var arr = [{
+        diagnosticsEvents: [{
+          type: "foo"
+        }, {
+          type: "bar"
+        }]
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].diagnosticsEvents).toBe(arr[0].diagnosticsEvents);
+    });
+
+    it('should search on issue messages', function () {
+      var arr = [{
+        diagnosticsEvents: [{
+          message: "foo"
+        }, {
+          message: "bar"
+        }]
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].diagnosticsEvents).toBe(arr[0].diagnosticsEvents);
+    });
+
     it('should search on multiple terms', function () {
       var arr = [{
         displayName: 'xfoox',

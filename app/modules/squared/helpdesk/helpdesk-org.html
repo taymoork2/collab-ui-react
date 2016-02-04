@@ -18,14 +18,6 @@
         <span ng-if="helpdeskOrgCtrl.org.isPartner" translate="helpdesk.partner"></span>
         <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
       </div>
-      <div class="row">
-        <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
-        </div>
-        <div class="medium-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
-        </div>
-      </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.email">
         <div class="large-5 columns details-heading">
@@ -59,7 +51,7 @@
           <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
-
+      
       <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.managedBy' | translate}}:</span>
@@ -72,6 +64,15 @@
               </a>
             </span>
           </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
         </div>
       </div>
 

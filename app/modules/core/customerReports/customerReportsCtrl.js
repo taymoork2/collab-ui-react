@@ -13,6 +13,7 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
+    vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
@@ -24,6 +25,7 @@
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
     var activeUserCard = null;
+    var previousSearch = "";
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
@@ -31,6 +33,7 @@
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
     vm.searchField = "";
     vm.mostActiveUsers = [];
+    vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -64,8 +67,15 @@
 
     var deviceChart = null;
     var deviceCard = null;
+    var currentDeviceGraphs = [];
+    var defaultDeviceFilter = {
+      value: 0,
+      label: $translate.instant('registeredEndpoints.allDevices')
+    };
     vm.deviceStatus = REFRESH;
     vm.deviceDescription = '';
+    vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+    vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
     var metricsCard = null;
@@ -74,6 +84,9 @@
     vm.metrics = {};
 
     vm.headerTabs = [{
+      title: $translate.instant('reportsPage.engagement'),
+      state: 'reports'
+    }, {
       title: $translate.instant('reportsPage.sparkReports'),
       state: 'devReports'
     }];
@@ -98,6 +111,7 @@
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
+    vm.deviceUpdate = deviceUpdate;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -109,11 +123,6 @@
 
     vm.activePage = function (num) {
       return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
-    };
-
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
-      resizeCards();
     };
 
     vm.mostActiveSort = function (num) {
@@ -129,28 +138,26 @@
       }
     };
 
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
       }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
-        vm.changePage(vm.activeUserCurrentPage + 1);
-      }
+      vm.activeUserCurrentPage = num;
       resizeCards();
     };
 
-    vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
+        vm.changePage(vm.activeUserCurrentPage + 1);
       }
-      if (vm.activeUserCurrentPage !== 1) {
+    };
+
+    vm.pageBackward = function () {
+      if (vm.activeUserCurrentPage > 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
-      resizeCards();
     };
 
     function init() {
@@ -164,6 +171,7 @@
           setFilesSharedData();
           setMediaData();
           setCallMetricsData();
+          setDeviceData();
         }, 30);
       }
     }
@@ -181,7 +189,7 @@
 
     function resetCards(filter) {
       if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard, deviceCard];
         var qualityElems = [mediaCard, metricsCard];
 
         if (filter === vm.allReports) {
@@ -281,6 +289,12 @@
         metricsChart = tempMetricsChart;
       }
 
+      var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
+      var tempDevicesChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+        deviceChart = tempDevicesChart;
+      }
+
       resizeCards();
     }
 
@@ -303,6 +317,7 @@
       setFilesSharedData();
       setMediaData();
       setCallMetricsData();
+      setDeviceData();
     }
 
     function mediaUpdate() {
@@ -323,6 +338,7 @@
       vm.activeUsersTotalPages = 0;
       vm.activeUserCurrentPage = 0;
       vm.searchField = "";
+      previousSearch = "";
       vm.showMostActiveUsers = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
@@ -344,6 +360,7 @@
               vm.activeUserPredicate = activeUsersSort[3];
               vm.mostActiveUsers = response;
               vm.activeUserCurrentPage = 1;
+              vm.activeButton = [1, 2, 3];
               vm.mostActiveUserStatus = SET;
             }
             resizeCards();
@@ -362,7 +379,12 @@
           returnArray.push(item);
         }
       });
-      vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      if (vm.activeUsersTotalPages !== Math.ceil(returnArray.length / 5) || previousSearch !== vm.searchField) {
+        vm.activeUserCurrentPage = 1;
+        vm.activeButton = [1, 2, 3];
+        vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+        previousSearch = vm.searchField;
+      }
       $timeout(function () {
         resizeCards();
       }, 10);
@@ -439,20 +461,36 @@
     }
 
     function setDeviceData() {
+      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.selectedDevice = vm.deviceFilter[0];
+      currentDeviceGraphs = [];
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
-          // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
-          //   deviceChart = tempDeviceChart;
-          // }
+          vm.deviceFilter = response.filterArray;
+          vm.selectedDevice = vm.deviceFilter[0];
+          currentDeviceGraphs = response.graphData;
+
+          var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+          if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+            deviceChart = tempDevicesChart;
+          }
           vm.deviceStatus = SET;
         }
         deviceCard = document.getElementById('device-card');
       });
+    }
+
+    function deviceUpdate() {
+      if (currentDeviceGraphs.length > 0) {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+      }
     }
 
     // WEBEX side of the page has been copied from the existing reports page

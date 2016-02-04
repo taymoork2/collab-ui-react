@@ -20,7 +20,7 @@
       <input type="text" class="columns medium-4 cdr-overview-controls" placeholder="{{::cdrpanel.searchPlaceholder}}" ng-model="cdrpanel.searchField"></input>
       <div class="columns medium-4 cdr-overview-controls">
         <a class="btn btn--primary cdr-overview-button" download="cdr.json" ng-href="{{::cdrpanel.jsonUrl}}" translate="cdrLogs.cdrSave"></a>
-        <button class="btn btn--primary cdr-overview-button" disabled='true' translate="cdrLogs.ladderDiagram"></button>
+        <button class="btn btn-primary cdr-overview-button" translate="cdrLogs.ladderDiagram" ng-click="cdrpanel.openLadderDiagram()"></button>
       </div>
     </div>
   </cs-sp-section>
@@ -46,11 +46,11 @@
           <col class="medium-5">
         </colgroup>
         <tbody>
-          <tr  ng-repeat="(key, value) in cdrpanel.filter()">
-            <td>{{::key}}</td>
-            <td>{{::value}}</td>
+          <tr  ng-repeat="item in cdrpanel.cdr | filter:cdrpanel.searchField">
+            <td>{{::item.key}}</td>
+              <td>{{::item.value}}</td>
           </tr>
-        </tbody>
+          </tbody>
       </table>
     </div>
   </cs-sp-section>

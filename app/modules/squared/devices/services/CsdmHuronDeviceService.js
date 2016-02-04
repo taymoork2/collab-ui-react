@@ -2,9 +2,13 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
+  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, HuronConfig, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
     var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+
+    function getCmiUploadLogsUrl(userId, deviceId) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
+    }
 
     var initialDataPromise = huronEnabled().then(function (enabled) {
       return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
@@ -43,10 +47,17 @@
       });
     }
 
+    function uploadLogs(device, feedbackId) {
+      return $http.post(getCmiUploadLogsUrl(device.cisUuid, device.huronId), {
+        ticketId: feedbackId
+      });
+    }
+
     return {
       on: deviceCache.on,
       getDeviceList: getDeviceList,
-      resetDevice: resetDevice
+      resetDevice: resetDevice,
+      uploadLogs: uploadLogs
     };
   }
 

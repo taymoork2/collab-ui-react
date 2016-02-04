@@ -6,6 +6,7 @@
 /* global __dirname */
 var gulp = require('gulp');
 var config = require('../gulp.config')();
+var fileListParser = require('../utils/fileListParser.gulp');
 var $ = require('gulp-load-plugins')({ lazy: true });
 var args = require('yargs').argv;
 var karma = require('karma').server;
@@ -22,9 +23,27 @@ gulp.task('karma-config', function (done) {
       config.vendorFiles.js,
       config.testFiles.js,
       config.testFiles.app,
-      config.testFiles.global,
-      config.testFiles.spec[specs]
+      config.testFiles.global
       );
+
+    // any other 'specs' target should already be defined in 'gulp.config.js'
+    if (specs !== 'custom') {
+      unitTestFiles = unitTestFiles.concat(config.testFiles.spec[specs]);
+    } else {
+      // for the 'custom' target, a '--files-from' option MUST be specified as a line-separated list of
+      // files relative to the project root dir
+      // (see: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/About-Karma-Test-Selection#selecting-tests-by-custom-list-ie-gulp-karma-custom---files-from)
+      var filesFrom = args['files-from'];
+      var flist;
+      if (!filesFrom) {
+        log($.util.colors.red('Error: missing \'--files-from\' argument'));
+        process.exit(1);
+      } else {
+        // parse each line item from file specified by '--files-from', and append to main list
+        flist = fileListParser.toList(filesFrom);
+        unitTestFiles = unitTestFiles.concat(flist);
+      }
+    }
 
     return gulp
       .src(config.testFiles.karmaTpl)
@@ -49,7 +68,7 @@ gulp.task('karma-config', function (done) {
       }))
       .pipe(gulp.dest(config.test));
   } else {
-    log($.util.colors.red('--nounit **Skipping Karma Config Task'));
+    log($.util.colors.yellow('--nounit **Skipping Karma Config Task'));
     return done();
   }
 });
@@ -63,19 +82,21 @@ gulp.task('karma', function (done) {
     var options = {
       configFile: path.resolve(__dirname, '../../test/karma-unit-' + specs + '.js')
     };
-    if (args.debug) {
-      if (args.watch) {
-        options.autoWatch = true;
-      }
-      options.browsers = ['Chrome'];
-      options.preprocessors = {};
-      options.browserNoActivityTimeout = 600000;
+    if (args.watch) {
+      options.autoWatch = true;
+      options.singleRun = false;
     } else {
-      options.singleRun = true;
+      if (args.debug) {
+        options.browsers = ['Chrome'];
+        options.preprocessors = {};
+        options.browserNoActivityTimeout = 600000;
+      } else {
+        options.singleRun = true;
+      }
     }
     karma.start(options, done);
   } else {
-    log($.util.colors.red('--nounit **Skipping Karma Tests'));
+    log($.util.colors.yellow('--nounit **Skipping Karma Tests'));
     return done();
   }
 });
@@ -125,6 +146,11 @@ gulp.task('karma-sunlight', function (done) {
 
 gulp.task('karma-webex', function (done) {
   args.specs = 'webex';
+  runSeq('karma-config','karma', done);
+});
+
+gulp.task('karma-custom', function (done) {
+  args.specs = 'custom';
   runSeq('karma-config','karma', done);
 });
 
