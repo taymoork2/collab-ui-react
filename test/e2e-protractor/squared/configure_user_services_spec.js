@@ -20,7 +20,7 @@ describe('Configuring services per-user', function () {
     fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
   }
 
-  // Make file
+  // Make file for import CSV testing
   utils.writeFile(absolutePath, fileText);
 
   afterEach(function () {
@@ -43,21 +43,30 @@ describe('Configuring services per-user', function () {
     navigation.clickUsers();
     users.createUser(testUser);
 
+    // Must select licene for HS to work
+    utils.click(users.paidMtgCheckbox);
+
     // Select hybrid services
-    //utils.click(users.hybridServices_Cal);
+    utils.click(users.hybridServices_Cal);
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
-  it('should confirm hybrid services case', function () {
-    utils.searchAndClick(testUser);
-    //utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    //utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+  it('Should activate user', function() {
+    activate.setup(null, testUser);
   });
 
-  xit('should confirm hybrid services ADDITIVE case', function () {
+  it('should confirm hybrid services case', function () {
+    utils.searchAndClick(testUser);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+  });
+
+  it('should confirm hybrid services ADDITIVE case', function () {
+    users.createUser(testUser);
+
     // Select hybrid services
     utils.click(users.hybridServices_UC);
 
@@ -78,10 +87,11 @@ describe('Configuring services per-user', function () {
       utils.click(users.standardTeamRooms);
       utils.expectCheckbox(users.standardTeamRooms, true);
       utils.click(users.saveButton);
-      /* $TODO - note these hybrid settings should be preserved, but are not (existing $BUG)
+
+      // Confirm these retain their previous settings
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-      */
+
       notifications.assertSuccess('entitled successfully');
     });
   });
@@ -118,16 +128,21 @@ describe('Configuring services per-user', function () {
 
   //////////////////////////////////////
   // 25 party messaging tests
-  xit('should add a user with 25 party meetings checked', function () {
+  it('should add a user with 25 party meetings checked', function () {
     users.createUser(testUser);
-    utils.click(users.meeting25Party);
+    utils.click(users.paidMtgCheckbox);
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
-  xit('should verify that 25 party meetigns is enabled', function () {
+  it('Should activate user', function() {
+    activate.setup(null, testUser);
+  });
+
+  it('should verify that 25 party meetigns is enabled', function () {
     utils.clickUser(testUser);
+    //$TODO - verify
     utils.deleteUser(testUser);
   });
 

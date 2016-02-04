@@ -13,13 +13,13 @@ var ActivatePage = function () {
     expect(activate.testData.getAttribute('eqp')).not.toBeNull();
   };
 
-  this.setup = setup;
-
-  function setup(deviceUA) {
+  // setup -- specify deviceUA = '' for web activation
+  this.setup = function setup(deviceUA, email) {
     var obj = {
-      body: getTestBody(),
+      body: this.getTestBody(email),
       deviceUA: deviceUA
-    };
+    }
+
     var flow = protractor.promise.controlFlow();
     flow.execute(getToken.bind(null, obj));
     flow.execute(verifyEmail.bind(null, obj));
@@ -27,9 +27,9 @@ var ActivatePage = function () {
     return obj;
   }
 
-  function getTestBody() {
+  this.getTestBody = function getTestBody(email) {
     return {
-      'email': utils.randomTestGmail(),
+      'email': email || utils.randomTestGmail(),
       'pushId': utils.randomId(),
       'deviceName': utils.randomId(),
       'deviceId': utils.randomId()
@@ -67,7 +67,9 @@ var ActivatePage = function () {
       },
       body: JSON.stringify(obj.body)
     };
+    console.log( 'Sending request: ' + options.url + '\n' + options.headers['User-Agent'] + '\n' + options.headers['Content-Type'] + '\n' + options.headers.Authorization + '\n' + options.body );
     return utils.sendRequest(options).then(function (data) {
+      console.log('Response is ' + data );
       var resp = JSON.parse(data);
       obj.encryptedQueryParam = resp.eqp;
     });

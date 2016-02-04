@@ -1143,7 +1143,7 @@ angular.module('Core')
 
               $scope.results.resultList.push(userResult);
             }
-            
+
             //concatenating the results in an array of strings for notify function
             var successes = [];
             var errors = [];
@@ -1223,7 +1223,8 @@ angular.module('Core')
           } else {
             entitleList = getEntitlements('add');
           }
-          entitleList = entitleList.concat( getExtensionEntitlements('add') );
+          entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
             Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
@@ -1662,6 +1663,8 @@ angular.module('Core')
             } else {
               entitleList = getEntitlements('add');
             }
+            entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
             if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
@@ -1949,6 +1952,7 @@ angular.module('Core')
             entitlementName: 'ciscoUC'
           });
         }
+        entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
         function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
           return csvPromise.then(function () {
