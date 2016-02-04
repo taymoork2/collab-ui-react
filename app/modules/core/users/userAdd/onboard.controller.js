@@ -1271,8 +1271,10 @@ angular.module('Core')
                 msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
-                if (errorMsg === 40087) {
-                  msg = $translate.instant('hercules.hybridServices.result40087');
+                if (errorMsg === '400087') {
+                  msg = $translate.instant('hercules.hybridServices.result400087', {
+                    email: response.email
+                  });
                 } else {
                   msg = $translate.instant('hercules.hybridServices.resultOther', {
                     email: response.email,
