@@ -29,17 +29,16 @@
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
-    vm.fromRouteCall = "false";
-
     var rtHG = 'routeToHuntGroup';
 
     /////////////////////
 
     function populateUiModel() {
-      if (!vm.fromRouteCall) {
-        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+
+      if (angular.isDefined($scope.fromRouteCall)) {
+        vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
-        vm.hgSelected.id = '';
+        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
       }
 
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
@@ -49,7 +48,13 @@
     }
 
     function saveUiModel() {
-      vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+      if (angular.isDefined($scope.fromRouteCall)) {
+        vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
+      } else {
+        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+        vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+      }
+
       AACommonService.setPhoneMenuStatus(true);
     }
 
@@ -68,16 +73,28 @@
 
     function activate() {
 
-      vm.fromRouteCall = $scope.fromRouteCall;
+      if (angular.isDefined($scope.fromRouteCall)) {
+        vm.fromRouteCall = $scope.fromRouteCall;
+      }
 
       vm.aaModel = AAModelService.getAAModel();
       var ui = AAUiModelService.getUiModel();
 
       vm.uiMenu = ui[$scope.schedule];
 
-      if (!vm.fromRouteCall) {
-        vm.menuEntry = vm.uiMenu.entries[$scope.index];
+      vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
+      if (angular.isDefined($scope.fromRouteCall)) {
+
+        // existing action for route to hunt group?
+        if (!_.find(vm.menuEntry.actions, {
+            name: rtHG
+          })) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+          vm.menuEntry.addAction(action);
+        }
+
+      } else {
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {

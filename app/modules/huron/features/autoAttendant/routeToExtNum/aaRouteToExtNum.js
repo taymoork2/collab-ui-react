@@ -71,12 +71,25 @@
       vm.uiMenu = ui[$scope.schedule];
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
-      if ($scope.keyIndex < vm.menuEntry.entries.length) {
-        vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+      if (angular.isDefined($scope.fromRouteCall)) {
+
+        // existing action for route to external number?
+        if (!_.find(vm.menuEntry.actions, {
+            name: 'route'
+          })) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('route', '');
+          vm.menuEntry.addAction(action);
+        }
+
       } else {
-        vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
-        vm.menuKeyEntry.addAction(action);
+
+        if ($scope.keyIndex < vm.menuEntry.entries.length) {
+          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+        } else {
+          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+          vm.menuKeyEntry.addAction(action);
+        }
       }
 
       populateUiModel();

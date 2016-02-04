@@ -10,8 +10,6 @@
 
     var vm = this;
 
-    vm.fromRouteCall = "false";
-
     vm.aaModel = {};
     vm.menuEntry = {};
 
@@ -56,10 +54,7 @@
     }
 
     function populateUiModel() {
-      if (!vm.fromRouteCall) {
-        vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
-      }
-
+      vm.aaName = ceId2aaName(vm.menuEntry.actions[0].value);
     }
 
     function saveUiModel() {
@@ -68,18 +63,30 @@
     }
 
     function activate() {
+      var action;
 
       var uiModel = AAUiModelService.getUiModel();
       var uiCombinedMenu = uiModel[$scope.schedule];
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
+      vm.menuEntry = uiCombinedMenu.entries[$scope.index];
 
-      // Read an existing routeToAA entry if exist or initialize it if not
-      if (!vm.fromRouteCall) {
+      if (angular.isDefined($scope.fromRouteCall)) {
+
+        // existing action for goto?
+        if (!_.find(vm.menuEntry.actions, {
+            name: "goto"
+          })) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          vm.menuEntry.addAction(action);
+        }
+      } else {
+
+        // Read an existing routeToAA entry if exist or initialize it if not
         if ($scope.keyIndex < uiPhoneMenu.entries.length) {
           vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
         } else {
           vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
           vm.menuEntry.addAction(action);
         }
 
@@ -93,6 +100,7 @@
       options.sort(function (a, b) {
         return a.localeCompare(b);
       });
+
       vm.options = options;
 
       populateUiModel();
