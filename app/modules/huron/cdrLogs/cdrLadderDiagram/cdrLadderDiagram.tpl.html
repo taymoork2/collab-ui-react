@@ -30,8 +30,8 @@
                             <hr class="color-blk">{{::"cdrLadderDiagram.downLoadCsvDesc" | translate}}
                         </div>
                         <div class="col-lg-3">
-                            <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadXml" | translate}}</h4>
-                            <hr class="color-blk">{{::"cdrLadderDiagram.downLoadXmlDesc" | translate}}
+                            <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadHtml" | translate}}</h4>
+                            <hr class="color-blk">{{::"cdrLadderDiagram.downLoadHtmlDesc" | translate}}
                         </div>
                         <div class="col-lg-2"></div>
                     </div>
@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-lg-offset-1 col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.json" ng-href="{{ cdrLadderDiagram.jsonUrl }}"><span class="icon icon-download"></span></a></div>
                         <div class="col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.csv" ng-href="{{ cdrLadderDiagram.csvUrl }}"><span class="icon icon-download"></span></a></div>
-                        <div class="col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.xml" ng-href="{{ cdrLadderDiagram.xmlUrl }}"><span class="icon icon-download"></span></a></div>
+                        <div class="col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.html" ng-href="{{ cdrLadderDiagram.htmlUrl }}"><span class="icon icon-download"></span></a></div>
                     </div>
                 </div>
             </div>
@@ -98,11 +98,11 @@
                                     <span>{{::"cdrLadderDiagram.filterBy" | translate}}</span><span class="icon icon-arrow-down"></span>
                                 </button>
                                 <ul cs-dropdown-menu class="dropdown-menu" role="menu">
-                                    <li><a href="#" ng-click="cdrLadderDiagram.reloadLadderDiagram('all')">{{::"cdrLadderDiagram.all" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('all')">{{::"cdrLadderDiagram.all" | translate}}</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#" ng-click="cdrLadderDiagram.reloadLadderDiagram('callId')">{{::"cdrLadderDiagram.callIds" | translate}}</a></li>
-                                    <li><a href="#" ng-click="cdrLadderDiagram.reloadLadderDiagram('sessionPair')">{{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}</a></li>
-                                    <li><a href="#" ng-click="cdrLadderDiagram.reloadLadderDiagram('hostName')">{{::"cdrLadderDiagram.hostname" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('callId')">{{::"cdrLadderDiagram.callIds" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('sessionPair')">{{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}</a></li>
+                                    <li><a ng-click="cdrLadderDiagram.reloadLadderDiagram('hostName')">{{::"cdrLadderDiagram.hostname" | translate}}</a></li>
                                 </ul>
                             </div>
                         </div>

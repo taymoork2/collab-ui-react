@@ -5,7 +5,7 @@
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
         <button cs-dropdown-toggle class="btn--user dropdown-toggle" tabindex="0">
-          <div ng-class="{unknown:  'gray', error: 'red', ok: 'green'}[helpdeskCtrl.healthyStatus]">
+          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskCtrl.overallSparkStatus]">
             <i class="icon icon-circle"></i>
           </div>
         </button>
@@ -17,7 +17,7 @@
           <div class="content">
             <div ng-repeat="health in helpdeskCtrl.healthMetrics">
               <div ng-href="{{helpdeskCtrl.statusPageUrl}}" target="_blank">
-                <div id="{{health.name}}" ng-class="{true:'green', false:'red'}[health.status==='operational']">
+                <div id="{{health.name}}" ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[health.status]">
                   <i class="fa fa-circle"></i>&nbsp;&nbsp;
                   {{health.name}}
                 </div>
@@ -27,8 +27,8 @@
         </div>
       </div>
       <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user dropdown-toggle" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
-          <i class="icon icon-clock icon-history"></i>
+        <button cs-dropdown-toggle class="btn--user dropdown-toggle helpdesk-history-button" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
+          <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">
           <li ng-if="helpdeskCtrl.searchHistory.length <= 0">

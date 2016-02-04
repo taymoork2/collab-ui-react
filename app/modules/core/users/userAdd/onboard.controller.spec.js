@@ -304,7 +304,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(Authinfo.isInitialized).toHaveBeenCalled();
         expect($scope.oneBilling).toEqual(true);
         expect($scope.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
-        expect($scope.showMultiSubscriptions('srvcid-integ-uitest-1a')).toEqual(true);
+        expect($scope.showMultiSubscriptions('srvcid-integ-uitest-1a', false)).toEqual(true);
       });
     });
 
@@ -316,9 +316,14 @@ describe('OnboardCtrl: Ctrl', function () {
 
       it('should verify that there are multiple subscriptionIds', function () {
         expect($scope.oneBilling).toEqual(false);
-        expect($scope.subscriptionOptions).toEqual(['svcid-integ-sunnyway-1a', 'svcid-integ-sunnyway-1']);
+        expect($scope.subscriptionOptions).toEqual(['svcid-integ-sunnyway-1a', 'svcid-integ-sunnyway-1', undefined]);
         expect($scope.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
-        expect($scope.showMultiSubscriptions('svcid-integ-sunnyway-1a')).toEqual(true);
+        expect($scope.showMultiSubscriptions('svcid-integ-sunnyway-1a', false)).toEqual(true);
+      });
+
+      it('should verify that there is a trial subscription', function () {
+        expect($scope.oneBilling).toEqual(false);
+        expect($scope.showMultiSubscriptions('', true)).toEqual(true);
       });
     });
   });

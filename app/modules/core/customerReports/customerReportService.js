@@ -618,8 +618,8 @@
         graphData: [],
         filterArray: []
       };
-      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isArray(response.data) && angular.isDefined(response.data[0].data) && angular.isArray(response.data[0].data)) {
-        var data = response.data[0].data;
+      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data) && angular.isArray(response.data.data[0].data)) {
+        var data = response.data.data[0].data;
         var graphItem = {
           totalRegisteredDevices: 0
         };
@@ -765,6 +765,5 @@
         return ABORT;
       }
     }
-
   }
 })();

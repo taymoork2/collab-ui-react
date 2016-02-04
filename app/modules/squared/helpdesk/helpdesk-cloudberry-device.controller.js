@@ -10,6 +10,7 @@
     vm.device = $stateParams.device;
     vm.keyPressHandler = keyPressHandler;
     vm.downloadLog = downloadLog;
+    vm.isAuthorizedForLog = isAuthorizedForLog;
     if ($stateParams.device && $stateParams.device.organization) {
       vm.org = $stateParams.device.organization;
     } else {
@@ -28,13 +29,17 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
-      if (Authinfo.isSupportUser()) {
+      if (isAuthorizedForLog()) {
         HelpdeskLogService.searchForLastPushedLog(vm.device.cisUuid).then(function (log) {
           vm.lastPushedLog = log;
         }, angular.noop);
       }
 
       angular.element(".helpdesk-details").focus();
+    }
+
+    function isAuthorizedForLog() {
+      return (Authinfo.isCisco() && (Authinfo.isSupportUser() || Authinfo.isAdmin() || Authinfo.isAppAdmin()));
     }
 
     function downloadLog(filename) {

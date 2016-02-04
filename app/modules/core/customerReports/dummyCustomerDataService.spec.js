@@ -14,6 +14,8 @@ describe('Controller: Dummy Customer Reports', function () {
   var avgRooms = angular.copy(dummyData.avgRooms);
   var filesShared = angular.copy(dummyData.filesShared);
   var mediaQuality = angular.copy(dummyData.mediaQuality);
+  var devicesJson = getJSONFixture('core/json/customerReports/devices.json');
+  var devicesData = angular.copy(devicesJson.dummyData);
 
   var metricsData = {
     dataProvider: [{
@@ -33,6 +35,7 @@ describe('Controller: Dummy Customer Reports', function () {
   var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
+
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
         data[i].modifiedDate = moment().subtract(7 - i, 'day').format(dayFormat);
@@ -117,6 +120,16 @@ describe('Controller: Dummy Customer Reports', function () {
 
     it('dummyMetricsData should return the expected responses', function () {
       expect(DummyCustomerReportService.dummyMetricsData()).toEqual(metricsData);
+    });
+
+    it('dummyDeviceData should return the expected responses', function () {
+      devicesData.one[0].graph = updateDates(devicesData.one[0].graph, timeFilter[0]);
+      devicesData.two[0].graph = updateDates(devicesData.two[0].graph, timeFilter[1], true);
+      devicesData.three[0].graph = updateDates(devicesData.three[0].graph, timeFilter[2], true);
+
+      expect(DummyCustomerReportService.dummyDeviceData(timeFilter[0])).toEqual(devicesData.one);
+      expect(DummyCustomerReportService.dummyDeviceData(timeFilter[1])).toEqual(devicesData.two);
+      expect(DummyCustomerReportService.dummyDeviceData(timeFilter[2])).toEqual(devicesData.three);
     });
   });
 });
