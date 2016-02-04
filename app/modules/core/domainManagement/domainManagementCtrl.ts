@@ -4,10 +4,10 @@ namespace domainManagement {
 
     private _loggedOnUser = {
       domain: null,
-      email:null,
-      isLoaded:false,
-      isPartner:false
-  };
+      email: null,
+      isLoaded: false,
+      isPartner: false
+    };
 
     private _feature = false;
 
@@ -41,7 +41,7 @@ namespace domainManagement {
         this._loggedOnUser.isLoaded = true;
       });
 
-      this.DomainManagementService.refreshDomainList();
+      this.DomainManagementService.getVerifiedDomains().then(DomainManagementService.getVerificationTokens.bind(DomainManagementService));
     }
 
     get domains() {

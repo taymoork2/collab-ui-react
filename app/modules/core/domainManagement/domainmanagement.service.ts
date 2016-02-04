@@ -59,10 +59,6 @@ class DomainManagementService {
     return this._domainList;
   }
 
-  refreshDomainList() {
-    return this.getVerifiedDomains(false);
-  }
-
   addDomain(domainToAdd) {
     let deferred = this.$q.defer();
 
@@ -136,7 +132,6 @@ class DomainManagementService {
               domainInList.status = this.states.verified;
             deferred.resolve();
           }, err => {
-            console.log("dfdsfdsfds", err);
             this.Log.error('Failed to verify domain:' + domain, err);
             deferred.reject(this.getErrorMessage(err));
           });
@@ -151,8 +146,6 @@ class DomainManagementService {
   claimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
-
-      console.log("claim", domain);
 
       if (this._mock) {
         let claimedDomain = _.find(this._domainList, {text: domain, status: this.states.verified});
@@ -253,14 +246,24 @@ class DomainManagementService {
 
       this.loadDomainlist(data.pendingDomains, this.states.pending, null);
 
-      this.getVerificationTokens();
-
       deferred.resolve(this._domainList);
     }, err => {
       deferred.reject(this.getErrorMessage(err));
     });
 
     return deferred.promise;
+  }
+
+  getVerificationTokens():void {
+
+    let pendingDomains = _.filter(this._domainList, {status: this.states.pending});
+
+    if (!pendingDomains || pendingDomains.length < 1)
+      return;
+
+    _.each(pendingDomains, domain => {
+      this.getToken(domain.text);
+    });
   }
 
   private loadDomainlist(domainArray, domainStatus, overridePredicate) {
@@ -277,26 +280,15 @@ class DomainManagementService {
 
         this._domainList.push({
           text: domLower,
-          code: '',
+          token: '',
           status: domainStatus
         });
       }
     });
   }
 
-  private getVerificationTokens():void {
-
-    let pendingDomains = _.filter(this._domainList, {status: this.states.pending});
-
-    if (!pendingDomains || pendingDomains.length < 1)
-      return;
-
-    _.each(pendingDomains, domain => {
-      this.getToken(domain.text);
-    });
-  }
-
   private getToken(domain) {
+
     let deferred = this.$q.defer();
 
     if (this._mock) {
