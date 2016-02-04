@@ -1,6 +1,6 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
 namespace domainManagement {
-  declare var punycode: any;
+  declare let punycode: any;
 
   describe('DomainManagementAddCtrl', function () {
 

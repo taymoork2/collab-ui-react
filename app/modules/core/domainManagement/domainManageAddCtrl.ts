@@ -1,5 +1,5 @@
 namespace domainManagement {
-  declare var punycode: any;
+  declare let punycode: any;
 
   class DomainManageAddCtrl {
     private _loggedOnUser;
