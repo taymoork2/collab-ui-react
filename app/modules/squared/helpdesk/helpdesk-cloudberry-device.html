@@ -63,7 +63,7 @@
           <span>{{helpdeskDeviceCtrl.device.mac}}</span>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.id' | translate}}:</span>
@@ -85,6 +85,19 @@
           </span>
         </div>
       </div>
+
+      <div class="row" ng-if="helpdeskDeviceCtrl.isAuthorizedForLog()">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.lastLog' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <a ng-if="helpdeskDeviceCtrl.lastPushedLog" ng-click="helpdeskDeviceCtrl.downloadLog(helpdeskDeviceCtrl.lastPushedLog.filename)">{{helpdeskDeviceCtrl.lastPushedLog.timestamp | date:'medium'}}</a>
+          </span>
+          <span ng-if="!helpdeskDeviceCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
+        </div>
+      </div>
+
 
       <div class="row" ng-if="helpdeskDeviceCtrl.device.hasIssues">
         <div class="small-4 medium-3 large-2 columns details-heading">

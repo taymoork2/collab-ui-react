@@ -124,7 +124,6 @@
 
     function openEditTrialModal() {
       $state.go('trialEdit.info', {
-          showPartnerEdit: true,
           currentTrial: vm.currentCustomer
         })
         .then(function () {

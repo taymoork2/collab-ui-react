@@ -623,8 +623,8 @@
     "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
     "downLoadCsv": "CSV",
     "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
-    "downLoadXml": "XML",
-    "downLoadXmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "downLoadHtml": "HTML",
+    "downLoadHtmlDesc": "This file format will yield the ladder diagram that is shown below.",
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
@@ -1107,7 +1107,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1144,7 +1144,6 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service.",
-      "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
@@ -1161,21 +1160,23 @@
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
-        "sipDomainHeading": "SIP Domain",
-        "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
-        "sipDomainPlaceholder": "Enter a single domain or subdomain"
+        "sipDomainHeading": "SIP Destination",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainPlaceholder": "Enter a SIP Destination",
+        "sipDomainExample": "For example: acme.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
@@ -1286,6 +1287,8 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
+    "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -1466,6 +1469,7 @@
     "phoneMenuPlaySubmenu": "Play Submenu",
     "phoneMenuRepeatMenu": "Repeat this Menu",
     "phoneMenuDialExt": "Dial by Extension",
+    "phoneMenuRouteToExtNum": "Route to Phone Number",
     "phoneMenuRouteUser": "Route to User",
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
@@ -1480,7 +1484,9 @@
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1569,7 +1575,9 @@
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
-    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "selectUserPlaceHolder": "Enter full name",
+    "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
     "code": "CP",
@@ -1718,7 +1726,6 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
-    "addNumbers": "Manage Numbers",
     "editNumbers": "Edit Phone Numbers",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
@@ -1980,7 +1987,6 @@
     "expiring": "Trial Expiring",
     "expiresToday": "Expires Today",
     "unused": "unused licenses",
-    "uploadNumbers": "Manage Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
     "none": "None",
@@ -2030,14 +2036,11 @@
     "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
-    "title": "Manage Phone Numbers",
-    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "buttonText": "Add Numbers",
+    "title": "Add Phone Numbers",
     "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
-    "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
-    "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
@@ -2072,15 +2075,14 @@
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
     "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires",
-    "lastSeen": "Last seen",
+    "lastSeen": "Offline since:",
+    "expires": "This activation code expires",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -2276,10 +2278,19 @@
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
+      "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
+      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+    },
+    "reassign": {
+      "reassignHost": "Reassign Host",
+      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignErrorHeader": "Unexpected Error",
+      "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2325,7 +2336,9 @@
     "offline": "Offline",
     "active": "Active",
     "noCluster": "No Media Service Clusters Connected to Spark",
-    "close": "Close"
+    "close": "Close",
+    "reassignCluster": "Reassign to Cluster",
+    "moveHost": "MOVE HOST"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -2826,7 +2839,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3109,6 +3123,30 @@
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
+  "digitalRiver": {
+    "enterEmailAddr": {
+      "title": "Atlas Portal Shopping Cart Login (APSCL)",
+      "header": "Enter eMail Addr",
+      "validation": {
+        "emptyEmail": "The email address cannot be blank"
+      }
+    },
+    "createAccount": {
+      "title": "Create Account",
+      "passwordLabel": "Enter your password:",
+      "validation": {
+        "emptyEmail": "Empty email",
+        "emptyPassword": "Empty password",
+        "emailsDontMatch": "Emails do not match",
+        "passwordsDontMatch": "Passwords do not match"
+      }
+    },
+    "validation": {
+      "unexpectedError": "Unexpected error"
+    },
+    "emailLabel": "Enter your email address:",
+    "nextButton": "Next"
+  },
   "overview": {
     "pageTitle": "Overview",
     "thisMonth": "This month",
@@ -3234,6 +3272,8 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
+    "lastLog": "Last Client Log",
+    "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
@@ -3290,8 +3330,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3312,7 +3352,12 @@
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
-    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer."
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "primary": "Primary",
+    "shared": "Shared",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help",
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3326,7 +3371,7 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
+    "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
@@ -3340,7 +3385,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",
@@ -3374,7 +3422,7 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Show code and instructions",
+      "instructions": "Code and instructions",
       "mail": "Mail code and instructions",
       "unverify": "Remove enforcement",
       "unclaim": "Release domain",
@@ -3382,9 +3430,11 @@
     },
     "instructions": {
       "title": "Code and instructions",
-      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done": "Done"
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

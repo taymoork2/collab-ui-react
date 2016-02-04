@@ -167,6 +167,20 @@ angular.module('Core')
           prod: 'https://identity.webex.com/organization/%s/v1/'
         },
 
+        sparkDomainManagementUrl: {
+          dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+        },
+
+        sparkDomainCheckUrl: {
+          dev: '.wbx2.com',
+          cfe: '.wbx2.com',
+          integration: '.wbx2.com',
+          prod: '.ciscospark.com'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
@@ -457,7 +471,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
-        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
+        //WARNING: Deprecated, use offerTypes
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -648,6 +662,28 @@ angular.module('Core')
           };
 
           return adminServiceUrl[this.getEnv()];
+        },
+
+        getSparkDomainManagementUrl: function () {
+          var sparkDomainManagementUrl = {
+            'dev': this.sparkDomainManagementUrl.dev,
+            'cfe': this.sparkDomainManagementUrl.cfe,
+            'integration': this.sparkDomainManagementUrl.integration,
+            'prod': this.sparkDomainManagementUrl.prod
+          };
+
+          return sparkDomainManagementUrl[this.getEnv()];
+        },
+
+        getSparkDomainCheckUrl: function () {
+          var sparkDomainCheckUrl = {
+            'dev': this.sparkDomainCheckUrl.dev,
+            'cfe': this.sparkDomainCheckUrl.cfe,
+            'integration': this.sparkDomainCheckUrl.integration,
+            'prod': this.sparkDomainCheckUrl.prod
+          };
+
+          return sparkDomainCheckUrl[this.getEnv()];
         },
 
         getProdAdminServiceUrl: function () {
@@ -1043,6 +1079,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
+          'drLoginForward',
           'users',
           'user-overview',
           'userprofile',

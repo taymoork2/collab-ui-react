@@ -104,6 +104,10 @@ Special stuff currently used for out own mail input field...
     right: 0;
     text-align: center;
   }
+
+  .centered-info-pane {
+    padding: 10% !important;
+  }
 }
 
 .hercules-cluster-settings {
@@ -118,7 +122,13 @@ Special stuff currently used for out own mail input field...
     }
   }
 }
-
+.hercules-connectSettings h5{
+  padding-top: 1rem;
+}
+.hercules-connect-setting{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
 .hercules-state-alarm {
   color: $color-negative-base;
 }
@@ -209,6 +219,16 @@ Special stuff currently used for out own mail input field...
 .hercules-modal-checkboxes {
   label {
     margin: 5px 0;
+  }
+}
+
+.hercules-sip-settings {
+  .tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+  }
+  .sip-domain-icon {
+    margin-left: 30px;
   }
 }
 

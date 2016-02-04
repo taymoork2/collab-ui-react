@@ -8,11 +8,11 @@
     </div>
   </div>
 
-  <div class="row full">
+  <div class="row full" ng-if="!helpdeskDeviceCtrl.notFound">
     <div class="columns medium-12">
       <h3 class="display-name ellipsis">{{helpdeskDeviceCtrl.device.displayName}}</h3>
 
-      <div class="row">
+      <div class="row" ng-if="helpdeskDeviceCtrl.device.product">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'helpdesk.type' | translate}}:</span>
         </div>
@@ -26,16 +26,16 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" ng-if="helpdeskDeviceCtrl.device.deviceStatus">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'helpdesk.status' | translate}}:</span>
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
-          <span ng-if="helpdeskDeviceCtrl.device"><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
+          <span><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
         </div>
       </div>
       
-      <div class="row">
+      <div class="row" ng-if="helpdeskDeviceCtrl.device.description">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.description' | translate}}:</span>
         </div>
@@ -53,13 +53,24 @@
         </div>
       </div>
       
-      <div class="row">
+      <div class="row" ng-if="helpdeskDeviceCtrl.deviceNumbers">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.numbers' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers">
+            {{number.directoryNumber.pattern}} <span ng-if="number.e164Mask">({{number.e164Mask}})</span>{{$last ? '' : ', '}}
+          </span>
+        </div>
+      </div>
+      
+      <div class="row" ng-if="helpdeskDeviceCtrl.ownerUser">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.user' | translate}}:</span>
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span>
-            <a ng-if="helpdeskDeviceCtrl.ownerUser" ui-sref="helpdesk.user({user:helpdeskDeviceCtrl.ownerUser, id:helpdeskDeviceCtrl.ownerUser.id, orgId:helpdeskDeviceCtrl.ownerUser.organization.id})">
+            <a ui-sref="helpdesk.user({user:helpdeskDeviceCtrl.ownerUser, id:helpdeskDeviceCtrl.ownerUser.id, orgId:helpdeskDeviceCtrl.ownerUser.organization.id})">
               {{helpdeskDeviceCtrl.ownerUser.displayName}}
             </a>
           </span>
@@ -79,5 +90,11 @@
         </div>
       </div>
     </div>
+  </div>
+  
+  <div class="row full" ng-if="helpdeskDeviceCtrl.notFound">
+    <div class="columns medium-12">
+      <h3 class="display-name ellipsis" ng-if="helpdeskDeviceCtrl.device">{{helpdeskDeviceCtrl.device.displayName}}</h3>
+      <span translate="helpdesk.deviceNotFound"></span>
   </div>
 </div>

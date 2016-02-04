@@ -28,6 +28,28 @@ angular
           },
           authenticate: false
         })
+        .state('enterEmailAddr', {
+          url: '/enterEmailAddr',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController',
+              controllerAs: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
+        .state('createAccount', {
+          url: '/createAccount',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController',
+              controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {
@@ -188,8 +210,6 @@ angular
           authenticate: false
         })
         .state('domainmanagement', {
-          //abstract: true,
-          url: '/domainmanagement',
           templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
           controller: 'DomainManagementCtrl',
           controllerAs: 'dv',
@@ -1332,7 +1352,6 @@ angular
             }
           },
           params: {
-            showPartnerEdit: false,
             currentTrial: {}
           }
         })
@@ -1341,7 +1360,7 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: false,
+            fromEditTrial: true,
             currentOrg: {}
           }
         })
@@ -1862,7 +1881,8 @@ angular
           params: {
             clusterId: null,
             properties: null,
-            connector: null
+            connector: null,
+            hostLength: null
           }
         })
         .state('connector-details.group-settings', {

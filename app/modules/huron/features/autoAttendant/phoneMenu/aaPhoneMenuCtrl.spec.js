@@ -57,12 +57,14 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('addKeyAction', function () {
     it('should add a new keyAction object into selectedActions array', function () {
-      var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
+      var headkey = '0';
+      var keys = [headkey, '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       controller.selectedActions = [];
       controller.menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
       controller.addKeyAction();
       expect(controller.selectedActions.length).toEqual(1);
       expect(controller.selectedActions[0].keys.join()).toEqual(keys.join());
+      expect(controller.selectedActions[0].key).toEqual(headkey);
 
       expect(controller.menuEntry.entries.length).toEqual(1);
     });
@@ -159,12 +161,31 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
+
+    it('should intialize CeMenu first entry with first available key', function () {
+      controller.createOptionMenu();
+
+      var headkey = '0';
+      expect(controller.entries[index].entries[0]).toBeDefined();
+      expect(controller.entries[index].entries[0].key).toEqual(headkey);
+    });
+
   });
 
   describe('populateOptionMenu', function () {
 
     it('should read the CeMenu with attempts 1 and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
       controller.menuEntry = angular.copy(data.ceMenuAttempt);
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
+    it('should read the CeMenu without attempts and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuNoAttempt);
       controller.selectedTimeout = [];
       controller.populateOptionMenu();
 

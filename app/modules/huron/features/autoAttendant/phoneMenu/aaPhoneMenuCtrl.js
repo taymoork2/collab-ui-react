@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -93,23 +93,11 @@
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
         inputType: 2
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      //   name: 'phoneMenuRouteUser',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
         name: 'phoneMenuRouteHunt',
         action: 'routeToHuntGroup'
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      //   name: 'phoneMenuRouteVM',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'
@@ -129,6 +117,7 @@
     function addKeyAction() {
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
+      keyAction.key = _.head(keyAction.keys);
       vm.selectedActions.push(keyAction);
 
       // update global UI Model
@@ -136,7 +125,11 @@
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
       menuEntry.addAction(action);
       menuEntry.setType('MENU_OPTION');
+      menuEntry.key = keyAction.key;
       vm.menuEntry.entries.push(menuEntry);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
       setPhonemenuFormDirty();
     }
 
@@ -250,7 +243,11 @@
               vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
             }
           }
+        } else {
+          // if attempts is not specified, menu defaults to first timeout
+          vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
         }
+
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
@@ -285,6 +282,7 @@
 
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
+      keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
@@ -293,11 +291,36 @@
       vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
       vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
       vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
     }
 
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
+
+    function addAvailableFeatures() {
+      if (Config.isDev() || Config.isIntegration()) {
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+          name: 'phoneMenuRouteUser',
+          action: 'routeToUser'
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          name: 'phoneMenuRouteMailbox',
+          action: 'routeToVoiceMail'
+        });
+
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+          name: 'phoneMenuRouteToExtNum',
+          action: 'route'
+        });
+
+      }
+    }
+
     /////////////////////
 
     function activate() {
@@ -306,6 +329,8 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
+
+      addAvailableFeatures();
 
       if (vm.menuEntry.type === '') {
         createOptionMenu();

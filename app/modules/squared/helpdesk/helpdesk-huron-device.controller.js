@@ -8,6 +8,7 @@
     vm.deviceId = $stateParams.id;
     vm.orgId = $stateParams.orgId;
     vm.device = $stateParams.device;
+    vm.ownerUser = vm.device ? vm.device.user : null;
     vm.keyPressHandler = keyPressHandler;
     if ($stateParams.device && $stateParams.device.organization) {
       vm.org = $stateParams.device.organization;
@@ -17,7 +18,13 @@
       };
     }
 
-    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
+    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, function (err) {
+      if (err.status === 404) {
+        vm.notFound = true;
+      } else {
+        XhrNotificationService.notify(err);
+      }
+    });
 
     function initDeviceView(device) {
       vm.device = device;
@@ -27,11 +34,16 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
-      if (vm.device.ownerUser && vm.device.ownerUser.uuid) {
+      if (!vm.ownerUser && vm.device.ownerUser && vm.device.ownerUser.uuid) {
         HelpdeskService.getUser(vm.orgId, vm.device.ownerUser.uuid).then(function (ownerUser) {
           vm.ownerUser = ownerUser;
         }, XhrNotificationService.notify);
       }
+
+      HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId).then(function (deviceNumbers) {
+        vm.deviceNumbers = deviceNumbers;
+      }, XhrNotificationService.notify);
+
       angular.element(".helpdesk-details").focus();
     }
 

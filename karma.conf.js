@@ -25,7 +25,9 @@ module.exports = function(config) {
       'test/hercules/**/*.js',
       'test/mediafusion/**/*.js',
       'test/squared/**/*.js',
-      'test/webex/**/*.js',
+      // 'test/webex/siteReports/*.js',
+      // 'test/webex/siteSettings/*.js',
+      // 'test/webex/userSettings/*.js',
       'test/sunlight/**/*.js',{
         pattern: 'test/fixtures/**/*.json',
         watched: true,

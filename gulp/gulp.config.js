@@ -10,6 +10,7 @@ module.exports = function() {
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
+  var tsTestOutputFolder = test + '/ts';
   var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
@@ -22,6 +23,7 @@ module.exports = function() {
     vendor: vendor,
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
+    tsTestOutputFolder: tsTestOutputFolder,
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -36,6 +38,7 @@ module.exports = function() {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js',
+        app + '!**/*.spec.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -77,6 +80,7 @@ module.exports = function() {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
+        tsTestOutputFolder + '/modules/**/*.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -92,6 +96,7 @@ module.exports = function() {
       ],
       spec: {
         all: app + '/**/*.spec.js',
+        ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
@@ -142,6 +147,7 @@ module.exports = function() {
         vendor + '/moment/moment.js',
         vendor + '/base64/base64.js',
         vendor + '/nicescroll/jquery.nicescroll.js',
+        vendor + '/punycode/punycode.js',
         vendor + '/angular/angular.js',
         vendor + '/angular-animate/angular-animate.js',
         vendor + '/angular-ui-utils/ui-utils.js',

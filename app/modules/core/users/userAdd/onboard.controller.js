@@ -369,8 +369,9 @@ angular.module('Core')
         $scope.selectedSubscription = this.selectedSubscription;
       };
 
-      $scope.showMultiSubscriptions = function (billingServiceId) {
+      $scope.showMultiSubscriptions = function (billingServiceId, isTrial) {
         var isSelected = false;
+        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
         if (_.isArray(billingServiceId)) {
           for (var i in billingServiceId) {
             if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
@@ -384,7 +385,7 @@ angular.module('Core')
         var isOneBilling = $scope.oneBilling;
 
         $scope.licenseExists = isSelected;
-        return isOneBilling || isSelected;
+        return isOneBilling || isSelected || isTrialSubscription;
       };
 
       function populateConf() {
@@ -437,6 +438,7 @@ angular.module('Core')
           licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
+          isTrial: _.get(obj, 'license.isTrial', false),
           confModel: false,
           cmrModel: false
         };
@@ -1204,7 +1206,6 @@ angular.module('Core')
               return (user.address == usersList[i].address);
             });
 
-            var internalExtension, directLine;
             if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
               usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
             }

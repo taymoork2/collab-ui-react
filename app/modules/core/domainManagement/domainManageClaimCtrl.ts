@@ -6,7 +6,7 @@ namespace domainManagement {
     private _error;
 
     /* @ngInject */
-    constructor(private $state, private DomainManagementService) {
+    constructor(private $state, private $previousState, private DomainManagementService) {
       this._domain = $state.params.domain;
       this._loggedOnUser = $state.params.loggedOnUser;
     }
@@ -29,11 +29,15 @@ namespace domainManagement {
 
     public claim() {
       this.DomainManagementService.claimDomain(this._domain.text).then(res => {
-          this.$state.go('domainmanagement');
+          this.$previousState.go();
         },
         err => {
           this._error = err;
         });
+    }
+
+    public cancel() {
+      this.$previousState.go();
     }
   }
   angular

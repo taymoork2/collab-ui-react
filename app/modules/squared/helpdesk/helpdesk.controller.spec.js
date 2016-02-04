@@ -49,6 +49,10 @@ describe('Controller: HelpdeskController', function () {
     httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
+
+    httpBackend
+      .when('GET', 'https://ciscospark.statuspage.io/index.json')
+      .respond({});
   }));
 
   afterEach(function () {
@@ -98,7 +102,7 @@ describe('Controller: HelpdeskController', function () {
         "url": "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3",
         "serial": "FTT1927036F",
         "mac": "18:8B:9D:D4:52:02",
-        "product": "Cisco TelePresence SX10",
+        "product": "Cisco TelePresence SX10"
       },
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/56c6a1f4-1e9d-50fc-b560-21496452ba72": {
         "displayName": "Ladidadi Room",
@@ -142,6 +146,7 @@ describe('Controller: HelpdeskController', function () {
       sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
       sinon.stub(HelpdeskService, 'getOrg');
       sinon.stub(HelpdeskHuronService, 'searchDevices');
+      sinon.stub(HelpdeskHuronService, 'findDevicesMatchingNumber');
 
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -160,6 +165,10 @@ describe('Controller: HelpdeskController', function () {
       HelpdeskHuronService.searchDevices.returns(deferredHuronDeviceResult.promise);
 
       HelpdeskService.findAndResolveOrgsForUserResults.returns(deferredUserResult.promise);
+
+      var deferredfindDevicesMatchingNumberResult = q.defer();
+      deferredfindDevicesMatchingNumberResult.resolve([]);
+      HelpdeskHuronService.findDevicesMatchingNumber.returns(deferredfindDevicesMatchingNumberResult.promise);
 
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve(orgLookupResult);

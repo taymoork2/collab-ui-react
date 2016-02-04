@@ -2,9 +2,18 @@
   @extend %page-background-white;
 }
 
+
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
+
+  .helpdesk-history-button {
+    font-size: 1.2rem;
+    color: $gray-light-1;
+    &:hover {
+      color: $color-primary-base;
+    }
+  }
 }
 .helpdesk-content-view {
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -28,7 +37,7 @@
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       word-wrap: break-word;
     }
     h4 {
@@ -107,6 +116,7 @@
     .user-img {
       height: 35px;
       width: 35px;
+      margin-right: 0.5rem;
     }
     .icon-user {
       color: white;
@@ -140,8 +150,26 @@
       }
     }
   }
+  .main-heading {
+    display: inline-block;
+    text-align: right;
+    .help {
+      color: $gray-light-1;
+      position: relative;
+      top: -0.6rem;
+      font-size: 1.0rem;
+      cursor: pointer;
+      i {
+        top: 2px;
+      }
+    }
+    @media only screen and (max-width: 500px) {
+      .help {
+        font-size: 0.7rem;
+      }
+    }
+  }
   h1 {
-    margin-bottom: 1rem;
     color: $color-primary-base;
   }
   h2 {
@@ -363,6 +391,9 @@
 .helpdesk-ok {
   color: $color-cta-base;
 }
+.helpdesk-warn {
+  color: $color-attention-base;
+}
 .helpdesk-warning {
   color: $color-attention-base;
 }
@@ -383,12 +414,13 @@
   }
 }
 
-.helpdesk-history-dropdown-menu {
+.helpdesk-header-dropdown-menu {
   max-height: none;
   width: 10rem;
-  li {  
+  li {
+    font-size:0.75rem;
     padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
-  } 
+  }
   .clear-history {
     color: $color-primary-base;
   }
@@ -397,12 +429,39 @@
   }
 }
 
+
+
+.helpdesk-history-dropdown-menu {
+  @extend .helpdesk-header-dropdown-menu;
+  width: 10rem;
+}
 .helpdesk-history-dropdown-menu.dropdown-menu:before {
   left: 80% !important;
 }
-
 .helpdesk-history-dropdown-menu.dropdown-menu:after {
   left: 80% !important;
+}
+
+
+.helpdesk-spark-status-dropdown-menu {
+  @extend .helpdesk-header-dropdown-menu;
+  width: 18rem;
+  .header {
+    padding: 1rem;
+    border-bottom:1px solid $gray-light-4;
+  }
+  .content {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 1rem;
+  }
+}
+.helpdesk-spark-status-dropdown-menu.dropdown-menu:before {
+  left: 92% !important;
+}
+.helpdesk-spark-status-dropdown-menu.dropdown-menu:after {
+  left: 92% !important;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -426,14 +485,14 @@
 }
 @media only screen and (max-width: 960px) {
   .helpdesk-app-container {
-    .fixed.top-bar- {     
+    .fixed.top-bar- {
       .dropdown-menu:before {
         left: 80% !important;
       }
       .dropdown-menu:after {
         left: 80% !important;
-      }        
-    }  
+      }
+    }
   }
 }
 @media only screen and (max-width: 800px) {
@@ -456,14 +515,14 @@
         position: fixed !important;
         right: 0;
         top: 52px;
-      }      
+      }
       .dropdown-menu:before {
         display: none;
       }
       .dropdown-menu:after {
         display: none;
-      }        
-    }  
+      }
+    }
   }
   .helpdesk-search {
     padding-top: 0;
