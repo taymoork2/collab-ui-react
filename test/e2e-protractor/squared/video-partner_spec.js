@@ -22,13 +22,30 @@ describe('Video play spec', function () {
     });
 
     it('should play video', function () {
-      expect(partner.isPaused()).toBe(true);
-      expect(partner.videoLoadError()).toBe(null);
+      utils.expectTruthy(partner.isPaused());
+      utils.waitForPresence(partner.videoModal, 2000);
+      partner.videoLoads();
       partner.playVideo();
-      expect(partner.isPaused()).toBe(false);
+      partner.isPlay();
     });
 
     it('click on close button of video modal', function () {
+      utils.expectIsDisplayed(partner.closeBtnOnModal);
+      utils.click(partner.closeBtnOnModal);
+    });
+
+    it('should logout', function () {
+      navigation.logout();
+    });
+  });
+
+  describe('Verify video link in partner sales admin', function () {
+    it('should login and redirect to the partner sales admin page', function () {
+      login.loginThroughGui(helper.auth['partner-sales-user'].user, helper.auth['partner-sales-user'].pass, '#/partner/overview');
+    });
+
+    it('customer page should have video link', function () {
+      navigation.videoTutorial();
       utils.expectIsDisplayed(partner.closeBtnOnModal);
       utils.click(partner.closeBtnOnModal);
     });
