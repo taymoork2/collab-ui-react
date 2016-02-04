@@ -939,12 +939,9 @@
   "spacesPage": {
     "title": "Devices",
     "modalTitle": "Activate a New Device",
-    "add": "Activate a New Device",
+    "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
-    "cancel": "Cancel",
-    "delete": "Delete",
     "deleteActivationCode": "Delete Activation Code",
-    "done": "Done",
     "kindHeader": "Type",
     "nameHeader": "Installed in",
     "statusHeader": "Status",
@@ -982,7 +979,9 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
+    "addAnother": "Add Another"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -2079,7 +2078,8 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
-    "expires": "This activation code expires",
+    "codeExpires": "This activation code expires",
+    "deviceCodeExpires": "The activation code for this device expires",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
