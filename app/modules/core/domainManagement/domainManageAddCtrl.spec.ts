@@ -2,7 +2,7 @@
 namespace domainManagement {
   declare let punycode: any;
 
-  describe('DomainManagementAddCtrl', function () {
+  describe('DomainManagementAddCtrl', () => {
 
     var Config, DomainManagmentAddCtrl;
     beforeEach(angular.mock.module('Core'));
@@ -16,24 +16,24 @@ namespace domainManagement {
       });
     }));
 
-    it('should have access to punycode.', function () {
+    it('should have access to punycode.', () => {
       expect(punycode).not.toBeNull('punycode is undefined');
     });
 
-    it('should encode IDN (top level and domain)', function () {
+    it('should encode IDN (top level and domain)', () => {
       let unEncoded = 'løv.no';
       let encoded = 'xn--lv-lka.no';
       DomainManagmentAddCtrl.domain = unEncoded;
       expect(DomainManagmentAddCtrl.encodedDomain).toBe(encoded);
     });
-    it('should encode IDN (top level and domain)', function () {
+    it('should encode IDN (top level and domain)', () => {
       let unEncoded = 'Домены.бел';
       let encoded = 'xn--d1acufc5f.xn--90ais';
       DomainManagmentAddCtrl.domain = unEncoded;
       expect(DomainManagmentAddCtrl.encodedDomain).toBe(encoded);
     });
 
-    it('should ignore UpperCase Domain names and treath them as valid', function () {
+    it('should ignore UpperCase Domain names and treath them as valid', () => {
       let unEncoded = 'Test.com';
       let encoded = 'test.com';
       DomainManagmentAddCtrl.domain = unEncoded;

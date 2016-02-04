@@ -1,20 +1,20 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
-describe('DomainManagementService', function () {
+describe('DomainManagementService', () => {
 
   beforeEach(angular.mock.module('Core'));
 
   let $httpBackend, DomainManagementService, Config, Authinfo, XhrNotificationService;
 
-  beforeEach(function () {
-    angular.mock.module(function ($provide) {
+  beforeEach(() => {
+    angular.mock.module($provide => {
       Authinfo = {
-        getOrgId: function () {
+        getOrgId: () => {
           return 'mockOrgId';
         }
       };
 
       XhrNotificationService = {
-        getMessages: function (ar) {
+        getMessages: ar => {
           return ['formatted err msg: ' + ar[0]];
         }
       };
@@ -24,19 +24,19 @@ describe('DomainManagementService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _DomainManagementService_, _Config_) {
+  beforeEach(inject(($injector, _DomainManagementService_, _Config_) => {
     Config = _Config_;
     DomainManagementService = _DomainManagementService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
   }));
 
-  afterEach(function () {
+  afterEach(() => {
     setTimeout($httpBackend.verifyNoOutstandingExpectation, 0);
     setTimeout($httpBackend.verifyNoOutstandingRequest, 0);
   });
 
-  it('should produce a list of domains with tokens for the pending.', function (done) {
+  it('should produce a list of domains with tokens for the pending.', done => {
 
     let orgId = 'mockOrgId';
     let scomUrl = Config.getScomUrl() + '/' + orgId;
@@ -104,7 +104,7 @@ describe('DomainManagementService', function () {
         expect(v.token).toBeFalsy(); //not set yet
       });
       done();
-    }, function (err) {
+    }, (err) => {
       expect(err).toBe(null);
     });
 
