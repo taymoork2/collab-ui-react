@@ -36,7 +36,7 @@ namespace domainManagement {
         });
     }
 
-    public cancel(){
+    public cancel() {
       this.$previousState.go();
     }
   }

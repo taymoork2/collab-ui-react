@@ -64,14 +64,14 @@ describe('DomainManagementService', function () {
       });
 
 
-   /* If we want to expand the test to test tokens:
-    let getTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
+    /* If we want to expand the test to test tokens:
+     let getTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
 
-   $httpBackend
-      .expectPOST(getTokenUrl)
-      .respond({
-        token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke"
-      });*/
+     $httpBackend
+     .expectPOST(getTokenUrl)
+     .respond({
+     token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke"
+     });*/
 
     DomainManagementService.getVerifiedDomains().then(function (data) {
       let expectedRes = [{
@@ -98,7 +98,7 @@ describe('DomainManagementService', function () {
 
       expect(data.length).toBe(expectedRes.length);
 
-      for(var i=0;i<data.length;i++){
+      for (var i = 0; i < data.length; i++) {
 
         expect(data[i].text).toBe(expectedRes[i].text);
         expect(data[i].status).toBe(expectedRes[i].status);

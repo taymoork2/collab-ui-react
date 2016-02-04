@@ -1,11 +1,6 @@
 class DomainManagementService {
 
-  private _domainList = [
-    /* {
-     text: 'initialDomain.com',
-     token: 'hjkhk',
-     status: this.states.pending}*/
-  ];
+  private _domainList = [];
 
   private _mock = false;
 
@@ -47,7 +42,7 @@ class DomainManagementService {
 
   }
 
-  private getErrorMessage(errObject){
+  private getErrorMessage(errObject) {
     return this.XhrNotificationService.getMessages([errObject])[0];
   }
 
@@ -72,7 +67,7 @@ class DomainManagementService {
       return deferred.promise;
     }
 
-    if (this._mock){
+    if (this._mock) {
       this._domainList.push({
         text: domainToAdd,
         token: '',
@@ -98,7 +93,7 @@ class DomainManagementService {
         }).then(res => {
           _.remove(this._domainList, {text: domain});
           deferred.resolve();
-        },err => {
+        }, err => {
           this.Log.error('Failed to unverify domain:' + domain, err);
           deferred.reject(this.getErrorMessage(err));
         });
@@ -294,7 +289,7 @@ class DomainManagementService {
     if (this._mock) {
       let pendingDomain = _.find(this._domainList, {text: domain, status: this.states.pending});
 
-      if (!pendingDomain){
+      if (!pendingDomain) {
         this._domainList.push({
           text: domain,
           token: "mockedtokenmockedtokenmockedtokemockedtokenmockedtokenmockedtoke",
@@ -314,7 +309,7 @@ class DomainManagementService {
 
       let pendingDomain = _.find(this._domainList, {text: domain, status: this.states.pending});
 
-      if (!pendingDomain){
+      if (!pendingDomain) {
         this._domainList.push({
           text: domain,
           token: res.data.token,

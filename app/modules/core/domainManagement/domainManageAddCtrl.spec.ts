@@ -8,15 +8,12 @@ namespace domainManagement {
     beforeEach(angular.mock.module('Core'));
     beforeEach(inject(function ($injector, $controller, $translate, _Config_) {
       Config = _Config_;
-      //DomainManagmentAddCtrl = _DomainManageAddCtrl_;
       DomainManagmentAddCtrl = $controller('DomainManageAddCtrl', {
         $stateParams: {loggedOnUser: ''},
         $previousState: null,
         DomainManagementService: {domainList: []},
         $translate: $translate
       });
-      //$httpBackend = $injector.get('$httpBackend');
-      //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
     }));
 
     it('should have access to punycode.', function () {

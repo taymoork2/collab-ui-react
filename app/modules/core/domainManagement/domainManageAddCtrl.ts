@@ -1,17 +1,14 @@
 namespace domainManagement {
-  declare let punycode: any;
+  declare let punycode:any;
 
   class DomainManageAddCtrl {
     private _loggedOnUser;
     private _domain;
     private _error;
     private _adding = false;
-    private _encoded;
-
 
     /* @ngInject */
     constructor($stateParams, private $previousState, private DomainManagementService, private $translate) {
-
       this._loggedOnUser = $stateParams.loggedOnUser;
     }
 
@@ -19,9 +16,7 @@ namespace domainManagement {
       if (!this.addEnabled) {
         return;
       }
-
       this._adding = true;
-
       this.DomainManagementService.addDomain(this.domainToAdd).then(
         ()=> {
           this.$previousState.go();
@@ -45,7 +40,6 @@ namespace domainManagement {
     }
 
     get exampleDomain() {
-
       //If the user is not a partner, and if not already added, suggest the logged on user's domain:
       if (this._loggedOnUser.isLoaded && !this._loggedOnUser.isPartner
         && !_.some(this.DomainManagementService.domainList, {text: this._loggedOnUser.domain}))
@@ -91,7 +85,6 @@ namespace domainManagement {
     }
 
     //gui valid
-
     public validate() {
       let domain = this.domainToAdd;
 

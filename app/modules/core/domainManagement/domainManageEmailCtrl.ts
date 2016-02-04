@@ -37,7 +37,6 @@ namespace domainManagement {
       } else {
         return {valid: false, empty: true};
       }
-
     }
 
     get sendEnabled() {

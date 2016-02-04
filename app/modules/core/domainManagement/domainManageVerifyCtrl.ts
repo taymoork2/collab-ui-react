@@ -37,10 +37,7 @@ namespace domainManagement {
       if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
         return false;
 
-      if (this._error)
-        return false;
-
-      return true;
+      return !this._error;
     }
 
     public verify() {

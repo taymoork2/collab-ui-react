@@ -10,7 +10,7 @@ namespace domainManagement {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
 
-      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)){
+      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)) {
         this._error = $translate.instant('domainManagement.delete.preventLockoutError');
       }
 
@@ -21,7 +21,7 @@ namespace domainManagement {
     }
 
     public deleteDomain() {
-      if (this._domainToDelete.status === this.DomainManagementService.states.verified){
+      if (this._domainToDelete.status === this.DomainManagementService.states.verified) {
         this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
           () => {
             this.$previousState.go();
@@ -40,7 +40,6 @@ namespace domainManagement {
           }
         );
       }
-
     }
 
     public cancel() {
