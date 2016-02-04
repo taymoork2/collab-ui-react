@@ -235,31 +235,29 @@
         }
       });
 
-      if (!Config.isProd()) {
-        vm.searchingForHuronDevicesMatchingNumber = true;
-        HelpdeskHuronService.findDevicesMatchingNumber(searchString, org.id, vm.searchResultsLimit).then(function (res) {
-          if (vm.currentSearch.deviceSearchResults) {
-            res = vm.currentSearch.deviceSearchResults.concat(res);
-          }
-          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
-            return device.displayName ? device.displayName.toLowerCase() : '';
-          });
-          vm.searchingForHuronDevicesMatchingNumber = false;
-          vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
-          setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
-          HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
-          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
-          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-        }, function (err) {
-          vm.searchingForHuronDevicesMatchingNumber = false;
-          vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
-          if (err.status === 404) {
-            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
-          } else {
-            vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          }
+      vm.searchingForHuronDevicesMatchingNumber = true;
+      HelpdeskHuronService.findDevicesMatchingNumber(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+        if (vm.currentSearch.deviceSearchResults) {
+          res = vm.currentSearch.deviceSearchResults.concat(res);
+        }
+        vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+          return device.displayName ? device.displayName.toLowerCase() : '';
         });
-      }
+        vm.searchingForHuronDevicesMatchingNumber = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
+        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+        HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
+        HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+        vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+      }, function (err) {
+        vm.searchingForHuronDevicesMatchingNumber = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
+        if (err.status === 404) {
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
+        } else {
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        }
+      });     
     }
 
     function initSearchWithOrgFilter(org) {

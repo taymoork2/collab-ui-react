@@ -120,7 +120,7 @@
                     };
                     // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
                     if (_.startsWith(device.name, 'SEP') && !_.find(devices, {
-                        id: device.uuid
+                        uuid: device.uuid
                       })) {
                       devices.push(massageDevice(device));
                     }
