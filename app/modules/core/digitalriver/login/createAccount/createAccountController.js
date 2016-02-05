@@ -10,6 +10,9 @@
 
     var vm = this;
 
+    // TODO: Remove this after the go-live.
+    vm.drReferrer = $location.search().referrer == 'digitalriver-ZGlnaXRhbHJpdmVy';
+
     vm.email1 = $location.search().email.replace(/\s+/g, '+');
 
     vm.handleCreateAccount = function () {

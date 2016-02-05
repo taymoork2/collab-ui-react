@@ -5,7 +5,7 @@
 
 describe('Test the enterEmailAddr page', function () {
 
-  browser.get('#/enter-email-addr');
+  browser.get('#/enter-email-addr?referrer=digitalriver-ZGlnaXRhbHJpdmVy');
 
   it('should have the right title', function () {
     utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML', 'Enter eMail Addr');
@@ -33,6 +33,12 @@ describe('Test the enterEmailAddr page', function () {
     utils.sendKeys(enterEmailAddrPage.email, utils.randomTestGmail());
     utils.click(enterEmailAddrPage.nextButton);
     utils.expectIsDisplayed(createAccountPage.email1);
+  });
+
+  // TODO: Delete this test after the go-live.
+  it('should not have content when the referrer is not digital river', function () {
+    browser.get('#/enter-email-addr');
+    utils.expectIsNotDisplayed(enterEmailAddrPage.email);
   });
 
 });

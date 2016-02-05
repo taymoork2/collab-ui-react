@@ -6,7 +6,8 @@
 describe('Test the createAccount page', function () {
 
   var newEmail = utils.randomTestGmail();
-  browser.get('#/create-account?email=' + newEmail);
+
+  browser.get('#/create-account?email=' + newEmail + "&referrer=digitalriver-ZGlnaXRhbHJpdmVy");
 
   it('should have the right title', function () {
     utils.expectAttribute(createAccountPage.h2, 'innerHTML', 'Create Account');
@@ -72,7 +73,7 @@ describe('Test the createAccount page', function () {
   });
 
   it('should validate existing user', function () {
-    browser.get('#/create-account?email=' + newEmail);
+    browser.get('#/create-account?email=' + newEmail + "&referrer=digitalriver-ZGlnaXRhbHJpdmVy");
     utils.sendKeys(createAccountPage.email2, newEmail);
     utils.sendKeys(createAccountPage.password1, 'P@ssword123');
     utils.sendKeys(createAccountPage.password2, 'P@ssword123');
@@ -82,10 +83,16 @@ describe('Test the createAccount page', function () {
   });
 
   it('should validate existing user for the checkEmailAddr page too', function () {
-    browser.get('#/enter-email-addr');
+    browser.get('#/enter-email-addr?referrer=digitalriver-ZGlnaXRhbHJpdmVy');
     utils.sendKeys(enterEmailAddrPage.email, newEmail);
     utils.click(createAccountPage.nextButton);
     utils.expectIsNotDisplayed(enterEmailAddrPage.email);
+    utils.expectIsNotDisplayed(createAccountPage.email1);
+  });
+
+  // TODO: Delete this test after the go-live.
+  it('should not have content when the referrer is not digital river', function () {
+    browser.get('#/create-account?email=' + newEmail);
     utils.expectIsNotDisplayed(createAccountPage.email1);
   });
 

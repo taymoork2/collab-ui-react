@@ -6,9 +6,12 @@
     .controller('enterEmailAddrController', enterEmailAddrController);
 
   /* @ngInject */
-  function enterEmailAddrController($window, $translate, Userservice) {
+  function enterEmailAddrController($location, $window, $translate, Userservice) {
 
     var vm = this;
+
+    // TODO: Remove this after the go-live.
+    vm.drReferrer = $location.search().referrer == 'digitalriver-ZGlnaXRhbHJpdmVy';
 
     vm.handleEnterEmailAddr = function () {
       if (!vm.email || 0 === vm.email.trim().length) {
@@ -19,7 +22,7 @@
       Userservice.getUserFromEmail(vm.email)
         .then(function (result) {
           if (result.data.success === true) {
-            $window.location.href = (_.get(result, 'data.data.exists', false) === true ? "/#/drLoginForward" : "/#/create-account") + "?email=" + vm.email;
+            $window.location.href = (_.get(result, 'data.data.exists', false) === true ? "/#/drLoginForward" : "/#/create-account") + "?email=" + vm.email + "&referrer=digitalriver-ZGlnaXRhbHJpdmVy";
           } else {
             vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
