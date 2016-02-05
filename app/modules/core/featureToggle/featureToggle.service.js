@@ -116,6 +116,7 @@
       webRoapCalls: 'web-roap-calls',
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
+      winHuronCalls: 'win-huron-calls',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
       winOutboundDialing: 'win-outbound-dialing',
