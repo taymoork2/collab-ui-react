@@ -13,20 +13,20 @@ angular.module('Squared').service('DeviceFilter',
       filterValue: 'all'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Offline'),
-      filterValue: 'offline'
-    }, {
-      count: 0,
       name: $translate.instant('CsdmStatus.OnlineWithIssues'),
       filterValue: 'issues'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Online'),
-      filterValue: 'online'
+      name: $translate.instant('CsdmStatus.Offline'),
+      filterValue: 'offline'
     }, {
       count: 0,
       name: $translate.instant('CsdmStatus.RequiresActivation'),
       filterValue: 'codes'
+    }, {
+      count: 0,
+      name: $translate.instant('CsdmStatus.Online'),
+      filterValue: 'online'
     }];
 
     var getFilters = function () {

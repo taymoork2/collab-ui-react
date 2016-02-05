@@ -136,7 +136,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cssColorClass = 'device-status-gray';
       this.state = {
         readableState: t('CsdmStatus.Inactive'),
-        priority: "5"
+        priority: "4"
       };
       this.isOnline = false;
       this.isUnused = true;
@@ -347,7 +347,7 @@ angular.module('Squared').service('CsdmConverter',
           }
           return {
             readableState: t('CsdmStatus.Online'),
-            priority: "4"
+            priority: "5"
           };
         default:
           return {

@@ -153,7 +153,7 @@ describe('CsdmConverterSpec', function () {
         }
       }];
       expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertDevices(arr)[0].state.priority).toBe("4");
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("5");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
@@ -164,7 +164,7 @@ describe('CsdmConverterSpec', function () {
         }
       }];
       expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
-      expect(converter.convertDevices(arr)[0].state.priority).toBe("4");
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("5");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
@@ -399,7 +399,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].state.priority).toBe("5");
+      expect(converter.convertAccounts(arr)[0].state.priority).toBe("4");
       expect(converter.convertAccounts(arr)[0].state.readableState).toBe('CsdmStatus.Inactive');
     });
 
