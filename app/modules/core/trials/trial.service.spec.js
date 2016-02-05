@@ -127,7 +127,7 @@ describe('Service: Trial Service', function () {
           phoneNumber: "+1 206 256 3000",
           address: "2901 3rd Ave Seattle",
           postalCode: " 98121",
-          recipientType: "CUSTOMER"
+          type: "CUSTOMER"
         };
         var shippingInfo = angular.fromJson(data).details.shippingInfo;
         return _.some(shippingInfo, shippingInfoList[0]);
