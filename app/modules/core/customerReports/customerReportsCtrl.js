@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -530,7 +530,7 @@
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);
