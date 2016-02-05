@@ -13,8 +13,6 @@
     ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
       .then(function () {
         vm.showScheduleUpgrade = true;
-      }, function (error) {
-        vm.showScheduleUpgrade = false;
       });
 
     var readCerts = function () {

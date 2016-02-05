@@ -1181,8 +1181,8 @@
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
-        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
+        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "defaultWarning": "Confirm the default schedule"
       }
     },
     "hybridServices": {
@@ -1192,9 +1192,9 @@
     },
     "notifications": {
       "scheduleUpgrade": {
-        "title": "Confirm the Schedule for Automatic Software Upgrades",
-        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
-        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+        "title": "Acknowledge the Scheduled Upgrade",
+        "description": "The clusters for this service have a default time set for a scheduled upgrade",
+        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
       }
     }
   },
