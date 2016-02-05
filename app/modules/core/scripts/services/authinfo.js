@@ -34,7 +34,7 @@ angular.module('Core')
         'conferenceServicesWithoutSiteUrl': null,
         'cmrServices': null,
         'hasAccount': false,
-        'email': null
+        'emails': null
       };
 
       var getTabTitle = function (title) {
@@ -170,21 +170,20 @@ angular.module('Core')
           authData.roles = [];
           authData.isInitialized = false;
           authData.setupDone = null;
-          authData.email = null;
+          authData.emails = null;
         },
-        setEmail: function (data) {
-          authData.email = data;
-          //email domain of user
-          var domain = authData.email.split('@')[1];
-          ll('setCustomDimension', 0, domain);
+        setEmails: function (data) {
+          authData.emails = data;
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          ll('setCustomDimension', 0, msg);
         },
-        getEmail: function () {
-          return authData.email;
+        getEmails: function () {
+          return authData.emails;
         },
         getPrimaryEmail: function () {
-          for (var emails in authData.email) {
-            if (authData.email[emails].primary === true) {
-              return authData.email[emails].value;
+          for (var emails in authData.emails) {
+            if (authData.emails[emails].primary === true) {
+              return authData.emails[emails].value;
             }
             return null;
           }
@@ -348,6 +347,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerSalesAdmin: function () {
+          return this.hasRole('PARTNER_SALES_ADMIN');
         },
         isPartnerUser: function () {
           return this.hasRole('PARTNER_USER');

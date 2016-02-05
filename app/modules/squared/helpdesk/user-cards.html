@@ -60,7 +60,7 @@
           <h5 translate="helpdesk.numbers"></h5>
           
           <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers">
-            <span>{{number.internal}}</span> <span ng-if="number.external">({{number.external}})</span>
+            <span>{{number.internal}}</span> <span ng-if="number.external">({{number.external}})</span> <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
           </div>
         </div>
       </section>

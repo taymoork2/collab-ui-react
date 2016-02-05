@@ -4,44 +4,58 @@
     </cs-header-left>
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user dropdown-toggle" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
-          <i class="icon icon-clock" style="font-size:1.5rem;color:lightgrey;"></i>
+        <button cs-dropdown-toggle class="btn--user dropdown-toggle" tabindex="0">
+          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
+            <i class="icon icon-circle"></i>
+          </div>
+        </button>
+        <div cs-dropdown-menu class="helpdesk-spark-status-dropdown-menu" role="menu">
+          <div class="header" >
+            <b translate="helpdesk.sparkStatus"></b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">{{helpdeskHeaderCtrl.statusPageUrl}}</a>
+          </div>
+          <div class="content">
+            <div ng-repeat="health in helpdeskHeaderCtrl.healthMetrics">
+              <div ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">
+                <div id="{{health.name}}" ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[health.status]">
+                  <i class="fa fa-circle"></i>&nbsp;&nbsp;
+                  {{health.name}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div cs-dropdown class="user-info dropdown">
+        <button cs-dropdown-toggle class="btn--user dropdown-toggle helpdesk-history-button" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
+          <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">
-          <li ng-if="helpdeskCtrl.searchHistory.length <= 0">
-          <small>
+          <li ng-if="helpdeskHeaderCtrl.searchHistory.length <= 0">
 	          <strong>{{'helpdesk.history.nohistory' | translate}}</strong>
-          </small>
           </li>
-          <li ng-repeat="search in helpdeskCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
-            <div ng-click="helpdeskCtrl.loadSearch(search)">
-              <small>
+          <li ng-repeat="search in helpdeskHeaderCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
+            <div class="search-result" ng-click="helpdeskHeaderCtrl.loadSearch(search)">
                 <strong>{{search.searchString}}</strong>
-              </small>
               <div ng-if="search.userSearchResults.length + search.orgSearchResults.length + search.deviceSearchResults.length === 1">
-                <small>1 {{'helpdesk.history.singlematch' | translate}}</small>
+                1 {{'helpdesk.history.singlematch' | translate}}
               </div>
               <div ng-if="search.userSearchResults.length + search.orgSearchResults.length + search.deviceSearchResults.length > 1">
-                <small>{{search.userSearchResults.length + search.orgSearchResults.length + search.deviceSearchResults.length}} {{'helpdesk.history.matches' | translate}}</small>
+                {{search.userSearchResults.length + search.orgSearchResults.length + search.deviceSearchResults.length}} {{'helpdesk.history.matches' | translate}}
               </div>
             </div>
           </li>
-          <li ng-if="helpdeskCtrl.searchHistory.length > 0">
-	        <div ng-click="helpdeskCtrl.clearSearchHistory()">         
-	         <span class="clear-history"><small>{{'helpdesk.history.clear' | translate}}</small></span>
+          <li ng-if="helpdeskHeaderCtrl.searchHistory.length > 0">
+	        <div ng-click="helpdeskHeaderCtrl.clearSearchHistory()">
+	         <span class="clear-history">{{'helpdesk.history.clear' | translate}}</span>
 	        </div>
           </li>
         </ul>
       </div>
-      <div cs-dropdown class="user-info dropdown">
-        <button class="btn--user" ng-click="helpdeskCtrl.showSearchHelp()" tabindex="-1">
-          <!-- TODO: should avoid inline css -->
-          <i class="icon icon-help" style="font-size:2rem;color:lightgrey;"></i>
-        </button>
-      </div>
+
       <cr-user-info></cr-user-info>
+
     </cs-header-right>
   </cs-header>
   <div class="helpdesk-content-view" ui-view=""></div>
 </div>
-

@@ -42,6 +42,7 @@
     vm.enableService = enableService;
     vm.showClusterDetails = showClusterDetails;
     vm.openUserErrorsModal = openUserErrorsModal;
+    vm.addResourceButtonClicked = addResourceButtonClicked;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -162,6 +163,14 @@
             return vm.currentServiceId;
           }
         }
+      });
+    }
+
+    function addResourceButtonClicked() {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
     }
   }

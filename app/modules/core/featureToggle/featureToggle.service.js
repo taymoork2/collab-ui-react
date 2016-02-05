@@ -18,6 +18,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
+      atlasReportTrials: 'atlas-report-trials',
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
@@ -39,11 +40,12 @@
       callMultiDevice: 'call-multi-device',
       calliopeDiscovery: 'calliope-discovery',
       callsTab: 'calls-tab',
+      clientRingbackV2: 'client-ringback-v2',
       console: 'console',
       deleteContent: 'delete-content',
       dialOut: 'dial-out',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'domainManagement',
+      domainManagement: 'atlas-domain-management',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
@@ -107,17 +109,23 @@
       uploadCallLogs: 'upload-call-logs',
       userPresence: 'user-presence',
       webGuestCall: 'web-guest-call',
+      webHuronCalls: 'web-huron-calls',
       webManualPairing: 'web-manual-pairing',
       webMentionsTab: 'web-mentions-tab',
+      webOutboundDialing: 'web-outbound-dialing',
+      webRoapCalls: 'web-roap-calls',
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
+      winHuronCalls: 'win-huron-calls',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
+      winOutboundDialing: 'win-outbound-dialing',
       winProximityDeviceSelection: 'win-proximity-device-selection',
       winTeams: 'win-teams',
       zeroTouchMeeting: 'zero-touch-meeting',
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
+      webexCSV: 'webex-CSV',
     };
 
     var service = {
@@ -265,7 +273,12 @@
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
         if (feature === features.csvUpload) {
-          resolve(true);
+          if (Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76' ||
+            Authinfo.getOrgId() === '5c8a3a19-0999-4016-b8e5-d8eb3c12f1f1') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);

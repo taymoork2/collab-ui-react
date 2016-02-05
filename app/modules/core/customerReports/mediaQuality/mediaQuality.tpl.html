@@ -6,7 +6,7 @@
     <section>
       <div class="customer-media">
         <p class="report-description" translate='mediaQuality.descriptionCustomer'></p>
-        <cs-select id="mediaFilter" name="mediaFilter" class='customer-report-filter media-filter' ng-model="nav.mediaSelected" options="nav.mediaOptions" on-change-fn="nav.mediaUpdate()"></cs-select>
+        <cs-select id="mediaFilter" name="mediaFilter" class='customer-report-filter media-filter' ng-model="nav.mediaSelected" options="nav.mediaOptions" on-change-fn="nav.mediaUpdate()" is-disabled="nav.isEmpty(nav.mediaQualityStatus) || nav.isRefresh(nav.mediaQualityStatus)"></cs-select>
         <div id="mediaQualityDiv" class="barchart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityStatus)">
           <i class='icon icon-spinner icon-2x'></i>

@@ -25,7 +25,6 @@ angular.module('Squared').service('CsdmConverter',
       this.upgradeChannel = getUpgradeChannel(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
-      this.readableActivationCode = getReadableActivationCode(obj);
       this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
       this.canDelete = true;
       this.canReportProblem = true;
@@ -67,6 +66,7 @@ angular.module('Squared').service('CsdmConverter',
       this.isOnline = getIsOnline(obj);
       this.canReset = true;
       this.canDelete = true;
+      this.canReportProblem = true;
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
@@ -74,6 +74,7 @@ angular.module('Squared').service('CsdmConverter',
       this.isHuronDevice = true;
       this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
       this.image = obj.product in huron_model_map ? huron_model_map[obj.product].image : "images/devices-hi/unknown.png";
+      this.huronId = getHuronId(obj);
     }
 
     var huron_model_map = {
@@ -153,7 +154,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
-      this.product = 'Activation Code';
+      this.product = 'Unactivated Device';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -319,6 +320,10 @@ angular.module('Squared').service('CsdmConverter',
     function getLastConnectionTime(obj) {
       moment.localeData(moment.locale())._calendar.sameElse = 'lll';
       return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
+    }
+
+    function getHuronId(obj) {
+      return obj.url && obj.url.substr(obj.url.lastIndexOf('/') + 1);
     }
 
     function getReadableState(obj) {

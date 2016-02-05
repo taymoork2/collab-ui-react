@@ -220,6 +220,7 @@
     vm.finishSetup = finishSetup;
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
+    vm.showDefaultFinish = showDefaultFinish;
 
     init();
 
@@ -407,7 +408,7 @@
           // handled by the backend process once provisioning is complete)
           if (!vm.meetingTrial.enabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-                vm.details.licenseDuration, vm.customerOrgId)
+                vm.details.licenseDuration, Authinfo.getOrgId())
               .catch(function (response) {
                 Notification.error('didManageModal.emailFailText');
               })
@@ -459,6 +460,10 @@
         }));
         $state.modal.close();
       }
+    }
+
+    function showDefaultFinish() {
+      return !vm.meetingTrial.enabled;
     }
   }
 })();

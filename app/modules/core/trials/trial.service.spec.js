@@ -46,9 +46,12 @@ describe('Service: Trial Service', function () {
   });
 
   it('should edit a trial', function () {
-    $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(trialEditResponse);
-    TrialService.editTrial('444', '', '', '', '', ['COLLAB']).then(function (response) {
+    var customerOrgId = 123;
+    var trialId = 444;
+    $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
+    TrialService.editTrial(customerOrgId, trialId).then(function (response) {
       expect(response.data).toEqual(trialEditResponse);
+      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
     });
     $httpBackend.flush();
   });
@@ -117,13 +120,15 @@ describe('Service: Trial Service', function () {
 
     it('should have shipping details', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var shippingInfoList = [{
-          "isPrimary": true,
-          "name": "John Connors",
-          "phoneNumber": "+1 206 256 3000",
-          "address": "2901 3rd Ave Seattle WA 98121",
-          "recipientType": "CUSTOMER"
-        }];
+        var shippingInfoList = {
+          country: "USA",
+          state: "WA",
+          name: "John Connors",
+          phoneNumber: "+1 206 256 3000",
+          address: "2901 3rd Ave Seattle",
+          postalCode: " 98121",
+          type: "CUSTOMER"
+        };
         var shippingInfo = angular.fromJson(data).details.shippingInfo;
         return _.some(shippingInfo, shippingInfoList[0]);
       }).respond(200);

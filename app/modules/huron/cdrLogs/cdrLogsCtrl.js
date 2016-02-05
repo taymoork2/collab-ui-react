@@ -36,7 +36,8 @@
     formlyConfig.setType({
       name: 'custom-file',
       templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
-      wrapper: ['ciscoWrapper']
+      wrapper: ['ciscoWrapper'],
+      overwriteOk: true
     });
 
     var validations = {
@@ -406,6 +407,7 @@
           btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.search'),
           onClick: function (options, scope) {
+            options.templateOptions.disabled = true;
             vm.gridData = null;
             vm.dataState = 1;
             vm.selectedCDR = null;
@@ -418,6 +420,8 @@
                   vm.dataState = 0;
                 }
               }
+            }).finally(function () {
+              options.templateOptions.disabled = false;
             });
           }
         },
@@ -604,7 +608,10 @@
 
       $state.go('cdr-overview', {
         cdrData: vm.selectedCDR,
-        call: callCopy
+        call: callCopy,
+        uniqueIds: CdrService.extractUniqueIds(call),
+        events: vm.events,
+        imported: vm.imported
       });
     }
 

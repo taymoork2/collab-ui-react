@@ -70,8 +70,8 @@ var PartnerHomePage = function () {
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
   this.saveUpdateButton = element(by.id('saveUpdateButton'));
-  this.newTrialRow = element(by.id(this.newTrial.customerName));
-  this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
+  this.newTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newTrial.customerName));
+  this.newSqUCTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
   this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
@@ -103,7 +103,7 @@ var PartnerHomePage = function () {
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
-  this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
+  this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
@@ -111,6 +111,8 @@ var PartnerHomePage = function () {
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
+  this.closeBtnOnModal = element(by.css('button.close'));
+  this.videoModal = element(by.id('videoId'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -137,10 +139,6 @@ var PartnerHomePage = function () {
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
 
-  this.assertDisabled = function (id) {
-    expect(element(by.id(id)).isEnabled()).toBeFalsy();
-  };
-
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(1);
@@ -148,10 +146,36 @@ var PartnerHomePage = function () {
   };
 
   this.retrieveOrgId = function (trialRow) {
-    return trialRow.getAttribute('orgId').then(function (orgId) {
+    return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
     });
+  };
+
+  this.isPaused = function () {
+    return browser.executeScript(function () {
+      return document.getElementById('videoId').paused;
+    });
+  };
+
+  this.isPlay = function () {
+    expect(partner.isPaused()).toBe(false);
+  };
+
+  this.playVideo = function () {
+    browser.executeScript(function () {
+      document.getElementById('videoId').play();
+    });
+  };
+
+  this.videoLoadError = function () {
+    return browser.executeScript(function () {
+      return document.getElementById('videoId').onerror;
+    });
+  };
+
+  this.videoLoads = function () {
+    expect(partner.videoLoadError()).toBeNull();
   };
 };
 

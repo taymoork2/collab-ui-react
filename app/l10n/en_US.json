@@ -7,13 +7,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Invite Users",
+    "inviteModalBtn": "Add Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
-    "add": "Invite Users",
+    "add": "Add Users",
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -57,7 +57,7 @@
     "pending": "Invite Pending",
     "all": "All",
     "administrators": "Administrators",
-    "inviteUsers": "Invite Users",
+    "inviteUsers": "Add Users",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -104,7 +104,7 @@
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
-    "onboardUsers": "Invite Users",
+    "onboardUsers": "Add Users",
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
@@ -121,6 +121,7 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
+    "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
@@ -140,7 +141,6 @@
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Call",
     "paidContactCenter": "Chat, Email, Voice",
-    "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
@@ -162,7 +162,6 @@
     "telephonyPreview": "Telephony",
     "telephonyFeaturesPreview": "Telephony Features",
     "conferencingPreview": "Conferencing",
-    "convPreview": "Messaging",
     "usagePreview": "Usage",
     "endpointsPreview": "Endpoints",
     "entitlementsPreview": "Entitlements",
@@ -183,9 +182,6 @@
     "calling": "Calling",
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
-  },
-  "messagingPanel": {
-    "title": "Messaging"
   },
   "settings": {
     "title": "Service Setup",
@@ -260,7 +256,8 @@
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner": "Manage My Organization"
+    "launchPartner": "Manage My Organization",
+    "videoTutorial": "Video Tutorial"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -403,7 +400,6 @@
     "filesSharedDescription": "The graph depicts the number of files and gigabytes shared during the {{time}}.",
     "contentSharedError": "There was an error while loading the data for the Files Shared.",
     "contentShareSizesDataError": "There was an error while loading the data for the File Sizes Shared.",
-    "contentShared": "Files Shared",
     "fileSizes": "Amount Shared",
     "gb": "GB"
   },
@@ -444,7 +440,8 @@
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
     "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
-    "customerError": "There was an error while loading registered endpoints."
+    "customerError": "There was an error while loading registered endpoints.",
+    "allDevices": "All Devices"
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
@@ -612,6 +609,28 @@
     "value": "Value",
     "sparkCall": "(Spark Call)"
   },
+  "cdrLadderDiagram": {
+    "title": "Call Flow Ladder Diagram",
+    "downLoadOptions": "DownLoad Options",
+    "filterOptions": "Filter Options",
+    "filterBy": "Filter By",
+    "all": "All",
+    "callIds": "Call IDs",
+    "localRemoteSessionIds": "Local/Remote Session IDs",
+    "hostname": "Host Name",
+    "downLoadEvents": "DownLoad Events",
+    "downLoadJson": "JSON",
+    "downLoadJsonDesc": "This file format is ideal if you wish to use the results in a separate script.",
+    "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
+    "downLoadCsv": "CSV",
+    "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
+    "downLoadHtml": "HTML",
+    "downLoadHtmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
+    "reload": "Reload",
+    "reloadMessage": "Please try reloading the page",
+    "close": "Close"
+  },
   "billingPage": {
     "title": "Order Provisioning",
     "sendCustomer": "Resend Customer Email",
@@ -692,7 +711,13 @@
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
-    "submit": "Submit"
+    "submit": "Submit",
+    "online": "Online",
+    "offline": "Offline",
+    "unknown": "Unknown",
+    "description": "Description",
+    "user": "User",
+    "ipAddress": "IP Address"
   },
   "notifications": {
     "success": "Success notifications",
@@ -734,7 +759,7 @@
     "name": "Name",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
-    "addUserText": "Invite Users",
+    "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
     "installSharedSpaceText": "Install a Devices into a Shared Space",
     "autoAttendantText": "Configure an Auto Attendant",
@@ -910,17 +935,15 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
-    "csvError": "Export failed."
+    "csvError": "Export failed.",
+    "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
     "title": "Devices",
     "modalTitle": "Activate a New Device",
-    "add": "Activate a New Device",
+    "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
-    "cancel": "Cancel",
-    "delete": "Delete",
     "deleteActivationCode": "Delete Activation Code",
-    "done": "Done",
     "kindHeader": "Type",
     "nameHeader": "Installed in",
     "statusHeader": "Status",
@@ -958,7 +981,9 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
+    "addAnother": "Add Another"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -992,7 +1017,18 @@
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
-      "status-title": "Service Status"
+      "status-title": "Service Status",
+      "add-resource-button": "Add Resource",
+      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+    },
+    "redirect-target-dialog": {
+      "title": "Register New Expressway",
+      "instructions-grant-registration": "Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.",
+      "hostname-placeholder": "Enter Expressway Hostname",
+      "activate-resource-button": "Next",
+      "register-resource-button": "Go To Expressway",
+      "grant-registration-success-header": "You may now register the Expressway <strong>{{hostname}}</strong> with Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Expressway within one hour to finish registration."
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
@@ -1072,7 +1108,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1109,7 +1145,6 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service.",
-      "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
@@ -1126,26 +1161,28 @@
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
         "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
-        "sipDomainHeading": "SIP Domain",
-        "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
-        "sipDomainPlaceholder": "Enter a single domain or subdomain"
+        "sipDomainHeading": "SIP Destination",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainPlaceholder": "Enter a SIP Destination",
+        "sipDomainExample": "For example: acme.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
-        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
+        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "defaultWarning": "Confirm the default schedule"
       }
     },
     "hybridServices": {
@@ -1155,21 +1192,24 @@
     },
     "notifications": {
       "scheduleUpgrade": {
-        "title": "Confirm the Schedule for Automatic Software Upgrades",
-        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
-        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+        "title": "Acknowledge the Scheduled Upgrade",
+        "description": "The clusters for this service have a default time set for a scheduled upgrade",
+        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
       }
     }
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
-    "simple": "Manually invite users",
+    "simple": "Manually add users",
     "manualEntryStep": "Manual",
     "assignServicesStep": "Assign Services",
     "upload": "Bulk upload users using CSV",
     "uploadStep": "Upload CSV",
+    "downloadStep": "Download CSV Template",
+    "downloadDescription": "Use this file to update user list and their entitlements.",
+    "downloadError": "There is a problem downloading the file.",
+    "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
     "uploadPrompt": "Drag and drop a CSV file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
@@ -1178,6 +1218,7 @@
     "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
+    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "timeElapsed": "Time Elapsed:",
     "uploadResultStep": "Upload Result",
     "uploadErrorStep": "Upload Errors",
@@ -1192,6 +1233,8 @@
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
+    "tooManyActiveMessageLicenses": "There are more than one \"Spark Message\" license enabled.  Please fix and try again.",
+    "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
@@ -1214,12 +1257,11 @@
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
     "downloadSub": "Download CSV template",
-    "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
-    "subscriptionId": "Subscription ID's",
+    "subscriptionId": "Subscription IDs",
     "spark": "Spark",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
@@ -1250,6 +1292,8 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
+    "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -1261,11 +1305,9 @@
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
-    "addUsers": "Invite Users",
+    "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "addUsersSimple": "Invite Users | Simple",
-    "addUsersAdvanced": "Invite Users | Advanced",
     "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
@@ -1287,10 +1329,11 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
-    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
+    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
@@ -1390,86 +1433,9 @@
   "autoAttendant": {
     "code": "AA",
     "title": "Auto Attendant",
-    "addAutoAttendant": "New Auto Attendant",
-    "deleteAutoAttendant": "Delete Auto Attendant",
-    "information": "Auto attendants allow you to create custom menus, annoucements and call flows to handle incoming calls to your business.",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
-    "general": "General",
-    "schedule": "Schedule",
-    "holidayDates": "Holiday Dates",
-    "autoAttendant": "Auto Attendant",
-    "navHelpGeneral": "Click <b>General</b> to manage name and numbers to reach this Auto Attendant.",
-    "navHelpAA": "Click <b>Auto Attendant</b> to configure menu options and annoucements.",
-    "welcomeStartHelp": "Click + to begin",
-    "welcomeOngoingHelp": "Click + to add actions",
-    "name": "Auto Attendant Name",
     "namePlaceholder": "Enter Name",
-    "numbers": "Auto Attendant Numbers",
-    "numberInternalPlaceholder": "Enter Internal Number",
-    "addNumber": "Add Number",
-    "deleteNumber": "Delete Number",
-    "addMenu": "Add Menu",
-    "deleteMenu": "Delete Menu",
-    "editMenu": "Edit Menu",
-    "mainMenu": "Main Menu",
-    "addMenuOption": "Add Menu Option",
-    "editMenuOption": "Edit Menu Option",
-    "deleteMenuOption": "Delete Menu Option",
-    "announcementMenuPlaceholder": "Add Menu Announcement",
-    "announcementMenu": "Menu Announcement",
-    "editAnnouncement": "Edit Announcement",
-    "deleteAnnoucment": "Delete Annoucement",
-    "optionForInvalidInputPlaceholder": "Enter Default Option For Invalid Input",
-    "optionForInvalidInput": "Default Option For Invalid Input",
-    "timeoutOptionPlaceholder": "Configure Timeout Options",
-    "timeoutOption": "Timeout Options",
-    "customMenu": "Custom Menu",
-    "customEdit": "Edit Custom Menu",
-    "customeDelete": "Delete Custom Menu",
-    "customUrl": "CML Instruction Location",
-    "urlPlaceholder": "Enter URL",
-    "userName": "User Name",
-    "userNamePlaceholder": "Enter User Name",
-    "password": "Password",
-    "passwordPlaceholder": "Enter Password",
-    "description": "Description",
-    "descriptionPlaceholder": "Enter Description",
-    "action": "Action",
-    "numberPlaceholder": "Enter Number",
-    "key": "Key",
-    "keyPlaceholder": "Choose Key",
-    "playAnnouncement": "Play Announcement",
-    "playPlaceholder": "http:// or text",
-    "disconnect": "Disconnect",
-    "announcementPlaceholder": "Add Announcement",
-    "announcement": "Announcement",
-    "disconnectPlaceholder": "Add Disconnect",
-    "routeToNumberPlaceholder": "Add Route To Number",
-    "routeToDialedNumberPlaceholder": "Add Route To Dialed Number",
-    "routeToMailboxPlaceholder": "Add Route To Mailbox",
-    "routeToDialedMailboxPlaceholder": "Add Route To Dialed Mailbox",
-    "routeToCollectedNumberPlaceholder": "Add Route To Collected Number",
-    "repeatMenuPlaceholder": "Add Repeat Menu",
-    "disconnectBusy": "With Busy Tone",
-    "disconnectTone": "With Disconnect Tone",
-    "disconnectNone": "With No Tone",
-    "routeToNumber": "Route To Number",
-    "routeToDialedNumber": "Route To Dialed Number",
-    "routeToMailbox": "Route To Mailbox",
-    "routeToDialedMailbox": "Route To Dialed Mailbox",
-    "routeToCollectedNumber": "Route To Collected Number",
     "repeatMenu": "Repeat Menu",
-    "configureMenuOption": "Configure Menu Option",
-    "menuOption": "Menu Option",
-    "invalidMenuOptionRequired": "This menu option is required.",
-    "invalidRequiredFields": "Enter the required fields.",
-    "invalidNameMissing": "Enter Auto Attendant Name under General.",
-    "invalidNameNotUnique": "Auto Attendant Name is already in use. Please enter a new Auto Attendant Name under General.",
-    "invalidCustomMenuIncomplete": "Define Custom Menu under Auto Attendant.",
-    "invalidMenuAnnoucementMissing": "Add Menu Annoucement to Auto Attendant / Main Menu.",
-    "invalidMenuDefaultMissing": "Enter Default Option for Invalid Input for Auto Attendant / Main Menu.",
-    "invalidMenuMinimumOption": "Configure at least one menu option for Auto Attendant / Main Menu.",
-    "errorListCes": "Failed to list Auto Attendant(s): {{statusText}} ({{status}}).",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -1477,14 +1443,6 @@
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
-    "errorAddNumberInUse": "Failed to add number: {{number}} already in use.",
-    "errorAddNumberInUseOtherAA": "Failed to add number: {{number}} already in use by {{name}}.",
-    "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
-    "landingDevelopmentLink": "AA Development Link",
-    "landingInformation": "Auto attendants allow you to create a custom greetings and phone menus that handle inbound calls to your business.",
-    "landingTitle": "Auto Attendants",
-    "landingAddAutoAttendant": "Create New",
-    "landingTemplateAutoAttendant": "Create from Template",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1513,6 +1471,7 @@
     "phoneMenuPlaySubmenu": "Play Submenu",
     "phoneMenuRepeatMenu": "Repeat this Menu",
     "phoneMenuDialExt": "Dial by Extension",
+    "phoneMenuRouteToExtNum": "Route to Phone Number",
     "phoneMenuRouteUser": "Route to User",
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
@@ -1527,7 +1486,9 @@
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
+    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1616,7 +1577,9 @@
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
-    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "selectUserPlaceHolder": "Enter full name",
+    "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
     "code": "CP",
@@ -1765,7 +1728,6 @@
   },
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
-    "addNumbers": "Manage Numbers",
     "editNumbers": "Edit Phone Numbers",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
@@ -1911,7 +1873,7 @@
       "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
+      "webexDetails": "WebEx Enterprise Edition",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -1941,7 +1903,14 @@
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
-      "partner": "Partner"
+      "partner": "Partner",
+      "name": "Name",
+      "phone": "Phone",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2016,6 +1985,7 @@
     "edit": "Edit Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
+    "webexOverview": "WebEx",
     "licenses": "Number of Licenses",
     "duration": "Duration",
     "days": "Days",
@@ -2026,7 +1996,6 @@
     "expiring": "Trial Expiring",
     "expiresToday": "Expires Today",
     "unused": "unused licenses",
-    "uploadNumbers": "Manage Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
     "none": "None",
@@ -2046,7 +2015,6 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
@@ -2067,7 +2035,9 @@
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
-    "internationalDialingSaveError": "International Dialing failed to save."
+    "internationalDialingSaveError": "International Dialing failed to save.",
+    "disableCompanyVoicemailTitle": "Disable Company Voicemail",
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2077,14 +2047,11 @@
     "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
-    "title": "Manage Phone Numbers",
-    "instructionsText": "The company you are setting up needs to provide you with their existing phone numbers. This will initiate the porting request of the company's phone numbers.",
+    "buttonText": "Add Numbers",
+    "title": "Add Phone Numbers",
     "processingText": "Processing Phone Numbers...",
     "newDidText": "{{count}} new phone number(s) successfully added.",
     "existingDidText": "{{count}} phone number(s) already in the system.",
-    "deleteDidText": "{{count}} phone number(s) were deleted.",
-    "deleteConfirmationText": "Are you sure you want to delete the following {{count}} number(s)?  It may impact end users if these numbers are assigned to user's lines.",
-    "removeNumbers": "Remove Numbers",
     "sendEmail": "Notify Customer",
     "notifyCustLater": "Notify Customer Later",
     "emailSuccessText": "Email successfully sent to customer.",
@@ -2119,15 +2086,15 @@
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
     "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
-    "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires",
-    "lastSeen": "Last seen",
+    "lastSeen": "Offline since:",
+    "codeExpires": "This activation code expires",
+    "deviceCodeExpires": "The activation code for this device expires",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -2323,10 +2290,19 @@
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
+      "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
+      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+    },
+    "reassign": {
+      "reassignHost": "Reassign Host",
+      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignErrorHeader": "Unexpected Error",
+      "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
     "alarms": {
       "alarms": "Alarms",
@@ -2372,7 +2348,9 @@
     "offline": "Offline",
     "active": "Active",
     "noCluster": "No Media Service Clusters Connected to Spark",
-    "close": "Close"
+    "close": "Close",
+    "reassignCluster": "Reassign to Cluster",
+    "moveHost": "MOVE HOST"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -2790,7 +2768,7 @@
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
-    "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
+    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -2873,7 +2851,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3254,8 +3233,10 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
+    "WX2_SquaredInviter": "WX2 SquaredInviter",
     "Site_Admin": "Site Admin",
-    "ReadOnly_Admin": "Read-only Admin"
+    "Readonly_Admin": "Read-only Admin",
+    "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3285,7 +3266,6 @@
     "accountCreated": "Account Created",
     "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
@@ -3304,6 +3284,9 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
+    "lastLog": "Last Log",
+    "lastClientLog": "Last Client Log",
+    "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
       "inactive": "Inactive",
@@ -3360,8 +3343,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3381,7 +3364,13 @@
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
-    "noMoreResults": "Max results limit reached. Try a different search."
+    "noMoreResults": "Max results limit reached. Try a different search.",
+    "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
+    "primary": "Primary",
+    "shared": "Shared",
+    "sparkStatus": "Spark Status",
+    "searchHelp": "Search Help",
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3395,10 +3384,11 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Verification",
-    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "title": "Domains",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
+    "claimDomain": "Claim",
     "list": {
       "domainHeader": "Domain",
       "statusHeader": "Status",
@@ -3406,28 +3396,58 @@
     },
     "add": {
       "header": "Add domains",
-      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "Invalid domain entered"
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
-      "header": "Delete domain",
-      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains."
+      "header": "Unverify domain",
+      "description": "You are about to unverify the following domain:",
+      "preventLockoutError": "Unverifying your own domain will prevent you from logging in.",
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
     },
     "email": {
       "header": "Send email",
-      "description": "",
-      "exampleEmail": "admin@example.com",
-      "invalidEmail": "This is not an email address",
+      "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
+      "exampleEmail": "Enter email addresses separated by commas.",
+      "invalidEmail": "This is not a valid email address.",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     },
     "verify": {
       "header": "Verify domain",
-      "verifyThis": "You are about to verify the following domain:",
-      "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
-      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "verifyThis": "Before you verify",
+      "beforeVerify": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "enable": "I understand this."
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
+    },
+    "claim": {
+      "header": "Claim domain",
+      "claimThis": "You are about to claim the following domain:",
+      "warning": "Users with e-mail addresses in this domain that belong to other orgs will have to provide new e-mail addresses.",
+      "claim": "Claim"
+    },
+    "actions": {
+      "instructions": "Code and instructions",
+      "mail": "Mail code and instructions",
+      "unverify": "Remove enforcement",
+      "unclaim": "Release domain",
+      "delete": "Remove"
+    },
+    "instructions": {
+      "title": "Code and instructions",
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

@@ -19,11 +19,11 @@
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
-      'getTrial': getTrial,
-      'editTrial': editTrial,
-      'startTrial': startTrial,
-      'getData': getData,
-      'reset': reset,
+      getTrial: getTrial,
+      editTrial: editTrial,
+      startTrial: startTrial,
+      getData: getData,
+      reset: reset
     };
 
     return service;
@@ -36,31 +36,22 @@
       }).$promise;
     }
 
-    function editTrial(id, trialPeriod, licenseCount, usageCount, roomSystemCount, corgId, offersList) {
-      var editTrialData = {
-        'trialPeriod': trialPeriod,
-        'customerOrgId': corgId,
-        'offers': []
+    function editTrial(custId, trialId) {
+      var data = _trialData;
+      var trialData = {
+        'customerOrgId': custId,
+        'trialPeriod': data.details.licenseDuration,
+        'details': _getDetails(data),
+        'offers': _getOffers(data)
       };
 
-      for (var i in offersList) {
-        editTrialData.offers.push({
-          'id': offersList[i],
-          'licenseCount': offersList[i] === Config.trials.roomSystems ? roomSystemCount : licenseCount
-        });
-      }
-
-      var editTrialUrl = trialsUrl + '/' + id;
+      var editTrialUrl = trialsUrl + '/' + trialId;
 
       function logEditTrialMetric(data, status) {
-        LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, editTrialData);
+        LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
       }
 
-      return $http({
-          method: 'PATCH',
-          url: editTrialUrl,
-          data: editTrialData
-        })
+      return $http.patch(editTrialUrl, trialData)
         .success(logEditTrialMetric)
         .error(logEditTrialMetric);
     }
@@ -106,6 +97,8 @@
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             details.shippingInfo = trial.details.shippingInfo;
+            details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
+            details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
             details.devices = _(trial.details.roomSystems)
               .concat(trial.details.phones)
               .filter({
@@ -118,8 +111,8 @@
           }
 
           if (trial.type === Config.offerTypes.meetings) {
-            details.siteUrl = trial.details.siteUrl;
-            details.timeZoneId = trial.details.timeZone.timeZoneId;
+            details.siteUrl = _.get(trial, 'details.siteUrl', '');
+            details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
         })
         .value();

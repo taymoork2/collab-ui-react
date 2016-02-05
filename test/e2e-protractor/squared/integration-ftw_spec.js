@@ -23,7 +23,7 @@ describe('First Time Wizard', function () {
     wizard.clickEnterpriseSettings();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
   });
 
   it('should complete custom sso provider flow', function () {
@@ -44,7 +44,7 @@ describe('First Time Wizard', function () {
     utils.expectIsDisplayed(wizard.mainviewTitle);
   });
 
-  it('should complete simple invite users flow', function () {
+  it('should complete simple add users flow', function () {
     wizard.clickAddUsers();
     utils.click(wizard.radiobuttons.first());
     notifications.clearNotifications();

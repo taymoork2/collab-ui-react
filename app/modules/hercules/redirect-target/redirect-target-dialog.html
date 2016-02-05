@@ -1,0 +1,38 @@
+<div class="redirect-target">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h5 class="modal-title"><span translate="hercules.redirect-target-dialog.title"></span></h5>
+  </div>
+  <form name="inputHostNameForm" ng-submit="redirectTarget.addRedirectTargetClicked(redirectTarget.hostName)">
+    <div class="modal-body" ng-hide="redirectTarget.enableRedirectToTarget">
+      <p><span
+        translate="hercules.redirect-target-dialog.instructions-grant-registration"></span></p>
+      <input type="text" placeholder="{{'hercules.redirect-target-dialog.hostname-placeholder' | translate}} "
+             ng-model="redirectTarget.hostName" required autofocus>
+  </div>
+  </form>
+  <div class="modal-body" ng-show="redirectTarget.enableRedirectToTarget">
+    <h3><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
+              translate-values="{hostname: redirectTarget.hostName || ''}"></span></h3>
+    <p><span
+      translate="hercules.redirect-target-dialog.grant-success-information"></span></p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" ng-click="$close()">
+      <span translate="common.close"></span>
+    </button>
+    <button class="btn activate-button btn--primary"
+            ng-hide="redirectTarget.enableRedirectToTarget"
+            ng-disabled="inputHostNameForm.$invalid"
+            ng-click="redirectTarget.addRedirectTargetClicked(redirectTarget.hostName)">
+      <span translate="hercules.redirect-target-dialog.activate-resource-button"></span>
+    </button>
+    <button class="btn register-button btn--primary"
+            ng-show="redirectTarget.enableRedirectToTarget"
+            ng-click="redirectTarget.redirectToTargetAndCloseWindowClicked(redirectTarget.hostName)">
+      <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
+    </button>
+  </div>
+</div>

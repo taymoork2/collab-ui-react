@@ -14,15 +14,29 @@ describe('Controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('WebExApiGateway'));
   beforeEach(module('WebExUtils'));
   beforeEach(module('WebExXmlApi'));
 
   var SiteListCtrl, scope, Authinfo;
-  var deferred;
-  var deferredXml;
+  var deferredSessionTicket;
+  var deferredSVCToggle;
 
   // Initialize the controller and mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _WebExXmlApiFact_, $translate, _Config_, $log, _Userservice_, _WebExUtilsFact_, _WebExXmlApiInfoSvc_) {
+  beforeEach(inject(function (
+    $q,
+    $controller,
+    $rootScope,
+    $translate,
+    _Config_,
+    $log,
+    _FeatureToggleService_,
+    _Userservice_,
+    _WebExApiGatewayService_,
+    _WebExUtilsFact_,
+    _WebExXmlApiFact_,
+    _WebExXmlApiInfoSvc_
+  ) {
     scope = $rootScope.$new();
 
     Authinfo = {
@@ -86,9 +100,8 @@ describe('Controller: SiteListCtrl', function () {
       }
     };
 
-    deferred = $q.defer();
-
-    spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferred.promise);
+    deferredSessionTicket = $q.defer();
+    spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
 
     spyOn(_WebExXmlApiFact_, "getSiteVersion").and.callFake(function (xmlApiAccessInfo) {
       if (xmlApiAccessInfo.webexSiteName == "sjsite14") {
@@ -132,6 +145,9 @@ describe('Controller: SiteListCtrl', function () {
       }
     });
 
+    deferredSVCToggle = $q.defer();
+    spyOn(_FeatureToggleService_, "supports").and.returnValue(deferredSVCToggle.promise);
+
     SiteListCtrl = $controller('SiteListCtrl', {
       $q: $q,
       $translate: $translate,
@@ -139,7 +155,9 @@ describe('Controller: SiteListCtrl', function () {
       Config: _Config_,
       $log: $log,
       $scope: scope,
+      FeatureToggleService: _FeatureToggleService_,
       Userservice: _Userservice_,
+      WebExApiGatewayService: _WebExApiGatewayService_,
       WebExUtilsFact: _WebExUtilsFact_,
       WebExXmlApiFact: _WebExXmlApiFact_,
       webExXmlApiInfoObj: _WebExXmlApiInfoSvc_
@@ -147,7 +165,9 @@ describe('Controller: SiteListCtrl', function () {
   }));
 
   it('should assign is not iFrame supported and is not report supported to site', function () {
-    deferred.resolve("ticket");
+    deferredSessionTicket.resolve("ticket");
+    deferredSVCToggle.resolve(true);
+
     scope.$apply();
 
     expect(SiteListCtrl).toBeDefined();
@@ -160,11 +180,14 @@ describe('Controller: SiteListCtrl', function () {
     expect(SiteListCtrl.gridData[0].isIframeSupported).toBe(false);
     expect(SiteListCtrl.gridData[0].isAdminReportEnabled).not.toBe(null);
     expect(SiteListCtrl.gridData[0].isAdminReportEnabled).toBe(false);
+
     expect(SiteListCtrl.gridData[0].showSiteLinks).toBe(true);
   });
 
   it('should assign is iFrame supported and is report supported to site', function () {
-    deferred.resolve("ticket");
+    deferredSessionTicket.resolve("ticket");
+    deferredSVCToggle.resolve(true);
+
     scope.$apply();
 
     expect(SiteListCtrl).toBeDefined();
@@ -177,11 +200,14 @@ describe('Controller: SiteListCtrl', function () {
     expect(SiteListCtrl.gridData[1].isIframeSupported).toBe(true);
     expect(SiteListCtrl.gridData[1].isAdminReportEnabled).not.toBe(null);
     expect(SiteListCtrl.gridData[1].isAdminReportEnabled).toBe(true);
+
     expect(SiteListCtrl.gridData[1].showSiteLinks).toBe(true);
   });
 
   it('should assign is iFrame supported and is not reported supported to site', function () {
-    deferred.resolve("ticket");
+    deferredSessionTicket.resolve("ticket");
+    deferredSVCToggle.resolve(true);
+
     scope.$apply();
 
     expect(SiteListCtrl).toBeDefined();
@@ -194,6 +220,7 @@ describe('Controller: SiteListCtrl', function () {
     expect(SiteListCtrl.gridData[2].isIframeSupported).toBe(true);
     expect(SiteListCtrl.gridData[2].isAdminReportEnabled).not.toBe(null);
     expect(SiteListCtrl.gridData[2].isAdminReportEnabled).toBe(false);
+
     expect(SiteListCtrl.gridData[2].showSiteLinks).toBe(true);
   });
 });

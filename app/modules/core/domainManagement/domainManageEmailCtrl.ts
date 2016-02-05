@@ -4,19 +4,19 @@ namespace domainManagement {
     private _domain;
     private _error;
     private _email;
-    private _adminEmail;
+    private _loggedOnUser;
     private _progress;
 
     /* @ngInject */
-    constructor($stateParams, private $state, private DomainManagementService) {
+    constructor($stateParams, private $previousState, private DomainManagementService) {
 
       this._domain = $stateParams.domain;
-      this._adminEmail = $stateParams.adminEmail;
-      //this._email = this._adminEmail;  //wait with this.
+      this._loggedOnUser = $stateParams.loggedOnUser;
+      this._email = this._loggedOnUser.email;
     }
 
     public cancel() {
-      this.$state.go('domainmanagement');
+      this.$previousState.go();
     }
 
     public sendEmail() {
@@ -37,7 +37,6 @@ namespace domainManagement {
       } else {
         return {valid: false, empty: true};
       }
-
     }
 
     get sendEnabled() {
@@ -52,6 +51,9 @@ namespace domainManagement {
       this._email = email;
     }
 
+    public get domain(){
+      return this._domain;
+    }
   }
   angular
     .module('Core')

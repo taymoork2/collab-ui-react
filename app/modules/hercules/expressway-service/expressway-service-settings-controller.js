@@ -2,12 +2,18 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, ScheduleUpgradeService) {
     var vm = this;
     vm.config = "";
     vm.emailSubscribers = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
+    vm.showScheduleUpgrade = false;
+
+    ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
+      .then(function () {
+        vm.showScheduleUpgrade = true;
+      });
 
     var readCerts = function () {
       CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
