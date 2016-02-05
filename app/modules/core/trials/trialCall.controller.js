@@ -13,7 +13,7 @@
 
     vm.details = _trialData.details;
     vm.sx10 = _.find(vm.details.roomSystems, {
-      model: 'CISCO_sx10'
+      model: 'CISCO_SX10'
     });
     vm.phone8865 = _.find(vm.details.phones, {
       model: 'CISCO_8865'

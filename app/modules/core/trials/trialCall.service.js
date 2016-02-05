@@ -33,7 +33,7 @@
         enabled: false,
         details: {
           roomSystems: [{
-            model: 'CISCO_sx10',
+            model: 'CISCO_SX10',
             enabled: false,
             quantity: 0
           }],
@@ -55,7 +55,7 @@
             quantity: 0
           }],
           shippingInfo: {
-            recipientType: 'CUSTOMER'
+            type: 'CUSTOMER'
           }
         }
       };
