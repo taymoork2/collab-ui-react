@@ -3,7 +3,7 @@
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-describe('Video play spec', function () {
+xdescribe('Video play spec', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
