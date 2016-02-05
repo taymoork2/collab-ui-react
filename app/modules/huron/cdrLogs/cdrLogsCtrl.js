@@ -420,8 +420,8 @@
                   vm.dataState = 0;
                 }
               }
-            }).finally(function() {
-               options.templateOptions.disabled = false;
+            }).finally(function () {
+              options.templateOptions.disabled = false;
             });
           }
         },
