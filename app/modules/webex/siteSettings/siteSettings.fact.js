@@ -165,7 +165,7 @@
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+              webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
               webExXmlApiInfoObj.webexSiteName = siteName;
               webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
               webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
@@ -198,7 +198,7 @@
           sessionTicket
         ) {
 
-          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = siteName;
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
           webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;

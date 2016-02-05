@@ -25,9 +25,10 @@
     $scope.setSipUri = function () {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
+        var sparkDomainStr = Config.getSparkDomainCheckUrl();
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
-            displayName = data.orgSettings.sipCloudDomain.split('.')[0];
+            displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             $scope.cloudSipUriField.isDisabled = true;
           } else if (data.verifiedDomains) {
             displayName = data.verifiedDomains[0];
@@ -191,7 +192,7 @@
           if (data.data.length > 0) {
             //check if data already exists for this entityId
             var newEntityId = checkNewEntityId(data);
-            if (newEntityId.startsWith('http')) {
+            if (_.startsWith(newEntityId, 'http')) {
               for (var datum in data.data) {
                 if (data.data[datum].entityId === newEntityId) {
                   metaUrl = data.data[datum].url;
@@ -267,7 +268,7 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
-          if (newEntityId.startsWith('http')) {
+          if (_.startsWith(newEntityId, 'http')) {
             for (var datum in data.data) {
               if (data.data[datum].entityId === newEntityId) {
                 metaUrl = data.data[datum].url;

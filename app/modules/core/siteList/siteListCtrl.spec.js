@@ -14,6 +14,7 @@ describe('Controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('WebExApiGateway'));
   beforeEach(module('WebExUtils'));
   beforeEach(module('WebExXmlApi'));
 
@@ -31,6 +32,7 @@ describe('Controller: SiteListCtrl', function () {
     $log,
     _FeatureToggleService_,
     _Userservice_,
+    _WebExApiGatewayService_,
     _WebExUtilsFact_,
     _WebExXmlApiFact_,
     _WebExXmlApiInfoSvc_
@@ -155,6 +157,7 @@ describe('Controller: SiteListCtrl', function () {
       $scope: scope,
       FeatureToggleService: _FeatureToggleService_,
       Userservice: _Userservice_,
+      WebExApiGatewayService: _WebExApiGatewayService_,
       WebExUtilsFact: _WebExUtilsFact_,
       WebExXmlApiFact: _WebExXmlApiFact_,
       webExXmlApiInfoObj: _WebExXmlApiInfoSvc_

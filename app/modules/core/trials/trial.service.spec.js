@@ -120,13 +120,15 @@ describe('Service: Trial Service', function () {
 
     it('should have shipping details', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var shippingInfoList = [{
-          "isPrimary": true,
-          "name": "John Connors",
-          "phoneNumber": "+1 206 256 3000",
-          "address": "2901 3rd Ave Seattle WA 98121",
-          "recipientType": "CUSTOMER"
-        }];
+        var shippingInfoList = {
+          country: "USA",
+          state: "WA",
+          name: "John Connors",
+          phoneNumber: "+1 206 256 3000",
+          address: "2901 3rd Ave Seattle",
+          postalCode: " 98121",
+          recipientType: "CUSTOMER"
+        };
         var shippingInfo = angular.fromJson(data).details.shippingInfo;
         return _.some(shippingInfo, shippingInfoList[0]);
       }).respond(200);

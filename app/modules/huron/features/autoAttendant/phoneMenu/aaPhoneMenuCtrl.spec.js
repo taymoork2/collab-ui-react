@@ -184,6 +184,16 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
 
+    it('should read the CeMenu without attempts and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuNoAttempt);
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
     it('should read the CeMenu with attempts 2 and set UI to Repeat-Menu-Once (Timeout/Invalid)', function () {
       controller.menuEntry = angular.copy(data.ceMenuAttempt);
       controller.menuEntry.attempts = 2;
