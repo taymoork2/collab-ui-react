@@ -34,13 +34,13 @@ while (0 >= sitereports.testInfo.describeCount) {
     });
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T31ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t31CardsSectionId);
       });
     } else {
-      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
+      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T30ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t30CardsSectionId);
