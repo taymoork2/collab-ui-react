@@ -23,8 +23,19 @@ describe('HelpdeskHuronService', function () {
   }];
 
   var device = {
-    "uuid": "17a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
-    "url": null,
+    "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
+    "name": "SEP1CDEA7DBF740",
+    "description": "373323613@qq.com (Cisco 8861 SIP)",
+    "product": "Cisco 8861",
+    "model": "Cisco 8861",
+    "ownerUser": {
+      "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+      "userId": "58852083@qq.com"
+    }
+  };
+
+  var deviceWithStatus = {
+    "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
     "name": "SEP1CDEA7DBF740",
     "description": "373323613@qq.com (Cisco 8861 SIP)",
     "product": "Cisco 8861",
@@ -51,14 +62,41 @@ describe('HelpdeskHuronService', function () {
     "displayName": "Tom Vasset (tvasset)"
   };
 
+  var devicesForUser = [{
+    "endpoint": {
+      "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
+      "name": "SEP1CDEA7DBF740"
+    },
+    "uuid": "3adfb2e8-cb9f-4840-b265-84ee978a7446"
+  }];
+
+  var huronUserWithNumbers = {
+    "uuid": "d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f",
+    "numbers": [{
+      "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+      "internal": "1234",
+      "external": "+14084744520",
+      "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
+    }]
+  };
+
+  var userDirectoryNumbers = [{
+    "directoryNumber": {
+      "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+      "pattern": "1234"
+    },
+    "dnUsage": "Primary",
+    "uuid": "97bba556-0312-42be-aeb8-a4dac8ca1de7"
+  }];
+
+  var userId = '74c2ca8d-99ca-4bdf-b6b9-a142d503f024';
   var orgId = '4214d345-7caf-4e32-b015-34de878d1158';
   var searchString = 'SEP';
   var limit = 20;
 
-  var HelpdeskHuronService, httpBackend, HuronConfig, $scope;
+  var HelpdeskHuronService, httpBackend, HuronConfig;
 
-  beforeEach(inject(function (_HelpdeskHuronService_, $httpBackend, _HuronConfig_, _$rootScope_) {
-    $scope = _$rootScope_.$new();
+  beforeEach(inject(function (_HelpdeskHuronService_, $httpBackend, _HuronConfig_) {
     HelpdeskHuronService = _HelpdeskHuronService_;
     httpBackend = $httpBackend;
     HuronConfig = _HuronConfig_;
@@ -80,8 +118,20 @@ describe('HelpdeskHuronService', function () {
       .respond(device);
 
     $httpBackend
-      .when('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/c498a32e-8b95-4e38-aa70-2a8c90b1f0f4')
-      .respond(device);
+      .when('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/c498a32e-8b95-4e38-aa70-2a8c90b1f0f4?status=true')
+      .respond(deviceWithStatus);
+
+    $httpBackend
+      .when('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024/endpoints')
+      .respond(devicesForUser);
+
+    $httpBackend
+      .when('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + userId + '/directorynumbers')
+      .respond(userDirectoryNumbers);
+
+    $httpBackend
+      .when('GET', HuronConfig.getCmiV2Url() + '/customers/' + orgId + '/users/' + userId)
+      .respond(huronUserWithNumbers);
 
     $httpBackend
       .when('GET', 'https://atlas-integration.wbx2.com/admin/api/v1/helpdesk/organizations/4214d345-7caf-4e32-b015-34de878d1158/users/74c2ca8d-99ca-4bdf-b6b9-a142d503f024')
@@ -110,6 +160,39 @@ describe('HelpdeskHuronService', function () {
     expect(devices[0].user.displayName).toBe('Tom Vasset');
     expect(devices[0].model).toBe('Cisco 8861');
     expect(devices[0].product).toBe('Cisco 8861');
+  });
+
+  it('reading devices for a user works as expected', function () {
+    var devices = [];
+    HelpdeskHuronService.getDevices(userId, orgId).then(function (res) {
+      devices = res;
+      setOrgOnDevices(orgId, devices);
+      HelpdeskHuronService.setOwnerAndDeviceDetails(devices);
+    });
+
+    httpBackend.flush();
+
+    expect(devices.length).toBe(1);
+    expect(devices[0].displayName).toBe('SEP1CDEA7DBF740');
+    expect(devices[0].uuid).toBe('c498a32e-8b95-4e38-aa70-2a8c90b1f0f4');
+    expect(devices[0].image).toBe('images/devices/cisco_8861.png');
+    expect(devices[0].deviceStatus.status).toBe('Online');
+    expect(devices[0].deviceStatus.cssColorClass).toBe('helpdesk-green');
+    expect(devices[0].model).toBe('Cisco 8861');
+  });
+
+  it('reading user numbers works as expected', function () {
+    var numbers = [];
+    HelpdeskHuronService.getUserNumbers(userId, orgId).then(function (res) {
+      numbers = res;
+    });
+
+    httpBackend.flush();
+
+    expect(numbers.length).toBe(1);
+    expect(numbers[0].internal).toBe('1234');
+    expect(numbers[0].external).toBe('+14084744520');
+    expect(numbers[0].dnUsage).toBe('primary');
   });
 
   function setOrgOnDevices(orgId, devices) {
