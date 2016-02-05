@@ -1,7 +1,6 @@
 'use strict';
 
 var CreateAccountPage = function () {
-  this.pageTitle = element(by.id('title'));
   this.h2 = element(by.id('h2'));
   this.emailLabel = element(by.id('emailLabel'));
   this.passwordLabel = element(by.id('passwordLabel'));

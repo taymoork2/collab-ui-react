@@ -10,7 +10,7 @@
 
     var vm = this;
 
-    vm.email1 = $location.search().email;
+    vm.email1 = $location.search().email.replace(/\s+/g, '+');
 
     vm.handleCreateAccount = function () {
 
