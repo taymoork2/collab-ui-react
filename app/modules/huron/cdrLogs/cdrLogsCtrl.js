@@ -407,6 +407,7 @@
           btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.search'),
           onClick: function (options, scope) {
+            options.templateOptions.disabled = true;
             vm.gridData = null;
             vm.dataState = 1;
             vm.selectedCDR = null;
@@ -419,6 +420,8 @@
                   vm.dataState = 0;
                 }
               }
+            }).finally(function() {
+               options.templateOptions.disabled = false;
             });
           }
         },
