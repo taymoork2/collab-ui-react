@@ -7,13 +7,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Invite Users",
+    "inviteModalBtn": "Add Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
-    "add": "Invite Users",
+    "add": "Add Users",
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -57,7 +57,7 @@
     "pending": "Invite Pending",
     "all": "All",
     "administrators": "Administrators",
-    "inviteUsers": "Invite Users",
+    "inviteUsers": "Add Users",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -104,7 +104,7 @@
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
-    "onboardUsers": "Invite Users",
+    "onboardUsers": "Add Users",
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
@@ -256,7 +256,8 @@
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner": "Manage My Organization"
+    "launchPartner": "Manage My Organization",
+    "videoTutorial": "Video Tutorial"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -758,7 +759,7 @@
     "name": "Name",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
-    "addUserText": "Invite Users",
+    "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
     "installSharedSpaceText": "Install a Devices into a Shared Space",
     "autoAttendantText": "Configure an Auto Attendant",
@@ -934,17 +935,15 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
-    "csvError": "Export failed."
+    "csvError": "Export failed.",
+    "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
     "title": "Devices",
     "modalTitle": "Activate a New Device",
-    "add": "Activate a New Device",
+    "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
-    "cancel": "Cancel",
-    "delete": "Delete",
     "deleteActivationCode": "Delete Activation Code",
-    "done": "Done",
     "kindHeader": "Type",
     "nameHeader": "Installed in",
     "statusHeader": "Status",
@@ -982,7 +981,9 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
+    "addAnother": "Add Another"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1180,8 +1181,8 @@
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
-        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
+        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "defaultWarning": "Confirm the default schedule"
       }
     },
     "hybridServices": {
@@ -1191,21 +1192,24 @@
     },
     "notifications": {
       "scheduleUpgrade": {
-        "title": "Confirm the Schedule for Automatic Software Upgrades",
-        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
-        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+        "title": "Acknowledge the Scheduled Upgrade",
+        "description": "The clusters for this service have a default time set for a scheduled upgrade",
+        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
       }
     }
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
-    "simple": "Manually invite users",
+    "simple": "Manually add users",
     "manualEntryStep": "Manual",
     "assignServicesStep": "Assign Services",
     "upload": "Bulk upload users using CSV",
     "uploadStep": "Upload CSV",
+    "downloadStep": "Download CSV Template",
+    "downloadDescription": "Use this file to update user list and their entitlements.",
+    "downloadError": "There is a problem downloading the file.",
+    "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
     "uploadPrompt": "Drag and drop a CSV file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
@@ -1229,6 +1233,8 @@
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
+    "tooManyActiveMessageLicenses": "There are more than one \"Spark Message\" license enabled.  Please fix and try again.",
+    "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
@@ -1251,7 +1257,6 @@
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
     "downloadSub": "Download CSV template",
-    "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
@@ -1300,11 +1305,9 @@
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
-    "addUsers": "Invite Users",
+    "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "addUsersSimple": "Invite Users | Simple",
-    "addUsersAdvanced": "Invite Users | Advanced",
     "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
@@ -2025,7 +2028,9 @@
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
-    "internationalDialingSaveError": "International Dialing failed to save."
+    "internationalDialingSaveError": "International Dialing failed to save.",
+    "disableCompanyVoicemailTitle": "Disable Company Voicemail",
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2081,7 +2086,8 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
-    "expires": "This activation code expires",
+    "codeExpires": "This activation code expires",
+    "deviceCodeExpires": "The activation code for this device expires",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -3271,7 +3277,8 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
-    "lastLog": "Last Client Log",
+    "lastLog": "Last Log",
+    "lastClientLog": "Last Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",

@@ -220,6 +220,7 @@
     vm.finishSetup = finishSetup;
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
+    vm.showDefaultFinish = showDefaultFinish;
 
     init();
 
@@ -459,6 +460,10 @@
         }));
         $state.modal.close();
       }
+    }
+
+    function showDefaultFinish() {
+      return !vm.meetingTrial.enabled;
     }
   }
 })();

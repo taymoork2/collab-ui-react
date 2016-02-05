@@ -136,7 +136,7 @@ describe('Partner flow', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
       utils.click(wizard.finishBtn);
       notifications.clearNotifications();

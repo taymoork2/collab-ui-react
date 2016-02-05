@@ -168,11 +168,11 @@ describe('Configuring services per-user', function () {
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  xit('should Manually Invite user', function () {
+  xit('should Manually Add user', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
 
     // Manual import
     utils.click(inviteusers.manualUpload);
@@ -205,7 +205,7 @@ describe('Configuring services per-user', function () {
   xit('should open CSV import dialog', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });
