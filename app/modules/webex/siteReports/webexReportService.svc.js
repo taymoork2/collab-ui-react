@@ -374,6 +374,7 @@ angular.module('WebExReports').service('WebexReportService', [
         viewReady: false,
         hasLoadError: false,
         sessionTicketError: false,
+        cardsSectionId: siteUrl + "-" + "cardsSection",
         siteUrl: siteUrl,
         siteName: siteName,
         infoCardObj: infoCardObj

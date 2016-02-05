@@ -256,7 +256,8 @@
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner": "Manage My Organization"
+    "launchPartner": "Manage My Organization",
+    "videoTutorial": "Video Tutorial"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -623,8 +624,8 @@
     "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
     "downLoadCsv": "CSV",
     "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
-    "downLoadXml": "XML",
-    "downLoadXmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "downLoadHtml": "HTML",
+    "downLoadHtmlDesc": "This file format will yield the ladder diagram that is shown below.",
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
@@ -934,7 +935,8 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
-    "csvError": "Export failed."
+    "csvError": "Export failed.",
+    "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
     "title": "Devices",
@@ -1106,7 +1108,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1159,6 +1161,8 @@
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -2022,7 +2026,9 @@
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
-    "internationalDialingSaveError": "International Dialing failed to save."
+    "internationalDialingSaveError": "International Dialing failed to save.",
+    "disableCompanyVoicemailTitle": "Disable Company Voicemail",
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2836,7 +2842,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3326,8 +3333,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3352,7 +3359,8 @@
     "primary": "Primary",
     "shared": "Shared",
     "sparkStatus": "Spark Status",
-    "searchHelp": "Search Help"
+    "searchHelp": "Search Help",
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3366,7 +3374,7 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
+    "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
@@ -3380,7 +3388,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",
@@ -3414,7 +3425,7 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Show code and instructions",
+      "instructions": "Code and instructions",
       "mail": "Mail code and instructions",
       "unverify": "Remove enforcement",
       "unclaim": "Release domain",
@@ -3422,9 +3433,11 @@
     },
     "instructions": {
       "title": "Code and instructions",
-      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done": "Done"
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

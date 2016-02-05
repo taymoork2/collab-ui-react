@@ -194,12 +194,16 @@
       switch (vm.sayMessageType) {
       case sayMessageType.MENUHEADER:
         {
-          var action = getSayAction(getSayActionHeader(vm.menuEntry));
+          var actionHeader = getSayActionHeader(vm.menuEntry);
+          var action = getSayAction(actionHeader);
           if (action) {
+            // existing say action from the existing header
             vm.actionEntry = action;
           } else {
+            // reset the headers and add new entry with say action
             var headerEntry = createMenuEntry();
             headerEntry.setType(properties.HEADER_TYPE);
+            vm.menuEntry.headers = [];
             vm.menuEntry.headers.push(headerEntry);
             vm.actionEntry = headerEntry.actions[0];
           }

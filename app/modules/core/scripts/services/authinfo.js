@@ -174,6 +174,8 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          ll('setCustomDimension', 0, msg);
         },
         getEmails: function () {
           return authData.emails;
@@ -345,6 +347,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerSalesAdmin: function () {
+          return this.hasRole('PARTNER_SALES_ADMIN');
         },
         isPartnerUser: function () {
           return this.hasRole('PARTNER_USER');

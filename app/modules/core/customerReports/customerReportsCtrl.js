@@ -33,6 +33,7 @@
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
     vm.searchField = "";
     vm.mostActiveUsers = [];
+    vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -305,7 +306,6 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 

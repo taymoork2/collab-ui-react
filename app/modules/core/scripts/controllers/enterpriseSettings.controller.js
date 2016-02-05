@@ -25,9 +25,10 @@
     $scope.setSipUri = function () {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
+        var sparkDomainStr = Config.getSparkDomainCheckUrl();
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
-            displayName = data.orgSettings.sipCloudDomain.split('.')[0];
+            displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             $scope.cloudSipUriField.isDisabled = true;
           } else if (data.verifiedDomains) {
             displayName = data.verifiedDomains[0];
@@ -47,8 +48,8 @@
       var domain = sipField.inputValue;
       sipField.isUrlAvailable = false;
       return SparkDomainManagementService.checkDomainAvailability(domain)
-        .then(function (data, status) {
-          if (data.isDomainAvailable) {
+        .then(function (response) {
+          if (response.data.isDomainAvailable) {
             sipField.isUrlAvailable = true;
             sipField.urlValue = sipField.inputValue;
             sipField.isError = false;
@@ -56,7 +57,7 @@
             sipField.isError = true;
           }
         })
-        .catch(function (data, status) {
+        .catch(function (response) {
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         });
     };
@@ -65,14 +66,14 @@
       var domain = sipField.inputValue;
       if (sipField.isUrlAvailable && !sipField.isDisabled) {
         SparkDomainManagementService.addSipUriDomain(domain)
-          .then(function (data, status) {
-            if (data.isDomainReserved) {
+          .then(function (response) {
+            if (response.data.isDomainReserved) {
               sipField.isError = false;
               sipField.isDisabled = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
             }
           })
-          .catch(function () {
+          .catch(function (response) {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
           });
       }
