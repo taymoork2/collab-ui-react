@@ -157,7 +157,7 @@
           vm.searchingForOrgs = false;
           HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-        }, function (err, status) {
+        }, function (err) {
           vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchResults = null;
           vm.currentSearch.orgSearchFailure = null;

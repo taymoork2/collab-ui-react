@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskHuronService(HelpdeskService, $http, Config, $q, HelpdeskMockData, DeviceService, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService, $translate) {
+  function HelpdeskHuronService(HelpdeskService, $http, $q, HelpdeskMockData, UserServiceCommonV2, HuronConfig, UserEndpointService, SipEndpointService) {
 
     function getDevices(userId, orgId) {
       if (HelpdeskService.useMock()) {
