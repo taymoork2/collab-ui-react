@@ -19,11 +19,11 @@
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
-      'getTrial': getTrial,
-      'editTrial': editTrial,
-      'startTrial': startTrial,
-      'getData': getData,
-      'reset': reset,
+      getTrial: getTrial,
+      editTrial: editTrial,
+      startTrial: startTrial,
+      getData: getData,
+      reset: reset
     };
 
     return service;

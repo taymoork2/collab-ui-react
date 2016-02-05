@@ -890,6 +890,14 @@ angular
             displayName: 'Overview'
           }
         })
+        .state('video', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/video/videoModal.tpl.html'
+            }
+          }
+        })
 
       /*
        devices

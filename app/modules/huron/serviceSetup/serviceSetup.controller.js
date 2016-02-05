@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService) {
+    ExternalNumberService, ModalService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -744,6 +744,24 @@
       });
     }
 
+    function displayDisableVoicemailWarning() {
+      if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
+        return ModalService.open({
+            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+            close: $translate.instant('common.disable'),
+            dismiss: $translate.instant('common.cancel'),
+            type: 'negative'
+          })
+          .result
+          .catch(function () {
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber);
+            return $q.reject();
+          });
+      }
+    }
+
     function initNext() {
       if (vm.form.$invalid) {
         Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
@@ -935,6 +953,7 @@
       // to be ignored after processing this promise chain.
       function saveCompanySite() {
         return $q.when(true)
+          .then(displayDisableVoicemailWarning)
           .then(saveCustomer)
           .then(saveSite)
           .then(saveTimezone)
