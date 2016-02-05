@@ -8,7 +8,7 @@ describe('Squared Invite User and Assign Services User Flow', function () {
     login.login('account-admin', '#/users');
   });
 
-  it('should click on invite users', function () {
+  it('should click on add users', function () {
     utils.click(users.addUsers);
     utils.expectIsDisplayed(users.manageDialog);
     utils.expectIsDisplayed(users.nextButton);
@@ -17,8 +17,8 @@ describe('Squared Invite User and Assign Services User Flow', function () {
     utils.expectIsNotDisplayed(users.addButton);
   });
 
-  describe('Invite users through modal', function () {
-    it('should invite a user', function () {
+  describe('Add users through modal', function () {
+    it('should add a user', function () {
       inviteEmail = utils.randomTestGmail();
 
       utils.click(users.clearButton);
