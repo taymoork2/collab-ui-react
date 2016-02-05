@@ -303,7 +303,7 @@
           function getSessionTicketSuccess(response) {
             $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
-            webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+            webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
             webExXmlApiInfoObj.webexSiteName = obj.getSiteName(siteUrl);
             webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
             webExXmlApiInfoObj.webexAdminSessionTicket = response;

@@ -4,7 +4,7 @@ angular.module('WebExXmlApi')
   .service('WebExXmlApiInfoSvc', [
     function WebExXmlApiInfo() {
       return {
-        xmlServerURL: "",
+        xmlApiUrl: "",
         webexAdminID: "",
         webexSessionTicket: "",
         webexUserId: ""
