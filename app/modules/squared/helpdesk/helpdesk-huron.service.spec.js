@@ -1,5 +1,5 @@
 'use strict';
-fdescribe('HelpdeskHuronService', function () {
+describe('HelpdeskHuronService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var numbersResult = {
