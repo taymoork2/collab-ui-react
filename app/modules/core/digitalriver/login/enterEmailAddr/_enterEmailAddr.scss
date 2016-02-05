@@ -1,11 +1,13 @@
 
-div.dr-left {
-    float: left;
-    clear: both;
-    padding-left: 2rem;
+div.dr-container {
+	display: table;
+	padding-left: 2rem;
 }
 
-div.dr-right {
-    float: left;
-    padding-left: 2rem;
+div.dr-row  {
+	display: table-row;
+}
+
+div.dr-left, div.dr-right {
+	display: table-cell;
 }

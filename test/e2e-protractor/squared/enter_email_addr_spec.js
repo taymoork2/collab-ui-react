@@ -8,7 +8,7 @@ describe('Test the enterEmailAddr page', function () {
   browser.get('#/enter-email-addr');
 
   it('should have the right title', function () {
-    utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML','Enter eMail Addr');
+    utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML', 'Enter eMail Addr');
   });
 
   it('should have the right label', function () {
@@ -20,7 +20,7 @@ describe('Test the enterEmailAddr page', function () {
   });
 
   it('should have a next button', function () {
-    utils.expectAttribute(enterEmailAddrPage.nextButton, 'innerHTML','Next');
+    utils.expectAttribute(enterEmailAddrPage.nextButton, 'innerHTML', 'Next');
   });
 
   it('should not allow an empty email address', function () {

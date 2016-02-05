@@ -9,7 +9,7 @@ describe('Test the createAccount page', function () {
   browser.get('#/create-account?email=' + newEmail);
 
   it('should have the right title', function () {
-    utils.expectAttribute(createAccountPage.h2, 'innerHTML','Create Account');
+    utils.expectAttribute(createAccountPage.h2, 'innerHTML', 'Create Account');
   });
 
   it('should have the right labels', function () {
@@ -25,7 +25,7 @@ describe('Test the createAccount page', function () {
   });
 
   it('should have a next button', function () {
-    utils.expectAttribute(createAccountPage.nextButton, 'innerHTML','Next');
+    utils.expectAttribute(createAccountPage.nextButton, 'innerHTML', 'Next');
   });
 
   it('should not allow mismatched emails', function () {
