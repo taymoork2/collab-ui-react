@@ -1245,23 +1245,6 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function assignHybridServices(entitlements, usersList) {
-        var deferred = $q.defer();
-
-        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
-          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
-        } else {
-          // No hybrid services to assign
-          deferred.resolve();
-        }
-
-        function callback(data) {
-          deferred.resolve();
-        }
-
-        return deferred.promise;
-      }
-
       function entitleUserCallback(data, status, method) {
         $scope.results = {
           resultList: []
@@ -1890,12 +1873,6 @@ angular.module('Core')
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
-
-              // Hybrid Service entitlements must be added after onboarding
-              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
-
-              });
-
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));

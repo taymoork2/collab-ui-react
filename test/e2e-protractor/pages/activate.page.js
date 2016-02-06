@@ -67,9 +67,7 @@ var ActivatePage = function () {
       },
       body: JSON.stringify(obj.body)
     };
-    //console.log( 'Sending request: ' + options.url + '\n' + options.headers['User-Agent'] + '\n' + options.headers['Content-Type'] + '\n' + options.headers.Authorization + '\n' + options.body );
     return utils.sendRequest(options).then(function (data) {
-      //console.log('Response is ' + data );
       var resp = JSON.parse(data);
       obj.encryptedQueryParam = resp.eqp;
     });
