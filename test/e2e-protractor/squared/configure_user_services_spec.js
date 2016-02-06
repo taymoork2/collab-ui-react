@@ -52,16 +52,13 @@ describe('Configuring services per-user', function () {
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
-  });
 
-  it('Should activate user', function() {
     activate.setup(null, testUser);
-  });
 
-  it('should confirm hybrid services case', function () {
     utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.click(users.closeSidePanel);
   });
 
   it('should confirm hybrid services ADDITIVE case', function () {
@@ -128,41 +125,49 @@ describe('Configuring services per-user', function () {
 
   //////////////////////////////////////
   // 25 party messaging tests
+  //
   it('should add a user with 25 party meetings checked', function () {
     users.createUser(testUser);
     utils.click(users.paidMtgCheckbox);
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
-  });
 
-  it('Should activate user', function() {
     activate.setup(null, testUser);
-  });
 
-  it('should verify that 25 party meetigns is enabled', function () {
     utils.clickUser(testUser);
-    //$TODO - verify
+    utils.expectIsDisplayed(users.meetingService);
+    utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
 
-  xit('should add user with NO hybrid services selected', function () {
+  //////////////////////////////////////
+  // NO hybrid services
+  //
+  it('should add user with NO hybrid services selected', function () {
     users.createUser(testUser);
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    activate.setup(null, testUser);
 
+    utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
 
-  xit('should add user with ALL hybrid services selected', function () {
+  ///////////////////////////////////////////
+  // ALL hybrid services
+  //
+  it('should add user with ALL hybrid services selected', function () {
     users.createUser(testUser);
+
+    // Need a license for valid HS services
+    utils.click(users.paidMsgCheckbox);
 
     // Select hybrid services
     utils.click(users.hybridServices_Cal);
@@ -172,8 +177,10 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    activate.setup(null, testUser);
 
+    utils.searchAndClick(testUser);
+    utils.expectIsDisplayed(users.messageService);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -183,7 +190,7 @@ describe('Configuring services per-user', function () {
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  xit('should Manually Invite user', function () {
+  it('should Manually Invite user', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
@@ -200,14 +207,18 @@ describe('Configuring services per-user', function () {
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
 
+    // Need a license for valid HS services
+    utils.click(users.paidMsgCheckbox);
+
     // Enable a hybrid service
     utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
-  });
 
-  xit('should confirm hybrid services set', function () {
+    activate.setup(null, testUser);
+
     utils.searchAndClick(testUser);
+    utils.expectIsDisplayed(users.messageService);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -217,7 +228,7 @@ describe('Configuring services per-user', function () {
   ///////////////////////////////////////////////////////////////
   // CSV Invite with hybrid services (onboard-csv_spec.js uses non-hybrid-service compatible account)
   //
-  xit('should open CSV import dialog', function () {
+  it('should open CSV import dialog', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
@@ -225,7 +236,7 @@ describe('Configuring services per-user', function () {
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to the upload csv section', function () {
+  it('should land to the upload csv section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
     bImportUsers = true; // Optimize whether we clean these users up
@@ -233,23 +244,27 @@ describe('Configuring services per-user', function () {
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to assign services section', function () {
+  it('should land to assign services section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Assign Services');
+
+    // Need a license for valid HS services
+    utils.click(users.paidMtgCheckbox);
+
     // Select hybrid services
     utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to upload processing page', function () {
+  it('should land to upload processing page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
   }, 60000 * 2);
 
-  xit('should land to upload result page', function () {
+  it('should land to upload result page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result', 60000 * 2);
     utils.click(inviteusers.finishButton);
   }, 60000 * 2 + 5000);
 
-  xit('should find some of the ' + userList.length + ' users created', function () {
+  it('should find some of the ' + userList.length + ' users created', function () {
     var nInd;
     for (i = 0; i < 3; i++) {
       switch (i) {
@@ -263,7 +278,11 @@ describe('Configuring services per-user', function () {
         nInd = userList.length - 1; // last
         break;
       }
+
+      activate.setup(null, userList[nInd]);
+
       utils.searchAndClick(userList[nInd]);
+      utils.expectIsDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);
