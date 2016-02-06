@@ -6,26 +6,30 @@
   .ui-grid-header-cell:first-child  {
    border-right: 0px;
   }
-}
 
-
-.export-users i {
-  color: $gray;
-  font-size: 1.5rem;
-  padding-right: .5rem;
-  margin-right: .5rem;
-  cursor: pointer;
-  &:hover {
-    color: $brand-primary;
-    text-decoration: none;
+  .export-users {
+    .icon-content-share {
+      color: $gray;
+      font-size: 1.5rem;
+      padding-left: .5rem;
+      margin-left: .5rem;
+      padding-right: .5rem;
+      margin-right: .5rem;
+      margin-top: 1rem;
+      cursor: pointer;
+      &:hover {
+        color: $brand-primary;
+        text-decoration: none;
+      }
+    }
   }
-}
 
-.too-many-users {
-  position: absolute;
-  top: 150px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: $gray-darker;
+  .too-many-users {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: $gray-darker;
+  }
 }

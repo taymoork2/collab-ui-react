@@ -1,5 +1,4 @@
 <div class="users-upload-csv">
-  <p translate="firstTimeWizard.uploadInstruction"></p>
   <div ng-if="!model.file" class="file-drop" cr-file-drop file="model.file" file-name="model.fileName" file-max-size="10" file-max-size-error="onFileSizeError()" file-type="text/csv, application/csv, application/vnd.ms-excel" file-suffix="csv" file-type-error="onFileTypeError()" >
     <div class="file-drop-content">
       <div class="icon icon-circle-attachment center"></div>
@@ -22,10 +21,4 @@
       <span class="sr-only" translate="common.close"></span>
     </button>
   </div>
-
-  <div class="download-link">
-    <a href="modules/core/setupWizard/sample.csv" download translate="firstTimeWizard.downloadSub"></a>
-  </div>
-
 </div>
-

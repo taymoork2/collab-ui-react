@@ -24,7 +24,7 @@
       <thead>
         <tr>
           <td class="col-md-4 bold pointer" translate="mediaFusion.connectors.hosts"></td>
-          <td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td>
+          <!--td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td-->
           <td></td>
         </tr>
       </thead>
@@ -38,7 +38,7 @@
 
             <span class="feature-name">{{ecp.hosts[0].host_name}}</span>
 
-            <span class="feature-name">{{ecp.properties["mf.role"]}}</span>
+            <!--span class="feature-name">{{ecp.properties["mf.role"]}}</span-->
 
             {{cluster.needs_attention}}{{cluster.alarms_present}}
             <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count > 0" class="yellow">

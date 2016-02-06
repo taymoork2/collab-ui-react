@@ -5,30 +5,32 @@
 
 var SiteReportsPage = function () {
 
+  this.t31Info = {
+    siteUrl: 't30citestprov6.webex.com',
+    testAdminUsername: 't31r1-regression-adm@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  this.t30Info = {
+    siteUrl: 'cisjsite002.webex.com',
+    testAdminUsername: 'cisjsite002@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   this.testInfo = {
     describeCount: 0,
-    siteUrl: null,
-    siteType: null,
-    describeText: null,
-    signInText: null,
+    testType: null,
+    describeText: null
   };
-
-  this.testAdmin1 = {
-    username: 'sjsite14@mailinator.com',
-    password: 'Cisco!23',
-  };
-
-  this.testAdmin2 = {
-    username: 'cisjsite002@mailinator.com',
-    password: 'Cisco!23',
-  }
-
-  this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
 
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
   this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
+  this.conferencing = element(by.css('a[href="#site-list"]'));
+  this.T31ReportsCog = element(by.id(this.t31Info.siteUrl + "_webex-site-reports"));
+  this.T30ReportsCog = element(by.id(this.t30Info.siteUrl + "_webex-site-reports"));
   this.webexReportsLink = element(by.css('a[href="#/reports/webex"]'));
+  this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
   this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
   this.webexCommonInfoCardMeetingInProgress = element(by.id('infoCardMeetingInProgress'));
@@ -38,6 +40,8 @@ var SiteReportsPage = function () {
   this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));
 
   this.reportEngagementId = element(by.id('engagementReports'));
+  this.t31CardsSectionId = element(by.id(this.t31Info.siteUrl + "-cardsSection"));
+  this.t30CardsSectionId = element(by.id(this.t30Info.siteUrl + "-cardsSection"));
   this.webexCommonReportsCardId = element(by.id('common_reports'));
   this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
   this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));

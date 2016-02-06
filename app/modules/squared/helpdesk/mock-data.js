@@ -513,6 +513,38 @@
       },
       "e164Mask": null
     }],
+    huronDevicesForNumber: [{
+      "endpoint": {
+        "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
+        "name": "SEP5ABCD7DB89F6"
+      },
+      "e164Mask": null,
+      "uuid": "4f7f009b-ef6a-4115-bbc0-00852cafcd2f"
+    }, {
+      "endpoint": {
+        "uuid": "69f85c9c-4581-4fb0-80ee-b4af193701f0",
+        "name": "SEP1CDEA7DA89D3"
+      },
+      "e164Mask": "+4797100288",
+      "uuid": "1df077dc-8983-42a1-9e47-5d58ee711aae"
+    }],
+    huronNumberSearch: {
+      "numbers": [{
+        "uuid": "4edbff96-da50-40f1-bca8-5b15486a6be9",
+        "number": "+14084744527",
+        "type": "external",
+        "directoryNumber": {
+          "uuid": "26cd541b-0978-4677-a237-7b3f2a514a1a"
+        }
+      }, {
+        "uuid": "f5897251-4c58-43d5-8527-16d36543504a",
+        "number": "2027",
+        "type": "internal",
+        "directoryNumber": {
+          "uuid": "a85a7321-cdf6-4cd0-be3c-611da264c8ef"
+        }
+      }]
+    },
     logs: {
       search: [{
         filename: "logFile1",

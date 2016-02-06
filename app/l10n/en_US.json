@@ -7,13 +7,13 @@
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Invite Users",
+    "inviteModalBtn": "Add Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
-    "add": "Invite Users",
+    "add": "Add Users",
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -57,7 +57,7 @@
     "pending": "Invite Pending",
     "all": "All",
     "administrators": "Administrators",
-    "inviteUsers": "Invite Users",
+    "inviteUsers": "Add Users",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -104,7 +104,7 @@
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
-    "onboardUsers": "Invite Users",
+    "onboardUsers": "Add Users",
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
@@ -256,7 +256,8 @@
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner": "Manage My Organization"
+    "launchPartner": "Manage My Organization",
+    "videoTutorial": "Video Tutorial"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -623,8 +624,8 @@
     "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
     "downLoadCsv": "CSV",
     "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
-    "downLoadXml": "XML",
-    "downLoadXmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "downLoadHtml": "HTML",
+    "downLoadHtmlDesc": "This file format will yield the ladder diagram that is shown below.",
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
@@ -758,7 +759,7 @@
     "name": "Name",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
-    "addUserText": "Invite Users",
+    "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
     "installSharedSpaceText": "Install a Devices into a Shared Space",
     "autoAttendantText": "Configure an Auto Attendant",
@@ -934,17 +935,15 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
-    "csvError": "Export failed."
+    "csvError": "Export failed.",
+    "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
     "title": "Devices",
     "modalTitle": "Activate a New Device",
-    "add": "Activate a New Device",
+    "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
-    "cancel": "Cancel",
-    "delete": "Delete",
     "deleteActivationCode": "Delete Activation Code",
-    "done": "Done",
     "kindHeader": "Type",
     "nameHeader": "Installed in",
     "statusHeader": "Status",
@@ -982,7 +981,9 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room systems license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended.",
+    "useThisCode": "Use this code to activate <b>{{deviceName}}</b> during setup:",
+    "addAnother": "Add Another"
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1107,7 +1108,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1160,6 +1161,8 @@
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -1178,27 +1181,30 @@
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
-        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
+        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "defaultWarning": "Confirm the default schedule"
       }
     },
     "notifications": {
       "scheduleUpgrade": {
-        "title": "Confirm the Schedule for Automatic Software Upgrades",
-        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
-        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+        "title": "Acknowledge the Scheduled Upgrade",
+        "description": "The clusters for this service have a default time set for a scheduled upgrade",
+        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
       }
     }
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
-    "simple": "Manually invite users",
+    "simple": "Manually add users",
     "manualEntryStep": "Manual",
     "assignServicesStep": "Assign Services",
     "upload": "Bulk upload users using CSV",
     "uploadStep": "Upload CSV",
+    "downloadStep": "Download CSV Template",
+    "downloadDescription": "Use this file to update user list and their entitlements.",
+    "downloadError": "There is a problem downloading the file.",
+    "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
     "uploadPrompt": "Drag and drop a CSV file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
@@ -1222,6 +1228,8 @@
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
+    "tooManyActiveMessageLicenses": "There are more than one \"Spark Message\" license enabled.  Please fix and try again.",
+    "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
@@ -1244,7 +1252,6 @@
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
     "downloadSub": "Download CSV template",
-    "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
@@ -1280,6 +1287,8 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
+    "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
@@ -1291,11 +1300,9 @@
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
-    "addUsers": "Invite Users",
+    "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "addUsersSimple": "Invite Users | Simple",
-    "addUsersAdvanced": "Invite Users | Advanced",
     "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
@@ -1476,6 +1483,7 @@
     "phoneMenuErrorRouteToHGTargetMissing": "Key {{key}} is missing a Route To Hunt Group target.",
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
+    "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1565,6 +1573,7 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
+    "selectUserPlaceHolder": "Enter full name",
     "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
@@ -1889,7 +1898,14 @@
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
-      "partner": "Partner"
+      "partner": "Partner",
+      "name": "Name",
+      "phone": "Phone",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2014,7 +2030,9 @@
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
-    "internationalDialingSaveError": "International Dialing failed to save."
+    "internationalDialingSaveError": "International Dialing failed to save.",
+    "disableCompanyVoicemailTitle": "Disable Company Voicemail",
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2070,7 +2088,8 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
-    "expires": "This activation code expires",
+    "codeExpires": "This activation code expires",
+    "deviceCodeExpires": "The activation code for this device expires",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -2827,7 +2846,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3260,6 +3280,7 @@
       "meetings": "WebEx Meetings (WebEx 11)"
     },
     "lastLog": "Last Log",
+    "lastClientLog": "Last Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -3317,8 +3338,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3343,7 +3364,8 @@
     "primary": "Primary",
     "shared": "Shared",
     "sparkStatus": "Spark Status",
-    "searchHelp": "Search Help"
+    "searchHelp": "Search Help",
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3357,7 +3379,7 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
+    "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
@@ -3371,7 +3393,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",
@@ -3405,7 +3430,7 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Show code and instructions",
+      "instructions": "Code and instructions",
       "mail": "Mail code and instructions",
       "unverify": "Remove enforcement",
       "unclaim": "Release domain",
@@ -3413,9 +3438,11 @@
     },
     "instructions": {
       "title": "Code and instructions",
-      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done": "Done"
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

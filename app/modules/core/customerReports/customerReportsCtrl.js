@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -33,6 +33,7 @@
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
     vm.searchField = "";
     vm.mostActiveUsers = [];
+    vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -305,7 +306,6 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 
@@ -530,7 +530,7 @@
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);

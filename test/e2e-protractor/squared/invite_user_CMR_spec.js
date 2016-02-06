@@ -20,7 +20,9 @@ describe('CMR shown under Enterprise Edition', function () {
     });
   });
 
-  describe('should show CMR under EE', function () {
+  // This org does not have EE license, someone from the WebEx team needs to take a look.
+  // Comment out this test for now
+  xdescribe('should show CMR under EE', function () {
     it('if there is EE should show CMR option', function () {
       utils.sendKeys(users.addUsersField, utils.randomTestGmail());
       utils.sendKeys(users.addUsersField, protractor.Key.ENTER);

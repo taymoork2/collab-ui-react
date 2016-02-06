@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -253,6 +253,9 @@
           vm.isNextDisabled = true;
         } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
           $rootScope.$broadcast('wizard-set-sso-event');
+          vm.nextText = $translate.instant('common.save');
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
+          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
           updateStep();
         } else {
           updateStep();

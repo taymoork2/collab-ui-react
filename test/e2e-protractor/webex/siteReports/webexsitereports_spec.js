@@ -1,51 +1,69 @@
 'use strict';
 
 sitereports.testInfo.describeCount = 0;
-while (1 >= sitesettings.testInfo.describeCount) {
-  switch (sitesettings.testInfo.describeCount) {
+while (0 >= sitereports.testInfo.describeCount) {
+  switch (sitereports.testInfo.describeCount) {
   case 1:
-    sitereports.testInfo.siteType = 'T30';
-    sitereports.testInfo.siteUrl = "cisjsite002.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T30 site ' + sitesettings.siteUrl;
-    sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin2.username + ' for T30 site config test';
+    sitereports.testInfo.testType = 'T30';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t30Info.siteUrl;
     break;
 
   default:
-    sitereports.testInfo.siteType = 'T31';
-    sitereports.testInfo.siteUrl = "sjsite14.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T31 site ' + sitesettings.siteUrl;
-    sitereports.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin1.username + ' for T31 site config test';
+    sitereports.testInfo.testType = 'T31';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t31Info.siteUrl;
   }
 
-  xdescribe(sitereports.testInfo.describeText, function () {
+  describe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
 
-    if (sitereports.testInfo.siteType == "T31") {
-      it(sitereports.testInfo.signInText, function () {
-        login.loginThroughGui(sitereports.testAdmin1.username, sitereports.testAdmin1.password);
+    if (sitereports.testInfo.testType == "T31") {
+      it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site config test', function () {
+        login.loginThroughGui(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
       });
     } else {
-      it(sitereports.testInfo.signInText, function () {
-        login.loginThroughGui(sitereports.testAdmin2.username, sitereports.testAdmin2.password);
+      it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site config test', function () {
+        login.loginThroughGui(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
+      });
+    }
+
+    it('should navigate to webex site list', function () {
+      navigation.clickServicesTab();
+      utils.click(sitereports.conferencing);
+    });
+
+    if (sitereports.testInfo.testType == "T31") {
+      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T31ReportsCog);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t31CardsSectionId);
+      });
+    } else {
+      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T30ReportsCog);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t30CardsSectionId);
       });
     }
 
     it('should navigate to reports engagement', function () {
       navigation.clickReports();
-      utils.wait(sitereports.webexReportsLink);
     });
 
-    it('should navigate to webex reports index', function () {
-      utils.click(sitereports.webexReportsLink);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('should navigate to webex reports index', function () {
-      utils.click(sitereports.webexReportsLink);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
+    if (sitereports.testInfo.testType == "T31") {
+      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
+        utils.click(sitereports.webexReportsLink);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t31CardsSectionId);
+      });
+    } else {
+      it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
+        utils.click(sitereports.webexReportsLink);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t30CardsSectionId);
+      });
+    }
 
     it('should not see last sync text or link', function () {
       expect(sitereports.lastSyncElement.isPresent()).toBeFalsy();
@@ -120,5 +138,5 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
   });
 
-  ++sitesettings.testInfo.describeCount;
+  ++sitereports.testInfo.describeCount;
 }

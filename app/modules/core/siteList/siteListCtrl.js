@@ -8,7 +8,7 @@ angular.module('Core')
     '$log',
     'FeatureToggleService',
     'Userservice',
-    'WebExUtilsFact',
+    'WebExApiGatewayService',
     function (
       $translate,
       Authinfo,
@@ -16,7 +16,7 @@ angular.module('Core')
       $log,
       FeatureToggleService,
       Userservice,
-      WebExUtilsFact
+      WebExApiGatewayService
     ) {
       var funcName = "siteListCtrl()";
       var logMsg = "";
@@ -173,7 +173,7 @@ angular.module('Core')
       if (adminUserSupportCSV) {
         vm.gridOptions.columnDefs.push({
           field: 'siteCSV',
-          displayName: 'CSV',
+          displayName: $translate.instant('siteList.siteCsv'),
           cellTemplate: siteCSVColumn,
           sortable: false
         });
@@ -210,7 +210,7 @@ angular.module('Core')
             if (adminUserSupportCSV) {
               var columnObj = {
                 field: 'siteCSV',
-                displayName: 'CSV',
+                displayName: $translate.instant('siteList.siteCsv'),
                 cellTemplate: siteCSVColumn,
                 sortable: false
               };
@@ -275,7 +275,7 @@ angular.module('Core')
             siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
             siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
 
-            WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
+            WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {
                 var funcName = "isSiteSupportsIframeSuccess()";
                 var logMsg = "";
@@ -317,7 +317,7 @@ angular.module('Core')
                   "response=" + JSON.stringify(response);
                 $log.log(logMsg);
               } // isSiteSupportsIframeError()
-            ); // WebExUtilsFact.isSiteSupportsIframe().then
+            ); // WebExApiGatewayService.isSiteSupportsIframe().then
           } // processGrid()
         ); // vm.gridData.forEach()
       } // initGridColumns()

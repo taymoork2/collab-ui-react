@@ -101,6 +101,13 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
     });
 
+    it('huronId', function () {
+      var arr = [{
+        url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6'
+      }];
+      expect(converter.convertHuronDevices(arr)[0].huronId).toBe('f0b72ba5-0121-452b-a0c8-f6680f660de6');
+    });
+
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {

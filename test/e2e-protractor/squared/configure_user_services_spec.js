@@ -231,7 +231,7 @@ describe('Configuring services per-user', function () {
   it('should open CSV import dialog', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });

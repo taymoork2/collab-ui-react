@@ -136,7 +136,7 @@ describe('Partner flow', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
       utils.click(wizard.finishBtn);
       notifications.clearNotifications();
@@ -164,11 +164,14 @@ describe('Partner flow', function () {
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
-
-        browser.close();
-        browser.switchTo().window(appWindow);
       });
     });
+
+    it('Should close customer portal', function () {
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
+
   }, LONG_TIMEOUT);
 
   afterAll(function () {
