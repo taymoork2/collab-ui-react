@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config, $log) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -84,7 +84,6 @@
     $scope._saveDomain = function () {
       var domain = sipField.inputValue;
       if (sipField.isUrlAvailable && sipField.isConfirmed) {
-        $log.log('here we are trying to save');
         SparkDomainManagementService.addSipUriDomain(domain)
           .then(function (response) {
             if (response.data.isDomainReserved) {
@@ -111,7 +110,6 @@
     };
 
     $scope.$watch('cloudSipUriField.inputValue', function (newValue, oldValue) {
-      $log.log('Inside inputOnChange function');
       if (newValue !== sipField.urlValue) {
         sipField.isUrlAvailable = false;
         sipField.isError = false;
