@@ -216,7 +216,7 @@
           if (data.data.length > 0) {
             //check if data already exists for this entityId
             var newEntityId = checkNewEntityId(data);
-            if (newEntityId.startsWith('http')) {
+            if (_.startsWith(newEntityId, 'http')) {
               for (var datum in data.data) {
                 if (data.data[datum].entityId === newEntityId) {
                   metaUrl = data.data[datum].url;
@@ -292,7 +292,7 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
-          if (newEntityId.startsWith('http')) {
+          if (_.startsWith(newEntityId, 'http')) {
             for (var datum in data.data) {
               if (data.data[datum].entityId === newEntityId) {
                 metaUrl = data.data[datum].url;
