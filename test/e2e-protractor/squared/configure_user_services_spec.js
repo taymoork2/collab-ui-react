@@ -190,11 +190,11 @@ describe('Configuring services per-user', function () {
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  it('should Manually Invite user', function () {
+  it('should Manually Add user', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
 
     // Manual import
     utils.click(inviteusers.manualUpload);
@@ -232,12 +232,12 @@ describe('Configuring services per-user', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });
 
   it('should land to the upload csv section', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
     bImportUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
@@ -245,8 +245,6 @@ describe('Configuring services per-user', function () {
   });
 
   it('should land to assign services section', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Assign Services');
-
     // Need a license for valid HS services
     utils.click(users.paidMtgCheckbox);
 
@@ -255,12 +253,7 @@ describe('Configuring services per-user', function () {
     utils.click(inviteusers.nextButton);
   });
 
-  it('should land to upload processing page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
-  }, 60000 * 2);
-
-  it('should land to upload result page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result', 60000 * 2);
+  it('should click finish button', function () {
     utils.click(inviteusers.finishButton);
   }, 60000 * 2 + 5000);
 
