@@ -179,9 +179,7 @@
         vm.menuKeyEntry.addAction(action);
       }
 
-      getUsers().then(function () {
-        populateUiModel();
-      });
+      populateUiModel();
 
     }
 
