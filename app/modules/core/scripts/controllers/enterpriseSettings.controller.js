@@ -16,7 +16,11 @@
       inputValue: '',
       isDisabled: false,
       isUrlAvailable: false,
+      isButtonDisabled: false,
+      isLoading: false,
+      isConfirmed: null,
       urlValue: '',
+      domainSuffix: Config.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
@@ -29,7 +33,8 @@
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
             displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
-            $scope.cloudSipUriField.isDisabled = true;
+            sipField.isDisabled = true;
+            sipField.isButtonDisabled = true;
           } else if (data.verifiedDomains) {
             displayName = data.verifiedDomains[0];
           } else if (data.displayName) {
@@ -47,6 +52,9 @@
     $scope.checkSipUriAvailability = function () {
       var domain = sipField.inputValue;
       sipField.isUrlAvailable = false;
+      sipField.isLoading = true;
+      sipField.isButtonDisabled = true;
+      sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
       return SparkDomainManagementService.checkDomainAvailability(domain)
         .then(function (response) {
           if (response.data.isDomainAvailable) {
@@ -55,21 +63,34 @@
             sipField.isError = false;
           } else {
             sipField.isError = true;
+            sipField.isButtonDisabled = false;
           }
+          sipField.isLoading = false;
         })
         .catch(function (response) {
-          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          if (response.status === 400) {
+            if (response.data.message) {
+              sipField.errorMsg = response.data.message;
+              sipField.isError = true;
+            }
+          } else {
+            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          }
+          sipField.isLoading = false;
+          sipField.isButtonDisabled = false;
         });
     };
 
     $scope._saveDomain = function () {
       var domain = sipField.inputValue;
-      if (sipField.isUrlAvailable && !sipField.isDisabled) {
+      if (sipField.isUrlAvailable && sipField.isConfirmed) {
+        $log.log('here we are trying to save');
         SparkDomainManagementService.addSipUriDomain(domain)
           .then(function (response) {
             if (response.data.isDomainReserved) {
               sipField.isError = false;
               sipField.isDisabled = true;
+              sipField.isButtonDisabled = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
             }
           })
@@ -89,12 +110,15 @@
       return sipField.isError;
     };
 
-    $scope.inputOnChange = function (newValue, oldValue) {
+    $scope.$watch('cloudSipUriField.inputValue', function (newValue, oldValue) {
+      $log.log('Inside inputOnChange function');
       if (newValue !== sipField.urlValue) {
         sipField.isUrlAvailable = false;
         sipField.isError = false;
+        sipField.isButtonDisabled = false;
+        sipField.isConfirmed = false;
       }
-    };
+    });
 
     $scope.options = {
       configureSSO: 1,
