@@ -42,7 +42,7 @@
       translate="common.back">
     </button>
     <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-      loading="trial.startTrialButtonLoad || meetingTrial.validatingUrl"
+      loading="trial.startTrialButtonLoad || trial.saveUpdateButtonLoad || meetingTrial.validatingUrl"
       ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
         <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>
