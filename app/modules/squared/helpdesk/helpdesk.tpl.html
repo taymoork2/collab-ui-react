@@ -5,18 +5,18 @@
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
         <button cs-dropdown-toggle class="btn--user dropdown-toggle" tabindex="0">
-          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskCtrl.overallSparkStatus]">
+          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
             <i class="icon icon-circle"></i>
           </div>
         </button>
         <div cs-dropdown-menu class="helpdesk-spark-status-dropdown-menu" role="menu">
           <div class="header" >
             <b translate="helpdesk.sparkStatus"></b>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a ng-href="{{helpdeskCtrl.statusPageUrl}}" target="_blank">{{helpdeskCtrl.statusPageUrl}}</a>
+            <a ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">{{helpdeskHeaderCtrl.statusPageUrl}}</a>
           </div>
           <div class="content">
-            <div ng-repeat="health in helpdeskCtrl.healthMetrics">
-              <div ng-href="{{helpdeskCtrl.statusPageUrl}}" target="_blank">
+            <div ng-repeat="health in helpdeskHeaderCtrl.healthMetrics">
+              <div ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">
                 <div id="{{health.name}}" ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[health.status]">
                   <i class="fa fa-circle"></i>&nbsp;&nbsp;
                   {{health.name}}
@@ -27,15 +27,15 @@
         </div>
       </div>
       <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user dropdown-toggle helpdesk-history-button" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
+        <button cs-dropdown-toggle class="btn--user dropdown-toggle helpdesk-history-button" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
           <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">
-          <li ng-if="helpdeskCtrl.searchHistory.length <= 0">
+          <li ng-if="helpdeskHeaderCtrl.searchHistory.length <= 0">
 	          <strong>{{'helpdesk.history.nohistory' | translate}}</strong>
           </li>
-          <li ng-repeat="search in helpdeskCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
-            <div class="search-result" ng-click="helpdeskCtrl.loadSearch(search)">
+          <li ng-repeat="search in helpdeskHeaderCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
+            <div class="search-result" ng-click="helpdeskHeaderCtrl.loadSearch(search)">
                 <strong>{{search.searchString}}</strong>
               <div ng-if="search.userSearchResults.length + search.orgSearchResults.length + search.deviceSearchResults.length === 1">
                 1 {{'helpdesk.history.singlematch' | translate}}
@@ -45,8 +45,8 @@
               </div>
             </div>
           </li>
-          <li ng-if="helpdeskCtrl.searchHistory.length > 0">
-	        <div ng-click="helpdeskCtrl.clearSearchHistory()">
+          <li ng-if="helpdeskHeaderCtrl.searchHistory.length > 0">
+	        <div ng-click="helpdeskHeaderCtrl.clearSearchHistory()">
 	         <span class="clear-history">{{'helpdesk.history.clear' | translate}}</span>
 	        </div>
           </li>

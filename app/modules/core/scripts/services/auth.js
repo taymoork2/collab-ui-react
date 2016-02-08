@@ -151,20 +151,22 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         });
     };
 
-    getAuthData().then(function (authData) {
-      Authinfo.initialize(authData);
-      if (Authinfo.isAdmin()) {
-        auth.getAccount(Authinfo.getOrgId())
-          .success(function (data, status) {
-            Authinfo.updateAccountInfo(data, status);
-            Authinfo.initializeTabs();
-          })
-          .finally(authDeferred.resolve);
-      } else {
-        Authinfo.initializeTabs();
-        authDeferred.resolve();
-      }
-    });
+    getAuthData()
+      .then(function (authData) {
+        Authinfo.initialize(authData);
+        if (Authinfo.isAdmin()) {
+          auth.getAccount(Authinfo.getOrgId())
+            .success(function (data, status) {
+              Authinfo.updateAccountInfo(data, status);
+              Authinfo.initializeTabs();
+            })
+            .finally(authDeferred.resolve);
+        } else {
+          Authinfo.initializeTabs();
+          authDeferred.resolve();
+        }
+      })
+      .catch(authDeferred.reject);
 
     return authDeferred.promise;
   };

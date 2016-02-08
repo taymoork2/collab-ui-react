@@ -106,7 +106,7 @@
           webexSiteName,
           webexAdminSessionTicket
         ) {
-          webExXmlApiInfo.xmlServerURL = "https://" + webexSiteUrl + "/WBXService/XMLService";
+          webExXmlApiInfo.xmlApiUrl = "https://" + webexSiteUrl + "/WBXService/XMLService";
           webExXmlApiInfo.webexSiteName = webexSiteName;
           webExXmlApiInfo.webexAdminID = Authinfo.getPrimaryEmail();
           webExXmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;

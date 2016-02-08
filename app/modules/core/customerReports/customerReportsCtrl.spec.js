@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExUtilsFact, Userservice;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
@@ -114,7 +114,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         initReportsObject: function (input) {}
       };
 
-      WebExUtilsFact = {
+      WebExApiGatewayService = {
         isSiteSupportsIframe: function (url) {
           var defer = $q.defer();
           defer.resolve({
@@ -169,7 +169,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         DummyCustomerReportService: DummyCustomerReportService,
         CustomerGraphService: CustomerGraphService,
         WebexReportService: WebexReportService,
-        WebExUtilsFact: WebExUtilsFact,
+        WebExApiGatewayService: WebExApiGatewayService,
         Userservice: Userservice
       });
       $scope.$apply();

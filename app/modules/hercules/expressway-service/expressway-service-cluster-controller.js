@@ -2,79 +2,112 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
+  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService, $timeout) {
     var vm = this;
     vm.state = $state;
-    vm.clusterId = $stateParams.cluster.id;
+    vm.clusterId = $stateParams.clusterId;
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
-
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-    };
-
-    vm.alarms2hosts = _.memoize(function () {
-      var alarms = {};
-
-      _.forEach(vm.selectedService().connectors, function (conn) {
-        _.forEach(conn.alarms, function (alarm) {
-          if (!alarms[alarm.id]) {
-            alarms[alarm.id] = {
-              alarm: alarm,
-              hosts: []
-            };
-          }
-          alarms[alarm.id].hosts.push(conn.host);
-        });
-      });
-      var mappedAlarms = _.toArray(alarms);
-      return mappedAlarms;
-    });
-
-    //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
-    vm.serviceNotInstalled = function () {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
+    var wasUpgrading = false;
+    var promise;
+    $scope.$watch(function () {
+      return ClusterService.getClustersById(vm.clusterId);
+    }, function (newValue, oldValue) {
+      vm.cluster = newValue;
+      // for shorter 'variables' in the HTML
+      vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
+      var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
+      vm.softwareUpgrade = {
+        provisionedVersion: provisioning.provisionedVersion,
+        availableVersion: provisioning.availableVersion,
+        isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        numberOfHosts: _.size(vm.clusterAggregates.hosts),
+        isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
+      };
+
+      if (vm.softwareUpgrade.isUpgrading) {
+        vm.fakeUpgrade = false;
+        var pendingHosts = _.chain(vm.clusterAggregates.hosts)
+          .filter('upgradeState', 'pending')
+          .value();
+        vm.upgradeDetails = {
+          numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
+          upgradingHostname: findUpgradingHostname(vm.clusterAggregates.hosts)
+        };
+      }
+
+      // If the upgrade is finished, display the success status during 2s
+      vm.upgradeJustFinished = wasUpgrading && !vm.softwareUpgrade.isUpgrading;
+      if (vm.upgradeJustFinished) {
+        promise = $timeout(function () {
+          vm.showUpgradeProgress = false;
+        }, 2000);
+      }
+      vm.showUpgradeProgress = vm.fakeUpgrade || vm.softwareUpgrade.isUpgrading || vm.upgradeJustFinished;
+
+      wasUpgrading = vm.softwareUpgrade.isUpgrading || vm.fakeUpgrade;
+    }, true);
 
     vm.upgrade = function () {
       $modal.open({
-        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
+        templateUrl: 'modules/hercules/expressway-service/software-upgrade-dialog.html',
         controller: SoftwareUpgradeController,
-        controllerAs: "softwareUpgrade",
+        controllerAs: 'softwareUpgradeCtrl',
         resolve: {
           serviceId: function () {
             return vm.serviceId;
+          },
+          cluster: function () {
+            return vm.cluster;
+          },
+          softwareUpgrade: function () {
+            return vm.softwareUpgrade;
           }
         }
       }).result.then(function () {
         ClusterService
           .upgradeSoftware(vm.clusterId, vm.serviceType)
-          .then(function () {}, XhrNotificationService.notify);
+          .then(function () {
+            vm.fakeUpgrade = vm.showUpgradeProgress = true;
+          }, XhrNotificationService.notify);
+      });
+
+      $scope.$on('$destroy', function () {
+        $timeout.cancel(promise);
       });
     };
 
-    /* @ngInject */
-    function SoftwareUpgradeController(serviceId, $translate, $modalInstance) {
-      var modalVm = this;
-      modalVm.newVersion = vm.selectedService().not_approved_package.version;
-      modalVm.oldVersion = vm.selectedService().connectors[0].version;
-      modalVm.serviceId = serviceId;
-      modalVm.serviceName = $translate.instant('hercules.serviceNames.' + modalVm.serviceId);
-      modalVm.ok = function () {
-        $modalInstance.close();
-      };
-      modalVm.cancel = function () {
-        $modalInstance.dismiss();
-      };
-      modalVm.clusterName = vm.cluster.name;
+    function findUpgradingHostname(hostnames) {
+      var upgrading = _.chain(vm.clusterAggregates.hosts)
+        .find('upgradeState', 'upgrading')
+        .value();
+      // if we are in bad luck we may have none upgrading, just pending
+      if (!upgrading) {
+        upgrading = _.chain(vm.clusterAggregates.hosts)
+          .find('upgradeState', 'pending')
+          .value();
+      }
+      return upgrading.hostname;
     }
+  }
+
+  /* @ngInject */
+  function SoftwareUpgradeController($translate, $modalInstance, serviceId, softwareUpgrade, cluster) {
+    var vm = this;
+    vm.provisionedVersion = softwareUpgrade.provisionedVersion;
+    vm.availableVersion = softwareUpgrade.availableVersion;
+    vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
+    vm.clusterName = cluster.name;
+
+    vm.ok = function () {
+      $modalInstance.close();
+    };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
   }
 
   angular

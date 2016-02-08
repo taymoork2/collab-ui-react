@@ -51,10 +51,21 @@ angular
           authenticate: false
         })
         .state('unauthorized', {
-          url: '/unauthorized',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/unauthorized.html',
+              templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
+            }
+          },
+          authenticate: false
+        })
+        .state('login-error', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -63,7 +74,9 @@ angular
           url: '/404',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/404.html',
+              templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -890,6 +903,14 @@ angular
             displayName: 'Overview'
           }
         })
+        .state('video', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/video/videoModal.tpl.html'
+            }
+          }
+        })
 
       /*
        devices
@@ -1128,8 +1149,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskController',
-              controllerAs: 'helpdeskCtrl',
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1144,7 +1165,8 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          abstract: true,
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
           parent: 'helpdesk-main'
         })
         .state('helpdesk.search', {
@@ -1680,8 +1702,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: undefined,
-            serviceType: undefined
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details.cluster-settings', {
