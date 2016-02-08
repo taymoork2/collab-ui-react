@@ -2,6 +2,8 @@
 
 var LoginPage = function () {
 
+  var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
+
   this.setLoginUsername = function (username) {
     browser.driver.findElement(by.id('IDToken1')).sendKeys(username);
   };
@@ -80,7 +82,7 @@ var LoginPage = function () {
       navigation.expectDriverCurrentUrl('/login').then(function () {
         browser.executeScript("localStorage.accessToken='" + bearer + "'");
         browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
+        utils.expectIsDisplayed(unauthorizedTitle);
       });
     });
     return browser.wait(function () {
