@@ -2761,7 +2761,9 @@
     "orgSettingsSuccess": "orgSettings updated successfully for organization",
     "orgSettingsError": "update orgSettings failed for organization",
     "orgSettingsForPartnerSuccess": "orgSettings updated successfully for partner and his managedOrgs",
-    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs"
+    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs",
+    "alwaysProvisionWithLatest": "Always provision with latest version",
+    "webexClientVersion": "Webex Client Version"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",

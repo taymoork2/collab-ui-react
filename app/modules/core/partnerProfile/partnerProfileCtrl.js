@@ -32,6 +32,11 @@ angular.module('Core')
         }
       };
 
+      $scope.allowCustomerWbxClientVersions = false;
+      $scope.wbxclientversionselected = "testversion1.0";
+      $scope.wbxclientversions = ["testversion1.0", "testversion2.0"];
+      $scope.wbxclientversionplaceholder = "Select webex client version";
+
       $scope.sendFeedback = function () {
         var appType = 'Atlas_' + $window.navigator.userAgent;
         var feedbackId = Utils.getUUID();

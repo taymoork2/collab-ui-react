@@ -86,6 +86,8 @@ angular.module('ReportIframe', ['Core']);
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
 
+angular.module('WebexClientVersions', ['Core']);
+
 angular.module('Messenger', ['Core']);
 
 angular.module('Sunlight', ['Core']);
@@ -105,6 +107,7 @@ angular.module('wx2AdminWebClientApp', [
   'WebExUserSettings',
   'WebExUserSettings2',
   'WebExReports',
+  'WebexClientVersions',
   'ReportIframe',
   'Messenger',
   'Sunlight'
