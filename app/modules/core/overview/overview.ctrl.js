@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, $log) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -51,6 +51,7 @@
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
     vm.isCloudSipUriSet = false;
+    vm.isEntitledUnderToggle = false;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -68,14 +69,19 @@
       }
     });
 
-    Orgservice.getOrg(function (data, status) {
-      if (status === 200) {
-        if (data.orgSettings.sipCloudDomain) {
-          vm.isCloudSipUriSet = true;
-        }
-      } else {
-        Log.debug('Get existing org failed. Status: ' + status);
-        Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+    FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
+      if (result && Authinfo.isFusion()) {
+        vm.isEntitledUnderToggle = true;
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            if (data.orgSettings.sipCloudDomain) {
+              vm.isCloudSipUriSet = true;
+            }
+          } else {
+            Log.debug('Get existing org failed. Status: ' + status);
+            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          }
+        });
       }
     });
 
