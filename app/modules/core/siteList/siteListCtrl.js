@@ -67,6 +67,14 @@ angular.module('Core')
       );
 
       // Start of grid set up
+      var siteCsvColumnHeaderTemplate = "\n" +
+        '<div class="ui-grid-cell-contents ui-grid-header-cell-primary-focus" col-index="renderIndex" tabindex="0" role="button">' + '\n' +
+        '  <div>' + '\n' +
+        '    <span id="id-siteCsvColumnHeader" class="ui-grid-header-cell-label ng-binding" translate="siteList.siteCsvColumnHeader"></span>' + '\n' +
+        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="top" ></span>' + '\n' +
+        '  </div>' + '\n' +
+        '</div>' + '\n';
+
       var siteCSVColumn = "\n" +
         '<div ng-if="!row.entity.showCSVInfo">' + '\n' +
         '  <p class="ui-grid-cell-contents">' + '\n' +
@@ -81,7 +89,7 @@ angular.module('Core')
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isCSVSupported">' + '\n' +
         '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      TBD' + '\n' +
+        '      <a><span translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
@@ -170,12 +178,14 @@ angular.module('Core')
         sortable: false
       });
 
+      // Toggle the column display based on which user logs into the Atlas site
       if (adminUserSupportCSV) {
         vm.gridOptions.columnDefs.push({
           field: 'siteCSV',
-          displayName: $translate.instant('siteList.siteCsv'),
+          //displayName: $translate.instant('siteList.siteCsvColumnHeader'),
           cellTemplate: siteCSVColumn,
-          sortable: false
+          sortable: false,
+          headerCellTemplate: siteCsvColumnHeaderTemplate
         });
       }
 
@@ -210,9 +220,9 @@ angular.module('Core')
             if (adminUserSupportCSV) {
               var columnObj = {
                 field: 'siteCSV',
-                displayName: $translate.instant('siteList.siteCsv'),
                 cellTemplate: siteCSVColumn,
-                sortable: false
+                sortable: false,
+                headerCellTemplate: siteCsvColumnHeaderTemplate
               };
 
               vm.gridOptions.columnDefs.splice(
