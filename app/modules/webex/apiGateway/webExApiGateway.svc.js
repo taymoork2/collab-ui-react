@@ -16,10 +16,122 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
     webExXmlApiInfoObj
   ) {
 
+    this.csvGetStatus = function (siteUrl) {
+      var funcName = "csvGetStatus()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var result = {
+        siteUrl: siteUrl,
+        result: "success"
+      };
+
+      var deferredResult = $q.defer();
+
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          deferredResult.resolve(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvGetStatus()
+
+    this.csvExport = function (siteUrl) {
+      var funcName = "csvExport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var result = {
+        siteUrl: siteUrl,
+        result: "success"
+      };
+
+      var deferredResult = $q.defer();
+
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          deferredResult.resolve(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvExport()
+
+    this.csvImport = function (siteUrl) {
+      var funcName = "csvImport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var result = {
+        siteUrl: siteUrl,
+        result: "success"
+      };
+
+      var deferredResult = $q.defer();
+
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          deferredResult.resolve(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvImport()
+
+    this.csvFileDownload = function (siteUrl) {
+      var funcName = "csvFileDownload()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var result = {
+        siteUrl: siteUrl,
+        result: "success"
+      };
+
+      var deferredResult = $q.defer();
+
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          deferredResult.resolve(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvFileDownload()
+
     this.isSiteSupportsIframe = function (siteUrl) {
       var deferredIsSiteSupportsIframe = $q.defer();
 
-      getSessionTicket().then(
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(response) {
           $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
@@ -144,10 +256,6 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
           deferredIsSiteSupportsIframe.reject(result);
         } // getSessionTicketError()
       ); // getSessionTicket(siteUrl).then()
-
-      function getSessionTicket() {
-        return WebExXmlApiFact.getSessionTicket(siteUrl);
-      } // getSessionTicket()
 
       function getSiteData() {
         var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
