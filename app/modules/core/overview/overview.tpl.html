@@ -63,6 +63,16 @@
               <button type="button" class="close"
                       ng-click="overview.setHybridAcknowledged('call-connect-service')"></button>
             </div>
+            <!--cloud-sip-uri -->
+            <div class="notification-style" ng-if="!overview.isCloudSipUriSet">
+              <span class="badge success" translate="common.new"></span>
+              <div class="notification-spacing">
+                <span translate="homePage.setupCloudSipUriMessage"></span>
+                <a ng-click="overview.showEnterpriseSettings()"
+                   translate="homePage.goSetupCloudSipUri"></a>
+              </div>
+              <button type="button" class="close"></button>
+            </div>
           </section>
         </article>
       </cs-card>

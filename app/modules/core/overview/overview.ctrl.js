@@ -50,6 +50,7 @@
     vm.isCalendarAcknowledged = true;
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
+    vm.isCloudSipUriSet = false;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -64,6 +65,17 @@
         });
       } else {
         Log.error("Error in GET service acknowledged status");
+      }
+    });
+
+    Orgservice.getOrg(function (data, status) {
+      if (status === 200) {
+        if (data.orgSettings.sipCloudDomain) {
+          vm.isCloudSipUriSet = true;
+        }
+      } else {
+        Log.debug('Get existing org failed. Status: ' + status);
+        Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       }
     });
 
@@ -87,6 +99,12 @@
         $state.go('call-service.list');
       }
       vm.setHybridAcknowledged(serviceName);
+    };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
     };
 
     vm.setupNotDone = function () {
