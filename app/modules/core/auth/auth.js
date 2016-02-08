@@ -245,7 +245,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function updateAccessToken(response) {
-    var token = _.get(response, 'data.access_token');
+    var token = _.get(response, 'data.access_token') || '';
     Log.info('updateAccessToken: ' + token);
     Storage.put('accessToken', token);
     setAuthorizationHeader(token);

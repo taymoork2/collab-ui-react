@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', 'Log',
+    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, Log) {
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
@@ -48,6 +48,7 @@ angular.module('Core')
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
               } else if (Authinfo.isPartnerAdmin()) {
+                Log.debug('Sending "partner logged in" metrics');
                 LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 state = 'partneroverview';
               } else if (Authinfo.isSupportUser()) {
@@ -59,9 +60,9 @@ angular.module('Core')
               }
               $rootScope.services = Authinfo.getServices();
 
-              if (state !== 'partneroverview' && Auth.isLoginMarked()) {
+              if (state !== 'partneroverview') {
+                Log.debug('Sending "customed logged in" metrics');
                 LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-                Auth.clearLoginMarker();
               }
 
               return loadingDelayPromise.then(function () {
