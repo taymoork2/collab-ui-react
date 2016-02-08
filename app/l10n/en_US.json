@@ -2837,14 +2837,7 @@
     "type": "Type",
     "siteSettings": "Configure",
     "siteReports": "Reports",
-    "siteCsvColumnHeader": "User Attributes",
-    "siteCsvExportLinkLabel": "Export",
-    "siteCsvExportInProgressLinkLabel": "Export in progress...",
-    "siteCsvImportLinkLabel": "Import",
-    "siteCsvImportInProgressLinkLabel": "Import in progress...",
-    "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvX": "X",
-    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site."
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
