@@ -10,21 +10,23 @@
     var vm = this;
     vm.clusterList = [];
     vm.groups = null;
+    vm.combo = true;
     vm.selectPlaceholder = 'Add new / Select existing Cluster';
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
+    vm.getGroups = getGroups;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
     vm.groupDetail = null;
 
-    vm.getGroups = function () {
+    function getGroups() {
       vm.groupResponse = MediaClusterService.getGroups().then(function (group) {
         vm.groups = group;
         _.each(group, function (group) {
           vm.clusterList.push(group.name);
         });
       });
-    };
+    }
     vm.getGroups();
 
     function addRedirectTargetClicked(hostName, enteredCluster) {
@@ -41,24 +43,17 @@
           MediaClusterService.createGroup(enteredCluster).then(function (resp) {
             // $log.log("create repsone", resp);
             // $log.log("create repsone", resp.data.id);
-            $modalInstance.close();
-            $window.open("https://" + encodeURIComponent(hostName) + "/?groupName=" + encodeURIComponent(enteredCluster) + "&propertySetId=" + encodeURIComponent(resp.data.id));
+            vm.redirectToTargetAndCloseWindowClicked(hostName, enteredCluster, resp.data.id);
           });
         } else {
-          $modalInstance.close();
-          $window.open("https://" + encodeURIComponent(hostName) + "/?groupName=" + encodeURIComponent(enteredCluster) + "&propertySetId=" + encodeURIComponent(vm.groupDetail.id));
+          vm.redirectToTargetAndCloseWindowClicked(hostName, enteredCluster, vm.groupDetail.id);
         }
       }, XhrNotificationService.notify);
     }
 
-    function selectCluster(enteredCluster) {
-      // $log.log("inside");
-      $log.log("entered value", enteredCluster);
-    }
-
-    function redirectToTargetAndCloseWindowClicked(hostName) {
+    function redirectToTargetAndCloseWindowClicked(hostName, clusterName, propertSetId) {
       $modalInstance.close();
-      $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration");
+      $window.open("https://" + encodeURIComponent(hostName) + "/?groupName=" + encodeURIComponent(clusterName) + "&propertySetId=" + encodeURIComponent(propertSetId));
     }
   }
 }());
