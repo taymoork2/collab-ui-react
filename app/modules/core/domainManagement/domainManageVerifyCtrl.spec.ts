@@ -1,7 +1,7 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
 namespace domainManagement {
 
-  describe('DomainManagementVerifyCtrl', function () {
+  describe('DomainManagementVerifyCtrl', ()=> {
 
       let Config, Controller, Q, Translate, Injector, DomainManagmentVerifyCtrl, DomainManagementService, verifyDomainInvoked;
 
