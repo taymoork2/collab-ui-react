@@ -84,7 +84,7 @@ auth =
 
   'customer-support-user':
     user: 'regUser1@csreptestdom.collaborate.com'
-    pass: 'P@ssword123'
+    pass: 'C1sc0123!'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'customer-regular-user':

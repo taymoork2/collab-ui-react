@@ -101,6 +101,8 @@
             details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
 
             // if this is not set, remove the whole thing
+            // since this may get sent with partially complete
+            // data that the backend doesnt like
             if (details.shippingInfo.country === '') {
               delete details.shippingInfo;
             }
