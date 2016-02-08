@@ -345,7 +345,7 @@
 
       if (time.value === 0) {
         var offset = 1;
-        if (moment.tz(mostRecent, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
+        if (moment.tz(mostRecent, dateFormat, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
           offset = 0;
         }
 
@@ -355,7 +355,7 @@
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
-        var dayOffset = parseInt(moment.tz(mostRecent, timezone).format('e'));
+        var dayOffset = parseInt(moment.tz(mostRecent, dateFormat, timezone).format('e'));
         if (dayOffset >= 4) {
           dayOffset = 7 - dayOffset;
         } else {
