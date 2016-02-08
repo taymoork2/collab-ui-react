@@ -99,6 +99,12 @@
             details.shippingInfo = trial.details.shippingInfo;
             details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
             details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+
+            // if this is not set, remove the whole thing
+            if (details.shippingInfo.country === '') {
+              delete details.shippingInfo;
+            }
+
             details.devices = _(trial.details.roomSystems)
               .concat(trial.details.phones)
               .filter({
