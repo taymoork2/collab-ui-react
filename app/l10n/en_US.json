@@ -1149,7 +1149,7 @@
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
@@ -1159,7 +1159,7 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "aware": "Share your desktop with Spark while you are on your work phone.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
@@ -1179,11 +1179,11 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: acme.com"
+        "sipDomainExample": "For example: example.org"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "description": "Set the start time to begin upgrades on the connectors.",
         "defaultWarning": "Confirm the default schedule"
       }
     },
