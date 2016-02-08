@@ -44,11 +44,12 @@ var Navigation = function () {
   this.orgname = element(by.binding('orgname'));
   this.userInfoButton = element(by.css('.user-info button'));
   this.logoutButton = element(by.css('#logout-btn a'));
+  this.videoLink = element(by.id('videoTutorial-lnk'));
 
   this.headerSearch = element(by.css('.header-search'));
   this.settingsMenu = element(by.css('.settings-menu .dropdown-toggle'));
   this.planReview = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Plan Review'));
-  this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Invite Users'));
+  this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Add Users'));
   this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Call'));
   this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
@@ -228,6 +229,11 @@ var Navigation = function () {
   this.support = function () {
     utils.click(this.userInfoButton);
     utils.click(this.supportLink);
+  }
+
+  this.videoTutorial = function () {
+    utils.click(this.userInfoButton);
+    utils.click(this.videoLink);
   }
 
   this.launchPartnerOrgPortal = function () {

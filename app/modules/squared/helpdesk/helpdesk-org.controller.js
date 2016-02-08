@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
-    $translate, LicenseService, HelpdeskHealthStatusService, $scope, $state) {
+    $translate, LicenseService, $scope, $state) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -18,13 +18,7 @@
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
     vm.userCard = {};
-    vm.healthStatuses = {
-      message: 'unknown',
-      meeting: 'unknown',
-      call: 'unknown',
-      room: 'unknown',
-      hybrid: 'unknown'
-    };
+
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.licenseUsageReady = false;
@@ -38,7 +32,6 @@
     vm.usageText = usageText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
-    HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
 
     function initOrgView(org) {
       vm.org = org;
@@ -64,10 +57,6 @@
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
       vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
-    }
-
-    function initHealth(healthStatuses) {
-      vm.healthStatuses = healthStatuses;
     }
 
     function findManagedByOrgs(org) {

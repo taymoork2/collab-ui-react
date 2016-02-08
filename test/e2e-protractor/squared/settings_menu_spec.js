@@ -15,9 +15,9 @@ describe('Service Setup tests', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
     });
 
-    it('should show the invite users flow', function () {
+    it('should show the add users flow', function () {
       navigation.clickAddUsers();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(inviteusers.bulkUpload);
     });
 

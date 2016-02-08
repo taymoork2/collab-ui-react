@@ -73,6 +73,8 @@ angular.module('Hercules', ['Core', 'ngTagsInput']);
 angular.module('Mediafusion', ['Core']);
 
 angular.module('WebExUtils', ['Core']);
+angular.module('WebExApiGateway', ['Core']);
+angular.module('WebExRestApi', ['Core']);
 angular.module('WebExXmlApi', ['Core']);
 
 angular.module('WebExSiteSettings', ['Core']);
@@ -95,6 +97,8 @@ angular.module('wx2AdminWebClientApp', [
   'Hercules',
   'Mediafusion',
   'WebExUtils',
+  'WebExApiGateway',
+  'WebExRestApi',
   'WebExXmlApi',
   'WebExSiteSettings',
   'WebExSiteSetting',

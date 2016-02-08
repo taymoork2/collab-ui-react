@@ -13,19 +13,19 @@
 
     vm.details = _trialData.details;
     vm.sx10 = _.find(vm.details.roomSystems, {
-      model: 'sx10'
+      model: 'CISCO_SX10'
     });
     vm.phone8865 = _.find(vm.details.phones, {
-      model: '8865'
+      model: 'CISCO_8865'
     });
     vm.phone8845 = _.find(vm.details.phones, {
-      model: '8845'
+      model: 'CISCO_8845'
     });
     vm.phone8841 = _.find(vm.details.phones, {
-      model: '8841'
+      model: 'CISCO_8841'
     });
     vm.phone7841 = _.find(vm.details.phones, {
-      model: '7841'
+      model: 'CISCO_7841'
     });
     vm.shippingInfo = _.find(vm.details.shippingInfo, {
       isPrimary: true
@@ -178,90 +178,98 @@
           return !vm.phone7841.enabled;
         }
       },
-
     }];
 
     vm.shippingFields = [{
-      model: vm.shippingInfo,
-      key: 'address',
-      type: 'textarea',
-      templateOptions: {
-        inputClass: 'columns medium-11 noresize',
-        placeholder: $translate.instant('trialModal.call.address'),
-        required: true,
-      },
-      ngModelAttrs: {
-        '{{7}}': {
-          value: 'rows'
-        }
-      },
-    }];
-
-    vm.foo = [{
-      key: 'country',
-      type: 'input',
-      templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-6',
-        label: 'Country',
-        type: 'text',
-        required: true,
-      },
-    }, {
       key: 'name',
       type: 'input',
+      className: 'columns medium-7 pad-top',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-6',
-        label: 'Name',
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-10',
+        label: $translate.instant('trialModal.call.name'),
         type: 'text',
       },
     }, {
-      key: 'phone',
+      key: 'phoneNumber',
       type: 'input',
+      className: 'columns medium-5 pad-top',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-6',
-        label: 'Phone',
-        type: 'number',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.phone'),
       },
     }, {
-      key: 'street',
-      type: 'input',
+      key: 'country',
+      type: 'select',
+      defaultValue: _.find(TrialCallService.getCountryList(), {
+        code: 'USA'
+      }),
+      className: 'columns medium-12 pad-top',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-6',
-        label: 'Street',
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-10',
+        label: $translate.instant('trialModal.call.country'),
+        type: 'text',
+        required: true,
+        labelfield: 'country',
+        labelProp: 'country',
+        valueProp: 'code',
+      },
+      expressionProperties: {
+        'templateOptions.options': function () {
+          return TrialCallService.getCountryList();
+        },
+      },
+    }, {
+      key: 'addressLine1',
+      type: 'input',
+      className: 'columns medium-12 pad-top',
+      templateOptions: {
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-10',
+        label: $translate.instant('trialModal.call.address'),
         type: 'text',
         required: true,
       },
     }, {
       key: 'city',
       type: 'input',
+      className: 'columns medium-4 pad-top',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-4',
-        label: 'City',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.city'),
         type: 'text',
         required: true,
       },
     }, {
       key: 'state',
-      type: 'input',
+      type: 'select',
+      className: 'columns medium-4 pad-top',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-2',
-        label: 'State',
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-8',
+        label: $translate.instant('trialModal.call.state'),
         type: 'text',
         required: true,
+        labelfield: 'abbr',
+        labelProp: 'abbr',
+        valueProp: 'state',
+      },
+      expressionProperties: {
+        'templateOptions.options': function () {
+          return TrialCallService.getStateList();
+        }
       },
     }, {
-      key: 'zip',
+      key: 'postalCode',
       type: 'input',
+      className: 'columns medium-4 pad-top',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-2',
-        label: 'Zip',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.zip'),
         type: 'number',
         max: 99999,
         min: 0,

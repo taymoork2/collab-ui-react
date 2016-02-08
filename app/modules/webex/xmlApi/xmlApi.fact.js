@@ -27,7 +27,7 @@
       var _self = this;
       var x2js = new X2JS();
 
-      this.sendXMLApiReq = function (xmlServerURL, xmlRequest, resolve, reject) {
+      this.sendXMLApiReq = function (xmlApiUrl, xmlRequest, resolve, reject) {
         var funcName = "sendXMLApiReq()";
         var logMsg = "";
 
@@ -36,7 +36,7 @@
         // $log.log(logMsg);
 
         $http({
-          url: xmlServerURL,
+          url: xmlApiUrl,
           method: "POST",
           data: xmlRequest,
           headers: {
@@ -52,33 +52,33 @@
       return {
         getSiteVersion: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.siteVersionRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, // getSiteVersion()
 
         getSiteInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.siteInfoRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 
         getUserInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.userInfoRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, //getUserInfo()
 
         getMeetingTypeInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.meetingTypeInfoRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, //getMeetingTypeInfo()
 
@@ -86,9 +86,9 @@
           var requestTemplate = xmlApiConstants.settingPagesInfoRequest;
 
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, // getSettingPagesInfo()
 
@@ -96,9 +96,9 @@
           var requestTemplate = xmlApiConstants.reportPagesInfoRequest;
 
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, // getReportPagesInfo()
 
@@ -106,9 +106,9 @@
           var requestTemplate = xmlApiConstants.enableT30UnifiedAdminInfoRequest;
 
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, // getEnableT30UnifiedAdminInfo()
 
@@ -145,7 +145,7 @@
           return $q(
             function (resolve, reject) {
               _self.sendXMLApiReq(
-                xmlApiAccessInfo.xmlServerURL,
+                xmlApiAccessInfo.xmlApiUrl,
                 xmlRequest,
                 resolve,
                 reject
@@ -254,7 +254,7 @@
           return $q(
             function (resolve, reject) {
               _self.sendXMLApiReq(
-                xmlApiAccessInfo.xmlServerURL,
+                xmlApiAccessInfo.xmlApiUrl,
                 xmlRequest,
                 resolve,
                 reject
@@ -265,9 +265,9 @@
 
         getSessionTicketInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.sessionTicketRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, //getSessionTicketInfo()
 
@@ -345,11 +345,11 @@
 
           var _this = this;
           var defer = $q.defer();
-          var xmlServerURL = "https://" + wbxSiteUrl + "/WBXService/XMLService";
+          var xmlApiUrl = "https://" + wbxSiteUrl + "/WBXService/XMLService";
           var primaryEmail = Authinfo.getPrimaryEmail();
 
           var xmlApiAccessInfo = {
-            xmlServerURL: xmlServerURL,
+            xmlApiUrl: xmlApiUrl,
             wbxSiteName: wbxSiteName,
             webexAdminID: primaryEmail,
             accessToken: Storage.get('accessToken')
@@ -413,9 +413,9 @@
 
         flushWafCache: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
-            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.flushWafCacheRequest)(xmlApiAccessInfo);
-            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+            _self.sendXMLApiReq(xmlApiUrl, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 

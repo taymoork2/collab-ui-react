@@ -19,11 +19,11 @@
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
-      'getTrial': getTrial,
-      'editTrial': editTrial,
-      'startTrial': startTrial,
-      'getData': getData,
-      'reset': reset,
+      getTrial: getTrial,
+      editTrial: editTrial,
+      startTrial: startTrial,
+      getData: getData,
+      reset: reset
     };
 
     return service;
@@ -97,6 +97,8 @@
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             details.shippingInfo = trial.details.shippingInfo;
+            details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
+            details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
             details.devices = _(trial.details.roomSystems)
               .concat(trial.details.phones)
               .filter({
