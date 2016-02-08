@@ -171,8 +171,7 @@ angular
           result[param.split('=')[0]] = param.split('=')[1];
         }
         return result;
-      };
-
+      }
 
     }
   ]);

@@ -176,7 +176,7 @@ angular.module('Squared')
           source: engine.ttAdapter()
         });
       };
-      
+
       initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {

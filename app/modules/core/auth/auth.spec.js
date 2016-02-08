@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Auth Service', function () {
+describe('Auth Service', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var Auth, $httpBackend, Config, Storage, $window;
@@ -11,11 +11,17 @@ fdescribe('Auth Service', function () {
       setProductionBackend: sinon.stub()
     };
     $window = {};
-    Storage = { get: sinon.stub(), put: sinon.stub() };
+    Storage = {
+      get: sinon.stub(),
+      put: sinon.stub()
+    };
     $provide.value('Config', Config);
     $provide.value('$window', $window);
     $provide.value('Storage', Storage);
-    $provide.value('Log', { debug: sinon.stub(), info: sinon.stub() });
+    $provide.value('Log', {
+      debug: sinon.stub(),
+      info: sinon.stub()
+    });
   }));
 
   beforeEach(inject(function (_Auth_, _$httpBackend_) {
@@ -26,14 +32,16 @@ fdescribe('Auth Service', function () {
       .respond({});
   }));
 
-  it('should get account info using correct API', function(done) {
+  it('should get account info using correct API', function (done) {
     Config.getAdminServiceUrl = sinon.stub().returns('foo/');
 
     $httpBackend
       .expectGET('foo/organization/bar/accounts')
-      .respond(200, { foo: 'bar' });
+      .respond(200, {
+        foo: 'bar'
+      });
 
-    Auth.getAccount('bar').then(function(res) {
+    Auth.getAccount('bar').then(function (res) {
       expect(res.data.foo).toBe('bar');
       done();
     });
@@ -41,20 +49,24 @@ fdescribe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should get new access token', function(done) {
-    Config.oauthClientRegistration = { scope: 'scope' }; 
+  it('should get new access token', function (done) {
+    Config.oauthClientRegistration = {
+      scope: 'scope'
+    };
     Config.getOauth2Url = sinon.stub().returns('oauth/');
     Config.getRedirectUrl = sinon.stub().returns('redir');
     Config.getOauthCodeUrl = sinon.stub().returns('codeUrl-');
     Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
 
     $httpBackend
-      .expectPOST('oauth/access_token', 'codeUrl-scope&redir', function(headers) {
+      .expectPOST('oauth/access_token', 'codeUrl-scope&redir', function (headers) {
         return headers['Authorization'] == 'Basic clientRegistrationCredentials';
       })
-      .respond(200, { access_token: 'accessTokenFromAPI' });
+      .respond(200, {
+        access_token: 'accessTokenFromAPI'
+      });
 
-    Auth.getNewAccessToken('argToGetNewAccessToken').then(function(accessToken) {
+    Auth.getNewAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(Config.getOauthCodeUrl.getCall(0).args[0]).toBe('argToGetNewAccessToken');
       done();
@@ -63,19 +75,21 @@ fdescribe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should refresh access token', function(done) {
+  it('should refresh access token', function (done) {
     Storage.get = sinon.stub().returns('fromStorage');
     Config.getOauth2Url = sinon.stub().returns('oauth2Url/');
     Config.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
     Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'accessCodeUrl', function(headers) {
+      .expectPOST('oauth2Url/access_token', 'accessCodeUrl', function (headers) {
         return headers['Authorization'] == 'Basic clientRegistrationCredentials';
       })
-      .respond(200, { access_token: 'accessTokenFromAPI' });
+      .respond(200, {
+        access_token: 'accessTokenFromAPI'
+      });
 
-    Auth.refreshAccessToken('argToGetNewAccessToken').then(function(accessToken) {
+    Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(Config.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
@@ -85,19 +99,27 @@ fdescribe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should set access token', function(done) {
+  it('should set access token', function (done) {
     Config.getOauth2Url = sinon.stub().returns('oauth2Url/');
-    Config.oauthClientRegistration = { atlas: { scope: 'scope' } };
-    Config.oauthUrl = { oauth2ClientUrlPattern: 'oauth2ClientUrlPattern-' };
+    Config.oauthClientRegistration = {
+      atlas: {
+        scope: 'scope'
+      }
+    };
+    Config.oauthUrl = {
+      oauth2ClientUrlPattern: 'oauth2ClientUrlPattern-'
+    };
     Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'oauth2ClientUrlPattern-scope', function(headers) {
+      .expectPOST('oauth2Url/access_token', 'oauth2ClientUrlPattern-scope', function (headers) {
         return headers['Authorization'] == 'Basic clientRegistrationCredentials';
       })
-      .respond(200, { access_token: 'accessTokenFromAPI' });
+      .respond(200, {
+        access_token: 'accessTokenFromAPI'
+      });
 
-    Auth.setAccessToken().then(function(accessToken) {
+    Auth.setAccessToken().then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       done();
     });
@@ -105,7 +127,7 @@ fdescribe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should refresh token and resend request', function(done) {
+  it('should refresh token and resend request', function (done) {
     Storage.get = sinon.stub().returns('');
     Config.getOauth2Url = sinon.stub().returns('');
     Config.getOauthAccessCodeUrl = sinon.stub().returns('');
@@ -113,13 +135,22 @@ fdescribe('Auth Service', function () {
 
     $httpBackend
       .expectPOST('access_token')
-      .respond(200, { access_token: '' });
+      .respond(200, {
+        access_token: ''
+      });
 
     $httpBackend
       .expectGET('foo')
-      .respond(200, { bar: 'baz' });
+      .respond(200, {
+        bar: 'baz'
+      });
 
-    Auth.refreshAccessTokenAndResendRequest({ config: { method: 'GET', url: 'foo' } }).then(function(res) {
+    Auth.refreshAccessTokenAndResendRequest({
+      config: {
+        method: 'GET',
+        url: 'foo'
+      }
+    }).then(function (res) {
       expect(res.data.bar).toBe('baz');
       done();
     });
@@ -127,7 +158,7 @@ fdescribe('Auth Service', function () {
     $httpBackend.flush();
   });
 
-  it('should logout', function() {
+  it('should logout', function () {
     var loggedOut = sinon.stub();
     $window.location = {};
     Storage.clear = sinon.stub();
@@ -137,7 +168,7 @@ fdescribe('Auth Service', function () {
     Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
 
     $httpBackend
-      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', function(headers) {
+      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', function (headers) {
         return headers['Authorization'] == 'Basic clientRegistrationCredentials';
       })
       .respond(200, {});
@@ -164,7 +195,5 @@ fdescribe('Auth Service', function () {
   //       $window.location.href = Config.getLogoutUrl();
   //     });
   // };
-
-
 
 });

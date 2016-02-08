@@ -13,7 +13,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     still untested and not refactored, will fix in my next PR 
     - stimurbe
   */
-  function authorize () {
+  function authorize() {
     if (authDeferred) return authDeferred.promise;
     authDeferred = $q.defer();
 
@@ -155,32 +155,32 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     });
 
     return authDeferred.promise;
-  };
+  }
 
   function getAccount(org) {
     var url = Config.getAdminServiceUrl() + 'organization/' + org + '/accounts';
     return httpGET(url);
-  };
+  }
 
-  function getNewAccessToken (code) {
+  function getNewAccessToken(code) {
     var url = Config.getOauth2Url() + 'access_token';
     var token = Config.getOAuthClientRegistrationCredentials();
     var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
 
     return httpPOST(url, data, token).then(
-      updateAccessToken, 
+      updateAccessToken,
       handleError('Failed to obtain new oauth access_token.')
     );
-  };
+  }
 
   function refreshAccessToken() {
     var refreshToken = Storage.get('refreshToken');
     var url = Config.getOauth2Url() + 'access_token';
     var data = Config.getOauthAccessCodeUrl(refreshToken);
     var token = Config.getOAuthClientRegistrationCredentials();
-    
+
     return httpPOST(url, data, token).then(updateAccessToken);
-  };
+  }
 
   function setAccessToken() {
     var url = Config.getOauth2Url() + 'access_token';
@@ -188,11 +188,10 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
 
     return httpPOST(url, data, token).then(
-      updateAccessToken, 
+      updateAccessToken,
       handleError('Failed to obtain oauth access_token')
     );
-  };
-
+  }
 
   function refreshAccessTokenAndResendRequest(response) {
     return refreshAccessToken()
@@ -200,29 +199,29 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
         var $http = $injector.get('$http');
         return $http(response.config);
       });
-  };
+  }
 
-  function logout () {
+  function logout() {
     var url = Config.getOauthDeleteTokenUrl();
     var data = 'token=' + Storage.get('accessToken');
     var token = Config.getOAuthClientRegistrationCredentials();
     return httpPOST(url, data, token)
-      .then(function() {
+      .then(function () {
         Log.info('oAuth token deleted successfully.');
       }, handleError('Failed to delete the oAuth token'))
-      .finally(function() {
+      .finally(function () {
         Storage.clear();
         $window.location.href = Config.getLogoutUrl();
       });
-  };
+  }
 
-  function isLoggedIn () {
+  function isLoggedIn() {
     return Storage.get('accessToken');
-  };
+  }
 
-  function redirectToLogin () {
+  function redirectToLogin() {
     $window.location.href = Config.getOauthLoginUrl();
-  };
+  }
 
   // helpers
 
@@ -253,9 +252,9 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function handleError(message) {
-    return function(res) {
+    return function (res) {
       Log.error(message, res.data);
-    }
+    };
   }
 
   function setAuthorizationHeader(token) {
@@ -268,12 +267,12 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     getAccount: getAccount,
     authorize: authorize,
     getNewAccessToken: getNewAccessToken,
-    refreshAccessToken:refreshAccessToken,
-    setAccessToken:setAccessToken,
-    refreshAccessTokenAndResendRequest:refreshAccessTokenAndResendRequest,
-    logout:logout,
-    isLoggedIn:isLoggedIn,
-    redirectToLogin:redirectToLogin,
+    refreshAccessToken: refreshAccessToken,
+    setAccessToken: setAccessToken,
+    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
+    logout: logout,
+    isLoggedIn: isLoggedIn,
+    redirectToLogin: redirectToLogin,
     setAuthorizationHeader: setAuthorizationHeader
   };
 

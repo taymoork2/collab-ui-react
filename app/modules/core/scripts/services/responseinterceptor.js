@@ -65,5 +65,5 @@
       return responseData.indexOf(searchString) != -1;
     }
   }
-  
+
 })();
