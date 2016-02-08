@@ -170,15 +170,6 @@ angular.module('Core')
         sortable: false
       });
 
-      if (adminUserSupportCSV) {
-        vm.gridOptions.columnDefs.push({
-          field: 'siteCSV',
-          displayName: $translate.instant('siteList.siteCsv'),
-          cellTemplate: siteCSVColumn,
-          sortable: false
-        });
-      }
-
       vm.gridOptions.columnDefs.push({
         field: 'siteSettings',
         displayName: $translate.instant('siteList.siteSettings'),
@@ -192,15 +183,16 @@ angular.module('Core')
         cellTemplate: siteReportsColumn,
         sortable: false
       });
-      // End of grid set up
 
-      if (!adminUserSupportCSV) {
-        insertCSVColumn();
+      var allowCSVToAllAdmins = false; // TODO
+      if (!allowCSVToAllAdmins) {
+        checkCSVToggle();
       } else {
+        insertCSVColumn();
         updateGrid();
       }
 
-      function insertCSVColumn() {
+      function checkCSVToggle() {
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
           function getSupportsCSVSuccess(result) {
             var funcName = "getSupportsCSVSuccess()";
@@ -208,18 +200,7 @@ angular.module('Core')
 
             adminUserSupportCSV = result;
             if (adminUserSupportCSV) {
-              var columnObj = {
-                field: 'siteCSV',
-                displayName: $translate.instant('siteList.siteCsv'),
-                cellTemplate: siteCSVColumn,
-                sortable: false
-              };
-
-              vm.gridOptions.columnDefs.splice(
-                3,
-                0,
-                columnObj
-              );
+              insertCSVColumn();
             }
 
             updateGrid();
@@ -236,7 +217,23 @@ angular.module('Core')
             updateGrid();
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
+      } // checkCSVToggle()
+
+      function insertCSVColumn() {
+        var columnObj = {
+          field: 'siteCSV',
+          displayName: $translate.instant('siteList.siteCsv'),
+          cellTemplate: siteCSVColumn,
+          sortable: false
+        };
+
+        vm.gridOptions.columnDefs.splice(
+          3,
+          0,
+          columnObj
+        );
       } // insertCSVColumn()
+      // End of grid set up
 
       function updateGrid() {
         var funcName = "updateGrid()";
@@ -286,10 +283,7 @@ angular.module('Core')
 
                 siteRow.isIframeSupported = result.isIframeSupported;
                 siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
-                siteRow.isCSVSupported = (
-                  result.isCSVSupported &&
-                  adminUserSupportCSV
-                ) ? true : false;
+                siteRow.isCSVSupported = result.isCSVSupported;
 
                 siteRow.showSiteLinks = true;
 
@@ -323,13 +317,37 @@ angular.module('Core')
       } // initGridColumns()
 
       function updateCSVColumn(siteRow) {
-        if (siteRow.isCSVSupported) {
+        if (!siteRow.isCSVSupported) {
+          // no further data to get
           siteRow.showCSVInfo = true;
           return;
         }
 
         // TODO
-        siteRow.showCSVInfo = true;
+        var siteUrl = siteRow.license.siteUrl;
+        WebExApiGatewayService.csvGetStatus(siteUrl).then(
+          function getCSVStatusSuccess(response) {
+            var funcName = "getCSVStatusSuccess()";
+            var logMsg = "";
+
+            logMsg = funcName + "\n" +
+              "response=" + JSON.stringify(response);
+            $log.log(logMsg);
+
+            siteRow.showCSVInfo = true;
+          }, // getCSVStatusSuccess()
+
+          function getCSVStatusError(response) {
+            var funcName = "getCSVStatusError()";
+            var logMsg = "";
+
+            logMsg = funcName + "\n" +
+              "response=" + JSON.stringify(response);
+            $log.log(logMsg);
+
+            siteRow.showCSVInfo = true;
+          } // getCSVStatusSuccess()
+        );
       } // updateCSVColumn()
-    }
+    } // updateCSVColumn()
   ]);
