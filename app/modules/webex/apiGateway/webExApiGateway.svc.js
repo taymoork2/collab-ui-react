@@ -24,20 +24,27 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
 
-      var result = {
-        siteUrl: siteUrl,
-        result: "success"
-      };
-
       var deferredResult = $q.defer();
 
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
           deferredResult.resolve(result);
         },
 
         function dummyError(response) {
-          deferredResult.resolve(result);
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
         }
       );
 
@@ -52,20 +59,27 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
 
-      var result = {
-        siteUrl: siteUrl,
-        result: "success"
-      };
-
       var deferredResult = $q.defer();
 
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
           deferredResult.resolve(result);
         },
 
         function dummyError(response) {
-          deferredResult.resolve(result);
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
         }
       );
 
@@ -80,20 +94,27 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
 
-      var result = {
-        siteUrl: siteUrl,
-        result: "success"
-      };
-
       var deferredResult = $q.defer();
 
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
           deferredResult.resolve(result);
         },
 
         function dummyError(response) {
-          deferredResult.resolve(result);
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
         }
       );
 
@@ -108,20 +129,27 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
 
-      var result = {
-        siteUrl: siteUrl,
-        result: "success"
-      };
-
       var deferredResult = $q.defer();
 
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
           deferredResult.resolve(result);
         },
 
         function dummyError(response) {
-          deferredResult.resolve(result);
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
         }
       );
 
