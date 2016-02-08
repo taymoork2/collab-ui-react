@@ -12,8 +12,8 @@ var SiteReportsPage = function () {
   };
 
   this.t30Info = {
-    siteUrl: 'cisjsite002.webex.com',
-    testAdminUsername: 'cisjsite002@mailinator.com',
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
