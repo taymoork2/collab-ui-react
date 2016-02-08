@@ -3417,7 +3417,7 @@
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification token.",
+      "learn": "<a href='#'>Learn more</a> about how to enter the DNS verification token.",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     },
     "claim": {
@@ -3437,7 +3437,7 @@
       "title": "Token and instructions",
       "done": "Done",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification token.",
+      "howto": "<a href='#'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     }
