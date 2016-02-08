@@ -664,6 +664,10 @@
 }
 
 .enterprise-sipUri-page {
+  #sipUriDomainTitle {
+    margin-bottom: 1.5rem;
+  }
+
   .btn-space {
     margin-left: .7rem
   }
@@ -697,6 +701,9 @@
   }
   .font-regular {
     font-size: 1rem
+  }
+  .paragraphSpacing {
+    margin-bottom: 1rem;
   }
 }
 
