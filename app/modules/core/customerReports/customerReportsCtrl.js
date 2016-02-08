@@ -474,22 +474,34 @@
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;
 
-          var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-          if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-            deviceChart = tempDevicesChart;
+          if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
+            var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+            if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+              deviceChart = tempDevicesChart;
+            }
+            vm.deviceStatus = SET;
+          } else {
+            vm.deviceStatus = EMPTY;
           }
-          vm.deviceStatus = SET;
         }
         deviceCard = document.getElementById('device-card');
       });
     }
 
     function deviceUpdate() {
-      if (currentDeviceGraphs.length > 0) {
+      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
         var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
         if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
           deviceChart = tempDevicesChart;
         }
+        vm.deviceStatus = SET;
+      } else {
+        var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
+        var tempDeviceChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+        if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
+          deviceChart = tempDeviceChart;
+        }
+        vm.deviceStatus = EMPTY;
       }
     }
 
