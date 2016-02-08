@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
+  .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log', '$window',
 
-    function ($templateCache, $scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
+    function ($templateCache, $scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log, $window) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -24,6 +24,7 @@ angular.module('Core')
       $scope.filter = 'ALL';
       $scope.trialsList = [];
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+      $scope.launchCustomerPortal = launchCustomerPortal;
       setNotesTextOrder();
 
       $scope.openAddTrialModal = function () {
@@ -181,38 +182,38 @@ angular.module('Core')
             priority: 0,
           },
         }, {
-          field: 'messaging',
-          displayName: $translate.instant('customerPage.message'),
-          width: '12%',
-          cellTemplate: serviceTemplate,
-          headerClass: 'align-center',
-          sortingAlgorithm: serviceSort
-        }, {
-          field: 'conferencing',
-          displayName: $translate.instant('customerPage.meeting'),
-          width: '12%',
-          cellTemplate: serviceTemplate,
-          headerClass: 'align-center',
-          sortingAlgorithm: serviceSort
-        }, {
-          field: 'communications',
-          displayName: $translate.instant('customerPage.call'),
-          width: '12%',
-          cellTemplate: serviceTemplate,
-          headerClass: 'align-center',
-          sortingAlgorithm: serviceSort
-        }, {
-          field: 'notes',
-          displayName: $translate.instant('customerPage.notes'),
-          cellTemplate: noteTemplate,
-          sortingAlgorithm: notesSort
-        }, {
-          field: 'action',
-          displayName: $translate.instant('customerPage.actionHeader'),
-          sortable: false,
-          cellTemplate: actionTemplate,
-          width: '90'
-        }]
+            field: 'messaging',
+            displayName: $translate.instant('customerPage.message'),
+            width: '12%',
+            cellTemplate: serviceTemplate,
+            headerClass: 'align-center',
+            sortingAlgorithm: serviceSort
+          }, {
+            field: 'conferencing',
+            displayName: $translate.instant('customerPage.meeting'),
+            width: '12%',
+            cellTemplate: serviceTemplate,
+            headerClass: 'align-center',
+            sortingAlgorithm: serviceSort
+          }, {
+            field: 'communications',
+            displayName: $translate.instant('customerPage.call'),
+            width: '12%',
+            cellTemplate: serviceTemplate,
+            headerClass: 'align-center',
+            sortingAlgorithm: serviceSort
+          }, {
+            field: 'notes',
+            displayName: $translate.instant('customerPage.notes'),
+            cellTemplate: noteTemplate,
+            sortingAlgorithm: notesSort
+          }, {
+            field: 'action',
+            displayName: $translate.instant('customerPage.actionHeader'),
+            sortable: false,
+            cellTemplate: actionTemplate,
+            width: '90'
+          }]
       };
 
       function serviceSort(a, b) {
@@ -359,6 +360,15 @@ angular.module('Core')
 
       if ($state.current.name === "partnercustomers.list") {
         LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+      }
+
+      function launchCustomerPortal(trial) {
+        var customer = trial;
+
+        $window.open($state.href('login_swap', {
+          customerOrgId: customer.customerOrgId,
+          customerOrgName: customer.customerName
+        }));
       }
 
     }
