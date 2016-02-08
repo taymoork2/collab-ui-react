@@ -101,7 +101,7 @@
             details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
 
             // if this is not set, remove the whole thing
-            if(details.shippingInfo.country === ''){
+            if (details.shippingInfo.country === '') {
               delete details.shippingInfo;
             }
 
