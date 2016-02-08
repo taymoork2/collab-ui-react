@@ -2222,6 +2222,7 @@
   },
   "mediaFusion": {
     "page_title": "Media Service",
+    "add-resource-button": "Add Resource",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -2317,6 +2318,14 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "raised": "Raised"
+    },
+    "add-resource-dialog": {
+      "title": "Register a New Media Server",
+      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to.",
+      "text2": "Enter the hostname or IP address of the Media Server that you want to register to cloud. Click REGISTER RESOURCE, login to your Media Server and register.",
+      "register": "REGISTER RESOURCE",
+      "cancel": "CANCEL",
+      "hostname-placeholder": "Enter hostname or IP address"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
