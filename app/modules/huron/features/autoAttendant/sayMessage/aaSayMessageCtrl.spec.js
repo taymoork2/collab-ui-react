@@ -102,7 +102,7 @@ describe('Controller: AASayMessageCtrl', function () {
         controller.setVoiceOptions();
         $scope.$apply();
 
-        expect(controller.voiceOptions.length).toEqual(8);
+        expect(controller.voiceOptions.length).toEqual(4);
 
       });
       it('should select previously saved voiceOption if available', function () {

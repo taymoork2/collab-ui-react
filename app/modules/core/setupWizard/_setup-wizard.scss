@@ -24,7 +24,7 @@
     }
   }
   .flex-row {
-    @extend .row;
+    @extend .row, .full;
     display: flex;
     .columns {
       padding: 1.5rem;
@@ -688,5 +688,11 @@
   }
   .uriCheckSpace {
     clear: both;
+  }
+}
+
+.wizard-main-wrapper {
+  .row {
+    @extend .full;
   }
 }
