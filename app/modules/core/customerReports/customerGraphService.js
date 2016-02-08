@@ -64,7 +64,7 @@
 
     // variables for device registration
     var devicesDiv = 'devicesDiv';
-    var deviceBalloonText = '<span class="graph-text">' + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="graph-number">[[totalRegisteredDevices]]</span></span>';
+    var deviceBalloonText = '<span class="graph-text">' + $translate.instant('registeredEndpoints.registeredEndpoints') + ' <span class="device-number">[[totalRegisteredDevices]]</span></span>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
