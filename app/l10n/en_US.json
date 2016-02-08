@@ -1015,7 +1015,6 @@
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
-      "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1057,10 +1056,7 @@
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
-      "activeActiveHeading": "Active-Active Mode (High Availability)",
-      "activeActiveNotPossible": "Not available as Active-Active Mode requires a cluster with more than 1 host",
-      "activeActivePossible": "Turn on Active-Active Mode to enable high availability for this service. When enabled, users are assigned to two nodes in the cluster for redundancy."
+      "notInstalled": "The {{serviceName}} is not installed on this cluster."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1074,8 +1070,10 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarm"
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending"
     },
     "setup": {
       "label": "Connector Management",
@@ -1140,7 +1138,11 @@
       "currentVersion": "Current Version",
       "newVersion": "New Version",
       "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
-      "upgrade": "Upgrade"
+      "pending": "Pending",
+      "upgrade": "Upgrade",
+      "upgradeNow": "Upgrade Now",
+      "upgradingHost": "Upgrading {{host}} to {{version}}",
+      "upgradeDone": "Upgrade completed!"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -2222,6 +2224,7 @@
   },
   "mediaFusion": {
     "page_title": "Media Service",
+    "add-resource-button": "Add Resource",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -2317,6 +2320,14 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "raised": "Raised"
+    },
+    "add-resource-dialog": {
+      "title": "Register a New Media Server",
+      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to.",
+      "text2": "Enter the hostname or IP address of the Media Server that you want to register to cloud. Click REGISTER RESOURCE, login to your Media Server and register.",
+      "register": "REGISTER RESOURCE",
+      "cancel": "CANCEL",
+      "hostname-placeholder": "Enter hostname or IP address"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
