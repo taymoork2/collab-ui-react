@@ -45,8 +45,8 @@ describe('Controller: TrialCallCtrl', function () {
     }
   });
 
-  it('should always have a recipientType === PARTNER || CUSTOMER', function () {
-    expect(controller.details.shippingInfo.recipientType).toBeDefined();
-    expect(controller.details.shippingInfo.recipientType).toBe('CUSTOMER' || 'PARTNER');
+  it('should always have a recipient type === PARTNER || CUSTOMER', function () {
+    expect(controller.details.shippingInfo.type).toBeDefined();
+    expect(controller.details.shippingInfo.type).toBe('CUSTOMER' || 'PARTNER');
   });
 });

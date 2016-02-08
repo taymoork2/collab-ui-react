@@ -1,8 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log', 'formlyValidationMessages',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log', 'formlyValidationMessages', 'PreviousState',
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState) {
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
@@ -104,9 +104,12 @@ angular
         },
         Config.tokenTimers.refreshDelay); //15 minutes
 
-      $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+      $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         HttpUtils.setTrackingID();
         LogMetricsService.logMetricsState(toState);
+
+        PreviousState.set(fromState.name);
+        PreviousState.setParams(fromParams);
 
         // Add Body Class to the $rootScope on stateChange
         $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

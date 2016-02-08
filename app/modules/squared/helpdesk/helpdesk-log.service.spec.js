@@ -20,16 +20,16 @@ describe('Service: HelpdeskLogService', function () {
       success: true,
       metadataList: [{
         filename: "logFile1",
-        timestamp: "2016-04-25T11:46:24.757Z"
-      }, {
-        filename: "logFile2",
-        timestamp: "2016-02-25T11:46:24.757Z"
-      }, {
-        filename: "logFile3",
         timestamp: "2016-01-25T11:46:24.757Z"
       }, {
+        filename: "logFile2",
+        timestamp: "2016-02-04T11:02:48.354Z"
+      }, {
+        filename: "logFile3",
+        timestamp: "2016-02-08T09:18:54.238Z"
+      }, {
         filename: "logFile4",
-        timestamp: "2016-04-25T11:46:25.757Z"
+        timestamp: "2016-01-25T11:19:19.443Z"
       }]
     };
     var download = {
@@ -47,7 +47,7 @@ describe('Service: HelpdeskLogService', function () {
 
   it('fetches the last log on search', function (done) {
     Service.searchForLastPushedLog('searchterm').then(function (log) {
-      expect(log.filename).toEqual("logFile4");
+      expect(log.filename).toEqual("logFile3");
       done();
     }, function (reason) {
       fail(reason);
@@ -57,7 +57,7 @@ describe('Service: HelpdeskLogService', function () {
 
   it('fetches the last log on user id', function (done) {
     Service.getLastPushedLogForUser('userid').then(function (log) {
-      expect(log.filename).toEqual("logFile4");
+      expect(log.filename).toEqual("logFile3");
       done();
     }, function (reason) {
       fail(reason);

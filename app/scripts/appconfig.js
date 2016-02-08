@@ -51,10 +51,21 @@ angular
           authenticate: false
         })
         .state('unauthorized', {
-          url: '/unauthorized',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/unauthorized.html',
+              templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
+            }
+          },
+          authenticate: false
+        })
+        .state('login-error', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -63,7 +74,9 @@ angular
           url: '/404',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/404.html',
+              templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -1689,8 +1702,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: undefined,
-            serviceType: undefined
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details.cluster-settings', {
