@@ -548,16 +548,16 @@
     logs: {
       search: [{
         filename: "logFile1",
-        timestamp: "2016-04-25T11:46:24.757Z"
-      }, {
-        filename: "logFile2",
-        timestamp: "2016-02-25T11:46:24.757Z"
-      }, {
-        filename: "logFile3",
         timestamp: "2016-01-25T11:46:24.757Z"
       }, {
+        filename: "logFile2",
+        timestamp: "2016-02-04T11:02:48.354Z"
+      }, {
+        filename: "logFile3",
+        timestamp: "2016-02-08T09:18:54.238Z"
+      }, {
         filename: "logFile4",
-        timestamp: "2016-04-25T11:46:25.757Z"
+        timestamp: "2016-01-25T11:19:19.443Z"
       }],
       download: "http://someverylongurl.txt"
     }

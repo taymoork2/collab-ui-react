@@ -24,7 +24,7 @@
     }
   }
   .flex-row {
-    @extend .row;
+    @extend .row, .full;
     display: flex;
     .columns {
       padding: 1.5rem;
@@ -697,5 +697,11 @@
   }
   .font-regular {
     font-size: 1rem
+  }
+}
+
+.wizard-main-wrapper {
+  .row {
+    @extend .full;
   }
 }

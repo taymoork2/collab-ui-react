@@ -294,7 +294,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       it('should update the registered device graph on deviceUpdated', function () {
         controller.deviceUpdate();
 
-        expect(DummyCustomerReportService.dummyDeviceData).not.toHaveBeenCalled();
         expect(CustomerReportService.getDeviceData).not.toHaveBeenCalled();
         expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
         expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();
