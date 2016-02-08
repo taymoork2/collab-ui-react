@@ -182,38 +182,38 @@ angular.module('Core')
             priority: 0,
           },
         }, {
-            field: 'messaging',
-            displayName: $translate.instant('customerPage.message'),
-            width: '12%',
-            cellTemplate: serviceTemplate,
-            headerClass: 'align-center',
-            sortingAlgorithm: serviceSort
-          }, {
-            field: 'conferencing',
-            displayName: $translate.instant('customerPage.meeting'),
-            width: '12%',
-            cellTemplate: serviceTemplate,
-            headerClass: 'align-center',
-            sortingAlgorithm: serviceSort
-          }, {
-            field: 'communications',
-            displayName: $translate.instant('customerPage.call'),
-            width: '12%',
-            cellTemplate: serviceTemplate,
-            headerClass: 'align-center',
-            sortingAlgorithm: serviceSort
-          }, {
-            field: 'notes',
-            displayName: $translate.instant('customerPage.notes'),
-            cellTemplate: noteTemplate,
-            sortingAlgorithm: notesSort
-          }, {
-            field: 'action',
-            displayName: $translate.instant('customerPage.actionHeader'),
-            sortable: false,
-            cellTemplate: actionTemplate,
-            width: '90'
-          }]
+          field: 'messaging',
+          displayName: $translate.instant('customerPage.message'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'conferencing',
+          displayName: $translate.instant('customerPage.meeting'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'communications',
+          displayName: $translate.instant('customerPage.call'),
+          width: '12%',
+          cellTemplate: serviceTemplate,
+          headerClass: 'align-center',
+          sortingAlgorithm: serviceSort
+        }, {
+          field: 'notes',
+          displayName: $translate.instant('customerPage.notes'),
+          cellTemplate: noteTemplate,
+          sortingAlgorithm: notesSort
+        }, {
+          field: 'action',
+          displayName: $translate.instant('customerPage.actionHeader'),
+          sortable: false,
+          cellTemplate: actionTemplate,
+          width: '90'
+        }]
       };
 
       function serviceSort(a, b) {
