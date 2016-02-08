@@ -352,7 +352,7 @@
             xmlServerURL: xmlServerURL,
             wbxSiteName: wbxSiteName,
             webexAdminID: primaryEmail,
-            accessToken: $rootScope.token
+            accessToken: Storage.get('accessToken')
           };
 
           this.getSessionTicketInfo(xmlApiAccessInfo).then(

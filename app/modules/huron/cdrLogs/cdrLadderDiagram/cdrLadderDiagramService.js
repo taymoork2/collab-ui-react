@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log) {
-    var access_token = 'Bearer ' + $rootScope.token;
     var callflowDiagramUrl = Config.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var TIMEOUT_IN_MILI = 8000;
     var NOT_FOUND = 'Not Found';
@@ -164,8 +163,7 @@
           },
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml',
-            'Authorization': access_token
+            'Accept': 'application/json, application/xml'
           }
         })
         .success(function (response) {

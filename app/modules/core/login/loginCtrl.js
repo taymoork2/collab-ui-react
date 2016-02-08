@@ -11,8 +11,6 @@ angular.module('Core')
       var storedParams = 'storedParams';
       var queryParams = SessionStorage.popObject('queryParams');
 
-      $rootScope.token = Storage.get('accessToken');
-
       var pageParam = $location.search().pp;
       if (pageParam) {
         PageParam.set(pageParam);
@@ -34,7 +32,7 @@ angular.module('Core')
         $scope.loading = true;
         var loadingDelayPromise = $timeout(function () {}, loadingDelay);
 
-        Auth.authorize($rootScope.token)
+        Auth.authorize()
           .then(function () {
             if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
               $state.go('firsttimewizard');
@@ -49,14 +47,9 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-
               } else if (Authinfo.isPartnerAdmin()) {
-                if (Auth.isLoginMarked()) {
-                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-                  Auth.clearLoginMarker();
-                }
+                LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 state = 'partneroverview';
-
               } else if (Authinfo.isSupportUser()) {
                 state = 'support.status';
               } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
@@ -93,7 +86,7 @@ angular.module('Core')
         authorizeUser();
       });
 
-      if (!_.isEmpty($rootScope.token)) {
+      if (!_.isEmpty(Storage.get('accessToken'))) {
         authorizeUser();
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();

@@ -6,7 +6,7 @@
     .factory('ResponseInterceptor', ResponseInterceptor);
 
   /* @ngInject */
-  function ResponseInterceptor($injector, $q, $rootScope, Storage, Utils, Config, Log, Auth) {
+  function ResponseInterceptor($q, Log, Auth) {
 
     return {
       responseError: function (response) {
@@ -65,4 +65,5 @@
       return responseData.indexOf(searchString) != -1;
     }
   }
+  
 })();

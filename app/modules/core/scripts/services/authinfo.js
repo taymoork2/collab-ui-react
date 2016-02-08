@@ -405,6 +405,9 @@ angular.module('Core')
         },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
+        },
+        isUserAdmin: function () {
+          return this.getRoles().indexOf('Full_Admin') > -1;
         }
       };
     }

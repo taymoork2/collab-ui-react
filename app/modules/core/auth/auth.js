@@ -5,31 +5,19 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope) {
-  var auth = {
-    oauthUrl: Config.getOauth2Url()
-  };
+function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage) {
 
   var authDeferred;
 
-  var loginMarker = false;
-
-  auth.getAccount = function (org) {
-    var $http = $injector.get('$http');
-    var accountUrl = Config.getAdminServiceUrl();
-    var url = accountUrl + 'organization/' + org + '/accounts';
-    return $http.get(url);
-  };
-
-  auth.authorize = function (token) {
+  /* 
+    still untested and not refactored, will fix in my next PR 
+    - stimurbe
+  */
+  function authorize () {
     if (authDeferred) return authDeferred.promise;
-
     authDeferred = $q.defer();
 
     var authorizeUrl = Config.getAdminServiceUrl();
-    var $http = $injector.get('$http');
-    $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-
     var currentOrgId = SessionStorage.get('customerOrgId');
     var partnerOrgId = SessionStorage.get('partnerOrgId');
 
@@ -53,7 +41,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     var getAuthData = function () {
       var result;
 
-      return $http.get(authUrl).then(function (authResponse) {
+      return httpGET(authUrl).then(function (authResponse) {
 
           //We'll need to explicitly use values from the response instead of
           //using Authinfo, since Authinfo.initialize() hasn't been called yet
@@ -70,7 +58,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           //otherwise, explicitly return null
           if (doServicesRequest) {
             var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + result.orgId + '/services';
-            return $http.get(servicesUrl);
+            return httpGET(servicesUrl);
           } else {
             return $q.when(null);
           }
@@ -108,7 +96,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlement removed from backend.
           var msgrServiceUrl = Config.getMessengerServiceUrl() + '/orgs/' + result.orgId + '/cisync/';
 
-          return $http.get(msgrServiceUrl).then(function (msgrResponse) {
+          return httpGET(msgrServiceUrl).then(function (msgrResponse) {
 
             var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
             if (isMsgrOrg) {
@@ -154,7 +142,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     getAuthData().then(function (authData) {
       Authinfo.initialize(authData);
       if (Authinfo.isAdmin()) {
-        auth.getAccount(Authinfo.getOrgId())
+        getAccount(Authinfo.getOrgId())
           .success(function (data, status) {
             Authinfo.updateAccountInfo(data, status);
             Authinfo.initializeTabs();
@@ -169,162 +157,124 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return authDeferred.promise;
   };
 
-  auth.getFromGetParams = function (url) {
-    var result = {};
-    var cleanUrlA = url.split('#');
-    var cleanUrl = cleanUrlA[1];
-    for (var i = 2; i < cleanUrlA.length; i++) {
-      cleanUrl += '#' + cleanUrlA[i];
-    }
-    var params = cleanUrl.split('&');
-    for (i = 0; i < params.length; i++) {
-      var param = params[i];
-      result[param.split('=')[0]] = param.split('=')[1];
-    }
-    return result;
+  function getAccount(org) {
+    var url = Config.getAdminServiceUrl() + 'organization/' + org + '/accounts';
+    return httpGET(url);
   };
 
-  auth.getFromStandardGetParams = function (url) {
-    var result = {};
-    var cleanUrlA = url.split('?');
-    var cleanUrl = cleanUrlA[1];
-    var params = cleanUrl.split('&');
-    for (var i = 0; i < params.length; i++) {
-      var param = params[i];
-      result[param.split('=')[0]] = param.split('=')[1];
-    }
-    return result;
-  };
-
-  auth.getNewAccessToken = function (code) {
-    var $http = $injector.get('$http');
-    var deferred = $q.defer();
+  function getNewAccessToken (code) {
+    var url = Config.getOauth2Url() + 'access_token';
     var token = Config.getOAuthClientRegistrationCredentials();
     var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
-    $http({
-        method: 'POST',
-        url: auth.oauthUrl + 'access_token',
-        data: data,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + token
-        }
-      })
-      .success(function (data) {
-        // This flow happens before the login controller is engaged and
-        // login controller would not know that the admin logged in
-        // without this marker. If there is a better way to check this
-        // information from the login controller in the future, this
-        // can be changed.
-        loginMarker = true;
-        deferred.resolve(data);
-      })
-      .error(function (data, status) {
-        Log.error('Failed to obtain new oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
-        deferred.reject('Token request failed: ' + data.error_description);
-      });
-    return deferred.promise;
+
+    return httpPOST(url, data, token).then(
+      updateAccessToken, 
+      handleError('Failed to obtain new oauth access_token.')
+    );
   };
 
-  auth.refreshAccessToken = function (refresh_tok) {
-    var $http = $injector.get('$http');
-    var data = Config.getOauthAccessCodeUrl(refresh_tok);
-    var cred = Config.getOAuthClientRegistrationCredentials();
-    return $http({
-      method: 'POST',
-      url: auth.oauthUrl + 'access_token',
-      data: data,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + cred
-      }
-    });
+  function refreshAccessToken() {
+    var refreshToken = Storage.get('refreshToken');
+    var url = Config.getOauth2Url() + 'access_token';
+    var data = Config.getOauthAccessCodeUrl(refreshToken);
+    var token = Config.getOAuthClientRegistrationCredentials();
+    
+    return httpPOST(url, data, token).then(updateAccessToken);
   };
 
-  auth.setAccessToken = function () {
-    var deferred = $q.defer();
-    var $http = $injector.get('$http');
-    var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
+  function setAccessToken() {
+    var url = Config.getOauth2Url() + 'access_token';
+    var token = Config.getOAuthClientRegistrationCredentials();
     var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
-    $http({
-        method: 'POST',
-        url: auth.oauthUrl + 'access_token',
-        data: data,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + token
-        }
-      })
-      .success(function (data) {
-        $rootScope.token = data.access_token;
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-        deferred.resolve(data.access_token);
-      })
-      .error(function (data, status) {
-        Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
-        deferred.reject('Token request failed: ' + data.error_description);
-      });
-    return deferred.promise;
+
+    return httpPOST(url, data, token).then(
+      updateAccessToken, 
+      handleError('Failed to obtain oauth access_token')
+    );
   };
 
-  auth.refreshAccessTokenAndResendRequest = function (response) {
-    var refresh_token = Storage.get('refreshToken');
-    return this.refreshAccessToken(refresh_token)
-      .then(function (response) {
+
+  function refreshAccessTokenAndResendRequest(response) {
+    return refreshAccessToken()
+      .then(function (token) {
         var $http = $injector.get('$http');
-        Storage.put('accessToken', response.data.access_token);
-        $rootScope.token = response.data.access_token;
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-        response.config.headers.Authorization = 'Bearer ' + $rootScope.token;
         return $http(response.config);
       });
   };
 
-  auth.logout = function () {
-    Storage.clear();
-    var $http = $injector.get('$http');
-    var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
-    var data = 'token=' + $rootScope.token;
-
-    $http({
-        method: 'POST',
-        url: Config.getOauthDeleteTokenUrl(),
-        data: data,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + token
-        }
-      })
-      .success(function (data, status) {
-        Log.info('oAuth token deleted successfully. Status: ' + status);
-        $window.location.href = Config.getLogoutUrl();
-      })
-      .error(function (data, status) {
-        Log.error('Failed to delete the oAuth token.  Status: ' + status + ' Error: ' + (data.error || 'unknown'));
-        // Call CI logout even if delete oAuth token operation fails. This is consistent with other spark clients.
+  function logout () {
+    var url = Config.getOauthDeleteTokenUrl();
+    var data = 'token=' + Storage.get('accessToken');
+    var token = Config.getOAuthClientRegistrationCredentials();
+    return httpPOST(url, data, token)
+      .then(function() {
+        Log.info('oAuth token deleted successfully.');
+      }, handleError('Failed to delete the oAuth token'))
+      .finally(function() {
+        Storage.clear();
         $window.location.href = Config.getLogoutUrl();
       });
   };
 
-  auth.isLoggedIn = function () {
+  function isLoggedIn () {
     return Storage.get('accessToken');
   };
 
-  auth.isUserAdmin = function () {
-    return Authinfo.getRoles().indexOf('Full_Admin') > -1;
-  };
-
-  auth.redirectToLogin = function () {
+  function redirectToLogin () {
     $window.location.href = Config.getOauthLoginUrl();
   };
 
-  auth.isLoginMarked = function () {
-    return loginMarker;
+  // helpers
+
+  function httpGET(url) {
+    var $http = $injector.get('$http');
+    return $http.get(url);
+  }
+
+  function httpPOST(url, data, token) {
+    var $http = $injector.get('$http');
+    return $http({
+      method: 'POST',
+      url: url,
+      data: data,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + token
+      }
+    });
+  }
+
+  function updateAccessToken(response) {
+    var token = _.get(response, 'data.access_token');
+    Log.info('updateAccessToken: ' + token);
+    Storage.put('accessToken', token);
+    setAuthorizationHeader(token);
+    return token;
+  }
+
+  function handleError(message) {
+    return function(res) {
+      Log.error(message, res.data);
+    }
+  }
+
+  function setAuthorizationHeader(token) {
+    $injector.get('$http').defaults.headers.common.Authorization = 'Bearer ' + (token || Storage.get('accessToken'));
+  }
+
+  // expose service
+
+  return {
+    getAccount: getAccount,
+    authorize: authorize,
+    getNewAccessToken: getNewAccessToken,
+    refreshAccessToken:refreshAccessToken,
+    setAccessToken:setAccessToken,
+    refreshAccessTokenAndResendRequest:refreshAccessTokenAndResendRequest,
+    logout:logout,
+    isLoggedIn:isLoggedIn,
+    redirectToLogin:redirectToLogin,
+    setAuthorizationHeader: setAuthorizationHeader
   };
 
-  auth.clearLoginMarker = function () {
-    loginMarker = false;
-  };
-
-  return auth;
 }

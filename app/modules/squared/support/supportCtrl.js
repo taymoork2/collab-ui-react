@@ -158,7 +158,7 @@ angular.module('Squared')
             cache: true,
             ajax: {
               headers: {
-                'Authorization': 'Bearer ' + $rootScope.token
+                'Authorization': 'Bearer ' + Storage.get('accessToken')
               }
             }
           }
@@ -176,8 +176,7 @@ angular.module('Squared')
           source: engine.ttAdapter()
         });
       };
-      //Populating authinfo data if empty.
-      $rootScope.token = Storage.get('accessToken');
+      
       initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
