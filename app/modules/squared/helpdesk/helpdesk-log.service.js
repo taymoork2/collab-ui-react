@@ -60,9 +60,10 @@
     }
 
     function findLastLog(metadataList) {
-      var lastLog = _.chain(metadataList).sortBy(metadataList, function (meta) {
+      var sorted = _.sortBy(metadataList, function (meta) {
         return new Date(meta.timestamp);
-      }).last().value();
+      });
+      var lastLog = _.last(sorted);
       return {
         timestamp: lastLog.timestamp,
         filename: lastLog.filename
