@@ -14,6 +14,7 @@
         <tr ng-repeat="domain in dv.domains">
           <td>{{domain.text}}</td>
           <td class="domain-status"><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</td>
+
           <td id="domainMenu">
             <span cs-dropdown class="actions-menu dropdown pull-right">
               <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
@@ -45,9 +46,6 @@
             <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
                     ng-if="domain.status==='pending' && domain.token"
                     class="btn--cta verify-btn" translate="domainManagement.verifyDomain"></button>
-            <button ui-sref="domainmanagement.claim({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                    ng-if="domain.status==='verified'"
-                    class="btn--cta verify-btn" translate="domainManagement.claimDomain"></button>
           </td>
         </tr>
       </table>
