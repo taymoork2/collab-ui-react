@@ -78,36 +78,31 @@ describe('Service: ClusterService', function () {
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_mgmt'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host1.example.com',
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_ucmc'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host1.example.com',
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_cal'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host2.example.com',
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_mgmt'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host2.example.com',
             state: 'registered',
             upgradeState: 'upgraded',
             connectorType: 'c_ucmc'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host2.example.com',
             state: 'running',
@@ -157,16 +152,14 @@ describe('Service: ClusterService', function () {
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_mgmt'
-          },
-          {
+          }, {
             alarms: [],
             hostname: 'host1.example.com',
             state: 'running',
             upgradeState: 'upgraded',
             connectorType: 'c_ucmc'
           }]
-        },
-        {
+        }, {
           id: 'cluster_1',
           name: 'Cluster 1',
           state: 'fused',
