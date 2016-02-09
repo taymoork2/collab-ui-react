@@ -28,7 +28,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     deferred = httpGET(getAuthorizationUrl())
       .then(replaceOrTweakServices)
       .then(injectMessengerService)
-      .then(intitalizeAuthinfo)
+      .then(initializeAuthinfo)
       .catch(handleErrorAndResetAuthinfo);
 
     return deferred;
@@ -124,13 +124,13 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
         if (isMessengerOrg) {
           Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
           authData.services.push({
-            "serviceId": "jabberMessenger",
-            "displayName": "Messenger",
-            "ciName": "webex-messenger",
-            "type": "PAID",
-            "isBeta": false,
-            "isConfigurable": false,
-            "isIgnored": true
+            'serviceId': 'jabberMessenger',
+            'displayName': 'Messenger',
+            'ciName': 'webex-messenger',
+            'type': 'PAID',
+            'isBeta': false,
+            'isConfigurable': false,
+            'isIgnored': true
           });
         }
         return authData;
@@ -160,7 +160,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return authData;
   }
 
-  function intitalizeAuthinfo(authData) {
+  function initializeAuthinfo(authData) {
     Authinfo.initialize(authData);
     if (Authinfo.isAdmin()) {
       return getAccount(Authinfo.getOrgId())
