@@ -136,13 +136,11 @@ angular.module('Core')
         };
 
         if ($scope.addEnterpriseSipUrl) {
-          if (Authinfo.isFusion()) {
-            var enterpriseSettingsTab = _.find($scope.tabs, {
-              name: 'enterpriseSettings',
-            });
-            if (angular.isDefined(enterpriseSettingsTab)) {
-              enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
-            }
+          var enterpriseSettingsTab = _.find($scope.tabs, {
+            name: 'enterpriseSettings',
+          });
+          if (angular.isDefined(enterpriseSettingsTab)) {
+            enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
           }
         }
 

@@ -69,21 +69,24 @@
       }
     });
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
-      if (result && Authinfo.isFusion()) {
-        vm.isEntitledUnderToggle = true;
-        Orgservice.getOrg(function (data, status) {
-          if (status === 200) {
-            if (data.orgSettings.sipCloudDomain) {
-              vm.isCloudSipUriSet = true;
+    vm.setSipUriNotification = function () {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
+        if (result) {
+          vm.isEntitledUnderToggle = true;
+          Orgservice.getOrg(function (data, status) {
+            if (status === 200) {
+              if (data.orgSettings.sipCloudDomain) {
+                vm.isCloudSipUriSet = true;
+              }
+            } else {
+              Log.debug('Get existing org failed. Status: ' + status);
+              Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
             }
-          } else {
-            Log.debug('Get existing org failed. Status: ' + status);
-            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-          }
-        });
-      }
-    });
+          });
+        }
+      });
+    };
+    vm.setSipUriNotification();
 
     vm.setHybridAcknowledged = function (serviceName) {
       if (serviceName === 'calendar-service') {
