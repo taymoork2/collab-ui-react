@@ -2,6 +2,8 @@
 
 var LoginPage = function () {
 
+  var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
+
   this.setLoginUsername = function (username) {
     browser.driver.findElement(by.id('IDToken1')).sendKeys(username);
   };
@@ -39,7 +41,7 @@ var LoginPage = function () {
     expect(browser.driver.findElement(by.css('.generic-error')).getText()).toContain(msg);
   };
 
-  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Login'));
+  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Sign In'));
 
   function getLoginUrl(expectedUrl) {
     var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
@@ -80,7 +82,7 @@ var LoginPage = function () {
       navigation.expectDriverCurrentUrl('/login').then(function () {
         browser.executeScript("localStorage.accessToken='" + bearer + "'");
         browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
+        utils.expectIsDisplayed(unauthorizedTitle);
       });
     });
     return browser.wait(function () {

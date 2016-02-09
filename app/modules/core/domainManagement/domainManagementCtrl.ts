@@ -4,23 +4,19 @@ namespace domainManagement {
 
     private _loggedOnUser = {
       domain: null,
-      email:null,
-      isLoaded:false,
-      isPartner:false
-  };
+      email: null,
+      isLoaded: false,
+      isPartner: false
+    };
 
     private _feature = false;
 
     /* @ngInject */
-    constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
+    constructor(Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
 
       FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
         .then(dmEnabled => {
-            if (dmEnabled) {
-              this._feature = true;
-            } else {
-              this.$state.go('unauthorized');
-            }
+            this._feature = !!dmEnabled;
           }
         );
 
@@ -41,7 +37,7 @@ namespace domainManagement {
         this._loggedOnUser.isLoaded = true;
       });
 
-      this.DomainManagementService.refreshDomainList();
+      this.DomainManagementService.getVerifiedDomains().then(DomainManagementService.getVerificationTokens.bind(DomainManagementService));
     }
 
     get domains() {

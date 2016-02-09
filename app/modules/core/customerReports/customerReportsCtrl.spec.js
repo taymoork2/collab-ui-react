@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Customer Reports Ctrl', function () {
-  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExUtilsFact, Userservice;
+  var controller, $scope, $stateParams, $q, $translate, $timeout, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, WebExApiGatewayService, Userservice;
   var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
   var ABORT = 'ABORT';
   var REFRESH = 'refresh';
@@ -114,7 +114,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         initReportsObject: function (input) {}
       };
 
-      WebExUtilsFact = {
+      WebExApiGatewayService = {
         isSiteSupportsIframe: function (url) {
           var defer = $q.defer();
           defer.resolve({
@@ -169,7 +169,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         DummyCustomerReportService: DummyCustomerReportService,
         CustomerGraphService: CustomerGraphService,
         WebexReportService: WebexReportService,
-        WebExUtilsFact: WebExUtilsFact,
+        WebExApiGatewayService: WebExApiGatewayService,
         Userservice: Userservice
       });
       $scope.$apply();
@@ -237,7 +237,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaOptions).toEqual(mediaOptions);
         expect(controller.mediaSelected).toEqual(mediaOptions[0]);
 
-        expect(controller.deviceDescription).toEqual('registeredEndpoints.description');
+        expect(controller.deviceDescription).toEqual('registeredEndpoints.customerDescription');
         expect(controller.deviceStatus).toEqual(REFRESH);
         expect(controller.deviceFilter).toEqual([defaultDeviceFilter]);
         expect(controller.selectedDevice).toEqual(defaultDeviceFilter);
@@ -294,7 +294,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       it('should update the registered device graph on deviceUpdated', function () {
         controller.deviceUpdate();
 
-        expect(DummyCustomerReportService.dummyDeviceData).not.toHaveBeenCalled();
         expect(CustomerReportService.getDeviceData).not.toHaveBeenCalled();
         expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
         expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();

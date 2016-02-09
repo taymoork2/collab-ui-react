@@ -6,7 +6,7 @@
     <section class="text-center row">
       <i class="icon icon-circle-comp-pos icon-5x"></i>
     </section>
-    <section class="text-center" ng-show="!trial.meetingTrial.enabled">
+    <section class="text-center" ng-show="trial.showDefaultFinish()">
       <div class="row">
         <h3 translate="trialModal.trialSuccess"></h3>
         <p translate="trialModal.nextStepPrompt"></p>
@@ -30,7 +30,7 @@
         </div>
       </div>
     </section>
-    <section class="text-center" ng-show="trial.meetingTrial.enabled">
+    <section class="text-center" ng-show="!trial.showDefaultFinish()">
       <div class="row">
         <h3 translate="trialModal.finishTrialAdded"></h3>
         <div class="medium-12 columns">

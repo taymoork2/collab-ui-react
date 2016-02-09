@@ -4,32 +4,32 @@
 'use strict';
 
 var SiteSettigsPage = function () {
+  this.t31Info = {
+    siteUrl: 't30citestprov6.webex.com',
+    testAdminUsername: 't31r1-regression-adm@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  this.t30Info = {
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   this.testInfo = {
     describeCount: 0,
-    siteUrl: null,
-    siteType: null,
+    testType: null,
     describeText: null
   };
-
-  this.testAdmin1 = {
-    username: 'sjsite14@mailinator.com',
-    password: 'Cisco!23',
-  };
-
-  this.testAdmin2 = {
-    username: 'cisjsite002@mailinator.com',
-    password: 'Cisco!23',
-  }
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
-  this.configureSJSITE14Cog = element(by.id("sjsite14.webex.com_webex-site-settings"));
-  this.configureCISJSITE002Cog = element(by.id("cisjsite002.webex.com_webex-site-settings"));
-  this.sjsite14CardsSectionId = element(by.id("sjsite14.webex.com-cardsSection"));
-  this.cisjsite002CardsSectionId = element(by.id("cisjsite002.webex.com-cardsSection"));
-
+  this.t31ConfigureCog = element(by.id(this.t31Info.siteUrl + "_webex-site-settings"));
+  this.t30ConfigureCog = element(by.id(this.t30Info.siteUrl + "_webex-site-settings"));
+  this.t31CardsSectionId = element(by.id(this.t31Info.siteUrl + "-cardsSection"));
+  this.t30CardsSectionId = element(by.id(this.t30Info.siteUrl + "-cardsSection"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));

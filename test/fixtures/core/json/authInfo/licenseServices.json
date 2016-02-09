@@ -35,4 +35,17 @@
   "isTrial": false,
   "status": "PENDING",
   "capacity": 50000
+}, {
+  "licenseId": "CF_7yah31f5-cgcd-434e-92ef-5abdbba1b3a7",
+  "offerName": "CF",
+  "licenseType": "CONFERENCING",
+  "billingServiceId": "",
+  "features": [
+    "webex-squared",
+    "squared-call-initiation"
+  ],
+  "volume": 500,
+  "isTrial": true,
+  "status": "PENDING",
+  "capacity": 500
 }]

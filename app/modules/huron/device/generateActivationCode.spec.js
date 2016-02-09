@@ -34,6 +34,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       $stateParams: stateParams
     });
     controller.showEmail = false;
+    spyOn($state, 'go').and.returnValue($q.when());
     spyOn(HttpUtils, 'setTrackingID').and.returnValue('TrackingID is set');
     spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
     spyOn(OtpService, 'generateOtp').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/0001000200030004.json')));

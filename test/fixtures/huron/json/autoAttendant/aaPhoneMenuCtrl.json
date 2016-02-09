@@ -138,6 +138,11 @@
     "entries": [],
     "headers": []
   },
+  "ceMenuNoAttempt": {
+    "type": "MENU_OPTION",
+    "entries": [],
+    "headers": []
+  },
   "combinedMenu": {
     "type": "MENU_WELCOME",
     "headers": [],
