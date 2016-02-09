@@ -15,9 +15,9 @@
 
     vm.email1 = _.get($location.search(), 'email', '').replace(/\s+/g, '+');
 
-    vm.confirmPlaceholder = function() {
+    vm.confirmPlaceholder = function () {
       return $translate.instant('digitalRiver.createAccount.confirmPlaceholder');
-    }
+    };
 
     vm.handleCreateAccount = function () {
 

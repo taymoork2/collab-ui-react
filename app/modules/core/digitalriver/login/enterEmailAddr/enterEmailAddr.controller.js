@@ -13,9 +13,9 @@
     // TODO: Remove this after the go-live.
     vm.drReferrer = Userservice.hasDrReferrer();
 
-    vm.emailPlaceholder = function() {
+    vm.emailPlaceholder = function () {
       return $translate.instant('digitalRiver.enterEmailAddr.emailPlaceholder');
-    }
+    };
 
     vm.handleEnterEmailAddr = function () {
       if (!vm.email || 0 === vm.email.trim().length) {
