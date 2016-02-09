@@ -15,29 +15,29 @@ var testFiles = [];
 var log = $.util.log;
 
 gulp.task('watch', [
-      'watch:scss',
-      'watch:js',
-      'watch:ts',
-      'watch:vendorjs',
-      'watch:templates',
-      'watch:lang'
-    ]);
+  'watch:scss',
+  'watch:js',
+  'watch:ts',
+  'watch:vendorjs',
+  'watch:templates',
+  'watch:lang'
+]);
 
 
 gulp.task('watch:js', function () {
   if (!args.dist) {
     if (args.nounit) {
       gulp.watch([
-        config.appFiles.js
-      ], [
+          config.appFiles.js
+        ], [
           'copy:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
     } else {
       gulp.watch([
-        config.appFiles.js
-      ], [
+          config.appFiles.js
+        ], [
           'karma-watch',
           'copy:changed-files',
           'index:build'
@@ -90,8 +90,8 @@ gulp.task('watch:ts', function () {
 gulp.task('watch:lang', function () {
   if (!args.dist) {
     gulp.watch([
-      config.appFiles.lang
-    ], [
+        config.appFiles.lang
+      ], [
         'copy:changed-files'
       ])
       .on('change', logWatch);
@@ -101,8 +101,8 @@ gulp.task('watch:lang', function () {
 gulp.task('watch:vendorjs', function () {
   if (!args.dist) {
     gulp.watch([
-      config.vendorFiles.js
-    ], [
+        config.vendorFiles.js
+      ], [
         'copy:build-vendor-js',
         'index:build'
       ])
