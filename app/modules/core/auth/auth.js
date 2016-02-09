@@ -186,10 +186,10 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function handleErrorAndResetAuthinfo(res) {
     Authinfo.clear();
-    if (res && res.statusCode == 401) {
+    if (res && res.status == 401) {
       return $q.reject($translate.instant('errors.status401'));
     }
-    if (res && res.statusCode == 403) {
+    if (res && res.status == 403) {
       return $q.reject($translate.instant('errors.status403'));
     }
     return $q.reject($translate.instant('errors.serverDown'));
