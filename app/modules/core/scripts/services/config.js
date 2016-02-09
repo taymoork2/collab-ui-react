@@ -870,7 +870,7 @@ angular.module('Core')
             this.oauthClientRegistration.atlas.scope,
             encodeURIComponent(acu),
             this.getOauthServiceType(),
-            email
+            encodeURIComponent(email)
           ];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
