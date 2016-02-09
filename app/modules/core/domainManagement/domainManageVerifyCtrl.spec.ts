@@ -1,18 +1,18 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
+
 namespace domainManagement {
-
+  declare let sinon:any;
   describe('DomainManagementVerifyCtrl', ()=> {
-
-      let Config, Controller, Q, Translate, Injector, DomainManagmentVerifyCtrl, DomainManagementService, verifyDomainInvoked;
-
+      let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagmentVerifyCtrl, DomainManagementService, verifyDomainInvoked;
       beforeEach(angular.mock.module('Core'));
 
-      beforeEach(inject(($injector, $controller, $translate, $q, _Config_)=> {
+      beforeEach(inject((_$rootScope_, $injector, $controller, $translate, _$q_, _Config_)=> {
         Config = _Config_;
         Translate = $translate;
         Controller = $controller;
         Injector = $injector;
-        Q = $q;
+        $q = _$q_;
+        $rootScope = _$rootScope_;
 
         DomainManagementService = new DomainManagementServiceMock($q);
       }));
@@ -26,6 +26,52 @@ namespace domainManagement {
           $translate: Translate
         });
       };
+
+      describe('', ()=> {
+        it('should return domain provided through state as domain property', ()=> {
+          let ctrl, domain = {text: 'anydomain.com'};
+          ctrl = domainManagmentVerifyCtrlFactory(
+            DomainManagementService,
+            {
+              name: "testuser",
+              isLoaded: true,
+              domain: 'example.com'
+            },
+            domain
+          );
+
+          expect(ctrl.domain).toBe(domain);
+        });
+
+        it('should return error from verify as error property', ()=> {
+          let ctrl;
+          let domain = {text: 'anydomain.com'};
+          let user = {isLoaded: true, domain: 'example.com'};
+          let deferred = $q.defer();
+
+          let service = {
+            domainList: [{text: "superdomain.com", status: 'verified'}],
+            verifyDomain: sinon.stub().returns(deferred.promise),//$q.reject("error-in-verify")),
+            states: DomainManagementService.states
+          };
+
+          ctrl = domainManagmentVerifyCtrlFactory(
+            service, user, domain
+          );
+
+          ctrl.verify();
+
+          expect(service.verifyDomain.callCount).toBe(1);
+          deferred.reject("error-in-verify");
+          ctrl.error = "not-the-error-we-expect";
+
+          $rootScope.$digest(); //execute the promise in the ctrl
+          expect(ctrl.error).not.toBeNull();
+
+          expect(ctrl.error).toBe("error-in-verify");
+        });
+      });
+
 
       describe("with no previous domains verified", ()=> {
         beforeEach(()=> {
