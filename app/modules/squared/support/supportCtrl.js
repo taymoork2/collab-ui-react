@@ -19,17 +19,17 @@ angular.module('Squared')
       $scope.searchInput = 'none';
 
       $scope.tabs = [{
-        title: $translate.instant('supportPage.tabs.status'),
-        state: "support.status"
-      }, {
-        title: $translate.instant('supportPage.tabs.logs'),
-        state: "support.logs"
-      }
-      // Preliminary removed the menu item because the functionality is currently not used
-      //, {
-      //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
-      //  state: "support.billing"
-      //}
+          title: $translate.instant('supportPage.tabs.status'),
+          state: "support.status"
+        }, {
+          title: $translate.instant('supportPage.tabs.logs'),
+          state: "support.logs"
+        }
+        // Preliminary removed the menu item because the functionality is currently not used
+        //, {
+        //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
+        //  state: "support.billing"
+        //}
       ];
 
       $scope.toggleSystem = function () {
