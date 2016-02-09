@@ -22,7 +22,7 @@
       });
     };
     vm.getGroups();
-    
+
     vm.reassignText = $translate.instant(
       'mediaFusion.reassign.reassignText', {
         clusterName: cluster.name,

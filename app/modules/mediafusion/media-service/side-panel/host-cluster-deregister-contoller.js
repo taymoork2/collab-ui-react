@@ -10,7 +10,7 @@
         clusterName: cluster.name,
         organizationName: orgName
       });
-    
+
     vm.deregisterItem1 = $translate.instant(
       'mediaFusion.clusters.defuseCausesListItem1', {
         groupName: cluster.properties["mf.group.displayName"]

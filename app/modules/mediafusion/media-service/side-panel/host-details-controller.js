@@ -18,7 +18,7 @@ angular.module('Mediafusion')
       MediaClusterService.getOrganization(function (data, status) {
         if (data.success) {
           vm.organization = data;
-        } 
+        }
       });
 
       vm.reassignCluster = function () {
