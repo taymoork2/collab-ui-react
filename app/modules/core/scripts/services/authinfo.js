@@ -195,7 +195,7 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts;
+            var accounts = data.accounts || [];
 
             if (accounts.length > 0) {
               authData.hasAccount = true;

@@ -3,18 +3,25 @@
 fdescribe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, $httpBackend, Config, Storage, $window;
+  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage;
 
   beforeEach(module(function ($provide) {
     $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _$httpBackend_, _Config_, _Storage_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_) {
     Auth = _Auth_;
     Config = _Config_;
     Storage = _Storage_;
+    Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
+    SessionStorage = _SessionStorage_;
   }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should get account info using correct API', function (done) {
     Config.getAdminServiceUrl = sinon.stub().returns('foo/');
@@ -27,7 +34,7 @@ fdescribe('Auth Service', function () {
 
     Auth.getAccount('bar').then(function (res) {
       expect(res.data.foo).toBe('bar');
-      done();
+      _.defer(done);
     });
 
     $httpBackend.flush();
@@ -53,7 +60,7 @@ fdescribe('Auth Service', function () {
     Auth.getNewAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(Config.getOauthCodeUrl.getCall(0).args[0]).toBe('argToGetNewAccessToken');
-      done();
+      _.defer(done);
     });
 
     $httpBackend.flush();
@@ -77,7 +84,7 @@ fdescribe('Auth Service', function () {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
       expect(Config.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
-      done();
+      _.defer(done);
     });
 
     $httpBackend.flush();
@@ -105,7 +112,7 @@ fdescribe('Auth Service', function () {
 
     Auth.setAccessToken().then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
-      done();
+      _.defer(done);
     });
 
     $httpBackend.flush();
@@ -133,7 +140,7 @@ fdescribe('Auth Service', function () {
       }
     }).then(function (res) {
       expect(res.data.bar).toBe('baz');
-      done();
+      _.defer(done);
     });
 
     $httpBackend.flush();
@@ -163,4 +170,193 @@ fdescribe('Auth Service', function () {
     expect(loggedOut.callCount).toBe(1);
   });
 
+  describe('authorize', function () {
+
+    beforeEach(function () {
+      SessionStorage.get = sinon.stub();
+      Config.getAdminServiceUrl = sinon.stub().returns('path/');
+    });
+
+    it('should use correct URL if customer org', function (done) {
+      SessionStorage.get.withArgs('customerOrgId').returns('1337');
+      $httpBackend
+        .expectGET('path/organization/1337/userauthinfo')
+        .respond(500, {});
+
+      Auth.authorize().catch(function () {
+        _.defer(done);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should use correct URL if partner org', function (done) {
+      SessionStorage.get.withArgs('partnerOrgId').returns('1337');
+      $httpBackend
+        .expectGET('path/organization/1337/userauthinfo?launchpartnerorg=true')
+        .respond(500, {});
+
+      Auth.authorize().catch(function () {
+        _.defer(done);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should use correct URL if other org', function (done) {
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(500, {});
+
+      Auth.authorize().catch(function () {
+        _.defer(done);
+      });
+
+      $httpBackend.flush();
+    });
+
+    describe('given user is full admin', function () {
+
+      beforeEach(function () {
+        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        $httpBackend
+          .expectGET('path/userauthinfo')
+          .respond(200, {
+            orgId: 1337,
+            roles: ['Full_Admin']
+          });
+      });
+
+      it('services should be fetched', function () {
+        $httpBackend
+          .expectGET('path/organizations/1337/services')
+          .respond(500, {});
+
+        Auth.authorize();
+
+        $httpBackend.flush();
+      });
+
+      it('retuned entitlements should be used and webex api should be called', function () {
+        $httpBackend
+          .expectGET('path/organizations/1337/services')
+          .respond(200, {
+            entitlements: ['foo']
+          });
+
+        $httpBackend
+          .expectGET('msn/orgs/1337/cisync/')
+          .respond(200, {});
+
+        Authinfo.initialize = sinon.stub();
+
+        Auth.authorize().then();
+
+        $httpBackend.flush();
+
+        expect(Authinfo.initialize.callCount).toBe(1);
+
+        var result = Authinfo.initialize.getCall(0).args[0];
+        expect(result.services[0]).toBe('foo');
+      });
+
+    });
+
+    describe('given user is not admin', function () {
+
+      beforeEach(function () {
+        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        $httpBackend
+          .expectGET('path/userauthinfo')
+          .respond(200, {
+            orgId: 1337,
+            services: [{
+              ciService: 'foo',
+              sqService: 'bar'
+            }]
+          });
+        $httpBackend
+          .expectGET('msn/orgs/1337/cisync/')
+          .respond(200, {});
+        Authinfo.initialize = sinon.stub();
+        Authinfo.initializeTabs = sinon.stub();
+      });
+
+      it('massaged services are used and webex api should be called', function (done) {
+        Auth.authorize().then(function () {
+          _.defer(done);
+        });
+
+        $httpBackend.flush();
+
+        expect(Authinfo.initialize.callCount).toBe(1);
+
+        var result = Authinfo.initialize.getCall(0).args[0];
+        expect(result.services[0].ciName).toBe('foo');
+        expect(result.services[0].serviceId).toBe('bar');
+        expect(result.services[0].ciService).toBe(undefined);
+        expect(result.services[0].sqService).toBe(undefined);
+      });
+
+      it('will initialize tabs if not admin', function (done) {
+        Auth.authorize().then(function () {
+          _.defer(done);
+        });
+
+        $httpBackend.flush();
+
+        expect(Authinfo.initializeTabs.callCount).toBe(1);
+      });
+
+      it('will call getaccount if is admin', function (done) {
+        Authinfo.isAdmin = sinon.stub().returns(true);
+        Authinfo.getOrgId = sinon.stub().returns(42);
+        Authinfo.updateAccountInfo = sinon.stub();
+
+        $httpBackend
+          .expectGET('path/organization/42/accounts')
+          .respond(200, {});
+
+        Auth.authorize().then(function () {
+          _.defer(done);
+        });
+
+        $httpBackend.flush();
+
+        expect(Authinfo.initializeTabs.callCount).toBe(1);
+        expect(Authinfo.updateAccountInfo.callCount).toBe(1);
+      });
+
+    });
+
+    it('will add some webex stuff given some condition', function (done) {
+      Authinfo.initialize = sinon.stub();
+      Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+
+      $httpBackend
+        .expectGET('path/userauthinfo')
+        .respond(200, {
+          orgId: 1337,
+          services: []
+        });
+
+      $httpBackend
+        .expectGET('msn/orgs/1337/cisync/')
+        .respond(200, {
+          orgID: 'foo',
+          orgName: 'bar'
+        });
+
+      Auth.authorize().then(function () {
+        _.defer(done);
+      });
+      $httpBackend.flush();
+
+      expect(Authinfo.initialize.callCount).toBe(1);
+
+      var result = Authinfo.initialize.getCall(0).args[0];
+      expect(result.services.length).toBe(1);
+      expect(result.services[0].ciName).toBe('webex-messenger');
+    });
+  });
 });

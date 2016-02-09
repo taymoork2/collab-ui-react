@@ -20,156 +20,18 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest
   };
 
-  /* 
-    still untested and not refactored, will fix in my next PR 
-    - stimurbe
-  */
-  var authDeferred;
+  var deferred;
 
   function authorize() {
-    if (authDeferred) return authDeferred.promise;
-    authDeferred = $q.defer();
+    if (deferred) return deferred;
 
-    var authorizeUrl = Config.getAdminServiceUrl();
-    var currentOrgId = SessionStorage.get('customerOrgId');
-    var partnerOrgId = SessionStorage.get('partnerOrgId');
+    deferred = httpGET(getAuthorizationUrl())
+      .then(injectEntitlementsOrMapServices)
+      .then(injectMessengerService)
+      .then(intitalizeAuthinfo)
+      .catch(handleErrorAndResetAuthinfo);
 
-    var orgId = null;
-    var authUrl = null;
-
-    if (currentOrgId) {
-      authUrl = authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
-      orgId = currentOrgId;
-    } else if (partnerOrgId) {
-      authUrl = authorizeUrl + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
-      orgId = partnerOrgId;
-    } else {
-      authUrl = authorizeUrl + 'userauthinfo';
-    }
-
-    //Return data from the /userauthinfo API, with data from the /services API
-    //grafted onto it if the user has access to /services (instead of the native
-    //"services" field from the /userauthinfo response.) This allows us to expose
-    //the "isConfigurable" flag in objects that appear in the /services API response.
-    var getAuthData = function () {
-      var result;
-
-      return httpGET(authUrl).then(function (authResponse) {
-
-          //We'll need to explicitly use values from the response instead of
-          //using Authinfo, since Authinfo.initialize() hasn't been called yet
-
-          result = angular.copy(authResponse.data);
-
-          //Figure out whether this user is allowed to access the /services API
-          var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
-            _.any(['Full_Admin', 'PARTNER_ADMIN'], function (role) {
-              return result.roles.indexOf(role) > -1;
-            }) : false;
-
-          //Do the /services requset if the user is allowed to;
-          //otherwise, explicitly return null
-          if (doServicesRequest) {
-            var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + result.orgId + '/services';
-            return httpGET(servicesUrl);
-          } else {
-            return $q.when(null);
-          }
-
-        })
-        .then(function (servicesResponse) {
-
-          //If we received data from the /services API (not null)...
-          if (servicesResponse) {
-
-            //Replace the value of the "services" field in the /userauthinfo API response
-            //with the related/more detailed data provided by the /services API
-            result.services = angular.copy(servicesResponse.data.entitlements);
-
-            //If we did NOT receive data from the /services API,
-            //Change some relevant key names in the /userauthinfo API response's
-            //"services" field to match the format of the /services API, so that
-            //consuming code doesn't have to know about two sets of key names
-          } else if (_.isArray(result.services)) {
-
-            result.services = result.services.map(function (service) {
-              service = angular.copy(service);
-              if (service.ciService) {
-                service.ciName = service.ciService;
-                delete service.ciService;
-              }
-              if (service.sqService) {
-                service.serviceId = service.sqService;
-                delete service.sqService;
-              }
-              return service;
-            });
-          }
-
-          // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlement removed from backend.
-          var msgrServiceUrl = Config.getMessengerServiceUrl() + '/orgs/' + result.orgId + '/cisync/';
-
-          return httpGET(msgrServiceUrl).then(function (msgrResponse) {
-
-            var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
-            if (isMsgrOrg) {
-
-              Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
-
-              // Better get from CI or backend, hard code now since it's workaround and content is stable
-              var msgr_service = {
-                "serviceId": "jabberMessenger",
-                "displayName": "Messenger",
-                "ciName": "webex-messenger",
-                "type": "PAID",
-                "isBeta": false,
-                "isConfigurable": false,
-                "isIgnored": true
-              };
-
-              result.services.push(msgr_service);
-            }
-
-            return result;
-          }).catch(function (msgrErrResp) {
-
-            Log.error('Ignore error from Msgr service check: error code = ' + msgrErrResp.status);
-            return result;
-          });
-
-        })
-        .catch(function (response) {
-          Authinfo.clear();
-          var error = $translate.instant('errors.serverDown');
-          if (response) {
-            if (response.status === 403) {
-              error = $translate.instant('errors.status403');
-            } else if (response.status === 401) {
-              error = $translate.instant('errors.status401');
-            }
-          }
-          return $q.reject(error);
-        });
-    };
-
-    getAuthData()
-      .then(function (authData) {
-        Authinfo.initialize(authData);
-        if (Authinfo.isAdmin()) {
-          getAccount(Authinfo.getOrgId())
-            .success(function (data, status) {
-              Authinfo.updateAccountInfo(data, status);
-              Authinfo.initializeTabs();
-            })
-            .finally(authDeferred.resolve);
-        } else {
-          Authinfo.initializeTabs();
-          authDeferred.resolve();
-        }
-      })
-      .catch(authDeferred.reject);
-
-    return authDeferred.promise;
+    return deferred;
   }
 
   function getAccount(org) {
@@ -236,6 +98,103 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     $window.location.href = Config.getOauthLoginUrl();
   }
 
+  // authorize helpers
+
+  function getAuthorizationUrl() {
+    var url = Config.getAdminServiceUrl();
+
+    var customerOrgId = SessionStorage.get('customerOrgId');
+    if (customerOrgId) {
+      return url + 'organization/' + customerOrgId + '/userauthinfo';
+    }
+
+    var partnerOrgId = SessionStorage.get('partnerOrgId');
+    if (partnerOrgId) {
+      return url + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
+    }
+
+    return url + 'userauthinfo';
+  }
+
+  function injectMessengerService(authData) {
+    var url = Config.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
+    return httpGET(url)
+      .then(function (res) {
+        var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
+        if (isMessengerOrg) {
+          Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
+          authData.services.push({
+            "serviceId": "jabberMessenger",
+            "displayName": "Messenger",
+            "ciName": "webex-messenger",
+            "type": "PAID",
+            "isBeta": false,
+            "isConfigurable": false,
+            "isIgnored": true
+          });
+        }
+        return authData;
+      }).catch(function (res) {
+        handleError('Ignore error from Msgr service check.')(res);
+        return authData;
+      });
+  }
+
+  function injectEntitlements(authData) {
+    var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
+    return httpGET(servicesUrl).then(function (res) {
+      authData.services = res.data.entitlements;
+      return authData;
+    });
+  }
+
+  function mapServices(authData) {
+    authData.services = _.map(authData.services, function (service) {
+      return _.assign(service, {
+        ciName: service.ciService || service.ciName,
+        serviceId: service.sqService || service.serviceId,
+        ciService: undefined,
+        sqService: undefined
+      });
+    });
+    return authData;
+  }
+
+  function intitalizeAuthinfo(authData) {
+    Authinfo.initialize(authData);
+    if (Authinfo.isAdmin()) {
+      return getAccount(Authinfo.getOrgId())
+        .then(function (res) {
+          Authinfo.updateAccountInfo(res.data);
+          Authinfo.initializeTabs();
+        });
+    } else {
+      Authinfo.initializeTabs();
+      return authData;
+    }
+  }
+
+  function injectEntitlementsOrMapServices(res) {
+    var authData = res.data;
+    var isAdmin = _.intersection(['Full_Admin', 'PARTNER_ADMIN'], authData.roles).length;
+    if (isAdmin) {
+      return injectEntitlements(authData);
+    } else {
+      return mapServices(authData);
+    }
+  }
+
+  function handleErrorAndResetAuthinfo(res) {
+    Authinfo.clear();
+    if (res && res.statusCode == 401) {
+      return $q.reject($translate.instant('errors.status401'));
+    }
+    if (res && res.statusCode == 403) {
+      return $q.reject($translate.instant('errors.status403'));
+    }
+    return $q.reject($translate.instant('errors.serverDown'));
+  }
+
   // helpers
 
   function getAccessTokenUrl() {
@@ -270,7 +229,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function handleError(message) {
     return function (res) {
-      Log.error(message, res.data);
+      Log.error(message, res && res.data || res.text);
     };
   }
 
