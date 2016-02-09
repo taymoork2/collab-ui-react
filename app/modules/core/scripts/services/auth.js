@@ -316,8 +316,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return Authinfo.getRoles().indexOf('Full_Admin') > -1;
   };
 
-  auth.redirectToLogin = function () {
-    $window.location.href = Config.getOauthLoginUrl();
+  auth.redirectToLogin = function (email) {
+    $window.location.href = Config.getOauthLoginUrl(email);
   };
 
   auth.isLoginMarked = function () {
