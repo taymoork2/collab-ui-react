@@ -14,14 +14,14 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
   var loginMarker = false;
 
-  auth.getAccount = function (org) {
+  auth.getAccount = function(org) {
     var $http = $injector.get('$http');
     var accountUrl = Config.getAdminServiceUrl();
     var url = accountUrl + 'organization/' + org + '/accounts';
     return $http.get(url);
   };
 
-  auth.authorize = function (token) {
+  auth.authorize = function(token) {
     if (authDeferred) return authDeferred.promise;
 
     authDeferred = $q.defer();
@@ -50,10 +50,10 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     //grafted onto it if the user has access to /services (instead of the native
     //"services" field from the /userauthinfo response.) This allows us to expose
     //the "isConfigurable" flag in objects that appear in the /services API response.
-    var getAuthData = function () {
+    var getAuthData = function() {
       var result;
 
-      return $http.get(authUrl).then(function (authResponse) {
+      return $http.get(authUrl).then(function(authResponse) {
 
           //We'll need to explicitly use values from the response instead of
           //using Authinfo, since Authinfo.initialize() hasn't been called yet
@@ -62,7 +62,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
           //Figure out whether this user is allowed to access the /services API
           var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
-            _.any(['Full_Admin', 'PARTNER_ADMIN'], function (role) {
+            _.any(['Full_Admin', 'PARTNER_ADMIN', 'Readonly_Admin', 'PARTNER_READ_ONLY_ADMIN'], function(role) {
               return result.roles.indexOf(role) > -1;
             }) : false;
 
@@ -76,7 +76,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           }
 
         })
-        .then(function (servicesResponse) {
+        .then(function(servicesResponse) {
 
           //If we received data from the /services API (not null)...
           if (servicesResponse) {
@@ -91,7 +91,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
             //consuming code doesn't have to know about two sets of key names
           } else if (_.isArray(result.services)) {
 
-            result.services = result.services.map(function (service) {
+            result.services = result.services.map(function(service) {
               service = angular.copy(service);
               if (service.ciService) {
                 service.ciName = service.ciService;
@@ -108,7 +108,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlement removed from backend.
           var msgrServiceUrl = Config.getMessengerServiceUrl() + '/orgs/' + result.orgId + '/cisync/';
 
-          return $http.get(msgrServiceUrl).then(function (msgrResponse) {
+          return $http.get(msgrServiceUrl).then(function(msgrResponse) {
 
             var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
             if (isMsgrOrg) {
@@ -130,14 +130,14 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
             }
 
             return result;
-          }).catch(function (msgrErrResp) {
+          }).catch(function(msgrErrResp) {
 
             Log.error('Ignore error from Msgr service check: error code = ' + msgrErrResp.status);
             return result;
           });
 
         })
-        .catch(function (response) {
+        .catch(function(response) {
           Authinfo.clear();
           var error = $translate.instant('errors.serverDown');
           if (response) {
@@ -152,11 +152,11 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     };
 
     getAuthData()
-      .then(function (authData) {
+      .then(function(authData) {
         Authinfo.initialize(authData);
         if (Authinfo.isAdmin()) {
           auth.getAccount(Authinfo.getOrgId())
-            .success(function (data, status) {
+            .success(function(data, status) {
               Authinfo.updateAccountInfo(data, status);
               Authinfo.initializeTabs();
             })
@@ -171,7 +171,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return authDeferred.promise;
   };
 
-  auth.getFromGetParams = function (url) {
+  auth.getFromGetParams = function(url) {
     var result = {};
     var cleanUrlA = url.split('#');
     var cleanUrl = cleanUrlA[1];
@@ -186,7 +186,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return result;
   };
 
-  auth.getFromStandardGetParams = function (url) {
+  auth.getFromStandardGetParams = function(url) {
     var result = {};
     var cleanUrlA = url.split('?');
     var cleanUrl = cleanUrlA[1];
@@ -198,7 +198,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return result;
   };
 
-  auth.getNewAccessToken = function (code) {
+  auth.getNewAccessToken = function(code) {
     var $http = $injector.get('$http');
     var deferred = $q.defer();
     var token = Config.getOAuthClientRegistrationCredentials();
@@ -212,7 +212,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           'Authorization': 'Basic ' + token
         }
       })
-      .success(function (data) {
+      .success(function(data) {
         // This flow happens before the login controller is engaged and
         // login controller would not know that the admin logged in
         // without this marker. If there is a better way to check this
@@ -221,14 +221,14 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         loginMarker = true;
         deferred.resolve(data);
       })
-      .error(function (data, status) {
+      .error(function(data, status) {
         Log.error('Failed to obtain new oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
         deferred.reject('Token request failed: ' + data.error_description);
       });
     return deferred.promise;
   };
 
-  auth.refreshAccessToken = function (refresh_tok) {
+  auth.refreshAccessToken = function(refresh_tok) {
     var $http = $injector.get('$http');
     var data = Config.getOauthAccessCodeUrl(refresh_tok);
     var cred = Config.getOAuthClientRegistrationCredentials();
@@ -243,7 +243,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     });
   };
 
-  auth.setAccessToken = function () {
+  auth.setAccessToken = function() {
     var deferred = $q.defer();
     var $http = $injector.get('$http');
     var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
@@ -257,22 +257,22 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           'Authorization': 'Basic ' + token
         }
       })
-      .success(function (data) {
+      .success(function(data) {
         $rootScope.token = data.access_token;
         $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
         deferred.resolve(data.access_token);
       })
-      .error(function (data, status) {
+      .error(function(data, status) {
         Log.error('Failed to obtain oauth access_token.  Status: ' + status + ' Error: ' + data.error + ', ' + data.error_description);
         deferred.reject('Token request failed: ' + data.error_description);
       });
     return deferred.promise;
   };
 
-  auth.refreshAccessTokenAndResendRequest = function (response) {
+  auth.refreshAccessTokenAndResendRequest = function(response) {
     var refresh_token = Storage.get('refreshToken');
     return this.refreshAccessToken(refresh_token)
-      .then(function (response) {
+      .then(function(response) {
         var $http = $injector.get('$http');
         Storage.put('accessToken', response.data.access_token);
         $rootScope.token = response.data.access_token;
@@ -282,7 +282,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
       });
   };
 
-  auth.logout = function () {
+  auth.logout = function() {
     Storage.clear();
     var $http = $injector.get('$http');
     var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
@@ -297,34 +297,34 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           'Authorization': 'Basic ' + token
         }
       })
-      .success(function (data, status) {
+      .success(function(data, status) {
         Log.info('oAuth token deleted successfully. Status: ' + status);
         $window.location.href = Config.getLogoutUrl();
       })
-      .error(function (data, status) {
+      .error(function(data, status) {
         Log.error('Failed to delete the oAuth token.  Status: ' + status + ' Error: ' + (data.error || 'unknown'));
         // Call CI logout even if delete oAuth token operation fails. This is consistent with other spark clients.
         $window.location.href = Config.getLogoutUrl();
       });
   };
 
-  auth.isLoggedIn = function () {
+  auth.isLoggedIn = function() {
     return Storage.get('accessToken');
   };
 
-  auth.isUserAdmin = function () {
+  auth.isUserAdmin = function() {
     return Authinfo.getRoles().indexOf('Full_Admin') > -1;
   };
 
-  auth.redirectToLogin = function () {
+  auth.redirectToLogin = function() {
     $window.location.href = Config.getOauthLoginUrl();
   };
 
-  auth.isLoginMarked = function () {
+  auth.isLoginMarked = function() {
     return loginMarker;
   };
 
-  auth.clearLoginMarker = function () {
+  auth.clearLoginMarker = function() {
     loginMarker = false;
   };
 
