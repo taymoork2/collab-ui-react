@@ -4,13 +4,18 @@ namespace domainManagement {
 
   describe('DomainManagementAddCtrl', () => {
 
-    let Config, DomainManagmentAddCtrl, DomainManagementService = {domainList: []};
+    let Config, $q, $rootScope, DomainManagmentAddCtrl, DomainManagementService = {
+      addDomain: undefined,
+      domainList: []
+    };
     beforeEach(angular.mock.module('Core'));
-    beforeEach(inject(($injector, $controller, $translate, _Config_)=> {
+    beforeEach(inject(($injector, _$q_, _$rootScope_, $controller, $translate, _Config_)=> {
       Config = _Config_;
+      $q = _$q_;
+      $rootScope = _$rootScope_;
       DomainManagmentAddCtrl = $controller('DomainManageAddCtrl', {
         $stateParams: {loggedOnUser: ''},
-        $previousState: null,
+        $previousState: {go: sinon.stub()},
         DomainManagementService: DomainManagementService,
         $translate: $translate
       });
@@ -61,6 +66,33 @@ namespace domainManagement {
       DomainManagmentAddCtrl.domain = domain;
       expect(DomainManagmentAddCtrl.isValid).toBeFalsy();
       expect(DomainManagmentAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');
+    });
+
+    it('should add the given domain using addDomain on the service', ()=> {
+      DomainManagementService.addDomain = sinon.stub().returns(
+        $q.resolve());
+
+
+      let unEncoded = 'test.com';
+      //let encoded = 'test.com';
+      DomainManagmentAddCtrl.domain = unEncoded;
+      DomainManagmentAddCtrl.add();
+      $rootScope.$digest();
+      expect(DomainManagementService.addDomain.callCount).toBe(1);
+    });
+
+    it('should set error if addDomain on the service fails', ()=> {
+      DomainManagementService.addDomain = sinon.stub().returns(
+        $q.reject('error-during-add'));
+
+
+      let unEncoded = 'test.com';
+      //let encoded = 'test.com';
+      DomainManagmentAddCtrl.domain = unEncoded;
+      DomainManagmentAddCtrl.add();
+      $rootScope.$digest();
+      expect(DomainManagementService.addDomain.callCount).toBe(1);
+      expect(DomainManagmentAddCtrl.error).toBe('error-during-add');
     });
 
 
