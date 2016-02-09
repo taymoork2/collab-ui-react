@@ -118,17 +118,9 @@ describe('Service: Trial Service', function () {
       expect($httpBackend.flush).not.toThrow();
     });
 
-    it('should have shipping details', function () {
+    it('should not have shipping details if none were provided', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var shippingInfoList = [{
-          "isPrimary": true,
-          "name": "John Connors",
-          "phoneNumber": "+1 206 256 3000",
-          "address": "2901 3rd Ave Seattle WA 98121",
-          "recipientType": "CUSTOMER"
-        }];
-        var shippingInfo = angular.fromJson(data).details.shippingInfo;
-        return _.some(shippingInfo, shippingInfoList[0]);
+        return _.isUndefined(data.shippingInfo);
       }).respond(200);
 
       TrialService.startTrial();

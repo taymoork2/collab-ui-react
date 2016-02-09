@@ -5,8 +5,8 @@ describe('MediafusionConnectorMock', function () {
 
   var Service;
 
-  beforeEach(inject(function ($injector, _ConnectorMock_) {
-    Service = _ConnectorMock_;
+  beforeEach(inject(function ($injector, _MediafusionConnectorMock_) {
+    Service = _MediafusionConnectorMock_;
   }));
 
   it('should create mock data', function () {

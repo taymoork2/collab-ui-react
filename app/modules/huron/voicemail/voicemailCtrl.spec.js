@@ -37,7 +37,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
     url = HuronConfig.getCmiUrl() + '/common/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id;
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoice);
-    spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.when());
     spyOn(Notification, 'notify');
     spyOn($modal, 'open').and.returnValue({
       result: modalDefer.promise
@@ -75,7 +74,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
-        expect(LineSettings.updateLineSettings).toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
@@ -119,7 +117,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
         controller.saveVoicemail();
         modalDefer.resolve();
         $httpBackend.flush();
-        expect(LineSettings.updateLineSettings).toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
@@ -148,7 +145,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
-        expect(LineSettings.updateLineSettings).not.toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
@@ -157,7 +153,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
-        expect(LineSettings.updateLineSettings).not.toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
     });

@@ -14,12 +14,14 @@ describe('Controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('WebExApiGateway'));
   beforeEach(module('WebExUtils'));
   beforeEach(module('WebExXmlApi'));
 
   var SiteListCtrl, scope, Authinfo;
   var deferredSessionTicket;
   var deferredSVCToggle;
+  var deferredSVCStatus;
 
   // Initialize the controller and mock scope
   beforeEach(inject(function (
@@ -31,6 +33,7 @@ describe('Controller: SiteListCtrl', function () {
     $log,
     _FeatureToggleService_,
     _Userservice_,
+    _WebExApiGatewayService_,
     _WebExUtilsFact_,
     _WebExXmlApiFact_,
     _WebExXmlApiInfoSvc_
@@ -99,6 +102,9 @@ describe('Controller: SiteListCtrl', function () {
     };
 
     deferredSessionTicket = $q.defer();
+    deferredSVCToggle = $q.defer();
+    deferredSVCStatus = $q.defer();
+
     spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
 
     spyOn(_WebExXmlApiFact_, "getSiteVersion").and.callFake(function (xmlApiAccessInfo) {
@@ -143,7 +149,6 @@ describe('Controller: SiteListCtrl', function () {
       }
     });
 
-    deferredSVCToggle = $q.defer();
     spyOn(_FeatureToggleService_, "supports").and.returnValue(deferredSVCToggle.promise);
 
     SiteListCtrl = $controller('SiteListCtrl', {
@@ -155,6 +160,7 @@ describe('Controller: SiteListCtrl', function () {
       $scope: scope,
       FeatureToggleService: _FeatureToggleService_,
       Userservice: _Userservice_,
+      WebExApiGatewayService: _WebExApiGatewayService_,
       WebExUtilsFact: _WebExUtilsFact_,
       WebExXmlApiFact: _WebExXmlApiFact_,
       webExXmlApiInfoObj: _WebExXmlApiInfoSvc_
@@ -164,6 +170,9 @@ describe('Controller: SiteListCtrl', function () {
   it('should assign is not iFrame supported and is not report supported to site', function () {
     deferredSessionTicket.resolve("ticket");
     deferredSVCToggle.resolve(true);
+    deferredSVCStatus.resolve({
+      status: "success"
+    });
 
     scope.$apply();
 
@@ -184,6 +193,9 @@ describe('Controller: SiteListCtrl', function () {
   it('should assign is iFrame supported and is report supported to site', function () {
     deferredSessionTicket.resolve("ticket");
     deferredSVCToggle.resolve(true);
+    deferredSVCStatus.resolve({
+      status: "success"
+    });
 
     scope.$apply();
 
@@ -204,6 +216,9 @@ describe('Controller: SiteListCtrl', function () {
   it('should assign is iFrame supported and is not reported supported to site', function () {
     deferredSessionTicket.resolve("ticket");
     deferredSVCToggle.resolve(true);
+    deferredSVCStatus.resolve({
+      status: "success"
+    });
 
     scope.$apply();
 

@@ -618,8 +618,8 @@
         graphData: [],
         filterArray: []
       };
-      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isArray(response.data) && angular.isDefined(response.data[0].data) && angular.isArray(response.data[0].data)) {
-        var data = response.data[0].data;
+      if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data) && angular.isArray(response.data.data[0].data)) {
+        var data = response.data.data[0].data;
         var graphItem = {
           totalRegisteredDevices: 0
         };
@@ -629,7 +629,7 @@
         angular.forEach(data, function (item, index, array) {
           if (responseLength < item.details.length) {
             responseLength = item.details.length;
-            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].date, timezone).format('e'));
+            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'));
           }
         });
         if (dayOffset >= 4) {
@@ -637,10 +637,8 @@
         } else {
           dayOffset = -dayOffset;
         }
-        // change to filter after dummy data removed
-        var baseGraph = getReturnGraph({
-          value: 0
-        }, dayOffset, graphItem);
+
+        var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
         deviceArray.graphData.push({
           deviceType: $translate.instant('registeredEndpoints.allDevices'),
           graph: angular.copy(baseGraph),
@@ -765,6 +763,5 @@
         return ABORT;
       }
     }
-
   }
 })();

@@ -152,10 +152,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   });
 
   describe('createOptionMenu', function () {
-    it('should initialize CeMenu Timeout/Invalid input with repeat-menu-3 times', function () {
+    it('should initialize CeMenu Timeout/Invalid input with Repeat-Menu-3-Tmes', function () {
       controller.createOptionMenu();
 
-      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      var expectedActions = angular.copy(controller.timeoutActions[1]);
       expectedActions.childOptions = angular.copy(controller.repeatOptions);
       expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
 
@@ -180,6 +180,18 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.populateOptionMenu();
 
       var expectedActions = angular.copy(controller.timeoutActions[0]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
+    it('should read the CeMenu without attempts and set UI to Repeat-Menu-3-Times (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuNoAttempt);
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[1]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
 
       expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });

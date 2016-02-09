@@ -25,6 +25,12 @@
         {{'index.support' | translate}}
       </a>
     </li>
+    <li id="videoTutorial-btn" ng-hide="!(isPartner || isPartnerSales)">
+      <a id="videoTutorial-lnk" ng-click="openVideo()" tabindex="0">
+        <i class="fa fa-play-circle fa-lg" style="padding:10px;"></i>
+        {{'index.videoTutorial' | translate}}
+      </a>
+    </li>
     <li id="logout-btn" ng-show="loggedIn">
       <a ng-click="logout()" tabindex="0">
         <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>

@@ -98,6 +98,17 @@
         "capacity": 15,
         "usage": 0
       }]
+    }, {
+      "licenses": "CF_7a8bf585-492f-4d7f-b4c2-8b0f9bd55656_34",
+      "offerName": "CF",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "",
+      "features": ["squared-syncup"],
+      "volume": 10,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "capacity": 20,
+      "usage": 0
     }],
     "singleSub": [{
       "subscriptionId": "srvcid-integ-uitest-1a",

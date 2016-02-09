@@ -27,13 +27,17 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     $q = _$q_;
 
     SparkDomainManagementService.checkDomainAvailability = jasmine.createSpy().and.returnValue($q.when({
-      isDomainAvailable: true,
-      isDomainReserved: false
+      data: {
+        isDomainAvailable: true,
+        isDomainReserved: false
+      }
     }));
 
     SparkDomainManagementService.addSipUriDomain = jasmine.createSpy().and.returnValue($q.when({
-      isDomainAvailable: false,
-      isDomainReserved: true
+      data: {
+        isDomainAvailable: false,
+        isDomainReserved: true
+      }
     }));
 
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, status) {
@@ -90,7 +94,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('should disable the field and clear error on the field validation', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect($scope.cloudSipUriField.isError).toEqual(false);
@@ -112,7 +116,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('addSipUriDomain should error gracefully', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect(Notification.error).toHaveBeenCalled();

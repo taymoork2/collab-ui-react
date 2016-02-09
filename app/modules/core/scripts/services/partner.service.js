@@ -195,15 +195,15 @@
         dataObj.webexEEConferencing = getLicense(data.licenses, Config.offerCodes.EE);
         dataObj.webexCMR = getLicense(data.licenses, Config.offerCodes.CMR);
 
-        var now = moment().format('MMM D, YYYY');
+        var now = moment();
         var then = edate;
-        var start = moment(data.startDate).format('MMM D, YYYY');
+        var start = moment(data.startDate);
 
         var daysDone = moment(now).diff(start, 'days');
         dataObj.daysUsed = daysDone;
         dataObj.percentUsed = Math.round((daysDone / data.trialPeriod) * 100);
 
-        var daysLeft = moment(then).diff(now, 'days');
+        var daysLeft = moment(then, 'MMM D, YYYY').diff(now, 'days');
         dataObj.daysLeft = daysLeft;
         if (isTrialData) {
           if (daysLeft < 0) {

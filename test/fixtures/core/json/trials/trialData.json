@@ -52,13 +52,15 @@
             "enabled": false,
             "quantity": 0
           }],
-          "shippingInfo": [{
-            "isPrimary": true,
+          "shippingInfo": {
+            "country": "USA",
+            "state": "WA",
             "name": "John Connors",
             "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
-          }]
+            "address": "2901 3rd Ave Seattle",
+            "postalCode": " 98121",
+            "type": "CUSTOMER"
+          }
         }
       },
       "roomSystemTrial": {
@@ -123,13 +125,15 @@
             "enabled": false,
             "quantity": 0
           }],
-          "shippingInfo": [{
-            "isPrimary": true,
+          "shippingInfo": {
+            "country": "USA",
+            "state": "WA",
             "name": "John Connors",
             "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
-          }]
+            "address": "2901 3rd Ave Seattle",
+            "postalCode": " 98121",
+            "type": "CUSTOMER"
+          }
         }
       },
       "roomSystemTrial": {

@@ -76,7 +76,8 @@ angular.module('Core')
       };
 
       function isOnlyCiscoState(state) {
-        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid === Config.ciscoMockOrgId)))
+        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid ===
+            Config.ciscoMockOrgId)))
           return true;
         return false;
       }
@@ -174,6 +175,8 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          ll('setCustomDimension', 0, msg);
         },
         getEmails: function () {
           return authData.emails;
@@ -337,6 +340,9 @@ angular.module('Core')
         isAdmin: function () {
           return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },
+        isReadOnlyAdmin: function () {
+          return this.hasRole('Readonly_Admin') && !this.isAdmin();
+        },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
         },
@@ -345,6 +351,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerSalesAdmin: function () {
+          return this.hasRole('PARTNER_SALES_ADMIN');
         },
         isPartnerUser: function () {
           return this.hasRole('PARTNER_USER');

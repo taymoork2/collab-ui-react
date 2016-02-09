@@ -18,7 +18,13 @@
       };
     }
 
-    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
+    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, function (err) {
+      if (err.status === 404) {
+        vm.notFound = true;
+      } else {
+        XhrNotificationService.notify(err);
+      }
+    });
 
     function initDeviceView(device) {
       vm.device = device;

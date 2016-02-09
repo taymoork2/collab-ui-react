@@ -1,19 +1,19 @@
 {
   "loginPage": {
     "title": "Cloud Collaboration Management",
-    "login": "Login",
+    "login": "Sign In",
     "loading": "Loading"
   },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
-    "inviteModalBtn": "Invite Users",
+    "inviteModalBtn": "Add Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
-    "add": "Invite Users",
+    "add": "Add Users",
     "entitle": "Entitle",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
@@ -57,7 +57,7 @@
     "pending": "Invite Pending",
     "all": "All",
     "administrators": "Administrators",
-    "inviteUsers": "Invite Users",
+    "inviteUsers": "Add Users",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -104,7 +104,7 @@
     "spark": "Spark",
     "webex": "WebEx",
     "calling": "Calling",
-    "onboardUsers": "Invite Users",
+    "onboardUsers": "Add Users",
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
@@ -256,7 +256,8 @@
     "genericTitle": "Spark",
     "search": "Search users by name or email",
     "greeting": "Hi {{name}}",
-    "launchPartner": "Manage My Organization"
+    "launchPartner": "Manage My Organization",
+    "videoTutorial": "Video Tutorial"
   },
   "entitlementPage": {
     "title": "Modify Entitlements",
@@ -439,6 +440,7 @@
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
     "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerDescription": "A registered endpoint is any device connected to the network in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
     "allDevices": "All Devices"
   },
@@ -623,8 +625,8 @@
     "downLoadJsonNote": "Note: This file format is needed if you wish to import the call at a later time.",
     "downLoadCsv": "CSV",
     "downLoadCsvDesc": "This file format will can be used to display the results in a plain text table format. This file format contains all of the details of the call while attempting to make it slightly more readable.",
-    "downLoadXml": "XML",
-    "downLoadXmlDesc": "This file format will yield the ladder diagram that is shown below.",
+    "downLoadHtml": "HTML",
+    "downLoadHtmlDesc": "This file format will yield the ladder diagram that is shown below.",
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
@@ -758,7 +760,7 @@
     "name": "Name",
     "errGetTrialsQuery": "Failed to retrieve trials. Status: {{status}}",
     "quickLinksText": "Quick Links",
-    "addUserText": "Invite Users",
+    "addUserText": "Add Users",
     "installDeviceText": "Install a Device for a User",
     "installSharedSpaceText": "Install a Devices into a Shared Space",
     "autoAttendantText": "Configure an Auto Attendant",
@@ -920,11 +922,20 @@
   },
   "unauthorizedPage": {
     "title": "Unauthorized",
-    "text": "Sorry! Your account is not authorized to access this page."
+    "text": "You're not authorized to access this page."
   },
   "404Page": {
-    "title": "404 Not Found",
+    "title": "Not Found",
     "text": "The page you requested cannot be found."
+  },
+  "loginErrorPage": {
+    "title": "Sign In Failure",
+    "text": "An error has occurred."
+  },
+  "stateRedirect": {
+    "goBackButton": "Go Back",
+    "tryAgainButton": "Try Again",
+    "signInButton": "Sign In Again"
   },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -934,7 +945,8 @@
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
     "statusError": "Request failed with status: {{status}}.",
-    "csvError": "Export failed."
+    "csvError": "Export failed.",
+    "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
     "title": "Devices",
@@ -1011,7 +1023,6 @@
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
-      "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1053,10 +1064,7 @@
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
-      "activeActiveHeading": "Active-Active Mode (High Availability)",
-      "activeActiveNotPossible": "Not available as Active-Active Mode requires a cluster with more than 1 host",
-      "activeActivePossible": "Turn on Active-Active Mode to enable high availability for this service. When enabled, users are assigned to two nodes in the cluster for redundancy."
+      "notInstalled": "The {{serviceName}} is not installed on this cluster."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1070,8 +1078,10 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarm"
+      "has_alarms": "Alarms",
+      "upgrading": "Upgrading",
+      "upgraded": "Upgraded",
+      "pending": "Pending"
     },
     "setup": {
       "label": "Connector Management",
@@ -1104,7 +1114,7 @@
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
-      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "sipDomainInvalid": "SIP destination was invalid. Please enter a valid SIP destination or IP address",
       "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
@@ -1136,14 +1146,18 @@
       "currentVersion": "Current Version",
       "newVersion": "New Version",
       "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
-      "upgrade": "Upgrade"
+      "pending": "Pending",
+      "upgrade": "Upgrade",
+      "upgradeNow": "Upgrade Now",
+      "upgradingHost": "Upgrading {{host}} to {{version}}",
+      "upgradeDone": "Upgrade completed!"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
@@ -1153,10 +1167,12 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "aware": "Share your desktop with Spark while you are on your work phone.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connectSettingsHeading": "Connect Settings",
+        "connectSettings": "Required settings for the Connect feature.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -1171,12 +1187,12 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: acme.com"
+        "sipDomainExample": "For example: example.org"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
-        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
+        "description": "Set the start time to begin upgrades on the connectors.",
+        "defaultWarning": "Confirm the default schedule"
       }
     },
     "hybridServices": {
@@ -1186,21 +1202,24 @@
     },
     "notifications": {
       "scheduleUpgrade": {
-        "title": "Confirm the Schedule for Automatic Software Upgrades",
-        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
-        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+        "title": "Acknowledge the Scheduled Upgrade",
+        "description": "The clusters for this service have a default time set for a scheduled upgrade",
+        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
       }
     }
   },
   "firstTimeWizard": {
     "termsAndConditions": "Terms and Conditions",
-    "simple": "Manually invite users",
+    "simple": "Manually add users",
     "manualEntryStep": "Manual",
     "assignServicesStep": "Assign Services",
     "upload": "Bulk upload users using CSV",
     "uploadStep": "Upload CSV",
+    "downloadStep": "Download CSV Template",
+    "downloadDescription": "Use this file to update user list and their entitlements.",
+    "downloadError": "There is a problem downloading the file.",
+    "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
     "uploadPrompt": "Drag and drop a CSV file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
@@ -1224,6 +1243,8 @@
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
+    "tooManyActiveMessageLicenses": "There are more than one \"Spark Message\" license enabled.  Please fix and try again.",
+    "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
@@ -1246,7 +1267,6 @@
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
     "downloadSub": "Download CSV template",
-    "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
@@ -1275,13 +1295,16 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
-    "setSipUriDesc": "This name will appear in the end-users' ID which they will use to reach each other. For example, if John Smith who works at Acme, he would be reachable by dialing jsmith@acme.call.ciscospark.com",
+    "setSipUriDescPartOne": "This value creates a domain that is branded with a name of your choosing. It will also generate Spark SIP addresses that will be assigned to your users. These addresses can be used by external SIP capable devices to call your users.",
+    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartThree": "We've provided a default value for you in the field.",
+    "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a SIP URI domain name",
-    "setSipUriDomainTitle": "SIP URI Domain Name",
+    "setSipUriDomainTitle": "Cloud SIP URI Domain",
     "setSipUriDomainCompNames": "Company's Domain Names",
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
-    "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriErrorMessage": "Not available. Please try another name",
     "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
@@ -1295,11 +1318,9 @@
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
-    "addUsers": "Invite Users",
+    "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "addUsersSimple": "Invite Users | Simple",
-    "addUsersAdvanced": "Invite Users | Advanced",
     "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
@@ -1499,65 +1520,66 @@
       "susan": "Susan",
       "vanessa": "Vanessa",
       "veronica": "Veronica",
-      "dave": "Dave",
-      "steven": "Steven",
+      "ava": "Ava",
+      "samantha": "Samantha",
+      "tom": "Tom",
       "victor": "Victor",
-      "elizabeth": "Elizabeth",
+      "serena": "Serena",
       "kate": "Kate",
-      "simon": "Simon",
-      "grace": "Grace",
-      "alan": "Alan",
+      "daniel": "Daniel",
+      "oliver": "Oliver",
+      "karen": "Karen",
+      "lee": "Lee",
       "montserrat": "Montserrat",
       "jordi": "Jordi",
-      "frida": "Frida",
+      "sara": "Sara",
       "magnus": "Magnus",
-      "saskia": "Saskia",
-      "willem": "Willem",
-      "milla": "Milla",
-      "mikko": "Mikko",
-      "florence": "Florence",
-      "juliette": "Juliette",
-      "bernard": "Bernard",
-      "charlotte": "Charlotte",
-      "olivier": "Olivier",
+      "claire": "Claire",
+      "xander": "Xander",
+      "satu": "Satu",
+      "onni": "Onni",
+      "audrey": "Audrey",
+      "aurelie": "Aurelie",
+      "thomas": "Thomas",
+      "amelie": "Amelie",
+      "chantal": "Chantal",
+      "nicolas": "Nicolas",
       "carmela": "Carmela",
-      "katrin": "Katrin",
-      "stefan": "Stefan",
-      "afroditi": "Afroditi",
+      "anna": "Anna",
+      "petra": "Petra",
+      "markus": "Markus",
+      "yannick": "Yannick",
+      "melina": "Melina",
       "nikos": "Nikos",
-      "giulia": "Giulia",
+      "alice": "Alice",
+      "federica": "Federica",
       "paola": "Paola",
-      "silvana": "Silvana",
-      "valentina": "Valentina",
       "luca": "Luca",
-      "marcello": "Marcello",
-      "matteo": "Matteo",
-      "roberto": "Roberto",
-      "linlin": "Linlin",
-      "lisheng": "Lisheng",
-      "vilde": "Vilde",
+      "tiantian": "Tian-tian",
+      "nora": "Nora",
       "henrik": "Henrik",
+      "ewa": "Ewa",
       "zosia": "Zosia",
       "krzysztof": "Krzysztof",
-      "olga": "Olga",
-      "dmitri": "Dmitri",
-      "carmen": "Carmen",
-      "leonor": "Leonor",
+      "katya": "Katya",
+      "milena": "Milena",
+      "yuri": "Yuri",
+      "monica": "Monica",
       "jorge": "Jorge",
-      "juan": "Juan",
       "diego": "Diego",
-      "francisca": "Francisca",
       "soledad": "Soledad",
-      "ximena": "Ximena",
-      "esperanza": "Esperanza",
       "carlos": "Carlos",
-      "amalia": "Amalai",
-      "eusebio": "Eusebio",
-      "fernanda": "Fernanda",
-      "gabriela": "Gabriela",
+      "angelica": "Angelica",
+      "paulina": "Paulina",
+      "juan": "Juan",
+      "catarina": "Catarina",
+      "joana": "Joana",
+      "joaquim": "Joaquim",
+      "luciana": "Luciana",
       "felipe": "Felipe",
-      "annika": "Annika",
-      "sven": "Sven",
+      "alva": "Alva",
+      "klara": "Klara",
+      "oskar": "Oskar",
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
@@ -1895,7 +1917,14 @@
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
       "customer": "Customer",
-      "partner": "Partner"
+      "partner": "Partner",
+      "name": "Name",
+      "phone": "Phone",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
@@ -2020,7 +2049,9 @@
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
-    "internationalDialingSaveError": "International Dialing failed to save."
+    "internationalDialingSaveError": "International Dialing failed to save.",
+    "disableCompanyVoicemailTitle": "Disable Company Voicemail",
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2205,6 +2236,7 @@
   },
   "mediaFusion": {
     "page_title": "Media Service",
+    "add-resource-button": "Add Resource",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -2274,16 +2306,16 @@
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
-      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
-      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
-      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
@@ -2300,6 +2332,14 @@
       "noAlarms": "No alarms reported",
       "hostImpact": "Host Impacted",
       "raised": "Raised"
+    },
+    "add-resource-dialog": {
+      "title": "Register a New Media Server",
+      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to.",
+      "text2": "Enter the hostname or IP address of the Media Server that you want to register to cloud. Click REGISTER RESOURCE, login to your Media Server and register.",
+      "register": "REGISTER RESOURCE",
+      "cancel": "CANCEL",
+      "hostname-placeholder": "Enter hostname or IP address"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2802,14 +2842,14 @@
     "spanishSpain": "Spanish (Spain)",
     "spanishColumbian": "Spanish (Columbian)",
     "french": "French",
-    "indionesian": "Indionesian",
+    "indonesian": "Indonesian",
     "italian": "Italian",
     "japanese": "Japanese",
     "korean": "Korean",
     "norwegian": "Norwegian",
     "dutch": "Dutch",
     "polish": "Polish",
-    "portugeseBrazillian": "Portugese (Brazillian)",
+    "portugueseBrazillian": "Portuguese (Brazillian)",
     "russian": "Russian",
     "swedish": "Swedish",
     "turkish": "Turkish",
@@ -2825,7 +2865,7 @@
     "spanishArgentine": "Spanish (Argentine)",
     "spanishChilean": "Spanish (Chilean)",
     "spanishMexican": "Spanish (Mexican)",
-    "portugese": "Portugese",
+    "portuguese": "Portuguese",
     "valencian": "Valencian"
   },
   "siteList": {
@@ -2834,7 +2874,8 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure",
-    "siteReports": "Reports"
+    "siteReports": "Reports",
+    "siteCsv": "WebEx User Attribute CSV File Import/Export"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3266,7 +3307,8 @@
       "ciscouc.free": "Free 1:1 Spark Call",
       "meetings": "WebEx Meetings (WebEx 11)"
     },
-    "lastLog": "Last Client Log",
+    "lastLog": "Last Log",
+    "lastClientLog": "Last Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -3324,8 +3366,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
-      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
@@ -3350,7 +3392,8 @@
     "primary": "Primary",
     "shared": "Shared",
     "sparkStatus": "Spark Status",
-    "searchHelp": "Search Help"
+    "searchHelp": "Search Help",
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3364,7 +3407,7 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
+    "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
@@ -3378,7 +3421,10 @@
       "header": "Add domains",
       "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
-      "invalidDomain": "This is not a valid domain name."
+      "invalidDomain": "This is not a valid domain name.",
+      "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
+      "invalidDomainAdded": "This domain name is already added."
+
     },
     "delete": {
       "header": "Unverify domain",
@@ -3412,7 +3458,7 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Show code and instructions",
+      "instructions": "Code and instructions",
       "mail": "Mail code and instructions",
       "unverify": "Remove enforcement",
       "unclaim": "Release domain",
@@ -3420,9 +3466,11 @@
     },
     "instructions": {
       "title": "Code and instructions",
-      "instructions": "Your DNS verification code for <b>{{name}}</b>:",
-      "howto": "Before verifying this domain, enter the DNS verification code in the TXT record section of your DNS management interface. Learn more about this in our <a href=''>Domain Management Guidelines</a>.",
-      "done": "Done"
+      "done": "Done",
+      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "beforeVerify": "Before you verify",
+      "sendEmail": "Send instructions"
     }
   }
 }

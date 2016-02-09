@@ -70,7 +70,7 @@
           voicemailPayload.voicemail = {
             'dtmfAccessId': vm.telephonyInfo.esn
           };
-          updateVoicemail(voicemailPayload, result, true);
+          updateVoicemail(voicemailPayload, result);
         } else {
           $modal.open({
             templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
@@ -81,7 +81,7 @@
                 vm.telephonyInfo.services.splice(j, 1);
               }
             }
-            updateVoicemail(voicemailPayload, result, false);
+            updateVoicemail(voicemailPayload, result);
           }, function () {
             vm.reset();
           });
@@ -89,26 +89,28 @@
       });
     }
 
-    function updateVoicemail(voicemailPayload, result, voicemailEnabled) {
+    function updateVoicemail(voicemailPayload, result) {
       vm.saveInProcess = true;
       voicemailPayload.services = vm.telephonyInfo.services;
+
+      //VOICE service is required for voicemail enable/disable so add it
+      var hasVoiceService = _.find(voicemailPayload.services, function (service) {
+        return service === 'VOICE';
+      });
+      if (!hasVoiceService) {
+        voicemailPayload.services.push('VOICE');
+      }
+
       UserServiceCommon.update({
           customerId: vm.currentUser.meta.organizationID,
           userId: vm.currentUser.id
         }, voicemailPayload).$promise
         .then(function () {
-          var promises = updateLineVoicemail(voicemailEnabled);
-          return $q.all(promises)
-            .then(function () {
-              resetForm();
-              result.msg = $translate.instant('voicemailPanel.success');
-              result.type = 'success';
-              Notification.notify([result.msg], result.type);
-              TelephonyInfoService.updateUserServices(vm.telephonyInfo.services);
-            })
-            .catch(function (response) {
-              Notification.errorResponse(response, 'directoryNumberPanel.error');
-            });
+          resetForm();
+          result.msg = $translate.instant('voicemailPanel.success');
+          result.type = 'success';
+          Notification.notify([result.msg], result.type);
+          return TelephonyInfoService.updateUserServices(vm.telephonyInfo.services);
         })
         .catch(function (response) {
           result.msg = $translate.instant('voicemailPanel.error') + response.data.errorMessage;
@@ -118,47 +120,6 @@
         .finally(function () {
           vm.saveInProcess = false;
         });
-    }
-
-    function updateLineVoicemail(value) {
-      var promise;
-      var promises = [];
-      // update the cfwdall and cfwNAB to voicemail enabled 'f' in case they are set to true
-      for (var num in vm.telephonyInfo.directoryNumbers) {
-        var dn = vm.telephonyInfo.directoryNumbers[num];
-        if (dn.uuid !== null) {
-          DirectoryNumber.getDirectoryNumber(dn.uuid).then(function (dn) {
-            vm.directoryNumber = dn;
-            if (!value) {
-              vm.directoryNumber.callForwardAll.voicemailEnabled = value;
-              vm.directoryNumber.callForwardNotRegistered.voicemailEnabled = value;
-              vm.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = value;
-            }
-            if (!value || isCallForwardingDisabled(dn)) {
-              vm.directoryNumber.callForwardBusy.voicemailEnabled = value;
-              vm.directoryNumber.callForwardBusy.intVoiceMailEnabled = value;
-              vm.directoryNumber.callForwardNoAnswer.voicemailEnabled = value;
-              vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = value;
-              promise = LineSettings.updateLineSettings(vm.directoryNumber);
-              promises.push(promise);
-            }
-          });
-        }
-      }
-      return promises;
-    }
-
-    function isCallForwardingDisabled(dn) {
-      return ((angular.isUndefined(dn.callForwardAll.destination) ||
-          dn.callForwardAll.destination === null) &&
-        (angular.isUndefined(dn.callForwardBusy.intDestination) ||
-          dn.callForwardBusy.intDestination === null) &&
-        (angular.isUndefined(dn.callForwardBusy.destination) ||
-          dn.callForwardBusy.destination === null) &&
-        (angular.isUndefined(dn.callForwardNoAnswer.destination) ||
-          dn.callForwardNoAnswer.destination === null) &&
-        (angular.isUndefined(dn.callForwardNoAnswer.intDestination) ||
-          dn.callForwardNoAnswer.intDestination === null));
     }
   }
 })();

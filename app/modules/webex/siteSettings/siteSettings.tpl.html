@@ -41,7 +41,7 @@
     </div>
     <!-- end of loading info -->
     <!-- start of card containers -->
-    <div ng-if="siteSettingsObj.viewReady" id="cardsSection" name="cardsSection">
+    <div ng-if="siteSettingsObj.viewReady" id="{{siteSettingsObj.cardsSectionId}}" name="cardsSection-{{siteSettingsObj.cardsSectionId}}">
       <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
       <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
     </div>

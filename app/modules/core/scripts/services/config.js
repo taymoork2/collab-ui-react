@@ -211,6 +211,13 @@ angular.module('Core')
           prod: 'https://hercules-a.wbx2.com/v1'
         },
 
+        herculesUrlV2: {
+          dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+          integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          prod: 'https://hercules-a.wbx2.com/hercules/api/v2'
+        },
+
         ussUrl: {
           dev: 'https://uss-integration.wbx2.com/',
           cfe: 'https://uss-e.wbx2.com/',
@@ -965,6 +972,17 @@ angular.module('Core')
           return herculesUrl[this.getEnv()];
         },
 
+        getHerculesUrlV2: function () {
+          var herculesUrl = {
+            'dev': this.herculesUrlV2.dev,
+            'cfe': this.herculesUrlV2.cfe,
+            'integration': this.herculesUrlV2.integration,
+            'prod': this.herculesUrlV2.prod
+          };
+
+          return herculesUrl[this.getEnv()];
+        },
+
         getUssUrl: function () {
           var ussUrl = {
             'dev': this.ussUrl.dev,
@@ -1113,9 +1131,9 @@ angular.module('Core')
         WX2_User: ['overview', 'reports', 'support', 'devReports'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
         PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
+        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
