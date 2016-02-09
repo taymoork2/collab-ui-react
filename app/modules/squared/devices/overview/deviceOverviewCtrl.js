@@ -76,7 +76,7 @@
 
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
-      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : CsdmDeviceService)
+      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? CsdmHuronDeviceService : CsdmDeviceService)
         .updateTags(deviceOverview.currentDevice.url, tags)
         .catch(XhrNotificationService.notify);
     };
