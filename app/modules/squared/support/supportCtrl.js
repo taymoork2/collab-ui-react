@@ -24,10 +24,13 @@ angular.module('Squared')
       }, {
         title: $translate.instant('supportPage.tabs.logs'),
         state: "support.logs"
-      }, {
-        title: $translate.instant('supportPage.tabs.orderProvisioning'),
-        state: "support.billing"
-      }];
+      }
+      // Preliminary removed the menu item because the functionality is currently not used
+      //, {
+      //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
+      //  state: "support.billing"
+      //}
+      ];
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
