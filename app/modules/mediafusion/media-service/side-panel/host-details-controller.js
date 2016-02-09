@@ -18,9 +18,7 @@ angular.module('Mediafusion')
       MediaClusterService.getOrganization(function (data, status) {
         if (data.success) {
           vm.organization = data;
-        } else {
-          $log.log('Get existing admin org failed. Status: ', status);
-        }
+        } 
       });
 
       vm.reassignCluster = function () {
