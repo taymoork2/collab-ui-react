@@ -161,10 +161,6 @@ gulp.task('ts:changed-files', function () {
 });
 
 function compileTs(files, output) {
-  //var files = [].concat(
-  //  changedFiles,
-  //  'app/scripts/types.ts'
-  //);
   var filter;
   var reporter = $.typescript.reporter.defaultReporter();
   messageLogger('Transpiling changed TypeScript files', changedFiles);
