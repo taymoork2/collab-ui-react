@@ -25,7 +25,8 @@
 
     vm.reassignText = $translate.instant(
       'mediaFusion.reassign.reassignText', {
-        clusterName: cluster.properties["mf.group.displayName"]
+        clusterName: cluster.name,
+        displayName: cluster.properties["mf.group.displayName"]
       });
     vm.saving = false;
 
