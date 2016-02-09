@@ -13,6 +13,15 @@ angular.module('Mediafusion')
       vm.cluster = MediaClusterService.getClusters()[vm.clusterId];
       vm.options = ["Switching", "Transcoding"];
       vm.selectPlaceholder = 'Select One';
+      vm.organization = '';
+
+      MediaClusterService.getOrganization(function (data, status) {
+        if (data.success) {
+          vm.organization = data;
+        } else {
+          $log.log('Get existing admin org failed. Status: ', status);
+        }
+      });
 
       vm.reassignCluster = function () {
         $modal.open({
@@ -55,9 +64,13 @@ angular.module('Mediafusion')
         if (vm.hostscount == 1) {
           $modal.open({
             resolve: {
+              orgName: function () {
+                return vm.organization.displayName;
+              },
               cluster: function () {
                 return vm.cluster;
               }
+
             },
             controller: 'HostClusterDeregisterController',
             controllerAs: "hostClusterDeregister",
@@ -68,6 +81,9 @@ angular.module('Mediafusion')
             resolve: {
               cluster: function () {
                 return vm.cluster;
+              },
+              orgName: function () {
+                return vm.organization.displayName;
               }
             },
             controller: 'HostDeregisterController',
