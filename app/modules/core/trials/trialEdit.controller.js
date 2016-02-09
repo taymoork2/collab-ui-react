@@ -37,6 +37,7 @@
     };
 
     vm.details.licenseCount = vm.preset.licenseCount;
+    vm.details.licenseDuration = vm.preset.licenseDuration;
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
 
     vm.trialStates = [{

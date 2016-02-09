@@ -229,14 +229,6 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(siteSettingsObj.siteName).toEqual(siteName);
   }));
 
-  it('can get a session ticket', inject(function (WebExSiteSettingsFact) {
-    deferred.resolve("ticket");
-    $rootScope.$apply();
-    var sessionTicket = WebExSiteSettingsFact.getSessionTicket(siteUrl);
-    expect(sessionTicket).toBeDefined();
-    expect(sessionTicket.$$state.value).toEqual("ticket");
-  }));
-
   it('can get a category', inject(function (WebExSiteSettingsFact) {
     WebExSiteSettingsFact.initSiteSettingsObj();
     var obj = WebExSiteSettingsFact.getCategoryObj("SiteInfo");

@@ -16,10 +16,150 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
     webExXmlApiInfoObj
   ) {
 
+    this.csvGetStatus = function (siteUrl) {
+      var funcName = "csvGetStatus()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var deferredResult = $q.defer();
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvGetStatus()
+
+    this.csvExport = function (siteUrl) {
+      var funcName = "csvExport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var deferredResult = $q.defer();
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvExport()
+
+    this.csvImport = function (siteUrl) {
+      var funcName = "csvImport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var deferredResult = $q.defer();
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvImport()
+
+    this.csvFileDownload = function (siteUrl) {
+      var funcName = "csvFileDownload()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      var deferredResult = $q.defer();
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+        function dummySuccess(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "success"
+          };
+
+          deferredResult.resolve(result);
+        },
+
+        function dummyError(response) {
+          var result = {
+            siteUrl: siteUrl,
+            result: "error"
+          };
+
+          deferredResult.reject(result);
+        }
+      );
+
+      return deferredResult.promise;
+    }; // csvFileDownload()
+
     this.isSiteSupportsIframe = function (siteUrl) {
       var deferredIsSiteSupportsIframe = $q.defer();
 
-      getSessionTicket().then(
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(response) {
           $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
@@ -144,10 +284,6 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
           deferredIsSiteSupportsIframe.reject(result);
         } // getSessionTicketError()
       ); // getSessionTicket(siteUrl).then()
-
-      function getSessionTicket() {
-        return WebExXmlApiFact.getSessionTicket(siteUrl);
-      } // getSessionTicket()
 
       function getSiteData() {
         var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);

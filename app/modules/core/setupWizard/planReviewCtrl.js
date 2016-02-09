@@ -57,10 +57,8 @@
       vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
 
       vm.multiSubscriptions.options = _.uniq(_.pluck(vm.multiSubscriptions.billings, 'billingServiceId'));
-      vm.multiSubscriptions.selected = vm.multiSubscriptions.options[0];
-      if (vm.multiSubscriptions.options.length === 1) {
-        vm.multiSubscriptions.oneBilling = true;
-      }
+      vm.multiSubscriptions.selected = _.first(vm.multiSubscriptions.options);
+      vm.multiSubscriptions.oneBilling = _.size(vm.multiSubscriptions.options) === 1;
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
@@ -172,12 +170,22 @@
     }
     /////////////////
 
-    function showMultiSubscriptions(billingServiceId) {
-      var isSelected = vm.multiSubscriptions.selected === billingServiceId;
-      var isOneBilling = vm.multiSubscriptions.oneBilling;
+    function showMultiSubscriptions(billingServiceId, isTrial) {
+      var isSelected = false;
 
-      vm.licenseExists = isSelected;
-      return isOneBilling || isSelected;
+      var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
+      if (_.isArray(billingServiceId)) {
+        for (var i in billingServiceId) {
+          if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
+            isSelected = true;
+            break;
+          }
+        }
+      } else {
+        isSelected = _.eq(billingServiceId, vm.multiSubscriptions.selected);
+      }
+
+      return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
     }
 
     function populateTrialData(trial) {
