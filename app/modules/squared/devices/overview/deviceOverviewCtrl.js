@@ -68,10 +68,9 @@
       var tag = _.trim(deviceOverview.newTag);
       if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
-        return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService
-            : deviceOverview.currentDevice.isHuronDevice ? CsdmHuronDeviceService :CsdmDeviceService)
-            .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
-            .catch(XhrNotificationService.notify);
+        return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? CsdmHuronDeviceService : CsdmDeviceService)
+          .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
+          .catch(XhrNotificationService.notify);
       }
     };
 

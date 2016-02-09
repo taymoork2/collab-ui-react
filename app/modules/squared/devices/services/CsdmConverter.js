@@ -176,7 +176,7 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"')
+      return (description || "").replace(/'/g, '"');
     }
 
     function convertExpiryTime(expiryTime) {

@@ -25,11 +25,11 @@
     }
 
     function encodeHuronTags(description) {
-      return (description || "").replace(/"/g, "'")
+      return (description || "").replace(/"/g, "'");
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"')
+      return (description || "").replace(/'/g, '"');
     }
 
     var deviceCache = CsdmCacheFactory.create({

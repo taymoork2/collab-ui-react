@@ -43,7 +43,7 @@
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"')
+      return (description || "").replace(/'/g, '"');
     }
 
     function loadDevices(userUuid) {
