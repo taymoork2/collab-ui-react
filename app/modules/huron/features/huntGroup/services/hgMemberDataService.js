@@ -133,7 +133,9 @@
     function getMembersNumberUuidJSON() {
       var members = [];
       selectedHuntMembers.forEach(function (member) {
-        members.push(member.selectableNumber.uuid);
+        if (!_.contains(members, member.selectableNumber.uuid)) {
+          members.push(member.selectableNumber.uuid);
+        }
       });
       return members;
     }

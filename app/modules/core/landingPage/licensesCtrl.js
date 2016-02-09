@@ -46,7 +46,7 @@ angular.module('Core')
       }
 
       var now = moment();
-      var start = moment(trial.startDate).format('MMM D, YYYY');
+      var start = moment(trial.startDate);
       var daysDone = moment(now).diff(start, 'days');
 
       $scope.packageInfo.termMax = trial.trialPeriod;

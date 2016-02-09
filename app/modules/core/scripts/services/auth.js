@@ -62,7 +62,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
           //Figure out whether this user is allowed to access the /services API
           var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
-            _.any(['Full_Admin', 'PARTNER_ADMIN'], function (role) {
+            _.any(['Full_Admin', 'PARTNER_ADMIN', 'Readonly_Admin', 'PARTNER_READ_ONLY_ADMIN'], function (role) {
               return result.roles.indexOf(role) > -1;
             }) : false;
 
@@ -151,20 +151,22 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         });
     };
 
-    getAuthData().then(function (authData) {
-      Authinfo.initialize(authData);
-      if (Authinfo.isAdmin()) {
-        auth.getAccount(Authinfo.getOrgId())
-          .success(function (data, status) {
-            Authinfo.updateAccountInfo(data, status);
-            Authinfo.initializeTabs();
-          })
-          .finally(authDeferred.resolve);
-      } else {
-        Authinfo.initializeTabs();
-        authDeferred.resolve();
-      }
-    });
+    getAuthData()
+      .then(function (authData) {
+        Authinfo.initialize(authData);
+        if (Authinfo.isAdmin()) {
+          auth.getAccount(Authinfo.getOrgId())
+            .success(function (data, status) {
+              Authinfo.updateAccountInfo(data, status);
+              Authinfo.initializeTabs();
+            })
+            .finally(authDeferred.resolve);
+        } else {
+          Authinfo.initializeTabs();
+          authDeferred.resolve();
+        }
+      })
+      .catch(authDeferred.reject);
 
     return authDeferred.promise;
   };

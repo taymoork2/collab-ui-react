@@ -21,7 +21,7 @@ angular.module('Squared').service('CsdmConverter',
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.upgradeChannel = getUpgradeChannel(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
@@ -69,7 +69,7 @@ angular.module('Squared').service('CsdmConverter',
       this.canReportProblem = true;
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
       this.isHuronDevice = true;
       this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
@@ -134,7 +134,10 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = obj.displayName;
       this.product = 'Account';
       this.cssColorClass = 'device-status-gray';
-      this.readableState = t('CsdmStatus.Inactive');
+      this.state = {
+        readableState: t('CsdmStatus.Inactive'),
+        priority: "4"
+      };
       this.isOnline = false;
       this.isUnused = true;
       this.canDelete = true;
@@ -154,11 +157,11 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
-      this.product = 'Activation Code';
+      this.product = 'Unactivated Device';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
@@ -326,19 +329,31 @@ angular.module('Squared').service('CsdmConverter',
       return obj.url && obj.url.substr(obj.url.lastIndexOf('/') + 1);
     }
 
-    function getReadableState(obj) {
+    function getState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.RequiresActivation');
+        return {
+          readableState: t('CsdmStatus.RequiresActivation'),
+          priority: "3"
+        };
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           if (hasIssues(obj)) {
-            return t('CsdmStatus.OnlineWithIssues');
+            return {
+              readableState: t('CsdmStatus.OnlineWithIssues'),
+              priority: "1"
+            };
           }
-          return t('CsdmStatus.Online');
+          return {
+            readableState: t('CsdmStatus.Online'),
+            priority: "5"
+          };
         default:
-          return t('CsdmStatus.Offline');
+          return {
+            readableState: t('CsdmStatus.Offline'),
+            priority: "2"
+          };
         }
       }
     }

@@ -160,13 +160,13 @@
           _this.webExSiteSettingsObj.pageTitle = pageTitle;
           _this.webExSiteSettingsObj.pageTitleFull = pageTitleFull;
 
-          _this.getSessionTicket(siteUrl).then(
+          WebExXmlApiFact.getSessionTicket(siteUrl).then(
             function getSessionTicketSuccess(sessionTicket) {
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
-              webExXmlApiInfoObj.webexSiteName = siteName;
+              webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+              webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
               webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
               webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
 
@@ -187,22 +187,6 @@
 
           return _this.webExSiteSettingsObj;
         }, // initSiteSettingsObj
-
-        getSessionTicket: function (webexSiteUrl) {
-          return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
-        }, //getSessionTicket()
-
-        initXmlApiInfo: function (
-          siteUrl,
-          siteName,
-          sessionTicket
-        ) {
-
-          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = siteName;
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
-        }, // initXmlApiInfo()
 
         getSiteSettingsInfo: function () {
           var funcName = "getSiteSettingsInfo()";

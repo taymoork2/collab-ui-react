@@ -23,6 +23,15 @@ angular.module('Squared')
             }
           }
         }
+
+        var activeTab = _.find($scope.tabs, {
+          isActive: true
+        });
+        if (activeTab) {
+          ll('tagEvent', 'Tab Clicked', {
+            'Tab Name': $scope.tabs[idx]
+          });
+        }
       }
 
       function resetActiveTabState() {

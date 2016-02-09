@@ -15,7 +15,7 @@
             class="fa fa-circle device-status device-status"
             ng-class="deviceOverview.currentDevice.cssColorClass">
           </i>
-          <span>{{deviceOverview.currentDevice.readableState}}</span>
+          <span>{{deviceOverview.currentDevice.state.readableState}}</span>
           <p ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</p>
         </div>
       </div>
@@ -48,7 +48,7 @@
           class="btn btn-action"
           ng-if="deviceOverview.currentDevice.canDelete">
           <span
-            translate="spacesPage.delete">
+            translate="common.delete">
           </span>
         </button>
       </div>
@@ -104,7 +104,7 @@
       <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
-        <p>{{'deviceOverviewPage.expires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
+        <p>{{'deviceOverviewPage.deviceCodeExpires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
       </div>
     </cs-sp-section>
 

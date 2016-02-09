@@ -80,7 +80,7 @@ describe('Controller: CdrLadderDiagramService', function () {
   it('should return a Ladder Diagram from the Diagnostics Service', function () {
     $httpBackend.whenPOST(diagnosticsServiceUrl).respond(diagnosticsResponse);
 
-    CdrLadderDiagramService.getLadderDiagram(messageSquence).then(function (response) {
+    CdrLadderDiagramService.createLadderDiagram(messageSquence).then(function (response) {
       expect(response).toEqual(diagnosticsResponse);
     });
 
