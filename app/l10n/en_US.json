@@ -2,7 +2,8 @@
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
-    "loading": "Loading"
+    "loading": "Loading",
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
   },
   "usersPage": {
     "assignServices": "Assign Services",
