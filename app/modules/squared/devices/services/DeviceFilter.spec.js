@@ -111,13 +111,15 @@ describe('Service: DeviceFilter', function () {
 
     it('should search on status', function () {
       var arr = [{
-        readableState: 'xfoox'
+        state: {
+          readableState: 'xfoox'
+        }
       }, {}];
 
       DeviceFilter.setCurrentSearch('foo');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
-      expect(DeviceFilter.getFilteredList(arr)[0].readableState).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].state.readableState).toBe('xfoox');
     });
 
     it('should search on ip', function () {

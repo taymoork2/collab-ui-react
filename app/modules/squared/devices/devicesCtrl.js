@@ -76,23 +76,28 @@ angular.module('Squared')
           width: 70
         }, {
           field: 'displayName',
-          displayName: 'Belongs to',
+          displayName: $translate.instant('spacesPage.nameHeader'),
           sortingAlgorithm: sortFn,
           sort: {
             direction: 'asc',
-            priority: 0
+            priority: 1
           },
           sortCellFiltered: true
         }, {
-          field: 'readableState',
-          displayName: 'Status',
+          field: 'state',
+          displayName: $translate.instant('spacesPage.statusHeader'),
           cellTemplate: getTemplate('_statusTpl'),
-          sortFn: sortFn
+          sortable: true,
+          sortingAlgorithm: sortStateFn,
+          sort: {
+            direction: 'asc',
+            priority: 0
+          }
         }, {
           field: 'product',
-          displayName: 'Type',
+          displayName: $translate.instant('spacesPage.typeHeader'),
           cellTemplate: getTemplate('_productTpl'),
-          sortFn: sortFn
+          sortingAlgorithm: sortFn
         }]
       };
 
@@ -111,5 +116,8 @@ angular.module('Squared')
         return 1;
       }
 
+      function sortStateFn(a, b) {
+        return a.priority - b.priority;
+      }
     }
   );
