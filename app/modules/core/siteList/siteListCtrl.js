@@ -325,7 +325,7 @@ angular.module('Core')
 
         // TODO
         var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvGetStatus(siteUrl).then(
+        WebExApiGatewayService.csvStatus(siteUrl).then(
           function getCSVStatusSuccess(response) {
             var funcName = "getCSVStatusSuccess()";
             var logMsg = "";
