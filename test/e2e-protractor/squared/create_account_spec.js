@@ -85,7 +85,7 @@ describe('Test the createAccount page', function () {
   it('should validate existing user for the checkEmailAddr page too', function () {
     browser.get('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
     utils.sendKeys(enterEmailAddrPage.email, newEmail);
-    utils.click(createAccountPage.nextButton);
+    utils.click(enterEmailAddrPage.nextButton);
     utils.expectIsNotDisplayed(enterEmailAddrPage.email);
     utils.expectIsNotDisplayed(createAccountPage.email1);
   });
