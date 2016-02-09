@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExApiGateway').service('WebExApiGatewayService', [
+angular.module('WebExApp').service('WebExApiGatewayService', [
   '$rootScope',
   '$q',
   '$log',
@@ -28,14 +28,21 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
 
       // the code below is just a mock call to an existing webex api
       // this will be replaced with call to the real webex api once it is available
+      var dummyResult = {
+        siteUrl: siteUrl,
+        result: 'success',
+        status: ''
+      };
 
+      return $q.when(dummyResult);
+      /*
       return WebExXmlApiFact.getSessionTicket(siteUrl)
         .then(
           function dummySuccess(response) {
-            var result = null;
+            var dummyResult = null;
 
             if (null == response) {
-              result = {
+              dummyResult = {
                 siteUrl: siteUrl,
                 result: 'failed',
                 code: response
@@ -44,7 +51,7 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
               $q.reject(result);
             }
 
-            result = {
+            dummyResult = {
               siteUrl: siteUrl,
               result: 'success',
               status: response
@@ -55,7 +62,7 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         ) // WebExXmlApiFact.getSessionTicket().then()
         .catch(
           function dummyCatch(error) {
-            var result = {
+            var dummyResult = {
               siteUrl: siteUrl,
               result: 'error',
               code: error
@@ -64,6 +71,7 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
             $q.reject(result);
           } // dummyCatch()
         ); // WebExXmlApiFact.getSessionTicket().catch()
+        */
     }; // csvStatus()
 
     this.csvExport = function (siteUrl) {
