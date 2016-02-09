@@ -12,6 +12,10 @@ div.dr-left, div.dr-right {
 	display: table-cell;
 }
 
-#dr-error  {
+#dr-enter-email-addr-header  {
+	font-size: 200%;
+}
+
+#dr-enter-email-addr-error  {
 	color: $color-negative-base;
 }
