@@ -26,7 +26,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     if (deferred) return deferred;
 
     deferred = httpGET(getAuthorizationUrl())
-      .then(injectEntitlementsOrMapServices)
+      .then(replaceOrTweakServices)
       .then(injectMessengerService)
       .then(intitalizeAuthinfo)
       .catch(handleErrorAndResetAuthinfo);
@@ -140,7 +140,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       });
   }
 
-  function injectEntitlements(authData) {
+  function replaceServices(authData) {
     var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
     return httpGET(servicesUrl).then(function (res) {
       authData.services = res.data.entitlements;
@@ -148,7 +148,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     });
   }
 
-  function mapServices(authData) {
+  function tweakServices(authData) {
     authData.services = _.map(authData.services, function (service) {
       return _.assign(service, {
         ciName: service.ciService || service.ciName,
@@ -174,13 +174,13 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     }
   }
 
-  function injectEntitlementsOrMapServices(res) {
+  function replaceOrTweakServices(res) {
     var authData = res.data;
     var isAdmin = _.intersection(['Full_Admin', 'PARTNER_ADMIN'], authData.roles).length;
     if (isAdmin) {
-      return injectEntitlements(authData);
+      return replaceServices(authData);
     } else {
-      return mapServices(authData);
+      return tweakServices(authData);
     }
   }
 
