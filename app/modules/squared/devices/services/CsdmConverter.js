@@ -159,7 +159,7 @@ angular.module('Squared').service('CsdmConverter',
       this.expiryTime = convertExpiryTime(obj.expiryTime);
       this.product = 'Unactivated Device';
       this.tagString = getTagString(obj.description);
-      this.tagString = getTagString(obj);
+      this.tagString = getTagString(obj.description);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
       this.readableState = getReadableState(obj);
