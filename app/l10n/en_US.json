@@ -3421,7 +3421,7 @@
     },
     "add": {
       "header": "Add domains",
-      "description": "Add domains in your organization to be verified. If you have users in multiple domains, add all of them. You will be required to verify your own domain before any others.",
+      "description": "Add domains in your organization to be verified. If you have users in multiple domains, repeat this step until you have added all of them. You will be required to verify your own domain before any others.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
       "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
@@ -3429,48 +3429,48 @@
 
     },
     "delete": {
-      "header": "Unverify domain",
-      "description": "You are about to unverify the following domain:",
-      "preventLockoutError": "Unverifying your own domain will prevent you from logging in.",
+      "header": "Remove domain",
+      "description": "You are about to remove the following domain:",
+      "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
     },
     "email": {
       "header": "Send email",
-      "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for {{name}}.",
+      "description": "Enter email addresses to receive an email with the DNS verification token and instructions for {{name}}.",
       "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not a valid email address.",
-      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
-      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
+      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     },
     "verify": {
       "header": "Verify domain",
       "verifyThis": "Before you verify",
-      "beforeVerify": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
+      "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     },
     "claim": {
       "header": "Claim domain",
       "claimThis": "You are about to claim the following domain:",
-      "warning": "Users with e-mail addresses in this domain that belong to other orgs will have to provide new e-mail addresses.",
+      "warning": "Users with e-mail addresses in this domain that belong to other organizations will have to provide new e-mail addresses.",
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "Code and instructions",
-      "mail": "Mail code and instructions",
-      "unverify": "Remove enforcement",
+      "instructions": "View token and instructions",
+      "mail": "Mail token and instructions",
+      "unverify": "Remove domain",
       "unclaim": "Release domain",
       "delete": "Remove"
     },
     "instructions": {
-      "title": "Code and instructions",
+      "title": "Token and instructions",
       "done": "Done",
-      "instructions": "you must copy and paste this DNS verification code to the TXT record section to prove that you own the domain:",
-      "howto": "<a href=''>Learn more</a> about how to enter the DNS verification code.",
+      "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
+      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     }
