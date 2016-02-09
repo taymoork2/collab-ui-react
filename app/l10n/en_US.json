@@ -2,7 +2,8 @@
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
-    "loading": "Loading"
+    "loading": "Loading",
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -440,6 +441,7 @@
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
     "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerDescription": "A registered endpoint is any device connected to the network in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
     "allDevices": "All Devices"
   },
@@ -953,12 +955,10 @@
     "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
     "deleteActivationCode": "Delete Activation Code",
-    "kindHeader": "Type",
-    "nameHeader": "Installed in",
+    "typeHeader": "Type",
+    "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "activationCodeHeader": "Activation Code",
-    "activationDateHeader": "Activation Date",
     "informationHeader": "Information",
     "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
@@ -1158,7 +1158,7 @@
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
@@ -1168,12 +1168,16 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "aware": "Share your desktop with Spark while you are on your work phone.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
+        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
+        "on": "On by default",
+        "connectHeading": "Connect",
+        "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -1188,11 +1192,11 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: acme.com"
+        "sipDomainExample": "For example: example.org"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "description": "Set the start time to begin upgrades on the connectors.",
         "defaultWarning": "Confirm the default schedule"
       }
     },
@@ -1296,13 +1300,16 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
-    "setSipUriDesc": "This name will appear in the end-users' ID which they will use to reach each other. For example, if John Smith who works at Acme, he would be reachable by dialing jsmith@acme.call.ciscospark.com",
+    "setSipUriDescPartOne": "This value creates a domain that is branded with a name of your choosing. It will also generate Spark SIP addresses that will be assigned to your users. These addresses can be used by external SIP capable devices to call your users.",
+    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartThree": "We've provided a default value for you in the field.",
+    "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a SIP URI domain name",
-    "setSipUriDomainTitle": "SIP URI Domain Name",
+    "setSipUriDomainTitle": "Cloud SIP URI Domain",
     "setSipUriDomainCompNames": "Company's Domain Names",
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
-    "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
+    "setSipUriErrorMessage": "Not available. Please try another name",
     "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
@@ -2304,16 +2311,16 @@
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
-      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
-      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
-      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
@@ -2842,14 +2849,14 @@
     "spanishSpain": "Spanish (Spain)",
     "spanishColumbian": "Spanish (Columbian)",
     "french": "French",
-    "indionesian": "Indionesian",
+    "indonesian": "Indonesian",
     "italian": "Italian",
     "japanese": "Japanese",
     "korean": "Korean",
     "norwegian": "Norwegian",
     "dutch": "Dutch",
     "polish": "Polish",
-    "portugeseBrazillian": "Portugese (Brazillian)",
+    "portugueseBrazillian": "Portuguese (Brazillian)",
     "russian": "Russian",
     "swedish": "Swedish",
     "turkish": "Turkish",
@@ -2865,7 +2872,7 @@
     "spanishArgentine": "Spanish (Argentine)",
     "spanishChilean": "Spanish (Chilean)",
     "spanishMexican": "Spanish (Mexican)",
-    "portugese": "Portugese",
+    "portuguese": "Portuguese",
     "valencian": "Valencian"
   },
   "siteList": {
@@ -2875,7 +2882,14 @@
     "type": "Type",
     "siteSettings": "Configure",
     "siteReports": "Reports",
-    "siteCsv": "WebEx User Attribute CSV File Import/Export"
+    "siteCsvColumnHeader": "User Attributes",
+    "siteCsvExportLinkLabel": "Export",
+    "siteCsvExportInProgressLinkLabel": "Export in progress...",
+    "siteCsvImportLinkLabel": "Import",
+    "siteCsvImportInProgressLinkLabel": "Import in progress...",
+    "siteCsvDownloadLinkLabel": "Download file",
+    "siteCsvX": "X",
+    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3162,6 +3176,7 @@
     "enterEmailAddr": {
       "title": "Atlas Portal Shopping Cart Login (APSCL)",
       "header": "Enter eMail Addr",
+      "emailPlaceholder": "Ex. x@y.com",
       "validation": {
         "emptyEmail": "The email address cannot be blank"
       }
@@ -3169,6 +3184,7 @@
     "createAccount": {
       "title": "Create Account",
       "passwordLabel": "Enter your password:",
+      "confirmPlaceholder": "confirm",
       "validation": {
         "emptyEmail": "Empty email",
         "emptyPassword": "Empty password",

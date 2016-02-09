@@ -382,10 +382,8 @@ angular.module('Core')
         } else {
           isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
         }
-        var isOneBilling = $scope.oneBilling;
 
-        $scope.licenseExists = isSelected;
-        return isOneBilling || isSelected || isTrialSubscription;
+        return $scope.oneBilling || isSelected || isTrialSubscription;
       };
 
       function populateConf() {

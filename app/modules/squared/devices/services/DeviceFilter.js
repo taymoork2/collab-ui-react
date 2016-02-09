@@ -13,20 +13,20 @@ angular.module('Squared').service('DeviceFilter',
       filterValue: 'all'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Offline'),
-      filterValue: 'offline'
-    }, {
-      count: 0,
       name: $translate.instant('CsdmStatus.OnlineWithIssues'),
       filterValue: 'issues'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Online'),
-      filterValue: 'online'
+      name: $translate.instant('CsdmStatus.Offline'),
+      filterValue: 'offline'
     }, {
       count: 0,
       name: $translate.instant('CsdmStatus.RequiresActivation'),
       filterValue: 'codes'
+    }, {
+      count: 0,
+      name: $translate.instant('CsdmStatus.Online'),
+      filterValue: 'online'
     }];
 
     var getFilters = function () {
@@ -108,10 +108,11 @@ angular.module('Squared').service('DeviceFilter',
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
         var matchesAnyFieldOfItem = termMatchesAnyFieldOfItem(term, item);
+        var matchesState = termMatchesState(item.state, term);
         var matchesAnyTag = termMatchesAnyTag(item.tags, term);
         var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
         var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
-        return matchesAnyFieldOfItem || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
+        return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
       });
     }
 
@@ -127,8 +128,12 @@ angular.module('Squared').service('DeviceFilter',
       });
     }
 
+    function termMatchesState(state, term) {
+      return state && (state.readableState || '').toLowerCase().indexOf(term || '') != -1;
+    }
+
     function termMatchesAnyFieldOfItem(term, item) {
-      return ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
+      return ['displayName', 'product', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
         return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
       });
     }

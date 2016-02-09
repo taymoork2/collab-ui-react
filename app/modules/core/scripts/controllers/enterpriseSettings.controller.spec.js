@@ -94,7 +94,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('should disable the field and clear error on the field validation', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect($scope.cloudSipUriField.isError).toEqual(false);
@@ -116,7 +116,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('addSipUriDomain should error gracefully', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect(Notification.error).toHaveBeenCalled();

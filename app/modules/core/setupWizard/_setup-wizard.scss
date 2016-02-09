@@ -663,15 +663,18 @@
   margin-bottom: 2px;
 }
 
-
 .enterprise-sipUri-page {
+  #sipUriDomainTitle {
+    margin-bottom: 1.5rem;
+  }
+
   .btn-space {
     margin-left: .7rem
   }
   .space {
     margin-left: 1rem
   }
-  .spaceFlow {
+  .space-flow {
     margin-bottom: 2.2rem
   }
   .url-examples-style {
@@ -683,11 +686,24 @@
   .inline {
     float: left;
   }
-  .inputFieldButton {
-    float: left;
-  }
-  .uriCheckSpace {
+  .uri-check-space {
     clear: both;
+  }
+  .red-error-icon {
+    color: red;
+  }
+  .green-check {
+    color: green;
+  }
+  .confirm-box {
+    position: absolute;
+    margin-top: 2rem;
+  }
+  .font-regular {
+    font-size: 1rem
+  }
+  .paragraphSpacing {
+    margin-bottom: 1rem;
   }
 }
 
