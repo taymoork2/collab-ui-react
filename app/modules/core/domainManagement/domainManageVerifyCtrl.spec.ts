@@ -27,49 +27,47 @@ namespace domainManagement {
         });
       };
 
-      describe('', ()=> {
-        it('should return domain provided through state as domain property', ()=> {
-          let ctrl, domain = {text: 'anydomain.com'};
-          ctrl = domainManagmentVerifyCtrlFactory(
-            DomainManagementService,
-            {
-              name: "testuser",
-              isLoaded: true,
-              domain: 'example.com'
-            },
-            domain
-          );
+      it('should return domain provided through state as domain property', ()=> {
+        let ctrl, domain = {text: 'anydomain.com'};
+        ctrl = domainManagmentVerifyCtrlFactory(
+          DomainManagementService,
+          {
+            name: "testuser",
+            isLoaded: true,
+            domain: 'example.com'
+          },
+          domain
+        );
 
-          expect(ctrl.domain).toBe(domain);
-        });
+        expect(ctrl.domain).toBe(domain);
+      });
 
-        it('should return error from verify as error property', ()=> {
-          let ctrl;
-          let domain = {text: 'anydomain.com'};
-          let user = {isLoaded: true, domain: 'example.com'};
-          let deferred = $q.defer();
+      it('should return error from verify as error property', ()=> {
+        let ctrl;
+        let domain = {text: 'anydomain.com'};
+        let user = {isLoaded: true, domain: 'example.com'};
+        let deferred = $q.defer();
 
-          let service = {
-            domainList: [{text: "superdomain.com", status: 'verified'}],
-            verifyDomain: sinon.stub().returns(deferred.promise),//$q.reject("error-in-verify")),
-            states: DomainManagementService.states
-          };
+        let service = {
+          domainList: [{text: "superdomain.com", status: 'verified'}],
+          verifyDomain: sinon.stub().returns(deferred.promise),//$q.reject("error-in-verify")),
+          states: DomainManagementService.states
+        };
 
-          ctrl = domainManagmentVerifyCtrlFactory(
-            service, user, domain
-          );
+        ctrl = domainManagmentVerifyCtrlFactory(
+          service, user, domain
+        );
 
-          ctrl.verify();
+        ctrl.verify();
 
-          expect(service.verifyDomain.callCount).toBe(1);
-          deferred.reject("error-in-verify");
-          ctrl.error = "not-the-error-we-expect";
+        expect(service.verifyDomain.callCount).toBe(1);
+        deferred.reject("error-in-verify");
+        ctrl.error = "not-the-error-we-expect";
 
-          $rootScope.$digest(); //execute the promise in the ctrl
-          expect(ctrl.error).not.toBeNull();
+        $rootScope.$digest(); //execute the promise in the ctrl
+        expect(ctrl.error).not.toBeNull();
 
-          expect(ctrl.error).toBe("error-in-verify");
-        });
+        expect(ctrl.error).toBe("error-in-verify");
       });
 
 
