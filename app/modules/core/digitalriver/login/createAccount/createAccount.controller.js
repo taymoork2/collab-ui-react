@@ -11,7 +11,7 @@
     var vm = this;
 
     // TODO: Remove this after the go-live.
-    vm.drReferrer = Userservice.hasDrReferrer();
+    vm.drReferrer = $location.search().referrer === Userservice.getDrReferrer();
 
     vm.email1 = _.get($location.search(), 'email', '').replace(/\s+/g, '+');
 

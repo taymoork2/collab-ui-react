@@ -5,7 +5,7 @@
 
 describe('Test the enterEmailAddr page', function () {
 
-  browser.get('#/enter-email-addr?referrer=digitalriver-ZGlnaXRhbHJpdmVy');
+  browser.get('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
 
   it('should have the right title', function () {
     utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML', 'Enter eMail Addr');

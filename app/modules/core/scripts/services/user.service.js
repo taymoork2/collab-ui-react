@@ -471,8 +471,8 @@ angular.module('Core')
         },
 
         // TODO: Remove this after the go-live.
-        hasDrReferrer: function() {
-          return $location.search().referrer === 'digitalriver-ZGlnaXRhbHJpdmVy';
+        getDrReferrer: function () {
+          return "digitalriver-ZGlnaXRhbHJpdmVy";
         }
       };
     }

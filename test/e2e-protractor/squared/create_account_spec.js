@@ -7,7 +7,7 @@ describe('Test the createAccount page', function () {
 
   var newEmail = utils.randomTestGmail();
 
-  browser.get('#/create-account?email=' + newEmail + "&referrer=digitalriver-ZGlnaXRhbHJpdmVy");
+  browser.get('#/create-account?email=' + newEmail + '&referrer=' + enterEmailAddrPage.drReferrer);
 
   it('should have the right title', function () {
     utils.expectAttribute(createAccountPage.h2, 'innerHTML', 'Create Account');
@@ -73,7 +73,7 @@ describe('Test the createAccount page', function () {
   });
 
   it('should validate existing user', function () {
-    browser.get('#/create-account?email=' + newEmail + "&referrer=digitalriver-ZGlnaXRhbHJpdmVy");
+    browser.get('#/create-account?email=' + newEmail + '&referrer=' + enterEmailAddrPage.drReferrer);
     utils.sendKeys(createAccountPage.email2, newEmail);
     utils.sendKeys(createAccountPage.password1, 'P@ssword123');
     utils.sendKeys(createAccountPage.password2, 'P@ssword123');
@@ -83,7 +83,7 @@ describe('Test the createAccount page', function () {
   });
 
   it('should validate existing user for the checkEmailAddr page too', function () {
-    browser.get('#/enter-email-addr?referrer=digitalriver-ZGlnaXRhbHJpdmVy');
+    browser.get('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
     utils.sendKeys(enterEmailAddrPage.email, newEmail);
     utils.click(createAccountPage.nextButton);
     utils.expectIsNotDisplayed(enterEmailAddrPage.email);
