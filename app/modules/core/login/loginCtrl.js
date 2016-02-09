@@ -70,22 +70,12 @@ angular.module('Core')
                 LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 Auth.clearLoginMarker();
               }
-
               return loadingDelayPromise.then(function () {
                 $state.go(state, params);
               });
             }
           }).catch(function (error) {
-            if (error) {
-              Auth.logout();
-              // $timeout(function () {
-              //   $scope.result = error;
-              //   $timeout(Auth.logout, logoutDelay);
-              // }, loadingDelay);
-            } else {
-              Auth.logout();
-              // $timeout(Auth.logout, logoutDelay);
-            }
+            $state.go('login-error');
           });
       };
 
