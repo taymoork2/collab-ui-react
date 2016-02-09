@@ -11,7 +11,11 @@
     var vm = this;
 
     // TODO: Remove this after the go-live.
-    vm.drReferrer = $location.search().referrer === 'digitalriver-ZGlnaXRhbHJpdmVy';
+    vm.drReferrer = Userservice.hasDrReferrer();
+
+    vm.emailPlaceholder = function() {
+      return $translate.instant('digitalRiver.enterEmailAddr.emailPlaceholder');
+    }
 
     vm.handleEnterEmailAddr = function () {
       if (!vm.email || 0 === vm.email.trim().length) {

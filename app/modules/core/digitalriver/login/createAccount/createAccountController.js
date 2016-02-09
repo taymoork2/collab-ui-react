@@ -11,9 +11,13 @@
     var vm = this;
 
     // TODO: Remove this after the go-live.
-    vm.drReferrer = $location.search().referrer === 'digitalriver-ZGlnaXRhbHJpdmVy';
+    vm.drReferrer = Userservice.hasDrReferrer();
 
     vm.email1 = _.get($location.search(), 'email', '').replace(/\s+/g, '+');
+
+    vm.confirmPlaceholder = function() {
+      return $translate.instant('digitalRiver.createAccount.confirmPlaceholder');
+    }
 
     vm.handleCreateAccount = function () {
 
