@@ -1,7 +1,7 @@
 'use strict';
 
 sitereports.testInfo.describeCount = 0;
-while (0 >= sitereports.testInfo.describeCount) {
+while (1 >= sitereports.testInfo.describeCount) {
   switch (sitereports.testInfo.describeCount) {
   case 1:
     sitereports.testInfo.testType = 'T30';
