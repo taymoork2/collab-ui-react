@@ -11,3 +11,7 @@ div.dr-row  {
 div.dr-left, div.dr-right {
 	display: table-cell;
 }
+
+#dr-error  {
+	color: $color-negative-base;
+}
