@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService',
-    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService) {
+  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService', 'WebexClientVersion',
+    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion) {
       var orgId = Authinfo.getOrgId();
 
       // toggles api calls, show/hides divs based on customer or partner profile
@@ -33,9 +33,11 @@ angular.module('Core')
       };
 
       $scope.allowCustomerWbxClientVersions = false;
-      $scope.wbxclientversionselected = "testversion1.0";
-      $scope.wbxclientversions = ["testversion1.0", "testversion2.0"];
-      $scope.wbxclientversionplaceholder = "Select webex client version";
+      $scope.wbxclientversionselected = 'testversion1.0';
+      $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
+      $scope.wbxclientversionplaceholder = 'Select webex client version';
+      //For now restrict to one user (who is a partner)
+      $scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
 
       $scope.sendFeedback = function () {
         var appType = 'Atlas_' + $window.navigator.userAgent;
@@ -135,6 +137,15 @@ angular.module('Core')
         BrandService.getLogoUrl(orgId).then(function (logoUrl) {
           $scope.tempLogoUrl = logoUrl;
         });
+
+        $scope.initWbxClientVersions();
+      };
+
+      $scope.initWbxClientVersions = function () {
+        //wbxclientversionselected
+        $scope.wbxclientversions = WebexClientVersion.getWbxClientVersions();
+        //will need to do more stuff here. Init selected version as well. 
+        //disable drop down ... but maybe not. 
       };
 
       $scope.init();
@@ -205,6 +216,18 @@ angular.module('Core')
           }
         });
       }
+
+      function toggleWebexSelectLatestVersionAlways() {
+        WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
+        //$scope.allowCustomerWbxClientVersions = !$scope.allowCustomerWbxClientVersions;
+      }
+
+      $scope.toggleWebexSelectLatestVersionAlways = _.debounce(
+        toggleWebexSelectLatestVersionAlways,
+        2000, {
+          'leading': true,
+          'trailing': false
+        });
 
       $scope.toggleLogo = _.debounce(function (value) {
         if (value) {

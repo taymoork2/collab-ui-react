@@ -121,8 +121,10 @@ ng-model="sel.selected"
 <!-- <div ng-controller="SelectWbxClientVersion as sel"> -->
    
    <!-- <form id="myForm"> -->
+    <div ng-if="showClientVersions">    
       <div class="row form-spacing">
-         <div class="small-12 columns">
+        <div class="small-12 columns">
+          <div class="row collapse" ng-if="isPartner">
            <p><span translate="partnerProfile.webexClientVersion"></span>  
               <span class="badge"></span>
             </p>
@@ -131,7 +133,8 @@ ng-model="sel.selected"
                options="wbxclientversions"
                placeholder="wbxclientversionplaceholder">
             </cs-select>
-         </div>
+          </div>
+        </div>
       </div>
    <!-- </form> -->
 <!-- </div> -->
@@ -149,6 +152,7 @@ ng-model="sel.selected"
           </div>
          </div>
        </div>
+     </div>  
 
 
 
