@@ -132,7 +132,7 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
-      this.product = 'Account';
+      this.product = t('spacesPage.account');
       this.cssColorClass = 'device-status-gray';
       this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
@@ -154,7 +154,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
-      this.product = 'Unactivated Device';
+      this.product = t('spacesPage.unactivatedDevice');
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;

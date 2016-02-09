@@ -960,6 +960,8 @@
     "actionsHeader": "Actions",
     "activationCodeHeader": "Activation Code",
     "activationDateHeader": "Activation Date",
+    "account": "Account",
+    "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Information",
     "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
