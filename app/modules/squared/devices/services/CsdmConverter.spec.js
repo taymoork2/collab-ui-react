@@ -384,7 +384,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
+      expect(converter.convertAccounts(arr)[0].product).toBe('spacesPage.account');
     });
 
     it('should set state to Non existent', function () {
