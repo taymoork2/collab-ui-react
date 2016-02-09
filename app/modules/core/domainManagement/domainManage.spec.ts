@@ -8,7 +8,7 @@ namespace domainManagement {
       domainList: [],
       getVerifiedDomains: undefined,
       getVerificationTokens: undefined,
-      states:{pending:'pending'}
+      states: {pending: 'pending'}
     };
     beforeEach(angular.mock.module('Core'));
     beforeEach(inject((_$q_, _$rootScope_, _Config_)=> {
@@ -21,7 +21,7 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
-        DomainManagementService.getVerificationTokens = sinon.stub().returns();
+        DomainManagementService.getVerificationTokens = sinon.stub().returns(undefined);
         ctrl = $controller('DomainManagementCtrl', {
           Authinfo: {getOrgId: sinon.stub().returns('org-id')},
           CiService: {
@@ -61,7 +61,7 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         ctrl = $controller('DomainManageDeleteCtrl', {
-          $stateParams: {domain: {text:'test.example.com'}, loggedOnUser: {email: sinon.stub()}},
+          $stateParams: {domain: {text: 'test.example.com'}, loggedOnUser: {email: sinon.stub()}},
           $previousState: {go: sinon.stub()},
           DomainManagementService: DomainManagementService,
           $translate: $translate
@@ -77,7 +77,7 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         ctrl = $controller('DomainManageEmailCtrl', {
-          $stateParams: {domain: {text:'test.example.com'}, loggedOnUser: {email: 'user-email'}},
+          $stateParams: {domain: {text: 'test.example.com'}, loggedOnUser: {email: 'user-email'}},
           $previousState: {go: sinon.stub()},
           DomainManagementService: DomainManagementService,
           $translate: $translate
@@ -93,7 +93,7 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         ctrl = $controller('DomainManageClaimCtrl', {
-          $state: {params: {domain: {text:'test.example.com'}, loggedOnUser: {email: sinon.stub()}}},
+          $state: {params: {domain: {text: 'test.example.com'}, loggedOnUser: {email: sinon.stub()}}},
           $previousState: {go: sinon.stub()},
           DomainManagementService: DomainManagementService,
           $translate: $translate
