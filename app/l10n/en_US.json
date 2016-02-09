@@ -3173,6 +3173,7 @@
     "enterEmailAddr": {
       "title": "Atlas Portal Shopping Cart Login (APSCL)",
       "header": "Enter eMail Addr",
+      "emailPlaceholder": "Ex. x@y.com",
       "validation": {
         "emptyEmail": "The email address cannot be blank"
       }
@@ -3180,6 +3181,7 @@
     "createAccount": {
       "title": "Create Account",
       "passwordLabel": "Enter your password:",
+      "confirmPlaceholder": "confirm",
       "validation": {
         "emptyEmail": "Empty email",
         "emptyPassword": "Empty password",
