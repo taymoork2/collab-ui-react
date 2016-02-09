@@ -51,7 +51,6 @@
       if (angular.isDefined($scope.fromRouteCall)) {
         vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
       } else {
-        vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
         vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
       }
 
@@ -90,8 +89,13 @@
         if (!_.find(vm.menuEntry.actions, {
             name: rtHG
           })) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
-          vm.menuEntry.addAction(action);
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            vm.menuEntry.actions[0].setName(rtHG);
+            vm.menuEntry.actions[0].setValue('');
+          }
         }
 
       } else {

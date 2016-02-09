@@ -68,17 +68,22 @@
       var uiModel = AAUiModelService.getUiModel();
       var uiCombinedMenu = uiModel[$scope.schedule];
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
-      vm.menuEntry = uiCombinedMenu.entries[$scope.index];
 
       if (angular.isDefined($scope.fromRouteCall)) {
 
-        // existing action for goto?
+        vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         if (!_.find(vm.menuEntry.actions, {
             name: "goto"
           })) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-          vm.menuEntry.addAction(action);
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+            vm.menuEntry.addAction(action);
+          } else {
+            vm.menuEntry.actions[0].setName('goto');
+            vm.menuEntry.actions[0].setValue('');
+          }
         }
+
       } else {
 
         // Read an existing routeToAA entry if exist or initialize it if not

@@ -12,24 +12,21 @@
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
     vm.options = [{
-        "label": "Route to Auto Attendant",
-        "value": "goto"
-      }, {
-        "label": "Route to Hunt Group",
-        "value": "routeToHuntGroup"
-      }, {
         "label": "Route to User",
         "value": "routeToUser"
       }, {
         "label": "Route to Voicemail",
         "value": "routeToVoiceMail"
       }, {
-        "label": "Dial by Extension",
-        "value": "routeToExtension"
+        "label": "Route to Hunt Group",
+        "value": "routeToHuntGroup"
+      }, {
+        "label": "Route to Auto Attendant",
+        "value": "goto"
       }, {
         "label": "Route to External Number",
         "value": "route"
-      },
+      }
 
     ];
 
@@ -40,19 +37,33 @@
       value: ''
     };
 
+    vm.setSelects = setSelects;
+
     function selectChangeFn() {
       var sel = vm.selected;
     }
 
     function setSelects() {
-      var result;
 
-      // check for existing route to option from list.
-      if (result = _.find(vm.options, {
-          value: _.head(_.map(vm.menuEntry.actions, 'name'))
-        })) {
-        vm.selected = result;
-      }
+      var val;
+
+      /* look for matching action in menuEntries 
+         Set label from our list. Will trigger the html and the 
+         appropriate controller will setup the select list
+       */
+
+      _.forEach(vm.options, function (option) {
+        val = _.find(vm.menuEntry.actions, {
+          name: option.value
+        });
+        if (angular.isDefined(val)) {
+          if (val.name === option.value) {
+            vm.selected.label = option.label;
+            return true;
+          }
+        }
+
+      });
 
     }
 

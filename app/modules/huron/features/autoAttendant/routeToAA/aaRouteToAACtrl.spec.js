@@ -122,5 +122,49 @@ describe('Controller: AARouteToAACtrl', function () {
         expect(actionEntry.value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
       });
     });
+
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+        aaUiModel[schedule].entries[0].addAction(action);
+
+      });
+
+      it('should be able to create new AA menu entry from Route Call', function () {
+        $scope.fromRouteCall = true;
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('goto');
+      });
+    });
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+        $scope.fromRouteCall = true;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+      });
+
+      it('should be able to create new AA entry from Route Call', function () {
+
+        var controller = $controller('AARouteToAACtrl', {
+          $scope: $scope
+        });
+
+        expect(controller).toBeDefined();
+
+        expect(controller.menuEntry.actions[0].name).toEqual('goto');
+        expect(controller.menuEntry.actions[0].value).toEqual('');
+
+      });
+    });
+
   });
 });

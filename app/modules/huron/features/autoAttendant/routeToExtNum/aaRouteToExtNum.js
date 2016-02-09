@@ -40,16 +40,28 @@
     /////////////////////
 
     function populateUiModel() {
-      vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+      if (angular.isDefined($scope.fromRouteCall)) {
+        vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
+      } else {
+        vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+      }
     }
 
     function saveUiModel() {
       var num = vm.model.phoneNumberInput.phoneNumber;
+
       if (num) {
         num = num.replace(/\D/g, '');
       }
-      vm.menuKeyEntry.actions[0].setValue(num);
+
+      if (angular.isDefined($scope.fromRouteCall)) {
+        vm.menuEntry.actions[0].setValue(num);
+      } else {
+        vm.menuKeyEntry.actions[0].setValue(num);
+      }
+
       AACommonService.setPhoneMenuStatus(true);
+
     }
 
     // when the phone number is changed in the UI, save to model
@@ -72,13 +84,18 @@
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
       if (angular.isDefined($scope.fromRouteCall)) {
-
         // existing action for route to external number?
         if (!_.find(vm.menuEntry.actions, {
-            name: 'route'
+            name: rtExtNum
           })) {
-          action = AutoAttendantCeMenuModelService.newCeActionEntry('route', '');
-          vm.menuEntry.addAction(action);
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+            vm.menuEntry.addAction(action);
+          } else {
+            // make sure action is External Number not AA, HG, User, etc
+            vm.menuEntry.actions[0].setName(rtExtNum);
+            vm.menuEntry.actions[0].setValue('');
+          }
         }
 
       } else {

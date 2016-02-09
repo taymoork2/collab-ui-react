@@ -85,6 +85,56 @@ describe('Controller: AARouteToHGCtrl', function () {
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when(huntGroups));
   }));
 
+  describe('fromRouteCall overwrite', function () {
+    beforeEach(function () {
+
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+
+      aaUiModel[schedule].entries[0].addAction(action);
+
+    });
+
+    it('should be able to create new HG entry from Route Call', function () {
+      $scope.fromRouteCall = true;
+
+      var controller = $controller('AARouteToHGCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].name).toEqual('routeToHuntGroup');
+      expect(controller.menuEntry.actions[0].value).toEqual('');
+
+    });
+  });
+
+  describe('fromRouteCall', function () {
+    beforeEach(function () {
+      $scope.fromRouteCall = true;
+
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      aaUiModel[schedule].entries[0].actions = [];
+
+    });
+
+    it('should be able to create new HG entry from Route Call', function () {
+
+      var controller = $controller('AARouteToHGCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].name).toEqual('routeToHuntGroup');
+      expect(controller.menuEntry.actions[0].value).toEqual('');
+
+    });
+
+  });
+
   describe('AARouteToHG', function () {
 
     it('should be able to create new HG entry', function () {
@@ -131,6 +181,31 @@ describe('Controller: AARouteToHGCtrl', function () {
     });
 
     describe('saveUiModel', function () {
+      it('should populate the ui from the menuEntry', function () {
+
+        var controller = $controller('AARouteToHGCtrl', {
+          $scope: $scope
+        });
+
+        controller.hgSelected = {
+          name: "Oleg's Call Experience 1",
+          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+        };
+
+        $scope.fromRouteCall = true;
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'myId');
+        controller.menuEntry.actions = [];
+        controller.menuEntry.actions[0] = action;
+
+        controller.populateUiModel();
+
+        $scope.$apply();
+
+        expect(controller.hgSelected.id).toEqual('myId');
+
+      });
+
       it('should write UI entry back into UI model', function () {
 
         var controller = $controller('AARouteToHGCtrl', {
@@ -141,11 +216,25 @@ describe('Controller: AARouteToHGCtrl', function () {
           name: "Oleg's Call Experience 1",
           id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
         };
+
         controller.saveUiModel();
 
         $scope.$apply();
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+
+        $scope.fromRouteCall = true;
+
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'fobar');
+        controller.menuEntry.actions = [];
+        controller.menuEntry.actions[0] = action;
+
+        controller.saveUiModel();
+
+        $scope.$apply();
+
+        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+
       });
     });
 

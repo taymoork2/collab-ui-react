@@ -777,10 +777,16 @@
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToVoiceMail') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToUser') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
               }
+            } else if (actionName === 'goto') {
+              newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToHuntGroup') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             }
           }
         }

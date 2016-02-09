@@ -10,7 +10,8 @@ angular
           schedule: '@aaSchedule',
           index: '=aaIndex',
           keyIndex: '@aaKeyIndex',
-          voicemail: '='
+          voicemail: '=',
+          fromRouteCall: '@aaFromRouteCall'
         },
         controller: 'AARouteToUserCtrl',
         controllerAs: 'aaRouteUser',
