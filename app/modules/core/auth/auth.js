@@ -7,12 +7,25 @@ angular
 /* @ngInject */
 function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage) {
 
-  var authDeferred;
+  return {
+    logout: logout,
+    authorize: authorize,
+    getAccount: getAccount,
+    isLoggedIn: isLoggedIn,
+    setAccessToken: setAccessToken,
+    redirectToLogin: redirectToLogin,
+    getNewAccessToken: getNewAccessToken,
+    refreshAccessToken: refreshAccessToken,
+    setAuthorizationHeader: setAuthorizationHeader,
+    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest
+  };
 
   /* 
     still untested and not refactored, will fix in my next PR 
     - stimurbe
   */
+  var authDeferred;
+
   function authorize() {
     if (authDeferred) return authDeferred.promise;
     authDeferred = $q.defer();
@@ -143,7 +156,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       .then(function (authData) {
         Authinfo.initialize(authData);
         if (Authinfo.isAdmin()) {
-          auth.getAccount(Authinfo.getOrgId())
+          getAccount(Authinfo.getOrgId())
             .success(function (data, status) {
               Authinfo.updateAccountInfo(data, status);
               Authinfo.initializeTabs();
@@ -165,39 +178,39 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function getNewAccessToken(code) {
-    var url = Config.getOauth2Url() + 'access_token';
+    var url = getAccessTokenUrl();
     var token = Config.getOAuthClientRegistrationCredentials();
     var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
 
-    return httpPOST(url, data, token).then(
-      updateAccessToken,
-      handleError('Failed to obtain new oauth access_token.')
-    );
+    return httpPOST(url, data, token)
+      .then(updateAccessToken)
+      .catch(handleError('Failed to obtain new oauth access_token.'));
   }
 
   function refreshAccessToken() {
+    var url = getAccessTokenUrl();
     var refreshToken = Storage.get('refreshToken');
-    var url = Config.getOauth2Url() + 'access_token';
     var data = Config.getOauthAccessCodeUrl(refreshToken);
     var token = Config.getOAuthClientRegistrationCredentials();
 
-    return httpPOST(url, data, token).then(updateAccessToken);
+    return httpPOST(url, data, token)
+      .then(updateAccessToken)
+      .catch(handleError('Failed to refresh access token'));
   }
 
   function setAccessToken() {
-    var url = Config.getOauth2Url() + 'access_token';
+    var url = getAccessTokenUrl();
     var token = Config.getOAuthClientRegistrationCredentials();
     var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
 
-    return httpPOST(url, data, token).then(
-      updateAccessToken,
-      handleError('Failed to obtain oauth access_token')
-    );
+    return httpPOST(url, data, token)
+      .then(updateAccessToken)
+      .catch(handleError('Failed to obtain oauth access_token'));
   }
 
   function refreshAccessTokenAndResendRequest(response) {
     return refreshAccessToken()
-      .then(function (token) {
+      .then(function () {
         var $http = $injector.get('$http');
         return $http(response.config);
       });
@@ -208,9 +221,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     var data = 'token=' + Storage.get('accessToken');
     var token = Config.getOAuthClientRegistrationCredentials();
     return httpPOST(url, data, token)
-      .then(function () {
-        Log.info('oAuth token deleted successfully.');
-      }, handleError('Failed to delete the oAuth token'))
+      .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
         Storage.clear();
         $window.location.href = Config.getLogoutUrl();
@@ -226,6 +237,10 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   // helpers
+
+  function getAccessTokenUrl() {
+    return Config.getOauth2Url() + 'access_token';
+  }
 
   function httpGET(url) {
     var $http = $injector.get('$http');
@@ -246,7 +261,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function updateAccessToken(response) {
-    var token = _.get(response, 'data.access_token') || '';
+    var token = _.get(response, 'data.access_token', '');
     Log.info('updateAccessToken: ' + token);
     Storage.put('accessToken', token);
     setAuthorizationHeader(token);
@@ -262,20 +277,5 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   function setAuthorizationHeader(token) {
     $injector.get('$http').defaults.headers.common.Authorization = 'Bearer ' + (token || Storage.get('accessToken'));
   }
-
-  // expose service
-
-  return {
-    getAccount: getAccount,
-    authorize: authorize,
-    getNewAccessToken: getNewAccessToken,
-    refreshAccessToken: refreshAccessToken,
-    setAccessToken: setAccessToken,
-    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
-    logout: logout,
-    isLoggedIn: isLoggedIn,
-    redirectToLogin: redirectToLogin,
-    setAuthorizationHeader: setAuthorizationHeader
-  };
 
 }

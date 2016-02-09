@@ -1,35 +1,19 @@
 'use strict';
 
-describe('Auth Service', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+fdescribe('Auth Service', function () {
+  beforeEach(module('Core'));
 
   var Auth, $httpBackend, Config, Storage, $window;
 
   beforeEach(module(function ($provide) {
-    Config = {
-      tokenTimers: sinon.stub(),
-      setProductionBackend: sinon.stub()
-    };
-    $window = {};
-    Storage = {
-      get: sinon.stub(),
-      put: sinon.stub()
-    };
-    $provide.value('Config', Config);
-    $provide.value('$window', $window);
-    $provide.value('Storage', Storage);
-    $provide.value('Log', {
-      debug: sinon.stub(),
-      info: sinon.stub()
-    });
+    $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _$httpBackend_) {
+  beforeEach(inject(function (_Auth_, _$httpBackend_, _Config_, _Storage_) {
     Auth = _Auth_;
+    Config = _Config_;
+    Storage = _Storage_;
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('should get account info using correct API', function (done) {
@@ -128,10 +112,7 @@ describe('Auth Service', function () {
   });
 
   it('should refresh token and resend request', function (done) {
-    Storage.get = sinon.stub().returns('');
     Config.getOauth2Url = sinon.stub().returns('');
-    Config.getOauthAccessCodeUrl = sinon.stub().returns('');
-    Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('');
 
     $httpBackend
       .expectPOST('access_token')
