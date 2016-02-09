@@ -182,18 +182,4 @@ describe('Auth Service', function () {
     expect(loggedOut.callCount).toBe(1);
   });
 
-  // function logout () {
-  //   var url = Config.getOauthDeleteTokenUrl();
-  //   var data = 'token=' + Storage.get('accessToken');
-  //   var token = Utils.Base64.encode(Config.getClientId() + ':' + Config.getClientSecret());
-  //   httpPOST(url, data, token)
-  //     .then(function() {
-  //       Log.info('oAuth token deleted successfully. Status: ' + status);
-  //     }, handleError('Failed to delete the oAuth token'))
-  //     .finally(function() {
-  //       Storage.clear();
-  //       $window.location.href = Config.getLogoutUrl();
-  //     });
-  // };
-
 });
