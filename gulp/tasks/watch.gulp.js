@@ -51,20 +51,37 @@ gulp.task('watch:ts', function () {
   if (!args.dist) {
     if (args.nounit) {
       gulp.watch([
-        config.appFiles.ts
-      ], [
+          config.appFiles.ts,
+          '!' + config.testFiles.spec.ts
+        ], [
           'ts:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
+      gulp.watch(
+        [
+          '!' + config.appFiles.ts,
+          config.testFiles.spec.ts],
+        ['ts:changed-spec-files', 'index:build'])
+        .on('change', logWatch);
     } else {
       gulp.watch([
-        config.appFiles.ts
-      ], [
+          config.appFiles.ts,
+          '!' + config.testFiles.spec.ts
+        ], [
           'karma-watch',
           'ts:changed-files',
           'index:build'
         ])
+        .on('change', logWatch);
+      gulp.watch(
+        [
+          '!' + config.appFiles.ts,
+          config.testFiles.spec.ts],
+        [
+          'karma-watch',
+          'ts:changed-spec-files',
+          'index:build'])
         .on('change', logWatch);
     }
   }
@@ -136,11 +153,18 @@ gulp.task('copy:changed-files', function () {
     }));
 });
 
+gulp.task('ts:changed-spec-files', function () {
+  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.tsTestOutputFolder);
+});
 gulp.task('ts:changed-files', function () {
-  var files = [].concat(
-    changedFiles,
-    'app/scripts/types.ts'
-  );
+  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
+});
+
+function compileTs(files, output) {
+  //var files = [].concat(
+  //  changedFiles,
+  //  'app/scripts/types.ts'
+  //);
   var filter;
   var reporter = $.typescript.reporter.defaultReporter();
   messageLogger('Transpiling changed TypeScript files', changedFiles);
@@ -159,11 +183,11 @@ gulp.task('ts:changed-files', function () {
       "listFiles": false
     }, filter, reporter))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(config.build))
+    .pipe(gulp.dest(output))
     .pipe(reload({
       stream: true
     }));
-});
+}
 
 //////////
 function logWatch(event) {
