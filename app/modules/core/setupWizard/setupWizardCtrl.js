@@ -104,7 +104,7 @@ angular.module('Core')
             required: true,
             label: 'firstTimeWizard.callSettings',
             description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-tools',
+            icon: 'icon-calls',
             title: 'firstTimeWizard.unifiedCommunication',
             controller: 'ServiceSetupCtrl as squaredUcSetup',
             controllerAs: 'squaredUcSetup',

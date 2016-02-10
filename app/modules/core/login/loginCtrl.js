@@ -24,8 +24,10 @@ angular.module('Core')
         SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
 
-      $scope.login = function () {
-        Auth.redirectToLogin();
+      $scope.login = function (keyCode) {
+        if (!keyCode || (keyCode === 13 && $scope.loginForm.email.$valid)) {
+          Auth.redirectToLogin($scope.email);
+        }
       };
 
       var authorizeUser = function () {

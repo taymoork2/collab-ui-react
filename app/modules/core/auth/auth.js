@@ -94,8 +94,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return !!Storage.get('accessToken');
   }
 
-  function redirectToLogin() {
-    $window.location.href = Config.getOauthLoginUrl();
+  function redirectToLogin(email) {
+    $window.location.href = Config.getOauthLoginUrl(email);
   }
 
   // authorize helpers

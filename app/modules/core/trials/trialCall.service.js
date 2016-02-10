@@ -31,6 +31,7 @@
       var defaults = {
         type: Config.offerTypes.call,
         enabled: false,
+        skipDevices: false,
         details: {
           roomSystems: [{
             model: 'CISCO_SX10',
