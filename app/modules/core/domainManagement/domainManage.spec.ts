@@ -57,22 +57,6 @@ namespace domainManagement {
       });
     });
 
-    describe('DomainManageDeleteCtrl', ()=> {
-      let ctrl;
-      beforeEach(inject(($controller, $translate)=> {
-        ctrl = $controller('DomainManageDeleteCtrl', {
-          $stateParams: {domain: {text: 'test.example.com'}, loggedOnUser: {email: sinon.stub()}},
-          $previousState: {go: sinon.stub()},
-          DomainManagementService: DomainManagementService,
-          $translate: $translate
-        });
-      }));
-
-      it('should create the ctrl and set domain', ()=> {
-        expect(ctrl.domain).toBe('test.example.com');
-      });
-    });
-
     describe('DomainManageEmailCtrl', ()=> {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {

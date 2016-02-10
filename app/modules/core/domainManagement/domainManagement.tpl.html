@@ -23,11 +23,11 @@
               <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
                 <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status!='pending'" translate="domainManagement.actions.unverify"></a>
+                     ng-if="domain.status==='verified'" translate="domainManagement.actions.unverify"></a>
                 </li>
                 <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status!='pending' && domain.status!='verified'"
+                     ng-if="domain.status==='claimed'"
                      translate="domainManagement.actions.unclaim"></a>
                 </li>
                 <li>
