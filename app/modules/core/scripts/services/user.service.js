@@ -454,12 +454,8 @@ angular.module('Core')
 
         deactivateUser: function (userData) {
           return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
-        },
-
-        // TODO: Remove this after the go-live.
-        getDrReferrer: function () {
-          return "digitalriver-ZGlnaXRhbHJpdmVy";
         }
+        
       };
     }
   ]);
