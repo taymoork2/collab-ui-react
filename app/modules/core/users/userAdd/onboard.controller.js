@@ -837,14 +837,14 @@ angular.module('Core')
 
       // Hybrid Services entitlements
       var getExtensionEntitlements = function (action) {
-        var entitleList = [];
-        $scope.extensionEntitlements.forEach(function (entry) {
-          if (action === 'add' && entry.entitlementState === 'ACTIVE') {
-            entitleList.push(new Feature(entry.entitlementName, entry.entitlementState));
-          }
-        });
-        Log.debug(entitleList);
-        return entitleList;
+        return _.chain($scope.extensionEntitlements)
+          .filter(function (entry) {
+            return action === 'add' && entry.entitlementState === 'ACTIVE';
+          })
+          .map(function (entry) {
+            return new Feature(entry.entitlementName, entry.entitlementState);
+          })
+          .value();
       };
 
       var getEntitlementStrings = function (entList) {
