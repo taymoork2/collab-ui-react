@@ -82,8 +82,6 @@ module.exports = function (config) {
     reporters: ['dots', 'junit', 'coverage', 'html'],
 
     junitReporter: {
-      useBrowserName: false,
-      outputDir: '.',
       outputFile: 'test/unit-test-results.xml',
       suite: ''
     },
