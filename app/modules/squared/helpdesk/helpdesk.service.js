@@ -331,6 +331,10 @@
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
     }
+    
+    function elevateToReadonlyAdmin(orgId) {
+      return $http.patch(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId));
+    }
 
     function getHybridStatusesForUser(userId, orgId) {
       if (useMock()) {
@@ -371,7 +375,8 @@
       getHybridStatusesForUser: getHybridStatusesForUser,
       cancelAllRequests: cancelAllRequests,
       noOutstandingRequests: noOutstandingRequests,
-      useMock: useMock
+      useMock: useMock,
+      elevateToReadonlyAdmin: elevateToReadonlyAdmin
     };
   }
 

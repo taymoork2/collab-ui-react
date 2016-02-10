@@ -196,15 +196,14 @@
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
         });
-        vm.searchingForCloudberryDevices = false;
-        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
-        vm.searchingForCloudberryDevices = false;
-        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+      }).finally(function () {
+         vm.searchingForCloudberryDevices = false;
+         vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
       });
     }
 
@@ -217,20 +216,19 @@
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
         });
-        vm.searchingForHuronDevices = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
-        vm.searchingForHuronDevices = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
         if (err.status === 404) {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
+      }).finally(function () {
+        vm.searchingForHuronDevices = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
       });
 
       vm.searchingForHuronDevicesMatchingNumber = true;
@@ -240,21 +238,20 @@
         }
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
-        });
-        vm.searchingForHuronDevicesMatchingNumber = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
+        });    
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
-        vm.searchingForHuronDevicesMatchingNumber = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
         if (err.status === 404) {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
+      }).finally(function () {     
+        vm.searchingForHuronDevicesMatchingNumber = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
       });
     }
 

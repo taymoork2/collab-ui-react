@@ -37,11 +37,11 @@
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.0rem;
       word-wrap: break-word;
     }
     h4 {
-      margin-top: 1rem;
+      margin-top: 0;
       margin-bottom: 1rem;
     }
     .head {
@@ -99,7 +99,7 @@
     }
     .cs-card-layout.cs-card-block {
       padding-right: 0;
-      padding-left: 0.5rem;
+      padding-left: 1.5rem;
     }
     .text-align-center {
       text-align:center;
@@ -109,9 +109,13 @@
       color: $color-primary-base;
       margin-top: 0.4rem;
     }
-    button {
-      padding-top: 0.1rem;
-      padding-bottom: 0.1rem;
+    .details-button {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .launch-button {
+      margin-top: 1.5rem; 
+      margin-bottom: 1.0rem;
     }
     .user-img {
       height: 35px;
@@ -503,6 +507,10 @@
         width: 100%;
       }
     }
+  }
+  .helpdesk-content-view .helpdesk-details .cs-card-layout.cs-card-block {
+    padding-right: 0;
+    padding-left: 0.5rem;
   }
 }
 @media only screen and (max-width: 640px) {

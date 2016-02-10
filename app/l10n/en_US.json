@@ -3331,7 +3331,7 @@
       "meetings": "WebEx Meetings (WebEx 11)"
     },
     "lastLog": "Last Log",
-    "lastClientLog": "Last Client Log",
+    "lastClientLog": "Last Spark Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -3381,7 +3381,7 @@
     },
     "consumerOrg": "Consumer",
     "unlicensedUsers": "Unlicensed Users",
-    "searchUsersDevices": "Go to user and device search",
+    "searchUsersDevices": "User and device search",
     "help": {
       "title": "Help",
       "navigation-title": "Navigating by Keyboard",
@@ -3401,7 +3401,7 @@
       "matches": "matches"
     },
     "verification": "Verification",
-    "resend": "Re-send",
+    "resend": "Resend Invite",
     "sendCode": "Send Code",
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
@@ -3416,7 +3416,8 @@
     "shared": "Shared",
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
-    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
+    "viewPortal": "View Customer"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
