@@ -201,13 +201,11 @@
     margin-left: auto;
     margin-right: auto;
     form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
-      margin-bottom: 0rem;
       max-width: 100%;
       display: block;
       height: auto;
       position: relative;
       z-index: 1;
-      padding: 0;
     }
     .icon-search {
       position: absolute;
