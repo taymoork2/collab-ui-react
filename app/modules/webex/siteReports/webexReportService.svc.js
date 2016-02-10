@@ -354,7 +354,7 @@ angular.module('WebExReports').service('WebexReportService', [
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
-        "icon icon-circle-comp-pos",
+        "icon icon-circle-comp-positive",
         "icon icon-circle-clock"
       );
 
