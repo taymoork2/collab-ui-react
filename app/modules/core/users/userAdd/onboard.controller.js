@@ -1083,7 +1083,7 @@ angular.module('Core')
             var addedUsersList = [];
 
             for (var num = 0; num < data.userResponse.length; num++) {
-              if (data.userResponse[num].status === 200) {
+              if (data.userResponse[num].status === 200 || data.userResponse[num].status === 201) {
                 numAddedUsers++;
               }
             }
@@ -1260,6 +1260,7 @@ angular.module('Core')
             _.each(userResponses, function (response) {
               var userStatus = response.status;
               var msg;
+              var errorMsg = response.message;
 
               if (userStatus === 404) {
                 msg = $translate.instant('hercules.hybridServices.result404', {
@@ -1270,10 +1271,16 @@ angular.module('Core')
                 msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
-                msg = $translate.instant('hercules.hybridServices.resultOther', {
-                  email: response.email,
-                  status: userStatus
-                });
+                if (errorMsg === '400087') {
+                  msg = $translate.instant('hercules.hybridServices.result400087', {
+                    email: response.email
+                  });
+                } else {
+                  msg = $translate.instant('hercules.hybridServices.resultOther', {
+                    email: response.email,
+                    status: userStatus
+                  });
+                }
                 failureResponses.push(msg);
               }
             });
@@ -1908,7 +1915,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {
@@ -2320,7 +2327,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {

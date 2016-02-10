@@ -590,7 +590,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
   });
-  describe('403 errors during onboarding', function () {
+  describe('status errors during onboarding', function () {
     beforeEach(initController);
 
     function testOnboardUsers(successFlag, statusCode, responseMessage) {
@@ -616,6 +616,11 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('checkUserExists', function () {
       Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400081'));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('check hybrid services without paid licenses', function () {
+      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 400, '400087'));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });
