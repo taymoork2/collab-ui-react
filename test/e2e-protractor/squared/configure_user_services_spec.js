@@ -43,7 +43,7 @@ describe('Configuring services per-user', function () {
     navigation.clickUsers();
     users.createUser(testUser);
 
-    // Must select licene for HS to work
+    // Must select license for HS to work
     utils.click(users.paidMtgCheckbox);
 
     // Select hybrid services
@@ -190,7 +190,7 @@ describe('Configuring services per-user', function () {
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  it('should Manually Add user', function () {
+  it('should Manually Add user, set some licenses, set some HS entitlements, onboard the user, verify the user, click the user, check that the licenses and entitlments have been set, close the sidebar, delete the user.', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);

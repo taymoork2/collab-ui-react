@@ -18,7 +18,7 @@ var ActivatePage = function () {
     var obj = {
       body: this.getTestBody(email),
       deviceUA: deviceUA
-    }
+    };
 
     var flow = protractor.promise.controlFlow();
     flow.execute(getToken.bind(null, obj));
