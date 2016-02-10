@@ -13,11 +13,6 @@ namespace domainManagement {
       if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)) {
         this._error = $translate.instant('domainManagement.delete.preventLockoutError');
       }
-
-      if (this.isValid && this._domainToDelete.status === DomainManagementService.states.pending) {
-        //Just delete it without confirmation!
-        this.deleteDomain();
-      }
     }
 
     public deleteDomain() {
@@ -48,6 +43,10 @@ namespace domainManagement {
 
     get domain() {
       return this._domainToDelete && this._domainToDelete.text;
+    }
+
+    get domainIsPending() {
+      return this._domainToDelete && this._domainToDelete.status == this.DomainManagementService.states.pending;
     }
 
     get error() {

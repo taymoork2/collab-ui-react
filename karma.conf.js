@@ -1,7 +1,7 @@
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -14,7 +14,21 @@ module.exports = function (config) {
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
-    files: [, {
+    files: [ <% scripts.forEach(function(file) { %> '<%= file %>', <%
+      }); %>
+      'build/scripts/**/*.js',
+      'build/templates-app.js',
+      'build/modules/**/*.js',
+      'test/global.spec.js',
+      'test/core/**/*.js',
+      'test/huron/**/*.js',
+      'test/hercules/**/*.js',
+      'test/mediafusion/**/*.js',
+      'test/squared/**/*.js',
+      // 'test/webex/siteReports/*.js',
+      // 'test/webex/siteSettings/*.js',
+      // 'test/webex/userSettings/*.js',
+      'test/sunlight/**/*.js',{
         pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,
@@ -57,15 +71,15 @@ module.exports = function (config) {
     // - Firefox
     // - Opera
     // - Safari (only Mac)
-    // - PhantomJS2
+    // - PhantomJS
     // - IE (only Windows)
-    browsers: [process.env.atlas_karma_browser || 'PhantomJS2'],
-     //browsers: ['Chrome'],
+    browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
+    // browsers: ['Chrome'],
 
     // Which plugins to enable
     plugins: [
       'karma-coverage',
-      'karma-phantomjs2-launcher',
+      'karma-phantomjs-launcher',
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-sinon',
