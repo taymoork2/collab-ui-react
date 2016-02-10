@@ -1,9 +1,8 @@
-/* global ll */
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate',
-    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate', 'Localytics',
+    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate, Localytics) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -153,7 +152,7 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
           //org id of user
-          ll('setCustomDimension', 1, authData.orgId);
+          Localytics.customDimension(1, authData.orgid);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -176,7 +175,7 @@ angular.module('Core')
         setEmails: function (data) {
           authData.emails = data;
           var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
-          ll('setCustomDimension', 0, msg);
+          Localytics.customDimension(0, msg);
         },
         getEmails: function () {
           return authData.emails;
