@@ -1203,6 +1203,7 @@
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
+      "result400087": "{{email}} did not qualify for the selected services",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     },
     "notifications": {
