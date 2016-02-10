@@ -5,10 +5,9 @@
   </div>
   <div class="modal-body">
     <p translate="domainManagement.delete.description"/>
-    <br>
-    <p><b>{{dmpopup.domain}}</b></p>
+    <p class="domainInput">{{dmpopup.domain}}</p>
   </div>
-  <div ng-if="!dmpopup.error" class="modal-body domWarning domError">
+  <div ng-if="!dmpopup.error && !dmpopup.domainIsPending" class="modal-body domWarning domError">
     <section>
       <i class="icon icon-error"></i>
       <p translate="domainManagement.delete.warning"></p>

@@ -49,6 +49,9 @@
     },
     "selenium-webdriver/selenium-webdriver.d.ts": {
       "commit": "001ca36ba58cef903c4c063555afb07bbc36bb58"
+    },
+    "sinon/sinon.d.ts": {
+      "commit": "3030a4be536b6530c06b80081f1333dc0de4d703"
     }
   }
 }
