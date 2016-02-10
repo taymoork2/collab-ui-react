@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService) {
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
@@ -144,16 +144,19 @@
     }
 
     function openEditTrialModal() {
-      $state.go('trialEdit.info', {
-          currentTrial: vm.currentCustomer
-        })
-        .then(function () {
-          $state.modal.result.then(function () {
-            $state.go('partnercustomers.list', {}, {
-              reload: true
+      TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
+        $state.go('trialEdit.info', {
+            currentTrial: vm.currentCustomer,
+            details: response
+          })
+          .then(function () {
+            $state.modal.result.then(function () {
+              $state.go('partnercustomers.list', {}, {
+                reload: true
+              });
             });
           });
-        });
+      });
     }
 
     function getDaysLeft(daysLeft) {
