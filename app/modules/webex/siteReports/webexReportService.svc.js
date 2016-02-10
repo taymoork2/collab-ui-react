@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExReports').service('WebexReportService', [
+angular.module('WebExApp').service('WebexReportService', [
   '$q',
   '$log',
   '$translate',

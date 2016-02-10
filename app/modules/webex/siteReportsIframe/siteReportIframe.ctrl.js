@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('ReportIframe').controller('ReportsIframeCtrl', [
+  angular.module('WebExApp').controller('ReportsIframeCtrl', [
     '$scope',
     '$rootScope',
     '$log',
