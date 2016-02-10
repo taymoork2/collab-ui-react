@@ -211,7 +211,7 @@ describe('Controller: OverviewCtrl', function () {
       beforeEach(function () {
         Orgservice.getOrg.and.callFake(function (callback, status) {
           callback({
-            "orgSettings": {
+            'orgSettings': {
               sipCloudDomain: false
             }
           }, 200);

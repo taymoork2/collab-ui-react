@@ -51,7 +51,8 @@
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
     vm.isCloudSipUriSet = false;
-    vm.isEntitledUnderToggle = false;
+    vm.isUnderToggle = false;
+    vm.isSipUriAcknowledged = false;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -72,7 +73,7 @@
     vm.setSipUriNotification = function () {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
         if (result) {
-          vm.isEntitledUnderToggle = true;
+          vm.isUnderToggle = true;
           Orgservice.getOrg(function (data, status) {
             if (status === 200) {
               if (data.orgSettings.sipCloudDomain) {
@@ -97,6 +98,12 @@
         vm.isCallConnectAcknowledged = true;
       }
       Orgservice.setHybridServiceAcknowledged(serviceName);
+    };
+
+    vm.setSipUriNotificationAcknowledged = function() {
+      vm.isSipUriAcknowledged = true;
+
+      return vm.isSipUriAcknowledged;
     };
 
     vm.showServiceActivationPage = function (serviceName) {
