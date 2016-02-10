@@ -39,7 +39,7 @@ xdescribe('Admin should be able to', function () {
 
     //Get an extension range
     navigation.clickCommunicationWizard();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
     utils.click(servicesetup.addNumberRange);
     utils.sendKeys(servicesetup.newBeginRange, huntGroup.beginNumber);
     utils.sendKeys(servicesetup.newEndRange, huntGroup.endNumber);
@@ -50,7 +50,7 @@ xdescribe('Admin should be able to', function () {
   afterAll(function () {
     navigation.clickUsers();
     navigation.clickCommunicationWizard();
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
     notifications.clearNotifications();
     servicesetup.deleteNumberRange(huntGroup.beginNumber);
     notifications.assertSuccess('Successfully deleted');

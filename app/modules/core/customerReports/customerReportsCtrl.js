@@ -251,7 +251,7 @@
         time: vm.timeSelected.description
       });
 
-      vm.deviceDescription = $translate.instant("registeredEndpoints.description", {
+      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
         time: vm.timeSelected.description
       });
     }

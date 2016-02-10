@@ -237,7 +237,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaOptions).toEqual(mediaOptions);
         expect(controller.mediaSelected).toEqual(mediaOptions[0]);
 
-        expect(controller.deviceDescription).toEqual('registeredEndpoints.description');
+        expect(controller.deviceDescription).toEqual('registeredEndpoints.customerDescription');
         expect(controller.deviceStatus).toEqual(REFRESH);
         expect(controller.deviceFilter).toEqual([defaultDeviceFilter]);
         expect(controller.selectedDevice).toEqual(defaultDeviceFilter);

@@ -1,12 +1,19 @@
-<div class="messagebox">
+<div class="messagebox login-box" ng-class="{loading: loading}">
   <div class="messagebox-small" ng-class="checkForIeWorkaround()">
-    <i class="icon icon-4x icon-cisco-logo messagebox-heading"></i>
+    <i class="icon icon-2x icon-cisco-logo messagebox-heading"></i>
     <div class="h3" translate="loginPage.title"></div>
     <div ng-show="result">
       <div class="results alert alert-danger" ng-bind-html="result"></div>
     </div>
-    <button cs-btn class="btn btn--people btn--large btn--expand messagebox-btn" role="button" ng-click="login()" loading="loading">
+    <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
+      <input type="email" class="underline" name="email" ng-model="email" placeholder="Email Address" required focus-on ng-keypress="login($event.which)">
+    </form>
+    <button class="btn btn--primary btn--large btn--expand messagebox-btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
       <span translate="loginPage.login"></span>
     </button>
+    <h6 translate="loginPage.license"></h6>
+    <div ng-show="loading">
+      <i class="icon icon-3x icon-spinner"></i>
+    </div>
   </div>
 </div>
