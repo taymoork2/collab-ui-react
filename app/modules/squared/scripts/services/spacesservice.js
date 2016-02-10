@@ -80,7 +80,6 @@ function SpacesService($rootScope, $http, Storage, Config, Log, Auth, Authinfo) 
 
     if ((deviceUuid !== null) && (deviceUuid.length > 0)) {
       var getStatusUrl = deviceUrl + '/' + deviceUuid + '/status';
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
       $http.get(getStatusUrl)
         .success(function (data, status) {
           data = data || {};

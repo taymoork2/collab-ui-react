@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
-    $translate, LicenseService, $scope, $state) {
+    $translate, LicenseService, $scope, $state, Authinfo, $window) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -30,6 +30,8 @@
     vm.daysLeftText = daysLeftText;
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
     vm.usageText = usageText;
+    vm.launchAtlasReadonly = launchAtlasReadonly;
+    vm.allowLaunchAtlas = Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
@@ -140,6 +142,19 @@
     function gotoSearchUsersAndDevices() {
       $scope.$parent.helpdeskCtrl.initSearchWithOrgFilter(vm.org);
       $state.go('helpdesk.search');
+    }
+
+    function launchAtlasReadonly() {
+      vm.launchingAtlas = true;
+      HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
+          $window.open($state.href('login_swap', {
+            customerOrgId: vm.orgId,
+            customerOrgName: vm.org.displayName
+          }));
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.launchingAtlas = false;
+        });
     }
   }
 

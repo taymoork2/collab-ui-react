@@ -58,7 +58,7 @@ var LandingPage = function () {
   this.closeAddUser = element(by.id('closeAddUser'));
   this.closeConvertUser = element(by.id('closeConvertUser'));
   this.unlicensedUserRow = element(by.css('.ui-grid-selection-row-header-buttons'));
-
+  this.userBtn = element(by.css('.btn--user '));
   this.serviceSetup = element(by.css('.settings-menu'));
   this.languageSelector = element(by.css('select#languageSelector'));
 
@@ -81,11 +81,11 @@ var LandingPage = function () {
 
   this.expectSelectLanguageRange = function (nStart, nEnd) {
     for (var i = nStart; i < nEnd; i++) {
-      utils.click(this.serviceSetup);
+      utils.click(this.userBtn);
       utils.click(this.languageSelector);
 
       this.clickLang(i);
-      utils.wait(this.serviceSetup);
+      utils.wait(this.userBtn);
     }
   };
 

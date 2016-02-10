@@ -338,7 +338,7 @@
       }]
     }, {
       "code": "pt_PT",
-      "label": "languages.portugese",
+      "label": "languages.portuguese",
       "voices": [{
         "label": "autoAttendant.voices.catarina",
         "voice": "Catarina",
@@ -354,7 +354,7 @@
       }]
     }, {
       "code": "pt_BR",
-      "label": "languages.portugeseBrazillian",
+      "label": "languages.portugueseBrazillian",
       "voices": [{
         "label": "autoAttendant.voices.luciana",
         "voice": "Luciana",

@@ -96,18 +96,30 @@
         })
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
-            details.shippingInfo = trial.details.shippingInfo;
-            details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
-            details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
-            details.devices = _(trial.details.roomSystems)
-              .concat(trial.details.phones)
-              .filter({
-                enabled: true
-              })
-              .map(function (device) {
-                return _.pick(device, ['model', 'quantity']);
-              })
-              .value();
+            details.devices = [];
+
+            if (!trial.skipDevices) {
+              details.shippingInfo = trial.details.shippingInfo;
+              details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
+              details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+
+              // if this is not set, remove the whole thing
+              // since this may get sent with partially complete
+              // data that the backend doesnt like
+              if (details.shippingInfo.country === '') {
+                delete details.shippingInfo;
+              }
+
+              details.devices = _(trial.details.roomSystems)
+                .concat(trial.details.phones)
+                .filter({
+                  enabled: true
+                })
+                .map(function (device) {
+                  return _.pick(device, ['model', 'quantity']);
+                })
+                .value();
+            }
           }
 
           if (trial.type === Config.offerTypes.meetings) {

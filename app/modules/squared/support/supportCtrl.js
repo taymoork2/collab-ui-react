@@ -19,15 +19,18 @@ angular.module('Squared')
       $scope.searchInput = 'none';
 
       $scope.tabs = [{
-        title: $translate.instant('supportPage.tabs.status'),
-        state: "support.status"
-      }, {
-        title: $translate.instant('supportPage.tabs.logs'),
-        state: "support.logs"
-      }, {
-        title: $translate.instant('supportPage.tabs.orderProvisioning'),
-        state: "support.billing"
-      }];
+          title: $translate.instant('supportPage.tabs.status'),
+          state: "support.status"
+        }, {
+          title: $translate.instant('supportPage.tabs.logs'),
+          state: "support.logs"
+        }
+        // Preliminary removed the menu item because the functionality is currently not used
+        //, {
+        //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
+        //  state: "support.billing"
+        //}
+      ];
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
@@ -158,7 +161,7 @@ angular.module('Squared')
             cache: true,
             ajax: {
               headers: {
-                'Authorization': 'Bearer ' + $rootScope.token
+                'Authorization': 'Bearer ' + Storage.get('accessToken')
               }
             }
           }
@@ -176,8 +179,7 @@ angular.module('Squared')
           source: engine.ttAdapter()
         });
       };
-      //Populating authinfo data if empty.
-      $rootScope.token = Storage.get('accessToken');
+
       initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
