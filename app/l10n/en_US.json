@@ -2308,7 +2308,8 @@
       "uninstalling": "Uninstalling",
       "running": "Running",
       "needs_attention": "Needs attention",
-      "alarm": "Alarm"
+      "alarm": "Alarm",
+      "Unknown": "Registering"
     },
     "clusters": {
       "listing": {
@@ -2321,7 +2322,7 @@
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
-      "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
+      "deregisterCausesListItem1": "This system will no longer be accepting any calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
       "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
