@@ -13,12 +13,13 @@
     var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
     var service = {
-      'listUsers': listUsers,
-      'generateUserReports': generateUserReports,
-      'getUserReports': getUserReports,
-      'extractUsers': extractUsers,
-      'exportCSV': exportCSV,
-      'listPartners': listPartners
+      listUsers: listUsers,
+      generateUserReports: generateUserReports,
+      getUserReports: getUserReports,
+      extractUsers: extractUsers,
+      exportCSV: exportCSV,
+      listPartners: listPartners,
+      listPartnersAsPromise: listPartnersAsPromise
     };
 
     return service;
@@ -252,6 +253,7 @@
       return deferred.promise;
     }
 
+    // TODO: rm this after replacing all instances of usage to listPartnersAsPromise
     function listPartners(orgId, callback) {
 
       var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
@@ -272,6 +274,27 @@
           if (errors) {
             description = errors[0].description;
           }
+        });
+    }
+
+    function listPartnersAsPromise(orgId) {
+
+      var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
+
+      return $http.get(adminUrl)
+        .catch(function (data, status) {
+          data = _.extend({}, data, {
+            success: false,
+            status: status
+          });
+          $q.reject(data);
+        })
+        .then(function (data, status) {
+          data = _.extend({}, data, {
+            success: true,
+            status: status
+          });
+          return data;
         });
     }
   }
