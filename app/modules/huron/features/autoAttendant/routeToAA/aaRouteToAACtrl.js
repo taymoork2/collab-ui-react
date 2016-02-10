@@ -73,7 +73,7 @@
 
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         if (!_.find(vm.menuEntry.actions, {
-            name: "goto"
+            name: 'goto'
           })) {
           if (vm.menuEntry.actions.length === 0) {
             action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');

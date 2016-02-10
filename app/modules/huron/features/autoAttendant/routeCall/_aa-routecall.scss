@@ -1,68 +1,17 @@
-%aa-pm-vertical-line {
-  position: relative;
-
-  &:before {
-    top: 0;
-    left: 0;
-    position: absolute;
-    display: inline-block;
-    content: '';
-    transform: translateX(2rem);
-    border-left: $aa-builder-border-size solid $aa-builder-border-color;
-    height: 100%;
-  }
-}
 .aa-route-call {
   min-width: vr-adjust(440);
-
-  @include vr-spacing(pt, 2);
-
+  @include vr-spacing(pt, 1.2); 
 }
 .aa-route-call-select {
   min-width: vr-adjust(300);
 
-  > .row:first-child {
-    @include vr-spacing(mt, 0.5);
-  }
-
-  & select {
-    color: $input-font-color;
-    background-color: $color-white;
-  }
-
-  .panel {
-    @include vr-spacing(m, 0);
-
-    @include vr-spacing(pt, 1);
-    @include vr-spacing(pl, .5);
-    @include vr-spacing(pr, .5);
-    @include vr-spacing(pb, 0);
-
-    background-color: $gray-light-3;
-
-    & ~ .panel {
-      @include vr-spacing(mt, 0.5);
-    }
-
-    .aa-pm-vertical-line {
-      @extend %aa-pm-vertical-line;
-    }
-  }
-  
-  & .select-list {
-    .dropdown-menu {
-      width: 100%;
-    }
-  }
-
   & .country-list {
     min-width: vr-adjust(300);
-
+    
     .dropdown-menu {
       width: vr-adjust(300);
     }
   }
-
 
   & .select-toggle {
 
@@ -74,6 +23,7 @@
       }
     }
   }
+ 
   & .aa-route-action {
     & .csSelect-container {
       @include vr-spacing(pt, 1);
@@ -81,40 +31,9 @@
     }
 
     & .country-list {
-      @include vr-spacing(pt, 1);
-      // width: 100%;
+      @include vr-spacing(mt, 1);
     }
 
-    & textarea {
-      line-height: 1.25rem;
-      @include vr-spacing(pt, .50);
-      @include vr-spacing(pb, .50);
-      @include vr-spacing(pl, .75);
-      @include vr-spacing(pr, .75);
-      resize: none;
-    }
-
-    & .control-label {;
-      @include vr-spacing(pl, .25);
-      @include vr-spacing(mt, .25);
-      @include vr-spacing(mb, 0);
-    }
   }
 
-}
-
-.aa-pm-vertical-line {
-  @include vr-spacing(pb, 1);
-
-  &:nth-child(n+12) {
-    @include vr-spacing(pb, 0);
-
-    @include vr-spacing(mb, 1);
-  }
-
-  &.aa-pm-primary-text {
-    @include vr-spacing(pb, 0);
-
-    @include vr-spacing(mb, 1);
-  }
 }

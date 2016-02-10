@@ -30,8 +30,6 @@
 
     ];
 
-    vm.selectChanged = selectChangeFn;
-
     vm.selected = {
       label: '',
       value: ''
@@ -39,16 +37,12 @@
 
     vm.setSelects = setSelects;
 
-    function selectChangeFn() {
-      var sel = vm.selected;
-    }
-
     function setSelects() {
 
       var val;
 
-      /* look for matching action in menuEntries 
-         Set label from our list. Will trigger the html and the 
+      /* look for matching action in menuEntries
+         Set label from our list. Will trigger the html and the
          appropriate controller will setup the select list
        */
 
