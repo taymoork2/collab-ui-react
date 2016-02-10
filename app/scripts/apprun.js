@@ -105,9 +105,7 @@ angular
         PreviousState.set(fromState.name);
         PreviousState.setParams(fromParams);
 
-        Localytics.push('Tab Clicked', {
-          'Tab Name': toState
-        });
+        Localytics.push('Tab Clicked', toState.name);
 
         // Add Body Class to the $rootScope on stateChange
         $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

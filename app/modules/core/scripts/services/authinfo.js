@@ -15,8 +15,8 @@ angular.module('Core')
       var authData = {
         'username': null,
         'userId': null,
-        'orgname': null,
-        'orgid': null,
+        'orgName': null,
+        'orgId': null,
         'addUserEnabled': null,
         'entitleUserEnabled': null,
         'managedOrgs': [],
@@ -75,7 +75,7 @@ angular.module('Core')
       };
 
       function isOnlyCiscoState(state) {
-        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid ===
+        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgId === Config.ciscoOrgId || authData.orgId ===
             Config.ciscoMockOrgId)))
           return true;
         return false;
@@ -127,8 +127,8 @@ angular.module('Core')
       return {
         initialize: function (data) {
           authData.username = data.name;
-          authData.orgname = data.orgName;
-          authData.orgid = data.orgId;
+          authData.orgName = data.orgName;
+          authData.orgId = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
           authData.entitleUserEnabled = data.entitleUserEnabled;
           authData.managedOrgs = data.managedOrgs;
@@ -152,7 +152,7 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
           //org id of user
-          Localytics.customDimension(1, authData.orgid);
+          Localytics.customDimension(1, authData.orgName);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -160,8 +160,8 @@ angular.module('Core')
         clear: function () {
           authData.username = null;
           authData.userId = null;
-          authData.orgname = null;
-          authData.orgid = null;
+          authData.orgName = null;
+          authData.orgId = null;
           authData.addUserEnabled = null;
           authData.entitleUserEnabled = null;
           authData.entitlements = null;
@@ -264,10 +264,10 @@ angular.module('Core')
           } //end if
         },
         getOrgName: function () {
-          return authData.orgname;
+          return authData.orgName;
         },
         getOrgId: function () {
-          return authData.orgid;
+          return authData.orgId;
         },
         getUserName: function () {
           return authData.username;
