@@ -33,7 +33,12 @@
         var tags = JSON.parse(description);
         return _.unique(tags);
       } catch (e) {
-        return [];
+        try {
+          tags = JSON.parse("[\"" + description + "\"]");
+          return _.unique(tags);
+        } catch (e) {
+          return [];
+        }
       }
     }
 
@@ -43,7 +48,8 @@
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"');
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
     }
 
     function loadDevices(userUuid) {

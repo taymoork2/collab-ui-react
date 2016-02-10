@@ -29,7 +29,8 @@
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"');
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
     }
 
     var deviceCache = CsdmCacheFactory.create({

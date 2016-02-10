@@ -176,7 +176,8 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function decodeHuronTags(description) {
-      return (description || "").replace(/'/g, '"');
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
     }
 
     function convertExpiryTime(expiryTime) {
@@ -377,7 +378,12 @@ angular.module('Squared').service('CsdmConverter',
         var tags = JSON.parse(description);
         return _.unique(tags);
       } catch (e) {
-        return [];
+        try {
+          tags = JSON.parse("[\"" + description + "\"]");
+          return _.unique(tags);
+        } catch (e) {
+          return [];
+        }
       }
     }
 
