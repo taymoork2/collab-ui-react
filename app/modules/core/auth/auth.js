@@ -91,7 +91,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function isLoggedIn() {
-    return Storage.get('accessToken');
+    return !!Storage.get('accessToken');
   }
 
   function redirectToLogin() {
@@ -124,13 +124,13 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
         if (isMessengerOrg) {
           Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
           authData.services.push({
-            'serviceId': 'jabberMessenger',
-            'displayName': 'Messenger',
-            'ciName': 'webex-messenger',
-            'type': 'PAID',
-            'isBeta': false,
-            'isConfigurable': false,
-            'isIgnored': true
+            serviceId: 'jabberMessenger',
+            displayName: 'Messenger',
+            ciName: 'webex-messenger',
+            type: 'PAID',
+            isBeta: false,
+            isConfigurable: false,
+            isIgnored: true
           });
         }
         return authData;

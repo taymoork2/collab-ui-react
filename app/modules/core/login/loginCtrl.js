@@ -61,7 +61,7 @@ angular.module('Core')
               $rootScope.services = Authinfo.getServices();
 
               if (state !== 'partneroverview') {
-                Log.debug('Sending "customed logged in" metrics');
+                Log.debug('Sending "customer logged in" metrics');
                 LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               }
               return loadingDelayPromise.then(function () {

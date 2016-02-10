@@ -47,12 +47,10 @@ describe('Auth Service', function () {
     Config.getOauth2Url = sinon.stub().returns('oauth/');
     Config.getRedirectUrl = sinon.stub().returns('redir');
     Config.getOauthCodeUrl = sinon.stub().returns('codeUrl-');
-    Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
+    Config.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('oauth/access_token', 'codeUrl-scope&redir', function (headers) {
-        return headers['Authorization'] == 'Basic clientRegistrationCredentials';
-      })
+      .expectPOST('oauth/access_token', 'codeUrl-scope&redir', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
@@ -70,12 +68,10 @@ describe('Auth Service', function () {
     Storage.get = sinon.stub().returns('fromStorage');
     Config.getOauth2Url = sinon.stub().returns('oauth2Url/');
     Config.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
-    Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
+    Config.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'accessCodeUrl', function (headers) {
-        return headers['Authorization'] == 'Basic clientRegistrationCredentials';
-      })
+      .expectPOST('oauth2Url/access_token', 'accessCodeUrl', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
@@ -100,12 +96,10 @@ describe('Auth Service', function () {
     Config.oauthUrl = {
       oauth2ClientUrlPattern: 'oauth2ClientUrlPattern-'
     };
-    Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
+    Config.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'oauth2ClientUrlPattern-scope', function (headers) {
-        return headers['Authorization'] == 'Basic clientRegistrationCredentials';
-      })
+      .expectPOST('oauth2Url/access_token', 'oauth2ClientUrlPattern-scope', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
@@ -153,12 +147,10 @@ describe('Auth Service', function () {
     Config.getLogoutUrl = sinon.stub().returns('logoutUrl');
     Storage.get = sinon.stub().returns('accessToken');
     Config.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
-    Config.getOAuthClientRegistrationCredentials = sinon.stub().returns('clientRegistrationCredentials');
+    Config.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', function (headers) {
-        return headers['Authorization'] == 'Basic clientRegistrationCredentials';
-      })
+      .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
       .respond(200, {});
 
     Auth.logout().then(loggedOut);
@@ -237,7 +229,7 @@ describe('Auth Service', function () {
         $httpBackend.flush();
       });
 
-      it('retuned entitlements should be used and webex api should be called', function () {
+      it('returned entitlements should be used and webex api should be called', function () {
         $httpBackend
           .expectGET('path/organizations/1337/services')
           .respond(200, {
@@ -250,7 +242,7 @@ describe('Auth Service', function () {
 
         Authinfo.initialize = sinon.stub();
 
-        Auth.authorize().then();
+        Auth.authorize();
 
         $httpBackend.flush();
 
@@ -308,7 +300,7 @@ describe('Auth Service', function () {
         expect(Authinfo.initializeTabs.callCount).toBe(1);
       });
 
-      it('will call getaccount if is admin', function (done) {
+      it('will fetch account info if admin', function (done) {
         Authinfo.isAdmin = sinon.stub().returns(true);
         Authinfo.getOrgId = sinon.stub().returns(42);
         Authinfo.updateAccountInfo = sinon.stub();
@@ -359,4 +351,15 @@ describe('Auth Service', function () {
       expect(result.services[0].ciName).toBe('webex-messenger');
     });
   });
+
+  // helpers
+
+  function stubCredentials() {
+    return sinon.stub().returns('clientRegistrationCredentials');
+  }
+
+  function assertCredentials(headers) {
+    return headers['Authorization'] === 'Basic clientRegistrationCredentials';
+  }
+
 });
