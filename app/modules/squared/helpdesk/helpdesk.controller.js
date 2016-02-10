@@ -202,8 +202,8 @@
       }, function (err) {
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
       }).finally(function () {
-         vm.searchingForCloudberryDevices = false;
-         vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
+        vm.searchingForCloudberryDevices = false;
+        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
       });
     }
 
@@ -238,7 +238,7 @@
         }
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
-        });    
+        });
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
@@ -249,7 +249,7 @@
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
-      }).finally(function () {     
+      }).finally(function () {
         vm.searchingForHuronDevicesMatchingNumber = false;
         vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
       });

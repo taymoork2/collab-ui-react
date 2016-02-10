@@ -143,18 +143,18 @@
       $scope.$parent.helpdeskCtrl.initSearchWithOrgFilter(vm.org);
       $state.go('helpdesk.search');
     }
-    
+
     function launchAtlasReadonly() {
       vm.launchingAtlas = true;
       HelpdeskService.elevateToReadonlyAdmin(vm.orgId).then(function () {
-        $window.open($state.href('login_swap', {
-          customerOrgId: vm.orgId,
-          customerOrgName: vm.org.displayName
-        }));
-      }, XhrNotificationService.notify)
-      .finally(function () {
-        vm.launchingAtlas = false;
-      });
+          $window.open($state.href('login_swap', {
+            customerOrgId: vm.orgId,
+            customerOrgName: vm.org.displayName
+          }));
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.launchingAtlas = false;
+        });
     }
   }
 
