@@ -29,6 +29,10 @@
       });
     }
 
+    function init() {
+      setSipUriNotification();
+    }
+
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
     vm.statusPageUrl = Config.getStatusPageUrl();
@@ -51,8 +55,10 @@
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
     vm.isCloudSipUriSet = false;
-    vm.isUnderToggle = false;
+    vm.isSipToggleEnabled = false;
     vm.isSipUriAcknowledged = false;
+    init();
+    vm.setSipUriNotification = setSipUriNotification;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -70,10 +76,10 @@
       }
     });
 
-    vm.setSipUriNotification = function () {
+    function setSipUriNotification() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
         if (result) {
-          vm.isUnderToggle = true;
+          vm.isSipToggleEnabled = true;
           Orgservice.getOrg(function (data, status) {
             if (status === 200) {
               if (data.orgSettings.sipCloudDomain) {
@@ -86,8 +92,7 @@
           });
         }
       });
-    };
-    vm.setSipUriNotification();
+    }
 
     vm.setHybridAcknowledged = function (serviceName) {
       if (serviceName === 'calendar-service') {
@@ -100,10 +105,8 @@
       Orgservice.setHybridServiceAcknowledged(serviceName);
     };
 
-    vm.setSipUriNotificationAcknowledged = function() {
+    vm.setSipUriNotificationAcknowledged = function () {
       vm.isSipUriAcknowledged = true;
-
-      return vm.isSipUriAcknowledged;
     };
 
     vm.showServiceActivationPage = function (serviceName) {
