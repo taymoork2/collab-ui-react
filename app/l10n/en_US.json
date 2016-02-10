@@ -2,7 +2,8 @@
   "loginPage": {
     "title": "Cloud Collaboration Management",
     "login": "Sign In",
-    "loading": "Loading"
+    "loading": "Loading",
+    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement."
   },
   "usersPage": {
     "assignServices": "Assign Services",
@@ -70,7 +71,7 @@
     "deleteUserError": "Error deleting user. Status: {{status}}",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
-    "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
+    "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
     "searchUser": "Search for a user",
@@ -853,7 +854,7 @@
     "winter": "Winter",
     "emptyNumber": "Number cannot be empty",
     "notANumber": " is not a valid number",
-    "saveSuccess": "Unified Communications setup saved successfully",
+    "saveSuccess": "Call settings saved successfully",
     "siteError": "Failed to create site.",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
@@ -954,12 +955,12 @@
     "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
     "deleteActivationCode": "Delete Activation Code",
-    "kindHeader": "Type",
-    "nameHeader": "Installed in",
+    "typeHeader": "Type",
+    "nameHeader": "Belongs to",
     "statusHeader": "Status",
     "actionsHeader": "Actions",
-    "activationCodeHeader": "Activation Code",
-    "activationDateHeader": "Activation Date",
+    "account": "Account",
+    "unactivatedDevice": "Unactivated Device",
     "informationHeader": "Information",
     "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
@@ -1159,7 +1160,7 @@
       "deactivateService": "Your users will no longer be able to use this service.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
@@ -1169,12 +1170,16 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "aware": "Share your desktop with Spark while you are on your work phone.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
+        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
+        "on": "On by default",
+        "connectHeading": "Connect",
+        "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
@@ -1189,17 +1194,18 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: acme.com"
+        "sipDomainExample": "For example: example.org"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
-        "description": "Edit the start time for scheduled upgrades on the connectors.",
+        "description": "Set the start time to begin upgrades on the connectors.",
         "defaultWarning": "Confirm the default schedule"
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
+      "result400087": "{{email}} did not qualify for the selected services",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     },
     "notifications": {
@@ -1312,14 +1318,14 @@
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
-    "messagingSetup": "Messaging Setup",
+    "messagingSetup": "Message Settings",
     "messagingSetupSub": "Setup messaging service",
     "planReviewSub": "Overview of your collaboration plan",
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
-    "unifiedCommunication": "Unified Communications",
+    "unifiedCommunication": "Call Settings",
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
@@ -1700,7 +1706,7 @@
     "title": "Shared Line",
     "description": "Simultaneously ring other users' lines when this line is called.",
     "remove": "Remove member",
-    "invalidUser": "{{user}} does not have Unified Communications service",
+    "invalidUser": "{{user}} does not have Call service",
     "member": "Shared Line Members",
     "disassociateUser": "Removing this user from the shared line members will immediately remove this line from all of their devices. Are you sure you want to proceed?",
     "addMember": "Add Member (by name or email)"
@@ -1907,14 +1913,20 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
+      "deviceLimitDescription": "Choose at least 2 and up to 7 total devices (maximum 5 per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
+      "skipAddDevices": "Skip adding devices",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
       "phone8841": "8841",
       "phone7841": "7841",
-      "quantity": "Qty",
+      "quantity": "Quantity",
+      "invalidQuantity": "Quantity must be between 1 and 5",
+      "invalidTotalQuantity": "Entire order must have between 2 and 7 devices",
+      "invalidRoomSystemsQuantity": "Limited to 5 Spark Room Systems",
+      "invalidPhonesQuantity": "Limited to 5 Personal & Shared Desk Phones",
       "shippingInfo": "Shipping Information",
       "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
       "recipient": "Where will the devices be shipped?",
@@ -2308,16 +2320,16 @@
       "deregisterConfirm": "Confirm",
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
-      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister {{clusterName}} from the Cisco Collaboration Cloud?",
-      "defuseCausesListItem1": "The cluster that contains {{clusterName}} will deregister.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
     "reassign": {
       "reassignHost": "Reassign Host",
-      "reassignText": "You are about to move the following host from this cluster to another: {{clusterName}}",
+      "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the host {{hostName}}."
     },
@@ -2725,7 +2737,7 @@
     "messagingDesc": "Team Rooms with content storage allow you to easily collaborate from any device to any user inside or outside your organization.",
     "communicationTitle": "Call",
     "communicationSubtitle": "Advanced Spark Call",
-    "communicationDesc": "Basic external calling and full Unified Communications enabled for your organization.",
+    "communicationDesc": "Basic external calling and call routing features enabled for your organization.",
     "conferencingTitle": "Meeting",
     "conferencingSubtitle": "Meeting Center",
     "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.",
@@ -2877,7 +2889,14 @@
     "type": "Type",
     "siteSettings": "Configure",
     "siteReports": "Reports",
-    "siteCsv": "WebEx User Attribute CSV File Import/Export"
+    "siteCsvColumnHeader": "User Attributes",
+    "siteCsvExportLinkLabel": "Export",
+    "siteCsvExportInProgressLinkLabel": "Export in progress...",
+    "siteCsvImportLinkLabel": "Import",
+    "siteCsvImportInProgressLinkLabel": "Import in progress...",
+    "siteCsvDownloadLinkLabel": "Download file",
+    "siteCsvX": "X",
+    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3164,6 +3183,7 @@
     "enterEmailAddr": {
       "title": "Atlas Portal Shopping Cart Login (APSCL)",
       "header": "Enter eMail Addr",
+      "emailPlaceholder": "Ex. x@y.com",
       "validation": {
         "emptyEmail": "The email address cannot be blank"
       }
@@ -3171,6 +3191,7 @@
     "createAccount": {
       "title": "Create Account",
       "passwordLabel": "Enter your password:",
+      "confirmPlaceholder": "confirm",
       "validation": {
         "emptyEmail": "Empty email",
         "emptyPassword": "Empty password",
@@ -3210,7 +3231,7 @@
       },
       "call": {
         "title": "Call",
-        "notEnabledText": "Basic external calling and full Unified Communications enabled for your organization."
+        "notEnabledText": "Basic external calling and call routing features enabled for your organization."
       },
       "roomSystem": {
         "title": "Room Systems",

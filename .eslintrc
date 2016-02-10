@@ -1,8 +1,5 @@
 {
   "extends": "airbnb/legacy",
-  "env": {
-    "jasmine": true
-  },
   "globals": {
     "_": true,
     "$": true,
@@ -14,7 +11,17 @@
     "jstz": true,
     "moment": true,
     "phoneUtils": true,
-    "sinon": true
+    "sinon": true,
+    "it": true,
+    "describe": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "xit": true,
+    "xdescribe": true,
+    "expect": true,
+    "spyOn": true,
+    "jasmine": true,
+    "fail": true
   },
   "rules": {
     "block-scoped-var": 0,

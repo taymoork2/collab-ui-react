@@ -31,8 +31,6 @@ angular.module('Mediafusion')
 
           var metricsListUrl = Utils.sprintf(baseUrl + '/threshold/metrics', [Authinfo.getOrgId()]);
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(metricsListUrl)
             .success(function (data, status) {

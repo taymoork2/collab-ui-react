@@ -29,7 +29,7 @@ angular
           authenticate: false
         })
         .state('enterEmailAddr', {
-          url: '/enterEmailAddr',
+          url: '/enter-email-addr',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -40,7 +40,7 @@ angular
           authenticate: false
         })
         .state('createAccount', {
-          url: '/createAccount',
+          url: '/create-account',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',

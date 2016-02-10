@@ -9,13 +9,11 @@ describe('Spark UC Partner flow', function () {
 
   describe('Add Partner Trial', function () {
 
-    it('should login', function (done) {
-      login.login('huron-e2e-partner', '#/partner/customers');
-      utils.retrieveToken().then(function (token) {
+    it('should login', function () {
+      login.login('huron-e2e-partner', '#/partner/customers').then(function (token) {
         accessToken = token;
-        done();
       });
-    }, 120000);
+    });
 
     it('should add a new trial without advanced spark call', function () {
       utils.click(partner.trialFilter);
