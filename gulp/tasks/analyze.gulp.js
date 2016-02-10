@@ -27,7 +27,7 @@ gulp.task('eslint:e2e', function () {
       rulePaths: ['config/rules']
     }))
     .pipe($.eslint.format())
-    .pipe($.eslint.failOnError());
+    .pipe($.eslint.failAfterError());
 });
 
 // vet JS files and create coverage report
@@ -62,7 +62,7 @@ gulp.task('analyze:eslint', function () {
     .pipe($.if(args.verbose, $.print()))
     .pipe($.eslint())
     .pipe($.eslint.format())
-    .pipe($.eslint.failOnError());
+    .pipe($.eslint.failAfterError());
 });
 
 gulp.task('analyze:jscs', function () {

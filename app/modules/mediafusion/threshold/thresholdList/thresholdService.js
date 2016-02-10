@@ -17,8 +17,6 @@ angular.module('Mediafusion')
           var thresholdListUrl = Utils.sprintf(baseUrl + '/threshold/allThreshold', [Authinfo.getOrgId()]);
           thresholdListUrl = thresholdListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(thresholdListUrl)
             .success(function (data, status) {
@@ -43,8 +41,6 @@ angular.module('Mediafusion')
         listMetricTypes: function (callback) {
 
           var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(metricTypesListUrl)
             .success(function (data, status) {
@@ -73,8 +69,6 @@ angular.module('Mediafusion')
           var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
           metricCountersListUrl = metricCountersListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -102,8 +96,6 @@ angular.module('Mediafusion')
           var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounterInstance', [Authinfo.getOrgId()]);
           metricCountersListUrl = metricCountersListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -130,8 +122,6 @@ angular.module('Mediafusion')
 
           var eventNamesListUrl = Utils.sprintf("http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/all", [Authinfo.getOrgId()]);
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(eventNamesListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -155,7 +145,6 @@ angular.module('Mediafusion')
         listSystemTypes: function (callback) {
 
           var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(sysTypesListUrl)
             .success(function (data, status) {
@@ -184,8 +173,6 @@ angular.module('Mediafusion')
           var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
           sysNamesListUrl = sysNamesListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(sysNamesListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -209,7 +196,6 @@ angular.module('Mediafusion')
         addThreshold: function (threshold, callback) {
 
           var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.post(addThresholdUrl, threshold)
             .success(function (data, status) {
@@ -228,7 +214,6 @@ angular.module('Mediafusion')
         addEvents: function (events, callback) {
 
           var addEventsUrl = Utils.sprintf('http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/create', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.post(addEventsUrl, events)
             .success(function (data, status) {
@@ -251,8 +236,6 @@ angular.module('Mediafusion')
 
           var deleteThresholdUrl = Utils.sprintf(baseUrl + '/threshold/deleteThreshold', [Authinfo.getOrgId()]);
           deleteThresholdUrl = deleteThresholdUrl + queryParams;
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(deleteThresholdUrl)
             .success(function (data, status) {

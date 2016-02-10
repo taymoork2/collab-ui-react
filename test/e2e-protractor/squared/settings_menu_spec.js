@@ -28,12 +28,12 @@ describe('Service Setup tests', function () {
 
     it('should show the communications flow', function () {
       navigation.clickCommunicationWizard();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
     });
 
     it('should show the messaging flow', function () {
       navigation.clickMessagingSetup();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Message Settings');
     });
 
     afterEach(function () {

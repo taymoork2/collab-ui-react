@@ -13,7 +13,6 @@ angular.module('Mediafusion')
         listSystemTypes: function (callback) {
 
           var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(sysTypesListUrl)
             .success(function (data, status) {
@@ -42,8 +41,6 @@ angular.module('Mediafusion')
           var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
           sysNamesListUrl = sysNamesListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(sysNamesListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -70,8 +67,6 @@ angular.module('Mediafusion')
 
           var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
           metricTypesListUrl = metricTypesListUrl + queryParams;
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.get(metricTypesListUrl)
             .success(function (data, status) {
@@ -100,8 +95,6 @@ angular.module('Mediafusion')
           var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
           metricCountersListUrl = metricCountersListUrl + queryParams;
 
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
-
           $http.get(metricCountersListUrl)
             .success(function (data, status) {
               data = data || {};
@@ -125,7 +118,6 @@ angular.module('Mediafusion')
         addThreshold: function (threshold, callback) {
 
           var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           $http.post(addThresholdUrl, threshold)
             .success(function (data, status) {
