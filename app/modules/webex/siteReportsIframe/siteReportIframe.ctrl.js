@@ -15,6 +15,7 @@
     'Authinfo',
     'Notification',
     'Config',
+    'Storage',
     function reportsIframeCtrl(
       $scope,
       $rootScope,
@@ -28,7 +29,8 @@
       $window,
       Authinfo,
       Notification,
-      Config
+      Config,
+      Storage
     ) {
 
       var _this = this;
@@ -49,7 +51,7 @@
         $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
-      $scope.authToken = $rootScope.token;
+      $scope.authToken = Storage.get('accessToken');
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
       var index = $stateParams.siteUrl.indexOf(".");

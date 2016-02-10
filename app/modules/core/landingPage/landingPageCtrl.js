@@ -299,12 +299,12 @@ angular.module('Core')
         });
       };
 
-      $scope.isAdmin = Auth.isUserAdmin();
+      $scope.isAdmin = Authinfo.isUserAdmin();
       getHealthTotal();
       getOrgInfo();
 
       $scope.$on('AuthinfoUpdated', function () {
-        $scope.isAdmin = Auth.isUserAdmin();
+        $scope.isAdmin = Authinfo.isUserAdmin();
       });
 
       $scope.getTrialProgress = function (obj) {

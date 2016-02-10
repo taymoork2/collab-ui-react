@@ -14,7 +14,7 @@ angular.module('Core')
         controller: 'PlanReviewCtrl as planReview',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/planReview.tpl.html'
+          template: 'modules/core/setupWizard/planReview/planReview.tpl.html'
         }]
       }, {
         name: 'messagingSetup',
@@ -25,7 +25,7 @@ angular.module('Core')
         controller: 'MessagingSetupCtrl as msgSetup',
         steps: [{
           name: 'setup',
-          template: 'modules/core/setupWizard/messagingSetup.tpl.html'
+          template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html'
         }]
       }, {
         name: 'enterpriseSettings',
@@ -36,16 +36,16 @@ angular.module('Core')
         controller: 'EnterpriseSettingsCtrl',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/enterprise.init.tpl.html'
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
         }, {
           name: 'exportMetadata',
-          template: 'modules/core/setupWizard/enterprise.exportMetadata.tpl.html'
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
         }, {
           name: 'importIdp',
-          template: 'modules/core/setupWizard/enterprise.importIdp.tpl.html'
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
         }, {
           name: 'testSSO',
-          template: 'modules/core/setupWizard/enterprise.testSSO.tpl.html'
+          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
         }]
       }, {
         name: 'addUsers',
@@ -59,16 +59,16 @@ angular.module('Core')
           controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
           }, {
             name: 'domainEntry',
-            template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
           }, {
             name: 'installConnector',
-            template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
           }, {
             name: 'syncStatus',
-            template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
           }],
         }],
       }];
@@ -110,7 +110,7 @@ angular.module('Core')
             controllerAs: 'squaredUcSetup',
             steps: [{
               name: 'init',
-              template: 'modules/core/setupWizard/serviceSetup.tpl.html'
+              template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html'
             }]
           });
         }
@@ -125,14 +125,14 @@ angular.module('Core')
             controller: 'WizardFinishCtrl',
             steps: [{
               name: 'init',
-              template: 'modules/core/setupWizard/finish.tpl.html'
+              template: 'modules/core/setupWizard/finish/finish.tpl.html'
             }]
           });
         }
 
         var enterpriseSipUrlStep = {
           name: 'enterpriseSipUrl',
-          template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html',
+          template: 'modules/core/setupWizard/sipUriSettings/enterprise.setSipUri.tpl.html',
         };
 
         if ($scope.addEnterpriseSipUrl) {
@@ -146,7 +146,7 @@ angular.module('Core')
 
         var claimSipUrlStep = {
           name: 'claimSipUrl',
-          template: 'modules/core/setupWizard/claimSipUrl.tpl.html',
+          template: 'modules/core/setupWizard/sipUriSettings/claimSipUrl.tpl.html',
         };
 
         if ($scope.addClaimSipUrl) {
@@ -189,16 +189,16 @@ angular.module('Core')
           controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
           }, {
             name: 'manualEntry',
-            template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.manualEntry.tpl.html'
           }, {
             name: 'assignServices',
-            template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
           }, {
             name: 'assignDnAndDirectLines',
-            template: 'modules/core/setupWizard/addUsers.assignDnAndDirectLines.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
           }]
         };
         var oldCsvSubTab = {
@@ -206,21 +206,21 @@ angular.module('Core')
           controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
           }, {
             name: 'csvUpload',
-            template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
           }, {
             name: 'csvServices',
-            template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
           }, {
             name: 'csvProcessing',
-            template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+            template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
             buttons: false
           }, {
             name: 'csvResult',
-            template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-            buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+            buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
           }]
         };
         var newCsvSubTab = {
@@ -228,34 +228,34 @@ angular.module('Core')
           controller: 'OnboardCtrl',
           steps: [{
             name: 'init',
-            template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
           }, {
             name: 'csvDownload',
-            template: 'modules/core/setupWizard/addUsers.downloadCsv.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
           }, {
             name: 'csvUpload',
-            template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
           }, {
             name: 'csvProcessing',
-            template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+            template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
             buttons: false
           }, {
             name: 'csvResult',
-            template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-            buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+            template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+            buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
           }]
         };
         var advancedSubTabSteps = [{
           name: 'dirsyncServices',
-          template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
         }, {
           name: 'dirsyncProcessing',
-          template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+          template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
           buttons: false
         }, {
           name: 'dirsyncResult',
-          template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers.dirSyncResultButtons.tpl.html'
+          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+          buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
         }];
 
         var csvSubTab = oldCsvSubTab;

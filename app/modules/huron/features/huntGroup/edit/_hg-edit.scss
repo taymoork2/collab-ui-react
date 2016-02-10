@@ -1,6 +1,3 @@
-.hg-save {
-  @include vr-spacing(mh, 0.5, 1px, true);
-}
 
 .hg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
@@ -16,10 +13,12 @@
   .cs-card.small {
     position: relative;
     width: 43%;
-    @include vr-spacing(pl, 0);
-    @include vr-spacing(pr, 0);
+    @include vr-spacing(ph, 0);
     i {
       font-size: 1.5rem;
+    }
+    article > header {
+       @include vr-spacing(ph, 0.75);
     }
   }
   .load {
@@ -33,7 +32,7 @@
     align-items: center;
   }
   form {
-    @include vr-spacing(m, 1.5);
+    @include vr-spacing(m, 2);
   }
   label {
     font-size: 1rem;
@@ -133,23 +132,22 @@
   }
   > a {
     flex: 1;
-    border: 1px solid $gray-light;
     @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
-    border-radius: $global-radius;
+    border-radius: $card-border-radius;
     text-align: center;
-    @include vr-spacing(pv, 1);
+    @include vr-spacing(pb, .5);
+    @include vr-spacing(pt, 1);
     cursor: pointer;
     > div {
       color: $brand-info;
-      @include vr-spacing(pt,0.5)
+      @include vr-spacing(pv,0.5)
     }
-    > i {
-      color: $color-black;
-      font-size: 2rem;
+    > div > i {
+      color: $gray-dark-2;
+      font-size: 2.5rem;
     }
     &:hover, &:focus {
       background: $gray-light-4;
-      @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
     }
   }
 }
@@ -162,8 +160,10 @@
   }
 
   .select-member{
-    width : 76%;
     @include vr-spacing(mb, 1.25);
+    input {
+      width: 78%;
+    }
   }
 }
 
@@ -172,6 +172,9 @@
   @include vr-spacing(mb, 0.5);
   .hg-edit & .cs-card.small {
     width: 100%;
+  }
+  &:focus {
+    outline: none;
   }
 }
 .hgmember .hunt-member-card {
@@ -182,9 +185,13 @@
   display: none;
 }
 
-.drop-placeholder header {
-  background: $brand-white!important;
+.drop-placeholder  {
+  height: rem-calc(40);
+  width: rem-calc(250);
+  border: 1px dashed $gray-base;
+  @include vr-spacing(mb, .5);
 }
+
 
 .dragover {
   .cs-card.header-background header {

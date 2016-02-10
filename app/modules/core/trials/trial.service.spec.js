@@ -103,10 +103,10 @@ describe('Service: Trial Service', function () {
     it('should have device details', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
         var deviceList = [{
-          model: 'sx10',
+          model: 'CISCO_SX10',
           quantity: 2
         }, {
-          model: '8865',
+          model: 'CISCO_8865',
           quantity: 3
         }];
         var devices = angular.fromJson(data).details.devices;
@@ -127,6 +127,7 @@ describe('Service: Trial Service', function () {
 
       expect($httpBackend.flush).not.toThrow();
     });
+
   });
 
   describe('start trial with disabled trials', function () {
@@ -143,6 +144,26 @@ describe('Service: Trial Service', function () {
     it('should have blank details', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
         return _.isEmpty(angular.fromJson(data).details);
+      }).respond(200);
+
+      TrialService.startTrial();
+
+      expect($httpBackend.flush).not.toThrow();
+    });
+  });
+
+  describe('start call trial with skipped devices', function () {
+    beforeEach(function () {
+      bard.mockService(TrialCallService, {
+        getData: trialData.enabled.trials.skipCallTrial
+      });
+      TrialService.getData();
+    });
+
+    it('should not have devices if call trial order page was skipped', function () {
+      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        var devices = angular.fromJson(data).details.devices;
+        return _.isEmpty(devices);
       }).respond(200);
 
       TrialService.startTrial();

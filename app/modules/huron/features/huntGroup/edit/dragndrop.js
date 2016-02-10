@@ -129,7 +129,7 @@
         });
 
         function getPlaceholderElement() {
-          return angular.element('<div class="hgmember clearfix"><div class="drop-placeholder small cs-card header-background"><article><header><h5>Drop Here</h5></header></article></div></div>');
+          return angular.element('<div class="drop-placeholder "></div>');
         }
 
         function getPlaceholderIndex() {
