@@ -1382,7 +1382,6 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: true,
             currentOrg: {}
           }
         })

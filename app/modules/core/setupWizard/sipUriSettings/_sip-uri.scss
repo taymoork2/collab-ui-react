@@ -1,0 +1,64 @@
+.sipurl-setup {
+  .title {
+    margin-bottom: 40px;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  .warning {
+    margin-bottom: 40px;
+  }
+  .sip-field {
+    padding-left: 2px;
+  }
+  .sip-input {
+    width: 250px;
+    display: inline;
+  }
+  .domain {
+    margin-left: 15px;
+  }
+}
+
+.enterprise-sipUri-page {
+  #sipUriDomainTitle {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-space {
+    margin-left: .7rem
+  }
+  .space {
+    margin-left: 1rem
+  }
+  .space-flow {
+    margin-bottom: 2.2rem
+  }
+  .url-examples-style {
+    margin-bottom: 1rem
+  }
+  .sip-uri-input {
+    margin-bottom: 2.2rem
+  }
+  .inline {
+    float: left;
+  }
+  .uri-check-space {
+    clear: both;
+  }
+  .red-error-icon {
+    color: red;
+  }
+  .green-check {
+    color: green;
+  }
+  .confirm-box {
+    position: absolute;
+    margin-top: 2rem;
+  }
+  .font-regular {
+    font-size: 1rem
+  }
+  .paragraphSpacing {
+    margin-bottom: 1rem;
+  }
+}

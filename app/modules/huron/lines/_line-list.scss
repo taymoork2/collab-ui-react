@@ -9,7 +9,13 @@
     & .internalNumberColumn {
       text-align: center;
     }
+    .ui-grid-row  {
+      &:hover {
+        background-color: transparent;
+      }
   }
+  }
+
   &.ui-grid-cell:first-child ,
   .ui-grid-header-cell:first-child  {
     text-align: center;
