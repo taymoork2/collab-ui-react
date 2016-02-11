@@ -73,6 +73,10 @@
   }
 }
 
+.line-row {
+  display: flex;
+}
+
 .modal-success, .modal-warning {
   padding: 10px 20px;
   margin: 0 30px;

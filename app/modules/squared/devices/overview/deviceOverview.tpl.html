@@ -58,13 +58,15 @@
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
         <label class="col-sm-4 control-label">Lines</label>
-        <div cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
-        <div ng-show="deviceOverview.linesAreLoaded">
-          <div class="col-sm-8" ng-show="deviceOverview.lines">
+        <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
+        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
+          <div ng-show="deviceOverview.lines">
             <div ng-repeat="line in deviceOverview.lines">
-              <p class="form-control-static"><strong>{{line.usage}}</strong></p>
-              <p class="form-control-static">{{line.directoryNumber}}</p>
-              <p class="form-control-static" ng-repeat="alternate in line.alternates">{{alternate}}</p>
+              <p class="form-control-static line-row">
+                <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
+                <span class="form-control-static line-row" ng-if="line.alternate"> or {{line.alternate}}&nbsp;</span>
+                <span class="badge primary" ng-if="line.usage === 'Primary'">Primary</span>
+              </p>
             </div>
           </div>
           <span ng-hide="deviceOverview.lines">-</span>

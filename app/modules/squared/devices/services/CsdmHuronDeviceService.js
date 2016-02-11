@@ -11,7 +11,7 @@
     }
 
     function alternateNumbersUrl(directoryNumberId) {
-      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers';
+      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
     var initialDataPromise = huronEnabled().then(function (enabled) {
@@ -50,16 +50,17 @@
           return $q.all(_.map(res.data, function (directoryNumber) {
             var line = {
               'directoryNumber': directoryNumber.directoryNumber.pattern,
-              'alternates': [],
               'usage': directoryNumber.dnUsage
             };
             return $http.get(alternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
-              alternates.data.forEach(function (alternate) {
-                line.alternates.push(alternate.numMask);
-              });
+              if (alternates.data && alternates.data[0]) {
+                line.alternate = alternates.data[0].numMask;
+              }
               lines.push(line);
             });
-          }));
+          })).then(function () {
+            return lines;
+          });
         });
     }
 
