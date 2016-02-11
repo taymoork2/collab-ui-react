@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -57,6 +57,16 @@
     deviceOverview.resetDevice = function () {
       ResetDeviceModal
         .open(deviceOverview.currentDevice)
+        .then($state.sidepanel.close);
+    };
+
+    deviceOverview.resetCode = function () {
+      var displayName = deviceOverview.currentDevice.displayName;
+      CsdmCodeService.deleteCode(deviceOverview.currentDevice)
+        .then(CsdmCodeService.createCode(displayName)
+          .then(function (result) {
+            AddDeviceModal.open(result);
+          }))
         .then($state.sidepanel.close);
     };
 

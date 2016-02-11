@@ -2123,8 +2123,10 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
+    "notYetActivated": "No device has been activated yet.",
     "codeExpires": "This activation code expires",
-    "deviceCodeExpires": "The activation code for this device expires",
+    "deviceCodeExpires": "The current activation code will expire",
+    "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
