@@ -95,6 +95,7 @@
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
       }
+      searchString = sanitizeNumberSearchInput(searchString);
       return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
         .then(extractDevices);
@@ -102,6 +103,7 @@
 
     function findDevicesMatchingNumber(searchString, orgId, limit) {
       var deferred = $q.defer();
+      searchString = sanitizeNumberSearchInput(searchString);
       searchNumbers(searchString, orgId, limit).then(function (numbers) {
         if (_.size(numbers) === 0) {
           deferred.resolve([]);
@@ -238,7 +240,9 @@
       return device;
     }
 
-    function sanitizeNumberSearchInput(searchString) {}
+    function sanitizeNumberSearchInput(searchString) {
+      return searchString.replace(/[-()]/g, '').replace(/\s/g, '');
+    }
 
     function deferredResolve(resolved) {
       var deferred = $q.defer();

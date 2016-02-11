@@ -59,7 +59,7 @@
         </div>
         <div class="small-8 medium-9 large-10 columns details-value-device">
           <span ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers">
-            {{number.directoryNumber.pattern}} <span ng-if="number.e164Mask">({{number.e164Mask}})</span>{{$last ? '' : ', '}}
+            {{number.directoryNumber.pattern}}<span ng-if="number.e164Mask"> ({{number.e164Mask}})</span>{{$last ? '' : ', '}}
           </span>
         </div>
       </div>
