@@ -470,7 +470,9 @@
         } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          vm.deviceFilter = response.filterArray;
+          vm.deviceFilter = response.filterArray.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;
 
