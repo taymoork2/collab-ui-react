@@ -19,14 +19,6 @@
             <li ng-repeat="item in tabs">
               <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
             </li>
-            <li ng-controller="SettingsMenuCtrl as langSettings">
-              <a><span | translate="common.language"></span>
-                <br>
-                <select id="languageSelector" ng-options="item.label for item in langSettings.options track by item.value"
-                        ng-model="langSettings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
-                </select>
-              </a>
-            </li>
           </ul>
         </div>
         <cr-user-info ng-if="Utils.isAdminPage()"></cr-user-info>

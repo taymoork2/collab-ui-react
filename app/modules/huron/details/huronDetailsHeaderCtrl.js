@@ -24,7 +24,7 @@
 
     $q.all([aaPromise, hgPromise]).then(function (toggle) {
       if (toggle[0] || toggle[1]) {
-        vm.tabs.splice(0, 0, {
+        vm.tabs.splice(1, 0, {
           title: 'huronDetails.featuresTitle',
           state: 'huronfeatures'
         });

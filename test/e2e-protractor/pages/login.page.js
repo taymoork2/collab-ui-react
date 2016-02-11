@@ -3,7 +3,7 @@
 var LoginPage = function () {
 
   var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
-
+  this.emailField = element(by.css('[name="email"]'));
   this.setLoginUsername = function (username) {
     browser.driver.findElement(by.id('IDToken1')).sendKeys(username);
   };
@@ -92,10 +92,8 @@ var LoginPage = function () {
 
   this.loginThroughGui = function (username, password, expectedUrl) {
     browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
-    browser.driver.wait(this.isLoginUsernamePresent, TIMEOUT);
-    this.setLoginUsername(username);
-    this.clickLoginNext();
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
     this.setLoginPassword(password);
     this.clickLoginSubmit();

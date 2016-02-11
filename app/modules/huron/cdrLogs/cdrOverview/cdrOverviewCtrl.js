@@ -17,6 +17,8 @@
     vm.cdrTable = [];
     vm.jsonUrl = "";
 
+    vm.localSessionID = cdrData.localSessionID;
+    vm.remoteSessionID = cdrData.remoteSessionID;
     vm.cdr = [];
     // build an array to use with angular filter.
     angular.forEach(cdrData, function (value, key) {

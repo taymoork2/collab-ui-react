@@ -1,47 +1,44 @@
 'use strict';
 
-/* eslint-disable */
-/* global describe */
-/* global it */
-/* global navigation, users, utils, notifications, protractor, deleteUtils, browser*/
+/* global describe, utils */
+/* global enterEmailAddrPage, createAccountPage */
 
-xdescribe('Test the enterEmailAddr page', function () {
+describe('Test the enterEmailAddr page', function () {
 
-  // TODO(David Rasti): Add this back (with modifications) once the protected login has been added by ops.
-
-  browser.get('#/enterEmailAddr');
+  browser.get('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
 
   it('should have the right title', function () {
-    expect(enterEmailAddrPage.pageTitle.getInnerHtml()).toEqual('Atlas Portal Shopping Cart Login (APSCL)');
-    expect(enterEmailAddrPage.h2.getInnerHtml()).toEqual('Enter eMail Addr');
+    utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML', 'Enter eMail Addr');
   });
 
   it('should have the right label', function () {
-    expect(enterEmailAddrPage.pageLabel.getInnerHtml()).toEqual('Enter your email address:');
+    utils.expectAttribute(enterEmailAddrPage.pageLabel, 'innerHTML', 'Enter your email address:');
   });
 
   it('should have a blank text field', function () {
-    expect(enterEmailAddrPage.email.getAttribute('value')).toEqual('')
+    utils.expectAttribute(enterEmailAddrPage.email, 'value', '');
   });
 
   it('should have a next button', function () {
-    expect(enterEmailAddrPage.nextButton.getInnerHtml()).toEqual('Next');
+    utils.expectAttribute(enterEmailAddrPage.nextButton, 'innerHTML', 'Next');
   });
 
   it('should not allow an empty email address', function () {
-    enterEmailAddrPage.nextButton.click();
-    expect(enterEmailAddrPage.errorMsg.getAttribute('value')).toEqual('The email address cannot be blank');
+    utils.expectAttribute(enterEmailAddrPage.errorMsg, 'value', '');
+    utils.click(enterEmailAddrPage.nextButton);
+    utils.expectAttribute(enterEmailAddrPage.errorMsg, 'value', 'The email address cannot be blank');
   });
 
   it('unrecongnized email address should forward to the create account page', function () {
-    var randomEmail = 'foo' + Math.floor(Math.random() * 10000000) + '@bar.com';
-    enterEmailAddrPage.email.sendKeys(randomEmail);
-    enterEmailAddrPage.nextButton.click();
-    browser.driver.sleep(12000);
-    browser.getCurrentUrl().
-    then(function (url) {
-      expect(url).toContain('/#/createAccount');
-    });
+    utils.sendKeys(enterEmailAddrPage.email, utils.randomTestGmail());
+    utils.click(enterEmailAddrPage.nextButton);
+    utils.expectIsDisplayed(createAccountPage.email1);
+  });
+
+  // TODO: Delete this test after the go-live.
+  it('should not have content when the referrer is not digital river', function () {
+    browser.get('#/enter-email-addr');
+    utils.expectIsNotDisplayed(enterEmailAddrPage.email);
   });
 
 });

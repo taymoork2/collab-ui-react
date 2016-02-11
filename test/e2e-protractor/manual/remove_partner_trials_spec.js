@@ -5,13 +5,8 @@ describe('Remove partner trials from partner org page', function () {
   var accessToken;
 
   it('should login as an partner admin', function () {
-    login.login('partner-admin', '#/partner/overview');
-  });
-
-  it('should have a partner token', function (done) {
-    utils.retrieveToken().then(function (token) {
+    login.login('partner-admin', '#/partner/overview').then(function (token) {
       accessToken = token;
-      done();
     });
   });
 

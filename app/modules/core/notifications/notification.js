@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Localytics) {
     return {
       success: success,
       error: error,
@@ -44,6 +44,9 @@
         return;
       }
       type = (type == 'success') ? type : 'error';
+      if (type === 'error') {
+        Localytics.push('Error Message', notifications);
+      }
       toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? 3000 : 0);
     }
 

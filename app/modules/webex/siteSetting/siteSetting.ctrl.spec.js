@@ -25,7 +25,7 @@ describe(
     var scopeLocale = "es_MX";
     var scopeSiteName = paramsSiteUrl;
 
-    beforeEach(module('WebExSiteSetting'));
+    beforeEach(module('WebExApp'));
 
     beforeEach(
       inject(

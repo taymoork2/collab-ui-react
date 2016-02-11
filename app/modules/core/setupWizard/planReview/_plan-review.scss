@@ -1,0 +1,16 @@
+@import "plan-container";
+.wizard-plan-review {
+  @extend %plan-container;
+}
+
+.wizard-trial-progress {
+  .small-12 {
+    @include vr-spacing(mv, .25);
+  }
+  .progress {
+    margin-bottom: 5px;
+  }
+  .progress-bar-warning {
+    background-color: $brand-warning-dark;
+  }
+}

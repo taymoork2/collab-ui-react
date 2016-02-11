@@ -9,7 +9,6 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.mac = obj.mac;
       this.ip = getIp(obj);
-      this.tags = getTags(obj);
       this.serial = obj.serial;
       this.createTime = obj.createTime;
       this.cisUuid = obj.cisUuid;
@@ -18,10 +17,11 @@ angular.module('Squared').service('CsdmConverter',
       this.software = getSoftware(obj);
       this.isOnline = getIsOnline(obj);
       this.lastConnectionTime = getLastConnectionTime(obj);
-      this.tagString = getTagString(obj);
+      this.tags = getTags(obj.description);
+      this.tagString = getTagString(obj.description);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.upgradeChannel = getUpgradeChannel(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
@@ -67,9 +67,12 @@ angular.module('Squared').service('CsdmConverter',
       this.canReset = true;
       this.canDelete = true;
       this.canReportProblem = true;
+      this.supportsCustomTags = true;
       this.displayName = obj.displayName;
+      this.tags = getTags(decodeHuronTags(obj.description));
+      this.tagString = getTagString(decodeHuronTags(obj.description));
       this.cssColorClass = getCssColorClass(obj);
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
       this.isHuronDevice = true;
       this.product = obj.product in huron_model_map ? huron_model_map[obj.product].displayName : getProduct(obj);
@@ -132,9 +135,12 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
-      this.product = 'Account';
+      this.product = t('spacesPage.account');
       this.cssColorClass = 'device-status-gray';
-      this.readableState = t('CsdmStatus.Inactive');
+      this.state = {
+        readableState: t('CsdmStatus.Inactive'),
+        priority: "4"
+      };
       this.isOnline = false;
       this.isUnused = true;
       this.canDelete = true;
@@ -152,13 +158,14 @@ angular.module('Squared').service('CsdmConverter',
 
       this.url = obj.url;
       this.cisUuid = obj.id;
-      this.tags = getTags(obj);
+      this.tags = getTags(obj.description);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
-      this.product = 'Unactivated Device';
-      this.tagString = getTagString(obj);
+      this.product = t('spacesPage.unactivatedDevice');
+      this.tags = getTags(obj.description);
+      this.tagString = getTagString(obj.description);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
-      this.readableState = getReadableState(obj);
+      this.state = getState(obj);
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
@@ -169,6 +176,11 @@ angular.module('Squared').service('CsdmConverter',
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
     }
 
     function convertExpiryTime(expiryTime) {
@@ -326,19 +338,31 @@ angular.module('Squared').service('CsdmConverter',
       return obj.url && obj.url.substr(obj.url.lastIndexOf('/') + 1);
     }
 
-    function getReadableState(obj) {
+    function getState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.RequiresActivation');
+        return {
+          readableState: t('CsdmStatus.RequiresActivation'),
+          priority: "3"
+        };
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           if (hasIssues(obj)) {
-            return t('CsdmStatus.OnlineWithIssues');
+            return {
+              readableState: t('CsdmStatus.OnlineWithIssues'),
+              priority: "1"
+            };
           }
-          return t('CsdmStatus.Online');
+          return {
+            readableState: t('CsdmStatus.Online'),
+            priority: "5"
+          };
         default:
-          return t('CsdmStatus.Offline');
+          return {
+            readableState: t('CsdmStatus.Offline'),
+            priority: "2"
+          };
         }
       }
     }
@@ -364,17 +388,22 @@ angular.module('Squared').service('CsdmConverter',
       return $translate.instant(key);
     }
 
-    function getTags(obj) {
+    function getTags(description) {
       try {
-        var tags = JSON.parse(obj.description);
+        var tags = JSON.parse(description);
         return _.unique(tags);
       } catch (e) {
-        return [];
+        try {
+          tags = JSON.parse("[\"" + description + "\"]");
+          return _.unique(tags);
+        } catch (e) {
+          return [];
+        }
       }
     }
 
-    function getTagString(obj) {
-      var tags = getTags(obj);
+    function getTagString(description) {
+      var tags = getTags(description);
       return tags.join(', ');
     }
 

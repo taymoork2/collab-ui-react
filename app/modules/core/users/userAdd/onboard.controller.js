@@ -1094,7 +1094,7 @@ angular.module('Core')
             var numAddedUsers = 0;
 
             for (var num = 0; num < data.userResponse.length; num++) {
-              if (data.userResponse[num].status === 200) {
+              if (data.userResponse[num].status === 200 || data.userResponse[num].status === 201) {
                 numAddedUsers++;
               }
             }
@@ -1863,7 +1863,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {
@@ -2275,7 +2275,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {

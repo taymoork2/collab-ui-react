@@ -1,6 +1,16 @@
 .sq-devices-page {
   @extend %grid-subheader;
   @extend %page-background-white;
+
+  .ui-grid-cell:first-child ,
+  .ui-grid-header-cell:first-child  {
+   border-right: 0px;
+
+    .space_avatar {
+      margin: 4px 5px 4px 30px;
+      width: 35px;
+    }
+  }
 }
 
 .sq-devices-page-overview {
@@ -176,14 +186,8 @@
   }
 }
 
-.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
-  border-right: 0;
-}
 
-.ui-grid-cell .space_avatar {
-  margin: 4px 5px 4px 30px;
-  width: 35px;
-}
+
 
 #addDeviceModal {
   .device-added {

@@ -95,6 +95,7 @@
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
       }
+      searchString = sanitizeNumberSearchInput(searchString);
       return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' + encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
         .then(extractDevices);
@@ -102,6 +103,7 @@
 
     function findDevicesMatchingNumber(searchString, orgId, limit) {
       var deferred = $q.defer();
+      searchString = sanitizeNumberSearchInput(searchString);
       searchNumbers(searchString, orgId, limit).then(function (numbers) {
         if (_.size(numbers) === 0) {
           deferred.resolve([]);
@@ -116,13 +118,18 @@
                     var device = {
                       uuid: deviceNumberAssociation.endpoint.uuid,
                       name: deviceNumberAssociation.endpoint.name,
-                      number: num.number
+                      numbers: [num.number]
                     };
-                    // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
-                    if (_.startsWith(device.name, 'SEP') && !_.find(devices, {
+                    // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"                   
+                    if (_.startsWith(device.name, 'SEP')) {
+                      var existingDevice = _.find(devices, {
                         uuid: device.uuid
-                      })) {
-                      devices.push(massageDevice(device));
+                      });
+                      if (!existingDevice) {
+                        devices.push(massageDevice(device));
+                      } else {
+                        existingDevice.numbers.push(num.number);
+                      }
                     }
                   });
                 }
@@ -133,6 +140,8 @@
             deferred.resolve(devices);
           });
         }
+      }, function (err) {
+        deferred.reject(err);
       });
       return deferred.promise;
     }
@@ -236,6 +245,10 @@
       return device;
     }
 
+    function sanitizeNumberSearchInput(searchString) {
+      return searchString.replace(/[-()]/g, '').replace(/\s/g, '');
+    }
+
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
@@ -250,7 +263,8 @@
       getDevice: getDevice,
       setOwnerAndDeviceDetails: setOwnerAndDeviceDetails,
       getNumber: getNumber,
-      findDevicesMatchingNumber: findDevicesMatchingNumber
+      findDevicesMatchingNumber: findDevicesMatchingNumber,
+      sanitizeNumberSearchInput: sanitizeNumberSearchInput
     };
   }
 

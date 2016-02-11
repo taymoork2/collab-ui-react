@@ -1,15 +1,4 @@
 <div class="row">
-  <div ng-show="ucDevices.otps[0]">
-    <div class="activation-code">
-      <div ng-repeat="otp in ucDevices.otps">
-        <div translate="usersPreview.activationCodeTitle"></div>
-        <div class="activation-code-expires">
-          {{'usersPreview.expires' | translate}}:  {{otp.friendlyExpiresOn}}
-        </div>
-        <button class="btn btn--people" ui-sref="generateauthcode({currentUser: currentUser, activationCode: otp})">{{otp.friendlyCode}}</button>
-      </div>
-    </div>
-  </div>
   <div class="dir-number-list col-md-12">
     <div ng-if="ucDevices.showGenerateOtpButton">
       <div class="generate-activation-code" translate="usersPreview.generateActivationCodeText"></div>
