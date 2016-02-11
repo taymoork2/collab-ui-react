@@ -235,12 +235,6 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(obj.id).toEqual("SiteInfo");
   }));
 
-  it('can get card for a centre', inject(function (WebExSiteSettingsFact) {
-    WebExSiteSettingsFact.initSiteSettingsObj();
-    var obj = WebExSiteSettingsFact.getCenterSettingsCardObj("TC");
-    expect(obj.id).toEqual("TC");
-  }));
-
   xit('can update display information', inject(function (WebExSiteSettingsFact) {
     WebExSiteSettingsFact.initSiteSettingsObj();
     WebExSiteSettingsFact.updateDisplayInfo();
