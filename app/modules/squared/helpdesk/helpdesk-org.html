@@ -62,6 +62,21 @@
           <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
+         
+      <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.managedBy' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
+            <span>
+              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
+                {{managingOrg.displayName}}
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
       
       <div class="row">
         <div class="large-5 columns details-heading">
@@ -79,21 +94,6 @@
               <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
             </span>
             <span translate="helpdesk.sso"></span>
-          </div>
-        </div>
-      </div>
-         
-      <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
-        <div class="medium-5 columns details-heading">
-          <span>{{'helpdesk.managedBy' | translate}}:</span>
-        </div>
-        <div class="medium-7 columns details-value">
-          <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
-            <span>
-              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
-                {{managingOrg.displayName}}
-              </a>
-            </span>
           </div>
         </div>
       </div>
