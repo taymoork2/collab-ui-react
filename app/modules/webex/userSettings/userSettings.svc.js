@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExUserSettings')
+angular.module('WebExApp')
   .service('WebexUserSettingsSvc', [
     function WebexUserSettingsModel() {
       return {
