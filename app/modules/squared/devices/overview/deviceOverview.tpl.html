@@ -63,7 +63,7 @@
         <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded && deviceOverview.lines">
           <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
             <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
-            <span class="form-control-static line-row" ng-if="line.alternate"> or {{line.alternate}}&nbsp;</span>
+            <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}&nbsp;</span>
             <span class="badge primary" ng-if="line.usage === 'Primary'">Primary</span>
           </p>
           <span ng-hide="deviceOverview.lines">-</span>
