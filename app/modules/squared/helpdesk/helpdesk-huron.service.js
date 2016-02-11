@@ -237,9 +237,8 @@
       }
       return device;
     }
-    
-    function sanitizeNumberSearchInput(searchString) {
-    }
+
+    function sanitizeNumberSearchInput(searchString) {}
 
     function deferredResolve(resolved) {
       var deferred = $q.defer();
