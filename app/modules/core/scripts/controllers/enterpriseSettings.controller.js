@@ -214,19 +214,11 @@
           if (data.data.length > 0) {
             //check if data already exists for this entityId
             var newEntityId = checkNewEntityId(data);
-            for (var datum in data.data) {
-              if (data.data[datum].entityId === newEntityId) {
-                metaUrl = data.data[datum].url;
-                break;
-              } else {
-                SSOService.deleteMeta(data.data[datum].url);
-                break;
-              }
-            }
-
-            if (metaUrl !== null) {
-              patchRemoteIdp(metaUrl);
+            var metaData = _.get(data, 'data[0]', {}); // pick a better name
+            if (metaData.entityId === newEntityId) {
+              patchRemoteIdp(metaData.url);
             } else {
+              SSOService.deleteMeta(metaData.url);
               postRemoteIdp();
             }
           } else {
@@ -249,7 +241,7 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           metaUrl = _.get(data, 'data[0].url');
-          if (metaUrl !== null) {
+          if (metaUrl) {
             SSOService.deleteMeta(metaUrl, function (status) {
               if (status !== 204) {
                 success = false;
@@ -283,14 +275,11 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
-          for (var datum in data.data) {
-            if (data.data[datum].entityId === newEntityId) {
-              metaUrl = data.data[datum].url;
-              break;
-            }
-          }
+          metaUrl = _.get(_.find(data.data, {
+            entityId: newEntityId
+          }), 'url');
 
-          if (metaUrl !== null) {
+          if (metaUrl) {
             SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
