@@ -37,10 +37,12 @@
 
     function initOrgView(org) {
       vm.org = org;
+        //vm.ssoEnabled: org.ssoEnabled,
+        //dirsyncEnabled: org.dirsyncEnabled
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-
+      
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
         initCards(licenses);
         findLicenseUsage();
@@ -58,7 +60,6 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
-      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function findManagedByOrgs(org) {

@@ -84,7 +84,7 @@
               });
               if (matchingUserNumber && directoryNumber.dnUsage) {
                 matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
-              }
+              }P
             });
           });
         return userNumbers;
@@ -236,6 +236,10 @@
         device.deviceStatus.cssColorClass = 'helpdesk-red';
       }
       return device;
+    }
+    
+    function sanitizeSearchInput(searchString) {
+      
     }
 
     function deferredResolve(resolved) {
