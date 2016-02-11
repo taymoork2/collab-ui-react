@@ -24,12 +24,34 @@
       }
     }
 
+    function encodeHuronTags(description) {
+      return (description || "").replace(/"/g, "'");
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
+    }
+
     var deviceCache = CsdmCacheFactory.create({
       fetch: function () {
         return huronEnabled().then(function (enabled) {
           return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
             return CsdmConverter.convertHuronDevices(res.data);
           });
+        });
+      },
+      update: function (url, obj) {
+        return $http.put(url, obj).then(function (res) {
+          var device = _.clone(deviceCache.list()[url]);
+          if (obj.description) {
+            try {
+              device.tags = JSON.parse(decodeHuronTags(obj.description));
+            } catch (e) {
+              device.tags = [];
+            }
+          }
+          return device;
         });
       },
       initializeData: initialDataPromise
@@ -47,6 +69,18 @@
       });
     }
 
+    function updateTags(url, tags) {
+      var jsonTags = encodeHuronTags(JSON.stringify(tags || []));
+      if (jsonTags.length >= 128) {
+        return $q.reject("List of tags is longer than supported.");
+      }
+      deviceCache.list()[url].tags = tags; // update ui asap
+      deviceCache.list()[url].tagString = tags.join(', '); // update ui asap
+      return deviceCache.update(url, {
+        description: jsonTags
+      });
+    }
+
     function uploadLogs(device, feedbackId) {
       return $http.post(getCmiUploadLogsUrl(device.cisUuid, device.huronId), {
         ticketId: feedbackId
@@ -57,7 +91,8 @@
       on: deviceCache.on,
       getDeviceList: getDeviceList,
       resetDevice: resetDevice,
-      uploadLogs: uploadLogs
+      uploadLogs: uploadLogs,
+      updateTags: updateTags
     };
   }
 

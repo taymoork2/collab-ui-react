@@ -39,10 +39,10 @@
 
   <!-- footer -->
   <div class="modal-footer">
-    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.startTrialButtonLoad">
+    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.loading">
       <span translate="partnerHomePage.cancel"></span>
     </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.startTrialButtonLoad"
+    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
       ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
         <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>

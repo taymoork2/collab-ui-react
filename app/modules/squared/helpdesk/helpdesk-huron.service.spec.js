@@ -156,7 +156,7 @@ describe('HelpdeskHuronService', function () {
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP5ABCD7DB89F6');
     expect(devices[0].uuid).toBe('c498a32e-8b95-4e38-aa70-2a8c90b1f0f4');
-    expect(devices[0].number).toBe('+14084744527');
+    expect(devices[0].numbers[0]).toBe('+14084744527');
     expect(devices[0].user.displayName).toBe('Tom Vasset');
     expect(devices[0].model).toBe('Cisco 8861');
     expect(devices[0].product).toBe('Cisco 8861');
@@ -193,6 +193,16 @@ describe('HelpdeskHuronService', function () {
     expect(numbers[0].internal).toBe('1234');
     expect(numbers[0].external).toBe('+14084744520');
     expect(numbers[0].dnUsage).toBe('primary');
+  });
+
+  it('number search input sanitization should behave', function () {
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('903-444-555')).toBe('903444555');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('(919) 476-1018')).toBe('9194761018');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('919 476 1018')).toBe('9194761018');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('5588')).toBe('5588');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('+1403555666')).toBe('+1403555666');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('')).toBe('');
+    httpBackend.flush();
   });
 
   function setOrgOnDevices(orgId, devices) {
