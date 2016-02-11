@@ -214,27 +214,20 @@
           if (data.data.length > 0) {
             //check if data already exists for this entityId
             var newEntityId = checkNewEntityId(data);
-            if (_.startsWith(newEntityId, 'http')) {
-              for (var datum in data.data) {
-                if (data.data[datum].entityId === newEntityId) {
-                  metaUrl = data.data[datum].url;
-                  break;
-                } else {
-                  SSOService.deleteMeta(data.data[datum].url);
-                  break;
-                }
-              }
-
-              if (metaUrl !== null) {
-                patchRemoteIdp(metaUrl);
+            for (var datum in data.data) {
+              if (data.data[datum].entityId === newEntityId) {
+                metaUrl = data.data[datum].url;
+                break;
               } else {
-                postRemoteIdp();
+                SSOService.deleteMeta(data.data[datum].url);
+                break;
               }
+            }
+
+            if (metaUrl !== null) {
+              patchRemoteIdp(metaUrl);
             } else {
-              Log.debug('Did not find entityId in IdP metadata file');
-              Notification.error('ssoModal.invalidFile', {
-                status: status
-              });
+              postRemoteIdp();
             }
           } else {
             postRemoteIdp();
@@ -290,29 +283,27 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
-          if (_.startsWith(newEntityId, 'http')) {
-            for (var datum in data.data) {
-              if (data.data[datum].entityId === newEntityId) {
-                metaUrl = data.data[datum].url;
-                break;
-              }
+          for (var datum in data.data) {
+            if (data.data[datum].entityId === newEntityId) {
+              metaUrl = data.data[datum].url;
+              break;
             }
+          }
 
-            if (metaUrl !== null) {
-              SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
-                if (data.success) {
-                  Log.debug('Single Sign-On (SSO) successfully enabled for all users');
-                  Notification.success('ssoModal.enableSSOSuccess', {
-                    status: status
-                  });
-                } else {
-                  Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
-                  Notification.error('ssoModal.enableSSOFailure', {
-                    status: status
-                  });
-                }
-              });
-            }
+          if (metaUrl !== null) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
+              if (data.success) {
+                Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+                Notification.success('ssoModal.enableSSOSuccess', {
+                  status: status
+                });
+              } else {
+                Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
+                Notification.error('ssoModal.enableSSOFailure', {
+                  status: status
+                });
+              }
+            });
           }
         } else {
           SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, true, function (data, status) {
