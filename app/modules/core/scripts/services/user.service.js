@@ -179,14 +179,11 @@ angular.module('Core')
             });
         },
 
-
-	getUserAuthToken: function (userid) {
-	      return Auth.setAccessToken().then(function () {
-		      return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid, {
-			      cache: false
-				  });
-		  });
-	},
+        getUserAuthToken: function (userid) {
+          return Auth.setAccessToken().then(function () {
+            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid);
+          });
+        },
 
         getUserFromEmail: function (email) {
           return Auth.setAccessToken().then(function () {

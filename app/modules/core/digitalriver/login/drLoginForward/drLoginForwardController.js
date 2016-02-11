@@ -1,30 +1,31 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-    .controller('drLoginForwardController', ['$scope', '$window', 'Userservice', '$cookies', '$translate',
-      function ($scope, $window, Userservice, $cookies, $translate) {
+  angular.module('Core')
+    .controller('drLoginForwardController', drLoginForwardController);
 
-      var vm = this;
+  /* @ngInject */
+  function drLoginForwardController($scope, $window, $cookies, $translate, Userservice) {
 
-      Userservice.getUser('me',
-        function (userData, status) {
-          if (status != 200 || !userData.success) {
-            $scope.error = userData.message;
-          } else {
+    var vm = this;
 
-	      Userservice.getUserAuthToken(userData.id)
-		  .then(function (userAuthResult) {
-			  if (userAuthResult.data.success === true) {
-			      $cookies.atlasDrCookie = userAuthResult.data.data.token;
-			      $window.location.href = "http://www.digitalriver.com/";
-			  } else {
-			      vm.error = _.get(userAuthResult.message,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
-			  }
-		      }, function (userAuthResult, status) {
-			  vm.error = _.get(userAuthResult,'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
-		      });
+    Userservice.getUser('me',
+      function (userData, status) {
+        if (status != 200 || !userData.success) {
+          $scope.error = userData.message;
+        } else {
 
-          }
-        });
-    }
-  ]);
+          Userservice.getUserAuthToken(userData.id)
+            .catch(function (error) {
+              vm.error = _.get(error, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+            })
+            .then(function (result) {
+              $cookies.atlasDrCookie = _.get(result, 'data.data.token');
+              if ($cookies.atlasDrCookie) {
+                $window.location.href = "http://www.digitalriver.com/";
+              }
+            });
+        }
+      });
+  }
+})();

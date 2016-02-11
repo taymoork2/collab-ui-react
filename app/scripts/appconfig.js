@@ -39,11 +39,11 @@ angular
           },
           authenticate: false
         })
-        .state('drLoginForward', {
-          url: '/drLoginForward',
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              template: '<div> </div>',
               controller: 'drLoginForwardController'
             }
           }
