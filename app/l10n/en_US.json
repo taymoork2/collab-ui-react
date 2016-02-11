@@ -3415,6 +3415,7 @@
     "resend": "Resend Invite",
     "sendCode": "Send Code",
     "more": "More",
+    "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
     "launchHelpdesk": "Help Desk",
     "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",

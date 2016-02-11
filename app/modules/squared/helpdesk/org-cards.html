@@ -21,9 +21,9 @@
             <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
-            <a href
-               ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]"
-               translate="helpdesk.more"></a>
+            <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+            </a>
           </span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -69,9 +69,9 @@
             <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
-            <a href
-               ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]"
-               translate="helpdesk.more"></a>
+            <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+            </a>
           </span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -115,9 +115,9 @@
             <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
-            <a href
-               ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]"
-               translate="helpdesk.more"></a>
+            <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+            </a>
           </span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -161,9 +161,9 @@
             <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           <span ng-if="aggregatedLicense.licenses.length > 1">|
-            <a href
-               ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]"
-               translate="helpdesk.more"></a>
+            <a href ng-click="helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] = !helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
+              {{helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key] ? 'helpdesk.less' : 'helpdesk.more' | translate}}   
+            </a>
           </span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
