@@ -25,7 +25,7 @@ angular.module('WebexClientVersions').service('WebexClientVersion', [
     //reference http://www.codelord.net/2015/09/24/$q-dot-defer-youre-doing-it-wrong/
 
     this.toggleWebexSelectLatestVersionAlways = function (partnerId, selectLatestVersion) {
-
+      $log.info("Togging");
     };
 
     this.getToggle_webexSelectLatestVersionAlways = function (partnerId) {
@@ -54,9 +54,9 @@ angular.module('WebexClientVersions').service('WebexClientVersion', [
        Here we will simply return a list of strings that corresponds to the client versions. 
     */
     this.getWbxClientVersions = function () {
-      //https://atlas-integration.wbx2.com/admin/api/v1/partners/versions
+      //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
 
-      var url = Config.getAdminServiceUrl() + 'partners/versions';
+      var url = Config.getAdminServiceUrl() + 'partnertemplate/clientversions';
 
       return $http.get(url).then(function (response) {
         return response.data.clientVersions;

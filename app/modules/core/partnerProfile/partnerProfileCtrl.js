@@ -143,7 +143,13 @@ angular.module('Core')
 
       $scope.initWbxClientVersions = function () {
         //wbxclientversionselected
-        $scope.wbxclientversions = WebexClientVersion.getWbxClientVersions();
+        //$scope.wbxclientversions = "";
+        var succ = function (data) {
+          $scope.wbxclientversions = data;
+          $scope.wbxclientversionselected = data[0];
+        };
+        //nothing to do on error.
+        WebexClientVersion.getWbxClientVersions().then(succ);
         //will need to do more stuff here. Init selected version as well. 
         //disable drop down ... but maybe not. 
       };
@@ -218,8 +224,9 @@ angular.module('Core')
       }
 
       function toggleWebexSelectLatestVersionAlways() {
+        Log.info("TOGGLE *******");
+        $scope.allowCustomerWbxClientVersions = !$scope.allowCustomerWbxClientVersions;
         WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
-        //$scope.allowCustomerWbxClientVersions = !$scope.allowCustomerWbxClientVersions;
       }
 
       $scope.toggleWebexSelectLatestVersionAlways = _.debounce(
