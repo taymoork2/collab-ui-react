@@ -96,7 +96,7 @@
           </span>
           <span ng-if="helpdeskUserCtrl.user.isConsumerUser" translate="helpdesk.consumerOrg"></span>
         </div>
-      </div>  
+      </div>
 
       <div class="row" ng-if="helpdeskUserCtrl.isAuthorizedForLog()">
         <div class="medium-5 columns details-heading">
@@ -104,12 +104,12 @@
         </div>
         <div class="medium-7 columns details-value">
           <span>
-            <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'medium'}}</a>
+            <a ng-if="helpdeskUserCtrl.lastPushedLog" ng-click="helpdeskUserCtrl.downloadLog(helpdeskUserCtrl.lastPushedLog.filename)">{{helpdeskUserCtrl.lastPushedLog.timestamp | date:'medium'}} ({{helpdeskUserCtrl.lastPushedLog.platform}})</a>
           </span>
           <span ng-if="!helpdeskUserCtrl.lastPushedLog" translate="helpdesk.noLog"></span>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'common.id' | translate}}:</span>
@@ -121,9 +121,9 @@
 
       <div class="row" ng-if="helpdeskUserCtrl.huronDevices && helpdeskUserCtrl.huronDevices.length > 0">
         <div class="medium-12 columns">
-          
+
           <hr>
-          
+
           <h4 translate="common.devices"></h4>
 
           <div class="device" ng-repeat="device in helpdeskUserCtrl.huronDevices">
@@ -148,8 +148,8 @@
           </div>
         </div>
       </div>
-      
-      <hr>    
+
+      <hr>
 
     </div>
 

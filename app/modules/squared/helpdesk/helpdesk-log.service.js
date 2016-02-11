@@ -64,9 +64,14 @@
         return new Date(meta.timestamp);
       });
       var lastLog = _.last(sorted);
+      var platform = '';
+      if (lastLog.platform) {
+        platform = _.last(lastLog.platform.split('-')) || platform;
+      }
       return {
         timestamp: lastLog.timestamp,
-        filename: lastLog.filename
+        filename: lastLog.filename,
+        platform: platform
       };
     }
 
