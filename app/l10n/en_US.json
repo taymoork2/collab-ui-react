@@ -2898,8 +2898,16 @@
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Import in progress...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvX": "X",
-    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site."
+    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
+    "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
+    "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportFinishedWithErrorsTooltip": "Export finished with errors",
+    "exportFailedTooltip": "Export failed",
+    "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
+    "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importFinishedWithErrorsTooltip": "Import finished with errors",
+    "importFailedTooltip": "Import failed",
+    "siteCSVNotAvailable": "Not available"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

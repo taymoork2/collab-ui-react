@@ -386,11 +386,11 @@
     function startTrial(addNumbersCallback) {
       vm.nameError = false;
       vm.emailError = false;
-      vm.startTrialButtonLoad = true;
+      vm.loading = true;
 
       return TrialService.startTrial()
         .catch(function (response) {
-          vm.startTrialButtonLoad = false;
+          vm.loading = false;
           Notification.notify([response.data.message], 'error');
           if ((response.data.message).indexOf('Org') > -1) {
             vm.nameError = true;
@@ -422,7 +422,7 @@
           if (vm.callTrial.enabled) {
             return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.startTrialButtonLoad = false;
+                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               });
@@ -440,7 +440,7 @@
           }
         })
         .then(function () {
-          vm.startTrialButtonLoad = false;
+          vm.loading = false;
           vm.finishSetup();
           return {
             'customerOrgId': vm.customerOrgId
