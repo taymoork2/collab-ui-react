@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: ClusterService', function () {
+fdescribe('Service: ClusterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, $location, Service, authinfo;
@@ -56,10 +56,10 @@ describe('Service: ClusterService', function () {
 
     expect(callback.callCount).toBe(1);
     var clusterCache = callback.args[0][0];
-    expect(clusterCache['cluster_0']).toBeDefined();
+    expect(clusterCache['c_mgmt']['cluster_0']).toBeDefined();
   });
 
-  it('should aggregates useful data and prove it with getClustersById', function () {
+  it('should aggregates useful data and prove it with getCluster', function () {
     // should be several tests to make it more clear
     $httpBackend
       .when('GET', rootPathV2 + '?fields=@wide')
@@ -70,6 +70,7 @@ describe('Service: ClusterService', function () {
           id: 'cluster_0',
           name: 'Cluster',
           state: 'fused',
+          provisioning: [],
           connectors: [{
             alarms: [{
               description: ''
@@ -99,7 +100,7 @@ describe('Service: ClusterService', function () {
           }, {
             alarms: [],
             hostname: 'host2.example.com',
-            state: 'registered',
+            state: 'not_configured',
             upgradeState: 'upgraded',
             connectorType: 'c_ucmc'
           }, {
@@ -115,25 +116,28 @@ describe('Service: ClusterService', function () {
     Service.fetch();
     $httpBackend.flush();
 
-    var aggregates = Service.getClustersById('cluster_0').aggregates;
-    expect(aggregates).toBeDefined();
+    // TODO: test provisioning and upgrades
 
-    expect(aggregates.c_mgmt).toBeDefined();
-    expect(aggregates.c_mgmt.alarms.length).toBe(1);
-    expect(aggregates.c_mgmt.hosts.length).toBe(2);
-    expect(aggregates.c_mgmt.runningState).toBe('has_alarms');
-    expect(aggregates.c_mgmt.runningStateSeverity).toBe('error');
+    var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0').aggregates;
+    expect(c_mgmt).toBeDefined();
+    expect(c_mgmt.alarms.length).toBe(1);
+    expect(c_mgmt.hosts.length).toBe(2);
+    expect(c_mgmt.state).toBe('has_alarms');
 
-    expect(aggregates.c_ucmc).toBeDefined();
-    expect(aggregates.c_ucmc.runningState).toBe('registered');
-    expect(aggregates.c_ucmc.runningStateSeverity).toBe('warning');
-    expect(aggregates.c_ucmc.upgradeState).toBe('upgraded');
+    var c_ucmc = Service.getCluster('c_ucmc', 'cluster_0').aggregates;
+    expect(c_ucmc).toBeDefined();
+    expect(c_ucmc.alarms.length).toBe(0);
+    expect(c_ucmc.state).toBe('not_configured');
+    expect(c_ucmc.upgradeState).toBe('upgraded');
 
-    expect(aggregates.c_cal).toBeDefined();
-    expect(aggregates.c_cal.runningState).toBe('running');
-    expect(aggregates.c_cal.runningStateSeverity).toBe('ok');
-    expect(aggregates.c_cal.upgradeState).toBe('upgrading');
+    var c_cal = Service.getCluster('c_cal', 'cluster_0').aggregates;
+    expect(c_cal).toBeDefined();
+    expect(c_cal.alarms.length).toBe(0);
+    expect(c_cal.state).toBe('running');
+    expect(c_cal.upgradeState).toBe('upgrading');
   });
+
+  // TODO: test new getRunningStateSeverity
 
   it('should give clusters by connector type', function () {
     // should be several tests to make it more clear
@@ -229,6 +233,10 @@ describe('Service: ClusterService', function () {
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].foo).toBe('bar');
   });
+
+  // TODO: test deleting a cluster
+
+  // TODO: test the .then part of deleting a host (hosts.length === 0 => delete cluster)
 
   it('should delete a host', function () {
     $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend

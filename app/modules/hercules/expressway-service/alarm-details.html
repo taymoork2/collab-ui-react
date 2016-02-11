@@ -11,11 +11,11 @@
       </tr>
       <tr>
         <td translate="hercules.alarms.firstReported"></td>
-        <td><span>{{alarmCtrl.alarm.firstReported | date : 'medium'}}</span></td>
+        <td><span>{{alarmCtrl.parseDate(alarmCtrl.alarm.firstReported) | date : 'medium'}}</span></td>
       </tr>
       <tr>
         <td translate="hercules.alarms.lastReported"></td>
-        <td><span>{{alarmCtrl.alarm.lastReported | date : 'medium'}}</span></td>
+        <td><span>{{alarmCtrl.parseDate(alarmCtrl.alarm.lastReported) | date : 'medium'}}</span></td>
       </tr>
       </tbody>
     </table>
