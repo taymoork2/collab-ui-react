@@ -70,10 +70,14 @@
     }
 
     function updateTags(url, tags) {
+      var jsonTags = encodeHuronTags(JSON.stringify(tags || []));
+      if (jsonTags.length >= 128) {
+        return $q.reject("List of tags is longer than supported.");
+      }
       deviceCache.list()[url].tags = tags; // update ui asap
       deviceCache.list()[url].tagString = tags.join(', '); // update ui asap
       return deviceCache.update(url, {
-        description: encodeHuronTags(JSON.stringify(tags || []))
+        description: jsonTags
       });
     }
 
