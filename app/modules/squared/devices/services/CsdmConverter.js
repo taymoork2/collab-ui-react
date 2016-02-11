@@ -9,7 +9,6 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.mac = obj.mac;
       this.ip = getIp(obj);
-      this.tags = getTags(obj);
       this.serial = obj.serial;
       this.createTime = obj.createTime;
       this.cisUuid = obj.cisUuid;
@@ -18,7 +17,8 @@ angular.module('Squared').service('CsdmConverter',
       this.software = getSoftware(obj);
       this.isOnline = getIsOnline(obj);
       this.lastConnectionTime = getLastConnectionTime(obj);
-      this.tagString = getTagString(obj);
+      this.tags = getTags(obj.description);
+      this.tagString = getTagString(obj.description);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.state = getState(obj);
@@ -67,7 +67,10 @@ angular.module('Squared').service('CsdmConverter',
       this.canReset = true;
       this.canDelete = true;
       this.canReportProblem = true;
+      this.supportsCustomTags = true;
       this.displayName = obj.displayName;
+      this.tags = getTags(decodeHuronTags(obj.description));
+      this.tagString = getTagString(decodeHuronTags(obj.description));
       this.cssColorClass = getCssColorClass(obj);
       this.state = getState(obj);
       this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
@@ -155,10 +158,11 @@ angular.module('Squared').service('CsdmConverter',
 
       this.url = obj.url;
       this.cisUuid = obj.id;
-      this.tags = getTags(obj);
+      this.tags = getTags(obj.description);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
       this.product = t('spacesPage.unactivatedDevice');
-      this.tagString = getTagString(obj);
+      this.tags = getTags(obj.description);
+      this.tagString = getTagString(obj.description);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
       this.state = getState(obj);
@@ -172,6 +176,11 @@ angular.module('Squared').service('CsdmConverter',
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
     }
 
     function convertExpiryTime(expiryTime) {
@@ -379,17 +388,22 @@ angular.module('Squared').service('CsdmConverter',
       return $translate.instant(key);
     }
 
-    function getTags(obj) {
+    function getTags(description) {
       try {
-        var tags = JSON.parse(obj.description);
+        var tags = JSON.parse(description);
         return _.unique(tags);
       } catch (e) {
-        return [];
+        try {
+          tags = JSON.parse("[\"" + description + "\"]");
+          return _.unique(tags);
+        } catch (e) {
+          return [];
+        }
       }
     }
 
-    function getTagString(obj) {
-      var tags = getTags(obj);
+    function getTagString(description) {
+      var tags = getTags(description);
       return tags.join(', ');
     }
 

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUtils').factory('WebExUtilsFact', [
+  angular.module('WebExApp').factory('WebExUtilsFact', [
     '$q',
     '$log',
     '$rootScope',

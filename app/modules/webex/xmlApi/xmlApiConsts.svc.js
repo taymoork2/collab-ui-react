@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExXmlApi').service(
+angular.module('WebExApp').service(
   'WebExXmlApiConstsSvc', [
     function XmlApiConstants() {
       return {
