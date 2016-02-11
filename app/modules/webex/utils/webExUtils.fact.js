@@ -32,14 +32,16 @@
       }; // getSiteName()
 
       obj.getNewInfoCardObj = function (
-        label,
+        siteUrl,
         iconClass1,
         iconClass2
       ) {
 
         var infoCardObj = {
           id: "SiteInfo",
-          label: label,
+          title: 'WebEx Site: ',
+          siteUrl: siteUrl + "\n\n",
+          label: siteUrl,
           isLicensesOverage: false,
 
           licensesTotal: {
