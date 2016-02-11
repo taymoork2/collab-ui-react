@@ -16,8 +16,7 @@ describe('WebExUtilsFact', function () {
   var urlPart = 'https://' + hostName + '/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=';
   var url = urlPart + siteName;
 
-  beforeEach(module('WebExXmlApi'));
-  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _WebExUtilsFact_) {
     $q = _$q_;

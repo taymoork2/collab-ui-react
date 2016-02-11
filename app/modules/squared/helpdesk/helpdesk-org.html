@@ -77,6 +77,26 @@
           </div>
         </div>
       </div>
+      
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.users' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <div>
+            <span>
+              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            </span>
+            <span translate="helpdesk.dirSync"></span>
+          </div>
+          <div>
+            <span>
+              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            </span>
+            <span translate="helpdesk.sso"></span>
+          </div>
+        </div>
+      </div>
          
       <div class="row">
         <div class="medium-12 columns">

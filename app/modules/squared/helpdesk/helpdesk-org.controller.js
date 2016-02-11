@@ -58,7 +58,6 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
-      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function findManagedByOrgs(org) {

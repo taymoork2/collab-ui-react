@@ -333,7 +333,7 @@
     }
 
     function elevateToReadonlyAdmin(orgId) {
-      return $http.patch(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId));
+      return $http.post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke');
     }
 
     function getHybridStatusesForUser(userId, orgId) {

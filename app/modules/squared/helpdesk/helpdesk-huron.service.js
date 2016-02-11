@@ -238,6 +238,8 @@
       return device;
     }
 
+    function sanitizeNumberSearchInput(searchString) {}
+
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
@@ -252,7 +254,8 @@
       getDevice: getDevice,
       setOwnerAndDeviceDetails: setOwnerAndDeviceDetails,
       getNumber: getNumber,
-      findDevicesMatchingNumber: findDevicesMatchingNumber
+      findDevicesMatchingNumber: findDevicesMatchingNumber,
+      sanitizeNumberSearchInput: sanitizeNumberSearchInput
     };
   }
 
