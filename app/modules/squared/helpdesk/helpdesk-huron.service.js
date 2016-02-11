@@ -128,7 +128,7 @@
                       if (!existingDevice) {
                         devices.push(massageDevice(device));
                       } else {
-                        existingDevice.numbers.push(num.number)
+                        existingDevice.numbers.push(num.number);
                       }
                     }
                   });
