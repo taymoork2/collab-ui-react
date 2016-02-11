@@ -195,6 +195,16 @@ describe('HelpdeskHuronService', function () {
     expect(numbers[0].dnUsage).toBe('primary');
   });
 
+  it('number search input sanitization should behave', function () {
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('903-444-555')).toBe('903444555');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('(919) 476-1018')).toBe('9194761018');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('919 476 1018')).toBe('9194761018');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('5588')).toBe('5588');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('+1403555666')).toBe('+1403555666');
+    expect(HelpdeskHuronService.sanitizeNumberSearchInput('')).toBe('');
+    httpBackend.flush();
+  });
+
   function setOrgOnDevices(orgId, devices) {
     _.each(devices, function (device) {
       device.organization = {
