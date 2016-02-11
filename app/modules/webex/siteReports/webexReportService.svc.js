@@ -354,7 +354,7 @@ angular.module('WebExReports').service('WebexReportService', [
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
-        "icon icon-circle-comp-pos",
+        "icon icon-circle-comp-positive",
         "icon icon-circle-clock"
       );
 
@@ -374,6 +374,7 @@ angular.module('WebExReports').service('WebexReportService', [
         viewReady: false,
         hasLoadError: false,
         sessionTicketError: false,
+        cardsSectionId: siteUrl + "-" + "cardsSection",
         siteUrl: siteUrl,
         siteName: siteName,
         infoCardObj: infoCardObj
@@ -409,7 +410,7 @@ angular.module('WebExReports').service('WebexReportService', [
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";
 
-          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = siteName;
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
           webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;

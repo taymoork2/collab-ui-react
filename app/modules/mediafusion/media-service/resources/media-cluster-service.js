@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification) {
+  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, Config) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -134,6 +134,11 @@
       //.success(callback);
     };
 
+    var deleteGroup = function (propertySetId) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySetId;
+      return $http.delete(url);
+    };
+
     var changeRole = function (role, clusterId) {
       var grp = {
         'mf.role': role
@@ -155,6 +160,27 @@
       return $http.post(url, value);
     };
 
+    var getOrganization = function (callback) {
+      var url = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
+
+      $http.get(url)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          if (!data || !(data instanceof Object)) {
+            data = {};
+          }
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
+
+      //return $http.get(url).then(extractDataFromResponse);
+    };
+
     var hub = CsdmHubFactory.create();
     var clusterPoller = CsdmPoller.create(fetch, hub);
 
@@ -170,11 +196,13 @@
       updateGroupAssignment: updateGroupAssignment,
       removeGroupAssignment: removeGroupAssignment,
       createGroup: createGroup,
+      deleteGroup: deleteGroup,
       changeRole: changeRole,
       subscribe: hub.on,
       getAggegatedClusters: getAggegatedClusters,
       getPropertySet: getPropertySet,
-      setPropertySet: setPropertySet
+      setPropertySet: setPropertySet,
+      getOrganization: getOrganization
     };
   }
 

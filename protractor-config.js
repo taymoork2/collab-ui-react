@@ -6,6 +6,10 @@ var touch = require('touch');
 var fs = require('fs');
 var e2eFailNotify = '.e2e-fail-notify';
 
+var TIMEOUT      = 1000 * 60;
+var LONG_TIMEOUT = 1000 * 60 * 2;
+var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
+
 exports.config = {
   framework: "jasmine2",
 
@@ -83,8 +87,8 @@ exports.config = {
       })
     );
 
-    global.TIMEOUT = 60000;
-    global.LONG_TIMEOUT = 60000 * 2;
+    global.TIMEOUT = TIMEOUT;
+    global.LONG_TIMEOUT = LONG_TIMEOUT;
 
     global.baseUrl = exports.config.baseUrl;
 
@@ -131,6 +135,8 @@ exports.config = {
     var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
     var HuronFeatures = require('./test/e2e-protractor/pages/huronFeatures.page.js');
     var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
+    var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
+    var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -168,6 +174,8 @@ exports.config = {
     global.inviteusers = new InviteUsers();
     global.huronFeatures = new HuronFeatures();
     global.huntGroup = new HuntGroup();
+    global.enterEmailAddrPage = new EnterEmailAddrPage();
+    global.createAccountPage = new CreateAccountPage();
 
     return browser.getCapabilities().then(function (capabilities) {
       if (capabilities.caps_.browserName === 'firefox') {
@@ -182,10 +190,10 @@ exports.config = {
     showColors: true,
     print: function() {},
     includeStackTrace: true,
-    defaultTimeoutInterval: 40000
+    defaultTimeoutInterval: VERY_LONG_TIMEOUT
   },
 
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: 40000
+  allScriptsTimeout: VERY_LONG_TIMEOUT
 };

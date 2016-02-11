@@ -108,13 +108,6 @@ exports.getToken = function () {
   });
 };
 
-exports.retrieveToken = function () {
-  return element(by.tagName('body')).evaluate('token').then(function (token) {
-    expect(token).not.toBeNull();
-    return token;
-  });
-};
-
 exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };
@@ -479,9 +472,7 @@ exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
     var input = elem.element(by.tagName('input'));
-    return input.isSelected().then(function (isSelected) {
-      return value === isSelected;
-    });
+    expect(input.isSelected()).toBe(value);
   });
 };
 

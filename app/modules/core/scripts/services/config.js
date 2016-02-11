@@ -107,7 +107,7 @@ angular.module('Core')
           ciRedirectUrl: 'redirect_uri=%s',
           oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
           oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
+          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s&email=%s',
           oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
           oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
           oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
@@ -161,10 +161,24 @@ angular.module('Core')
         },
 
         domainManagementUrl: {
-          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
-          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
-          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
-          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+          dev: 'https://identity.webex.com/organization/%s/v1/',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/',
+          integration: 'https://identity.webex.com/organization/%s/v1/',
+          prod: 'https://identity.webex.com/organization/%s/v1/'
+        },
+
+        sparkDomainManagementUrl: {
+          dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          cfe: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+        },
+
+        sparkDomainCheckUrl: {
+          dev: '.wbx2.com',
+          cfe: '.wbx2.com',
+          integration: '.wbx2.com',
+          prod: '.ciscospark.com'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',
@@ -190,18 +204,18 @@ angular.module('Core')
           prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
-        huronHealthCheckUrl: {
-          dev: 'https://squareduc.statuspage.io/index.json',
-          cfe: 'https://squareduc.statuspage.io/index.json',
-          integration: 'https://squareduc.statuspage.io/index.json',
-          prod: 'https://squareduc.statuspage.io/index.json'
-        },
-
         herculesUrl: {
           dev: 'https://hercules-integration.wbx2.com/v1',
           cfe: 'https://hercules-e.wbx2.com/v1',
           integration: 'https://hercules-integration.wbx2.com/v1',
           prod: 'https://hercules-a.wbx2.com/v1'
+        },
+
+        herculesUrlV2: {
+          dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+          integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          prod: 'https://hercules-a.wbx2.com/hercules/api/v2'
         },
 
         ussUrl: {
@@ -242,6 +256,13 @@ angular.module('Core')
           cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
           integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
           prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+        },
+
+        cdrUrl: {
+          dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
+          integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+          prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
         },
 
         scimSchemas: [
@@ -431,11 +452,6 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
-          }, {
-            title: 'tabs.reportTab',
-            desc: 'reportsPage.devReports',
-            state: 'devReports',
-            link: '#devReports'
           }]
         }],
 
@@ -462,7 +478,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
-        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
+        //WARNING: Deprecated, use offerTypes
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -527,7 +543,8 @@ angular.module('Core')
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA',
-          colorAttentionBase: '#F5A623'
+          colorAttentionBase: '#F5A623',
+          colorPeopleBase: '#14A792'
         },
 
         confMap: {
@@ -652,6 +669,28 @@ angular.module('Core')
           };
 
           return adminServiceUrl[this.getEnv()];
+        },
+
+        getSparkDomainManagementUrl: function () {
+          var sparkDomainManagementUrl = {
+            'dev': this.sparkDomainManagementUrl.dev,
+            'cfe': this.sparkDomainManagementUrl.cfe,
+            'integration': this.sparkDomainManagementUrl.integration,
+            'prod': this.sparkDomainManagementUrl.prod
+          };
+
+          return sparkDomainManagementUrl[this.getEnv()];
+        },
+
+        getSparkDomainCheckUrl: function () {
+          var sparkDomainCheckUrl = {
+            'dev': this.sparkDomainCheckUrl.dev,
+            'cfe': this.sparkDomainCheckUrl.cfe,
+            'integration': this.sparkDomainCheckUrl.integration,
+            'prod': this.sparkDomainCheckUrl.prod
+          };
+
+          return sparkDomainCheckUrl[this.getEnv()];
         },
 
         getProdAdminServiceUrl: function () {
@@ -823,14 +862,15 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
-        getOauthLoginUrl: function () {
+        getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
             this.getOauth2Url(),
             this.getClientId(),
             this.oauthClientRegistration.atlas.scope,
             encodeURIComponent(acu),
-            this.getOauthServiceType()
+            this.getOauthServiceType(),
+            encodeURIComponent(email)
           ];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
@@ -890,17 +930,6 @@ angular.module('Core')
           return healthCheckServiceUrl[this.getEnv()];
         },
 
-        getHuronHealthCheckUrlServiceUrl: function () {
-          var healthCheckServiceUrl = {
-            'dev': this.huronHealthCheckUrl.dev,
-            'cfe': this.huronHealthCheckUrl.cfe,
-            'integration': this.huronHealthCheckUrl.integration,
-            'prod': this.huronHealthCheckUrl.prod
-          };
-
-          return healthCheckServiceUrl[this.getEnv()];
-        },
-
         getLogMetricsUrl: function () {
           return this.logMetricUrl;
         },
@@ -939,6 +968,17 @@ angular.module('Core')
             'cfe': this.herculesUrl.cfe,
             'integration': this.herculesUrl.integration,
             'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
+        },
+
+        getHerculesUrlV2: function () {
+          var herculesUrl = {
+            'dev': this.herculesUrlV2.dev,
+            'cfe': this.herculesUrlV2.cfe,
+            'integration': this.herculesUrlV2.integration,
+            'prod': this.herculesUrlV2.prod
           };
 
           return herculesUrl[this.getEnv()];
@@ -1026,6 +1066,17 @@ angular.module('Core')
           };
 
           return sunlightConfigServiceUrl[this.getEnv()];
+        },
+
+        getCdrUrl: function () {
+          var cdrConfigServiceUrl = {
+            'dev': this.cdrUrl.dev,
+            'cfe': this.cdrUrl.cfe,
+            'integration': this.cdrUrl.integration,
+            'prod': this.cdrUrl.prod
+          };
+
+          return cdrConfigServiceUrl[this.getEnv()];
         }
       };
 
@@ -1047,6 +1098,23 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
+          'drLoginForward',
+          'users',
+          'user-overview',
+          'userprofile',
+          'reports',
+          'devReports',
+          'setupwizardmodal',
+          'firsttimewizard',
+          'groups',
+          'profile',
+          'customerprofile',
+          'support',
+          'editService',
+          'trialExtInterest'
+        ],
+        Readonly_Admin: [
+          'overview',
           'users',
           'user-overview',
           'userprofile',
@@ -1060,12 +1128,13 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing'],
-        WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support'],
+        Support: ['support', 'reports', 'billing', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
+        PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -1099,9 +1168,9 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'devReports',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',

@@ -3,7 +3,7 @@
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-xdescribe('Partner flow', function () {
+describe('Partner flow', function () {
   var orgId;
   var accessToken;
   var appWindow;
@@ -15,7 +15,9 @@ xdescribe('Partner flow', function () {
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
-      login.login('partner-admin', '#/partner/overview');
+      login.login('partner-admin', '#/partner/overview').then(function (token) {
+        accessToken = token;
+      });
     });
 
     it('should display correct navigation colors', function () {
@@ -26,13 +28,6 @@ xdescribe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
-    });
-
-    it('should have a partner token', function (done) {
-      utils.retrieveToken().then(function (token) {
-        accessToken = token;
-        done();
-      });
     });
 
     it('should display trials list', function () {
@@ -64,19 +59,18 @@ xdescribe('Partner flow', function () {
       utils.click(partner.addButton);
       utils.expectIsDisplayed(partner.addTrialForm);
 
-      partner.assertDisabled('startTrialButton');
+      utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectIsDisplayed(partner.squaredTrialCheckbox);
+      utils.expectIsDisplayed(partner.messageTrialCheckbox);
       utils.expectIsNotDisplayed(partner.squaredUCTrialCheckbox);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
       utils.clickEscape();
-    }, LONG_TIMEOUT);
+    });
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
@@ -97,9 +91,9 @@ xdescribe('Partner flow', function () {
 
       utils.waitForModal().then(function () {
         utils.expectIsDisplayed(partner.editTrialForm);
-        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+        utils.expectClass(partner.messageTrialCheckbox, 'disabled');
 
-        partner.assertDisabled('saveUpdateButton');
+        utils.expectIsDisabled(partner.saveUpdateButton);
         utils.clear(partner.licenseCountInput);
         utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
@@ -137,7 +131,7 @@ xdescribe('Partner flow', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
       utils.click(wizard.finishBtn);
       notifications.clearNotifications();
@@ -165,11 +159,14 @@ xdescribe('Partner flow', function () {
         // backend services are slow to check userauthinfo/accounts
         utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
-
-        browser.close();
-        browser.switchTo().window(appWindow);
       });
     });
+
+    it('Should close customer portal', function () {
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
+
   }, LONG_TIMEOUT);
 
   afterAll(function () {

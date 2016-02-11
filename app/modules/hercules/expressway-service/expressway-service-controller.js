@@ -17,8 +17,6 @@
     vm.currentServiceId = HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType);
     vm.serviceEnabled = null; // when we don't know yet, otherwise the value is true or false
     vm.loadingClusters = true;
-
-    //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
 
     // Added for cs-page-header
@@ -31,17 +29,14 @@
       state: vm.route + '.settings({serviceType:vm.currentServiceType})'
     }];
 
-    vm.clusters = ClusterService.getExpresswayClusters();
+    vm.clusters = ClusterService.getClustersByConnectorType(vm.currentServiceType);
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
     vm.clusterLength = clusterLength;
-    vm.serviceNotInstalled = serviceNotInstalled;
-    vm.softwareUpgradeAvailable = softwareUpgradeAvailable;
-    vm.softwareVersionAvailable = softwareVersionAvailable;
-    vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
     vm.openUserStatusReportModal = openUserStatusReportModal;
-    vm.enableService = enableService;
-    vm.showClusterDetails = showClusterDetails;
     vm.openUserErrorsModal = openUserErrorsModal;
+    vm.addResourceButtonClicked = addResourceButtonClicked;
+    vm.showClusterDetails = showClusterDetails;
+    vm.enableService = enableService;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -72,7 +67,7 @@
 
     ScheduleUpgradeChecker.check(vm.currentServiceType, vm.currentServiceId, vm.route + '.settings({serviceType:vm.currentServiceType})');
 
-    if (vm.currentServiceId == "squared-fusion-mgmt") {
+    if (vm.currentServiceId == 'squared-fusion-mgmt') {
       ServiceDescriptor.services(function (error, services) {
         if (!error) {
           vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
@@ -92,26 +87,9 @@
       return _.size(vm.clusters);
     }
 
-    function serviceNotInstalled(cluster) {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
-    }
-
-    function softwareUpgradeAvailable(cluster) {
-      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
-    }
-
-    function softwareVersionAvailable(cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
-        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
-    }
-
-    function selectedClusterAggregatedStatus(cluster) {
-      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
-    }
-
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      vm.clusters = ClusterService.getExpresswayClusters();
+      vm.clusters = ClusterService.getClustersByConnectorType(vm.currentServiceType);
       vm.loadingClusters = false;
     }
 
@@ -138,7 +116,7 @@
       vm.waitForEnabled = true;
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
-          XhrNotificationService.notify("Problems enabling the service");
+          XhrNotificationService.notify('Problems enabling the service');
         }
         vm.serviceEnabled = true;
         vm.waitForEnabled = false;
@@ -147,7 +125,7 @@
 
     function showClusterDetails(cluster) {
       $state.go('cluster-details', {
-        cluster: cluster,
+        clusterId: cluster.id,
         serviceType: vm.currentServiceType
       });
     }
@@ -164,40 +142,42 @@
         }
       });
     }
+
+    function addResourceButtonClicked() {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
+    }
   }
 
   /* @ngInject */
   function AlarmController($stateParams) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
-    vm.host = $stateParams.host;
   }
 
   /* @ngInject */
   function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
-    vm.host = $stateParams.host;
-    vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
-    vm.serviceType = $stateParams.serviceType;
-    vm.connector = function () {
-      var service = _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-      return _.find(service.connectors, function (connector) {
-        return connector.host.serial == vm.host.serial;
-      });
-    };
+    var cluster = ClusterService.getClustersById($stateParams.clusterId);
+    vm.host = _.find(cluster.connectors, {
+      hostname: $stateParams.host,
+      connectorType: $stateParams.serviceType
+    });
 
     vm.deleteHost = function () {
-      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
-        if (ClusterService.getClusters()[vm.cluster.id]) {
-          $state.go('cluster-details', {
-            clusterId: vm.cluster.id
-          });
-        } else {
-          $state.sidepanel.close();
-        }
-      }, XhrNotificationService.notify);
+      return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
+        .then(function () {
+          if (ClusterService.getClustersById(cluster.id)) {
+            $state.go('cluster-details', {
+              clusterId: vm.cluster.id
+            });
+          } else {
+            $state.sidepanel.close();
+          }
+        }, XhrNotificationService.notify);
     };
   }
 
@@ -206,40 +186,12 @@
     var vm = this;
     vm.clusterId = $stateParams.clusterId;
     vm.serviceType = $stateParams.serviceType;
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
+    vm.cluster = ClusterService.getClustersById(vm.clusterId);
     vm.saving = false;
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-    };
-
-    //TODO Turn on when active-active is implemented by services
-    //vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
-    vm.activeActiveApplicable = false;
-    vm.activeActivePossible = vm.cluster.hosts.length > 1;
-    vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
-    vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
 
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
     };
-
-    function isActiveActiveEnabled(cluster, serviceType) {
-      return cluster.properties && cluster.properties[activeActivePropertyName(serviceType)] == 'activeActive';
-    }
-
-    function activeActivePropertyName(serviceType) {
-      switch (serviceType) {
-      case 'c_cal':
-        return 'fms.calendarAssignmentType';
-      case 'c_ucmc':
-        return 'fms.callManagerAssignmentType';
-      default:
-        return '';
-      }
-    }
 
     vm.showDeregisterDialog = function () {
       $modal.open({
@@ -249,28 +201,9 @@
           }
         },
         controller: 'ClusterDeregisterController',
-        controllerAs: "clusterDeregister",
+        controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
       });
-    };
-
-    $scope.$watch('expresswayClusterSettingsCtrl.activeActiveEnabled', function (newVal, oldVal) {
-      if (newVal !== undefined && newVal != oldVal) {
-        vm.showButtons = newVal != vm.activeActiveEnabledOld;
-      }
-    });
-
-    vm.save = function () {
-      vm.saving = true;
-      ClusterService.setProperty(vm.clusterId, activeActivePropertyName(vm.serviceType), vm.activeActiveEnabled ? 'activeActive' : 'standard')
-        .then(function () {
-          vm.saving = false;
-        }, XhrNotificationService.notify);
-    };
-
-    vm.cancel = function () {
-      vm.showButtons = false;
-      vm.activeActiveEnabled = vm.activeActiveEnabledOld;
     };
   }
 
@@ -301,7 +234,7 @@
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {
-        XhrNotificationService.notify("Failed to fetch user statuses", error);
+        XhrNotificationService.notify('Failed to fetch user statuses', error);
         return;
       }
       if (statuses) {

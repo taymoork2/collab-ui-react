@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -29,6 +29,10 @@
       });
     }
 
+    function init() {
+      setSipUriNotification();
+    }
+
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
     vm.statusPageUrl = Config.getStatusPageUrl();
@@ -44,13 +48,17 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-    ReportsService.huronHealthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     vm.isCalendarAcknowledged = true;
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
+    vm.isCloudSipUriSet = false;
+    vm.isSipToggleEnabled = false;
+    vm.isSipUriAcknowledged = false;
+    init();
+    vm.setSipUriNotification = setSipUriNotification;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -68,6 +76,24 @@
       }
     });
 
+    function setSipUriNotification() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
+        if (result) {
+          vm.isSipToggleEnabled = true;
+          Orgservice.getOrg(function (data, status) {
+            if (status === 200) {
+              if (data.orgSettings.sipCloudDomain) {
+                vm.isCloudSipUriSet = true;
+              }
+            } else {
+              Log.debug('Get existing org failed. Status: ' + status);
+              Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+            }
+          });
+        }
+      });
+    }
+
     vm.setHybridAcknowledged = function (serviceName) {
       if (serviceName === 'calendar-service') {
         vm.isCalendarAcknowledged = true;
@@ -79,6 +105,10 @@
       Orgservice.setHybridServiceAcknowledged(serviceName);
     };
 
+    vm.setSipUriNotificationAcknowledged = function () {
+      vm.isSipUriAcknowledged = true;
+    };
+
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {
         $state.go('calendar-service.list');
@@ -88,6 +118,12 @@
         $state.go('call-service.list');
       }
       vm.setHybridAcknowledged(serviceName);
+    };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
     };
 
     vm.setupNotDone = function () {

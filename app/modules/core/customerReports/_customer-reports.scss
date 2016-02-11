@@ -2,6 +2,7 @@
 @import 'avgRooms/_avg-rooms';
 @import 'callMetrics/_call-metrics-customer';
 @import 'mediaQuality/_media-quality-customer';
+@import 'registeredEndpoints/_registered-endpoints';
 
 .customer-reports {
   @extend %content-subheader;

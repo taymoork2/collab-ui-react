@@ -28,11 +28,44 @@ angular
           },
           authenticate: false
         })
-        .state('unauthorized', {
-          url: '/unauthorized',
+        .state('enterEmailAddr', {
+          url: '/enter-email-addr',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/unauthorized.html',
+              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController',
+              controllerAs: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
+        .state('createAccount', {
+          url: '/create-account',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController',
+              controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
+        .state('unauthorized', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
+            }
+          },
+          authenticate: false
+        })
+        .state('login-error', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -41,7 +74,9 @@ angular
           url: '/404',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/404.html',
+              templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -188,8 +223,6 @@ angular
           authenticate: false
         })
         .state('domainmanagement', {
-          //abstract: true,
-          url: '/domainmanagement',
           templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
           controller: 'DomainManagementCtrl',
           controllerAs: 'dv',
@@ -205,7 +238,21 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.instructions', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageInstructionsCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/instructions.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +266,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +280,21 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
+          }
+        })
+        .state('domainmanagement.claim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageClaimCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/claim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +307,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {
@@ -841,6 +903,14 @@ angular
             displayName: 'Overview'
           }
         })
+        .state('video', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/video/videoModal.tpl.html'
+            }
+          }
+        })
 
       /*
        devices
@@ -1079,8 +1149,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskController',
-              controllerAs: 'helpdeskCtrl',
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1095,7 +1165,8 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          abstract: true,
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
           parent: 'helpdesk-main'
         })
         .state('helpdesk.search', {
@@ -1123,10 +1194,21 @@ angular
             id: null
           }
         })
-        .state('helpdesk.device', {
-          url: '/device/:orgId/:id',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
-          controller: 'HelpdeskDeviceController',
+        .state('helpdesk.cloudberry-device', {
+          url: '/cloudberryDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
+          controller: 'HelpdeskCloudberryDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
+          }
+        })
+        .state('helpdesk.huron-device', {
+          url: '/huronDevice/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
+          controller: 'HelpdeskHuronDeviceController',
           controllerAs: 'helpdeskDeviceCtrl',
           params: {
             device: null,
@@ -1160,10 +1242,29 @@ angular
           },
           params: {
             cdrData: {},
-            call: []
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
+          }
+        })
+        .state('cdrladderdiagram', {
+          parent: 'modalFull',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
+              controller: 'CdrLadderDiagramCtrl',
+              controllerAs: 'cdrLadderDiagram'
+            }
+          },
+          params: {
+            call: [],
+            uniqueIds: [],
+            events: [],
+            imported: ''
           }
         })
         .state('callroutingBase', {
@@ -1187,70 +1288,6 @@ angular
               template: '<div ui-view></div>'
             }
           }
-        })
-        .state('autoattendant', {
-          url: '/autoattendant',
-          abstract: false,
-          parent: 'callrouting',
-          template: '<div> <div ui-view></div> </div>'
-        })
-        .state('autoattendant.landing', {
-          parent: 'autoattendant',
-          templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantLanding.tpl.html',
-          controller: 'AutoAttendantLandingCtrl',
-          controllerAs: 'aaLanding'
-        })
-        .state('autoattendant.main', {
-          abstract: true,
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'AutoAttendantMainCtrl',
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMain.tpl.html',
-              controllerAs: 'aaMain'
-            }
-          }
-        })
-        .state('autoattendant.main.general', {
-          parent: 'autoattendant.main',
-          params: {
-            aaName: ''
-          },
-          views: {
-            'tabContent': {
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantGeneral.tpl.html',
-              controller: 'AutoAttendantGeneralCtrl',
-              controllerAs: 'aaGeneral'
-            }
-          }
-        })
-        .state('autoattendant.main.aa', {
-          parent: 'autoattendant.main',
-          params: {
-            aaName: ''
-          },
-          views: {
-            'tabContent': {
-              templateUrl: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
-              controller: 'AutoAttendantMenuCtrl',
-              controllerAs: 'aaMenu'
-            }
-          }
-        })
-        .state('autoattendant.aalanding', {
-          parent: 'autoattendant',
-          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
-          controller: 'AALandingCtrl',
-          controllerAs: 'aaLanding'
-        })
-        .state('autoattendant.aabuilder', {
-          parent: 'main',
-          params: {
-            aaName: ''
-          },
-          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
-          controller: 'AABuilderMainCtrl',
-          controllerAs: 'aaBuilderMain'
         })
         .state('callpark', {
           url: '/callpark',
@@ -1337,7 +1374,6 @@ angular
             }
           },
           params: {
-            showPartnerEdit: false,
             currentTrial: {}
           }
         })
@@ -1346,12 +1382,24 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: false,
             currentOrg: {}
           }
         })
         .state('trialEdit.info', {
           templateUrl: 'modules/core/trials/trialEdit.tpl.html'
+        })
+        .state('trialEdit.finishSetup', {
+          templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+        })
+        .state('trialEdit.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
+        })
+        .state('trialEdit.call', {
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          controller: 'TrialCallCtrl',
+          controllerAs: 'callTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',
@@ -1653,8 +1701,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: undefined,
-            serviceType: undefined
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details.cluster-settings', {
@@ -1854,7 +1902,8 @@ angular
           params: {
             clusterId: null,
             properties: null,
-            connector: null
+            connector: null,
+            hostLength: null
           }
         })
         .state('connector-details.group-settings', {

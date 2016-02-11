@@ -1,3 +1,4 @@
+/* global ll */
 'use strict';
 
 angular.module('Core')
@@ -33,7 +34,7 @@ angular.module('Core')
         'conferenceServicesWithoutSiteUrl': null,
         'cmrServices': null,
         'hasAccount': false,
-        'email': null
+        'emails': null
       };
 
       var getTabTitle = function (title) {
@@ -75,7 +76,8 @@ angular.module('Core')
       };
 
       function isOnlyCiscoState(state) {
-        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid === Config.ciscoMockOrgId)))
+        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid ===
+            Config.ciscoMockOrgId)))
           return true;
         return false;
       }
@@ -150,6 +152,8 @@ angular.module('Core')
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
+          //org id of user
+          ll('setCustomDimension', 1, authData.orgId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -167,18 +171,20 @@ angular.module('Core')
           authData.roles = [];
           authData.isInitialized = false;
           authData.setupDone = null;
-          authData.email = null;
+          authData.emails = null;
         },
-        setEmail: function (data) {
-          authData.email = data;
+        setEmails: function (data) {
+          authData.emails = data;
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          ll('setCustomDimension', 0, msg);
         },
-        getEmail: function () {
-          return authData.email;
+        getEmails: function () {
+          return authData.emails;
         },
         getPrimaryEmail: function () {
-          for (var emails in authData.email) {
-            if (authData.email[emails].primary === true) {
-              return authData.email[emails].value;
+          for (var emails in authData.emails) {
+            if (authData.emails[emails].primary === true) {
+              return authData.emails[emails].value;
             }
             return null;
           }
@@ -190,7 +196,7 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts;
+            var accounts = data.accounts || [];
 
             if (accounts.length > 0) {
               authData.hasAccount = true;
@@ -334,6 +340,9 @@ angular.module('Core')
         isAdmin: function () {
           return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },
+        isReadOnlyAdmin: function () {
+          return this.hasRole('Readonly_Admin') && !this.isAdmin();
+        },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
         },
@@ -342,6 +351,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerSalesAdmin: function () {
+          return this.hasRole('PARTNER_SALES_ADMIN');
         },
         isPartnerUser: function () {
           return this.hasRole('PARTNER_USER');
@@ -400,6 +412,9 @@ angular.module('Core')
         },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
+        },
+        isUserAdmin: function () {
+          return this.getRoles().indexOf('Full_Admin') > -1;
         }
       };
     }

@@ -6,6 +6,10 @@
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
     var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
 
+    function getCmiUploadLogsUrl(userId, deviceId) {
+      return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
+    }
+
     function directoryNumbersUrl(userId) {
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/directorynumbers';
     }
@@ -72,11 +76,18 @@
       });
     }
 
+    function uploadLogs(device, feedbackId) {
+      return $http.post(getCmiUploadLogsUrl(device.cisUuid, device.huronId), {
+        ticketId: feedbackId
+      });
+    }
+
     return {
       on: deviceCache.on,
       getDeviceList: getDeviceList,
       getLinesForDevice: getLinesForDevice,
-      resetDevice: resetDevice
+      resetDevice: resetDevice,
+      uploadLogs: uploadLogs
     };
   }
 

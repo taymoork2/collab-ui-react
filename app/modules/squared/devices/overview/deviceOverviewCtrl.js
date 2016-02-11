@@ -43,10 +43,21 @@
     };
 
     deviceOverview.reportProblem = function () {
-      var feedbackId = Utils.getUUID();
+      var uploadLogsPromise;
+      var feedbackId;
+      if (deviceOverview.currentDevice.isHuronDevice) {
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        feedbackId = '';
+        for (var i = 32; i > 0; --i) {
+          feedbackId += chars[Math.floor(Math.random() * chars.length)];
+        }
+        uploadLogsPromise = CsdmHuronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
+      } else {
+        feedbackId = Utils.getUUID();
+        uploadLogsPromise = CsdmDeviceService.uploadLogs(deviceOverview.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail());
+      }
 
-      return CsdmDeviceService.uploadLogs(deviceOverview.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail())
-        .then(function () {
+      uploadLogsPromise.then(function () {
           var appType = 'Atlas_' + $window.navigator.userAgent;
           return FeedbackService.getFeedbackUrl(appType, feedbackId);
         })

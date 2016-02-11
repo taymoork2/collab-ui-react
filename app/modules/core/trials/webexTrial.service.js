@@ -3,13 +3,23 @@
 
   angular
     .module('core.trial')
-    .factory('WebexTrialService', WebexTrialService);
+    .factory('WebexTrialService', WebexTrialService)
+    .factory('WebexOrderStatusResource', WebexOrderStatusResource);
 
   /* @ngInject */
-  function WebexTrialService($http, $translate, Config, Notification) {
+  function WebexOrderStatusResource($resource, Authinfo, Config) {
+    return $resource(Config.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
+      orgId: Authinfo.getOrgId(),
+      trialId: '@trialId'
+    }, {});
+  }
+
+  /* @ngInject */
+  function WebexTrialService($http, Config, Notification, WebexOrderStatusResource) {
     var service = {
       getTimeZones: getTimeZones,
-      validateSiteUrl: validateSiteUrl
+      validateSiteUrl: validateSiteUrl,
+      getTrialStatus: getTrialStatus
     };
 
     return service;
@@ -50,6 +60,22 @@
         };
       }).catch(function (response) {
         Notification.error('trialModal.meeting.validationHttpError');
+      });
+    }
+
+    function getTrialStatus(trialId) {
+      return WebexOrderStatusResource.get({
+        'trialId': trialId
+      }).$promise.then(function (data) {
+        var orderStatus = data.provOrderStatus !== 'PROVISIONED';
+        var timeZoneId = data.timeZoneId && data.timeZoneId.toString();
+
+        return {
+          siteUrl: data.siteUrl,
+          timeZoneId: timeZoneId,
+          trialExists: _.isUndefined(data.errorCode),
+          pending: orderStatus
+        };
       });
     }
 

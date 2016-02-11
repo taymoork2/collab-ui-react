@@ -1,5 +1,12 @@
 <div>
   <div class="license-wrapper">
+    <div ng-hide="oneBilling" class="flex-row">
+      <div class="small-4 multiSub">
+        <span class="multiText" translate="firstTimeWizard.subscriptionId"></span>
+        <cs-select class="multiSelect" ng-model="selectedSubscription" options="subscriptionOptions" ng-change="modelChange()">
+        </cs-select>
+      </div>
+    </div>
     <div class="flex-row">
       <div class="small-4 columns column-title">
         <div class="column-header">
@@ -48,7 +55,8 @@
             </div>
             <div ng-if="msgFeature.licenses.length > 1">
                 <fieldset class="onboard-fieldset">
-                    <label class="cs-radio" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">                                 
+                    <label class="cs-radio" for="{{license.licenseId}}" ng-show="showMultiSubscriptions(license.billingServiceId, license.isTrial)" 
+                    ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">                         
                         <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
                         ng-model="$parent.$parent.radioStates.subLicense" ng-value="license" />
                         <span>{{license.billingServiceId}} ({{license.volume}})</span>
@@ -61,12 +69,15 @@
       <div id="conference" class="small-4 columns column-paid">
         <div ng-if="confChk" class="item-license" translate="onboardModal.meeting"></div>
         <div class="entitle-check-grp" ng-repeat="lic in allLicenses">
-          <div class="ckbx" id="paidMtg" ng-if="!lic.site">
+          <div class="ckbx" id="paidMtg" ng-show="showMultiSubscriptions(lic.billing, lic.isTrial)" ng-if="!lic.site">
             <cs-checkbox ckid="{{lic.licenseId}}" ng-model="lic.confModel" label="{{lic.label}}"></cs-checkbox>
           </div>
           <div class="item-mtg">
-            {{lic.site}}
-            <div ng-repeat="cfLic in lic.confLic">
+            <div ng-show="showMultiSubscriptions(lic.billing, lic.isTrial)">
+              <div class="sub-line" ng-if="lic.site"></div>
+              {{lic.site}}
+            </div>
+            <div ng-show="showMultiSubscriptions(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
               <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" label="WebEx {{cfLic.label}}"></cs-checkbox>
               <div ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
@@ -75,11 +86,12 @@
               </div>
             </div>
           </div>
-          <div ng-class="{'sub-line':!$last}"></div>
         </div>
       </div>
       <div id="communication" class="small-4 columns column-paid">
-        <div class="entitle-check-grp" ng-repeat="commFeature in communicationFeatures" ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
+        <div class="entitle-check-grp" ng-show="showMultiSubscriptions(commFeature.license.billingServiceId, commFeature.license.isTrial)" 
+        ng-repeat="commFeature in communicationFeatures" 
+        ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
           <div ng-if="isStormBranding" class="item-license" translate="onboardModal.call"></div>
           <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.communication"></div>
           <div class="ckbx">

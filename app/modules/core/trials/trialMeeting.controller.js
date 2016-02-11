@@ -50,14 +50,17 @@
       model: vm.details,
       key: 'timeZone',
       type: 'select',
-      defaultValue: '',
+      defaultValue: {
+        'label': $translate.instant('trialModal.meeting.timeZonePlaceholder'),
+        'timeZoneId': undefined
+      },
       templateOptions: {
         required: true,
         labelfield: 'label',
         labelClass: 'small-2 columns',
         inputClass: 'small-9 columns left',
         labelProp: 'label',
-        valueProp: 'value',
+        valueProp: 'timeZoneId',
         label: $translate.instant('trialModal.meeting.timezone')
       },
       expressionProperties: {
@@ -67,6 +70,14 @@
           return _.filter(timeZones, function (timeZone) {
             return _.includes(validTimeZoneIds, timeZone.timeZoneId);
           });
+        }
+      },
+      validators: {
+        'timezone': {
+          expression: function ($viewValue, $modelValue) {
+            var timezone = $modelValue || $viewValue;
+            return !_.isUndefined(timezone.timeZoneId);
+          }
         }
       }
     }];

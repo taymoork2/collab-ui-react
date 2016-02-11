@@ -13,20 +13,20 @@ angular.module('Squared').service('DeviceFilter',
       filterValue: 'all'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Offline'),
-      filterValue: 'offline'
-    }, {
-      count: 0,
       name: $translate.instant('CsdmStatus.OnlineWithIssues'),
       filterValue: 'issues'
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Online'),
-      filterValue: 'online'
+      name: $translate.instant('CsdmStatus.Offline'),
+      filterValue: 'offline'
     }, {
       count: 0,
       name: $translate.instant('CsdmStatus.RequiresActivation'),
       filterValue: 'codes'
+    }, {
+      count: 0,
+      name: $translate.instant('CsdmStatus.Online'),
+      filterValue: 'online'
     }];
 
     var getFilters = function () {
@@ -107,14 +107,33 @@ angular.module('Squared').service('DeviceFilter',
     function matchesSearch(item) {
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
-        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || (item.tags || []).some(function (tag) {
-          return (tag || '').toLowerCase().indexOf(term || '') != -1;
-        }) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        var matchesAnyFieldOfItem = termMatchesAnyFieldOfItem(term, item);
+        var matchesState = termMatchesState(item.state, term);
+        var matchesAnyTag = termMatchesAnyTag(item.tags, term);
+        var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
+        var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
       });
     }
 
-    function termMatchesAnyFieldOfItem(term, item, fields) {
-      return (fields || []).some(function (field) {
+    function termMatchesAnyTag(tags, term) {
+      return (tags || []).some(function (tag) {
+        return (tag || '').toLowerCase().indexOf(term || '') != -1;
+      });
+    }
+
+    function termMatchesAnyIssue(issues, term) {
+      return (issues || []).some(function (issue) {
+        return (issue.type || '').toLowerCase().indexOf(term || '') != -1 || (issue.message || '').toLowerCase().indexOf(term || '') != -1;
+      });
+    }
+
+    function termMatchesState(state, term) {
+      return state && (state.readableState || '').toLowerCase().indexOf(term || '') != -1;
+    }
+
+    function termMatchesAnyFieldOfItem(term, item) {
+      return ['displayName', 'product', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
         return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
       });
     }

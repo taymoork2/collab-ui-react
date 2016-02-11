@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
+  .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log', '$window',
 
-    function ($templateCache, $scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
+    function ($templateCache, $scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log, $window) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -24,6 +24,7 @@ angular.module('Core')
       $scope.filter = 'ALL';
       $scope.trialsList = [];
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+      $scope.launchCustomerPortal = launchCustomerPortal;
       setNotesTextOrder();
 
       $scope.openAddTrialModal = function () {
@@ -37,7 +38,6 @@ angular.module('Core')
 
       $scope.openEditTrialModal = function () {
         $state.go('trialEdit.info', {
-          showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
           $state.modal.result.finally(function () {
@@ -360,6 +360,15 @@ angular.module('Core')
 
       if ($state.current.name === "partnercustomers.list") {
         LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+      }
+
+      function launchCustomerPortal(trial) {
+        var customer = trial;
+
+        $window.open($state.href('login_swap', {
+          customerOrgId: customer.customerOrgId,
+          customerOrgName: customer.customerName
+        }));
       }
 
     }

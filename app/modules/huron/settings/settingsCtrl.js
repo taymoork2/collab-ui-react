@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService) {
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService, ModalService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -633,6 +633,24 @@
       });
     }
 
+    function displayDisableVoicemailWarning() {
+      if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.companyVoicemail.companyVoicemailEnabled')) {
+        return ModalService.open({
+            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+            close: $translate.instant('common.disable'),
+            dismiss: $translate.instant('common.cancel'),
+            type: 'negative'
+          })
+          .result
+          .catch(function () {
+            vm.model.companyVoicemail.companyVoicemailEnabled = true;
+            vm.model.companyVoicemail.companyVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber);
+            return $q.reject();
+          });
+      }
+    }
+
     function save() {
       vm.processing = true;
       var promises = [];
@@ -786,12 +804,13 @@
       // Save company site
       promises.push(
         $q.when(true)
+        .then(displayDisableVoicemailWarning)
         .then(saveCustomer)
         .then(saveSite)
         .then(saveTimeZone)
         .catch(_.noop)
         .then(getCustomer)
-        .then()
+        .then(loadExternalNumberPool)
         .catch(_.noop)
       );
 
@@ -972,7 +991,7 @@
 
     function loadExternalNumberPool(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
-        vm.externalNumberPool = ExternalNumberService.getAllNumbers();
+        vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
         vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
           var externalNumber = angular.copy(en);
           externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);

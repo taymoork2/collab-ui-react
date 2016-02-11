@@ -13,8 +13,9 @@ angular.module('Squared').controller('ReportsCtrl', [
   '$translate',
   'CannedDataService',
   'Userservice',
-  'WebExUtilsFact',
+  'WebExApiGatewayService',
   'Storage',
+  'FeatureToggleService',
   function (
     $scope,
     $stateParams,
@@ -28,8 +29,9 @@ angular.module('Squared').controller('ReportsCtrl', [
     $translate,
     CannedDataService,
     Userservice,
-    WebExUtilsFact,
-    Storage
+    WebExApiGatewayService,
+    Storage,
+    FeatureToggleService
   ) {
 
     $scope.webexReportsObject = {};
@@ -76,7 +78,7 @@ angular.module('Squared').controller('ReportsCtrl', [
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);
@@ -149,7 +151,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }
@@ -601,5 +603,18 @@ angular.module('Squared').controller('ReportsCtrl', [
     $scope.$on('AuthinfoUpdated', function () {
       $scope.manualReload(true);
     });
+
+    function init() {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasReportTrials).then(function (toggle) {
+        if (toggle) {
+          $scope.repPageHeader_tabs.splice(1, 0, {
+            title: $translate.instant('reportsPage.sparkReports'),
+            state: 'devReports'
+          });
+        }
+      });
+    }
+
+    init();
   }
 ]);

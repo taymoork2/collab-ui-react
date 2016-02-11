@@ -2,33 +2,59 @@ namespace domainManagement {
 
   class DomainManageVerifyCtrl {
     private _domain;
-    private _domainManagementService;
-    private _enable = false;
+    private _loggedOnUser;
+    private _error;
 
     /* @ngInject */
-    constructor(private $state, private DomainManagementService) {
+    constructor(private $state, private $previousState, private DomainManagementService, $translate) {
       this._domain = $state.params.domain;
+      this._loggedOnUser = $state.params.loggedOnUser;
 
+      //if any domain is already verified, it is safe to verify more:
+      if (DomainManagementService.domainList.length == 0
+        || _.all(DomainManagementService.domainList, {status: DomainManagementService.states.pending})) {
+
+        //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
+        if (this.domainName != this._loggedOnUser.domain)
+          this._error = $translate.instant('domainManagement.verify.preventLockoutError', {domain: this._loggedOnUser.domain});
+      }
     }
 
     get domainName() {
       return this._domain && this._domain.text;
     }
 
-    get enable() {
-      return this._enable;
+    get domain() {
+      return this._domain;
     }
 
-    set enable(enable) {
-      this._enable = enable;
+    get error() {
+      return this._error;
+    }
+
+    set error(error) {
+      this._error = error;
+    }
+
+    get operationAllowed() {
+      //input validation:
+      if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
+        return false;
+
+      return !this._error;
     }
 
     public verify() {
-      this.DomainManagementService.verifyDomain(this._domain).then(res => {
-        this.$state.go('domainmanagement');
+      this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
+        this.$previousState.go();
+      }, err => {
+        this._error = err;
       });
     }
 
+    public cancel() {
+      this.$previousState.go();
+    }
   }
   angular
     .module('Core')

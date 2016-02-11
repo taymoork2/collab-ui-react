@@ -9,6 +9,18 @@
  * Main module of the application.
  */
 
+(function (l, y, t, i, c, s) {
+  l['LocalyticsGlobal'] = i;
+  l[i] = function () {
+    (l[i].q = l[i].q || []).push(arguments);
+  };
+  l[i].t = +new Date();
+  (s = y.createElement(t)).type = 'text/javascript';
+  s.src = '//web.localytics.com/v3/localytics.min.js';
+  (c = y.getElementsByTagName(t)[0]).parentNode.insertBefore(s, c);
+  window.ll('init', 'f725f885fe2646751d3c8a3-075b0c4e-a82c-11e5-c7e0-00d0fea82624', {});
+}(window, document, 'script', 'll'));
+
 angular.module('Core', [
   'core.trial',
   'pascalprecht.translate',
@@ -61,6 +73,8 @@ angular.module('Hercules', ['Core', 'ngTagsInput']);
 angular.module('Mediafusion', ['Core']);
 
 angular.module('WebExUtils', ['Core']);
+angular.module('WebExApiGateway', ['Core']);
+angular.module('WebExRestApi', ['Core']);
 angular.module('WebExXmlApi', ['Core']);
 
 angular.module('WebExSiteSettings', ['Core']);
@@ -83,6 +97,8 @@ angular.module('wx2AdminWebClientApp', [
   'Hercules',
   'Mediafusion',
   'WebExUtils',
+  'WebExApiGateway',
+  'WebExRestApi',
   'WebExXmlApi',
   'WebExSiteSettings',
   'WebExSiteSetting',

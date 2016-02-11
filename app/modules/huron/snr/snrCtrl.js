@@ -40,7 +40,7 @@
       templateOptions: {
         placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
         inputClass: 'col-sm-12',
-        maxlength: 24,
+        maxLength: '24',
         required: true,
         options: [{
           name: $translate.instant('singleNumberReachPanel.unitedStates'),

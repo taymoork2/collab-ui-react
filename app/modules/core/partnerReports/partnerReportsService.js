@@ -89,8 +89,8 @@
                 var activeUsers = parseInt(item.details.activeUsers);
                 var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-                // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
-                if (totalRegisteredUsers < 0) {
+                // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+                if (totalRegisteredUsers <= 0) {
                   var previousTotal = 0;
                   var nextTotal = 0;
                   if (index !== 0) {
@@ -345,7 +345,7 @@
 
       if (time.value === 0) {
         var offset = 1;
-        if (moment.tz(mostRecent, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
+        if (moment.tz(mostRecent, dateFormat, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
           offset = 0;
         }
 
@@ -355,7 +355,7 @@
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
-        var dayOffset = parseInt(moment.tz(mostRecent, timezone).format('e'));
+        var dayOffset = parseInt(moment.tz(mostRecent, dateFormat, timezone).format('e'));
         if (dayOffset >= 4) {
           dayOffset = 7 - dayOffset;
         } else {
@@ -419,6 +419,7 @@
                 index.orgName = customer.label;
                 index.numCalls = parseInt(index.details.numCalls);
                 index.totalActivity = parseInt(index.details.totalActivity);
+                index.sparkMessages = index.totalActivity - index.numCalls;
                 index.userId = index.details.userId;
                 index.userName = index.details.userName;
               }

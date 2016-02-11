@@ -5,11 +5,15 @@ angular.module('Hercules')
     function ConfigService($window, Config) {
 
       var baseHerculesUrl = Config.getHerculesUrl();
+      var baseHerculesUrlV2 = Config.getHerculesUrlV2();
       var baseUssUrl = Config.getUssUrl();
       var baseCertsUrl = Config.getCertsUrl();
 
       var getUrl = function () {
         return baseHerculesUrl;
+      };
+      var getUrlV2 = function () {
+        return baseHerculesUrlV2;
       };
       var getUSSUrl = function () {
         return baseUssUrl + 'uss/api/v1';
@@ -20,6 +24,7 @@ angular.module('Hercules')
 
       return {
         getUrl: getUrl,
+        getUrlV2: getUrlV2,
         getUSSUrl: getUSSUrl,
         getCertsUrl: getCertsUrl
       };
