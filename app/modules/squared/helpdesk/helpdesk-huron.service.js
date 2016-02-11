@@ -237,10 +237,6 @@
       }
       return device;
     }
-    
-    function sanitizeSearchInput(searchString) {
-      
-    }
 
     function deferredResolve(resolved) {
       var deferred = $q.defer();
