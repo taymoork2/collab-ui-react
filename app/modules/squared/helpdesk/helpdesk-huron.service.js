@@ -85,7 +85,6 @@
               if (matchingUserNumber && directoryNumber.dnUsage) {
                 matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
               }
-              P
             });
           });
         return userNumbers;
@@ -238,6 +237,9 @@
       }
       return device;
     }
+    
+    function sanitizeNumberSearchInput(searchString) {
+    }
 
     function deferredResolve(resolved) {
       var deferred = $q.defer();
@@ -253,7 +255,8 @@
       getDevice: getDevice,
       setOwnerAndDeviceDetails: setOwnerAndDeviceDetails,
       getNumber: getNumber,
-      findDevicesMatchingNumber: findDevicesMatchingNumber
+      findDevicesMatchingNumber: findDevicesMatchingNumber,
+      sanitizeNumberSearchInput: sanitizeNumberSearchInput
     };
   }
 
