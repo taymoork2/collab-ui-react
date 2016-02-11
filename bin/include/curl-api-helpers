@@ -1,6 +1,7 @@
 # TODO: get these static urls from common source that can be shared with other nodejs scripts
 atlas_api_url=${atlas_api_url:-https://atlas-integration.wbx2.com/admin/api/v1}
 wdm_api_url=${wdm_api_url:-https://wdm-integration.wbx2.com/wdm/api/v1}
+huron_api_url=${huron_api_url:-https://cmi.huron-int.com/api/v1}
 ci_api_url=https://idbroker.webex.com
 
 ci_cookie_name=cisPRODiPlanetDirectoryPro
@@ -322,6 +323,7 @@ function is_safe_atlas_operation {
 # print the endpoint url prefix based on the script-name invoked
 # - ex. 'curl-atlas' => prints the default atlas api url prefix
 # - ex. 'curl-wdm' => prints the default wdm api url prefix
+# - ex. 'curl-huron' => prints the default huron api url prefix
 # - ex. 'curl-ci' => prints the default CI api url prefix
 # - ex. 'curl-cca' => prints empty string (no prefix, as it is assumed the whole url is being provided)
 function get_url_endpoint_prefix {
@@ -332,6 +334,9 @@ function get_url_endpoint_prefix {
             ;;
         "curl-wdm" )
             echo "${wdm_api_url}"
+            ;;
+        "curl-huron" )
+            echo "${huron_api_url}"
             ;;
         "curl-ci" )
             echo "${ci_api_url}"
