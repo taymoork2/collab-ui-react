@@ -13,6 +13,7 @@
   <section class="modal-body collapse-fields">
     <h5 translate="trialModal.call.selectDevicesHeader"></h5>
     <section class="row indent">
+      <div class="small-12 columns" translate="trialModal.call.deviceLimitDescription"></div>
       <h6 class="small-12 columns" translate="trialModal.call.meetingRoomCamera"></h6>
       <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields" hide-directive="ng-show"
         class="small-12 columns indent">
@@ -36,11 +37,12 @@
 
   <!-- footer -->
   <div class="modal-footer">
-    <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.startTrialButtonLoad"
+    <a class="pull-left" ng-click="callTrial.skip(true); trial.nextStep()" translate="trialModal.call.skipAddDevices"></a>
+    <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
       translate="common.back">
     </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.startTrialButtonLoad"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
+    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+      ng-click="trialForm.$setPristine(true); callTrial.skip(false); trial.nextStep()" ng-disabled="trialForm.$invalid">
         <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>
       </span>

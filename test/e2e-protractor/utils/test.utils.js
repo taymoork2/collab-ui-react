@@ -108,13 +108,6 @@ exports.getToken = function () {
   });
 };
 
-exports.retrieveToken = function () {
-  return element(by.tagName('body')).evaluate('token').then(function (token) {
-    expect(token).not.toBeNull();
-    return token;
-  });
-};
-
 exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };

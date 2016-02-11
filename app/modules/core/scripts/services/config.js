@@ -870,7 +870,7 @@ angular.module('Core')
             this.oauthClientRegistration.atlas.scope,
             encodeURIComponent(acu),
             this.getOauthServiceType(),
-            email
+            encodeURIComponent(email)
           ];
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
@@ -1182,10 +1182,7 @@ angular.module('Core')
           'devices-redux'
         ],
         'squared-fusion-uc': [
-          'call-service',
-          'devices',
-          'device-overview',
-          'devices-redux'
+          'call-service'
         ],
         'squared-fusion-cal': [
           'calendar-service'

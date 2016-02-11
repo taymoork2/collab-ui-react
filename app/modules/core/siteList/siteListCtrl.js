@@ -71,7 +71,7 @@ angular.module('Core')
         '<div class="ui-grid-cell-contents ui-grid-header-cell-primary-focus" col-index="renderIndex" tabindex="0" role="button">' + '\n' +
         '  <div>' + '\n' +
         '    <span id="id-siteCsvColumnHeader" class="ui-grid-header-cell-label ng-binding" translate="siteList.siteCsvColumnHeader"></span>' + '\n' +
-        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="top" ></span>' + '\n' +
+        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="right" ></span>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -83,13 +83,13 @@ angular.module('Core')
         '</div>' + '\n' +
         '<div ng-if="row.entity.showCSVInfo">' + '\n' +
         '  <div ng-if="!row.entity.isCSVSupported">' + '\n' +
-        '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      Not Available' + '\n' +
+        '    <p class="ui-grid-cell-contents" translate>' + '\n' +
+        '      siteList.siteCSVNotAvailable' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isCSVSupported">' + '\n' +
         '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      <a><span translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
+        '      <a><span id="{{row.entity.license.siteUrl}}_xlaunch-export-users" translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span id="{{row.entity.license.siteUrl}}_xlaunch-import-users" translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
@@ -334,7 +334,7 @@ angular.module('Core')
 
         // TODO
         var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvGetStatus(siteUrl).then(
+        WebExApiGatewayService.csvStatus(siteUrl).then(
           function getCSVStatusSuccess(response) {
             var funcName = "getCSVStatusSuccess()";
             var logMsg = "";
@@ -359,4 +359,5 @@ angular.module('Core')
         );
       } // updateCSVColumn()
     } // updateCSVColumn()
+
   ]);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebexClientVersions').service('WebexClientVersion', [
+angular.module('WebExApp').service('WebexClientVersion', [
   '$q',
   '$log',
   '$translate',

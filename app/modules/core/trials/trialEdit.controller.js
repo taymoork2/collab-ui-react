@@ -400,14 +400,14 @@
     }
 
     function editTrial(callback) {
-      vm.saveUpdateButtonLoad = true;
+      vm.loading = true;
       var custId = vm.currentTrial.customerOrgId;
       var trialId = vm.currentTrial.trialId;
       var showFinish = hasEnabledAnyTrial(vm, vm.preset);
 
       return TrialService.editTrial(custId, trialId)
         .catch(function (response) {
-          vm.saveUpdateButtonLoad = false;
+          vm.loading = false;
           Notification.error(response.data.message);
           return $q.reject();
         })
@@ -416,14 +416,14 @@
           if (vm.callTrial.enabled && !vm.preset.call) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.saveUpdateButtonLoad = false;
+                vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               });
           }
         })
         .then(function () {
-          vm.saveUpdateButtonLoad = false;
+          vm.loading = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           Notification.success('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName

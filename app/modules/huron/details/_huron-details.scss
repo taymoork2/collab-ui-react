@@ -6,9 +6,9 @@
 .save-section {
   position: absolute;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
-  padding: 0.5rem 1.5rem;
+  @include vr-spacing(ph, 2);
   z-index: $zindex-popover;
   border-bottom: 1px solid $gray-light;
   background-color: $white;

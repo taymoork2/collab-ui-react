@@ -1,8 +1,9 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log', 'formlyValidationMessages', 'PreviousState',
-    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState) {
+  .run(['$cookies', '$location', '$rootScope', 'Auth', 'Authinfo', 'Storage', 'Localize', 'Utils', 'HttpUtils', 'Log', '$interval', '$document', 'Config', '$state', 'SessionStorage', '$translate', 'LogMetricsService', '$log', 'formlyValidationMessages', 'PreviousState', 'Localytics',
+
+    function ($cookies, $location, $rootScope, Auth, Authinfo, Storage, Localize, Utils, HttpUtils, Log, $interval, $document, Config, $state, SessionStorage, $translate, LogMetricsService, $log, formlyValidationMessages, PreviousState, Localytics) {
       //Expose the localize service globally.
       $rootScope.Localize = Localize;
       $rootScope.Utils = Utils;
@@ -21,10 +22,10 @@ angular
       var storedParams = 'storedParams';
       var queryParams = 'queryParams';
 
+      Auth.setAuthorizationHeader();
       Config.setProductionBackend($location.search().backend);
 
       $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
-
         if (typeof to.authenticate === 'undefined' || to.authenticate) {
           if (Authinfo.isInitialized()) {
             if (!Authinfo.isAllowedState(to.name)) {
@@ -32,10 +33,9 @@ angular
               $state.go('unauthorized');
             }
           } else {
-            $rootScope.token = Storage.get('accessToken');
             e.preventDefault();
-            if (!_.isEmpty($rootScope.token)) {
-              Auth.authorize($rootScope.token)
+            if (!_.isEmpty(Storage.get('accessToken'))) {
+              Auth.authorize()
                 .then(function () {
                   $state.go(to.name, toParams);
                 })
@@ -59,20 +59,17 @@ angular
       if (!Storage.get('accessToken')) {
         var params;
         if (document.URL.indexOf('access_token') !== -1) {
-          params = Auth.getFromGetParams(document.URL);
+          params = getFromGetParams(document.URL);
           $rootScope.status = 'loaded';
           Storage.put('accessToken', params.access_token);
-          $rootScope.token = params.access_token;
-
         } else if (document.URL.indexOf('code') !== -1) {
-          params = Auth.getFromStandardGetParams(document.URL);
+          params = getFromStandardGetParams(document.URL);
           $rootScope.status = 'loading';
           Auth.getNewAccessToken(params.code)
-            .then(function (data) {
+            .then(function (token) {
+              Log.debug('Got new access token: ' + token);
               $rootScope.status = 'loaded';
-              Storage.put('accessToken', data.access_token);
-              Storage.put('refreshToken', data.refresh_token);
-              $rootScope.token = data.access_token;
+              Storage.put('refreshToken', token);
               $rootScope.$broadcast('ACCESS_TOKEN_RETRIEVED');
             }, function () {
               Auth.redirectToLogin();
@@ -84,12 +81,8 @@ angular
 
       var refreshToken = function () {
         $interval(function () {
-          Auth.refreshAccessToken(Storage.get('refreshToken'))
-            .then(function (data) {
-              Storage.put('accessToken', data.access_token);
-              $rootScope.token = data.access_token;
-            });
-        }, Config.tokenTimers.refreshTimer); //11 hours
+          Auth.refreshAccessToken();
+        }, Config.tokenTimers.refreshTimer);
       };
 
       var delay = $interval(function () {
@@ -102,7 +95,8 @@ angular
             Auth.redirectToLogin();
           }
         },
-        Config.tokenTimers.refreshDelay); //15 minutes
+        Config.tokenTimers.refreshDelay
+      );
 
       $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         HttpUtils.setTrackingID();
@@ -110,6 +104,8 @@ angular
 
         PreviousState.set(fromState.name);
         PreviousState.setParams(fromParams);
+
+        Localytics.push('Tab Clicked', toState.name);
 
         // Add Body Class to the $rootScope on stateChange
         $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';
@@ -155,5 +151,33 @@ angular
           max: scope.options.templateOptions.max
         });
       }
+
+      function getFromStandardGetParams(url) {
+        var result = {};
+        var cleanUrlA = url.split('?');
+        var cleanUrl = cleanUrlA[1];
+        var params = cleanUrl.split('&');
+        for (var i = 0; i < params.length; i++) {
+          var param = params[i];
+          result[param.split('=')[0]] = param.split('=')[1];
+        }
+        return result;
+      }
+
+      function getFromGetParams(url) {
+        var result = {};
+        var cleanUrlA = url.split('#');
+        var cleanUrl = cleanUrlA[1];
+        for (var i = 2; i < cleanUrlA.length; i++) {
+          cleanUrl += '#' + cleanUrlA[i];
+        }
+        var params = cleanUrl.split('&');
+        for (i = 0; i < params.length; i++) {
+          var param = params[i];
+          result[param.split('=')[0]] = param.split('=')[1];
+        }
+        return result;
+      }
+
     }
   ]);
