@@ -3,7 +3,7 @@
 
   /* global X2JS */
 
-  angular.module('WebExXmlApi').factory('WebExXmlApiFact', [
+  angular.module('WebExApp').factory('WebExXmlApiFact', [
     '$http',
     '$log',
     '$interpolate',

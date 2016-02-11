@@ -13,10 +13,9 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn" ng-click="trial.previousStep()" ng-disabled="didAdd.fromEditTrial ? trial.saveUpdateButtonLoad : trial.startTrialButtonLoad"
-        translate="common.back">
+      <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading" translate="common.back">
       </button>
-      <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="didAdd.fromEditTrial ? trial.saveUpdateButtonLoad : trial.startTrialButtonLoad"
+      <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
         ng-disabled="!didAdd.submitBtnStatus" ng-click="trial.nextStep(didAdd.submit)">
           <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
           <span ng-if="trial.hasNextStep()" translate="common.next"></span>

@@ -14,9 +14,9 @@
 	<div class="row-fluid">
 		<div class="col-md-3">
 			<!-- TODO: replace function call for isError-->
-			<cs-input-depreciated class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
+			<cs-input-deprecated class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
 			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
-			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input>
+			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input-deprecated>
 		</div>
 		<div class="col-md-9 font-regular">
 			<button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability" ng-disabled="cloudSipUriField.isButtonDisabled"></button>

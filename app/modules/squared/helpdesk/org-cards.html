@@ -226,36 +226,5 @@
       <footer></footer>
     </article>
   </cs-card>
-
-  <cs-card class="large">
-    <article>
-      <header class="align-center">
-        <div class="overview-header">
-          <i class="icon icon-circle-user"></i>{{'helpdesk.users' | translate}}
-        </div>
-      </header>
-      <section>
-        <div>
-          <div class="text-align-center large-number">{{helpdeskOrgCtrl.userCard.unlicensedUserCount}}</div>
-          <div ng-if="helpdeskOrgCtrl.userCard.unlicensedUserCount != null" class="text-align-center">
-            <span translate="helpdesk.unlicensedUsers"></span>
-          </div>
-          <hr>
-          <span>
-            <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.userCard.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          </span>
-          <span translate="helpdesk.dirSync"></span>
-        </div>
-        <div>
-          <span>
-            <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.userCard.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          </span>
-          <span translate="helpdesk.sso"></span>
-        </div>
-      </section>
-      <footer></footer>
-    </article>
-  </cs-card>
+  
 </cs-card-layout>

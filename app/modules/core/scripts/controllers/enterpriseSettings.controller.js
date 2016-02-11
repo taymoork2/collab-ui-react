@@ -110,7 +110,7 @@
     };
 
     $scope.$watch('cloudSipUriField.inputValue', function (newValue, oldValue) {
-      if (newValue !== sipField.urlValue) {
+      if (newValue !== sipField.urlValue && !sipField.isDisabled) {
         sipField.isUrlAvailable = false;
         sipField.isError = false;
         sipField.isButtonDisabled = false;

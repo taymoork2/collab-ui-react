@@ -9,14 +9,25 @@
   </div>
 
   <div class="row full">
-    <div class="columns large-4 medium-5">
+    <div class="details-column columns large-4 medium-5">
 
-      <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
-
+      <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>  
+      
+      <hr>  
+      
       <div class="customer-or-partner">
         <span ng-if="!helpdeskOrgCtrl.org.isPartner" translate="helpdesk.customer"></span>
         <span ng-if="helpdeskOrgCtrl.org.isPartner" translate="helpdesk.partner"></span>
         <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
+      </div>
+      
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        </div>
       </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.email">
@@ -39,7 +50,7 @@
           <span ng-if="!helpdeskOrgCtrl.org.domains" translate="helpdesk.none"></span>
         </div>
       </div>
-
+      
       <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites">
         <div class="large-5 columns details-heading">
           <span>{{'helpdesk.webexsites' | translate}}:</span>
@@ -51,7 +62,7 @@
           <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
-      
+         
       <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.managedBy' | translate}}:</span>
@@ -68,14 +79,25 @@
       </div>
       
       <div class="row">
-        <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.users' | translate}}:</span>
         </div>
-        <div class="medium-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        <div class="large-7 columns details-value">
+          <div>
+            <span>
+              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            </span>
+            <span translate="helpdesk.dirSync"></span>
+          </div>
+          <div>
+            <span>
+              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            </span>
+            <span translate="helpdesk.sso"></span>
+          </div>
         </div>
       </div>
-
+         
       <div class="row">
         <div class="medium-12 columns">
           <span>
@@ -85,9 +107,12 @@
             </span>
         </div>
       </div>
-
+              
       <div class="row" ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
         <div class="medium-12 columns">
+          
+          <hr>  
+          
           <h4 translate="helpdesk.adminUsers"></h4>
 
           <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
@@ -110,6 +135,14 @@
                      translate="helpdesk.hideAllAdminUsers"></a></span>
           </div>
 
+        </div>
+      </div>
+      
+      <hr>      
+      
+      <div class="row" ng-if="helpdeskOrgCtrl.allowLaunchAtlas">
+        <div class="medium-12 columns">
+          <button cs-btn class="btn btn--people centered launch-button" type="button" ng-click="helpdeskOrgCtrl.launchAtlasReadonly()" loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.viewPortal' | translate}}</button>
         </div>
       </div>
 

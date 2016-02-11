@@ -777,6 +777,8 @@
     "status": "Status",
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
+    "goSetupCloudSipUri": "Go here to finish this configuration",
+    "setupCloudSipUriMessage": "Your organization's cloud SIP URI domain is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -2896,8 +2898,16 @@
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Import in progress...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvX": "X",
-    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site."
+    "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
+    "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
+    "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportFinishedWithErrorsTooltip": "Export finished with errors",
+    "exportFailedTooltip": "Export failed",
+    "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
+    "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importFinishedWithErrorsTooltip": "Import finished with errors",
+    "importFailedTooltip": "Import failed",
+    "siteCSVNotAvailable": "Not available"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3332,7 +3342,7 @@
       "meetings": "WebEx Meetings (WebEx 11)"
     },
     "lastLog": "Last Log",
-    "lastClientLog": "Last Client Log",
+    "lastClientLog": "Last Spark Client Log",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -3382,7 +3392,7 @@
     },
     "consumerOrg": "Consumer",
     "unlicensedUsers": "Unlicensed Users",
-    "searchUsersDevices": "Go to user and device search",
+    "searchUsersDevices": "User and device search",
     "help": {
       "title": "Help",
       "navigation-title": "Navigating by Keyboard",
@@ -3402,7 +3412,7 @@
       "matches": "matches"
     },
     "verification": "Verification",
-    "resend": "Re-send",
+    "resend": "Resend Invite",
     "sendCode": "Send Code",
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
@@ -3417,7 +3427,8 @@
     "shared": "Shared",
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
-    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?"
+    "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
+    "viewPortal": "View Customer"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
