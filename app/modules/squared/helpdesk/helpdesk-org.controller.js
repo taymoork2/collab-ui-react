@@ -37,8 +37,6 @@
 
     function initOrgView(org) {
       vm.org = org;
-        //vm.ssoEnabled: org.ssoEnabled,
-        //dirsyncEnabled: org.dirsyncEnabled
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
