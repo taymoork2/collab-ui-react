@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('WebExUtils').directive(
+angular.module('WebExApp').directive(
   'iFrameResizable',
   function iFrameResizableDirective($window) {
     return function iFrameResizable(

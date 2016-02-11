@@ -200,10 +200,10 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should set flags to prevent display of notification', function () {
       controller.isCloudSipUriSet = false;
-      controller.isEntitledUnderToggle = false;
+      controller.isSipToggleEnabled = false;
       controller.setSipUriNotification().then(function () {
         expect(controller.isCloudSipUriSet).toEqual(true);
-        expect(controller.isEntitledUnderToggle).toEqual(true);
+        expect(controller.isSipToggleEnabled).toEqual(true);
       });
     });
 
@@ -219,10 +219,10 @@ describe('Controller: OverviewCtrl', function () {
       });
 
       controller.isCloudSipUriSet = false;
-      controller.isEntitledUnderToggle = false;
+      controller.isSipToggleEnabled = false;
       controller.setSipUriNotification().then(function () {
         expect(controller.isCloudSipUriSet).toEqual(false);
-        expect(controller.isEntitledUnderToggle).toEqual(true);
+        expect(controller.isSipToggleEnabled).toEqual(true);
       });
     });
   });

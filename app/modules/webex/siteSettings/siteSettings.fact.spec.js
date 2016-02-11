@@ -9,9 +9,7 @@ describe('WebExSiteSettingsFact Test', function () {
   var deferred;
   var $rootScope;
 
-  beforeEach(module('WebExXmlApi'));
-  beforeEach(module('WebExSiteSettings'));
-  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(module(function ($provide) {
     var $stateParams = {
