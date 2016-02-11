@@ -19,7 +19,7 @@ describe('CsdmConverterSpec', function () {
 
   it('should convert tags for huron devices', function () {
     var obj = {
-      description: "['foo', 'bar']"
+      description: '["foo", "bar"]'
     };
     expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
     expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
