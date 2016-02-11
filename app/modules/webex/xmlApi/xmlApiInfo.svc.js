@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExXmlApi')
+angular.module('WebExApp')
   .service('WebExXmlApiInfoSvc', [
     function WebExXmlApiInfo() {
       return {
