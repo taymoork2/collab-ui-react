@@ -122,13 +122,15 @@
                     };
                     // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"                   
                     if (_.startsWith(device.name, 'SEP')) {
-                      var existingDevice = _.find(devices, { uuid: device.uuid });
+                      var existingDevice = _.find(devices, {
+                        uuid: device.uuid
+                      });
                       if (!existingDevice) {
                         devices.push(massageDevice(device));
                       } else {
                         existingDevice.numbers.push(num.number)
-                      }                      
-                    } 
+                      }
+                    }
                   });
                 }
               }));
