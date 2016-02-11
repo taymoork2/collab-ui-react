@@ -156,7 +156,7 @@ describe('HelpdeskHuronService', function () {
     expect(devices.length).toBe(1);
     expect(devices[0].displayName).toBe('SEP5ABCD7DB89F6');
     expect(devices[0].uuid).toBe('c498a32e-8b95-4e38-aa70-2a8c90b1f0f4');
-    expect(devices[0].number).toBe('+14084744527');
+    expect(devices[0].numbers[0]).toBe('+14084744527');
     expect(devices[0].user.displayName).toBe('Tom Vasset');
     expect(devices[0].model).toBe('Cisco 8861');
     expect(devices[0].product).toBe('Cisco 8861');
