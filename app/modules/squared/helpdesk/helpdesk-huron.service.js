@@ -118,14 +118,17 @@
                     var device = {
                       uuid: deviceNumberAssociation.endpoint.uuid,
                       name: deviceNumberAssociation.endpoint.name,
-                      number: num.number
+                      numbers: [num.number]
                     };
-                    // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"
-                    if (_.startsWith(device.name, 'SEP') && !_.find(devices, {
-                        uuid: device.uuid
-                      })) {
-                      devices.push(massageDevice(device));
-                    }
+                    // Filter out "weird" devices (the ones that don't start with SEP seems to be device profiles or something)"                   
+                    if (_.startsWith(device.name, 'SEP')) {
+                      var existingDevice = _.find(devices, { uuid: device.uuid });
+                      if (!existingDevice) {
+                        devices.push(massageDevice(device));
+                      } else {
+                        existingDevice.numbers.push(num.number)
+                      }                      
+                    } 
                   });
                 }
               }));
