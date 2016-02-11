@@ -4,11 +4,7 @@
   /* @ngInject */
   function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
-      if (HelpdeskService.checkIfMobile()) {
-        angular.element('#searchInput').blur();
-      } else {
-        angular.element('#searchInput').focus();
-      }
+      setSearchFieldFocus();
     });
     var vm = this;
     vm.search = search;
@@ -60,6 +56,7 @@
         vm.currentSearch.userLimit);
       HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
       $state.go('helpdesk.search');
+      setSearchFieldFocus();
     }
 
     vm.currentSearch = {
@@ -85,11 +82,7 @@
         this.orgLimit = vm.searchResultsPageSize;
         this.userLimit = vm.searchResultsPageSize;
         this.deviceLimit = vm.searchResultsPageSize;
-        if (HelpdeskService.checkIfMobile()) {
-          angular.element('#searchInput').blur();
-        } else {
-          angular.element('#searchInput').focus();
-        }
+        setSearchFieldFocus();
       },
       clear: function () {
         this.initSearch('');
@@ -361,13 +354,7 @@
         if (inputFieldHasFocus) {
           initSearchWithoutOrgFilter();
         } else {
-          if (HelpdeskService.checkIfMobile()) {
-            // TODO: Why is mobile relevant here ?
-            angular.element('#searchInput').blur();
-          } else {
-            // TODO: Why .select ?
-            angular.element('#searchInput').focus().select();
-          }
+          angular.element('#searchInput').focus().select();
           newTabIndex = -1;
         }
         break;
@@ -391,9 +378,15 @@
         $('[tabindex=' + newTabIndex + ']').focus();
       }
     }
-
+    
+    function setSearchFieldFocus() {
+      if (HelpdeskService.checkIfMobile()) {
+        angular.element('#searchInput').blur();
+      } else {
+        angular.element('#searchInput').focus();
+      }
+    }
   }
-
   angular
     .module('Squared')
     .controller('HelpdeskController', HelpdeskController);
