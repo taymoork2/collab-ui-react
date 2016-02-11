@@ -378,7 +378,7 @@
         $('[tabindex=' + newTabIndex + ']').focus();
       }
     }
-    
+
     function setSearchFieldFocus() {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
