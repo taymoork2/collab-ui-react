@@ -62,6 +62,24 @@
           <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
+      
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.dirSync' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.dirsyncEnabled ? 'common.on' : 'common.off' | translate}}</span>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.sso' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.ssoEnabled ? 'common.on' : 'common.off' | translate}}</span>
+        </div>
+      </div>
          
       <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
         <div class="medium-5 columns details-heading">
@@ -74,26 +92,6 @@
                 {{managingOrg.displayName}}
               </a>
             </span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="large-5 columns details-heading">
-          <span>{{'helpdesk.users' | translate}}:</span>
-        </div>
-        <div class="large-7 columns details-value">
-          <div>
-            <span>
-              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-            </span>
-            <span translate="helpdesk.dirSync"></span>
-          </div>
-          <div>
-            <span>
-              <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-            </span>
-            <span translate="helpdesk.sso"></span>
           </div>
         </div>
       </div>
