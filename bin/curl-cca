@@ -38,10 +38,11 @@ function ex_usage {
             # TODO: add examples
             ;;
         "curl-ci" )
-            # TODO: add examples
+            echo "ex. GET info of an organization (from CI SCIM)"
+            echo "  ${cmd_basename} partner-admin GET /Orgs/{org_id}"
             ;;
         "curl-huron" )
-            echo "ex. GET info of an organization"
+            echo "ex. GET info of an organization (from Huron)"
             echo "  ${cmd_basename} partner-admin GET /common/customers/{org_id}"
             ;;
         "curl-cca" )
