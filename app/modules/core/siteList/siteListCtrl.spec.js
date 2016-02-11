@@ -14,9 +14,7 @@ describe('Controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
-  beforeEach(module('WebExApiGateway'));
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   var SiteListCtrl, scope, Authinfo;
   var deferredSessionTicket;

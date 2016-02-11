@@ -51,25 +51,12 @@
       return hybridServicesCard;
     }
 
-    function getUserCardForOrg(org) {
-      var userCard = {
-        ssoEnabled: org.ssoEnabled,
-        dirsyncEnabled: org.dirsyncEnabled
-      };
-      LicenseService.getUnlicensedUsersCount(org.id).then(function (count) {
-        userCard.unlicensedUserCount = count;
-      }, XhrNotificationService.notify);
-
-      return userCard;
-    }
-
     return {
       getMessageCardForOrg: getMessageCardForOrg,
       getMeetingCardForOrg: getMeetingCardForOrg,
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
-      getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
-      getUserCardForOrg: getUserCardForOrg
+      getRoomSystemsCardForOrg: getRoomSystemsCardForOrg
     };
   }
 

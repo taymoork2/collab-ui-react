@@ -29,7 +29,7 @@ angular
           authenticate: false
         })
         .state('enterEmailAddr', {
-          url: '/enterEmailAddr',
+          url: '/enter-email-addr',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -40,7 +40,7 @@ angular
           authenticate: false
         })
         .state('createAccount', {
-          url: '/createAccount',
+          url: '/create-account',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
@@ -606,7 +606,6 @@ angular
         .state('user-overview.conferencing.webex', {
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
           controller: 'WebExUserSettingsCtrl',
-          controllerAs: 'WebExUserSettings',
           data: {
             displayName: 'Session Enablement'
           },
@@ -618,7 +617,6 @@ angular
         .state('user-overview.conferencing.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
-          controllerAs: 'WebExUserSettings2',
           data: {
             displayName: 'Privileges'
           },
@@ -765,7 +763,6 @@ angular
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
-          controllerAs: 'WebExSiteSettings',
           parent: 'main',
           params: {
             siteUrl: null
@@ -774,7 +771,6 @@ angular
         .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
-          controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -805,7 +801,6 @@ angular
         .state('webex-reports.webex-reports-iframe', {
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -1382,7 +1377,6 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: true,
             currentOrg: {}
           }
         })

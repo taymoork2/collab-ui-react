@@ -88,9 +88,6 @@
       }, {
         key: 'User Name',
         value: Authinfo.getUserName()
-      }, {
-        key: 'OAuth2 Token',
-        value: $rootScope.token
       }];
     }
 
