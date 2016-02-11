@@ -173,12 +173,6 @@ angular.module('Core')
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.volume',
-        displayName: $translate.instant('siteList.licenseCount'),
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
         field: 'siteSettings',
         displayName: $translate.instant('siteList.siteSettings'),
         cellTemplate: siteConfigColumn,
