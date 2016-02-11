@@ -93,6 +93,11 @@
       @include vr-spacing(mt, .25);
       @include vr-spacing(mb, 0);
     }
+
+    & .country-list {
+      @include vr-spacing(mt, 1);
+    }
+
   }
 
   .aa-pm-timeout {
