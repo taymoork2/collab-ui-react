@@ -40,6 +40,9 @@ function ex_usage {
         "curl-ci" )
             # TODO: add examples
             ;;
+        "curl-cca" )
+            # TODO: add examples
+            ;;
     esac
 }
 

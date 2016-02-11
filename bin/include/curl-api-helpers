@@ -323,6 +323,7 @@ function is_safe_atlas_operation {
 # - ex. 'curl-atlas' => prints the default atlas api url prefix
 # - ex. 'curl-wdm' => prints the default wdm api url prefix
 # - ex. 'curl-ci' => prints the default CI api url prefix
+# - ex. 'curl-cca' => prints empty string (no prefix, as it is assumed the whole url is being provided)
 function get_url_endpoint_prefix {
     local cmd_basename=${1}
     case "${cmd_basename}" in
@@ -334,6 +335,9 @@ function get_url_endpoint_prefix {
             ;;
         "curl-ci" )
             echo "${ci_api_url}"
+            ;;
+        "curl-cca" )
+            echo ""
             ;;
         *)
             >&2 echo "Error: unrecognized command: ${cmd_basename}"
