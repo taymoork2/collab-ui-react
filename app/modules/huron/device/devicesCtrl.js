@@ -34,14 +34,10 @@
 
         return $q.all(promises)
           .then(function () {
-            if (vm.devices.length === 0 && vm.otps.length === 0) {
+            if (vm.devices.length === 0) {
               vm.showGenerateOtpButton = true;
-            }
-
-            if (vm.devices.length > 0 && vm.otps.length === 0) {
-              $scope.userOverview.addGenerateAuthCodeLink();
             } else {
-              $scope.userOverview.removeGenerateAuthCodeLink();
+              $scope.userOverview.addGenerateAuthCodeLink();
             }
           });
       });
