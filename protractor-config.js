@@ -28,7 +28,7 @@ exports.config = {
 
     'chromeOptions': {
       //'args': ['--disable-extensions', '--start-fullscreen']
-      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,800']
+      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
     },
     shardTestFiles: true,
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
