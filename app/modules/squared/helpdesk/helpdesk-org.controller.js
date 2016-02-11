@@ -40,7 +40,7 @@
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-      
+
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
         initCards(licenses);
         findLicenseUsage();

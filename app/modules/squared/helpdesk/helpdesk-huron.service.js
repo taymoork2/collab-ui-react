@@ -84,7 +84,8 @@
               });
               if (matchingUserNumber && directoryNumber.dnUsage) {
                 matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : 'shared';
-              }P
+              }
+              P
             });
           });
         return userNumbers;
