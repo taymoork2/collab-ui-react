@@ -63,12 +63,12 @@
     deviceOverview.resetCode = function () {
       deviceOverview.resettingCode = true;
       var displayName = deviceOverview.currentDevice.displayName;
-      CsdmCodeService.deleteCode(deviceOverview.currentDevice)
-        .then(CsdmCodeService.createCode(displayName)
-          .then(function (result) {
-            AddDeviceModal.open(result);
-          })
-          .then($state.sidepanel.close));
+      CsdmCodeService.deleteCode(deviceOverview.currentDevice);
+      CsdmCodeService.createCode(displayName)
+        .then(function (result) {
+          AddDeviceModal.open(result);
+        })
+        .then($state.sidepanel.close);
     };
 
     deviceOverview.showRemoteSupportDialog = function () {
