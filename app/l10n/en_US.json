@@ -1508,15 +1508,13 @@
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
-    "selectPlaceHolder": "Search or Select a Number",
+    "selectPlaceHolder": "Search or Select",
+    "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
-    "selectHGPlaceHolder": "Search or Select a Hunt Group",
-    "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
-    "selectPlaceholder": "Select...",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1596,7 +1594,6 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "selectUserPlaceHolder": "Enter full name",
     "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
