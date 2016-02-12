@@ -2902,7 +2902,9 @@
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
-    "siteCSVNotAvailable": "Not available"
+    "siteCSVNotAvailable": "Not available",
+    "authError": "Cannot authenticate. Check your entitlement for this site.",
+    "systemError": "Unable to communicate with this WebEx site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
