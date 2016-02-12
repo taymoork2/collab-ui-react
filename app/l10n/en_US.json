@@ -440,8 +440,8 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
-    "customerDescription": "A registered endpoint is any device connected to the network in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
+    "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
     "allDevices": "All Devices"
   },
@@ -1204,12 +1204,6 @@
         "defaultWarning": "Confirm the default schedule"
       }
     },
-    "hybridServices": {
-      "result404": "Entitlements for {{email}} do not exist.",
-      "result409": "Entitlement(s) previously updated.",
-      "result400087": "{{email}} did not qualify for the selected services",
-      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
-    },
     "notifications": {
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
@@ -1514,15 +1508,13 @@
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
-    "selectPlaceHolder": "Search or Select a Number",
+    "selectPlaceHolder": "Search or Select",
+    "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
-    "selectHGPlaceHolder": "Search or Select a Hunt Group",
-    "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
-    "selectPlaceholder": "Select...",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1602,7 +1594,6 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "selectUserPlaceHolder": "Enter full name",
     "routeExtNumPlaceHolder": "Enter Number"
   },
   "callPark": {
@@ -1837,14 +1828,16 @@
     "feature5": "E911 Services and Toll Free vanity lookup"
   },
   "partnerHomePage": {
-    "trialsHeading": "Active Trials",
+    "trialsHeading": "Trials",
+    "onboardingTitle": "Onboarding",
+    "activity-title": "Activity",
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
     "addTrial": "Start Trial",
-    "trialsCustomerName": "Customer",
+    "trialsCustomerName": "Active Trials",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",
-    "viewAll": "View all trials",
+    "viewAll": "View all Trials",
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
@@ -2557,6 +2550,7 @@
     "indexPageLabel_CommonSettings_productivity": "Productivity Tools",
     "indexPageLabel_CommonSettings_session_type": "Session Types",
     "indexPageLabel_CommonSettings_user_priv": "User Privileges",
+    "indexPageLabel_CommonSettings_site_info": "Site Information",
 
     "indexPageLabel_MC_mc_options": "Site Options",
     "indexPageLabel_MC_mc_default_options": "Default Options",
@@ -2609,6 +2603,7 @@
     "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
     "settingPageLabel_CommonSettings_session_type": "Session Types",
     "settingPageLabel_CommonSettings_user_priv": "User Privileges",
+    "settingPageLabel_CommonSettings_site_info": "Site Overview",
 
     "settingPageLabel_MC_mc_options": "Meeting Center Settings",
     "settingPageLabel_MC_mc_default_options": "Meeting Center Settings",
@@ -2908,7 +2903,9 @@
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
-    "siteCSVNotAvailable": "Not available"
+    "siteCSVNotAvailable": "Not available",
+    "authError": "Cannot authenticate. Check your entitlement for this site.",
+    "systemError": "Unable to communicate with this WebEx site. Contact support."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -2978,6 +2975,14 @@
       "UltrasoundSpeakerAvailability": {
         "type": "No Embedded Ultrasound Speaker",
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
+      },
+      "MissingEncryptionKey": {
+        "type": " Missing encryption option key",
+        "message": "Please add an encryption option key"
+      },
+      "ConfiguredForTestAutomation": {
+        "type": "Configured for test automation",
+        "message": "Metrics and log reporting are affected"
       },
       "inactive": {
         "type": "Inactive Account",

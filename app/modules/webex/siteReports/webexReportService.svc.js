@@ -89,7 +89,7 @@ angular.module('WebExApp').service('WebexReportService', [
     //All card names are hard coded in all languages except for the commom 
     //reports tag.
     var card_name_translations = {
-      "training_center": "Traning Center",
+      "training_center": "Training Center",
       "support_center": "Support Center",
       "event_center": "Event Center",
       "remote_access": "Remote Access"

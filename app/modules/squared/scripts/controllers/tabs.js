@@ -1,4 +1,3 @@
-/* global ll */
 'use strict';
 
 angular.module('Squared')
@@ -22,15 +21,6 @@ angular.module('Squared')
               break;
             }
           }
-        }
-
-        var activeTab = _.find($scope.tabs, {
-          isActive: true
-        });
-        if (activeTab) {
-          ll('tagEvent', 'Tab Clicked', {
-            'Tab Name': $scope.tabs[idx]
-          });
         }
       }
 

@@ -375,7 +375,7 @@
       var returnArray = [];
       angular.forEach(vm.mostActiveUsers, function (item, index, array) {
         var userName = item.userName;
-        if (vm.searchField === undefined || vm.searchField === '' || (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
+        if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
           returnArray.push(item);
         }
       });
@@ -470,7 +470,9 @@
         } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          vm.deviceFilter = response.filterArray;
+          vm.deviceFilter = response.filterArray.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;
 
