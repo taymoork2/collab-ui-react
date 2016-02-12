@@ -3427,6 +3427,7 @@
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
     "primary": "Primary",
     "shared": "Shared",
+    "primaryShared": "Primary Shared",
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",

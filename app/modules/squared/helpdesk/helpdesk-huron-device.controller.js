@@ -40,7 +40,7 @@
         }, XhrNotificationService.notify);
       }
 
-      HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId).then(function (deviceNumbers) {
+      HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId, vm.device.ownerUser ? vm.device.ownerUser.uuid : null).then(function (deviceNumbers) {
         vm.deviceNumbers = deviceNumbers;
       }, XhrNotificationService.notify);
 
