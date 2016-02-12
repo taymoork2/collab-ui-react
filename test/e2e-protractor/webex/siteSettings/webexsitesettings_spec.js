@@ -230,30 +230,6 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.wait(sitesettings.iFramePage);
     });
 
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.click(sitesettings.siteSettingsCrumb);
-      utils.wait(sitesettings.siteSettingsPanel);
-    });
-
-    it('should click on site features link', function () {
-      utils.click(sitesettings.siteFeaturesLink);
-      utils.wait(sitesettings.siteSettingPanel);
-      utils.wait(sitesettings.siteFeaturesId);
-      utils.wait(sitesettings.iFramePage);
-    });
-
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.click(sitesettings.siteSettingsCrumb);
-      utils.wait(sitesettings.siteSettingsPanel);
-    });
-
-    it('should click on site information link', function () {
-      utils.click(sitesettings.siteInformationLink);
-      utils.wait(sitesettings.siteSettingPanel);
-      utils.wait(sitesettings.siteInformationId);
-      utils.wait(sitesettings.iFramePage);
-    });
-
     if (sitesettings.testInfo.testType == "T31") {
       it('should click on configure site cog and navigate to site settings index', function () {
         utils.click(sitesettings.siteListCrumb);
