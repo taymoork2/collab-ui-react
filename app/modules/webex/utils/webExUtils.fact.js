@@ -32,14 +32,14 @@
       }; // getSiteName()
 
       obj.getNewInfoCardObj = function (
-        label,
+        siteUrl,
         iconClass1,
         iconClass2
       ) {
 
         var infoCardObj = {
           id: "SiteInfo",
-          label: label,
+          label: siteUrl,
           isLicensesOverage: false,
 
           licensesTotal: {
