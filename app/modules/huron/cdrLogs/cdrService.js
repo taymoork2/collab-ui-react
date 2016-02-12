@@ -92,11 +92,8 @@
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
       var devicesQuery = [];
-      var secondaryDevicesQuery = [];
 
-      // seperate queries search for callingTenant and calledTenant so as not to only get external calls as well as internal calls
       devicesQuery.push(deviceQuery(callingTenant, Authinfo.getOrgId()));
-      secondaryDevicesQuery.push(deviceQuery(calledTenant, Authinfo.getOrgId()));
       var promises = [];
       var userUuidRetrieved = true;
 
@@ -104,7 +101,6 @@
         var callingUserPromse = convertUuid(model.callingUser, $translate.instant('cdrLogs.callingParty')).then(function (callingUUID) {
           if (callingUUID !== null) {
             devicesQuery.push(deviceQuery(callingUser, callingUUID));
-            secondaryDevicesQuery.push(deviceQuery(callingUser, callingUUID));
           } else {
             userUuidRetrieved = false;
           }
@@ -115,7 +111,6 @@
         var calledUserPromse = convertUuid(model.calledUser, $translate.instant('cdrLogs.calledParty')).then(function (calledUUID) {
           if (calledUUID !== null) {
             devicesQuery.push(deviceQuery(calledUser, calledUUID));
-            secondaryDevicesQuery.push(deviceQuery(calledUser, calledUUID));
           } else {
             userUuidRetrieved = false;
           }
@@ -129,31 +124,24 @@
         if (userUuidRetrieved) {
           if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
-            secondaryDevicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
           }
           if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
             devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
-            secondaryDevicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
           }
           if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
-            secondaryDevicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
           }
           if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
             devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
-            secondaryDevicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
           }
 
           //finalize the JSON Query
           var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
-          var secondaryJsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
 
           if (devicesQuery.length > 0) {
             jsQuery += ',"should":[' + devicesQuery + ']';
-            secondaryJsQuery += ',"should":[' + secondaryDevicesQuery + ']';
           }
           jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
-          secondaryJsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
           var results = [];
 
           var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
