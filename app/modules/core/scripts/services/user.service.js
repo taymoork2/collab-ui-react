@@ -192,20 +192,6 @@ angular.module('Core')
             });
         },
 
-        getUserFromEmail: function (email) {
-          return Auth.setAccessToken().then(function () {
-            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
-              cache: false
-            });
-          });
-        },
-
-        addDrUser: function (emailPassword) {
-          return Auth.setAccessToken().then(function () {
-            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
-          });
-        },
-
         updateUserProfile: function (userid, userData, callback) {
           var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
@@ -468,12 +454,8 @@ angular.module('Core')
 
         deactivateUser: function (userData) {
           return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
-        },
-
-        // TODO: Remove this after the go-live.
-        getDrReferrer: function () {
-          return "digitalriver-ZGlnaXRhbHJpdmVy";
         }
+
       };
     }
   ]);
