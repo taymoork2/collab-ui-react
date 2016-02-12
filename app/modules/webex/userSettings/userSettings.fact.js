@@ -64,6 +64,13 @@
         }, // getUserSettingsModel()
 
         initUserSettingsModel: function () {
+          var funcName = "initUserSettingsModel()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "$stateParams=" + JSON.stringify($stateParams);
+          // $log.log(logMsg);
+
           var currSite = $stateParams.site;
           var userName = $stateParams.currentUser.userName;
           var userWebExLicenses = $stateParams.currentUser.licenseID;
@@ -89,7 +96,7 @@
                   "userName=" + userName + "\n" +
                   "webExLicense=" + webExLicense + "\n" +
                   "licenseType=" + licenseType;
-                $log.log(logMsg);
+                // $log.log(logMsg);
 
                 if (licenseSite == currSite) {
                   if (webExUserSettingsModel.meetingCenter.id == licenseType) {
