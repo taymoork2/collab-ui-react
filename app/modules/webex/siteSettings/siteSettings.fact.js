@@ -238,6 +238,7 @@
                 _this.webExSiteSettingsObj.hasLoadError = true;
               } else {
                 _this.processSettingPagesInfo(settingPagesInfo);
+                _this.copyFromInfoCategoryToCommonCategory();
                 _this.pinPageInCategory();
                 _this.updateDisplayInfo();
                 _this.webExSiteSettingsObj.viewReady = true;
@@ -293,6 +294,44 @@
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
         }, // processSettingPagesInfo()
+
+        copyFromInfoCategoryToCommonCategory: function () {
+          var funcName = "copyFromInfoCategoryToCommonCategory()";
+          var logMsg = "";
+
+          var _this = this;
+
+          var infoCategoryObj = _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id);
+          logMsg = funcName + "\n" +
+            "infoCategoryObj.pageObjs=" + JSON.stringify(infoCategoryObj.pageObjs);
+          // $log.log(logMsg);
+
+          infoCategoryObj.pageObjs.forEach(
+            function checkPageObj(pageObj) {
+              var funcName = "copyFromInfoCategoryToCommonCategory().checkPageObj()";
+              var logMsg = "";
+
+              logMsg = funcName + "\n" +
+                "pageObj=" + JSON.stringify(pageObj);
+              // $log.log(logMsg);
+
+              if (pageObj.pageId == "site_info") {
+                var pageId = pageObj.pageId;
+                var iframeUrl = pageObj.iframeUrl;
+
+                logMsg = funcName + "\n" +
+                  "pageId=" + pageId + "\n" +
+                  "iframeUrl=" + iframeUrl;
+                // $log.log(logMsg);
+
+                _this.addPage(
+                  "CommonSettings",
+                  pageId,
+                  iframeUrl);
+              }
+            } // checkPageObj()
+          ); // infoCategoryObj.pageObjs.forEach()
+        }, // copyFromInfoCategoryToCommonCategory()
 
         addPage: function (
           categoryId,
