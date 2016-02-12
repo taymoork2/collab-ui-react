@@ -440,8 +440,8 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
-    "customerDescription": "A registered endpoint is any device connected to the network in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
+    "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
     "allDevices": "All Devices"
   },
@@ -1203,12 +1203,6 @@
         "description": "Set the start time to begin upgrades on the connectors.",
         "defaultWarning": "Confirm the default schedule"
       }
-    },
-    "hybridServices": {
-      "result404": "Entitlements for {{email}} do not exist.",
-      "result409": "Entitlement(s) previously updated.",
-      "result400087": "{{email}} did not qualify for the selected services",
-      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     },
     "notifications": {
       "scheduleUpgrade": {
@@ -2910,7 +2904,9 @@
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
-    "siteCSVNotAvailable": "Not available"
+    "siteCSVNotAvailable": "Not available",
+    "authError": "Cannot authenticate. Check your entitlement for this site.",
+    "systemError": "Unable to communicate with this WebEx site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
