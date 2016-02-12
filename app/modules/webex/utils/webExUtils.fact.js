@@ -39,8 +39,6 @@
 
         var infoCardObj = {
           id: "SiteInfo",
-          title: 'WebEx Site: ',
-          siteUrl: siteUrl + "\n\n",
           label: siteUrl,
           isLicensesOverage: false,
 
