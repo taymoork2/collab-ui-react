@@ -428,20 +428,14 @@
       description: 'This is a mock description',
       deviceStatus: {
         status: 'Online',
-        ipAddress: '10.47.10.1',
-        progressStatus: false,
-        isValid: true
       }
     }, {
       uuid: "66236784-0f09-4daa-89d6-750f315a921d",
       name: "SEP5566778899",
-      model: '',
+      model: 'Cisco 8861',
       description: '',
       deviceStatus: {
-        status: '',
-        ipAddress: '',
-        progressStatus: false,
-        isValid: true
+        status: 'Offline',
       }
     }],
     huronUserNumbers: {
@@ -461,7 +455,8 @@
         "internal": "2345",
         "external": null,
         "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18",
-        "dnUsage": "shared"
+        "dnUsage": "shared",
+        "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']
       }]
     },
     huronDeviceSearchResult: [{
@@ -505,13 +500,16 @@
         "uuid": "0472df70-779b-4819-8c35-a2f7abc69fe8",
         "pattern": "2900"
       },
-      "e164Mask": "+14084744520"
+      "e164Mask": "+14084744520",
+      "dnUsage": 'primary'
     }, {
       "directoryNumber": {
         "uuid": "3472df70-779b-4819-8c35-a2f7abc69fe8",
         "pattern": "3300"
       },
-      "e164Mask": null
+      "e164Mask": null,
+      "dnUsage": 'shared',
+      "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']   
     }],
     huronDevicesForNumber: [{
       "endpoint": {
