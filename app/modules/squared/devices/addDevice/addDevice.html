@@ -43,7 +43,7 @@
           {{adc.activationCode}}
           <a class="clipboard-button" sq-clipboard="adc.activationCode"><i class="fa fa-clipboard"></i></a>
         </h3>
-        <p>{{'deviceOverviewPage.codeExpires' | translate}} {{adc.expiryTime}}</p>
+        <p translate="deviceOverviewPage.codeExpires" translate-values="{inXDays: adc.expiryTime}"></p>
       </div>
 
     </div>
