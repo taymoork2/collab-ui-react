@@ -22,15 +22,15 @@
 
     describe('http methods', function () {
       it('getUserFromEmail', function () {
-        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('not used');
-        httpBackend.expectGET(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/foo@bar.com/exists').respond('not used');
+        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
+        httpBackend.expectGET(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/foo@bar.com/exists').respond(200);
         DigitalRiverService.getUserFromEmail('foo@bar.com');
         httpBackend.flush();
       });
       it('addDrUser', function () {
-        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('not used');
-        httpBackend.expectPOST(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user').respond('not used');
-        DigitalRiverService.addDrUser();
+        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
+        httpBackend.expectPOST(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user', 'emailPassword').respond(201);
+        DigitalRiverService.addDrUser('emailPassword');
         httpBackend.flush();
       });
     });
