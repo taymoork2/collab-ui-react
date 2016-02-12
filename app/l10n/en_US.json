@@ -2975,6 +2975,14 @@
         "type": "No Embedded Ultrasound Speaker",
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
+      "MissingEncryptionKey": {
+        "type": " Missing encryption option key",
+        "message": "Please add an encryption option key"
+      },
+      "ConfiguredForTestAutomation": {
+        "type": "Configured for test automation",
+        "message": "Metrics and log reporting are affected"
+      },
       "inactive": {
         "type": "Inactive Account",
         "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
