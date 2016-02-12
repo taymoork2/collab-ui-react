@@ -2903,7 +2903,7 @@
     "importFailedTooltip": "Import failed",
     "siteCSVNotAvailable": "Not available",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site."
+    "systemError": "Unable to communicate with this WebEx site. Contact support."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
