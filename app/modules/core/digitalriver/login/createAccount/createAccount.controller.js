@@ -6,12 +6,12 @@
     .controller('createAccountController', createAccountController);
 
   /* @ngInject */
-  function createAccountController($location, $window, $cookies, $translate, Userservice) {
+  function createAccountController($location, $window, $cookies, $translate, DigitalRiverService) {
 
     var vm = this;
 
     // TODO: Remove this after the go-live.
-    vm.drReferrer = $location.search().referrer === Userservice.getDrReferrer();
+    vm.drReferrer = $location.search().referrer === DigitalRiverService.getDrReferrer();
 
     vm.email1 = _.get($location.search(), 'email', '').replace(/\s+/g, '+');
 
@@ -35,7 +35,7 @@
         return;
       }
 
-      Userservice.addDrUser({
+      DigitalRiverService.addDrUser({
           'email': vm.email1,
           'password': vm.password1
         })
