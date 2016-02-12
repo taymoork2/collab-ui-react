@@ -1829,7 +1829,7 @@
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
-    "onboarding-title": "Onboarding",
+    "onboardingTitle": "Onboarding",
     "activity-title": "Activity",
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
