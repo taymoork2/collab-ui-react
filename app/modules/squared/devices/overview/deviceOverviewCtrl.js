@@ -24,9 +24,7 @@
     function pollLines() {
       CsdmHuronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
-        $timeout(function () {
-          deviceOverview.linesAreLoaded = true;
-        }, 100);
+        deviceOverview.linesAreLoaded = true;
       });
     }
 
