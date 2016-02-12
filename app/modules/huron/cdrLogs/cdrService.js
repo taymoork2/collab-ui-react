@@ -180,41 +180,6 @@
             });
           queryPromises.push(callingPromise);
 
-          var calledPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-                for (var i = 0; i < response.hits.hits.length; i++) {
-                  results.push(response.hits.hits[i]._source);
-                }
-                return recursiveQuery(results, thisJob).then(function (response) {
-                  if (response !== ABORT) {
-                    return proxyData;
-                  } else {
-                    return response;
-                  }
-                }, function (response) {
-                  if (response !== ABORT) {
-                    return;
-                  } else {
-                    return response;
-                  }
-                });
-              }
-              return;
-            },
-            function (response) {
-              if (response.status === -1) {
-                return ABORT;
-              } else if (response.status === 401) {
-                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
-                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
-                return;
-              } else {
-                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
-                return;
-              }
-            });
-          queryPromises.push(calledPromise);
         }
 
         return $q.all(queryPromises).then(function () {
