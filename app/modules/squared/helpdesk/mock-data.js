@@ -509,7 +509,7 @@
       },
       "e164Mask": null,
       "dnUsage": 'shared',
-      "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']   
+      "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']
     }],
     huronDevicesForNumber: [{
       "endpoint": {
@@ -543,18 +543,21 @@
         }
       }]
     },
-    huronUsersUsingNumber: [
-      {
-        "user": {
-          "uuid": "46f5c4bf-8756-4220-b124-6852d8b4c7a9", "userId": "karcisco+tsic-cust1user2@gmail.com"
-        },
-        "dnUsage": "Undefined",
-        "uuid": "f5897251-4c58-43d5-8527-16d36543504a"
-      }, {
-        "user": {"uuid": "943e7651-8646-4c3b-9770-7143c116cce0", "userId": "karcisco+tsic-cust1user1@gmail.com"},
-        "dnUsage": "Undefined",
-        "uuid": "3bc624c5-a47e-460d-b8cc-12ee3642cea5"
-      }],
+    huronUsersUsingNumber: [{
+      "user": {
+        "uuid": "46f5c4bf-8756-4220-b124-6852d8b4c7a9",
+        "userId": "karcisco+tsic-cust1user2@gmail.com"
+      },
+      "dnUsage": "Undefined",
+      "uuid": "f5897251-4c58-43d5-8527-16d36543504a"
+    }, {
+      "user": {
+        "uuid": "943e7651-8646-4c3b-9770-7143c116cce0",
+        "userId": "karcisco+tsic-cust1user1@gmail.com"
+      },
+      "dnUsage": "Undefined",
+      "uuid": "3bc624c5-a47e-460d-b8cc-12ee3642cea5"
+    }],
     logs: {
       search: [{
         filename: "logFile1",

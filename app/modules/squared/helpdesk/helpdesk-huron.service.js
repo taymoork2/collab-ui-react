@@ -55,37 +55,37 @@
       }
       if (!ownerUserId) {
         return $http
-        .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
-        .then(extractData);
+          .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
+          .then(extractData);
       }
       return $http
         .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + "/directorynumbers")
         .then(function (res) {
-          var deviceNumbers = res.data;         
+          var deviceNumbers = res.data;
           $http.get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/users/' + ownerUserId + "/directorynumbers")
-          .then(function (res) {
-            _.each(res.data, function (directoryNumber) {
-              var matchingDeviceNumber = _.find(deviceNumbers, function (deviceNumber) {
-                return deviceNumber.directoryNumber.uuid === directoryNumber.directoryNumber.uuid;
+            .then(function (res) {
+              _.each(res.data, function (directoryNumber) {
+                var matchingDeviceNumber = _.find(deviceNumbers, function (deviceNumber) {
+                  return deviceNumber.directoryNumber.uuid === directoryNumber.directoryNumber.uuid;
+                });
+                if (matchingDeviceNumber && directoryNumber.dnUsage) {
+                  matchingDeviceNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : '';
+                  matchingDeviceNumber.sortOrder = getNumberSortOrder(matchingDeviceNumber.dnUsage);
+                  getUsersUsingNumber(orgId, matchingDeviceNumber.directoryNumber.uuid).then(function (userNumberAssociations) {
+                    if (userNumberAssociations.length > 1) {
+                      this.dnUsage = this.dnUsage === 'primary' ? 'primaryShared' : 'shared';
+                      this.sortOrder = getNumberSortOrder(this.dnUsage);
+                    }
+                    var users = [];
+                    _.each(userNumberAssociations, function (userNumberAssociation) {
+                      users.push(userNumberAssociation.user.uuid);
+                    });
+                    this.users = users;
+                  }.bind(matchingDeviceNumber));
+                }
               });
-              if (matchingDeviceNumber && directoryNumber.dnUsage) {
-                matchingDeviceNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : '';
-                matchingDeviceNumber.sortOrder = getNumberSortOrder(matchingDeviceNumber.dnUsage);
-                getUsersUsingNumber(orgId, matchingDeviceNumber.directoryNumber.uuid).then(function (userNumberAssociations) {           
-                  if (userNumberAssociations.length > 1) {
-                    this.dnUsage = this.dnUsage === 'primary' ? 'primaryShared' : 'shared';
-                    this.sortOrder = getNumberSortOrder(this.dnUsage);
-                  }
-                  var users = [];
-                  _.each(userNumberAssociations, function (userNumberAssociation) {
-                    users.push(userNumberAssociation.user.uuid);
-                  });
-                  this.users = users;
-                }.bind(matchingDeviceNumber));
-              }
             });
-          });         
-          return deviceNumbers; 
+          return deviceNumbers;
         });
     }
 
@@ -116,7 +116,7 @@
               if (matchingUserNumber && directoryNumber.dnUsage) {
                 matchingUserNumber.dnUsage = directoryNumber.dnUsage === "Primary" ? 'primary' : '';
                 matchingUserNumber.sortOrder = getNumberSortOrder(matchingUserNumber.dnUsage);
-                getUsersUsingNumber(orgId, matchingUserNumber.uuid).then(function (userNumberAssociations) {           
+                getUsersUsingNumber(orgId, matchingUserNumber.uuid).then(function (userNumberAssociations) {
                   if (userNumberAssociations.length > 1) {
                     this.dnUsage = this.dnUsage === 'primary' ? 'primaryShared' : 'shared';
                     this.sortOrder = getNumberSortOrder(this.dnUsage);
@@ -300,17 +300,17 @@
     function sanitizeNumberSearchInput(searchString) {
       return searchString.replace(/[-()]/g, '').replace(/\s/g, '');
     }
-    
+
     function getNumberSortOrder(dnUsage) {
       switch (dnUsage) {
-        case 'primary':
-          return 1;
-        case 'primaryShared':
-          return 2;
-        case 'shared':
-          return 3;
-        default:
-          return 4;
+      case 'primary':
+        return 1;
+      case 'primaryShared':
+        return 2;
+      case 'shared':
+        return 3;
+      default:
+        return 4;
       }
     }
 
