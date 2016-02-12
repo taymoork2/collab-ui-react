@@ -10,11 +10,11 @@
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
     }
 
-    function directoryNumbersUrl(userId) {
+    function getDirectoryNumbersUrl(userId) {
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/directorynumbers';
     }
 
-    function alternateNumbersUrl(directoryNumberId) {
+    function getAlternateNumbersUrl(directoryNumberId) {
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
@@ -48,7 +48,7 @@
     }
 
     function getLinesForDevice(huronDevice) {
-      return $http.get(directoryNumbersUrl(huronDevice.cisUuid))
+      return $http.get(getDirectoryNumbersUrl(huronDevice.cisUuid))
         .then(function (res) {
           var lines = [];
           return $q.all(_.map(res.data, function (directoryNumber) {
@@ -56,7 +56,7 @@
               'directoryNumber': directoryNumber.directoryNumber.pattern,
               'usage': directoryNumber.dnUsage
             };
-            return $http.get(alternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
+            return $http.get(getAlternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
               if (alternates.data && alternates.data[0]) {
                 line.alternate = alternates.data[0].numMask;
               }
