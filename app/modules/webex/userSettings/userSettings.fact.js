@@ -9,6 +9,7 @@
     '$filter',
     'Authinfo',
     'Notification',
+    'Orgservice',
     'WebExUtilsFact',
     'WebExXmlApiFact',
     'WebexUserSettingsSvc',
@@ -21,6 +22,7 @@
       $filter,
       Authinfo,
       Notification,
+      Orgservice,
       WebExUtilsFact,
       WebExXmlApiFact,
       webExUserSettingsModel,
@@ -67,53 +69,90 @@
           var funcName = "initUserSettingsModel()";
           var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "$stateParams=" + JSON.stringify($stateParams);
-          // $log.log(logMsg);
-
-          var currSite = $stateParams.site;
-          var userName = $stateParams.currentUser.userName;
-          var userWebExLicenses = $stateParams.currentUser.licenseID;
-          userWebExLicenses.forEach(
-            function checkLicense(webExLicense) {
-              var funcName = "checkLicense()";
+          Orgservice.getValidLicenses().then(
+            function getOrgLicensesSuccess(orgLicenses) {
+              var funcName = "getOrgLicensesSuccess()";
               var logMsg = "";
 
-              var licenseFields = webExLicense.split("_");
-              var licenseType = licenseFields[0];
-              if (
-                ("MC" == licenseType) ||
-                ("EC" == licenseType) ||
-                ("SC" == licenseType) ||
-                ("TC" == licenseType) ||
-                ("CMR" == licenseType)
-              ) {
+              logMsg = funcName + ": " + "\n" +
+                "orgLicenses=" + JSON.stringify(orgLicenses);
+              // $log.log(logMsg);
 
-                var licenseSite = licenseFields[3];
+              var currSite = $stateParams.site;
+              var userName = $stateParams.currentUser.userName;
+              var userLicenses = $stateParams.currentUser.licenseID;
 
-                logMsg = funcName + "\n" +
-                  "currSite=" + currSite + "\n" +
-                  "userName=" + userName + "\n" +
-                  "webExLicense=" + webExLicense + "\n" +
-                  "licenseType=" + licenseType;
-                // $log.log(logMsg);
+              logMsg = funcName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses);
+              // $log.log(logMsg);
 
-                if (licenseSite == currSite) {
-                  if (webExUserSettingsModel.meetingCenter.id == licenseType) {
-                    webExUserSettingsModel.meetingCenter.userHasLicense = true;
-                  } else if (webExUserSettingsModel.trainingCenter.id == licenseType) {
-                    webExUserSettingsModel.trainingCenter.userHasLicense = true;
-                  } else if (webExUserSettingsModel.eventCenter.id == licenseType) {
-                    webExUserSettingsModel.eventCenter.userHasLicense = true;
-                  } else if (webExUserSettingsModel.supportCenter.id == licenseType) {
-                    webExUserSettingsModel.supportCenter.userHasLicense = true;
-                  } else if (webExUserSettingsModel.cmr.id == licenseType) {
-                    webExUserSettingsModel.cmr.userHasLicense = true;
+              userLicenses.forEach(
+                function checkLicense(userLicense) {
+                  var funcName = "checkLicense()";
+                  var logMsg = "";
+
+                  var userLicenseItems = userLicense.split("_");
+                  var userLicenseType = userLicenseItems[0];
+
+                  // only check for webex center type of license
+                  if (
+                    ("MC" == userLicenseType) ||
+                    ("EC" == userLicenseType) ||
+                    ("SC" == userLicenseType) ||
+                    ("TC" == userLicenseType) ||
+                    ("CMR" == userLicenseType)
+                  ) {
+
+                    var userLicenseSiteUrl = userLicenseItems[3];
+
+                    logMsg = funcName + "\n" +
+                      "currSite=" + currSite + "\n" +
+                      "userName=" + userName + "\n" +
+                      "userLicense=" + userLicense;
+                    // $log.log(logMsg);
+
+                    // check that the license is for the current site
+                    if (userLicenseSiteUrl == currSite) {
+                      // verify that the user's webex center license is valid for the org
+                      orgLicenses.forEach(
+                        function compareOrgLicense(orgLicense) {
+                          var funcName = "";
+                          var logMsg = "";
+
+                          logMsg = funcName + "\n" +
+                            "orgLicense=" + JSON.stringify(orgLicense) + "\n" +
+                            "userLicense=" + JSON.stringify(userLicense);
+                          // $log.log(logMsg);
+
+                          if (userLicense == orgLicense.licenseId) {
+                            if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                              webExUserSettingsModel.meetingCenter.userHasLicense = true;
+                            } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
+                              webExUserSettingsModel.trainingCenter.userHasLicense = true;
+                            } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
+                              webExUserSettingsModel.eventCenter.userHasLicense = true;
+                            } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
+                              webExUserSettingsModel.supportCenter.userHasLicense = true;
+                            } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
+                              webExUserSettingsModel.cmr.userHasLicense = true;
+                            }
+                          }
+                        } // compareOrgLicense()
+                      ); // orgLicenses.forEach()
+                    }
                   }
-                }
-              }
-            } // checkLicense()
-          ); // userWebExLicenses.forEach(()
+                } // checkLicense()
+              ); // userLicenses.forEach(()
+            }, // getOrgLicensesSuccess()
+            function getOrgLicensesError(response) {
+              var funcName = "getOrgLicensesError()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "response=" + JSON.stringify(response);
+              $log.log(logMsg);
+            } // getOrgLicensesError()
+          );
 
           webExUserSettingsModel.siteInfo = null;
           webExUserSettingsModel.meetingTypesInfo = null;
