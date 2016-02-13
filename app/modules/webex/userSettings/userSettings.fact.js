@@ -93,7 +93,7 @@
 
                   var userLicenseItems = userLicense.split("_");
                   var userLicenseType = userLicenseItems[0];
-                  
+
                   // only check for webex center type of license
                   if (
                     ("MC" == userLicenseType) ||
