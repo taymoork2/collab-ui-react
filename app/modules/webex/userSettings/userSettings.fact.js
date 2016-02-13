@@ -64,6 +64,57 @@
         }, // getUserSettingsModel()
 
         initUserSettingsModel: function () {
+          var funcName = "initUserSettingsModel()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "$stateParams=" + JSON.stringify($stateParams);
+          // $log.log(logMsg);
+
+          var currSite = $stateParams.site;
+          var userName = $stateParams.currentUser.userName;
+          var userWebExLicenses = $stateParams.currentUser.licenseID;
+          userWebExLicenses.forEach(
+            function checkLicense(webExLicense) {
+              var funcName = "checkLicense()";
+              var logMsg = "";
+
+              var licenseFields = webExLicense.split("_");
+              var licenseType = licenseFields[0];
+              if (
+                ("MC" == licenseType) ||
+                ("EC" == licenseType) ||
+                ("SC" == licenseType) ||
+                ("TC" == licenseType) ||
+                ("CMR" == licenseType)
+              ) {
+
+                var licenseSite = licenseFields[3];
+
+                logMsg = funcName + "\n" +
+                  "currSite=" + currSite + "\n" +
+                  "userName=" + userName + "\n" +
+                  "webExLicense=" + webExLicense + "\n" +
+                  "licenseType=" + licenseType;
+                // $log.log(logMsg);
+
+                if (licenseSite == currSite) {
+                  if (webExUserSettingsModel.meetingCenter.id == licenseType) {
+                    webExUserSettingsModel.meetingCenter.userHasLicense = true;
+                  } else if (webExUserSettingsModel.trainingCenter.id == licenseType) {
+                    webExUserSettingsModel.trainingCenter.userHasLicense = true;
+                  } else if (webExUserSettingsModel.eventCenter.id == licenseType) {
+                    webExUserSettingsModel.eventCenter.userHasLicense = true;
+                  } else if (webExUserSettingsModel.supportCenter.id == licenseType) {
+                    webExUserSettingsModel.supportCenter.userHasLicense = true;
+                  } else if (webExUserSettingsModel.cmr.id == licenseType) {
+                    webExUserSettingsModel.cmr.userHasLicense = true;
+                  }
+                }
+              }
+            } // checkLicense()
+          ); // userWebExLicenses.forEach(()
+
           webExUserSettingsModel.siteInfo = null;
           webExUserSettingsModel.meetingTypesInfo = null;
           webExUserSettingsModel.siteVersionInfo = null;
@@ -79,11 +130,10 @@
           webExUserSettingsModel.isT31Site = false;
 
           webExUserSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
-
           webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
-
           webExUserSettingsModel.otherPrivilegesSection.label = $translate("webexUserSettingLabels.OtherPrivilegesLabel");
           webExUserSettingsModel.pmr.label = $translate.instant("webexUserSettingLabels.pmrLabel");
+
           webExUserSettingsModel.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
           webExUserSettingsModel.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
           webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
