@@ -433,11 +433,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.cdrTab',
-            desc: 'tabs.cdrLogsTabDesc',
-            state: 'cdrsupport',
-            link: '#cdrsupport'
-          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',

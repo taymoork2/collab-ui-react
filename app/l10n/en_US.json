@@ -538,6 +538,7 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
+    "cdrLogs": "CDR Call Flow",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -546,7 +547,8 @@
     "cards": {
       "sparkStatus": "Spark Status",
       "helpDesk": "Help Desk Support",
-      "supportResources": "Support Resources"
+      "supportResources": "Support Resources",
+      "tools": "Tools"
     }
   },
   "cdrLogs": {
@@ -556,18 +558,18 @@
     "nonexistentUser": "{{calltype}} User Id is incorrect or does not exist for this customer.  Please verify the field and retry.",
     "search": "Search",
     "reset": "Reset",
-    "userLabel": "User ID:",
-    "number": "Number:",
-    "device": "Device:",
+    "userLabel": "User ID",
+    "callingNumber": "Calling Number",
+    "calledNumber": "Called Number",
     "callingParty": "Calling Party",
     "calledParty": "Called Party",
-    "startTime": "Start Time:",
-    "endTime": "End Time:",
+    "startTime": "Start Time",
+    "endTime": "End Time",
     "timeExample": "hh:mm:ss AM/PM",
-    "startDate": "Start Date:",
-    "endDate": "End Date:",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "dateExample": "Choose a Date",
-    "size": "Hit Size:",
+    "size": "Hit Size",
     "uploadFile": "Upload CDR File",
     "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
