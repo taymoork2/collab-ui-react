@@ -3,22 +3,18 @@
 angular.module('WebExApp').service('WebexClientVersion', [
   '$q',
   '$log',
-  '$translate',
   '$filter',
   '$http',
   'Authinfo',
   'Config',
-  'WebExUtilsFact',
   'Notification',
   function (
     $q,
     $log,
-    $translate,
     $filter,
     $http,
     Authinfo,
     Config,
-    WebExUtilsFact,
     Notification
   ) {
 
@@ -55,20 +51,19 @@ angular.module('WebExApp').service('WebexClientVersion', [
     */
     this.getWbxClientVersions = function () {
       //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
-
       var url = Config.getAdminServiceUrl() + 'partnertemplate/clientversions';
-
       return $http.get(url).then(function (response) {
         return response.data.clientVersions;
       });
-
-      //clientVersions = ["version1", "version2"];
-      //return $q.when(clientVersions);
     };
 
     this.getSelectedWbxClientVersion = function () {
       var clientVersion = "selectedVersion";
       return $q.when(clientVersion);
+    };
+
+    this.getTestData = function () {
+      return "testData";
     };
   }
 ]);
