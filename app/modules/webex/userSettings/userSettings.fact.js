@@ -69,6 +69,12 @@
           var funcName = "initUserSettingsModel()";
           var logMsg = "";
 
+          webExUserSettingsModel.meetingCenter.userHasLicense = false;
+          webExUserSettingsModel.trainingCenter.userHasLicense = false;
+          webExUserSettingsModel.eventCenter.userHasLicense = false;
+          webExUserSettingsModel.supportCenter.userHasLicense = false;
+          webExUserSettingsModel.cmr.userHasLicense = false;
+
           Orgservice.getValidLicenses().then(
             function getOrgLicensesSuccess(orgLicenses) {
               var funcName = "getOrgLicensesSuccess()";
