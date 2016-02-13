@@ -93,6 +93,8 @@
 
                   var userLicenseItems = userLicense.split("_");
                   var userLicenseType = userLicenseItems[0];
+                  
+                  // only check for webex center type of license
                   if (
                     ("MC" == userLicenseType) ||
                     ("EC" == userLicenseType) ||
@@ -109,7 +111,9 @@
                       "userLicense=" + userLicense;
                     // $log.log(logMsg);
 
+                    // check that the license is for the current site
                     if (userLicenseSiteUrl == currSite) {
+                      // verify that the user's webex center license is valid for the org
                       orgLicenses.forEach(
                         function compareOrgLicense(orgLicense) {
                           var funcName = "";
