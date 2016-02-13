@@ -9,7 +9,7 @@ auth =
 
   'pbr-admin':
     user: 'pbr-org-admin@squared2webex.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'partner-admin':
