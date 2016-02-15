@@ -170,7 +170,7 @@
           return _.filter(response.clusters, 'state', 'fused');
         })
         .then(function (clusters) {
-          // start modeling the reponse to match how the UI uses it, per connectorType
+          // start modeling the response to match how the UI uses it, per connectorType
           return {
             c_mgmt: clusterType('c_mgmt', clusters),
             c_ucmc: clusterType('c_ucmc', clusters),
