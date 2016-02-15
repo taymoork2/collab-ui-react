@@ -4,11 +4,13 @@ namespace domainManagement {
     private _domain;
     private _loggedOnUser;
     private _error;
+    private _loadTime;
 
     /* @ngInject */
     constructor(private $state, private $previousState, private DomainManagementService, $translate, private LogMetricsService) {
       this._domain = $state.params.domain;
       this._loggedOnUser = $state.params.loggedOnUser;
+      this._loadTime = moment();
 
       //if any domain is already verified, it is safe to verify more:
       if (DomainManagementService.domainList.length == 0
@@ -58,6 +60,10 @@ namespace domainManagement {
     public cancel() {
       this.recordMetrics('cancel', 100, moment(), {domain: this._domain.text, action: 'cancel'});
       this.$previousState.go();
+    }
+
+    public learnMore(){
+      this.recordMetrics('read more', 200, this._loadTime, {domain: this._domain.text, action: 'manual'});
     }
 
     recordMetrics(log, status, start, data) {

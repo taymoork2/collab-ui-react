@@ -12,16 +12,20 @@ namespace domainManagement {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._email = this._loggedOnUser.email;
       this._loadTime = moment();
-      this.recordMetrics('open', false, 200, moment(), {});
+      this.recordMetrics('open', false, 200, moment(), {domain: this.domain.text, action: 'open'});
     }
 
     public cancel() {
-      this.recordMetrics('close', false, 200, this._loadTime, null);
+      this.recordMetrics('close', true, 200, this._loadTime, {domain: this.domain.text, action: 'close'});
       this.$previousState.go();
     }
 
     public get domain() {
       return this._domain;
+    }
+
+    public learnMore() {
+      this.recordMetrics('read more', true, 200, this._loadTime, {domain: this.domain.text, action: 'manual'});
     }
 
     recordMetrics(log, done, status, start, data) {
