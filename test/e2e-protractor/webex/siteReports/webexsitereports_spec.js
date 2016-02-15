@@ -109,19 +109,9 @@ while (1 >= sitereports.testInfo.describeCount) {
       utils.wait(sitereports.webexSiteReportsPanel);
     });
 
-    it('click on common reports meetings in progress link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingInProgress);
-      utils.wait(sitereports.webexCommonMeetingsInProgressId);
-    });
-
     it('click on reports index breadcrumb and should navigate to site reports index', function () {
       utils.click(sitereports.webexReportCrumb2);
       utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on common reports meetings usage link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingUsage);
-      utils.wait(sitereports.webexCommonMeetingUsageId);
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {

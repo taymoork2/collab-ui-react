@@ -19,9 +19,12 @@
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
+    vm.allowCustomerLogoOrig = false;
     vm.logoOverride = false;
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
+    vm.reset = reset;
+    vm.saveLogoSettings = saveLogoSettings;
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
 
@@ -52,6 +55,23 @@
       'trailing': false
     });
 
+    function resetForm() {
+      if (vm.form) {
+        vm.allowCustomerLogos = vm.allowCustomerLogoOrig;
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function reset() {
+      resetForm();
+    }
+
+    function saveLogoSettings() {
+      vm.toggleAllowCustomerLogos();
+      reset();
+    }
+
     function initCustomer() {
       if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
@@ -67,6 +87,7 @@
         .then(function (settings) {
           vm.usePartnerLogo = settings.usePartnerLogo;
           vm.allowCustomerLogos = settings.allowCustomerLogos;
+          vm.allowCustomerLogoOrig = settings.allowCustomerLogos;
         });
     }
 

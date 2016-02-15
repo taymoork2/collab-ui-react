@@ -993,7 +993,8 @@
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
     "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
-    "noDevices": "No devices found...",
+    "nothingHere": "No devices yet.",
+    "noDevices": "Let's enable collaboration devices",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room systems license is suspended.",
@@ -2527,7 +2528,7 @@
     "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
-    "siteSettingsIndexPageTitle": "Configure",
+    "siteSettingsIndexPageTitle": "Configure WebEx Site",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
     "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
@@ -3145,7 +3146,7 @@
     "noFeatures": "Features are not available for the current login",
     "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Nothing here to see yet.",
+      "nothingToSee": "No features yet.",
       "letsCustomize": "Let's customize the calling experience"
     },
     "hgMethods": {
