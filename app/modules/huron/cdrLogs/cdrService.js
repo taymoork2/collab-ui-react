@@ -92,8 +92,6 @@
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
       var devicesQuery = [];
-
-      devicesQuery.push(deviceQuery(callingTenant, Authinfo.getOrgId()));
       var promises = [];
       var userUuidRetrieved = true;
 
@@ -137,7 +135,6 @@
 
           //finalize the JSON Query
           var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
-
           if (devicesQuery.length > 0) {
             jsQuery += ',"should":[' + devicesQuery + ']';
           }
@@ -166,20 +163,9 @@
               return;
             },
             function (response) {
-              if (response.status === -1) {
-                return ABORT;
-              } else if (response.status === 401) {
-                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
-                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
-                return;
-              } else {
-                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
-                return;
-              }
+              return errorResponse(response);
             });
           queryPromises.push(callingPromise);
-
         }
 
         return $q.all(queryPromises).then(function () {
@@ -287,9 +273,7 @@
           if (response.status === -1) {
             return ABORT;
           } else {
-            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError')], 'error');
-            return;
+            return errorResponse(response);
           }
         });
     }
@@ -417,6 +401,31 @@
       }
 
       return defer.promise;
+    }
+
+    function errorResponse(response) {
+      if (response.status === -1) {
+        return ABORT;
+      } else if (response.status === 401 || response.status === 403) {
+        Log.debug('User not authorized to retrieve cdr data from server. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr401And403Error')], 'error');
+      } else if (response.status === 404) {
+        Log.debug('Elastic Search unable to respond. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr404Error')], 'error');
+      } else if (response.status === 408) {
+        Log.debug('Request timed out while waiting for a response. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr408Error')], 'error');
+      } else if (response.status === 409) {
+        Log.debug('Request failed due to a processing conflict. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr409Error')], 'error');
+      } else if (response.status === 502 || response.status === 503) {
+        Log.debug('Elastic Search is temporarily unavailable. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr502And503Error')], 'error');
+      } else {
+        Log.debug('Request failed due to an error with Elastic Search. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdr500Error')], 'error');
+      }
+      return;
     }
   }
 })();
