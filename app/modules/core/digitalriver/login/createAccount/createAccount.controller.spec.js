@@ -2,22 +2,17 @@
   'use strict';
 
   describe('Controller: createAccountController', function () {
-    var controller, $controller, $location, $window, $cookies, $translate, DigitalRiverService;
+    var controller, DigitalRiverService;
 
     beforeEach(module('Core'));
 
     beforeEach(inject(function (_$controller_, _$location_, _$window_, _$cookies_, _$translate_, _DigitalRiverService_, $q) {
-      $controller = _$controller_;
-      $location = _$location_;
-      $window = _$window_;
-      $cookies = _$cookies_;
-      $translate = _$translate_;
       DigitalRiverService = _DigitalRiverService_;
-      controller = $controller('createAccountController', {
-        $location: $location,
-        $window: $window,
-        $cookies: $cookies,
-        $translate: $translate,
+      controller = _$controller_('createAccountController', {
+        $location: _$location_,
+        $window: _$window_,
+        $cookies: _$cookies_,
+        $translate: _$translate_,
         DigitalRiverService: DigitalRiverService
       });
       controller.email1 = '';
@@ -25,9 +20,7 @@
       controller.password1 = '';
       controller.password2 = '';
       controller.error = '';
-      spyOn(DigitalRiverService, "addDrUser").and.callFake(function () {
-        return $q.defer().promise;
-      });
+      spyOn(DigitalRiverService, "addDrUser").and.returnValue($q.when());
     }));
 
     describe('confirmPlaceholder', function () {

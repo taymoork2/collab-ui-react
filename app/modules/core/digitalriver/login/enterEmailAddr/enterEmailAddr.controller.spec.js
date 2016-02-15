@@ -2,27 +2,21 @@
   'use strict';
 
   describe('Controller: enterEmailAddrController', function () {
-    var controller, $controller, $location, $window, $translate, DigitalRiverService;
+    var controller, DigitalRiverService;
 
     beforeEach(module('Core'));
 
     beforeEach(inject(function (_$controller_, _$location_, _$window_, _$translate_, _DigitalRiverService_, $q) {
-      $controller = _$controller_;
-      $location = _$location_;
-      $window = _$window_;
-      $translate = _$translate_;
       DigitalRiverService = _DigitalRiverService_;
-      controller = $controller('enterEmailAddrController', {
-        $location: $location,
-        $window: $window,
-        $translate: $translate,
+      controller = _$controller_('enterEmailAddrController', {
+        $location: _$location_,
+        $window: _$window_,
+        $translate: _$translate_,
         DigitalRiverService: DigitalRiverService
       });
       controller.email = '';
       controller.error = '';
-      spyOn(DigitalRiverService, "getUserFromEmail").and.callFake(function () {
-        return $q.defer().promise;
-      });
+      spyOn(DigitalRiverService, "getUserFromEmail").and.returnValue($q.when());
     }));
 
     describe('emailPlaceholder', function () {
