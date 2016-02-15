@@ -12,11 +12,20 @@ namespace domainManagement {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._email = this._loggedOnUser.email;
       this._loadTime = moment();
-      this.recordMetrics('open', false, 200, moment(), {domain: this.domain.text, action: 'open'});
+      this.recordMetrics({
+        msg: 'open',
+        done: false,
+        data: {domain: this.domain.text, action: 'open'}
+      });
     }
 
     public cancel() {
-      this.recordMetrics('close', true, 200, this._loadTime, {domain: this.domain.text, action: 'close'});
+      this.recordMetrics({
+        msg: 'close',
+        done: true,
+        startLog: this._loadTime,
+        data: {domain: this.domain.text, action: 'close'}
+      });
       this.$previousState.go();
     }
 
@@ -25,16 +34,21 @@ namespace domainManagement {
     }
 
     public learnMore() {
-      this.recordMetrics('read more', true, 200, this._loadTime, {domain: this.domain.text, action: 'manual'});
+      this.recordMetrics({
+        msg: 'read more',
+        done: true,
+        startLog: this._loadTime,
+        data: {domain: this.domain.text, action: 'manual'}
+      });
     }
 
-    recordMetrics(log, done, status, start, data) {
+    recordMetrics({msg, done, status = 200, startLog = moment(), data}) {
       this.LogMetricsService.logMetrics(
-        'domainManage instructions ' + log,
+        'domainManage instructions ' + msg,
         this.LogMetricsService.eventType.domainManageInstructions,
         done ? this.LogMetricsService.eventAction.buttonClick : this.LogMetricsService.eventAction.pageLoad,
         status,
-        start,
+        startLog,
         1,
         data
       );

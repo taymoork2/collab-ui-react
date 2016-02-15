@@ -49,30 +49,47 @@ namespace domainManagement {
     public verify() {
       let start = moment();
       this.DomainManagementService.verifyDomain(this._domain.text).then(res => {
-        this.recordMetrics('ok', 200, start, {domain: this._domain.text, action: 'verify'});
+        this.recordMetrics({
+          msg: 'ok',
+          startLog: start,
+          data: {domain: this._domain.text, action: 'verify'}
+        });
         this.$previousState.go();
       }, err => {
-        this.recordMetrics('error', 500, start, {domain: this._domain.text, error: err, action: 'verify'});
+        this.recordMetrics({
+          msg: 'error',
+          status: 500,
+          startLog: start,
+          data: {domain: this._domain.text, error: err, action: 'verify'}
+        });
         this._error = err;
       });
     }
 
     public cancel() {
-      this.recordMetrics('cancel', 100, moment(), {domain: this._domain.text, action: 'cancel'});
+      this.recordMetrics({
+        msg: 'cancel',
+        status: 100,
+        data: {domain: this._domain.text, action: 'cancel'}
+      });
       this.$previousState.go();
     }
 
-    public learnMore(){
-      this.recordMetrics('read more', 200, this._loadTime, {domain: this._domain.text, action: 'manual'});
+    public learnMore() {
+      this.recordMetrics({
+        msg: 'read more',
+        startLog: this._loadTime,
+        data: {domain: this._domain.text, action: 'manual'}
+      });
     }
 
-    recordMetrics(log, status, start, data) {
+    recordMetrics({msg, status = 200, startLog = moment(), data}) {
       this.LogMetricsService.logMetrics(
-        'domainManage verify ' + log,
+        'domainManage verify ' + msg,
         this.LogMetricsService.eventType.domainManageVerify,
         this.LogMetricsService.eventAction.buttonClick,
         status,
-        start,
+        startLog,
         1,
         data
       );
