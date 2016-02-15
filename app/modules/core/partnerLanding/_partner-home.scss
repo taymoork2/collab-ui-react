@@ -7,8 +7,7 @@
     border-color: $gray-light-2;
   }
   .tab-reports {
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    @include vr-spacing(mb,0.5);
   }
   .tabcontainer {
     background-color: $gray-light-4;
@@ -36,7 +35,6 @@
   .large section {
     padding: 0 1.5rem;
     .onboarded {
-      margin-top: 2rem;
       border: 1px solid $gray-light-2;
     }
     .largetabs {
@@ -47,9 +45,18 @@
     & > a {
       border-color: $gray-light-2;
       color: $gray-light-1;
+      @include vr-spacing(pt,1, 2px);
+      [class*="ng-"] {
+        .total {
+          @include vr-spacing(pt,0.5);
+        }
+      }
     }
     &.active > a {
       color: $gray-dark-1;
+      &:hover {
+        border-color: $gray-light-2;
+      }
     }
   }
   #entitlementTitle {
