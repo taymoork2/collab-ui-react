@@ -45,6 +45,7 @@
     "login": true,
     "manage": true,
     "meetings": true,
+    "mediaservice": true,
     "module": true,
     "moment": true,
     "navigation": true,

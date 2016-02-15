@@ -59,8 +59,10 @@
         <div ng-if="helpdeskUserCtrl.callCard.huronNumbers">
           <h5 translate="helpdesk.numbers"></h5>
           
-          <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers  | orderBy:'dnUsage'">
-            <span>{{number.internal}}</span> <span ng-if="number.external">({{number.external}})</span> <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
+          <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers  | orderBy:'sortOrder'">
+            <span>{{number.internal}}</span> <span ng-if="number.external"> {{'common.or' | translate}} {{number.external}}</span> 
+            <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
+            <span ng-if="number.users.length > 1"> ({{number.users.length}} {{'helpdesk.users' | translate | lowercase}})</span>
           </div>
         </div>
       </section>

@@ -31,7 +31,7 @@
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
     vm.usageText = usageText;
     vm.launchAtlasReadonly = launchAtlasReadonly;
-    vm.allowLaunchAtlas = Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
+    vm.allowLaunchAtlas = vm.orgId != Authinfo.getOrgId() && Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
@@ -58,7 +58,6 @@
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
-      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function findManagedByOrgs(org) {

@@ -20,3 +20,11 @@
 .webex-reports {
   @extend %content-header;
 }
+
+.webex-alert-text {
+  color: $color-alerts-base;
+}
+
+.webex-attention-text {
+  color: $color-attention-base;
+}

@@ -72,19 +72,7 @@ angular.module('Hercules', ['Core', 'ngTagsInput']);
 
 angular.module('Mediafusion', ['Core']);
 
-angular.module('WebExUtils', ['Core']);
-angular.module('WebExApiGateway', ['Core']);
-angular.module('WebExRestApi', ['Core']);
-angular.module('WebExXmlApi', ['Core']);
-
-angular.module('WebExSiteSettings', ['Core']);
-angular.module('WebExSiteSetting', ['Core']);
-
-angular.module('WebExReports', ['Core']);
-angular.module('ReportIframe', ['Core']);
-
-angular.module('WebExUserSettings', ['Core']);
-angular.module('WebExUserSettings2', ['Core']);
+angular.module('WebExApp', ['Core']);
 
 angular.module('Messenger', ['Core']);
 
@@ -96,16 +84,7 @@ angular.module('wx2AdminWebClientApp', [
   'Huron',
   'Hercules',
   'Mediafusion',
-  'WebExUtils',
-  'WebExApiGateway',
-  'WebExRestApi',
-  'WebExXmlApi',
-  'WebExSiteSettings',
-  'WebExSiteSetting',
-  'WebExUserSettings',
-  'WebExUserSettings2',
-  'WebExReports',
-  'ReportIframe',
+  'WebExApp',
   'Messenger',
   'Sunlight'
 ]);

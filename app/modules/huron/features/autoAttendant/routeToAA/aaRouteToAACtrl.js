@@ -14,7 +14,7 @@
     vm.menuEntry = {};
 
     // cs-select associated inputs:
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectAAPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
     vm.options = [];
     vm.aaName = '';

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExSiteSetting').controller('WebExSiteSettingCtrl', [
+  angular.module('WebExApp').controller('WebExSiteSettingCtrl', [
     '$scope',
     '$rootScope',
     '$log',

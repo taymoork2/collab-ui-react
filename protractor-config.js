@@ -27,7 +27,8 @@ exports.config = {
     'build': process.env.BUILD_NUMBER,
 
     'chromeOptions': {
-      'args': ['--disable-extensions', '--start-fullscreen']
+      //'args': ['--disable-extensions', '--start-fullscreen']
+      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
     },
     shardTestFiles: true,
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
@@ -127,7 +128,7 @@ exports.config = {
     var SiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
     var SiteReportsPage = require('./test/e2e-protractor/pages/webexsitereports.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
-    var ManagementServicePage = require('./test/e2e-protractor/pages/managementService.page.js');
+    var MediaServicePage = require('./test/e2e-protractor/pages/mediaService.page.js');
     var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
     var UtilizationPage = require('./test/e2e-protractor/pages/utilization.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
@@ -166,7 +167,7 @@ exports.config = {
     global.sitesettings = new SiteSettigsPage();
     global.sitereports = new SiteReportsPage();
     global.orgprofile = new OrgProfilePage();
-    global.management = new ManagementServicePage();
+    global.mediaservice = new MediaServicePage();
     global.enterpriseResource = new EnterpriseResourcePage();
     global.utilization = new UtilizationPage();
     global.meetings = new MeetingsPage();

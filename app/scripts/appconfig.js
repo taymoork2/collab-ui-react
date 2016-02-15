@@ -1,8 +1,9 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+      var $window = $windowProvider.$get();
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -144,7 +145,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = 'en_US';
+      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -606,7 +607,6 @@ angular
         .state('user-overview.conferencing.webex', {
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
           controller: 'WebExUserSettingsCtrl',
-          controllerAs: 'WebExUserSettings',
           data: {
             displayName: 'Session Enablement'
           },
@@ -618,7 +618,6 @@ angular
         .state('user-overview.conferencing.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
-          controllerAs: 'WebExUserSettings2',
           data: {
             displayName: 'Privileges'
           },
@@ -765,7 +764,6 @@ angular
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
-          controllerAs: 'WebExSiteSettings',
           parent: 'main',
           params: {
             siteUrl: null
@@ -774,7 +772,6 @@ angular
         .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
-          controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -805,7 +802,6 @@ angular
         .state('webex-reports.webex-reports-iframe', {
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
           parent: 'main',
           params: {
             siteUrl: null,
