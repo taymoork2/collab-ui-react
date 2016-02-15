@@ -5,7 +5,7 @@
     .controller('AddDeviceController',
 
       /* @ngInject */
-      function ($scope, $q, Notification, CsdmCodeService, XhrNotificationService, $timeout) {
+      function ($scope, $q, $state, $modalInstance, Notification, CsdmCodeService, XhrNotificationService, $timeout) {
         var adc = this;
 
         adc.showAdd = true;
@@ -56,6 +56,11 @@
 
         adc.isNameValid = function () {
           return adc.deviceName && adc.deviceName.length < 128;
+        };
+
+        adc.clickUsers = function () {
+          $state.go('users.list');
+          $modalInstance.dismiss();
         };
       }
     )
