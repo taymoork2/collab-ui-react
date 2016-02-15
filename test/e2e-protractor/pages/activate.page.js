@@ -13,13 +13,13 @@ var ActivatePage = function () {
     expect(activate.testData.getAttribute('eqp')).not.toBeNull();
   };
 
-  this.setup = setup;
-
-  function setup(deviceUA) {
+  // setup -- specify deviceUA = '' for web activation
+  this.setup = function setup(deviceUA, email) {
     var obj = {
-      body: getTestBody(),
+      body: this.getTestBody(email),
       deviceUA: deviceUA
     };
+
     var flow = protractor.promise.controlFlow();
     flow.execute(getToken.bind(null, obj));
     flow.execute(verifyEmail.bind(null, obj));
@@ -27,9 +27,9 @@ var ActivatePage = function () {
     return obj;
   }
 
-  function getTestBody() {
+  this.getTestBody = function getTestBody(email) {
     return {
-      'email': utils.randomTestGmail(),
+      'email': email || utils.randomTestGmail(),
       'pushId': utils.randomId(),
       'deviceName': utils.randomId(),
       'deviceId': utils.randomId()

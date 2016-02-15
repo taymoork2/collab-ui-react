@@ -20,7 +20,7 @@ describe('Configuring services per-user', function () {
     fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
   }
 
-  // Make file
+  // Make file for import CSV testing
   utils.writeFile(absolutePath, fileText);
 
   afterEach(function () {
@@ -43,21 +43,27 @@ describe('Configuring services per-user', function () {
     navigation.clickUsers();
     users.createUser(testUser);
 
+    // Must select license for HS to work
+    utils.click(users.paidMtgCheckbox);
+
     // Select hybrid services
-    //utils.click(users.hybridServices_Cal);
+    utils.click(users.hybridServices_Cal);
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
-  });
 
-  it('should confirm hybrid services case', function () {
+    activate.setup(null, testUser);
+
     utils.searchAndClick(testUser);
-    //utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    //utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.click(users.closeSidePanel);
   });
 
-  xit('should confirm hybrid services ADDITIVE case', function () {
+  it('should confirm hybrid services ADDITIVE case', function () {
+    users.createUser(testUser);
+
     // Select hybrid services
     utils.click(users.hybridServices_UC);
 
@@ -78,10 +84,11 @@ describe('Configuring services per-user', function () {
       utils.click(users.standardTeamRooms);
       utils.expectCheckbox(users.standardTeamRooms, true);
       utils.click(users.saveButton);
-      /* $TODO - note these hybrid settings should be preserved, but are not (existing $BUG)
+
+      // Confirm these retain their previous settings
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-      */
+
       notifications.assertSuccess('entitled successfully');
     });
   });
@@ -118,36 +125,49 @@ describe('Configuring services per-user', function () {
 
   //////////////////////////////////////
   // 25 party messaging tests
-  xit('should add a user with 25 party meetings checked', function () {
+  //
+  it('should add a user with 25 party meetings checked', function () {
     users.createUser(testUser);
-    utils.click(users.meeting25Party);
+    utils.click(users.paidMtgCheckbox);
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
-  });
 
-  xit('should verify that 25 party meetigns is enabled', function () {
+    activate.setup(null, testUser);
+
     utils.clickUser(testUser);
+    utils.expectIsDisplayed(users.meetingService);
+    utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
 
-  xit('should add user with NO hybrid services selected', function () {
+  //////////////////////////////////////
+  // NO hybrid services
+  //
+  it('should add user with NO hybrid services selected', function () {
     users.createUser(testUser);
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    activate.setup(null, testUser);
 
+    utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
 
-  xit('should add user with ALL hybrid services selected', function () {
+  ///////////////////////////////////////////
+  // ALL hybrid services
+  //
+  it('should add user with ALL hybrid services selected', function () {
     users.createUser(testUser);
+
+    // Need a license for valid HS services
+    utils.click(users.paidMsgCheckbox);
 
     // Select hybrid services
     utils.click(users.hybridServices_Cal);
@@ -157,8 +177,10 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    activate.setup(null, testUser);
 
+    utils.searchAndClick(testUser);
+    utils.expectIsDisplayed(users.messageService);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -168,7 +190,7 @@ describe('Configuring services per-user', function () {
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  xit('should Manually Add user', function () {
+  it('should Manually Add user, set some licenses, set some HS entitlements, onboard the user, verify the user, click the user, check that the licenses and entitlments have been set, close the sidebar, delete the user.', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
@@ -185,14 +207,18 @@ describe('Configuring services per-user', function () {
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
 
+    // Need a license for valid HS services
+    utils.click(users.paidMsgCheckbox);
+
     // Enable a hybrid service
     utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
-  });
 
-  xit('should confirm hybrid services set', function () {
+    activate.setup(null, testUser);
+
     utils.searchAndClick(testUser);
+    utils.expectIsDisplayed(users.messageService);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -202,39 +228,36 @@ describe('Configuring services per-user', function () {
   ///////////////////////////////////////////////////////////////
   // CSV Invite with hybrid services (onboard-csv_spec.js uses non-hybrid-service compatible account)
   //
-  xit('should open CSV import dialog', function () {
+  it('should open CSV import dialog', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to the upload csv section', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
+  it('should land to the upload csv section', function () {
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
     bImportUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to assign services section', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Assign Services');
+  it('should land to assign services section', function () {
+    // Need a license for valid HS services
+    utils.click(users.paidMtgCheckbox);
+
     // Select hybrid services
     utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
   });
 
-  xit('should land to upload processing page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
-  }, 60000 * 2);
-
-  xit('should land to upload result page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result', 60000 * 2);
+  it('should click finish button', function () {
     utils.click(inviteusers.finishButton);
   }, 60000 * 2 + 5000);
 
-  xit('should find some of the ' + userList.length + ' users created', function () {
+  it('should find some of the ' + userList.length + ' users created', function () {
     var nInd;
     for (i = 0; i < 3; i++) {
       switch (i) {
@@ -248,7 +271,11 @@ describe('Configuring services per-user', function () {
         nInd = userList.length - 1; // last
         break;
       }
+
+      activate.setup(null, userList[nInd]);
+
       utils.searchAndClick(userList[nInd]);
+      utils.expectIsDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);

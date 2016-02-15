@@ -54,6 +54,8 @@ angular.module('Core')
             conferenceService.showSiteLinks = false;
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
+            conferenceService.isError = false;
+            conferenceService.isWarn = false;
 
             conferenceService.webExSessionTicket = null;
             conferenceService.adminEmailParam = null;
@@ -101,7 +103,7 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
         '                 advanced-settings={{row.entity.advancedSettings}}' + '\n' +
         '                 user-email-param={{row.entity.userEmailParam}}' + '\n' +
@@ -110,7 +112,7 @@ angular.module('Core')
         '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
@@ -118,6 +120,16 @@ angular.module('Core')
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-error icon err webex-alert-text"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-warning icon webex-attention-text"></i>' + '\n' +
+        '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -147,6 +159,16 @@ angular.module('Core')
         '        </p>' + '\n' +
         '       </a>' + '\n' +
         '    </div>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-error icon err webex-alert-text"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-warning icon webex-attention-text"></i>' + '\n' +
+        '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -315,6 +337,10 @@ angular.module('Core')
                 siteRow.isAdminReportEnabled = false;
                 siteRow.showSiteLinks = true;
                 siteRow.showCSVInfo = true;
+                siteRow.isError = true;
+                if (response.response.indexOf("030048") != -1) {
+                  siteRow.isWarn = true;
+                }
 
                 logMsg = funcName + ": " + "\n" +
                   "response=" + JSON.stringify(response);
@@ -334,7 +360,7 @@ angular.module('Core')
 
         // TODO
         var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvGetStatus(siteUrl).then(
+        WebExApiGatewayService.csvStatus(siteUrl).then(
           function getCSVStatusSuccess(response) {
             var funcName = "getCSVStatusSuccess()";
             var logMsg = "";
