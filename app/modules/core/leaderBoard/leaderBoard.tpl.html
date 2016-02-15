@@ -1,6 +1,6 @@
 <div class="leader-board row" ng-init="init()">
   <div class="subscription" ng-repeat="subscription in buckets">
-    <div ng-show="subscription.subscriptionId !== 'undefined'" class="subscriptionId"> Subscription ID {{subscription.subscriptionId}}</div>
+    <div ng-show="buckets.length > 1 && subscription.subscriptionId !== 'undefined'" class="subscriptionId"> Subscription ID {{subscription.subscriptionId}}</div>
     <cs-card class="small header-bar" ng-show="subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center title">

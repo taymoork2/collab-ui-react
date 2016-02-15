@@ -137,11 +137,9 @@
           var siteUrl = $stateParams.siteUrl || "";
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
           var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
-          var pageTitleFull = $translate.instant(
-            "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-              siteUrl: siteUrl
-            }
-          );
+          var pageTitleFull = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
+            siteUrl: siteUrl
+          });
 
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
