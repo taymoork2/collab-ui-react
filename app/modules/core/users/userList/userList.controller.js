@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.manageUsers');
     $scope.load = true;
@@ -101,6 +101,10 @@
       $scope.$on('USER_LIST_UPDATED', function () {
         getUserList();
       });
+    }
+
+    function getTemplate(name) {
+      return $templateCache.get('modules/core/users/userList/templates/' + name + '.html');
     }
 
     function getUserList(startAt) {
@@ -395,6 +399,7 @@
           field: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
+          cellTemplate: getTemplate('statusTpl'),
           displayName: $translate.instant('usersPage.status')
         }, {
           field: 'action',
