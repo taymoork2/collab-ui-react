@@ -280,7 +280,6 @@ describe('Controller: Customer Reports Ctrl', function () {
         controller.timeSelected = timeOptions[2];
         controller.mediaUpdate();
 
-        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[2]);
         expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[2]);
         expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
 
