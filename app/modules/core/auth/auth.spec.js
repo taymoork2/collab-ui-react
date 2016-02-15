@@ -26,9 +26,16 @@ describe('Auth Service', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should redirect to login if redirectToLogin method is called without email', function () {
+  it('should redirect to login if redirectToLogin method is called without email else to oauthURL', function () {
     Auth.redirectToLogin();
     expect($state.go).toHaveBeenCalled();
+  });
+
+  it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
+    $window.location = {};
+    Config.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+    Auth.redirectToLogin('email@email.com');
+    expect($window.location.href).toBe('oauthURL');
   });
 
   it('should get account info using correct API', function (done) {
