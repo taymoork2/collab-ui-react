@@ -17,7 +17,8 @@ var runSeq = require('run-sequence');
 gulp.task('eslint:e2e', function () {
   var files = [].concat(
     config.test + '/e2e-protractor/squared/*_spec.js',
-    config.test + '/e2e-protractor/huron/*_spec.js'
+    config.test + '/e2e-protractor/huron/*_spec.js',
+    config.test + '/e2e-protractor/mediafusion/*_spec.js'
     );
   messageLogger('Running eslint on E2E test files', files);
   return gulp
