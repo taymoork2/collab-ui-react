@@ -9,7 +9,7 @@
     <p translate="domainManagement.email.instructions"></p>
 
     <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
-    <p translate="domainManagement.email.description" translate-value-name="{{dmpopup.domain.text}}"/>
+    <p translate="domainManagement.email.description" translate-value-domain="{{dmpopup.domain.text}}"/>
     <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.email.exampleEmail' | translate)}}"
            ng-model="dmpopup.email" ng-keypress="dmpopup.keyPressInInputField($event)"/>
 
