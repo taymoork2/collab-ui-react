@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -8,6 +8,7 @@ describe('Service: Trial Service:', function () {
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
       'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService');
+  });
 
   beforeEach(function () {
     bard.mockService(LogMetricsService, {});
@@ -158,7 +159,8 @@ describe('Service: Trial Service:', function () {
 
       it('should have blank details', function () {
         $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          return _.isEmpty(angular.fromJson(data).details);
+          var details = angular.fromJson(data).details;
+          return _.isEmpty(details.devices) && _.isEmpty(details.offers);
         }).respond(200);
 
         TrialService.startTrial();

@@ -538,7 +538,7 @@
       }), 'quantity', 0);
     }
 
-    function isPreviouslyDisabled(deviceModel){
+    function isPreviouslyDisabled(deviceModel) {
       // get quantity only checks from stateparams, which is gotten from querying trials
       return !!getQuantity(deviceModel);
     }

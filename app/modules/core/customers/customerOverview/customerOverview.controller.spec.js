@@ -15,7 +15,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_,_TrialService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_, _TrialService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -70,7 +70,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Userservice, 'updateUsers');
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(TrialService,'getTrial').and.returnValue($q.when({}));
+    spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
