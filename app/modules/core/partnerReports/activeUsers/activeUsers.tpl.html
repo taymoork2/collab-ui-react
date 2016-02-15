@@ -5,7 +5,7 @@
   </header>
   <section>
     <p >{{nav.activeUserDescription}}</p>
-    <div id="activeUsersdiv" class="barchart"></div>
+    <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUsersRefresh) && !nav.isRefresh(nav.activeUsersRefresh)}"></div>
     <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
