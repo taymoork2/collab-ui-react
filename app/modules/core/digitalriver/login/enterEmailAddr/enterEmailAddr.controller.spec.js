@@ -14,8 +14,6 @@
         $translate: _$translate_,
         DigitalRiverService: DigitalRiverService
       });
-      controller.email = '';
-      controller.error = '';
       spyOn(DigitalRiverService, "getUserFromEmail").and.returnValue($q.when());
     }));
 
@@ -35,7 +33,7 @@
       it('should pass happy path', function () {
         controller.email = 'foo@bar.com';
         controller.handleEnterEmailAddr();
-        expect(controller.error).toEqual('');
+        expect(controller.error).not.toBeDefined();
         expect(DigitalRiverService.getUserFromEmail).toHaveBeenCalled();
       });
 
