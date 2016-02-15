@@ -6,10 +6,7 @@
       class="close"
       ng-click="$dismiss()">
     </button>
-    <h3
-      class="modal-title"
-      translate="spacesPage.modalTitle">
-    </h3>
+    <h3 class="modal-title" translate="spacesPage.modalTitle"></h3>
   </div>
 
   <div class="modal-body">
@@ -19,7 +16,8 @@
 
     <form onsubmit="$('#create-code-button').click()" ng-show="adc.showAdd">
       <h4 translate="spacesPage.addDeviceStep1"></h4>
-      <p translate="spacesPage.addDeviceStep1Desc"></p>
+      <span translate="spacesPage.addDeviceStep1Desc"></span>
+
       <div>
         <input
           required
@@ -32,6 +30,8 @@
           class="form-control"
           maxlength="127">
         </input>
+        <h4 translate="spacesPage.addPersonalDevice"></h4>
+        <span translate="spacesPage.addPersonalDeviceDesc" translate-value-onclick="adc.clickUsers()" translate-compile></span>
 
       </div>
     </form>
@@ -71,10 +71,8 @@
       id="create-code-button"
       class="btn btn--primary"
       sq-click-promise="adc.addDevice()"
-      ng-disabled="!adc.isNameValid()">
-      <span
-        translate="spacesPage.activateDevice">
-      </span>
+      ng-disabled="!adc.isNameValid()"
+      translate="spacesPage.addBtn">
     </button>
   </div>
 

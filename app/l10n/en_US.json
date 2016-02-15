@@ -955,7 +955,7 @@
   },
   "spacesPage": {
     "title": "Devices",
-    "modalTitle": "Activate a New Device",
+    "modalTitle": "Add a New Device",
     "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
     "deleteActivationCode": "Delete Activation Code",
@@ -970,6 +970,8 @@
     "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+    "addPersonalDevice": "Trying to add a personal device?",
+    "addPersonalDeviceDesc": "To add a personal device, generate an activation code for a specific user in the <a ng-click=\"{{onclick}}\">Users</a> page.",
     "addDeviceStep2": "Your activation code has been created",
     "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
     "emptyDevices1": "Once you add a new device,",
