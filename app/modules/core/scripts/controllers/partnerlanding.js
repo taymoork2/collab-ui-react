@@ -354,10 +354,6 @@ angular.module('Core')
         return rowData === Authinfo.getOrgId();
       };
 
-      $scope.partnerClicked = function (rowData) {
-        $scope.activeBadge = rowData === Authinfo.getOrgId();
-      };
-
       if ($state.current.name === "partnercustomers.list") {
         LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
       }

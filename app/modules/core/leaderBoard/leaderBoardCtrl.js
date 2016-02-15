@@ -6,7 +6,7 @@ angular.module('Core')
 
       $scope.label = $filter('translate')('leaderBoard.licenseUsage');
       $scope.state = 'license'; // Possible values are license, warning or error
-      $scope.icon = 'gear-check';
+      $scope.icon = 'check-gear';
 
       $scope.bucketKeys = [
         'messaging',
