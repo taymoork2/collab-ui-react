@@ -36,6 +36,9 @@
   .selected-link {
     color: $gray-darkest;
   }
+  .cs-card-layout {
+    margin-bottom: rem-calc(15);
+  }
   .report-box article {
     min-height: vr-adjust(570);
   }
