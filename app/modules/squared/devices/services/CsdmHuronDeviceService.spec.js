@@ -11,7 +11,8 @@ describe('CsdmHuronDeviceService', function () {
     HuronConfig = _HuronConfig_;
     Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
+    $httpBackend.whenGET('https://csdm-integration.wbx2.com/csdm/api/v1/organization/null/huronDevices?checkDisplayName=false').respond([]);
   }));
 
   afterEach(function () {
@@ -112,7 +113,7 @@ describe('CsdmHuronDeviceService', function () {
     };
 
     $httpBackend
-      .expectGET('testHuronUrl/voice/customers/testOrg/users/testUserId/directorynumbers')
+      .whenGET('testHuronUrl/voice/customers/testOrg/users/testUserId/directorynumbers')
       .respond(200, [{
         directoryNumber: {
           pattern: '1234',
@@ -128,13 +129,13 @@ describe('CsdmHuronDeviceService', function () {
       }]);
 
     $httpBackend
-      .expectGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId1/alternatenumbers?alternatenumbertype=%2BE.164+Number')
+      .whenGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId1/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, [{
         numMask: '+47 1234'
       }]);
 
     $httpBackend
-      .expectGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId2/alternatenumbers?alternatenumbertype=%2BE.164+Number')
+      .whenGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId2/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, [{
         numMask: '+47 5678'
       }]);
