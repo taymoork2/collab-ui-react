@@ -1170,11 +1170,14 @@ angular.module('Core')
           'huntgroupedit',
           'cdrsupport',
           'cdr-overview',
-          'cdrladderdiagram'
+          'cdrladderdiagram',
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'management-service',
+          'management-service'
         ],
         'spark-room-system': [
           'devices',
