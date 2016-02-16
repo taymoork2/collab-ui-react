@@ -1001,6 +1001,8 @@
     "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
     "nothingHere": "No devices yet.",
     "noDevices": "Let's enable collaboration devices",
+    "noneFound": "No Devices Found",
+    "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room systems license is suspended.",
