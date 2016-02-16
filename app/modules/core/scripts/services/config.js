@@ -433,11 +433,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.cdrTab',
-            desc: 'tabs.cdrLogsTabDesc',
-            state: 'cdrsupport',
-            link: '#cdrsupport'
-          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -1234,7 +1229,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', '404', 'csadmin'];
+      config.publicStates = ['unauthorized', '404', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
 

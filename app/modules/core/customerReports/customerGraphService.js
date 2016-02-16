@@ -78,6 +78,10 @@
     // bar charts
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, startDuration) {
       var chartData = {
+        'autoMargins': false,
+        'marginLeft': 60,
+        'marginTop': 60,
+        'marginRight': 60,
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
         'type': 'serial',
@@ -96,8 +100,6 @@
           'fixedPosition': true,
           'shadowAlpha': 0
         },
-        'autoMargins': false,
-        'marginTop': 60,
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,

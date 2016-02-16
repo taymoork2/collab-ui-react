@@ -23,7 +23,12 @@
       editTrial: editTrial,
       startTrial: startTrial,
       getData: getData,
-      reset: reset
+      reset: reset,
+      getTrialIds: getTrialIds,
+      getTrialPeriodData: getTrialPeriodData,
+      calcDaysLeft: calcDaysLeft,
+      calcDaysUsed: calcDaysUsed,
+      getExpirationPeriod: getExpirationPeriod
     };
 
     return service;
@@ -172,6 +177,59 @@
       };
 
       return _trialData;
+    }
+
+    function getTrialIds() {
+      var trialIds = _(Authinfo.getLicenses())
+        .filter('trialId')
+        .map(function (data) {
+          return data['trialId'];
+        })
+        .uniq()
+        .value();
+
+      return trialIds;
+    }
+
+    function getTrialPeriodData(trialId) {
+      return service.getTrial(trialId) // <= 'service.getTrial' is mock-friendly, 'getTrial' is not
+        .catch(function (reason) {
+          return $q.reject(reason);
+        })
+        .then(function (trialData) {
+          var startDate = _.get(trialData, 'startDate'),
+            trialPeriod = _.get(trialData, 'trialPeriod');
+
+          return {
+            startDate: startDate,
+            trialPeriod: trialPeriod
+          };
+        });
+    }
+
+    function calcDaysLeft(startDate, trialPeriod, currentDate) {
+      var daysUsed = calcDaysUsed(startDate, currentDate);
+      var daysLeft = trialPeriod - daysUsed;
+      return daysLeft;
+    }
+
+    function calcDaysUsed(startDate, currentDate) {
+      var d1 = new Date(startDate);
+      var d2 = currentDate || new Date();
+      d1.setUTCHours(0, 0, 0, 0); // normalize on UTC midnight
+      d2.setUTCHours(0, 0, 0, 0);
+      var deltaMs = d2 - d1;
+      var daysUsed = Math.floor(deltaMs / (24 * 60 * 60 * 1000));
+      return daysUsed;
+    }
+
+    function getExpirationPeriod(trialId, currentDate) {
+      return service.getTrialPeriodData(trialId)
+        .then(function (trialPeriodData) {
+          var startDate = trialPeriodData.startDate;
+          var trialPeriod = trialPeriodData.trialPeriod;
+          return calcDaysLeft(startDate, trialPeriod, currentDate);
+        });
     }
   }
 })();
