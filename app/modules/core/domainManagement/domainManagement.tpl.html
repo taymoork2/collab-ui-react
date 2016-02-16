@@ -14,11 +14,7 @@
         <tr ng-repeat="domain in dv.domains">
           <td>{{domain.text}}</td>
           <td class="domain-status"><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</td>
-          <!--<td class="tableMail"><i class="icon icon-email"
-                                   ui-sref="domainmanagement.email({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                                   ng-show="domain.status==='pending'"></i></td>
-          <td><i class="icon icon-trash"
-                 ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"></i></td>-->
+
           <td id="domainMenu">
             <span cs-dropdown class="actions-menu dropdown pull-right">
               <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
@@ -27,11 +23,11 @@
               <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
                 <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status!='pending'" translate="domainManagement.actions.unverify"></a>
+                     ng-if="domain.status==='verified'" translate="domainManagement.actions.unverify"></a>
                 </li>
                 <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status!='pending' && domain.status!='verified'"
+                     ng-if="domain.status==='claimed'"
                      translate="domainManagement.actions.unclaim"></a>
                 </li>
                 <li>
@@ -46,20 +42,10 @@
               </ul>
             </span>
           </td>
-          <!--<td class="tokenCell">
-            <span class="token">{{domain.token}}</span>
-            <span class="copy">
-              <i class="icon icon-content-share" ng-if="domain.token"></i>
-            </span>
-          </td>-->
           <td>
             <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
                     ng-if="domain.status==='pending' && domain.token"
-                    class="btn--cta verify-btn" translate="domainManagement.verifyDomain"
-                    ng-disabled="dv.loggedOnUser.domain != domain.text"></button>
-            <button ui-sref="domainmanagement.claim({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                    ng-if="domain.status==='verified'"
-                    class="btn--cta verify-btn" translate="domainManagement.claimDomain"></button>
+                    class="btn--cta verify-btn" translate="domainManagement.verifyDomain"></button>
           </td>
         </tr>
       </table>

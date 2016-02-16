@@ -17,6 +17,14 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertDevice(obj).tags[0]).toBe('foo');
   });
 
+  it('should convert tags for huron devices', function () {
+    var obj = {
+      description: '["foo", "bar"]'
+    };
+    expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
+    expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
+  });
+
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'
@@ -392,7 +400,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
+      expect(converter.convertAccounts(arr)[0].product).toBe('spacesPage.account');
     });
 
     it('should set state to Non existent', function () {

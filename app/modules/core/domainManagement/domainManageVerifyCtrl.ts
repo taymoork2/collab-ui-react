@@ -32,6 +32,10 @@ namespace domainManagement {
       return this._error;
     }
 
+    set error(error) {
+      this._error = error;
+    }
+
     get operationAllowed() {
       //input validation:
       if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))

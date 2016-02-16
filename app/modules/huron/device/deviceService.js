@@ -28,6 +28,30 @@
       }).$promise;
     }
 
+    function getTags(description) {
+      try {
+        var tags = JSON.parse(description);
+        return _.unique(tags);
+      } catch (e) {
+        try {
+          tags = JSON.parse("[\"" + description + "\"]");
+          return _.unique(tags);
+        } catch (e) {
+          return [];
+        }
+      }
+    }
+
+    function getTagString(description) {
+      var tags = getTags(description);
+      return tags.join(', ');
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
+    }
+
     function loadDevices(userUuid) {
       return UserEndpointService.query({
           customerId: Authinfo.getOrgId(),
@@ -56,7 +80,7 @@
               sipEndpointId: device.uuid
             }, function (endpoint) {
               this.model = endpoint.model;
-              this.description = endpoint.description;
+              this.description = getTagString(decodeHuronTags(endpoint.description));
             }.bind(device));
 
             device.deviceStatus.progressStatus = true;

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUserSettings').controller('WebExUserSettingsCtrl', [
+  angular.module('WebExApp').controller('WebExUserSettingsCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -26,43 +26,44 @@
       $state.current.data.displayName = $stateParams.site;
       $rootScope.$broadcast('displayNameUpdated');
 
-      this.initPanel = function () {
+      $scope.initPanel = function () {
         WebExUserSettingsFact.initPanel();
       }; // initPanel()
 
-      this.getUserSettingsInfo = function (form) {
+      $scope.getUserSettingsInfo = function (form) {
         WebExUserSettingsFact.getUserSettingsInfo(form);
       }; // getUserSettingsInfo()
 
-      this.btnReload = function () {
+      $scope.btnReload = function () {
         var funcName = "btnReload()";
         var logMsg = "";
 
         logMsg = funcName + ": " + "\n" +
-          "sessionTicketErr=" + this.userSettingsModel.sessionTicketErr;
+          "sessionTicketErr=" + $scope.userSettingsModel.sessionTicketErr;
         // $log.log(logMsg);
 
-        if (this.userSettingsModel.sessionTicketErr) {
-          this.initPanel();
+        if ($scope.userSettingsModel.sessionTicketErr) {
+          $scope.initPanel();
         } else {
-          this.getUserSettingsInfo(null);
+          $scope.getUserSettingsInfo(null);
         }
       }; // btnReload()
 
-      this.btnSave = function (form) {
+      $scope.btnSave = function (form) {
         WebExUserSettingsFact.updateUserSettings(form);
       }; // btnSave()
 
-      this.btnReset = function (form) {
-        this.getUserSettingsInfo(form);
+      $scope.btnReset = function (form) {
+        $scope.getUserSettingsInfo(form);
       }; // btnReset()
 
       //----------------------------------------------------------------------//
 
       $log.log("Show panel3");
 
-      this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
-      this.initPanel();
+      $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
+      WebExUserSettingsFact.checkUserWebExEntitlement();
+      $scope.initPanel();
     } // WebExUserSettingsCtrl()
   ]);
 })();

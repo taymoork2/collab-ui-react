@@ -4,11 +4,7 @@
   /* @ngInject */
   function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
-      if (HelpdeskService.checkIfMobile()) {
-        angular.element('#searchInput').blur();
-      } else {
-        angular.element('#searchInput').focus();
-      }
+      setSearchFieldFocus();
     });
     var vm = this;
     vm.search = search;
@@ -60,6 +56,7 @@
         vm.currentSearch.userLimit);
       HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
       $state.go('helpdesk.search');
+      setSearchFieldFocus();
     }
 
     vm.currentSearch = {
@@ -85,11 +82,7 @@
         this.orgLimit = vm.searchResultsPageSize;
         this.userLimit = vm.searchResultsPageSize;
         this.deviceLimit = vm.searchResultsPageSize;
-        if (HelpdeskService.checkIfMobile()) {
-          angular.element('#searchInput').blur();
-        } else {
-          angular.element('#searchInput').focus();
-        }
+        setSearchFieldFocus();
       },
       clear: function () {
         this.initSearch('');
@@ -196,15 +189,14 @@
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
         });
-        vm.searchingForCloudberryDevices = false;
-        vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
+        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+      }).finally(function () {
         vm.searchingForCloudberryDevices = false;
         vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
-        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
       });
     }
 
@@ -217,20 +209,19 @@
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
         });
-        vm.searchingForHuronDevices = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
-        vm.searchingForHuronDevices = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
         if (err.status === 404) {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
+      }).finally(function () {
+        vm.searchingForHuronDevices = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
       });
 
       vm.searchingForHuronDevicesMatchingNumber = true;
@@ -241,20 +232,19 @@
         vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
           return device.displayName ? device.displayName.toLowerCase() : '';
         });
-        vm.searchingForHuronDevicesMatchingNumber = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
         setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         HelpdeskHuronService.setOwnerAndDeviceDetails(_.take(vm.currentSearch.deviceSearchResults, vm.currentSearch.deviceLimit));
         HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
         vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
       }, function (err) {
-        vm.searchingForHuronDevicesMatchingNumber = false;
-        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
         if (err.status === 404) {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.huronNotActivated');
         } else {
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         }
+      }).finally(function () {
+        vm.searchingForHuronDevicesMatchingNumber = false;
+        vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
       });
     }
 
@@ -364,13 +354,7 @@
         if (inputFieldHasFocus) {
           initSearchWithoutOrgFilter();
         } else {
-          if (HelpdeskService.checkIfMobile()) {
-            // TODO: Why is mobile relevant here ?
-            angular.element('#searchInput').blur();
-          } else {
-            // TODO: Why .select ?
-            angular.element('#searchInput').focus().select();
-          }
+          angular.element('#searchInput').focus().select();
           newTabIndex = -1;
         }
         break;
@@ -395,8 +379,14 @@
       }
     }
 
+    function setSearchFieldFocus() {
+      if (HelpdeskService.checkIfMobile()) {
+        angular.element('#searchInput').blur();
+      } else {
+        angular.element('#searchInput').focus();
+      }
+    }
   }
-
   angular
     .module('Squared')
     .controller('HelpdeskController', HelpdeskController);

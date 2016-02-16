@@ -79,14 +79,12 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
 
     it('should show OTP button if no devices', function () {
-      userOverview.removeGenerateAuthCodeLink.calls.reset();
       DeviceService.loadDevices.and.returnValue($q.when(emptyArray));
 
       $scope.$broadcast('deviceDeactivated');
       $scope.$apply();
 
       expect(controller.showGenerateOtpButton).toEqual(true);
-      expect($scope.userOverview.removeGenerateAuthCodeLink.calls.count()).toEqual(1);
     });
 
     it('should not call activate when Huron entitlement is removed', function () {

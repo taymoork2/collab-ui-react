@@ -54,6 +54,8 @@ angular.module('Core')
             conferenceService.showSiteLinks = false;
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
+            conferenceService.isError = false;
+            conferenceService.isWarn = false;
 
             conferenceService.webExSessionTicket = null;
             conferenceService.adminEmailParam = null;
@@ -71,7 +73,7 @@ angular.module('Core')
         '<div class="ui-grid-cell-contents ui-grid-header-cell-primary-focus" col-index="renderIndex" tabindex="0" role="button">' + '\n' +
         '  <div>' + '\n' +
         '    <span id="id-siteCsvColumnHeader" class="ui-grid-header-cell-label ng-binding" translate="siteList.siteCsvColumnHeader"></span>' + '\n' +
-        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="top" ></span>' + '\n' +
+        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="right" ></span>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -83,13 +85,13 @@ angular.module('Core')
         '</div>' + '\n' +
         '<div ng-if="row.entity.showCSVInfo">' + '\n' +
         '  <div ng-if="!row.entity.isCSVSupported">' + '\n' +
-        '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      Not Available' + '\n' +
+        '    <p class="ui-grid-cell-contents" translate>' + '\n' +
+        '      siteList.siteCSVNotAvailable' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isCSVSupported">' + '\n' +
         '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      <a><span translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
+        '      <a><span id="{{row.entity.license.siteUrl}}_xlaunch-export-users" translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span id="{{row.entity.license.siteUrl}}_xlaunch-import-users" translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
@@ -101,7 +103,7 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
         '                 advanced-settings={{row.entity.advancedSettings}}' + '\n' +
         '                 user-email-param={{row.entity.userEmailParam}}' + '\n' +
@@ -110,7 +112,7 @@ angular.module('Core')
         '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
@@ -118,6 +120,16 @@ angular.module('Core')
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-error icon err"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-warning icon"></i>' + '\n' +
+        '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -315,6 +327,10 @@ angular.module('Core')
                 siteRow.isAdminReportEnabled = false;
                 siteRow.showSiteLinks = true;
                 siteRow.showCSVInfo = true;
+                siteRow.isError = true;
+                if (response.response.indexOf("030048") != -1) {
+                  siteRow.isWarn = true;
+                }
 
                 logMsg = funcName + ": " + "\n" +
                   "response=" + JSON.stringify(response);
@@ -334,7 +350,7 @@ angular.module('Core')
 
         // TODO
         var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvGetStatus(siteUrl).then(
+        WebExApiGatewayService.csvStatus(siteUrl).then(
           function getCSVStatusSuccess(response) {
             var funcName = "getCSVStatusSuccess()";
             var logMsg = "";
@@ -359,4 +375,5 @@ angular.module('Core')
         );
       } // updateCSVColumn()
     } // updateCSVColumn()
+
   ]);

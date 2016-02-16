@@ -9,17 +9,6 @@
 
   @extend %page-content-padding;
 
-  & .save-section {
-    display: flex;
-    align-items: center;
-
-    @include vr-spacing(ph, 2);
-
-    & .right button:first-child {
-      @include vr-spacing(mr, 0);
-    }
-  }
-
   & .profile-content-container {
     @include vr-spacing(ph, 1.5);
 

@@ -3,7 +3,7 @@
 
   /* global X2JS */
 
-  angular.module('WebExXmlApi').factory('WebExXmlApiFact', [
+  angular.module('WebExApp').factory('WebExXmlApiFact', [
     '$http',
     '$log',
     '$interpolate',
@@ -352,7 +352,7 @@
             xmlApiUrl: xmlApiUrl,
             wbxSiteName: wbxSiteName,
             webexAdminID: primaryEmail,
-            accessToken: $rootScope.token
+            accessToken: Storage.get('accessToken')
           };
 
           this.getSessionTicketInfo(xmlApiAccessInfo).then(
