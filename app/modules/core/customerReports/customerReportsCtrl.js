@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -33,6 +33,7 @@
     vm.searchPlaceholder = $translate.instant('activeUsers.search');
     vm.searchField = "";
     vm.mostActiveUsers = [];
+    vm.showMostActiveUsers = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -250,7 +251,7 @@
         time: vm.timeSelected.description
       });
 
-      vm.deviceDescription = $translate.instant("registeredEndpoints.description", {
+      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
         time: vm.timeSelected.description
       });
     }
@@ -305,7 +306,6 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
       vm.metrics = {};
       vm.mediaSelected = vm.mediaOptions[0];
 
@@ -375,7 +375,7 @@
       var returnArray = [];
       angular.forEach(vm.mostActiveUsers, function (item, index, array) {
         var userName = item.userName;
-        if (vm.searchField === undefined || vm.searchField === '' || (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
+        if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
           returnArray.push(item);
         }
       });
@@ -470,26 +470,40 @@
         } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          vm.deviceFilter = response.filterArray;
+          vm.deviceFilter = response.filterArray.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          });
           vm.selectedDevice = vm.deviceFilter[0];
           currentDeviceGraphs = response.graphData;
 
-          var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-          if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-            deviceChart = tempDevicesChart;
+          if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
+            var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+            if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+              deviceChart = tempDevicesChart;
+            }
+            vm.deviceStatus = SET;
+          } else {
+            vm.deviceStatus = EMPTY;
           }
-          vm.deviceStatus = SET;
         }
         deviceCard = document.getElementById('device-card');
       });
     }
 
     function deviceUpdate() {
-      if (currentDeviceGraphs.length > 0) {
+      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
         var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
         if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
           deviceChart = tempDevicesChart;
         }
+        vm.deviceStatus = SET;
+      } else {
+        var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
+        var tempDeviceChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+        if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
+          deviceChart = tempDeviceChart;
+        }
+        vm.deviceStatus = EMPTY;
       }
     }
 
@@ -530,7 +544,7 @@
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);

@@ -1,9 +1,8 @@
-/* global ll */
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate',
-    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate) {
+  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate', 'Localytics',
+    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate, Localytics) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -16,8 +15,8 @@ angular.module('Core')
       var authData = {
         'username': null,
         'userId': null,
-        'orgname': null,
-        'orgid': null,
+        'orgName': null,
+        'orgId': null,
         'addUserEnabled': null,
         'entitleUserEnabled': null,
         'managedOrgs': [],
@@ -76,7 +75,8 @@ angular.module('Core')
       };
 
       function isOnlyCiscoState(state) {
-        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid === Config.ciscoMockOrgId)))
+        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgId === Config.ciscoOrgId || authData.orgId ===
+            Config.ciscoMockOrgId)))
           return true;
         return false;
       }
@@ -127,8 +127,8 @@ angular.module('Core')
       return {
         initialize: function (data) {
           authData.username = data.name;
-          authData.orgname = data.orgName;
-          authData.orgid = data.orgId;
+          authData.orgName = data.orgName;
+          authData.orgId = data.orgId;
           authData.addUserEnabled = data.addUserEnabled;
           authData.entitleUserEnabled = data.entitleUserEnabled;
           authData.managedOrgs = data.managedOrgs;
@@ -152,7 +152,7 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
           //org id of user
-          ll('setCustomDimension', 1, authData.orgId);
+          Localytics.customDimension(1, authData.orgName);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -160,8 +160,8 @@ angular.module('Core')
         clear: function () {
           authData.username = null;
           authData.userId = null;
-          authData.orgname = null;
-          authData.orgid = null;
+          authData.orgName = null;
+          authData.orgId = null;
           authData.addUserEnabled = null;
           authData.entitleUserEnabled = null;
           authData.entitlements = null;
@@ -174,6 +174,8 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
+          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
+          Localytics.customDimension(0, msg);
         },
         getEmails: function () {
           return authData.emails;
@@ -193,7 +195,7 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts;
+            var accounts = data.accounts || [];
 
             if (accounts.length > 0) {
               authData.hasAccount = true;
@@ -262,10 +264,10 @@ angular.module('Core')
           } //end if
         },
         getOrgName: function () {
-          return authData.orgname;
+          return authData.orgName;
         },
         getOrgId: function () {
-          return authData.orgid;
+          return authData.orgId;
         },
         getUserName: function () {
           return authData.username;
@@ -337,6 +339,9 @@ angular.module('Core')
         isAdmin: function () {
           return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },
+        isReadOnlyAdmin: function () {
+          return this.hasRole('Readonly_Admin') && !this.isAdmin();
+        },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
         },
@@ -345,6 +350,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerSalesAdmin: function () {
+          return this.hasRole('PARTNER_SALES_ADMIN');
         },
         isPartnerUser: function () {
           return this.hasRole('PARTNER_USER');
@@ -403,6 +411,9 @@ angular.module('Core')
         },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
+        },
+        isUserAdmin: function () {
+          return this.getRoles().indexOf('Full_Admin') > -1;
         }
       };
     }

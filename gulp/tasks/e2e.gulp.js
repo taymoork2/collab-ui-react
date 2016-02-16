@@ -86,6 +86,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
   var tests = [];
   if (args.specs) {
     var specs = args.specs;
+    // TODO: after storm launch, refactor this make use of '.../utils/fileListParser.gulp.js'
     if (specs === 'fromfile') {
       if (args.filename) {
         var filename = args.filename;

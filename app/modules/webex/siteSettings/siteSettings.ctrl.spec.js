@@ -10,9 +10,7 @@ describe('WebExSiteSettingsCtrl Test', function () {
   var siteUrl = 'go.webex.com';
   var email = "mojoco@webex.com";
 
-  beforeEach(module('WebExSiteSettings'));
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (
     _Authinfo_,

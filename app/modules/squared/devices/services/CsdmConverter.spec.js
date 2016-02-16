@@ -17,6 +17,14 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertDevice(obj).tags[0]).toBe('foo');
   });
 
+  it('should convert tags for huron devices', function () {
+    var obj = {
+      description: '["foo", "bar"]'
+    };
+    expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
+    expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
+  });
+
   it('should add needsActivation flag', function () {
     var arr = [{
       state: 'UNCLAIMED'
@@ -101,9 +109,16 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
     });
 
+    it('huronId', function () {
+      var arr = [{
+        url: 'https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/sipendpoints/f0b72ba5-0121-452b-a0c8-f6680f660de6'
+      }];
+      expect(converter.convertHuronDevices(arr)[0].huronId).toBe('f0b72ba5-0121-452b-a0c8-f6680f660de6');
+    });
+
   }); // pass thru fields
 
-  describe('readableState and cssColorClass', function () {
+  describe('state and cssColorClass', function () {
     it('should convert device with issues yellow color and show status', function () {
       var arr = [{
         state: 'CLAIMED',
@@ -112,7 +127,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("1");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
@@ -123,7 +139,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("1");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
@@ -131,7 +148,8 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         state: 'UNCLAIMED'
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.RequiresActivation');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.RequiresActivation');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("3");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
     });
 
@@ -142,7 +160,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("5");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
@@ -152,7 +171,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("5");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
@@ -163,7 +183,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("2");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
@@ -173,7 +194,8 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("2");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
@@ -181,7 +203,8 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         state: 'CLAIMED'
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].state.priority).toBe("2");
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
@@ -377,14 +400,15 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
+      expect(converter.convertAccounts(arr)[0].product).toBe('spacesPage.account');
     });
 
     it('should set state to Non existent', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].readableState).toBe('CsdmStatus.Inactive');
+      expect(converter.convertAccounts(arr)[0].state.priority).toBe("4");
+      expect(converter.convertAccounts(arr)[0].state.readableState).toBe('CsdmStatus.Inactive');
     });
 
     it('should have issues', function () {

@@ -1,7 +1,7 @@
 <div class="hercules typography-airy large-margin">
   <div class="row">
     <div class="large-4 columns">
-      <schedule-upgrade-configuration service-type="exp.currentServiceType"></schedule-upgrade-configuration>
+      <schedule-upgrade-configuration ng-if="expresswayServiceSettings.showScheduleUpgrade" service-type="exp.currentServiceType"></schedule-upgrade-configuration>
       <h5 translate="hercules.settings.call.featureHeading"></h5>
       <p translate="hercules.settings.call.feature"></p>
       <h6><strong translate="hercules.settings.call.awareHeading"></strong></h6>
@@ -17,6 +17,10 @@
       </h6>
       <p translate="hercules.settings.call.connect"></p>
 
+      <div class="hercules-connect-setting"
+           ng-if="expresswayServiceSettings.squaredFusionEc"
+           ng-controller="DomainManagementCtrl as dv"
+           ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
       <div class="hercules-sip-settings"
            ng-if="expresswayServiceSettings.squaredFusionEc"
            ng-include
@@ -30,7 +34,6 @@
       <div ng-include src="'modules/hercules/expressway-service/deactivate-service-setting.html'"></div>
       <div ng-include src="'modules/hercules/expressway-service/documentation.html'"></div>
     </div>
-    <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
     <div class="large-4 columns">
     </div>
   </div>

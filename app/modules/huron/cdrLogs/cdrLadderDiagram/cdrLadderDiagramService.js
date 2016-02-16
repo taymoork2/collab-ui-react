@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log) {
-    var access_token = 'Bearer ' + $rootScope.token;
     var callflowDiagramUrl = Config.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var TIMEOUT_IN_MILI = 8000;
     var NOT_FOUND = 'Not Found';
@@ -154,33 +153,6 @@
       return defer.promise;
     };
 
-    svc.getLadderDiagram = function (message) {
-      var defer = $q.defer();
-      $http({
-          method: "POST",
-          url: callflowDiagramUrl,
-          data: {
-            "data": message
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml',
-            'Authorization': access_token
-          }
-        })
-        .success(function (response) {
-          defer.resolve(response);
-        })
-        .error(function (response, status) {
-          Log.debug('Failed to retrieve ladder diagram from ' + serviceName + ' server.');
-          defer.reject({
-            'response': response,
-            'status': status
-          });
-        });
-      return defer.promise;
-    };
-
     function proxyDiagnosticService(message) {
       var defer = $q.defer();
       $http({
@@ -191,8 +163,7 @@
           },
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json, application/xml',
-            'Authorization': access_token
+            'Accept': 'application/json, application/xml'
           }
         })
         .success(function (response) {

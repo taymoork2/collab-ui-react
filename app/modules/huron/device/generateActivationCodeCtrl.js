@@ -30,9 +30,11 @@
             vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
             setQRCode(vm.otp.code);
           });
-        } else {
+        } else if (vm.otp.code) {
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
           setQRCode(vm.otp.code);
+        } else {
+          $state.go('users.list');
         }
       });
     }

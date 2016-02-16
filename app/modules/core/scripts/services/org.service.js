@@ -92,24 +92,26 @@
     function getLicensesUsage() {
       return getAdminOrgUsage().then(function (response) {
 
-        var usageLicenses = [];
-        usageLicenses = response.data || [];
+        var usageLicenses = response.data || [];
         var statusLicenses = Authinfo.getLicenses();
+        var trial = '';
 
         var result = [];
-        for (var index in usageLicenses) {
-          var licenses = _.filter(usageLicenses[index].licenses, function (license) {
+        _.forEach(usageLicenses, function (usageLicense) {
+          var licenses = _.filter(usageLicense.licenses, function (license) {
             var match = _.find(statusLicenses, {
               'licenseId': license.licenseId
             });
+            trial = license.isTrial ? 'Trial' : 'unknown';
             return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
+
           var subscription = {
-            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : 'undefined',
+            "subscriptionId": usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
             "licenses": licenses
           };
           result.push(subscription);
-        }
+        });
         return result;
       }).catch(function (err) {
         Log.debug('Get existing admin org failed. Status: ' + err);

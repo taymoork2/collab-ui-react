@@ -54,7 +54,7 @@
     function labelForTime(time) {
       var currentLanguage = $translate.use();
       if (currentLanguage === 'en_US') {
-        return moment(time, ['HH:mm']).format('hh:mm A');
+        return moment(time, 'HH:mm').format('hh:mm A');
       } else {
         return time;
       }

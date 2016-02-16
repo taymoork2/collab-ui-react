@@ -8,7 +8,7 @@ angular.module('Core')
     '$log',
     'FeatureToggleService',
     'Userservice',
-    'WebExUtilsFact',
+    'WebExApiGatewayService',
     function (
       $translate,
       Authinfo,
@@ -16,7 +16,7 @@ angular.module('Core')
       $log,
       FeatureToggleService,
       Userservice,
-      WebExUtilsFact
+      WebExApiGatewayService
     ) {
       var funcName = "siteListCtrl()";
       var logMsg = "";
@@ -54,6 +54,8 @@ angular.module('Core')
             conferenceService.showSiteLinks = false;
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
+            conferenceService.isError = false;
+            conferenceService.isWarn = false;
 
             conferenceService.webExSessionTicket = null;
             conferenceService.adminEmailParam = null;
@@ -67,6 +69,14 @@ angular.module('Core')
       );
 
       // Start of grid set up
+      var siteCsvColumnHeaderTemplate = "\n" +
+        '<div class="ui-grid-cell-contents ui-grid-header-cell-primary-focus" col-index="renderIndex" tabindex="0" role="button">' + '\n' +
+        '  <div>' + '\n' +
+        '    <span id="id-siteCsvColumnHeader" class="ui-grid-header-cell-label ng-binding" translate="siteList.siteCsvColumnHeader"></span>' + '\n' +
+        '    <span id="id-userAttributesTooltipIcon" class="icon icon-information icon-lg ng-scope" tooltip-append-to-body="true" tooltip-animation="false" tooltip="{{::\'siteList.userAttributesTooltip\' | translate}}" tooltip-placement="right" ></span>' + '\n' +
+        '  </div>' + '\n' +
+        '</div>' + '\n';
+
       var siteCSVColumn = "\n" +
         '<div ng-if="!row.entity.showCSVInfo">' + '\n' +
         '  <p class="ui-grid-cell-contents">' + '\n' +
@@ -75,13 +85,13 @@ angular.module('Core')
         '</div>' + '\n' +
         '<div ng-if="row.entity.showCSVInfo">' + '\n' +
         '  <div ng-if="!row.entity.isCSVSupported">' + '\n' +
-        '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      Not Available' + '\n' +
+        '    <p class="ui-grid-cell-contents" translate>' + '\n' +
+        '      siteList.siteCSVNotAvailable' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isCSVSupported">' + '\n' +
         '    <p class="ui-grid-cell-contents">' + '\n' +
-        '      TBD' + '\n' +
+        '      <a><span id="{{row.entity.license.siteUrl}}_xlaunch-export-users" translate="siteList.siteCsvExportLinkLabel"></span></a>' + '   |   ' + '<a><span id="{{row.entity.license.siteUrl}}_xlaunch-import-users" translate="siteList.siteCsvImportLinkLabel"></span></a>' + '\n' +
         '    </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
@@ -93,7 +103,7 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
         '                 advanced-settings={{row.entity.advancedSettings}}' + '\n' +
         '                 user-email-param={{row.entity.userEmailParam}}' + '\n' +
@@ -102,7 +112,7 @@ angular.module('Core')
         '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported && !row.entity.isError">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
@@ -110,6 +120,16 @@ angular.module('Core')
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-error icon err"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-warning icon"></i>' + '\n' +
+        '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -170,15 +190,6 @@ angular.module('Core')
         sortable: false
       });
 
-      if (adminUserSupportCSV) {
-        vm.gridOptions.columnDefs.push({
-          field: 'siteCSV',
-          displayName: 'CSV',
-          cellTemplate: siteCSVColumn,
-          sortable: false
-        });
-      }
-
       vm.gridOptions.columnDefs.push({
         field: 'siteSettings',
         displayName: $translate.instant('siteList.siteSettings'),
@@ -192,15 +203,16 @@ angular.module('Core')
         cellTemplate: siteReportsColumn,
         sortable: false
       });
-      // End of grid set up
 
-      if (!adminUserSupportCSV) {
-        insertCSVColumn();
+      var allowCSVToAllAdmins = false; // TODO
+      if (!allowCSVToAllAdmins) {
+        checkCSVToggle();
       } else {
+        insertCSVColumn();
         updateGrid();
       }
 
-      function insertCSVColumn() {
+      function checkCSVToggle() {
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
           function getSupportsCSVSuccess(result) {
             var funcName = "getSupportsCSVSuccess()";
@@ -208,18 +220,7 @@ angular.module('Core')
 
             adminUserSupportCSV = result;
             if (adminUserSupportCSV) {
-              var columnObj = {
-                field: 'siteCSV',
-                displayName: 'CSV',
-                cellTemplate: siteCSVColumn,
-                sortable: false
-              };
-
-              vm.gridOptions.columnDefs.splice(
-                3,
-                0,
-                columnObj
-              );
+              insertCSVColumn();
             }
 
             updateGrid();
@@ -236,7 +237,24 @@ angular.module('Core')
             updateGrid();
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
+      } // checkCSVToggle()
+
+      function insertCSVColumn() {
+        var columnObj = {
+          field: 'siteCSV',
+          displayName: $translate.instant('siteList.siteCsv'),
+          cellTemplate: siteCSVColumn,
+          headerCellTemplate: siteCsvColumnHeaderTemplate,
+          sortable: false
+        };
+
+        vm.gridOptions.columnDefs.splice(
+          3,
+          0,
+          columnObj
+        );
       } // insertCSVColumn()
+      // End of grid set up
 
       function updateGrid() {
         var funcName = "updateGrid()";
@@ -275,7 +293,7 @@ angular.module('Core')
             siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
             siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
 
-            WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
+            WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {
                 var funcName = "isSiteSupportsIframeSuccess()";
                 var logMsg = "";
@@ -286,10 +304,7 @@ angular.module('Core')
 
                 siteRow.isIframeSupported = result.isIframeSupported;
                 siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
-                siteRow.isCSVSupported = (
-                  result.isCSVSupported &&
-                  adminUserSupportCSV
-                ) ? true : false;
+                siteRow.isCSVSupported = result.isCSVSupported;
 
                 siteRow.showSiteLinks = true;
 
@@ -312,24 +327,53 @@ angular.module('Core')
                 siteRow.isAdminReportEnabled = false;
                 siteRow.showSiteLinks = true;
                 siteRow.showCSVInfo = true;
+                siteRow.isError = true;
+                if (response.response.indexOf("030048") != -1) {
+                  siteRow.isWarn = true;
+                }
 
                 logMsg = funcName + ": " + "\n" +
                   "response=" + JSON.stringify(response);
                 $log.log(logMsg);
               } // isSiteSupportsIframeError()
-            ); // WebExUtilsFact.isSiteSupportsIframe().then
+            ); // WebExApiGatewayService.isSiteSupportsIframe().then
           } // processGrid()
         ); // vm.gridData.forEach()
       } // initGridColumns()
 
       function updateCSVColumn(siteRow) {
-        if (siteRow.isCSVSupported) {
+        if (!siteRow.isCSVSupported) {
+          // no further data to get
           siteRow.showCSVInfo = true;
           return;
         }
 
         // TODO
-        siteRow.showCSVInfo = true;
+        var siteUrl = siteRow.license.siteUrl;
+        WebExApiGatewayService.csvStatus(siteUrl).then(
+          function getCSVStatusSuccess(response) {
+            var funcName = "getCSVStatusSuccess()";
+            var logMsg = "";
+
+            logMsg = funcName + "\n" +
+              "response=" + JSON.stringify(response);
+            $log.log(logMsg);
+
+            siteRow.showCSVInfo = true;
+          }, // getCSVStatusSuccess()
+
+          function getCSVStatusError(response) {
+            var funcName = "getCSVStatusError()";
+            var logMsg = "";
+
+            logMsg = funcName + "\n" +
+              "response=" + JSON.stringify(response);
+            $log.log(logMsg);
+
+            siteRow.showCSVInfo = true;
+          } // getCSVStatusSuccess()
+        );
       } // updateCSVColumn()
-    }
+    } // updateCSVColumn()
+
   ]);

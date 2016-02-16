@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('WebEx user settings', function () {
+describe('WebEx user settings', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });

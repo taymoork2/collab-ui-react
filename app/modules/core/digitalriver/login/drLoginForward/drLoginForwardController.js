@@ -5,17 +5,17 @@
     .controller('drLoginForwardController', drLoginForwardController);
 
   /* @ngInject */
-  function drLoginForwardController($scope, $window, $cookies, $translate, Userservice) {
+  function drLoginForwardController($window, $cookies, $translate, DigitalRiverService, Userservice) {
 
     var vm = this;
-
     Userservice.getUser('me',
       function (userData, status) {
         if (status != 200 || !userData.success) {
-          $scope.error = userData.message;
+          vm.error = userData.message;
+          $cookies.atlasDrCookie = "abc";
         } else {
-
-          Userservice.getUserAuthToken(userData.id)
+          $cookies.atlasDrCookie = "def";
+          DigitalRiverService.getUserAuthToken(userData.id)
             .catch(function (error) {
               vm.error = _.get(error, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
             })

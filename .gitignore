@@ -30,6 +30,7 @@ node_modules
 npm-debug.log
 npm-shrinkwrap.json
 
+test/ts/
 test/e2e-protractor/reports
 test/karma-unit-*
 test/karma-watch.js
@@ -37,3 +38,5 @@ test/unit-test-results.html
 test/unit-test-results.xml
 .manifest-checksums
 .last-refreshed
+
+?

@@ -45,6 +45,16 @@ describe('User Service', function () {
         uuid: "testUUID",
         pattern: "+133423423445"
       }
+    }, {
+      address: 'dntodid2@gmail.com',
+      assignedDn: {
+        uuid: "testUUID",
+        pattern: "5002"
+      },
+      externalNumber: {
+        uuid: "",
+        pattern: "None"
+      }
     }];
     $httpBackend.expectPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users').respond(201, {
       status: 201,

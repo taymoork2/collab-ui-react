@@ -29,7 +29,7 @@ angular
           authenticate: false
         })
         .state('enterEmailAddr', {
-          url: '/enterEmailAddr',
+          url: '/enter-email-addr',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -49,7 +49,7 @@ angular
           }
         })
         .state('createAccount', {
-          url: '/createAccount',
+          url: '/create-account',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
@@ -60,10 +60,21 @@ angular
           authenticate: false
         })
         .state('unauthorized', {
-          url: '/unauthorized',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/unauthorized.html',
+              templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
+            }
+          },
+          authenticate: false
+        })
+        .state('login-error', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -72,7 +83,9 @@ angular
           url: '/404',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/404.html',
+              templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -219,8 +232,6 @@ angular
           authenticate: false
         })
         .state('domainmanagement', {
-          //abstract: true,
-          url: '/domainmanagement',
           templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
           controller: 'DomainManagementCtrl',
           controllerAs: 'dv',
@@ -604,7 +615,6 @@ angular
         .state('user-overview.conferencing.webex', {
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
           controller: 'WebExUserSettingsCtrl',
-          controllerAs: 'WebExUserSettings',
           data: {
             displayName: 'Session Enablement'
           },
@@ -616,7 +626,6 @@ angular
         .state('user-overview.conferencing.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
-          controllerAs: 'WebExUserSettings2',
           data: {
             displayName: 'Privileges'
           },
@@ -763,7 +772,6 @@ angular
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
-          controllerAs: 'WebExSiteSettings',
           parent: 'main',
           params: {
             siteUrl: null
@@ -772,7 +780,6 @@ angular
         .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
-          controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -803,7 +810,6 @@ angular
         .state('webex-reports.webex-reports-iframe', {
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -899,6 +905,14 @@ angular
           },
           data: {
             displayName: 'Overview'
+          }
+        })
+        .state('video', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/video/videoModal.tpl.html'
+            }
           }
         })
 
@@ -1139,8 +1153,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskController',
-              controllerAs: 'helpdeskCtrl',
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1155,7 +1169,8 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          abstract: true,
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
           parent: 'helpdesk-main'
         })
         .state('helpdesk.search', {
@@ -1371,7 +1386,6 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: true,
             currentOrg: {}
           }
         })
@@ -1691,8 +1705,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: undefined,
-            serviceType: undefined
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details.cluster-settings', {

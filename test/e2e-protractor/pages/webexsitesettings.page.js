@@ -4,30 +4,32 @@
 'use strict';
 
 var SiteSettigsPage = function () {
+  this.t31Info = {
+    siteUrl: 't30citestprov6.webex.com',
+    testAdminUsername: 't31r1-regression-adm@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
+  this.t30Info = {
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   this.testInfo = {
     describeCount: 0,
-    siteUrl: null,
-    siteType: null,
-    describeText: null,
-    signInText: null,
+    testType: null,
+    describeText: null
   };
-
-  this.testAdmin1 = {
-    username: 'sjsite14@mailinator.com',
-    password: 'Cisco!23',
-  };
-
-  this.testAdmin2 = {
-    username: 'cisjsite002@mailinator.com',
-    password: 'Cisco!23',
-  }
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
-  this.configureSJSITE14Cog = element(by.id("sjsite14.webex.com_webex-site-settings"));
-  this.configureCISJSITE002Cog = element(by.id("cisjsite002.webex.com_webex-site-settings"));
+  this.t31ConfigureCog = element(by.id(this.t31Info.siteUrl + "_webex-site-settings"));
+  this.t30ConfigureCog = element(by.id(this.t30Info.siteUrl + "_webex-site-settings"));
+  this.t31CardsSectionId = element(by.id(this.t31Info.siteUrl + "-cardsSection"));
+  this.t30CardsSectionId = element(by.id(this.t30Info.siteUrl + "-cardsSection"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));
@@ -43,6 +45,8 @@ var SiteSettigsPage = function () {
   this.configureCommonDisclaimersLink = element(by.id('CommonSettings_disclaimer'));
   this.configureCommonCompanyAddressesLink = element(by.id('CommonSettings_address'));
   this.configureCommonCMRLink = element(by.id('CommonSettings_cmr'));
+  this.configureCommonSiteInformationLink = element(by.id('CommonSettings_site_info'));
+
   this.iFramePage = element(by.id('webexIframeContainer'));
   this.siteSettingsPanel = element(by.id('webexSiteSettings'));
   this.siteInfoCardId = element(by.id('SiteInfo-card'));
@@ -58,6 +62,7 @@ var SiteSettigsPage = function () {
   this.commonProductivityToolsId = element(by.id('CommonSettings_productivity'));
   this.commonNavigationId = element(by.id('CommonSettings_navigation'));
   this.commonMobileId = element(by.id('CommonSettings_mobile'));
+  this.commonSiteInformationId = element(by.id('CommonSettings_site_info'));
   this.emaillTemplateId = element(by.id('CommonSettings_email_template'));
   this.disclaimersId = element(by.id('CommonSettings_disclaimer'));
   this.companyAddressesId = element(by.id('CommonSettings_address'));

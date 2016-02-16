@@ -4,69 +4,68 @@ sitesettings.testInfo.describeCount = 0;
 while (1 >= sitesettings.testInfo.describeCount) {
   switch (sitesettings.testInfo.describeCount) {
   case 1:
-    sitesettings.testInfo.siteType = 'T30';
-    sitesettings.testInfo.siteUrl = "cisjsite002.cisco.com";
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for T30 site ' + sitesettings.siteUrl;
-    sitesettings.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin2.username + ' for T30 site config test';
+    sitesettings.testInfo.testType = 'T30';
+    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t30Info.siteUrl;
     break;
 
   default:
-    sitesettings.testInfo.siteType = 'T31';
-    sitesettings.testInfo.siteUrl = "sjsite14.cisco.com";
-    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for T31 site ' + sitesettings.siteUrl;
-    sitesettings.testInfo.signInText = 'should signin as ' + sitesettings.testAdmin1.username + ' for T31 site config test';
+    sitesettings.testInfo.testType = 'T31';
+    sitesettings.testInfo.describeText = 'WebEx site settings iframe test for ' + sitesettings.testInfo.testType + ' site ' + sitesettings.t31Info.siteUrl;
   }
 
-  xdescribe(sitesettings.testInfo.describeText, function () {
+  describe(sitesettings.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
 
-    if (sitesettings.testInfo.siteType == "T31") {
-      it(sitesettings.testInfo.signInText, function () {
-        login.loginThroughGui(sitesettings.testAdmin1.username, sitesettings.testAdmin1.password);
+    if (sitesettings.testInfo.testType == "T31") {
+      it('should signin as ' + sitesettings.t31Info.testAdminUsername + ' for T31 site config test', function () {
+        login.loginThroughGui(sitesettings.t31Info.testAdminUsername, sitesettings.t31Info.testAdminPassword);
       });
     } else {
-      it(sitesettings.testInfo.signInText, function () {
-        login.loginThroughGui(sitesettings.testAdmin2.username, sitesettings.testAdmin2.password);
+      it('should signin as ' + sitesettings.t30Info.testAdminUsername + ' for T30 site config test', function () {
+        login.loginThroughGui(sitesettings.t30Info.testAdminUsername, sitesettings.t30Info.testAdminPassword);
       });
     }
 
-    it('should navigate to webex site list and find the configure site cog for ' + sitesettings.testInfo.siteUrl, function () {
+    it('should navigate to webex site list', function () {
       navigation.clickServicesTab();
       utils.click(sitesettings.conferencing);
     });
 
-    if (sitesettings.testInfo.siteType == "T31") {
-      it('should click on configure site cog and navigate to site settings index', function () {
-        utils.click(sitesettings.configureSJSITE14Cog);
+    if (sitesettings.testInfo.testType == "T31") {
+      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+        utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t31CardsSectionId);
       });
     } else {
-      it('should click on configure site cog and navigate to site settings index', function () {
-        utils.click(sitesettings.configureCISJSITE002Cog);
+      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+        utils.click(sitesettings.t30ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t30CardsSectionId);
       });
     }
 
     it('should click on site list breadcrumb and navigate to site list', function () {
-      utils.wait(sitesettings.siteListCrumb);
       utils.click(sitesettings.siteListCrumb);
     });
 
-    if (sitesettings.testInfo.siteType == "T31") {
-      it('should click on configure site cog and navigate to site settings index', function () {
-        utils.click(sitesettings.configureSJSITE14Cog);
+    if (sitesettings.testInfo.testType == "T31") {
+      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+        utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t31CardsSectionId);
       });
     } else {
-      it('should click on configure site cog and navigate to site settings index', function () {
-        utils.click(sitesettings.configureCISJSITE002Cog);
+      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+        utils.click(sitesettings.t30ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t30CardsSectionId);
       });
     }
 
-    if (sitesettings.testInfo.siteType == "T31") { // for T31 site only
+    if (sitesettings.testInfo.testType == "T31") { // for T31 site only
       it('should click on common settings cmr link', function () {
         utils.click(sitesettings.configureCommonCMRLink);
         utils.wait(sitesettings.siteSettingPanel);
@@ -148,19 +147,18 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     it('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.wait(sitesettings.siteSettingsCrumb);
       utils.click(sitesettings.siteSettingsCrumb);
       utils.wait(sitesettings.siteSettingsPanel);
     });
 
-    it('should click on common settings email template link', function () {
+    xit('should click on common settings email template link', function () {
       utils.click(sitesettings.configureCommonEmailTemplateLink);
       utils.wait(sitesettings.siteSettingPanel);
       utils.wait(sitesettings.emaillTemplateId);
       utils.wait(sitesettings.iFramePage);
     });
 
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
+    xit('should click on settings index breadcrumb and navigate to site settings index', function () {
       utils.click(sitesettings.siteSettingsCrumb);
       utils.wait(sitesettings.siteSettingsPanel);
     });
@@ -213,6 +211,18 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.wait(sitesettings.siteSettingsPanel);
     });
 
+    it('should click on common settings site information link', function () {
+      utils.click(sitesettings.configureCommonSiteInformationLink);
+      utils.wait(sitesettings.siteSettingPanel);
+      utils.wait(sitesettings.commonSiteInformationId);
+      utils.wait(sitesettings.iFramePage);
+    });
+
+    it('should click on settings index breadcrumb and navigate to site settings index', function () {
+      utils.click(sitesettings.siteSettingsCrumb);
+      utils.wait(sitesettings.siteSettingsPanel);
+    });
+
     it('should click on email all hosts btn', function () {
       utils.click(sitesettings.emailAllHostsBtn);
       utils.wait(sitesettings.siteSettingPanel);
@@ -220,39 +230,15 @@ while (1 >= sitesettings.testInfo.describeCount) {
       utils.wait(sitesettings.iFramePage);
     });
 
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.click(sitesettings.siteSettingsCrumb);
-      utils.wait(sitesettings.siteSettingsPanel);
-    });
-
-    it('should click on site features link', function () {
-      utils.click(sitesettings.siteFeaturesLink);
-      utils.wait(sitesettings.siteSettingPanel);
-      utils.wait(sitesettings.siteFeaturesId);
-      utils.wait(sitesettings.iFramePage);
-    });
-
-    it('should click on settings index breadcrumb and navigate to site settings index', function () {
-      utils.click(sitesettings.siteSettingsCrumb);
-      utils.wait(sitesettings.siteSettingsPanel);
-    });
-
-    it('should click on site information link', function () {
-      utils.click(sitesettings.siteInformationLink);
-      utils.wait(sitesettings.siteSettingPanel);
-      utils.wait(sitesettings.siteInformationId);
-      utils.wait(sitesettings.iFramePage);
-    });
-
-    if (sitesettings.testInfo.siteType == "T31") {
+    if (sitesettings.testInfo.testType == "T31") {
       it('should click on configure site cog and navigate to site settings index', function () {
         utils.click(sitesettings.siteListCrumb);
-        utils.wait(sitesettings.configureSJSITE14Cog);
+        utils.wait(sitesettings.t31ConfigureCog);
       });
     } else {
       it('should click on configure site cog and navigate to site settings index', function () {
         utils.click(sitesettings.siteListCrumb);
-        utils.wait(sitesettings.configureCISJSITE002Cog);
+        utils.wait(sitesettings.t30ConfigureCog);
       });
     }
 

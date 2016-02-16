@@ -6,25 +6,20 @@ namespace domainManagement {
     private _error;
 
     /* @ngInject */
-    constructor($stateParams, $translate, private $state, private DomainManagementService) {
+    constructor($stateParams, $translate, private $state, private $previousState, private DomainManagementService) {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
 
-      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)){
+      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)) {
         this._error = $translate.instant('domainManagement.delete.preventLockoutError');
-      }
-
-      if (this.isValid && this._domainToDelete.status === DomainManagementService.states.pending) {
-        //Just delete it without confirmation!
-        this.deleteDomain();
       }
     }
 
     public deleteDomain() {
-      if (this._domainToDelete.status === this.DomainManagementService.states.verified){
+      if (this._domainToDelete.status === this.DomainManagementService.states.verified) {
         this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
           () => {
-            this.$state.go('domainmanagement');
+            this.$previousState.go();
           },
           err => {
             this._error = err;
@@ -33,22 +28,25 @@ namespace domainManagement {
       } else {
         this.DomainManagementService.unclaimDomain(this._domainToDelete.text).then(
           () => {
-            this.$state.go('domainmanagement');
+            this.$previousState.go();
           },
           err => {
             this._error = err;
           }
         );
       }
-
     }
 
     public cancel() {
-      this.$state.go('domainmanagement');
+      this.$previousState.go();
     }
 
     get domain() {
       return this._domainToDelete && this._domainToDelete.text;
+    }
+
+    get domainIsPending() {
+      return this._domainToDelete && this._domainToDelete.status == this.DomainManagementService.states.pending;
     }
 
     get error() {

@@ -77,19 +77,32 @@ angular.module('Core')
 
         updateUsers: function (usersDataArray, licenses, entitlements, method, callback) {
           var userData = {
-            'users': []
+            users: []
           };
 
           for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
+            var userInfo = usersDataArray[i];
+            var userEmail = userInfo.address.trim();
             if (userEmail.length > 0) {
               var user = {
-                'email': userEmail,
-                'userEntitlements': entitlements,
-                'licenses': licenses,
-                'assignedDn': usersDataArray[i].assignedDn,
-                'externalNumber': usersDataArray[i].externalNumber
+                email: userEmail,
+                userEntitlements: entitlements,
+                licenses: licenses
               };
+
+              var userLic = {};
+
+              userLic.internalExtension = _.get(userInfo, 'assignedDn.pattern');
+              if (userInfo.externalNumber && userInfo.externalNumber.pattern !== 'None') {
+                userLic.directLine = userInfo.externalNumber.pattern;
+              }
+
+              if (_.isArray(entitlements) && entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userLic, entitlements);
+              }
+              if (_.isArray(licenses) && licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userLic, licenses);
+              }
               userData.users.push(user);
             }
           }
@@ -177,26 +190,6 @@ angular.module('Core')
               data.status = status;
               callback(data, status);
             });
-        },
-
-        getUserAuthToken: function (userid) {
-          return Auth.setAccessToken().then(function () {
-            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid);
-          });
-        },
-
-        getUserFromEmail: function (email) {
-          return Auth.setAccessToken().then(function () {
-            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
-              cache: false
-            });
-          });
-        },
-
-        addDrUser: function (emailPassword) {
-          return Auth.setAccessToken().then(function () {
-            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
-          });
         },
 
         updateUserProfile: function (userid, userData, callback) {
@@ -394,6 +387,9 @@ angular.module('Core')
 
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
               if (displayName) {
                 user.displayName = displayName;
               }
@@ -412,9 +408,54 @@ angular.module('Core')
           onboardUsers(userPayload, callback, cancelPromise);
         },
 
+        bulkOnboardUsers: function (usersDataArray, callback, cancelPromise) {
+          var userPayload = {
+            'users': []
+          };
+
+          _.forEach(usersDataArray, function (userData) {
+            var userEmail = userData.address.trim();
+            var userName = userData.name;
+            var displayName = userData.displayName;
+
+            var user = {
+              'email': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
+              'userEntitlements': null,
+              'licenses': null
+            };
+
+            if (userEmail.length > 0) {
+              user.email = userEmail;
+              user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
+              if (displayName) {
+                user.displayName = displayName;
+              }
+
+              // Build entitlement and license arrays with properties driven from userData model
+              if (_.isArray(userData.entitlements) && userData.entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userData, userData.entitlements);
+              }
+              if (_.isArray(userData.licenses) && userData.licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userData, userData.licenses);
+              }
+
+              userPayload.users.push(user);
+            }
+          });
+          onboardUsers(userPayload, callback, cancelPromise);
+        },
+
         deactivateUser: function (userData) {
           return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
         }
+
       };
     }
   ]);

@@ -2,7 +2,7 @@
   .device-filter {
     left: 70%;
     position: absolute;
-    top: rem-calc(140);
+    top: rem-calc(145);
     z-index: 1000;
     .select-options {
     	padding: 0;
@@ -10,5 +10,10 @@
   }
   .amExportButton {
     top: rem-calc(40);
+  }
+  .device-number {
+    font-size: rem-calc(18);
+    color: $color-people-base;
+    text-align: left;
   }
 }

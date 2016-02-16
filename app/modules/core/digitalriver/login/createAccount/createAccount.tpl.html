@@ -1,21 +1,25 @@
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title id="title" translate="digitalRiver.createAccount.title"/>
-	</head>
-	<body>
-		<h2 id="h2" translate="digitalRiver.createAccount.title"/>
-		<input type="text" ng-model="createAccountController.error" readonly="readonly" style="color:red">
-		<table>
-			<tr><td id="emailLabel" translate="digitalRiver.emailLabel"/><td><input type="email" ng-model="createAccountController.email1"></td></tr>
-			<tr><td></td><td><input type="email" ng-model="createAccountController.email2" placeholder="confirm"></td></tr>
-			<tr></tr>
-			<tr><td id="passwordLabel" translate="digitalRiver.createAccount.passwordLabel"/><td><input type="password" ng-model="createAccountController.password1"></td></tr>
-			<tr><td></td><td><input type="password" ng-model="createAccountController.password2" placeholder="confirm"></td></tr>
-			<tr></tr>
-			<tr><td><button ng-click="createAccountController.handleCreateAccount()" id="next" translate="digitalRiver.nextButton"/></td><td></td></tr>
-		</table>
-		
-	</body>
-</html>
-
+<div ng-hide="!createAccountController.drReferrer">
+	<div class="dr-container">
+		<div class="dr-row">
+			<div id="dr-create-account-header" translate="digitalRiver.createAccount.title"/>
+		</div>
+	</div>
+	<input type="text" ng-model="createAccountController.error" readonly="readonly" id="dr-create-account-error">
+	<div class="dr-container">
+		<div class="dr-row">
+			<div class="dr-left" id="dr-create-account-email-label" translate="digitalRiver.emailLabel"/><div class="dr-right"><input type="email" ng-model="createAccountController.email1"></div>
+		</div>
+		<div class="dr-row">
+			<div class="dr-left"/><div class="dr-right"><input type="email" ng-model="createAccountController.email2" placeholder="{{createAccountController.confirmPlaceholder()}}"></div>
+		</div>
+		<div class="dr-row">
+			<div class="dr-left" id="dr-create-account-password-label" translate="digitalRiver.createAccount.passwordLabel"/><div class="dr-right"><input type="password" ng-model="createAccountController.password1"></div>
+		</div>
+		<div class="dr-row">
+			<div class="dr-left"/><div class="dr-right"><input type="password" ng-model="createAccountController.password2" placeholder="{{createAccountController.confirmPlaceholder()}}"></div>
+		</div>
+		<div class="dr-row">
+			<div class="dr-left"><button ng-click="createAccountController.handleCreateAccount()" id="dr-create-account-next" translate="digitalRiver.nextButton"/></div></div>
+		</div>
+	</div>
+</div>

@@ -6,6 +6,10 @@ var touch = require('touch');
 var fs = require('fs');
 var e2eFailNotify = '.e2e-fail-notify';
 
+var TIMEOUT      = 1000 * 60;
+var LONG_TIMEOUT = 1000 * 60 * 2;
+var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
+
 exports.config = {
   framework: "jasmine2",
 
@@ -23,7 +27,8 @@ exports.config = {
     'build': process.env.BUILD_NUMBER,
 
     'chromeOptions': {
-      'args': ['--disable-extensions', '--start-fullscreen']
+      //'args': ['--disable-extensions', '--start-fullscreen']
+      'args': ['--disable-extensions', '--window-position=0,0', '--window-size=1280,900']
     },
     shardTestFiles: true,
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
@@ -83,8 +88,8 @@ exports.config = {
       })
     );
 
-    global.TIMEOUT = 60000;
-    global.LONG_TIMEOUT = 60000 * 2;
+    global.TIMEOUT = TIMEOUT;
+    global.LONG_TIMEOUT = LONG_TIMEOUT;
 
     global.baseUrl = exports.config.baseUrl;
 
@@ -186,10 +191,10 @@ exports.config = {
     showColors: true,
     print: function() {},
     includeStackTrace: true,
-    defaultTimeoutInterval: 40000
+    defaultTimeoutInterval: VERY_LONG_TIMEOUT
   },
 
   // The timeout for each script run on the browser. This should be longer
   // than the maximum time your application needs to stabilize between tasks.
-  allScriptsTimeout: 40000
+  allScriptsTimeout: VERY_LONG_TIMEOUT
 };

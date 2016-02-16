@@ -1,4 +1,3 @@
-/* global ll */
 'use strict';
 
 angular.module('Squared')
