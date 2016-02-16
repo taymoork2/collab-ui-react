@@ -6,11 +6,11 @@
     .controller('AARouteCallMenuCtrl', AARouteCallMenuCtrl);
 
   /* @ngInject */
-  function AARouteCallMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AARouteCallMenuCtrl($scope, $translate, AAUiModelService) {
 
     var vm = this;
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
+
     vm.options = [{
         "label": "Route to User",
         "value": "routeToUser"
@@ -62,11 +62,9 @@
     }
 
     function activate() {
-      vm.schedule = $scope.schedule;
       var ui = AAUiModelService.getUiModel();
-      vm.uiMenu = ui[vm.schedule];
-      vm.entries = vm.uiMenu.entries;
-      vm.menuEntry = vm.entries[$scope.index];
+
+      vm.menuEntry = ui[$scope.schedule].entries[$scope.index];
 
       setSelects();
 

@@ -27,7 +27,7 @@
       controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
       url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
       help: $translate.instant('autoAttendant.routeCallMenuHelp'),
-      actions: ['route', 'goto', 'routeToExtension']
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");

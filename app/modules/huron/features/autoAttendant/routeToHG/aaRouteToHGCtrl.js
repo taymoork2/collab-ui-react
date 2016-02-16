@@ -93,6 +93,7 @@
             action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
             vm.menuEntry.addAction(action);
           } else {
+            // make sure action is HG not AA, User, extNum, etc
             vm.menuEntry.actions[0].setName(rtHG);
             vm.menuEntry.actions[0].setValue('');
           }

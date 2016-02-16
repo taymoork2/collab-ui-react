@@ -38,6 +38,10 @@
     vm.getUser = getUser;
     vm.getUsers = getUsers;
 
+    // the CE action verb is 'routeToUser' or 'routeToVoiceMail'
+    var routeToVoiceMail = 'routeToVoiceMail';
+    var routeToUser = 'routeToUser';
+
     /////////////////////
 
     function populateUiModel() {
@@ -178,7 +182,7 @@
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
       if (angular.isDefined($scope.fromRouteCall)) {
-        var from = angular.isDefined($scope.voicemail) ? 'routeToVoiceMail' : 'routeToUser';
+        var from = angular.isDefined($scope.voicemail) && $scope.voicemail ? routeToVoiceMail : routeToUser;
 
         // existing action for route to user?
         if (!_.find(vm.menuEntry.actions, {
@@ -202,9 +206,9 @@
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var action;
           if (angular.isDefined($scope.voicemail) && $scope.voicemail)
-            action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToVoiceMail', '');
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToVoiceMail, '');
           else
-            action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', '');
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUser, '');
           vm.menuKeyEntry.addAction(action);
         }
 

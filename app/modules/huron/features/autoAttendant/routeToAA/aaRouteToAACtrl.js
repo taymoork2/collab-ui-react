@@ -79,6 +79,7 @@
             action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
             vm.menuEntry.addAction(action);
           } else {
+            // make sure action is AA not External Number, HG, User, etc
             vm.menuEntry.actions[0].setName('goto');
             vm.menuEntry.actions[0].setValue('');
           }
