@@ -178,7 +178,7 @@
           </cs-card>
         </div>
 
-        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit"
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit && helpdeskCtrl.currentSearch.deviceLimit < helpdeskCtrl.searchResultsLimit"
              class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a></span>
         </div>

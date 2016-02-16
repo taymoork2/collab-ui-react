@@ -3,14 +3,18 @@
   <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
     <!-- start of breadcrumbs -->
     <cs-page-sub-header-left>
+     <img src="/images/webex_logo_16px.png"
+                   class="webexlogo"
+                   id="webexLogo"
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
+
       <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
         <li>
           <a id="siteListCrumb" name="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing">
           </a>
         </li>
-        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">
-          {{siteSettingsObj.pageTitleFull}}
-        </li>
+        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">{{siteSettingsObj.pageTitleFull}}</li>
       </ul>
     </cs-page-sub-header-left>
     <!-- end of breadcrumbs -->
@@ -42,7 +46,6 @@
     <!-- end of loading info -->
     <!-- start of card containers -->
     <div ng-if="siteSettingsObj.viewReady" id="{{siteSettingsObj.cardsSectionId}}" name="cardsSection-{{siteSettingsObj.cardsSectionId}}">
-      <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
       <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
     </div>
     <!-- end of card containers -->

@@ -173,6 +173,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -982,6 +983,7 @@
     "deleteDevice": "Delete Device",
     "rebootDevice": "Reboot Device",
     "reboot": "Reboot",
+    "cancel": "Cancel",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
@@ -998,7 +1000,8 @@
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
     "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
-    "noDevices": "No devices found...",
+    "nothingHere": "No devices yet.",
+    "noDevices": "Let's enable collaboration devices",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room systems license is suspended.",
@@ -2067,7 +2070,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2532,7 +2536,7 @@
     "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
-    "siteSettingsIndexPageTitle": "Configure",
+    "siteSettingsIndexPageTitle": "Configure WebEx Site",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
     "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
@@ -3150,7 +3154,7 @@
     "noFeatures": "Features are not available for the current login",
     "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Nothing here to see yet.",
+      "nothingToSee": "No features yet.",
       "letsCustomize": "Let's customize the calling experience"
     },
     "hgMethods": {

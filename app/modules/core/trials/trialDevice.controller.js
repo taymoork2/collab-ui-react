@@ -3,18 +3,21 @@
 
   angular
     .module('core.trial')
-    .controller('TrialCallCtrl', TrialCallCtrl);
+    .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialCallCtrl($translate, TrialCallService, TrialRoomSystemService) {
+  function TrialDeviceController($stateParams, $translate, TrialCallService, TrialRoomSystemService, TrialDeviceService) {
     var vm = this;
 
-    var _trialData = TrialCallService.getData();
+    var _trialCallData = TrialCallService.getData();
     var _trialRoomSystemData = TrialRoomSystemService.getData();
+    var _trialDeviceData = TrialDeviceService.getData();
 
-    vm.details = _trialData.details;
-    vm.hasCallTrial = _trialData.enabled;
-    vm.hasRoomSystemTrial = _trialRoomSystemData.enabled;
+    vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
+    vm.skipDevices = _trialDeviceData.skipDevices;
+
+    vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
+    vm.canAddRoomSystemDevice = TrialRoomSystemService.canAddRoomSystemDevice(_.get($stateParams, 'details.details'), _trialRoomSystemData.enabled);
     vm.validateInputQuantity = validateInputQuantity;
     vm.validateRoomSystemsQuantity = validateRoomSystemsQuantity;
     vm.validatePhonesQuantity = validatePhonesQuantity;
@@ -22,24 +25,37 @@
     vm.calcQuantity = calcQuantity;
     vm.skip = skip;
 
-    vm.sx10 = _.find(vm.details.roomSystems, {
+    if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
+      // always default to USA
+      _trialDeviceData.shippingInfo.country = 'United States';
+      if (_.has($stateParams, 'details.details.shippingInformation.country')) {
+        // nothing was supplied to us and we have something from the backend
+        _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
+      }
+    }
+    vm.shippingInfo = _trialDeviceData.shippingInfo;
+
+    vm.sx10 = _.find(_trialRoomSystemData.details.roomSystems, {
       model: 'CISCO_SX10'
     });
-    vm.phone8865 = _.find(vm.details.phones, {
+    vm.phone8865 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8865'
     });
-    vm.phone8845 = _.find(vm.details.phones, {
+    vm.phone8845 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8845'
     });
-    vm.phone8841 = _.find(vm.details.phones, {
+    vm.phone8841 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8841'
     });
-    vm.phone7841 = _.find(vm.details.phones, {
+    vm.phone7841 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7841'
     });
-    vm.shippingInfo = _.find(vm.details.shippingInfo, {
-      isPrimary: true
-    });
+
+    setQuantity(vm.sx10);
+    setQuantity(vm.phone8865);
+    setQuantity(vm.phone8845);
+    setQuantity(vm.phone8841);
+    setQuantity(vm.phone7841);
 
     vm.roomSystemFields = [{
       model: vm.sx10,
@@ -53,7 +69,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.hasRoomSystemTrial;
+          return !vm.canAddRoomSystemDevice;
         }
       }
     }, {
@@ -64,7 +80,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -83,7 +99,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled;
+          return disabled || isPreviouslyDisabled(vm.sx10);
         }
       },
       watcher: _addWatcher(),
@@ -102,7 +118,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.hasCallTrial;
+          return !vm.canAddCallDevice;
         }
       }
     }, {
@@ -113,7 +129,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -132,7 +148,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled;
+          return disabled || isPreviouslyDisabled(vm.phone8865);
         }
       },
       watcher: _addWatcher(),
@@ -149,7 +165,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.hasCallTrial;
+          return !vm.canAddCallDevice;
         }
       }
     }, {
@@ -160,7 +176,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -179,7 +195,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled;
+          return disabled || isPreviouslyDisabled(vm.phone8845);
         }
       },
       watcher: _addWatcher(),
@@ -196,7 +212,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.hasCallTrial;
+          return !vm.canAddCallDevice;
         }
       }
     }, {
@@ -207,7 +223,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -226,7 +242,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled;
+          return disabled || isPreviouslyDisabled(vm.phone8841);
         }
       },
       watcher: _addWatcher(),
@@ -243,7 +259,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.hasCallTrial;
+          return !vm.canAddCallDevice;
         }
       }
     }, {
@@ -254,7 +270,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -273,7 +289,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled;
+          return disabled || isPreviouslyDisabled(vm.phone7841);
         }
       },
       watcher: _addWatcher(),
@@ -281,50 +297,55 @@
     }];
 
     vm.shippingFields = [{
+      model: vm.shippingInfo,
       key: 'name',
       type: 'input',
-      className: 'columns medium-7 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
       },
     }, {
+      model: vm.shippingInfo,
       key: 'phoneNumber',
       type: 'input',
-      className: 'columns medium-5 pad-top',
-      templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-9',
-        label: $translate.instant('trialModal.call.phone'),
-      },
-    }, {
-      key: 'country',
-      type: 'select',
-      defaultValue: _.find(TrialCallService.getCountryList(), {
-        code: 'USA'
-      }),
-      className: 'columns medium-12 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-6',
+        label: $translate.instant('trialModal.call.phone'),
+        type: 'text'
+      },
+    }, {
+      model: vm.shippingInfo,
+      key: 'country',
+      type: 'select',
+      defaultValue: _.find(TrialDeviceService.getCountries(), {
+        country: vm.shippingInfo.country
+      }),
+      className: 'columns medium-12',
+      templateOptions: {
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
         labelfield: 'country',
         labelProp: 'country',
-        valueProp: 'code',
+        valueProp: 'country',
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialCallService.getCountryList();
+          return TrialDeviceService.getCountries();
         },
       },
     }, {
+      model: vm.shippingInfo,
       key: 'addressLine1',
       type: 'input',
-      className: 'columns medium-12 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
         inputClass: 'columns medium-10',
@@ -333,9 +354,10 @@
         required: true,
       },
     }, {
+      model: vm.shippingInfo,
       key: 'city',
       type: 'input',
-      className: 'columns medium-4 pad-top',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
@@ -344,33 +366,39 @@
         required: true,
       },
     }, {
+      model: vm.shippingInfo,
       key: 'state',
       type: 'select',
-      className: 'columns medium-4 pad-top',
+      defaultValue: _.find(TrialDeviceService.getStates(), {
+        country: vm.shippingInfo.state
+      }),
+      className: 'columns medium-4',
       templateOptions: {
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-8',
+        labelClass: 'columns medium-3',
+        inputClass: 'columns medium-9',
         label: $translate.instant('trialModal.call.state'),
         type: 'text',
         required: true,
         labelfield: 'abbr',
         labelProp: 'abbr',
         valueProp: 'state',
+        filter: true
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialCallService.getStateList();
+          return TrialDeviceService.getStates();
         }
       },
     }, {
+      model: vm.shippingInfo,
       key: 'postalCode',
       type: 'input',
-      className: 'columns medium-4 pad-top',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
         label: $translate.instant('trialModal.call.zip'),
-        type: 'number',
+        type: 'text',
         max: 99999,
         min: 0,
         pattern: '\\d{5}',
@@ -385,7 +413,7 @@
     function init() {}
 
     function skip(skipped) {
-      _trialData.skipDevices = skipped;
+      _trialDeviceData.skipDevices = skipped;
     }
 
     function validateInputQuantity($viewValue, $modelValue, scope) {
@@ -496,6 +524,23 @@
           }
         }
       };
+    }
+
+    function setQuantity(deviceModel) {
+      var quant = getQuantity(deviceModel);
+      deviceModel.quantity = quant;
+      deviceModel.enabled = !!quant;
+    }
+
+    function getQuantity(deviceModel) {
+      return _.get(_.find(_.get($stateParams, 'details.details.devices', []), {
+        model: deviceModel.model
+      }), 'quantity', 0);
+    }
+
+    function isPreviouslyDisabled(deviceModel) {
+      // get quantity only checks from stateparams, which is gotten from querying trials
+      return !!getQuantity(deviceModel);
     }
   }
 })();

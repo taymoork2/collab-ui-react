@@ -9,7 +9,7 @@
           <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
         </div>
         <div cs-dropdown class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
-          <button cs-dropdown-toggle class="btn btn--header dropdown-toggle">
+          <button cs-dropdown-toggle ng-show = "tabs && tabs.length > 0"  class="btn btn--header dropdown-toggle">
             <div>
               <i class="icon-settings icon"></i>
               <span class="header-label">{{::'settings.title' | translate}}</span>
