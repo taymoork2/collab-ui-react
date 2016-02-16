@@ -19,11 +19,16 @@
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
-      'getTrial': getTrial,
-      'editTrial': editTrial,
-      'startTrial': startTrial,
-      'getData': getData,
-      'reset': reset,
+      getTrial: getTrial,
+      editTrial: editTrial,
+      startTrial: startTrial,
+      getData: getData,
+      reset: reset,
+      getTrialIds: getTrialIds,
+      getTrialPeriodData: getTrialPeriodData,
+      calcDaysLeft: calcDaysLeft,
+      calcDaysUsed: calcDaysUsed,
+      getExpirationPeriod: getExpirationPeriod
     };
 
     return service;
@@ -96,16 +101,30 @@
         })
         .forEach(function (trial) {
           if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
-            details.shippingInfo = trial.details.shippingInfo;
-            details.devices = _(trial.details.roomSystems)
-              .concat(trial.details.phones)
-              .filter({
-                enabled: true
-              })
-              .map(function (device) {
-                return _.pick(device, ['model', 'quantity']);
-              })
-              .value();
+            details.devices = [];
+
+            if (!trial.skipDevices) {
+              details.shippingInfo = trial.details.shippingInfo;
+              details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
+              details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+
+              // if this is not set, remove the whole thing
+              // since this may get sent with partially complete
+              // data that the backend doesnt like
+              if (details.shippingInfo.country === '') {
+                delete details.shippingInfo;
+              }
+
+              details.devices = _(trial.details.roomSystems)
+                .concat(trial.details.phones)
+                .filter({
+                  enabled: true
+                })
+                .map(function (device) {
+                  return _.pick(device, ['model', 'quantity']);
+                })
+                .value();
+            }
           }
 
           if (trial.type === Config.offerTypes.meetings) {
@@ -158,6 +177,59 @@
       };
 
       return _trialData;
+    }
+
+    function getTrialIds() {
+      var trialIds = _(Authinfo.getLicenses())
+        .filter('trialId')
+        .map(function (data) {
+          return data['trialId'];
+        })
+        .uniq()
+        .value();
+
+      return trialIds;
+    }
+
+    function getTrialPeriodData(trialId) {
+      return service.getTrial(trialId) // <= 'service.getTrial' is mock-friendly, 'getTrial' is not
+        .catch(function (reason) {
+          return $q.reject(reason);
+        })
+        .then(function (trialData) {
+          var startDate = _.get(trialData, 'startDate'),
+            trialPeriod = _.get(trialData, 'trialPeriod');
+
+          return {
+            startDate: startDate,
+            trialPeriod: trialPeriod
+          };
+        });
+    }
+
+    function calcDaysLeft(startDate, trialPeriod, currentDate) {
+      var daysUsed = calcDaysUsed(startDate, currentDate);
+      var daysLeft = trialPeriod - daysUsed;
+      return daysLeft;
+    }
+
+    function calcDaysUsed(startDate, currentDate) {
+      var d1 = new Date(startDate);
+      var d2 = currentDate || new Date();
+      d1.setUTCHours(0, 0, 0, 0); // normalize on UTC midnight
+      d2.setUTCHours(0, 0, 0, 0);
+      var deltaMs = d2 - d1;
+      var daysUsed = Math.floor(deltaMs / (24 * 60 * 60 * 1000));
+      return daysUsed;
+    }
+
+    function getExpirationPeriod(trialId, currentDate) {
+      return service.getTrialPeriodData(trialId)
+        .then(function (trialPeriodData) {
+          var startDate = trialPeriodData.startDate;
+          var trialPeriod = trialPeriodData.trialPeriod;
+          return calcDaysLeft(startDate, trialPeriod, currentDate);
+        });
     }
   }
 })();

@@ -192,20 +192,6 @@ angular.module('Core')
             });
         },
 
-        getUserFromEmail: function (email) {
-          return Auth.setAccessToken().then(function () {
-            return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + email + "/exists", {
-              cache: false
-            });
-          });
-        },
-
-        addDrUser: function (emailPassword) {
-          return Auth.setAccessToken().then(function () {
-            return $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user", emailPassword);
-          });
-        },
-
         updateUserProfile: function (userid, userData, callback) {
           var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
@@ -401,6 +387,9 @@ angular.module('Core')
 
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
               if (displayName) {
                 user.displayName = displayName;
               }
@@ -419,9 +408,54 @@ angular.module('Core')
           onboardUsers(userPayload, callback, cancelPromise);
         },
 
+        bulkOnboardUsers: function (usersDataArray, callback, cancelPromise) {
+          var userPayload = {
+            'users': []
+          };
+
+          _.forEach(usersDataArray, function (userData) {
+            var userEmail = userData.address.trim();
+            var userName = userData.name;
+            var displayName = userData.displayName;
+
+            var user = {
+              'email': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
+              'userEntitlements': null,
+              'licenses': null
+            };
+
+            if (userEmail.length > 0) {
+              user.email = userEmail;
+              user.name = tokenParseFirstLastName(userName);
+              if (!user.name.givenName && !user.name.familyName) {
+                delete user.name;
+              }
+              if (displayName) {
+                user.displayName = displayName;
+              }
+
+              // Build entitlement and license arrays with properties driven from userData model
+              if (_.isArray(userData.entitlements) && userData.entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userData, userData.entitlements);
+              }
+              if (_.isArray(userData.licenses) && userData.licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userData, userData.licenses);
+              }
+
+              userPayload.users.push(user);
+            }
+          });
+          onboardUsers(userPayload, callback, cancelPromise);
+        },
+
         deactivateUser: function (userData) {
           return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
         }
+
       };
     }
   ]);

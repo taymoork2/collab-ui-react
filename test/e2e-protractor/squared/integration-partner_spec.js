@@ -15,7 +15,9 @@ describe('Partner flow', function () {
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
-      login.login('partner-admin', '#/partner/overview');
+      login.login('partner-admin', '#/partner/overview').then(function (token) {
+        accessToken = token;
+      });
     });
 
     it('should display correct navigation colors', function () {
@@ -26,13 +28,6 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
       utils.expectIsDisplayed(navigation.reportsTab);
-    });
-
-    it('should have a partner token', function (done) {
-      utils.retrieveToken().then(function (token) {
-        accessToken = token;
-        done();
-      });
     });
 
     it('should display trials list', function () {
@@ -136,7 +131,7 @@ describe('Partner flow', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
 
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
       utils.click(wizard.finishBtn);
       notifications.clearNotifications();

@@ -629,7 +629,7 @@
         angular.forEach(data, function (item, index, array) {
           if (responseLength < item.details.length) {
             responseLength = item.details.length;
-            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].date, timezone).format('e'));
+            dayOffset = parseInt(moment.tz(item.details[(item.details.length - 1)].recordTime, timezone).format('e'));
           }
         });
         if (dayOffset >= 4) {
@@ -637,10 +637,8 @@
         } else {
           dayOffset = -dayOffset;
         }
-        // change to filter after dummy data removed
-        var baseGraph = getReturnGraph({
-          value: 0
-        }, dayOffset, graphItem);
+
+        var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
         deviceArray.graphData.push({
           deviceType: $translate.instant('registeredEndpoints.allDevices'),
           graph: angular.copy(baseGraph),

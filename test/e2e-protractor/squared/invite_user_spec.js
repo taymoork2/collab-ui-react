@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Squared Invite User Flow', function () {
+describe('Squared Add User Flow', function () {
 
   var inviteEmail, inviteEmail2;
 
@@ -12,7 +12,7 @@ describe('Squared Invite User Flow', function () {
     login.login('pbr-admin', '#/users');
   });
 
-  describe('Invite users through modal', function () {
+  describe('Add users through modal', function () {
 
     it('click on add button should pop up the adduser modal', function () {
       utils.click(users.addUsers);
@@ -23,7 +23,7 @@ describe('Squared Invite User Flow', function () {
       utils.expectIsNotDisplayed(users.addButton);
     });
 
-    it('should invite users successfully', function () {
+    it('should add users successfully', function () {
       inviteEmail = utils.randomTestGmail();
       inviteEmail2 = utils.randomTestGmail();
 
@@ -45,7 +45,7 @@ describe('Squared Invite User Flow', function () {
       utils.expectIsNotDisplayed(users.manageDialog);
     });
 
-    it('should show invite pending status on new user 1', function () {
+    it('should show add pending status on new user 1', function () {
       utils.search(inviteEmail);
       utils.expectText(users.userListStatus, 'Invite Pending');
     });
@@ -68,15 +68,14 @@ describe('Squared Invite User Flow', function () {
 
   });
 
-  describe('Invite users through wizard', function () {
+  describe('Add users through wizard', function () {
 
     it('should open the Add Users wizard', function () {
       navigation.clickAddUsers();
-      //    utils.expectIsDisplayed(wizard.manualSubtitle);
       utils.click(wizard.nextBtn);
     });
 
-    it('should invite users successfully', function () {
+    it('should add users successfully', function () {
       inviteEmail = utils.randomTestGmail();
       inviteEmail2 = utils.randomTestGmail();
 

@@ -851,7 +851,7 @@ a:active.ftwNavLink {
 .nav > li:focus,
 .nav > li:active,
 .nav > li.active {
-  z-index: 500;
+  z-index: 90;
 }
 
 .edit-modal-info {
@@ -943,6 +943,17 @@ a:active.ftwNavLink {
 
 #languageSelector {
   color: #3B3A36;
+  width: 12rem;
+  padding: 0.5rem rem-calc(14);
+  background: white;
+  height: 2rem;
+  appearance: button;
+  user-select: none;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxNTkzLjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEwMTYuNCAzNzEuM2MtMTQuNy0xNC41LTM4LjUtMTQuNS01My4yLS4xTDgwMS4zIDUzMC4zIDY0MS4xIDM3MC41Yy0xNC42LTE0LjYtMzguMy0xNC41LTUyLjguMWwtLjUuNGMtMTQuNSAxNC42LTE0LjUgMzguMyAwIDUzbDIxNC40IDIxNi40TDEwMTYuNyA0MjRjMTQuNS0xNC42IDE0LjMtMzguMi0uNC01Mi43eiIvPjwvc3ZnPg==);
+  background-size: 30px 30px;
+  background-position: 100% center;
+  background-repeat: no-repeat;
+  border-radius: $global-radius;
 }
 
 .hidden-button {

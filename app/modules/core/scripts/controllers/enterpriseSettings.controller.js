@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config, $log) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -16,7 +16,11 @@
       inputValue: '',
       isDisabled: false,
       isUrlAvailable: false,
+      isButtonDisabled: false,
+      isLoading: false,
+      isConfirmed: null,
       urlValue: '',
+      domainSuffix: Config.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
@@ -25,10 +29,12 @@
     $scope.setSipUri = function () {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
+        var sparkDomainStr = Config.getSparkDomainCheckUrl();
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
-            displayName = data.orgSettings.sipCloudDomain.split('.')[0];
-            $scope.cloudSipUriField.isDisabled = true;
+            displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
+            sipField.isDisabled = true;
+            sipField.isButtonDisabled = true;
           } else if (data.verifiedDomains) {
             displayName = data.verifiedDomains[0];
           } else if (data.displayName) {
@@ -46,6 +52,9 @@
     $scope.checkSipUriAvailability = function () {
       var domain = sipField.inputValue;
       sipField.isUrlAvailable = false;
+      sipField.isLoading = true;
+      sipField.isButtonDisabled = true;
+      sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
       return SparkDomainManagementService.checkDomainAvailability(domain)
         .then(function (response) {
           if (response.data.isDomainAvailable) {
@@ -54,21 +63,33 @@
             sipField.isError = false;
           } else {
             sipField.isError = true;
+            sipField.isButtonDisabled = false;
           }
+          sipField.isLoading = false;
         })
         .catch(function (response) {
-          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          if (response.status === 400) {
+            if (response.data.message) {
+              sipField.errorMsg = response.data.message;
+              sipField.isError = true;
+            }
+          } else {
+            Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          }
+          sipField.isLoading = false;
+          sipField.isButtonDisabled = false;
         });
     };
 
     $scope._saveDomain = function () {
       var domain = sipField.inputValue;
-      if (sipField.isUrlAvailable && !sipField.isDisabled) {
+      if (sipField.isUrlAvailable && sipField.isConfirmed) {
         SparkDomainManagementService.addSipUriDomain(domain)
           .then(function (response) {
             if (response.data.isDomainReserved) {
               sipField.isError = false;
               sipField.isDisabled = true;
+              sipField.isButtonDisabled = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
             }
           })
@@ -88,12 +109,14 @@
       return sipField.isError;
     };
 
-    $scope.inputOnChange = function (newValue, oldValue) {
-      if (newValue !== sipField.urlValue) {
+    $scope.$watch('cloudSipUriField.inputValue', function (newValue, oldValue) {
+      if (newValue !== sipField.urlValue && !sipField.isDisabled) {
         sipField.isUrlAvailable = false;
         sipField.isError = false;
+        sipField.isButtonDisabled = false;
+        sipField.isConfirmed = false;
       }
-    };
+    });
 
     $scope.options = {
       configureSSO: 1,
@@ -191,27 +214,12 @@
           if (data.data.length > 0) {
             //check if data already exists for this entityId
             var newEntityId = checkNewEntityId(data);
-            if (newEntityId.startsWith('http')) {
-              for (var datum in data.data) {
-                if (data.data[datum].entityId === newEntityId) {
-                  metaUrl = data.data[datum].url;
-                  break;
-                } else {
-                  SSOService.deleteMeta(data.data[datum].url);
-                  break;
-                }
-              }
-
-              if (metaUrl !== null) {
-                patchRemoteIdp(metaUrl);
-              } else {
-                postRemoteIdp();
-              }
+            var metaData = _.get(data, 'data[0]', {}); // pick a better name
+            if (metaData.entityId === newEntityId) {
+              patchRemoteIdp(metaData.url);
             } else {
-              Log.debug('Did not find entityId in IdP metadata file');
-              Notification.error('ssoModal.invalidFile', {
-                status: status
-              });
+              SSOService.deleteMeta(metaData.url);
+              postRemoteIdp();
             }
           } else {
             postRemoteIdp();
@@ -233,7 +241,7 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           metaUrl = _.get(data, 'data[0].url');
-          if (metaUrl !== null) {
+          if (metaUrl) {
             SSOService.deleteMeta(metaUrl, function (status) {
               if (status !== 204) {
                 success = false;
@@ -267,29 +275,24 @@
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
-          if (newEntityId.startsWith('http')) {
-            for (var datum in data.data) {
-              if (data.data[datum].entityId === newEntityId) {
-                metaUrl = data.data[datum].url;
-                break;
-              }
-            }
+          metaUrl = _.get(_.find(data.data, {
+            entityId: newEntityId
+          }), 'url');
 
-            if (metaUrl !== null) {
-              SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
-                if (data.success) {
-                  Log.debug('Single Sign-On (SSO) successfully enabled for all users');
-                  Notification.success('ssoModal.enableSSOSuccess', {
-                    status: status
-                  });
-                } else {
-                  Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
-                  Notification.error('ssoModal.enableSSOFailure', {
-                    status: status
-                  });
-                }
-              });
-            }
+          if (metaUrl) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
+              if (data.success) {
+                Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+                Notification.success('ssoModal.enableSSOSuccess', {
+                  status: status
+                });
+              } else {
+                Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
+                Notification.error('ssoModal.enableSSOFailure', {
+                  status: status
+                });
+              }
+            });
           }
         } else {
           SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, true, function (data, status) {

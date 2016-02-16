@@ -17,7 +17,8 @@ var runSeq = require('run-sequence');
 gulp.task('eslint:e2e', function () {
   var files = [].concat(
     config.test + '/e2e-protractor/squared/*_spec.js',
-    config.test + '/e2e-protractor/huron/*_spec.js'
+    config.test + '/e2e-protractor/huron/*_spec.js',
+    config.test + '/e2e-protractor/mediafusion/*_spec.js'
     );
   messageLogger('Running eslint on E2E test files', files);
   return gulp
@@ -27,7 +28,7 @@ gulp.task('eslint:e2e', function () {
       rulePaths: ['config/rules']
     }))
     .pipe($.eslint.format())
-    .pipe($.eslint.failOnError());
+    .pipe($.eslint.failAfterError());
 });
 
 // vet JS files and create coverage report
@@ -62,7 +63,7 @@ gulp.task('analyze:eslint', function () {
     .pipe($.if(args.verbose, $.print()))
     .pipe($.eslint())
     .pipe($.eslint.format())
-    .pipe($.eslint.failOnError());
+    .pipe($.eslint.failAfterError());
 });
 
 gulp.task('analyze:jscs', function () {

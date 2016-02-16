@@ -97,9 +97,7 @@
     //
     // properties:
     this.description = '';
-    this.isConfigured = true;
     this.type = '';
-    this.isTouched = false;
 
     //
     // welcome menu entry
@@ -125,8 +123,6 @@
     var newObj = new CeMenuEntry();
     newObj.setDescription(this.description);
     newObj.setType(this.type);
-    newObj.setIsConfigured(this.isConfigured);
-    newObj.setIsTouched(this.isTouched);
 
     newObj.setKey(this.key);
     for (var i = 0; i < this.actions.length; i++) {
@@ -157,18 +153,6 @@
 
   CeMenuEntry.prototype.getType = function () {
     return this.type;
-  };
-
-  CeMenuEntry.prototype.setIsConfigured = function (isConfigured) {
-    this.isConfigured = isConfigured;
-  };
-
-  CeMenuEntry.prototype.setIsTouched = function (isTouched) {
-    this.isTouched = isTouched;
-  };
-
-  CeMenuEntry.prototype.isTouched = function () {
-    return this.isTouched;
   };
 
   CeMenuEntry.prototype.setKey = function (key) {

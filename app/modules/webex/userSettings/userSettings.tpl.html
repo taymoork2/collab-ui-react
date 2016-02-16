@@ -5,8 +5,8 @@
           translate="common.save"
           type="submit"
           data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
-          ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
-          ng-disabled="WebExUserSettings.userSettingsModel.disableSave">
+          ng-click="btnSave(userSettingsView.form)"
+          ng-disabled="userSettingsModel.disableSave">
   </button>
 
   <button id="resetBtn"
@@ -14,8 +14,8 @@
          
           translate="common.cancel"
           data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
-          ng-click="WebExUserSettings.btnReset(userSettingsView.form)"
-          ng-disabled="WebExUserSettings.userSettingsModel.disableCancel">
+          ng-click="btnReset(userSettingsView.form)"
+          ng-disabled="userSettingsModel.disableCancel">
   </button>
 </cs-sp-buttons>
 
@@ -24,7 +24,7 @@
     <cs-sp-section>
       <div id="errSection"
            name="errSection"
-           ng-if="WebExUserSettings.userSettingsModel.hasLoadError">
+           ng-if="userSettingsModel.hasLoadError">
 
         <div class="center">
           <div class="nodata-icon">
@@ -32,7 +32,7 @@
           </div>
 
           <div class="nodata-message">
-            {{WebExUserSettings.userSettingsModel.errMsg}}
+            {{userSettingsModel.errMsg}}
           </div>
 
           <button id="cancelBtn"
@@ -46,31 +46,29 @@
                   name="reloadBtn"
                   translate="webexUserSettings.reload"
                   class="btn btn--people wiz-onboard-btn"
-                  ng-if="WebExUserSettings.userSettingsModel.allowRetry"
-                  ng-click="WebExUserSettings.btnReload()"
+                  ng-if="userSettingsModel.allowRetry"
+                  ng-click="btnReload()"
                   data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
           </button>
         </div>
       </div>
 
       <div id="webexUserSettingsPage"
-           ng-if="WebExUserSettings.userSettingsModel.viewReady">
+           ng-if="userSettingsModel.viewReady">
 
         <h4 class="list-group-item-heading">
           &nbsp;
         </h4>
 
-
-
         <!-- Start of Meeting Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
-          <p><b>{{WebExUserSettings.userSettingsModel.meetingCenter.label}}</b><p>
+        <div ng-if="userSettingsModel.meetingCenter.isSiteEnabled && userSettingsModel.meetingCenter.userHasLicense">
+          <p><b>{{userSettingsModel.meetingCenter.label}}</b><p>
 
           <table class="wx-table" id="MC"
                  name="MC">
 
             <tr class="wx-tr" valign="top"
-                ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+                ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.meetingCenterApplicable">
               <td class="wx-td">
                 <cs-checkbox ckid={{sessionType.id}}
@@ -88,17 +86,16 @@
           </table>
           <hr>
         </div>
-
         <!-- End of Meeting Center -->
 
         <!-- Start of Event Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
-          <p><b>{{WebExUserSettings.userSettingsModel.eventCenter.label}}</b></p>
+        <div ng-if="userSettingsModel.eventCenter.isSiteEnabled && userSettingsModel.eventCenter.userHasLicense">
+          <p><b>{{userSettingsModel.eventCenter.label}}</b></p>
           <table class="wx-table" id="EC"
                  name="EC">
 
             <tr class="wx-tr" valign="top"
-                ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+                ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.eventCenterApplicable">
               <td class="wx-td">
                 <cs-checkbox ckid={{sessionType.id}}
@@ -116,17 +113,16 @@
           </table>
           <hr>
         </div>
-
         <!-- End of Event Center -->
 
         <!-- Start of Support Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
-          <p><b>{{WebExUserSettings.userSettingsModel.supportCenter.label}}</p></b>
+        <div ng-if="userSettingsModel.supportCenter.isSiteEnabled && userSettingsModel.supportCenter.userHasLicense">
+          <p><b>{{userSettingsModel.supportCenter.label}}</p></b>
           <table class="wx-table" id="SC"
                  name="SC">
 
             <tr class="wx-tr" valign="top"
-                ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+                ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.supportCenterApplicable">
               <td class="wx-td">
                 <cs-checkbox ckid={{sessionType.id}}
@@ -144,17 +140,16 @@
           </table>
           <hr>
         </div>
-
         <!-- End of Support Center -->
 
         <!-- Start of Training Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
-          <p><b>{{WebExUserSettings.userSettingsModel.trainingCenter.label}}</b></p>
+        <div ng-if="userSettingsModel.trainingCenter.isSiteEnabled && userSettingsModel.trainingCenter.userHasLicense">
+          <p><b>{{userSettingsModel.trainingCenter.label}}</b></p>
           <table class="wx-table" id="TC"
                  name="TC">
 
             <tr class="wx-tr" valign="top"
-                ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
+                ng-repeat="sessionType in userSettingsModel.sessionTypes"
                 ng-if="sessionType.trainingCenterApplicable">
               <td class="wx-td">
                 <cs-checkbox ckid={{sessionType.id}}
@@ -172,7 +167,6 @@
           </table>
            <hr>
         </div>
-
         <!-- End of Training Center -->
 
         <div id="privLinkSection"

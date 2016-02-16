@@ -6,26 +6,36 @@
     .controller('TrialCallCtrl', TrialCallCtrl);
 
   /* @ngInject */
-  function TrialCallCtrl($translate, TrialCallService) {
+  function TrialCallCtrl($translate, TrialCallService, TrialRoomSystemService) {
     var vm = this;
 
     var _trialData = TrialCallService.getData();
+    var _trialRoomSystemData = TrialRoomSystemService.getData();
 
     vm.details = _trialData.details;
+    vm.hasCallTrial = _trialData.enabled;
+    vm.hasRoomSystemTrial = _trialRoomSystemData.enabled;
+    vm.validateInputQuantity = validateInputQuantity;
+    vm.validateRoomSystemsQuantity = validateRoomSystemsQuantity;
+    vm.validatePhonesQuantity = validatePhonesQuantity;
+    vm.validateTotalQuantity = validateTotalQuantity;
+    vm.calcQuantity = calcQuantity;
+    vm.skip = skip;
+
     vm.sx10 = _.find(vm.details.roomSystems, {
-      model: 'sx10'
+      model: 'CISCO_SX10'
     });
     vm.phone8865 = _.find(vm.details.phones, {
-      model: '8865'
+      model: 'CISCO_8865'
     });
     vm.phone8845 = _.find(vm.details.phones, {
-      model: '8845'
+      model: 'CISCO_8845'
     });
     vm.phone8841 = _.find(vm.details.phones, {
-      model: '8841'
+      model: 'CISCO_8841'
     });
     vm.phone7841 = _.find(vm.details.phones, {
-      model: '7841'
+      model: 'CISCO_7841'
     });
     vm.shippingInfo = _.find(vm.details.shippingInfo, {
       isPrimary: true
@@ -41,6 +51,11 @@
         id: 'cameraSX10',
         class: 'columns medium-offset-1',
       },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.hasRoomSystemTrial;
+        }
+      }
     }, {
       model: vm.sx10,
       key: 'quantity',
@@ -49,17 +64,30 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-5',
+        labelClass: 'columns medium-4 medium-offset-2',
+        inputClass: 'columns medium-6',
         type: 'number',
+        max: 5,
         min: 0,
         disabled: true,
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.sx10.enabled;
+        'templateOptions.required': function () {
+          return vm.sx10.enabled;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          var disabled = !vm.sx10.enabled;
+          if (disabled) {
+            scope.model.quantity = 0;
+          }
+          return disabled;
         }
       },
+      watcher: _addWatcher(),
+      validators: _addRoomSystemValidators()
     }];
 
     vm.deskPhoneFields = [{
@@ -72,6 +100,11 @@
         id: 'phone8865',
         class: 'columns medium-offset-1',
       },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.hasCallTrial;
+        }
+      }
     }, {
       model: vm.phone8865,
       key: 'quantity',
@@ -80,17 +113,30 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-5',
+        labelClass: 'columns medium-4 medium-offset-2',
+        inputClass: 'columns medium-6',
         type: 'number',
+        max: 5,
         min: 0,
         disabled: true,
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.phone8865.enabled;
+        'templateOptions.required': function () {
+          return vm.phone8865.enabled;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          var disabled = !vm.phone8865.enabled;
+          if (disabled) {
+            scope.model.quantity = 0;
+          }
+          return disabled;
         }
       },
+      watcher: _addWatcher(),
+      validators: _addPhonesValidators()
     }, {
       model: vm.phone8845,
       key: 'enabled',
@@ -101,6 +147,11 @@
         id: 'phone8845',
         class: 'columns medium-offset-1',
       },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.hasCallTrial;
+        }
+      }
     }, {
       model: vm.phone8845,
       key: 'quantity',
@@ -109,17 +160,30 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-5',
+        labelClass: 'columns medium-4 medium-offset-2',
+        inputClass: 'columns medium-6',
         type: 'number',
+        max: 5,
         min: 0,
         disabled: true,
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.phone8845.enabled;
+        'templateOptions.required': function () {
+          return vm.phone8845.enabled;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          var disabled = !vm.phone8845.enabled;
+          if (disabled) {
+            scope.model.quantity = 0;
+          }
+          return disabled;
         }
       },
+      watcher: _addWatcher(),
+      validators: _addPhonesValidators()
     }, {
       model: vm.phone8841,
       key: 'enabled',
@@ -130,6 +194,11 @@
         id: 'phone8841',
         class: 'columns medium-offset-1',
       },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.hasCallTrial;
+        }
+      }
     }, {
       model: vm.phone8841,
       key: 'quantity',
@@ -138,17 +207,30 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-5',
+        labelClass: 'columns medium-4 medium-offset-2',
+        inputClass: 'columns medium-6',
         type: 'number',
+        max: 5,
         min: 0,
         disabled: true,
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.phone8841.enabled;
+        'templateOptions.required': function () {
+          return vm.phone8841.enabled;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          var disabled = !vm.phone8841.enabled;
+          if (disabled) {
+            scope.model.quantity = 0;
+          }
+          return disabled;
         }
       },
+      watcher: _addWatcher(),
+      validators: _addPhonesValidators()
     }, {
       model: vm.phone7841,
       key: 'enabled',
@@ -159,6 +241,11 @@
         id: 'phone7841',
         class: 'columns medium-offset-1',
       },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.hasCallTrial;
+        }
+      }
     }, {
       model: vm.phone7841,
       key: 'quantity',
@@ -167,101 +254,124 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-5',
+        labelClass: 'columns medium-4 medium-offset-2',
+        inputClass: 'columns medium-6',
         type: 'number',
+        max: 5,
         min: 0,
         disabled: true,
       },
+      modelOptions: {
+        allowInvalid: true
+      },
       expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.phone7841.enabled;
+        'templateOptions.required': function () {
+          return vm.phone7841.enabled;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          var disabled = !vm.phone7841.enabled;
+          if (disabled) {
+            scope.model.quantity = 0;
+          }
+          return disabled;
         }
       },
-
+      watcher: _addWatcher(),
+      validators: _addPhonesValidators()
     }];
 
     vm.shippingFields = [{
-      model: vm.shippingInfo,
-      key: 'address',
-      type: 'textarea',
-      templateOptions: {
-        inputClass: 'columns medium-11 noresize',
-        placeholder: $translate.instant('trialModal.call.address'),
-        required: true,
-      },
-      ngModelAttrs: {
-        '{{7}}': {
-          value: 'rows'
-        }
-      },
-    }];
-
-    vm.foo = [{
-      key: 'country',
-      type: 'input',
-      templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-6',
-        label: 'Country',
-        type: 'text',
-        required: true,
-      },
-    }, {
       key: 'name',
       type: 'input',
+      className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-3',
+        labelClass: 'columns medium-2',
         inputClass: 'columns medium-6',
-        label: 'Name',
+        label: $translate.instant('trialModal.call.name'),
         type: 'text',
       },
     }, {
-      key: 'phone',
+      key: 'phoneNumber',
       type: 'input',
+      className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-3',
+        labelClass: 'columns medium-2',
         inputClass: 'columns medium-6',
-        label: 'Phone',
-        type: 'number',
+        label: $translate.instant('trialModal.call.phone'),
+        type: 'text'
       },
     }, {
-      key: 'street',
-      type: 'input',
+      key: 'country',
+      type: 'select',
+      defaultValue: _.find(TrialCallService.getCountryList(), {
+        code: 'USA'
+      }),
+      className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-3',
+        labelClass: 'columns medium-2',
         inputClass: 'columns medium-6',
-        label: 'Street',
+        label: $translate.instant('trialModal.call.country'),
+        type: 'text',
+        required: true,
+        labelfield: 'country',
+        labelProp: 'country',
+        valueProp: 'code',
+      },
+      expressionProperties: {
+        'templateOptions.options': function () {
+          return TrialCallService.getCountryList();
+        },
+      },
+    }, {
+      key: 'addressLine1',
+      type: 'input',
+      className: 'columns medium-12',
+      templateOptions: {
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-10',
+        label: $translate.instant('trialModal.call.address'),
         type: 'text',
         required: true,
       },
     }, {
       key: 'city',
       type: 'input',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-4',
-        label: 'City',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.city'),
         type: 'text',
         required: true,
       },
     }, {
       key: 'state',
-      type: 'input',
+      type: 'select',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-2',
-        label: 'State',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.state'),
         type: 'text',
         required: true,
+        labelfield: 'abbr',
+        labelProp: 'abbr',
+        valueProp: 'state',
+        filter: true
+      },
+      expressionProperties: {
+        'templateOptions.options': function () {
+          return TrialCallService.getStateList();
+        }
       },
     }, {
-      key: 'zip',
+      key: 'postalCode',
       type: 'input',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
-        inputClass: 'columns medium-2',
-        label: 'Zip',
+        inputClass: 'columns medium-9',
+        label: $translate.instant('trialModal.call.zip'),
         type: 'number',
         max: 99999,
         min: 0,
@@ -276,5 +386,118 @@
 
     function init() {}
 
+    function skip(skipped) {
+      _trialData.skipDevices = skipped;
+    }
+
+    function validateInputQuantity($viewValue, $modelValue, scope) {
+      var quantity = $modelValue || $viewValue;
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return (quantity >= 1 && quantity <= 5);
+      }
+    }
+
+    function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
+      var quantity = vm.calcQuantity(vm.details.roomSystems);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity > 5);
+      }
+    }
+
+    function validatePhonesQuantity($viewValue, $modelValue, scope) {
+      var quantity = vm.calcQuantity(vm.details.phones);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity > 5);
+      }
+    }
+
+    function validateTotalQuantity($viewValue, $modelValue, scope) {
+      var quantity = vm.calcQuantity(vm.details.roomSystems, vm.details.phones);
+      var device = scope.model;
+      if (!device.enabled) {
+        return true;
+      } else {
+        return !(quantity < 2 || quantity > 7);
+      }
+    }
+
+    function calcQuantity() {
+      var devices = Array.prototype.slice.call(arguments);
+      return _(devices)
+        .flatten()
+        .filter({
+          enabled: true
+        })
+        .map('quantity')
+        .reduce(_.add) || 0;
+    }
+
+    function _addWatcher() {
+      return {
+        expression: function () {
+          return vm.calcQuantity(vm.details.roomSystems, vm.details.phones);
+        },
+        listener: function (field, newValue, oldValue) {
+          if (newValue !== oldValue) {
+            field.formControl.$validate();
+          }
+        }
+      };
+    }
+
+    function _addRoomSystemValidators() {
+      return {
+        inputQuantity: {
+          expression: vm.validateInputQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidQuantity');
+          }
+        },
+        roomSystemsQuantity: {
+          expression: vm.validateRoomSystemsQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidRoomSystemsQuantity');
+          }
+        },
+        totalQuantity: {
+          expression: vm.validateTotalQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidTotalQuantity');
+          }
+        }
+      };
+    }
+
+    function _addPhonesValidators() {
+      return {
+        inputQuantity: {
+          expression: vm.validateInputQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidQuantity');
+          }
+        },
+        phonesQuantity: {
+          expression: vm.validatePhonesQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidPhonesQuantity');
+          }
+        },
+        totalQuantity: {
+          expression: vm.validateTotalQuantity,
+          message: function () {
+            return $translate.instant('trialModal.call.invalidTotalQuantity');
+          }
+        }
+      };
+    }
   }
 })();

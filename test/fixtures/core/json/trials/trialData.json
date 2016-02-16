@@ -29,36 +29,39 @@
       "callTrial": {
         "type": "SQUAREDUC",
         "enabled": false,
+        "skipDevices": false,
         "details": {
           "roomSystems": [{
-            "model": "sx10",
+            "model": "CISCO_SX10",
             "enabled": false,
             "quantity": 0
           }],
           "phones": [{
-            "model": "8865",
+            "model": "CISCO_8865",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8845",
+            "model": "CISCO_8845",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8841",
+            "model": "CISCO_8841",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "7841",
+            "model": "CISCO_7841",
             "enabled": false,
             "quantity": 0
           }],
-          "shippingInfo": [{
-            "isPrimary": true,
+          "shippingInfo": {
+            "country": "USA",
+            "state": "WA",
             "name": "John Connors",
             "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
-          }]
+            "address": "2901 3rd Ave Seattle",
+            "postalCode": " 98121",
+            "type": "CUSTOMER"
+          }
         }
       },
       "roomSystemTrial": {
@@ -97,39 +100,80 @@
           }
         }
       },
-      "callTrial": {
+      "skipCallTrial": {
         "type": "SQUAREDUC",
         "enabled": true,
+        "skipDevices": true,
         "details": {
           "roomSystems": [{
-            "model": "sx10",
+            "model": "CISCO_SX10",
             "enabled": true,
             "quantity": 2
           }],
           "phones": [{
-            "model": "8865",
+            "model": "CISCO_8865",
             "enabled": true,
             "quantity": 3
           }, {
-            "model": "8845",
+            "model": "CISCO_8845",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8841",
+            "model": "CISCO_8841",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "7841",
+            "model": "CISCO_7841",
             "enabled": false,
             "quantity": 0
           }],
-          "shippingInfo": [{
-            "isPrimary": true,
+          "shippingInfo": {
+            "country": "USA",
+            "state": "WA",
             "name": "John Connors",
             "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
-          }]
+            "address": "2901 3rd Ave Seattle",
+            "postalCode": " 98121",
+            "type": "CUSTOMER"
+          }
+        }
+      },
+      "callTrial": {
+        "type": "SQUAREDUC",
+        "enabled": true,
+        "skipDevices": false,
+        "details": {
+          "roomSystems": [{
+            "model": "CISCO_SX10",
+            "enabled": true,
+            "quantity": 2
+          }],
+          "phones": [{
+            "model": "CISCO_8865",
+            "enabled": true,
+            "quantity": 3
+          }, {
+            "model": "CISCO_8845",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "CISCO_8841",
+            "enabled": false,
+            "quantity": 0
+          }, {
+            "model": "CISCO_7841",
+            "enabled": false,
+            "quantity": 0
+          }],
+          "shippingInfo": {
+            "country": "USA",
+            "state": "WA",
+            "name": "John Connors",
+            "phoneNumber": "+1 206 256 3000",
+            "address": "2901 3rd Ave Seattle",
+            "postalCode": " 98121",
+            "type": "CUSTOMER"
+          }
         }
       },
       "roomSystemTrial": {

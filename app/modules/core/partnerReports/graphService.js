@@ -66,7 +66,7 @@
       updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration, marginBottom) {
       var chartData = {
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
@@ -87,7 +87,9 @@
           'shadowAlpha': 0
         },
         'autoMargins': false,
+        'marginLeft': 60,
         'marginTop': 60,
+        'marginRight': 60,
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,
@@ -131,6 +133,10 @@
 
       if (angular.isDefined(chartCursor) && chartCursor !== null) {
         chartData.chartCursor = chartCursor;
+      }
+
+      if (angular.isDefined(marginBottom) && marginBottom !== null) {
+        chartData.marginBottom = marginBottom;
       }
 
       return AmCharts.makeChart(div, chartData);
@@ -312,7 +318,7 @@
         startDuration = 0;
       }
 
-      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration);
+      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration, 60);
     }
 
     function populationGraphs(data) {

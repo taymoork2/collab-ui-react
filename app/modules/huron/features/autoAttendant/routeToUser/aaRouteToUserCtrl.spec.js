@@ -310,6 +310,8 @@ describe('Controller: AARouteToUserCtrl', function () {
       var nameNumber1 = users[0].displayName.concat(' (')
         .concat(users[0].extension).concat(')');
 
+      controller.getUsers();
+
       $httpBackend.flush();
 
       $scope.$apply();
@@ -330,6 +332,8 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       // just the display name when no extension found (404)
       var nameNumber = users[0].displayName;
+
+      controller.getUsers();
 
       $httpBackend.flush();
 

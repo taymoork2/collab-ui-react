@@ -35,4 +35,6 @@
     >
   </cs-select>
 </div>
-<p ng-if="!scheduleUpgrade.isAdminAcknowledged" translate="hercules.settings.scheduleUpgrade.defaultWarning" translate-value-onclick="scheduleUpgrade.acknowledge(scheduleUpgrade.data)" translate-compile></p>
+<p ng-if="!scheduleUpgrade.isAdminAcknowledged">
+  <button class="btn btn--cta" ng-click="scheduleUpgrade.acknowledge(scheduleUpgrade.data)" translate="hercules.settings.scheduleUpgrade.defaultWarning"></button>
+</p>

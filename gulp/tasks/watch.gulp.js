@@ -15,29 +15,29 @@ var testFiles = [];
 var log = $.util.log;
 
 gulp.task('watch', [
-      'watch:scss',
-      'watch:js',
-      'watch:ts',
-      'watch:vendorjs',
-      'watch:templates',
-      'watch:lang'
-    ]);
+  'watch:scss',
+  'watch:js',
+  'watch:ts',
+  'watch:vendorjs',
+  'watch:templates',
+  'watch:lang'
+]);
 
 
 gulp.task('watch:js', function () {
   if (!args.dist) {
     if (args.nounit) {
       gulp.watch([
-        config.appFiles.js
-      ], [
+          config.appFiles.js
+        ], [
           'copy:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
     } else {
       gulp.watch([
-        config.appFiles.js
-      ], [
+          config.appFiles.js
+        ], [
           'karma-watch',
           'copy:changed-files',
           'index:build'
@@ -51,20 +51,37 @@ gulp.task('watch:ts', function () {
   if (!args.dist) {
     if (args.nounit) {
       gulp.watch([
-        config.appFiles.ts
-      ], [
+          config.appFiles.ts,
+          '!' + config.testFiles.spec.ts
+        ], [
           'ts:changed-files',
           'index:build'
         ])
         .on('change', logWatch);
+      gulp.watch(
+        [
+          '!' + config.appFiles.ts,
+          config.testFiles.spec.ts],
+        ['ts:changed-spec-files', 'index:build'])
+        .on('change', logWatch);
     } else {
       gulp.watch([
-        config.appFiles.ts
-      ], [
+          config.appFiles.ts,
+          '!' + config.testFiles.spec.ts
+        ], [
           'karma-watch',
           'ts:changed-files',
           'index:build'
         ])
+        .on('change', logWatch);
+      gulp.watch(
+        [
+          '!' + config.appFiles.ts,
+          config.testFiles.spec.ts],
+        [
+          'karma-watch',
+          'ts:changed-spec-files',
+          'index:build'])
         .on('change', logWatch);
     }
   }
@@ -73,8 +90,8 @@ gulp.task('watch:ts', function () {
 gulp.task('watch:lang', function () {
   if (!args.dist) {
     gulp.watch([
-      config.appFiles.lang
-    ], [
+        config.appFiles.lang
+      ], [
         'copy:changed-files'
       ])
       .on('change', logWatch);
@@ -84,8 +101,8 @@ gulp.task('watch:lang', function () {
 gulp.task('watch:vendorjs', function () {
   if (!args.dist) {
     gulp.watch([
-      config.vendorFiles.js
-    ], [
+        config.vendorFiles.js
+      ], [
         'copy:build-vendor-js',
         'index:build'
       ])
@@ -136,11 +153,14 @@ gulp.task('copy:changed-files', function () {
     }));
 });
 
+gulp.task('ts:changed-spec-files', function () {
+  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.tsTestOutputFolder);
+});
 gulp.task('ts:changed-files', function () {
-  var files = [].concat(
-    changedFiles,
-    'app/scripts/types.ts'
-  );
+  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
+});
+
+function compileTs(files, output) {
   var filter;
   var reporter = $.typescript.reporter.defaultReporter();
   messageLogger('Transpiling changed TypeScript files', changedFiles);
@@ -159,11 +179,11 @@ gulp.task('ts:changed-files', function () {
       "listFiles": false
     }, filter, reporter))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(config.build))
+    .pipe(gulp.dest(output))
     .pipe(reload({
       stream: true
     }));
-});
+}
 
 //////////
 function logWatch(event) {

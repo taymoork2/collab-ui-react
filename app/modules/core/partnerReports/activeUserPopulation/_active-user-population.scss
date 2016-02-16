@@ -14,18 +14,18 @@
     text-align: left;
   }
 }
+#activeUserPopulationDiv p {
+  padding: 0;
+  position: relative;
+  z-index: 1000;
+}
 #activeUserPopulationChart{
-  overflow: visible !important;
-   position: relative;
-   top: -20px;
-   height: 350px;
-   left: 18px;
-  .amcharts-chart-div{
-    overflow: visible !important;
-    svg {
-     overflow: visible !important;
-     position: relative !important;
-    }
+  position: relative;
+  top: -20px;
+  height: 350px;
+  left: 18px;
+  .amcharts-chart-div svg {
+    position: relative !important;
   }
   .amcharts-balloon-div {
     margin-top: 5px !important;

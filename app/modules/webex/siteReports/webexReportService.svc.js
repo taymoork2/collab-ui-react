@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExReports').service('WebexReportService', [
+angular.module('WebExApp').service('WebexReportService', [
   '$q',
   '$log',
   '$translate',
@@ -89,7 +89,7 @@ angular.module('WebExReports').service('WebexReportService', [
     //All card names are hard coded in all languages except for the commom 
     //reports tag.
     var card_name_translations = {
-      "training_center": "Traning Center",
+      "training_center": "Training Center",
       "support_center": "Support Center",
       "event_center": "Event Center",
       "remote_access": "Remote Access"
@@ -354,7 +354,7 @@ angular.module('WebExReports').service('WebexReportService', [
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
-        "icon icon-circle-comp-pos",
+        "icon icon-circle-comp-positive",
         "icon icon-circle-clock"
       );
 
@@ -410,7 +410,7 @@ angular.module('WebExReports').service('WebexReportService', [
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";
 
-          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = siteName;
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
           webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;

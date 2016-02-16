@@ -1,8 +1,9 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
+      var $window = $windowProvider.$get();
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -29,7 +30,7 @@ angular
           authenticate: false
         })
         .state('enterEmailAddr', {
-          url: '/enterEmailAddr',
+          url: '/enter-email-addr',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -40,7 +41,7 @@ angular
           authenticate: false
         })
         .state('createAccount', {
-          url: '/createAccount',
+          url: '/create-account',
           views: {
             'main@': {
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
@@ -51,10 +52,21 @@ angular
           authenticate: false
         })
         .state('unauthorized', {
-          url: '/unauthorized',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/unauthorized.html',
+              templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
+            }
+          },
+          authenticate: false
+        })
+        .state('login-error', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -63,7 +75,9 @@ angular
           url: '/404',
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/404.html',
+              templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+              controller: 'StateRedirectCtrl',
+              controllerAs: 'stateRedirect'
             }
           },
           authenticate: false
@@ -131,7 +145,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = 'en_US';
+      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -593,7 +607,6 @@ angular
         .state('user-overview.conferencing.webex', {
           templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
           controller: 'WebExUserSettingsCtrl',
-          controllerAs: 'WebExUserSettings',
           data: {
             displayName: 'Session Enablement'
           },
@@ -605,7 +618,6 @@ angular
         .state('user-overview.conferencing.webex.webex2', {
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           controller: 'WebExUserSettings2Ctrl',
-          controllerAs: 'WebExUserSettings2',
           data: {
             displayName: 'Privileges'
           },
@@ -752,7 +764,6 @@ angular
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
-          controllerAs: 'WebExSiteSettings',
           parent: 'main',
           params: {
             siteUrl: null
@@ -761,7 +772,6 @@ angular
         .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
-          controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -792,7 +802,6 @@ angular
         .state('webex-reports.webex-reports-iframe', {
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
           parent: 'main',
           params: {
             siteUrl: null,
@@ -888,6 +897,14 @@ angular
           },
           data: {
             displayName: 'Overview'
+          }
+        })
+        .state('video', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              templateUrl: 'modules/core/video/videoModal.tpl.html'
+            }
           }
         })
 
@@ -1128,8 +1145,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskController',
-              controllerAs: 'helpdeskCtrl',
+              controller: 'HelpdeskHeaderController',
+              controllerAs: 'helpdeskHeaderCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1144,7 +1161,8 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          abstract: true,
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
           parent: 'helpdesk-main'
         })
         .state('helpdesk.search', {
@@ -1360,7 +1378,6 @@ angular
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
           params: {
-            fromEditTrial: true,
             currentOrg: {}
           }
         })
@@ -1680,8 +1697,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            cluster: undefined,
-            serviceType: undefined
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details.cluster-settings', {

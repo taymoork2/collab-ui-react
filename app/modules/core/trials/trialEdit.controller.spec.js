@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: TrialEditCtrl', function () {
+describe('Controller: TrialEditCtrl:', function () {
   var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer, FeatureToggleService;
 
   beforeEach(module('core.trial'));
@@ -98,6 +98,202 @@ describe('Controller: TrialEditCtrl', function () {
 
     it('should not close the modal', function () {
       expect($state.modal.close).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('helper functions:', function () {
+    describe('hasEnabled', function () {
+      it('should only return true if first arg is true and second arg is false', function () {
+        var hasEnabled = controller._helpers.hasEnabled;
+        expect(hasEnabled(true, false)).toBe(true);
+        expect(hasEnabled(true, true)).toBe(false);
+        expect(hasEnabled(false, true)).toBe(false);
+        expect(hasEnabled(false, false)).toBe(false);
+      });
+    });
+
+    describe('hasEnabledMessageTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "message" as its second arg', function () {
+        var hasEnabledMessageTrial = controller._helpers.hasEnabledMessageTrial;
+        expect(hasEnabledMessageTrial({
+          enabled: true
+        }, {
+          message: false
+        })).toBe(true);
+
+        expect(hasEnabledMessageTrial({
+          enabled: true
+        }, {
+          message: true
+        })).toBe(false);
+
+        expect(hasEnabledMessageTrial({
+          enabled: false
+        }, {
+          message: false
+        })).toBe(false);
+
+        expect(hasEnabledMessageTrial({
+          enabled: false
+        }, {
+          message: true
+        })).toBe(false);
+      });
+    });
+
+    describe('hasEnabledMeetingTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "meeting" as its second arg', function () {
+        var hasEnabledMeetingTrial = controller._helpers.hasEnabledMeetingTrial;
+        expect(hasEnabledMeetingTrial({
+          enabled: true
+        }, {
+          meeting: false
+        })).toBe(true);
+
+        expect(hasEnabledMeetingTrial({
+          enabled: true
+        }, {
+          meeting: true
+        })).toBe(false);
+
+        expect(hasEnabledMeetingTrial({
+          enabled: false
+        }, {
+          meeting: false
+        })).toBe(false);
+
+        expect(hasEnabledMeetingTrial({
+          enabled: false
+        }, {
+          meeting: true
+        })).toBe(false);
+      });
+    });
+
+    describe('hasEnabledCallTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "call" as its second arg', function () {
+        var hasEnabledCallTrial = controller._helpers.hasEnabledCallTrial;
+        expect(hasEnabledCallTrial({
+          enabled: true
+        }, {
+          call: false
+        })).toBe(true);
+
+        expect(hasEnabledCallTrial({
+          enabled: true
+        }, {
+          call: true
+        })).toBe(false);
+
+        expect(hasEnabledCallTrial({
+          enabled: false
+        }, {
+          call: false
+        })).toBe(false);
+
+        expect(hasEnabledCallTrial({
+          enabled: false
+        }, {
+          call: true
+        })).toBe(false);
+      });
+    });
+
+    describe('hasEnabledRoomSystemTrial', function () {
+      it('should expect an object with a boolean property named "enabled" as its first arg, and an object with a boolean property named "roomSystems" as its second arg', function () {
+        var hasEnabledRoomSystemTrial = controller._helpers.hasEnabledRoomSystemTrial;
+        expect(hasEnabledRoomSystemTrial({
+          enabled: true
+        }, {
+          roomSystems: false
+        })).toBe(true);
+
+        expect(hasEnabledRoomSystemTrial({
+          enabled: true
+        }, {
+          roomSystems: true
+        })).toBe(false);
+
+        expect(hasEnabledRoomSystemTrial({
+          enabled: false
+        }, {
+          roomSystems: false
+        })).toBe(false);
+
+        expect(hasEnabledRoomSystemTrial({
+          enabled: false
+        }, {
+          roomSystems: true
+        })).toBe(false);
+      });
+    });
+
+    describe('hasEnabledAnyTrial', function () {
+      describe('expects two args: an object with properties of "messageTrial", "meetingTrial", ' +
+        '"callTrial", "roomSystemTrial" as its first, and an object with properties of "message", ' +
+        '"meeting", "call", and "roomSystems" as its second',
+        function () {
+          var _vm, _preset;
+
+          beforeEach(function () {
+            _vm = {
+              messageTrial: {
+                enabled: false
+              },
+              meetingTrial: {
+                enabled: false
+              },
+              callTrial: {
+                enabled: false
+              },
+              roomSystemTrial: {
+                enabled: false
+              },
+            };
+            _preset = {
+              message: false,
+              meeting: false,
+              call: false,
+              roomSystems: false,
+            };
+          });
+
+          it('should return true if the "messageTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "message" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = controller._helpers.hasEnabledAnyTrial;
+              _vm.messageTrial.enabled = true;
+              _preset.message = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+
+          it('should return true if the "meetingTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "meeting" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = controller._helpers.hasEnabledAnyTrial;
+              _vm.meetingTrial.enabled = true;
+              _preset.meeting = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+
+          it('should return true if the "callTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "call" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = controller._helpers.hasEnabledAnyTrial;
+              _vm.callTrial.enabled = true;
+              _preset.call = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+
+          it('should return true if the "roomSystemTrial.enabled" sub-property on the first arg is true, ' +
+            'and the "roomSystems" property on the second arg is false',
+            function () {
+              var hasEnabledAnyTrial = controller._helpers.hasEnabledAnyTrial;
+              _vm.roomSystemTrial.enabled = true;
+              _preset.roomSystems = false;
+              expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+            });
+        });
     });
   });
 });

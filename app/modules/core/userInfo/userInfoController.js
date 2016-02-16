@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils', '$translate', 'WebExUtilsFact', '$timeout',
-    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
+  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', '$state', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils', '$translate', 'WebExUtilsFact', '$timeout',
+    function ($scope, Authinfo, Auth, Log, Config, $window, $location, $state, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate, WebExUtilsFact, $timeout) {
       var getAuthinfoData = function () {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
@@ -13,6 +13,7 @@ angular.module('Core')
         $scope.roles = roles;
         $scope.orgId = Authinfo.getOrgId();
         $scope.isPartner = Authinfo.isPartnerAdmin();
+        $scope.isPartnerSales = Authinfo.isPartnerSalesAdmin();
         $scope.roleList = _.map(roles, function (role) {
           return $translate.instant('atlasRoles.' + role);
         }).sort().join(', ');
@@ -58,6 +59,10 @@ angular.module('Core')
           Auth.logout();
         });
         $scope.loggedIn = false;
+      };
+
+      $scope.openVideo = function () {
+        $state.go('video');
       };
 
       $scope.sendFeedback = function () {
