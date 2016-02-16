@@ -857,6 +857,10 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
+        /**
+         * Method to get Oauth Login Url with email specified
+         * @param {string} email
+         */
         getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
@@ -867,6 +871,7 @@ angular.module('Core')
             this.getOauthServiceType(),
             encodeURIComponent(email)
           ];
+
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
