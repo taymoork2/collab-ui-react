@@ -18,19 +18,9 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
-    var initialDataPromise = huronEnabled().then(function (enabled) {
-      return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
-        return CsdmConverter.convertHuronDevices(res.data);
-      });
+    var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
+      return CsdmConverter.convertHuronDevices(res.data);
     });
-
-    function huronEnabled() {
-      if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmHuron);
-      }
-    }
 
     function encodeHuronTags(description) {
       return (description || "").replace(/"/g, "'");
@@ -43,10 +33,8 @@
 
     var deviceCache = CsdmCacheFactory.create({
       fetch: function () {
-        return huronEnabled().then(function (enabled) {
-          return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
-            return CsdmConverter.convertHuronDevices(res.data);
-          });
+        return $http.get(devicesUrl).then(function (res) {
+          return CsdmConverter.convertHuronDevices(res.data);
         });
       },
       update: function (url, obj) {

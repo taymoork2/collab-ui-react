@@ -173,6 +173,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -2068,7 +2069,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",

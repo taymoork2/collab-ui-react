@@ -215,9 +215,7 @@
     "type": "MENU_OPTION",
     "headers": [{
       "description": "",
-      "isConfigured": true,
       "type": "MENU_OPTION_ANNOUNCEMENT",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "say",
@@ -233,9 +231,7 @@
       "voice": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "MENU_OPTION_DEFAULT",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "repeatActionsOnInput",
@@ -252,9 +248,7 @@
     }],
     "entries": [{
       "description": "Play office hours",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "0",
       "actions": [{
         "name": "play",
@@ -270,9 +264,7 @@
       "voice": ""
     }, {
       "description": "Operator",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "1",
       "actions": [{
         "name": "route",
@@ -288,9 +280,7 @@
       "voice": ""
     }, {
       "description": "Leave voicemail",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "2",
       "actions": [{
         "name": "routeToVoiceMail",
@@ -306,9 +296,7 @@
       "voice": ""
     }, {
       "description": "Repeat instruction",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "3",
       "actions": [{
         "name": "repeatActionsOnInput",
@@ -324,9 +312,7 @@
       "voice": ""
     }, {
       "description": "Call dialed number",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "4",
       "actions": [{
         "name": "routeToDialed",
@@ -342,9 +328,7 @@
       "voice": ""
     }, {
       "description": "Call dialed mailbox",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "5",
       "actions": [{
         "name": "routeToDialedMailbox",
@@ -360,9 +344,7 @@
       "voice": ""
     }, {
       "description": "Dial by extension",
-      "isConfigured": true,
       "type": "MENU_OPTION",
-      "isTouched": false,
       "key": "6",
       "actions": [{
         "name": "runActionsOnInput",

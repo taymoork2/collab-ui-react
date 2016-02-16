@@ -23,6 +23,7 @@
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
+      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
       androidAddGuestRelease: 'android-add-guest-release',
       androidCallsTab: 'android-calls-tab',
