@@ -7,7 +7,7 @@
   /* @ngInject */
   function TrialNoticeBannerCtrl($q, Authinfo, EmailService, FeatureToggleService, Notification, TrialService, UserListService) {
     var vm = this;
-    var _ft = {
+    var ft = {
       atlasTrialConversion: false
     };
 
@@ -26,25 +26,27 @@
     ///////////////////////
 
     function init() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion)
-        .then(function (enabled) {
-          _ft.atlasTrialConversion = enabled;
-        })
-        .then(getDaysLeft)
-        .then(function (daysLeft) {
+      return $q.all([
+          FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion),
+          getDaysLeft(),
+          getPrimaryPartnerInfo()
+        ])
+        .then(function (results) {
+          var enabled = results[0],
+            daysLeft = results[1],
+            partnerInfo = results[2];
+          ft.atlasTrialConversion = enabled;
           vm.daysLeft = daysLeft;
-        })
-        .then(getPrimaryPartnerInfo)
-        .then(function (partnerInfo) {
           vm.partnerName = _.get(partnerInfo, 'data.partners[0].displayName');
         });
     }
 
     function canShow() {
-      return _ft.atlasTrialConversion && Authinfo.isCustomerAdmin();
+      return ft.atlasTrialConversion && Authinfo.isUserAdmin();
     }
 
     function sendRequest() {
+      // TODO: add sendEmail() here
       Notification.success('trials.requestConfirmNotifyMsg', {
         partnerName: vm.partnerName
       });

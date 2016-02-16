@@ -60,7 +60,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     });
 
     $httpBackend.flush();
-    $scope.$apply();
   }));
 
   afterEach(function () {
@@ -69,10 +68,6 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   });
 
   describe('primary behaviors:', function () {
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
-    });
-
     it('should check if "atlasTrialConversion" feature-toggle is enabled', function () {
       expect(FeatureToggleService.supports)
         .toHaveBeenCalledWith(FeatureToggleService.features.atlasTrialConversion);
@@ -89,13 +84,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('canShow():', function () {
       describe('if "atlasTrialConversion" feature-toggle is enabled:', function () {
-        it('should return true if "Authinfo.isCustomerAdmin()" is true', function () {
-          spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        it('should return true if "Authinfo.isUserAdmin()" is true', function () {
+          spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
           expect(controller.canShow()).toBe(true);
         });
 
-        it('should return true if "Authinfo.isCustomerAdmin()" is false', function () {
-          spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(false);
+        it('should return true if "Authinfo.isUserAdmin()" is false', function () {
+          spyOn(Authinfo, 'isUserAdmin').and.returnValue(false);
           expect(controller.canShow()).toBe(false);
         });
       });

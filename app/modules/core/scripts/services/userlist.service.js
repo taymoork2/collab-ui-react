@@ -277,6 +277,8 @@
         });
     }
 
+    // TODO: revisit after graduation, consider:
+    // - simply unpacking the 'data' property on success
     function listPartnersAsPromise(orgId) {
 
       var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
@@ -287,7 +289,7 @@
             success: false,
             status: status
           });
-          $q.reject(data);
+          return $q.reject(data);
         })
         .then(function (data, status) {
           data = _.extend({}, data, {
