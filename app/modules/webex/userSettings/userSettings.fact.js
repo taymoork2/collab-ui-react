@@ -65,15 +65,8 @@
           return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
-        initUserSettingsModel: function () {
-          var funcName = "initUserSettingsModel()";
-          var logMsg = "";
-
-          webExUserSettingsModel.meetingCenter.userHasLicense = false;
-          webExUserSettingsModel.trainingCenter.userHasLicense = false;
-          webExUserSettingsModel.eventCenter.userHasLicense = false;
-          webExUserSettingsModel.supportCenter.userHasLicense = false;
-          webExUserSettingsModel.cmr.userHasLicense = false;
+        checkUserWebExEntitlement: function () {
+          var deferredCheckUserWebExEntitlement = $q.defer();
 
           Orgservice.getValidLicenses().then(
             function getOrgLicensesSuccess(orgLicenses) {
@@ -149,7 +142,10 @@
                   }
                 } // checkLicense()
               ); // userLicenses.forEach(()
+
+              deferredCheckUserWebExEntitlement.resolve(null);
             }, // getOrgLicensesSuccess()
+
             function getOrgLicensesError(response) {
               var funcName = "getOrgLicensesError()";
               var logMsg = "";
@@ -157,8 +153,23 @@
               logMsg = funcName + ": " + "\n" +
                 "response=" + JSON.stringify(response);
               $log.log(logMsg);
+
+              deferredCheckUserWebExEntitlement.reject(response);
             } // getOrgLicensesError()
-          );
+          ); // Orgservice.getValidLicenses().then()
+
+          return deferredCheckUserWebExEntitlement.promise;
+        }, // checkUserWebExEntitlement()
+
+        initUserSettingsModel: function () {
+          var funcName = "initUserSettingsModel()";
+          var logMsg = "";
+
+          webExUserSettingsModel.meetingCenter.userHasLicense = false;
+          webExUserSettingsModel.trainingCenter.userHasLicense = false;
+          webExUserSettingsModel.eventCenter.userHasLicense = false;
+          webExUserSettingsModel.supportCenter.userHasLicense = false;
+          webExUserSettingsModel.cmr.userHasLicense = false;
 
           webExUserSettingsModel.siteInfo = null;
           webExUserSettingsModel.meetingTypesInfo = null;
