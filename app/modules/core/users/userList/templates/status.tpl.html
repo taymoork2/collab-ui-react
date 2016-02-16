@@ -1,0 +1,9 @@
+<div class="ui-grid-cell-contents">
+  <i
+    class="icon icon-circle user-status"
+    ng-class="{'user-status-green': !row.entity.userStatus || row.entity.userStatus === 'active', 'user-status-yellow': row.entity.userStatus && row.entity.userStatus !== 'active'}">
+  </i>
+  <span>
+    {{row.entity.userStatus|userListFilter}}
+  </span>
+</div>

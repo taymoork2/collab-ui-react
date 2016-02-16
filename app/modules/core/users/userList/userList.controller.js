@@ -399,7 +399,7 @@
           field: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
-          cellTemplate: getTemplate('statusTpl'),
+          cellTemplate: getTemplate('status.tpl'),
           displayName: $translate.instant('usersPage.status')
         }, {
           field: 'action',
