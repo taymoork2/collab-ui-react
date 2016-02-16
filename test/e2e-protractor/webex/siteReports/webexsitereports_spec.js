@@ -109,16 +109,6 @@ while (1 >= sitereports.testInfo.describeCount) {
       utils.wait(sitereports.webexSiteReportsPanel);
     });
 
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
     // it('should pause', function () {
     //   browser.pause()
     // });
