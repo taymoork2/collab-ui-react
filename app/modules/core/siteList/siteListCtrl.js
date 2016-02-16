@@ -123,12 +123,12 @@ angular.module('Core')
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
         '      <p class="ui-grid-cell-contents">' + '\n' +
-        '        <i class="icon-error icon err"></i>' + '\n' +
+        '        <i class="icon-error icon err webex-alert-text"></i>' + '\n' +
         '      </p>' + '\n' +
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
         '      <p class="ui-grid-cell-contents">' + '\n' +
-        '        <i class="icon-warning icon"></i>' + '\n' +
+        '        <i class="icon-warning icon webex-attention-text"></i>' + '\n' +
         '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
@@ -159,6 +159,16 @@ angular.module('Core')
         '        </p>' + '\n' +
         '       </a>' + '\n' +
         '    </div>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isError && !row.entity.isWarn" popover="{{\'siteList.systemError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-error icon err webex-alert-text"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="row.entity.isWarn" popover="{{\'siteList.authError\' | translate}}" popover-trigger="mouseenter" popover-placement="bottom">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
+        '        <i class="icon-warning icon webex-attention-text"></i>' + '\n' +
+        '      </p>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 

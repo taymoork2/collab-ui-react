@@ -52,18 +52,7 @@
           <span>{{helpdeskDeviceCtrl.device.uuid}}</span>
         </div>
       </div>
-      
-      <div class="row" ng-if="helpdeskDeviceCtrl.deviceNumbers">
-        <div class="small-4 medium-3 large-2 columns details-heading">
-          <span>{{'helpdesk.numbers' | translate}}:</span>
-        </div>
-        <div class="small-8 medium-9 large-10 columns details-value-device">
-          <span ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers">
-            {{number.directoryNumber.pattern}}<span ng-if="number.e164Mask"> ({{number.e164Mask}})</span>{{$last ? '' : ', '}}
-          </span>
-        </div>
-      </div>
-      
+          
       <div class="row" ng-if="helpdeskDeviceCtrl.ownerUser">
         <div class="small-4 medium-3 large-2 columns details-heading">
           <span>{{'common.user' | translate}}:</span>
@@ -87,6 +76,19 @@
               {{helpdeskDeviceCtrl.org.displayName}}
             </a>
           </span>
+        </div>
+      </div>
+      
+      <div class="row" ng-if="helpdeskDeviceCtrl.deviceNumbers">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.numbers' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <div ng-repeat="number in helpdeskDeviceCtrl.deviceNumbers | orderBy:'sortOrder'">
+            <span>{{number.directoryNumber.pattern}}</span><span ng-if="number.e164Mask"> {{'common.or' | translate}} {{number.e164Mask}}</span> 
+            <span ng-if="number.dnUsage">- {{'helpdesk.' + number.dnUsage | translate}}</span>
+            <span ng-if="number.users.length > 1"> ({{number.users.length}} {{'helpdesk.users' | translate | lowercase}})</span>
+          </div>
         </div>
       </div>
     </div>

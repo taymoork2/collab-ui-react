@@ -53,19 +53,40 @@
     width: 141px;
   }
 
-  #overview {
+  .activationOverview {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+  }
+
+  .activationImage {
+    margin: 15px 0 40px 0;
+    width: 116px;
+  }
+
+  .activationDescription {
+    text-align: center;
+  }
+
+  .activationButtons {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .overview {
     display: flex;
     align-items: center;
     justify-content: center
   }
 
-  #overviewImage {
+  .overviewImage {
     width: 144px;
-    margin: 15px 25px 15px 0;
+    margin: 15px 15px 15px 0;
   }
 
-  #overviewDescription {
-    margin: 0 0 0 25px;
+  .overviewDescription {
+    margin: 0 0 0 15px;
   }
 
   .deviceIssue {
@@ -77,6 +98,14 @@
   i {
     top: 15px;
   }
+}
+
+.line-row {
+  display: flex;
+}
+
+.primaryLineBadge {
+  margin-left: 10px;
 }
 
 .modal-success, .modal-warning {
@@ -203,6 +232,10 @@
   .btn {
     transition: none;
   }
+  #newRoom {
+    margin-top: 10px;
+    margin-bottom: 25px;
+  }
 }
 
 #remoteSupportModal {
@@ -211,6 +244,9 @@
   }
   input {
     margin-right: 15px;
+  }
+  #display-key {
+    width: 100%;
   }
 }
 

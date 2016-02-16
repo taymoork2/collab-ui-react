@@ -173,6 +173,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -538,6 +539,7 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
+    "cdrLogs": "CDR Call Flow",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -546,7 +548,8 @@
     "cards": {
       "sparkStatus": "Spark Status",
       "helpDesk": "Help Desk Support",
-      "supportResources": "Support Resources"
+      "supportResources": "Support Resources",
+      "tools": "Tools"
     }
   },
   "cdrLogs": {
@@ -556,18 +559,18 @@
     "nonexistentUser": "{{calltype}} User Id is incorrect or does not exist for this customer.  Please verify the field and retry.",
     "search": "Search",
     "reset": "Reset",
-    "userLabel": "User ID:",
-    "number": "Number:",
-    "device": "Device:",
+    "userLabel": "User ID",
+    "callingNumber": "Calling Number",
+    "calledNumber": "Called Number",
     "callingParty": "Calling Party",
     "calledParty": "Called Party",
-    "startTime": "Start Time:",
-    "endTime": "End Time:",
+    "startTime": "Start Time",
+    "endTime": "End Time",
     "timeExample": "hh:mm:ss AM/PM",
-    "startDate": "Start Date:",
-    "endDate": "End Date:",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "dateExample": "Choose a Date",
-    "size": "Hit Size:",
+    "size": "Hit Size",
     "uploadFile": "Upload CDR File",
     "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
@@ -586,9 +589,12 @@
     "callsSubtitle": "Call List",
     "sessionIds": "Session Ids",
     "cdrTableTitle": "CDRs Generated During Call",
-    "cdrRetrievalError": "Error encountered while retrieving CDR records.",
-    "cdr401Unauthorized": "User not authorized to retrieve CDR records.",
-    "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data.  To retrieve data, lower the 'Hit Size' count and resubmit.",
+    "cdr401And403Error": "User not authorized to retrieve CDR records.",
+    "cdr404Error": "Elastic Search unable to respond at this time. Please try again at a later time.",
+    "cdr408Error": "Request timed out while waiting for a response from Elastic Search. Please try again at a later time.",
+    "cdr409Error": "Request failed due to a processing conflict. Please verify the search data and try again.",
+    "cdr500Error": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.  Lowering the hit size before retrying may prevent further errors.",
+    "cdr502And503Error": "Elastic Search is temporarily unavailable. Please try again at a later time.",
     "required": "This field is required.",
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
     "userUuidError": "Input a User ID or 36 character UUID.",
@@ -953,7 +959,7 @@
   },
   "spacesPage": {
     "title": "Devices",
-    "modalTitle": "Activate a New Device",
+    "modalTitle": "Add a New Device",
     "activateDevice": "Activate a New Device",
     "addBtn": "Add Device",
     "deleteActivationCode": "Delete Activation Code",
@@ -968,6 +974,8 @@
     "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+    "addPersonalDevice": "Trying to add a personal device?",
+    "addPersonalDeviceDesc": "To add a personal device, generate an activation code for a specific user in the <a ng-click=\"{{onclick}}\">Users</a> page.",
     "addDeviceStep2": "Your activation code has been created",
     "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
     "emptyDevices1": "Once you add a new device,",
@@ -1038,12 +1046,12 @@
       "instructions-grant-registration": "Enter the hostname of the Expressway that you want to register with Cisco Collaboration Cloud.",
       "hostname-placeholder": "Enter Expressway Hostname",
       "activate-resource-button": "Next",
-      "register-resource-button": "Go To Expressway",
-      "grant-registration-success-header": "You may now register the Expressway <strong>{{hostname}}</strong> with Cisco Collaboration Cloud.",
-      "grant-success-information": "Go to your Expressway within one hour to finish registration."
+      "register-resource-button": "Go to Expressway",
+      "grant-registration-success-header": "You may now register the Expressway {{hostname}} with Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Expressway within one hour to complete registration."
     },
     "activateService": {
-      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "ingress": "Extend the Cloud to your On-Premise Environment",
       "serviceNames": {
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
@@ -1109,8 +1117,8 @@
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
-      "squared-fusion-cal": "Calendar Service helps your users collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx to your invitation.",
+      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
+      "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx link to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
       "squared-fusion-ec": "",
@@ -1165,7 +1173,7 @@
       "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
       "documentationHeading": "Documentation and software",
-      "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
+      "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
       "documentationSaving": "Saving.",
       "call": {
@@ -1178,7 +1186,7 @@
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
-        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
+        "aware": "Share your desktop with Spark while you are on your work phone.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1828,14 +1836,16 @@
     "feature5": "E911 Services and Toll Free vanity lookup"
   },
   "partnerHomePage": {
-    "trialsHeading": "Active Trials",
+    "trialsHeading": "Trials",
+    "onboardingTitle": "Onboarding",
+    "activity-title": "Activity",
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
     "addTrial": "Start Trial",
-    "trialsCustomerName": "Customer",
+    "trialsCustomerName": "Active Trials",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",
-    "viewAll": "View all trials",
+    "viewAll": "View all Trials",
     "expiredToday": "Expires Today",
     "daysAgo": "{{days}} days ago",
     "expireToday": "Expiring Today",
@@ -2115,8 +2125,11 @@
     "macAddr": "MAC Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
-    "codeExpires": "This activation code expires",
-    "deviceCodeExpires": "The activation code for this device expires",
+    "notYetActivated": "No device has been activated for this location.",
+    "deleteLocation": "Delete Location",
+    "codeExpires": "This activation code expires {{inXDays}}",
+    "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
+    "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
     "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
@@ -2903,7 +2916,7 @@
     "importFailedTooltip": "Import failed",
     "siteCSVNotAvailable": "Not available",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site."
+    "systemError": "Unable to communicate with this WebEx site. Contact support."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3430,6 +3443,7 @@
     "huronNotActivated": "Unable to search for Spark Call devices. The voice service is not activated for this customer.",
     "primary": "Primary",
     "shared": "Shared",
+    "primaryShared": "Primary Shared",
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
@@ -3474,7 +3488,7 @@
     },
     "email": {
       "header": "Send email",
-      "description": "Enter email addresses to receive an email with the DNS verification token and instructions for {{name}}.",
+      "description": "Enter email addresses to receive an email with the DNS verification token and instructions for {{domain}}.",
       "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not a valid email address.",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
@@ -3488,7 +3502,7 @@
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     },
     "claim": {
@@ -3508,7 +3522,7 @@
       "title": "Token and instructions",
       "done": "Done",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
+      "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify",
       "sendEmail": "Send instructions"
     }
