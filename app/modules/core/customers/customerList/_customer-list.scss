@@ -17,11 +17,11 @@
 }
 
 .ui-grid-cell.ui-grid-add-column-border {
-  border-right: 1px solid #ebebec;
+  border-right: 1px solid $gray-light-3;
 }
 
 .ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
-  border-right: 1px solid #ebebec;
+  border-right: 1px solid $gray-light-3;
 }
 
 .ngHeaderText.colt1,
