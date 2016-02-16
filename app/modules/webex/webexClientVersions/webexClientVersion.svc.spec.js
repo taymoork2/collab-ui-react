@@ -7,7 +7,7 @@ describe('WebexClientVersion Test', function () {
   //beforeEach(module('wx2AdminWebClientApp'));
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var WebexClientVersion, httpBackend, WebExUtilsFact, $translate, Config;
+  var WebexClientVersion, httpBackend, $translate, Config;
   var clientVersions1;
 
   beforeEach(inject(function ($injector, _$httpBackend_, _Config_, _WebexClientVersion_) {
@@ -23,6 +23,11 @@ describe('WebexClientVersion Test', function () {
 
   }));
 
+  afterEach(function () {
+    //httpBackend.verifyNoOutstandingExpectation();
+    //httpBackend.verifyNoOutstandingRequest();
+  });
+
   it("shoud get test data", function () {
     var td = WebexClientVersion.getTestData();
     expect(td).toBe("testData");
@@ -33,14 +38,21 @@ describe('WebexClientVersion Test', function () {
   });
 
   it("should get client versions", function () {
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
+
     var url = Config.getAdminServiceUrl() + 'partnertemplate/clientversions';
 
-    httpBackend.expectGET(url).respond(200, clientVersions1);
+    //httpBackend.resetExpectations();
+
+    //unfortunately, this line is necessary. Not sure where it's coming from
+    httpBackend.expectGET('l10n/en_US.json').respond(200, {});
+    httpBackend.whenGET(url).respond(200, clientVersions1);
     //httpBackend.expectGET('/admin/api/v1/partnertemplate/clientversions');
 
-    WebexClientVersion.getWbxClientVersions();
+    var versionp = WebexClientVersion.getWbxClientVersions();
+
+    versionp.then(function (data) {
+      expect(data[0]).toBe('c1');
+    });
 
     httpBackend.flush();
   });
