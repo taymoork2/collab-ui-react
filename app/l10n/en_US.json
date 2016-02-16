@@ -2870,7 +2870,7 @@
     "events": "Events"
   },
   "processOrderPage": {
-    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
+    "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
   },
