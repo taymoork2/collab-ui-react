@@ -31,9 +31,7 @@
     "headers": [],
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "play",
@@ -46,9 +44,7 @@
       "url": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "route",

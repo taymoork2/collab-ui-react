@@ -29,9 +29,7 @@
     "headers": [],
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "play",
@@ -52,9 +50,7 @@
     "headers": [],
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [],
       "timeout": "",
