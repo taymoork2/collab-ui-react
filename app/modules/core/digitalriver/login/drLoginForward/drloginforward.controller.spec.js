@@ -57,13 +57,13 @@
 
 
 
-    describe('should return userauthtoken 2', function () {
+    describe('should have unexpected error', function () {
       beforeEach(function () {
         DigitalRiverService.getUserAuthToken.and.returnValue($q.reject());
         initController();
       });
 
-      it('should return userauthtoken 2', function () {
+      it('should have unexpected error', function () {
         expect(Userservice.getUser).toHaveBeenCalled();
         $scope.$apply();
         expect(DigitalRiverService.getUserAuthToken).toHaveBeenCalled();
