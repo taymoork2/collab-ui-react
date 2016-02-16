@@ -474,9 +474,9 @@
         canAddDevice()
       ];
 
-      // bail at first false result
-      return _.reduce(checks, function (currentValue, sum) {
-        if (!sum) {
+      // bail at first true result
+      return !_.reduce(checks, function (currentValue, sum) {
+        if (sum) {
           return sum;
         }
         return currentValue;

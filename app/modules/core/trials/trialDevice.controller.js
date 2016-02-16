@@ -322,7 +322,7 @@
       model: vm.shippingInfo,
       key: 'country',
       type: 'select',
-      defaultValue: _.find(TrialDeviceService.getCountryList(), {
+      defaultValue: _.find(TrialDeviceService.getCountries(), {
         country: vm.shippingInfo.country
       }),
       className: 'columns medium-12',
@@ -338,7 +338,7 @@
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getCountryList();
+          return TrialDeviceService.getCountries();
         },
       },
     }, {
@@ -369,7 +369,7 @@
       model: vm.shippingInfo,
       key: 'state',
       type: 'select',
-      defaultValue: _.find(TrialDeviceService.getStateList(), {
+      defaultValue: _.find(TrialDeviceService.getStates(), {
         country: vm.shippingInfo.state
       }),
       className: 'columns medium-4',
@@ -386,7 +386,7 @@
       },
       expressionProperties: {
         'templateOptions.options': function () {
-          return TrialDeviceService.getStateList();
+          return TrialDeviceService.getStates();
         }
       },
     }, {

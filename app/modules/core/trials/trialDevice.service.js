@@ -11,8 +11,8 @@
     var service = {
       getData: getData,
       reset: reset,
-      getStateList: getStateList,
-      getCountryList: getCountryList,
+      getStates: getStates,
+      getCountries: getCountries,
       canAddDevice: canAddDevice,
     };
 
@@ -47,13 +47,13 @@
       return _trialData;
     }
 
-    function getCountryList() {
+    function getCountries() {
       return [{
         country: 'United States'
       }];
     }
 
-    function getStateList() {
+    function getStates() {
       return [{
         state: 'Alabama',
         abbr: 'AL'
