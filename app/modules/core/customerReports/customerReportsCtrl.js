@@ -52,6 +52,7 @@
 
     var mediaChart = null;
     var mediaCard = null;
+    var mediaData = [];
     vm.mediaQualityStatus = REFRESH;
     vm.mediaOptions = [{
       value: 0,
@@ -321,17 +322,10 @@
     }
 
     function mediaUpdate() {
-      vm.mediaQualityStatus = REFRESH;
-
-      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
-        value: 0
-      });
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
-
-      setMediaData();
     }
 
     function setActiveUserData() {
@@ -426,13 +420,15 @@
     }
 
     function setMediaData() {
+      mediaData = [];
       CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart, vm.mediaSelected);
+          mediaData = response;
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
           if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
             mediaChart = tempMediaChart;
           }

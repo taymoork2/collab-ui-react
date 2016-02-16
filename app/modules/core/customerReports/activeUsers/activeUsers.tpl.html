@@ -6,7 +6,7 @@
     <section>
       <div class="customer-active-user">
         <p class="report-description">{{nav.activeUserDescription}}</p>
-        <div id="activeUsersdiv" class="barchart"></div>
+        <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUserStatus) && !nav.isRefresh(nav.activeUserStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.activeUserStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

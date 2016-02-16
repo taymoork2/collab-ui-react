@@ -64,7 +64,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -113,7 +113,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -160,7 +160,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -207,7 +207,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -254,7 +254,7 @@
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
-        labelClass: 'columns medium-4',
+        labelClass: 'columns medium-4 medium-offset-2',
         inputClass: 'columns medium-6',
         type: 'number',
         max: 5,
@@ -283,21 +283,22 @@
     vm.shippingFields = [{
       key: 'name',
       type: 'input',
-      className: 'columns medium-7 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
       },
     }, {
       key: 'phoneNumber',
       type: 'input',
-      className: 'columns medium-5 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-9',
+        labelClass: 'columns medium-2',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.phone'),
+        type: 'text'
       },
     }, {
       key: 'country',
@@ -305,10 +306,10 @@
       defaultValue: _.find(TrialCallService.getCountryList(), {
         code: 'USA'
       }),
-      className: 'columns medium-12 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
@@ -324,7 +325,7 @@
     }, {
       key: 'addressLine1',
       type: 'input',
-      className: 'columns medium-12 pad-top',
+      className: 'columns medium-12',
       templateOptions: {
         labelClass: 'columns medium-2',
         inputClass: 'columns medium-10',
@@ -335,7 +336,7 @@
     }, {
       key: 'city',
       type: 'input',
-      className: 'columns medium-4 pad-top',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
@@ -346,16 +347,17 @@
     }, {
       key: 'state',
       type: 'select',
-      className: 'columns medium-4 pad-top',
+      className: 'columns medium-4',
       templateOptions: {
-        labelClass: 'columns medium-4',
-        inputClass: 'columns medium-8',
+        labelClass: 'columns medium-3',
+        inputClass: 'columns medium-9',
         label: $translate.instant('trialModal.call.state'),
         type: 'text',
         required: true,
         labelfield: 'abbr',
         labelProp: 'abbr',
         valueProp: 'state',
+        filter: true
       },
       expressionProperties: {
         'templateOptions.options': function () {
@@ -365,7 +367,7 @@
     }, {
       key: 'postalCode',
       type: 'input',
-      className: 'columns medium-4 pad-top',
+      className: 'columns medium-4',
       templateOptions: {
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-9',
