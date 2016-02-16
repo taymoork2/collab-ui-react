@@ -346,7 +346,6 @@
         _.forEach(action.actionset, function (actionset) {
           var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
-          menuEntry.isConfigured = false;
           menuEntry.addAction(menuAction);
           uiMenu.appendEntry(menuEntry);
         });

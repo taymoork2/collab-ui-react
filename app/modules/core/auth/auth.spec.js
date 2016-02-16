@@ -3,24 +3,39 @@
 describe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage;
+  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q;
 
   beforeEach(module(function ($provide) {
     $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_) {
     Auth = _Auth_;
     Config = _Config_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
+    $state = _$state_;
+    $q = _$q_;
+    spyOn($state, 'go').and.returnValue($q.when());
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should redirect to login if redirectToLogin method is called without email else to oauthURL', function () {
+    Auth.redirectToLogin();
+    expect($state.go).toHaveBeenCalled();
+  });
+
+  it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
+    $window.location = {};
+    Config.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+    Auth.redirectToLogin('email@email.com');
+    expect($window.location.href).toBe('oauthURL');
   });
 
   it('should get account info using correct API', function (done) {

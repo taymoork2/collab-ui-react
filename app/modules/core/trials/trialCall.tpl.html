@@ -12,25 +12,25 @@
   <!-- body -->
   <section class="modal-body collapse-fields">
     <h5 translate="trialModal.call.selectDevicesHeader"></h5>
-    <section class="row indent">
+    <section class="row">
       <div class="small-12 columns" translate="trialModal.call.deviceLimitDescription"></div>
       <h6 class="small-12 columns" translate="trialModal.call.meetingRoomCamera"></h6>
-      <formly-form model="callTrial.details.roomSystems" fields="callTrial.roomSystemFields" hide-directive="ng-show"
-        class="small-12 columns indent">
+      <formly-form class="small-12 columns" model="callTrial.details.roomSystems"
+         fields="callTrial.roomSystemFields" hide-directive="ng-show">
       </formly-form>
     </section>
-    <section class="row indent">
+    <section class="row">
       <h6 class="small-12 columns" translate="trialModal.call.deskPhones"></h6>
-      <formly-form model="callTrial.details.phones" fields="callTrial.deskPhoneFields" hide-directive="ng-show"
-        class="small-12 columns indent">
+      <formly-form class="small-12 columns" model="callTrial.details.phones"
+         fields="callTrial.deskPhoneFields" hide-directive="ng-show">
       </formly-form>
     </section>
   </section>
-  <section class="modal-body row">
+  <section class="modal-body collapse-fields">
     <h5 translate="trialModal.call.shippingInfo"></h5>
-    <section class="medium-11 medium-offset-1 columns">
-      <!-- <h6 translate="trialModal.call.recipient"></h6> -->
-      <formly-form model="callTrial.details.shippingInfo" fields="callTrial.shippingFields" hide-directive="ng-show">
+    <section class="row">
+      <formly-form class="small-12 columns" model="callTrial.details.shippingInfo"
+        fields="callTrial.shippingFields" hide-directive="ng-show">
       </formly-form>
     </section>
   </section>

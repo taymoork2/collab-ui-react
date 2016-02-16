@@ -857,6 +857,10 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
+        /**
+         * Method to get Oauth Login Url with email specified
+         * @param {string} email
+         */
         getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
@@ -867,6 +871,7 @@ angular.module('Core')
             this.getOauthServiceType(),
             encodeURIComponent(email)
           ];
+
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
@@ -1165,11 +1170,14 @@ angular.module('Core')
           'huntgroupedit',
           'cdrsupport',
           'cdr-overview',
-          'cdrladderdiagram'
+          'cdrladderdiagram',
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'management-service',
+          'management-service'
         ],
         'spark-room-system': [
           'devices',
@@ -1229,7 +1237,7 @@ angular.module('Core')
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', '404', 'csadmin'];
+      config.publicStates = ['unauthorized', '404', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
 

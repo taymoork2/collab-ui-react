@@ -1,15 +1,40 @@
 <div class="sq-devices-page-overview">
   <div ui-view="header"></div>
 
-  <cs-sp-container>
+  <cs-sp-container ng-if="deviceOverview.currentDevice.needsActivation">
+    <div class="activationOverview">
+      <img
+        class="activationImage"
+        src="images/devices-hi/activation_code.png"
+      />
+      <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
+      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires" translate-values="{inXDays: deviceOverview.currentDevice.expiryTime}"></div>
+    </div>
+    <div class="activationButtons">
+      <button
+        ng-click="deviceOverview.deleteDevice()"
+        class="btn"
+        ng-disabled="deviceOverview.resettingCode">
+        <span translate="deviceOverviewPage.deleteLocation"></span>
+      </button>
+
+      <button
+        ng-click="deviceOverview.resetCode()"
+        class="btn">
+        <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
+        <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
+      </button>
+    </div>
+  </cs-sp-container>
+  <cs-sp-container ng-if="!deviceOverview.currentDevice.needsActivation">
     <cs-sp-section>
-      <div id="overview">
+      <div class="overview">
         <img
-          id="overviewImage"
+          class="overviewImage"
           ng-if="deviceOverview.currentDevice.image"
           ng-src="{{deviceOverview.currentDevice.image}}"
         />
-        <div id="overviewDescription">
+        <div class="overviewDescription">
           <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
           <i
             class="fa fa-circle device-status device-status"
@@ -74,6 +99,18 @@
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+        <label class="col-sm-4 control-label">Lines</label>
+        <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
+        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded && deviceOverview.lines">
+          <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
+            <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
+            <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
+            <span class="badge primary primaryLineBadge" ng-if="line.usage === 'Primary'">Primary</span>
+          </p>
+          <span ng-hide="deviceOverview.lines">-</span>
+        </div>
+      </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.ip">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.ipAddr"></label>
         <div class="col-sm-8">
@@ -117,11 +154,6 @@
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
         </div>
-      </div>
-      <div
-        class="feature-list activation-code-pane"
-        ng-show="deviceOverview.currentDevice.needsActivation">
-        <p>{{'deviceOverviewPage.deviceCodeExpires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
       </div>
     </cs-sp-section>
 
