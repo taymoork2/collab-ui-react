@@ -53,7 +53,7 @@ describe('Controller: PlanReviewCtrl', function () {
 
     beforeEach(function () {
       //trial request
-      $httpBackend.whenGET(Config.getAdminServiceUrl() + '/organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials/33e66606-b1b8-4794-a7c5-5bfc5046380f').respond(function () {
+      $httpBackend.whenGET(Config.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials/33e66606-b1b8-4794-a7c5-5bfc5046380f').respond(function () {
         var data = getJSONFixture('core/json/trials/trialGetResponse.json');
         // reset the trial.startDate to 100 days in the past.
         data.startDate = moment().subtract(100, 'days');

@@ -1,7 +1,7 @@
-/* globals $controller, $q, $rootScope, TrialCallCtrl, TrialCallService, TrialRoomSystemService*/
+/* globals $controller, $q, $rootScope, TrialDeviceController, TrialCallService, TrialRoomSystemService*/
 'use strict';
 
-describe('Controller: TrialCallCtrl', function () {
+describe('Controller: TrialDeviceController', function () {
   var controller, $scope, $translate;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
@@ -11,7 +11,7 @@ describe('Controller: TrialCallCtrl', function () {
   beforeEach(function () {
     bard.inject(this, '$controller', '$q', '$rootScope', 'TrialCallService', 'TrialRoomSystemService');
 
-    controller = $controller('TrialCallCtrl');
+    controller = $controller('TrialDeviceController');
     $rootScope.$apply();
   });
 
@@ -45,8 +45,10 @@ describe('Controller: TrialCallCtrl', function () {
     });
 
     it('should always have a recipient type === PARTNER || CUSTOMER', function () {
-      expect(controller.details.shippingInfo.type).toBeDefined();
-      expect(controller.details.shippingInfo.type).toBe('CUSTOMER' || 'PARTNER');
+      var type = controller.shippingInfo.type;
+      expect(controller.shippingInfo.type).toBeDefined();
+
+      expect(type === 'CUSTOMER' || type === 'PARTNER').toBeTruthy();
     });
 
     it('should calculate quantity of devices', function () {
