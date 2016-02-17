@@ -11,7 +11,8 @@
     var service = {
       getUserFromEmail: getUserFromEmail,
       addDrUser: addDrUser,
-      getDrReferrer: getDrReferrer
+      getDrReferrer: getDrReferrer,
+      activateUser: activateUser
     };
 
     return service;
@@ -28,8 +29,10 @@
       });
     }
 
-    function activateUser(userId) {
-      // TODO: Add here.
+    function activateUser(uuid) {
+      return Auth.setAccessToken().then(function () {
+        return $http.patch(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
+      });
     }
 
     // TODO: Remove this after the go-live.

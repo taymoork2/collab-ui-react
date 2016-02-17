@@ -34,7 +34,11 @@
         httpBackend.flush();
       });
       it('activateUser', function () {
-        // TODO: Add here
+        var uuid = '0b17b44a-4fea-48d4-9660-3da55df5d782';
+        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
+        httpBackend.expectPATCH(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active').respond(200);
+        DigitalRiverService.activateUser(uuid);
+        httpBackend.flush();
       });
     });
 
