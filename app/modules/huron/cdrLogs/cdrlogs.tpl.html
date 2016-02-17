@@ -1,91 +1,218 @@
-<div class="page-title">
-  <span class="title-heading" translate="cdrLogs.title"/>
-</div>
+<cs-page-header title="{{::'cdrLogs.title' | translate}}"></cs-page-header>
 <div class="cdr">
   <div class="cdr-content">
     <div class="searchUpload">
-      <form class="searchUpdateForm" novalidate name="cdr.searchAndUploadForm">
-        <formly-form model="cdr.model" fields="cdr.fields"></formly-form>
+      <div class="row showgrid">
+        <div class="columns">
+          <cs-radiolist options="cdr.radioOptions" ng-model="cdr.radioSelected" horizontal="true"></cs-radiolist>
+        </div>
+      </div>
+
+      <form name="cdr.searchAndUploadForm" novalidate>      
+        <div ng-show="cdr.radioSelected === cdr.UPLOAD">
+         <div class="row showgrid">
+            <div class="columns">
+               <formly-form model="cdr.model" fields="cdr.fields"></formly-form>
+            </div>
+          </div>
+        </div>
+
+        <div ng-show="cdr.radioSelected === cdr.SEARCH">
+          <div class="row showgrid">
+            <div class="columns">
+              <input
+                cs-input
+                type="text"
+                maxlength="36"
+                id="callingUser"
+                ng-model="cdr.model.callingUser"
+                cs-input-group-size="medium-2"
+                cs-input-label='{{::"cdrLogs.userLabel" | translate}}'>
+            </div>
+          </div>
+
+          <div class="row showgrid" id="callNumber">
+            <div class="columns medium-2">
+              <input cs-input
+                type="text" maxlength="10"
+                id="callingPartyNumber"  name="callingPartyNumber"
+                ng-model="cdr.model.callingPartyNumber"
+                cs-input-label='{{::"cdrLogs.callingNumber" | translate}}'
+                ng-pattern="cdr.patterns.number"
+                ng-blur="cdr.validations.callingNumber()"
+                cs-input-messages="cdr.messages.number">
+            </div>
+            <div class="columns medium-2 medium-pull-8">
+              <input cs-input
+                type="text"  maxlength="10"
+                id="calledPartyNumber"  name="calledPartyNumber"
+                ng-model="cdr.model.calledPartyNumber"
+                cs-input-label='{{::"cdrLogs.calledNumber" | translate}}'
+                ng-pattern="cdr.patterns.number"
+                ng-blur="cdr.validations.calledNumber()"
+                cs-input-messages="cdr.messages.number">
+            </div>
+          </div>
+
+          <div class="row showgrid" id="callTime">
+            <div class="columns medium-2">
+              <input cs-input
+                  type="text" maxlength="11"
+                  id="startTime" name="startTime"
+                  ng-model="cdr.model.startTime"
+                  cs-input-label='{{::"cdrLogs.startTime" | translate}}'
+                  cs-input-messages="cdr.messages.time" 
+                  ng-pattern="cdr.patterns.time"
+                  ng-model-options="{updateOn: 'blur'}"
+                  ng-required="true">
+            </div> 
+            <div class="columns medium-2 medium-pull-8">
+              <input cs-input
+                  type="text" maxlength="11"
+                  id="endTime" name="endTime" 
+                  ng-model="cdr.model.endTime"
+                  cs-input-label='{{::"cdrLogs.endTime" | translate}}'
+                  cs-input-messages="cdr.messages.time"
+                  ng-pattern="cdr.patterns.time"
+                  ng-model-options="{updateOn: 'blur'}"
+                  ng-required="true">
+            </div>
+          </div>
+
+          <div class="row showgrid" id="callDate">
+            <div class="columns columns medium-2" ng-class="{'error': cdr.searchAndUploadForm.startDate.$invalid}">
+                <label class="cs-input__label">{{::"cdrLogs.startDate" | translate}}</label>
+                <cs-datepicker 
+                    id="startDate" name="startDate"  
+                    ng-model="cdr.model.startDate"
+                    ng-messages="cdr.messages.date"
+                    ng-required="true">  
+                  </cs-datepicker>
+                <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.startDate.$error" role="alert">
+                  <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidStartDate}}</div>
+                  <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
+                </div>
+              </div>    
+              <div  class="columns medium-2 medium-pull-8" ng-class="{'error': cdr.searchAndUploadForm.endDate.$invalid}">
+                <label class="cs-input__label">{{::"cdrLogs.endDate" | translate}}</label>
+                <cs-datepicker 
+                    id="endDate" name="endDate"
+                    ng-model="cdr.model.endDate" 
+                    ng-messages="cdr.messages.date"
+                    ng-change="cdr.validations.endDate()"
+                    ng-required="true">
+                </cs-datepicker>
+                <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.endDate.$error" role="alert">
+                  <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidEndDate}}</div>
+                  <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row showgrid hitSize">
+              <div class="columns medium-2">
+                <input cs-input 
+                    type="number" id="hitSize" name="hitSize"
+                    min="1" max="50"
+                    ng-model="cdr.model.hitSize"  
+                    cs-input-label='{{::"cdrLogs.size" | translate}}'
+                    cs-input-messages="cdr.messages.hitSize"
+                    ng-required="true">   
+              </div>
+            </div>
+
+            <div class="row showgrid">
+              <div class="columns">
+                <button type="button" class="button btn--primary" 
+                      ng-disabled="cdr.searchAndUploadForm.$invalid || cdr.searchDisabled"
+                      ng-click="cdr.search()">{{::"cdrLogs.search" | translate}}</button> 
+                <button type="button" class="button btn--primary" 
+                      ng-click="cdr.reset()">{{::"cdrLogs.reset" | translate}}</button>
+              </div>
+            </div>
+         </div>
       </form>
-    </div>
-    <div class="cdrDisplay">
-      <h2 class="cdr-title" translate="cdrLogs.callsSubtitle"></h2>
-      <div class="spinner-position" ng-if="cdr.gridData === null">
-        <i class='icon icon-spinner icon-2x'></i>
-      </div>
-      <div ng-if="cdr.dataState === 0">
-        <span class="cdr-no-data" translate="cdrLogs.noData"></span>
-      </div>
-      <cs-accordion close-others="true">
-        <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true" ng-click="cdr.accordionClicked('cdrtable' + $index)">
-          <cs-accordion-heading>
-            <span ng-click="cdr.resize()">
-              <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
-            <span class="pull-right caret"></span>
-            </span>
-          </cs-accordion-heading>
-          <div>
-            <h3 class="cdr-title cdr-accordion-title" translate="cdrLogs.cdrTableTitle"></h3>
-            <div class="cdrTable">
-              <table class="table table-bordered">
-                <colgroup>
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-2">
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-2">
-                  <col class="medium-2">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th translate='cdrLogs.timeStamp'></th>
-                    <th translate='cdrLogs.callingDeviceName'></th>
-                    <th translate='cdrLogs.callingPartyNumber'></th>
-                    <th class="center" translate='cdrLogs.callingCause'></th>
-                    <th translate='cdrLogs.calledDeviceName'></th>
-                    <th translate='cdrLogs.calledPartyNumber'></th>
-                    <th class="center" translate='cdrLogs.calledCause'></th>
-                    <th class="center" translate='cdrLogs.duration'></th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-            <div id="cdrtable{{$index}}" class="cdrTable table-body">
-              <table class="table table-bordered">
-                <colgroup>
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-2">
-                  <col class="medium-3">
-                  <col class="medium-3">
-                  <col class="medium-2">
-                  <col class="medium-2">
-                </colgroup>
-                <tbody ng-repeat="callSegment in call">
+
+
+      <div class="cdrDisplay">
+        <h2 class="cdr-title" translate="cdrLogs.callsSubtitle"></h2>
+        <div class="spinner-position" ng-if="cdr.gridData === null">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div ng-if="cdr.dataState === 0">
+          <span class="cdr-no-data" translate="cdrLogs.noData"></span>
+        </div>
+        <cs-accordion close-others="true">
+          <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true" ng-click="cdr.accordionClicked('cdrtable' + $index)">
+            <cs-accordion-heading>
+              <span ng-click="cdr.resize()">
+                <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
+              <span class="pull-right caret"></span>
+              </span>
+            </cs-accordion-heading>
+            <div>
+              <h3 class="cdr-title cdr-accordion-title" translate="cdrLogs.cdrTableTitle"></h3>
+              <div class="cdrTable">
+                <table class="table table-bordered">
+                  <colgroup>
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-2">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th translate='cdrLogs.timeStamp'></th>
+                      <th translate='cdrLogs.callingDeviceName'></th>
+                      <th translate='cdrLogs.callingPartyNumber'></th>
+                      <th class="center" translate='cdrLogs.callingCause'></th>
+                      <th translate='cdrLogs.calledDeviceName'></th>
+                      <th translate='cdrLogs.calledPartyNumber'></th>
+                      <th class="center" translate='cdrLogs.calledCause'></th>
+                      <th class="center" translate='cdrLogs.duration'></th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div id="cdrtable{{$index}}" class="cdrTable table-body">
+                <table class="table table-bordered">
+                  <colgroup>
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-3">
+                    <col class="medium-3">
+                    <col class="medium-2">
+                    <col class="medium-2">
+                  </colgroup>
+                  <tbody ng-repeat="callSegment in call">
                   <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, callSegment)' ng-class="{'selectedCDR': data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
-                    <td>{{::data['@timestamp']}}</td>
-                    <td>{{::data.dataParam.calling_deviceName}}</td>
-                    <td>{{::data.dataParam.calling_partyNumber}}</td>
-                    <td class="center">{{::data.dataParam.calling_cause_Value}}</td>
-                    <td>{{::data.dataParam.called_deviceName}}</td>
-                    <td>{{::data.dataParam.called_partyNumber}}</td>
-                    <td class="center">{{::data.dataParam.called_cause_Value}}</td>
-                    <td class="center">{{::data.dataParam.duration}}</td>
-                  </tr>
-                </tbody>
-              </table>
+                      <td>{{::data['@timestamp']}}</td>
+                      <td>{{::data.dataParam.calling_deviceName}}</td>
+                      <td>{{::data.dataParam.calling_partyNumber}}</td>
+                      <td class="center">{{::data.dataParam.calling_cause_Value}}</td>
+                      <td>{{::data.dataParam.called_deviceName}}</td>
+                      <td>{{::data.dataParam.called_partyNumber}}</td>
+                      <td class="center">{{::data.dataParam.called_cause_Value}}</td>
+                      <td class="center">{{::data.dataParam.duration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-          <h3 class="cdr-title cdr-accordion-title" translate="cdrLogs.sessionIds"></h3>
-          <div ng-repeat="callSegment in call">
-            <div class="session-id"><b><span translate="cdrLogs.local"></span> {{callSegment[0].dataParam.localSessionID}}</b></div>
-            <div class="session-id"><b><span translate="cdrLogs.remote"></span> {{callSegment[0].dataParam.remoteSessionID}}</b></div>
-          </div>
-        </cs-accordion-group>
-      </cs-accordion>
-    </div>
-  </div>
-</div>
+            <h3 class="cdr-title cdr-accordion-title" translate="cdrLogs.sessionIds"></h3>
+            <div ng-repeat="callSegment in call">
+              <div class="session-id"><b><span translate="cdrLogs.local"></span> {{callSegment[0].dataParam.localSessionID}}</b></div>
+              <div class="session-id"><b><span translate="cdrLogs.remote"></span> {{callSegment[0].dataParam.remoteSessionID}}</b></div>
+            </div>
+          </cs-accordion-group>
+        </cs-accordion>
+      </div>
+   </div>
+  </div> <!-- class="cdr-content" -->
+</div> <!-- class="cdr" -->
