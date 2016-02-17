@@ -37,6 +37,16 @@ angular.module('Squared')
           (vm.huronDeviceListSubscription.eventCount !== 0 || CsdmHuronDeviceService.getDeviceList().length > 0);
       };
 
+      vm.haveDevices = function() {
+        var devices = CsdmDeviceService.getDeviceList();
+        var devkeys = Object.keys(devices);
+        var numdevs = devkeys.length;
+        var huronDevices = CsdmHuronDeviceService.getDeviceList();
+        var huronkeys = Object.keys(huronDevices);
+        var numhuron = huronkeys.length;
+        return (numdevs > 0 || numhuron > 0);
+      }
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
