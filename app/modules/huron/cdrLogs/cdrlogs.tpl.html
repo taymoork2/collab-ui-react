@@ -86,7 +86,7 @@
                     id="startDate" name="startDate"  
                     ng-model="cdr.model.startDate"
                     ng-messages="cdr.messages.date"
-                    ng-required="true">  
+                    ng-required="true">
                   </cs-datepicker>
                 <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.startDate.$error" role="alert">
                   <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidStartDate}}</div>
@@ -132,7 +132,6 @@
             </div>
          </div>
       </form>
-
 
       <div class="cdrDisplay">
         <h2 class="cdr-title" translate="cdrLogs.callsSubtitle"></h2>
@@ -191,7 +190,7 @@
                     <col class="medium-2">
                   </colgroup>
                   <tbody ng-repeat="callSegment in call">
-                  <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, callSegment)' ng-class="{'selectedCDR': data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
+                    <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, callSegment)' ng-class="{'selectedCDR':  data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
                       <td>{{::data['@timestamp']}}</td>
                       <td>{{::data.dataParam.calling_deviceName}}</td>
                       <td>{{::data.dataParam.calling_partyNumber}}</td>

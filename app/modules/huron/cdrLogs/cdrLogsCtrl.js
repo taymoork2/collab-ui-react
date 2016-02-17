@@ -44,14 +44,13 @@
     //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
     $scope.cdr = {
       model: {}
-    }; // need to add this in order for $watch to work with variables in view-model
+    };
     $scope.$watch("cdr.model.endDate", function () {
       vm.validations.endDate();
     });
     $scope.$watch("cdr.model.startDate", function () {
       vm.validations.startDate();
     });
-    //TODO: end
 
     vm.radioOptions = [{
       label: $translate.instant('cdrLogs.searchForm'),
@@ -90,8 +89,7 @@
 
     vm.patterns = {
       number: /^(\+1)?([0-9]+)$/,
-      time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/,
-      date: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
+      time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
     };
 
     vm.search = function () {
@@ -136,7 +134,7 @@
           isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
         }
         vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
-        if (isValid) { // clear any existing error on the  called number
+        if (isValid) {
           vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
         }
       },
@@ -146,7 +144,7 @@
           isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
         }
         vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
-        if (isValid) { // clear any existing error on the  calling number
+        if (isValid) {
           vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
         }
       },
@@ -173,7 +171,6 @@
       }
     };
 
-    // fields for upload section 
     vm.fields = [{
       fieldGroup: [{
         key: 'uploadFile',

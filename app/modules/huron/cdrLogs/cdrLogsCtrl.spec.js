@@ -52,10 +52,10 @@ describe('Controller: CdrLogsCtrl', function () {
     expect(controller.getAccordionHeader(callLegs[1])).toContain('cdrLogs.cdrAccordionHeader');
     expect(controller.getAccordionHeader(callLegs[1])).not.toContain('cdrLogs.sparkCall');
   });
-  /* TODO: will fix this after the cdr page fix is merged.
-    it('selectCDR should set selectedCDR', function () {
-      controller.selectCDR(callLegs[0][0], callLegs[0][0][0]);
-      expect(controller.selectedCDR).toEqual(callLegs[0][0][0]);
-    });
-  */
+  //TODO: will fix this after the cdr page fix is merged.
+  xit('selectCDR should set selectedCDR', function () {
+    controller.selectCDR(callLegs[0][0], callLegs[0][0][0]);
+    expect(controller.selectedCDR).toEqual(callLegs[0][0][0]);
+  });
+
 });
