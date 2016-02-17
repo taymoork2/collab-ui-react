@@ -221,64 +221,6 @@
         return enableT30UnifiedAdmin;
       }; // getEnableT30UnifiedAdmin()
 
-      obj.getWebexLicenseInfo = function (siteUrl) {
-        var deferredGetWebexLicenseInfo = $q.defer();
-
-        Orgservice.getValidLicenses().then(
-          function getValidLicensesSuccess(licenses) {
-            var funcName = "getValidLicensesSuccess()";
-            var logMsg = "";
-
-            logMsg = funcName + ": " + "\n" +
-              "licenses=" + JSON.stringify(licenses);
-            // $log.log(logMsg);
-
-            var licenseInfo = null;
-
-            licenses.forEach(
-              function checkLicense(license) {
-                logMsg = funcName + ": " + "\n" +
-                  "license=" + JSON.stringify(license);
-                // $log.log(logMsg);
-
-                if (
-                  ("CONFERENCING" == license.licenseType) &&
-                  (0 <= license.licenseId.indexOf(siteUrl))
-                ) {
-
-                  var licenseVolume = license.volume;
-                  var licenseUsage = license.usage;
-                  var licensesAvailable = licenseVolume - licenseUsage;
-
-                  licenseInfo = {
-                    volume: licenseVolume,
-                    usage: licenseUsage,
-                    available: licensesAvailable
-                  };
-
-                  deferredGetWebexLicenseInfo.resolve(licenseInfo);
-                }
-              } // checkLicense()
-            ); // licenses.forEach()
-
-            deferredGetWebexLicenseInfo.reject(licenseInfo);
-          }, // getValidLicensesSuccess()
-
-          function getValidLicensesError(info) {
-            var funcName = "getValidLicensesError()";
-            var logMsg = "";
-
-            logMsg = funcName + ": " + "\n" +
-              "info=" + JSON.stringify(info);
-            $log.log(logMsg);
-
-            deferredGetWebexLicenseInfo.reject(info);
-          } // getValidLicensesError()
-        ); // Orgservice.getValidLicenses().then()
-
-        return deferredGetWebexLicenseInfo.promise;
-      }; // getWebexLicenseInfo()
-
       obj.getAllSitesWebexLicenseInfo = function () {
         var deferredGetWebexLicenseInfo = $q.defer();
 
