@@ -1147,7 +1147,7 @@
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-uc": "Share your desktop with Spark while you are on your work phone.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
       }
@@ -2294,7 +2294,7 @@
       "hosts": "Hosts"
     },
     "activateService": {
-      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "ingress": "Extend the Cloud to your On-Premise Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
     },
