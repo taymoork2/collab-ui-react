@@ -3189,7 +3189,7 @@
       },
       "circular": {
         "name": "Circular",
-        "desc": "The system keeps a track of which member was sent the previous call. Circular first send tha call to next sequential idle (or available) member."
+        "desc": " Circular first sends the call to next sequential idle (or available) member. The system keeps track of which member was sent the previous call."
       },
       "topDown": {
         "name": "Top Down",
