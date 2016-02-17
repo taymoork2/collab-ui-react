@@ -184,6 +184,98 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    //    it('should add Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+    //      utils.click(autoattendant.addStep);
+    //      utils.expectIsDisplayed(autoattendant.newStep);
+    //      utils.click(autoattendant.newStepMenu);
+
+    // first menu option is Add Say Message
+    //      utils.click(autoattendant.newStepSelectFirst);
+
+    // Since the AA already contained 1 Say Message, we should now have 2
+    //      utils.expectCount(autoattendant.sayMessageAll, 2);
+
+    // Add a message to the new (first) Say Message we just added
+    //      utils.click(autoattendant.sayMessageInputFirst);
+    //      utils.sendKeys(autoattendant.sayMessageInputFirst, "Added say message, you should hear this first before the other say message");
+
+    // save and assert successful update message
+    //      utils.expectIsEnabled(autoattendant.saveButton);
+    //      utils.click(autoattendant.saveButton);
+    //      utils.expectIsDisabled(autoattendant.saveButton);
+    //      autoattendant.assertUpdateSuccess();
+
+    //    }, 60000);
+
+    //it('should add a Phone Menu via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+    //  utils.click(autoattendant.addStepLast);
+    //  utils.expectIsDisplayed(autoattendant.newStep);
+    //  utils.click(autoattendant.newStepMenu);
+
+    // middle/2nd menu option is Add Phone Menu
+    //  utils.click(autoattendant.newStepSelectMiddle);
+
+    // Since the AA already contained 1 Phone Menu, we should now have 2
+    //  utils.expectCount(autoattendant.phoneMenuAll, 2);
+
+    // Click on the language for the new (first) Phone Menu we just added
+    //  utils.click(autoattendant.phoneSayMessageLanguageFirst);
+
+    // Set langauage to Galacian
+    //  utils.click(autoattendant.phoneLanguageDropDownOptionsTenth);
+
+    // save and assert successful update message
+    //  utils.expectIsEnabled(autoattendant.saveButton);
+    //  utils.click(autoattendant.saveButton);
+    //  utils.expectIsDisabled(autoattendant.saveButton);
+    //  autoattendant.assertUpdateSuccess();
+
+    //}, 60000);
+
+    it('should add Route Call via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.addStep);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // Last/3rd menu option is Route Call
+      utils.click(autoattendant.newStepSelectLast);
+
+    });
+
+    it('should Route Call to external number in the Route Call via New Step dialog in the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      utils.click(autoattendant.routeCallChoose);
+      utils.click(autoattendant.routeExternal);
+      utils.expectIsDisplayed(autoattendant.routeExternalNumber);
+      utils.sendKeys(autoattendant.routeExternalNumber, '2062345678');
+      utils.click(autoattendant.routeCall);
+
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    //    it('should add Route (Transfer for now) Call via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    //
+    //      utils.click(autoattendant.addStep);
+    //      utils.expectIsDisplayed(autoattendant.newStep);
+    //      utils.click(autoattendant.newStepMenu);
+    //      utils.click(autoattendant.newStepSelectLast);
+    //      utils.expectIsDisplayed(autoattendant.transferCall);
+
+    // save and assert successful update message
+    //      utils.expectIsEnabled(autoattendant.saveButton);
+    //      utils.click(autoattendant.saveButton);
+    //      utils.expectIsDisabled(autoattendant.saveButton);
+    //      autoattendant.assertUpdateSuccess();
+
+    //    }, 60000);
+
     it('should close AA edit and return to landing page', function () {
 
       utils.click(autoattendant.closeEditButton);
