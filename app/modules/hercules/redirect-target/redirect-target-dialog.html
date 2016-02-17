@@ -9,8 +9,9 @@
     <div class="modal-body" ng-hide="redirectTarget.enableRedirectToTarget">
       <p><span
         translate="hercules.redirect-target-dialog.instructions-grant-registration"></span></p>
-      <input type="text" placeholder="{{'hercules.redirect-target-dialog.hostname-placeholder' | translate}} "
-             ng-model="redirectTarget.hostName" required autofocus>
+      <input type="text" class="form-control"
+             placeholder="{{'hercules.redirect-target-dialog.hostname-placeholder' | translate}} "
+             ng-model="redirectTarget.hostName" required focus-on="true">
   </div>
   </form>
   <div class="modal-body" ng-show="redirectTarget.enableRedirectToTarget">
