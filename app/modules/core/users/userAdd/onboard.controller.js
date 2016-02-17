@@ -1126,6 +1126,10 @@ angular.module('Core')
                   email: userResult.email,
                   domain: userResult.email.split('@')[1]
                 });
+              } else if (userStatus === 400 && data.userResponse[i].message = '400087') {
+                  userResult.message = $translate.instant('usersPage.hybridServicesError', {
+                    email: userResult.email,
+                  });
               } else {
                 userResult.message = $translate.instant('usersPage.onboardError', {
                   email: userResult.email,

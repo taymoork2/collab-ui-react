@@ -74,6 +74,7 @@
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "hybridServicesError": "{{email}} did not qualify for the selected services",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
