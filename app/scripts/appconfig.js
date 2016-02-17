@@ -43,7 +43,7 @@ angular
           url: '/dr-login-forward',
           views: {
             'main@': {
-              template: '<div> </div>',
+              template: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
               controller: 'drLoginForwardController'
             }
           }
