@@ -28,6 +28,10 @@
       });
     }
 
+    function activateUser(userId) {
+      // TODO: Add here.
+    }
+
     // TODO: Remove this after the go-live.
     function getDrReferrer() {
       return 'digitalriver-ZGlnaXRhbHJpdmVy';

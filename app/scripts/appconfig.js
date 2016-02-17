@@ -50,6 +50,17 @@ angular
           },
           authenticate: false
         })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'activateUserController',
+              controllerAs: 'activateUserController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {

@@ -33,6 +33,9 @@
         DigitalRiverService.addDrUser('emailPassword');
         httpBackend.flush();
       });
+      it('activateUser', function () {
+        // TODO: Add here
+      });
     });
 
   });
