@@ -33,12 +33,8 @@
     position: relative;
     overflow: visible !important;
     top: -25px;
-    .amcharts-chart-div{
-      overflow: visible !important;
-      svg {
-        position: relative !important;
-        overflow: visible !important;
-      }
+    .amcharts-chart-div svg {
+      position: relative !important;
     }
   }
 }

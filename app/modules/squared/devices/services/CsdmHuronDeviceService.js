@@ -10,6 +10,14 @@
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
     }
 
+    function getDirectoryNumbersUrl(userId) {
+      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/directorynumbers';
+    }
+
+    function getAlternateNumbersUrl(directoryNumberId) {
+      return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
+    }
+
     var initialDataPromise = huronEnabled().then(function (enabled) {
       return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
         return CsdmConverter.convertHuronDevices(res.data);
@@ -17,11 +25,7 @@
     });
 
     function huronEnabled() {
-      if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmHuron);
-      }
+      return $q.when(Authinfo.isSquaredUC());
     }
 
     function encodeHuronTags(description) {
@@ -61,6 +65,27 @@
       return deviceCache.list();
     }
 
+    function getLinesForDevice(huronDevice) {
+      return $http.get(getDirectoryNumbersUrl(huronDevice.cisUuid))
+        .then(function (res) {
+          var lines = [];
+          return $q.all(_.map(res.data, function (directoryNumber) {
+            var line = {
+              'directoryNumber': directoryNumber.directoryNumber.pattern,
+              'usage': directoryNumber.dnUsage
+            };
+            return $http.get(getAlternateNumbersUrl(directoryNumber.directoryNumber.uuid)).then(function (alternates) {
+              if (alternates.data && alternates.data[0]) {
+                line.alternate = alternates.data[0].numMask;
+              }
+              lines.push(line);
+            });
+          })).then(function () {
+            return lines;
+          });
+        });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -90,6 +115,7 @@
     return {
       on: deviceCache.on,
       getDeviceList: getDeviceList,
+      getLinesForDevice: getLinesForDevice,
       resetDevice: resetDevice,
       uploadLogs: uploadLogs,
       updateTags: updateTags

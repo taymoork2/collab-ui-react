@@ -9,10 +9,12 @@
 
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
+    var aaActionStatus = false;
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
       setPhoneMenuStatus: setPhoneMenuStatus,
+      setActionStatus: setActionStatus,
       resetFormStatus: resetFormStatus
     };
 
@@ -21,12 +23,13 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaSayMessageForm || aaPhoneMenuOptions;
+      return aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus;
     }
 
     function resetFormStatus() {
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
+      aaActionStatus = false;
     }
 
     function setSayMessageStatus(status) {
@@ -35,6 +38,10 @@
 
     function setPhoneMenuStatus(status) {
       aaPhoneMenuOptions = status;
+    }
+
+    function setActionStatus(status) {
+      aaActionStatus = status;
     }
 
   }

@@ -8,7 +8,7 @@ namespace domainManagement {
     private _adding = false;
 
     /* @ngInject */
-    constructor($stateParams, private $previousState, private DomainManagementService, private $translate) {
+    constructor($stateParams, private $previousState, private DomainManagementService, private $translate, private LogMetricsService) {
       this._loggedOnUser = $stateParams.loggedOnUser;
     }
 
@@ -17,12 +17,24 @@ namespace domainManagement {
         return;
       }
       this._adding = true;
+      let startAdd = moment();
       this.DomainManagementService.addDomain(this.domainToAdd).then(
         ()=> {
+          this.recordMetrics({
+            msg: 'ok',
+            startLog: startAdd,
+            data: {domain: this.domainToAdd, action: 'add'}
+          });
           this.$previousState.go();
           this._adding = false;
         },
         err => {
+          this.recordMetrics({
+            msg: 'ok',
+            status: 500,
+            startLog: startAdd,
+            data: {domain: this.domainToAdd, error: err, action: 'add'}
+          });
           this._error = err;
           this._adding = false;
         }
@@ -35,7 +47,24 @@ namespace domainManagement {
       }
     }
 
+    recordMetrics({msg, status = 200, startLog = moment(), data}) {
+      this.LogMetricsService.logMetrics(
+        'domainManage add ' + msg,
+        this.LogMetricsService.eventType.domainManageAdd,
+        this.LogMetricsService.eventAction.buttonClick,
+        status,
+        startLog,
+        1,
+        data
+      );
+    }
+
     public cancel() {
+      this.recordMetrics({
+        msg: 'cancel',
+        status: 100,
+        data: {domain: this.domainToAdd, action: 'cancel'}
+      });
       this.$previousState.go();
     }
 

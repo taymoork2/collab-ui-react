@@ -22,7 +22,7 @@ angular.module('WebExApp').service('WebexReportService', [
     Notification
   ) {
     var self = this;
-    //ok, we need a unique global self. 
+    //ok, we need a unique global self.
     //the above self is overloaded in places.
     var uself = this;
 
@@ -86,7 +86,7 @@ angular.module('WebExApp').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
-    //All card names are hard coded in all languages except for the commom 
+    //All card names are hard coded in all languages except for the commom
     //reports tag.
     var card_name_translations = {
       "training_center": "Training Center",
@@ -354,7 +354,7 @@ angular.module('WebExApp').service('WebexReportService', [
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
-        "icon icon-circle-comp-positive",
+        "icon icon-circle-group",
         "icon icon-circle-clock"
       );
 

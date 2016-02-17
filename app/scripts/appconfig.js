@@ -1347,7 +1347,7 @@ angular
         })
         .state('trialAdd.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('trialAdd.addNumbers', {
@@ -1370,7 +1370,8 @@ angular
             }
           },
           params: {
-            currentTrial: {}
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialEdit.addNumbers', {
@@ -1394,7 +1395,7 @@ angular
         })
         .state('trialEdit.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('generateauthcode', {

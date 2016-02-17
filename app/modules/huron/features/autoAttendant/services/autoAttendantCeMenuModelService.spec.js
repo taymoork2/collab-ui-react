@@ -210,8 +210,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_menuEntry.getDescription()).toBe('menu entry');
       _menuEntry.setType('type');
       expect(_menuEntry.getType()).toBe('type');
-      _menuEntry.setIsConfigured(false);
-      expect(_menuEntry.isConfigured).toBe(false);
       _menuEntry.setKey('7');
       expect(_menuEntry.getKey()).toBe('7');
       _menuEntry.setTimeout('5');

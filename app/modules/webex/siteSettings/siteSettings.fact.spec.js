@@ -6,9 +6,6 @@ describe('WebExSiteSettingsFact Test', function () {
   var siteUrl = 'go.webex.com';
   var siteName = "go";
 
-  var deferred;
-  var $rootScope;
-
   beforeEach(module('WebExApp'));
 
   beforeEach(module(function ($provide) {
@@ -16,15 +13,6 @@ describe('WebExSiteSettingsFact Test', function () {
       'siteUrl': siteUrl
     };
     $provide.value('$stateParams', $stateParams);
-  }));
-
-  beforeEach(inject(function (_$translate_, _WebExXmlApiFact_, _$q_, _$rootScope_) {
-    var $translate = _$translate_;
-    deferred = _$q_.defer();
-    $rootScope = _$rootScope_;
-
-    spyOn($translate, 'use').and.returnValue(locale);
-    spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferred.promise);
   }));
 
   it('can initialize the site settings', inject(function (WebExSiteSettingsFact) {
