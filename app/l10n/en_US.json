@@ -1971,7 +1971,14 @@
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
-    "roomSystem": "Spark Room System"
+    "roomSystem": "Spark Room System",
+    "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
+    "expiredMsg": "Your trial has expired.",
+    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestConfirmMsg": "A purchase request message was sent to {{partnerName}}",
+    "requestPurchaseBtn": "Request Purchase",
+    "requestAgainBtn": "Request Again",
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerName}} of your intent to purchase"
   },
 
   "status": {

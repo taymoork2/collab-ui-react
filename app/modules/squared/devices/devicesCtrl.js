@@ -31,20 +31,17 @@ angular.module('Squared')
         scope: $scope
       });
 
+      vm.existsDevices = function () {
+        return (vm.shouldShowList() && (
+          Object.keys(CsdmCodeService.getCodeList()).length > 0 ||
+          Object.keys(CsdmDeviceService.getDeviceList()).length > 0 ||
+          Object.keys(CsdmHuronDeviceService.getDeviceList()).length > 0));
+      };
+
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
           (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
           (vm.huronDeviceListSubscription.eventCount !== 0 || CsdmHuronDeviceService.getDeviceList().length > 0);
-      };
-
-      vm.haveDevices = function () {
-        var devices = CsdmDeviceService.getDeviceList();
-        var devkeys = Object.keys(devices);
-        var numdevs = devkeys.length;
-        var huronDevices = CsdmHuronDeviceService.getDeviceList();
-        var huronkeys = Object.keys(huronDevices);
-        var numhuron = huronkeys.length;
-        return (numdevs > 0 || numhuron > 0);
       };
 
       vm.updateListAndFilter = function () {
