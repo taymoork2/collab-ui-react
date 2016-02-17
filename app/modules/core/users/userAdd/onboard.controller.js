@@ -1737,6 +1737,8 @@ angular.module('Core')
       var cancelDeferred;
       var saveDeferred;
       var csvHeaders;
+      var orgHeaders;
+      var maxUsers = 40000;
       var isDirSync = false;
       FeatureToggleService.supportsDirSync().then(function (enabled) {
         isDirSync = enabled;
@@ -1763,7 +1765,7 @@ angular.module('Core')
             if (userArray[0][0] === 'First Name') {
               csvHeaders = userArray.shift();
             }
-            if (userArray.length > 0) {
+            if (userArray.length > 0 && userArray.length <= maxUsers) {
               isCsvValid = true;
             }
           }
@@ -1790,7 +1792,11 @@ angular.module('Core')
           deferred.resolve();
         } else {
           var error;
-          if (userArray.length === 0) {
+          if (userArray.length > maxUsers) {
+            error = [$translate.instant('firstTimeWizard.csvMaxLinesError', {
+              max: String(maxUsers)
+            })];
+          } else {
             error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
           }
           Notification.notify(error, 'error');
@@ -1802,9 +1808,19 @@ angular.module('Core')
 
       // Wizard hook
       $scope.csvProcessingNext = bulkSave;
+      // Feature toggle
       FeatureToggleService.supportsCsvUpload().then(function (enabled) {
         if (enabled) {
           $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          return CsvDownloadService.getCsv('headers').then(function (response) {
+            orgHeaders = angular.copy(response.data.columns || []);
+            // Leave this commented out until discussion of maximum limit is done
+            // if (!hasSparkCallLicense(orgHeaders)) {
+            //   maxUsers = 500000;
+            // }
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+          });
         }
       });
 
@@ -1831,6 +1847,13 @@ angular.module('Core')
         LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
       }
 
+      function hasSparkCallLicense(inHeaders) {
+        var index = _.findIndex(inHeaders, function (h) {
+          return h.name == 'Spark Call';
+        });
+        return index !== -1;
+      }
+
       function bulkSaveWithIndividualLicenses() {
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
@@ -1847,12 +1870,10 @@ angular.module('Core')
         }
 
         function addUserErrorWithTrackingID(row, errorMsg) {
-          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
-            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-              errorMsg += '.';
-            }
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
+          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
           }
+          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
           addUserError(row, _.trim(errorMsg));
         }
 
@@ -1969,13 +1990,6 @@ angular.module('Core')
           });
         }
 
-        function hasSparkCall() {
-          var index = _.findIndex(headers, function (h) {
-            return h.name == 'Spark Call';
-          });
-          return index !== -1;
-        }
-
         function generateHeaders(serverHeaders, userHeaders) {
           var returnHeaders = [];
           var index = -1;
@@ -2025,137 +2039,133 @@ angular.module('Core')
         }
 
         function processCsvRows() {
-          return CsvDownloadService.getCsv('headers').then(function (response) {
-            headers = generateHeaders(response.data.columns || null, csvHeaders || null);
-            csvChunk = hasSparkCall() ? 4 : 10; // Rate limit for Huron
+          headers = generateHeaders(orgHeaders || null, csvHeaders || null);
+          csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
 
-            // TODO
-            // deal with AUDP -- only one column - Phone Number
+          // TODO
+          // deal with AUDP -- only one column - Phone Number
 
-            _.forEach(userArray, function (userRow, j) {
-              processingError = false;
-              var firstName = '',
-                lastName = '',
-                displayName = '',
-                id = '';
-              var directoryNumber = '',
-                directLine = '';
-              var idxDirectoryNumber = -1,
-                idxDirectLine = -1;
-              var licenseList = [];
-              var entitleList = [];
-              var numOfActiveMessageLicenses = 0;
-              var isWrongLicenseFormat = false;
+          _.forEach(userArray, function (userRow, j) {
+            processingError = false;
+            var firstName = '',
+              lastName = '',
+              displayName = '',
+              id = '';
+            var directoryNumber = '',
+              directLine = '';
+            var idxDirectoryNumber = -1,
+              idxDirectLine = -1;
+            var licenseList = [];
+            var entitleList = [];
+            var numOfActiveMessageLicenses = 0;
+            var isWrongLicenseFormat = false;
 
-              // If we haven't met the chunk size, process the next user
-              if (tempUserArray.length < csvChunk) {
-                // Basic data
-                firstName = userRow[findHeaderIndex('First Name')];
-                lastName = userRow[findHeaderIndex('Last Name')];
-                displayName = userRow[findHeaderIndex('Display Name')];
-                id = userRow[findHeaderIndex('User ID/Email (Required)')];
-                idxDirectoryNumber = findHeaderIndex('Directory Number');
-                if (idxDirectoryNumber !== -1) {
-                  directoryNumber = userRow[idxDirectoryNumber];
-                }
-                idxDirectLine = findHeaderIndex('Direct Line');
-                if (idxDirectLine !== -1) {
-                  directLine = userRow[idxDirectLine];
-                }
-                licenseList = [];
-                entitleList = [];
+            // If we haven't met the chunk size, process the next user
+            if (tempUserArray.length < csvChunk) {
+              // Basic data
+              firstName = userRow[findHeaderIndex('First Name')];
+              lastName = userRow[findHeaderIndex('Last Name')];
+              displayName = userRow[findHeaderIndex('Display Name')];
+              id = userRow[findHeaderIndex('User ID/Email (Required)')];
+              idxDirectoryNumber = findHeaderIndex('Directory Number');
+              if (idxDirectoryNumber !== -1) {
+                directoryNumber = userRow[idxDirectoryNumber];
+              }
+              idxDirectLine = findHeaderIndex('Direct Line');
+              if (idxDirectLine !== -1) {
+                directLine = userRow[idxDirectLine];
+              }
+              licenseList = [];
+              entitleList = [];
 
-                // validations
-                if (!id) {
-                  // Report required field is missing
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-                } else if (_.contains(uniqueEmails, id)) {
-                  // Report a duplicate email
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-                } else if (directLine && !isValidDID(directLine)) {
-                  // Report an invalid DID format
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
-                } else {
-                  // get license and entitlements
-                  _.forEach(headers, function (header, k) {
-                    if (header.license) { // if this is a license column
-                      if (isTrue(userRow[k])) {
-                        licenseList.push(new LicenseFeature(header.license, true));
-                        // Check Active Spark Message
-                        if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                          numOfActiveMessageLicenses++;
-                        }
-                      } else if (isFalse(userRow[k])) {
-                        // TODO - in phase 2, if allow license removal, then un-comment the next line
-                        // licenseList.push(new LicenseFeature(header.license, false));
-                        _.noop();
-                      } else {
-                        isWrongLicenseFormat = true;
+              // validations
+              if (!id) {
+                // Report required field is missing
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+              } else if (_.contains(uniqueEmails, id)) {
+                // Report a duplicate email
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+              } else if (directLine && !isValidDID(directLine)) {
+                // Report an invalid DID format
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+              } else {
+                // get license and entitlements
+                _.forEach(headers, function (header, k) {
+                  if (header.license) { // if this is a license column
+                    if (isTrue(userRow[k])) {
+                      licenseList.push(new LicenseFeature(header.license, true));
+                      // Check Active Spark Message
+                      if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
+                        numOfActiveMessageLicenses++;
                       }
-                    } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
-                      if (isTrue(userRow[k]) || isFalse(userRow[k])) {
-                        _.forEach(header.entitlements, function (entitlement) {
-                          // if lincense is Calendar Service, only process if it is enabled
-                          if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                            if (isTrue(userRow[k])) {
-                              entitleList.push(new Feature(entitlement, true));
-                            } else if (isFalse(userRow[k])) {
-                              // TODO - in phase 2, if allow license removal, then un-comment the next line
-                              // entitleList.push(new Feature(entitlement, false));
-                              _.noop();
-                            }
+                    } else if (isFalse(userRow[k])) {
+                      // TODO - in phase 2, if allow license removal, then un-comment the next line
+                      // licenseList.push(new LicenseFeature(header.license, false));
+                      _.noop();
+                    } else {
+                      isWrongLicenseFormat = true;
+                    }
+                  } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
+                    if (isTrue(userRow[k]) || isFalse(userRow[k])) {
+                      _.forEach(header.entitlements, function (entitlement) {
+                        // if lincense is Calendar Service, only process if it is enabled
+                        if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
+                          if (isTrue(userRow[k])) {
+                            entitleList.push(new Feature(entitlement, true));
+                          } else if (isFalse(userRow[k])) {
+                            // TODO - in phase 2, if allow license removal, then un-comment the next line
+                            // entitleList.push(new Feature(entitlement, false));
+                            _.noop();
                           }
-                        });
-                      } else {
-                        isWrongLicenseFormat = true;
-                      }
+                        }
+                      });
+                    } else {
+                      isWrongLicenseFormat = true;
                     }
-                  });
-
-                  if (isWrongLicenseFormat) {
-                    processingError = true;
-                    addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-                  } else if (numOfActiveMessageLicenses > 1) {
-                    processingError = true;
-                    addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
-                  } else {
-                    uniqueEmails.push(id);
-                    // Do not send name and displayName if it's a DirSync org
-                    if (isDirSync) {
-                      firstName = '';
-                      lastName = '';
-                      displayName = '';
-                    }
-                    tempUserArray.push({
-                      'address': id,
-                      'name': firstName + NAME_DELIMITER + lastName,
-                      'displayName': displayName,
-                      'internalExtension': directoryNumber,
-                      'directLine': directLine,
-                      'licenses': licenseList,
-                      'entitlements': entitleList
-                    });
                   }
+                });
+
+                if (isWrongLicenseFormat) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
+                } else if (numOfActiveMessageLicenses > 1) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+                } else {
+                  uniqueEmails.push(id);
+                  // Do not send name and displayName if it's a DirSync org
+                  if (isDirSync) {
+                    firstName = '';
+                    lastName = '';
+                    displayName = '';
+                  }
+                  tempUserArray.push({
+                    'address': id,
+                    'name': firstName + NAME_DELIMITER + lastName,
+                    'displayName': displayName,
+                    'internalExtension': directoryNumber,
+                    'directLine': directLine,
+                    'licenses': licenseList,
+                    'entitlements': entitleList
+                  });
                 }
               }
+            }
 
-              // Onboard all the previous users in the temp array if there was an error processing a row
-              if (processingError) {
-                csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
-                tempUserArray = [];
-              } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
-                // Onboard the current temp array if we've met the chunk size or is the last user in list
-                csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
-                tempUserArray = [];
-              }
+            // Onboard all the previous users in the temp array if there was an error processing a row
+            if (processingError) {
+              csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
+              tempUserArray = [];
+            } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+              // Onboard the current temp array if we've met the chunk size or is the last user in list
+              csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
+              tempUserArray = [];
+            }
 
-              calculateProcessProgress();
-            });
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+            calculateProcessProgress();
           });
         }
 
@@ -2259,12 +2269,10 @@ angular.module('Core')
         }
 
         function addUserErrorWithTrackingID(row, errorMsg) {
-          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
-            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-              errorMsg += '.';
-            }
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
+          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
           }
+          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
           addUserError(row, _.trim(errorMsg));
         }
 

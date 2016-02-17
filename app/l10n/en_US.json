@@ -725,7 +725,8 @@
     "unknown": "Unknown",
     "description": "Description",
     "user": "User",
-    "ipAddress": "IP Address"
+    "ipAddress": "IP Address",
+    "tryAgain": "Try Again"
   },
   "notifications": {
     "success": "Success notifications",
@@ -813,7 +814,8 @@
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
-    "testSSOSetupDesc": "You are ready to test your SSO configuration. Press the button below to launch a new window. If you are able to sign in successfully, you can return to this screen and press next to finalize your SSO setup.",
+    "testSSOSetupDesc": "Press the button below to test your SSO configuration. The test will open in a new browser window. Enter valid SSO credentials and verify the login was successful.",
+    "testSSOSetupDesc2": "If your test was successful, enable Single Sign On below. Otherwise, disable Single Sign On or return to the previous steps.",
     "enableSSODesc": "If you are ready to enable Single Sign-On (SSO) for all users, press the finish button. All user authentication will then be processed through your new SSO provider.",
     "IdPFileLabel": "IdP Metadata File",
     "chooseFilePlaceHolder": "Choose File...",
@@ -1241,7 +1243,7 @@
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
-    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
+    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to {{max}} or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
@@ -1274,7 +1276,6 @@
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "uploadDirSyncEmpty": "Please upload users from the directory server.",
-    "dirsyncMaxLinesError": "The directory contains more users than the maximum allowed. Please reduce the number of users to 250 or less.",
     "dirSyncStatus": "Sync Status",
     "processDirSyncStep": "Processing Directory Sync",
     "dirSyncResultStep": "Directory Sync Result",
