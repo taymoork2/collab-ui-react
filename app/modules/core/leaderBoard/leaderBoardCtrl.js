@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', 'FeatureToggleService', '$translate',
-    function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, FeatureToggleService, $translate) {
+  .controller('leaderBoardCtrl', ['$q', '$scope', '$translate', 'Orgservice', 'Authinfo', 'FeatureToggleService',
+    function ($q, $scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
 
-      $scope.label = $filter('translate')('leaderBoard.licenseUsage');
+      // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
+      $scope.label = $translate.instant('leaderBoard.licenseUsage');
+
       $scope.state = 'license'; // Possible values are license, warning or error
       $scope.icon = 'check-gear';
 
@@ -17,6 +19,9 @@ angular.module('Core')
         'storage',
         'sites'
       ];
+
+      $scope.isCustomerAdmin = Authinfo.isCustomerAdmin();
+      $scope.isAtlasTrialConversion = false;
 
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
@@ -65,14 +70,23 @@ angular.module('Core')
         });
       };
 
-      getLicenses();
+      function init() {
+        FeatureToggleService.supports(FeatureToggleService.features.atlasTrialConversion)
+          .then(function (enabled) {
+            $scope.isAtlasTrialConversion = enabled;
+          });
+
+        getLicenses();
+      }
+
+      init();
 
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();
       });
     }
   ])
-  .directive('leaderBoardBucket', function () {
+  .directive('crLeaderBoardBucket', function () {
     return {
       restrict: 'EA',
       controller: 'leaderBoardCtrl',

@@ -1,6 +1,6 @@
 <div class="sq-devices-page">
   <cs-page-header title="{{::'spacesPage.title' | translate}}"></cs-page-header>
-  <cs-page-sub-header  ng-hide="sc.updateListAndFilter().length === 0">
+  <cs-page-sub-header ng-show="sc.existsDevices()">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
@@ -11,49 +11,52 @@
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
- <div class="content-container" cs-scroll>
-  <cs-accordion
-      id="licenseWarning"
-      ng-show="sc.showLicenseWarning">
-    <cs-accordion-group
-        show-caret="true"
-        display-status="warning">
-      <cs-accordion-heading>
-        <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
-        <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
-      </cs-accordion-heading>
-      <p>{{sc.licenseError}}</p>
-    </cs-accordion-group>
-  </cs-accordion>
-
-  <div ng-if="!sc.shouldShowList()">
-    <div class="message-container">
-      <div class="empty-devices-content">
-        <div class="grid-refresh">
-          <i class='icon icon-spinner icon-2x'></i>
+  <div class="content-container" cs-scroll>
+    <cs-accordion id="licenseWarning" ng-show="sc.showLicenseWarning">
+      <cs-accordion-group show-caret="true" display-status="warning">
+        <cs-accordion-heading>
+          <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+          <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+        </cs-accordion-heading>
+        <p>{{sc.licenseError}}</p>
+      </cs-accordion-group>
+    </cs-accordion>
+    <div ng-if="!sc.shouldShowList()">
+      <div class="message-container">
+        <div class="empty-devices-content">
+          <div class="grid-refresh">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
-    <div class="error-spinner">
-      <i class="icon icon-2x icon-spinner" />
+    <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
+      <div class="error-spinner">
+        <i class="icon icon-2x icon-spinner" />
+      </div>
     </div>
-  </div>
-
-  <div ng-if="sc.shouldShowList()">
-    <div ng-hide="sc.updateListAndFilter().length > 0" class="none_found">
-       <i class="icon icon-circle-telepresence" />
-                <span class="h5" translate="spacesPage.nothingHere"></span>
-                <span class="h1" translate="spacesPage.noDevices"></span>
-                <button class="btn btn--people btn--large add-button" ng-click="sc.showAddDeviceDialog()">
-                    <span translate="spacesPage.addBtn"></span>
-                </button>
+    <div ng-if="sc.shouldShowList()">
+      <div ng-show="sc.existsDevices() && sc.updateListAndFilter().length > 0" id="roomsListPanel" class="row">
+        <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+      </div>
+      <div ng-show="sc.updateListAndFilter().length === 0 && sc.existsDevices()">
+        <div class="none_found">
+          <i class="icon icon-circle-comp-negative" />
+          <span class="h5" translate="spacesPage.tryAgain"></span>
+          <span class="h1" translate="spacesPage.noneFound"></span>
+        </div>
+      </div>
+      <div ng-hide="sc.existsDevices()">
+        <div class="none_found">
+          <i class="icon icon-circle-telepresence" />
+          <span class="h5" translate="spacesPage.nothingHere"></span>
+          <span class="h1" translate="spacesPage.noDevices"></span>
+          <button class="btn btn--people btn--large add-button" ng-click="sc.showAddDeviceDialog()">
+            <span translate="spacesPage.addBtn"></span>
+          </button>
+        </div>
+      </div>
     </div>
-    <div ng-hide="sc.updateListAndFilter().length === 0" id="roomsListPanel" class="row">
-      <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
-    </div>
+    <squared-add-device></squared-add-device>
   </div>
-  <squared-add-device></squared-add-device>
-</div>
 </div>
