@@ -50,7 +50,7 @@
                     <span translate="spacesPage.addBtn"></span>
                 </button>
     </div>
-    <div ng-show="sc.existsDevices()" id="roomsListPanel" class="row">
+    <div ng-if="sc.existsDevices()" id="roomsListPanel" class="row">
       <div gridscrollbar class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
     </div>
   </div>
