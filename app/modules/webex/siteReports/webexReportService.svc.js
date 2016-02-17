@@ -380,31 +380,6 @@ angular.module('WebExApp').service('WebexReportService', [
         infoCardObj: infoCardObj
       };
 
-      WebExUtilsFact.getWebexLicenseInfo(reportsObject.siteUrl).then(
-        function getWebexLicenseInfoSuccess(licenseInfo) {
-          var funcName = "getWebexLicenseInfoSuccess()";
-          var logMsg = "";
-
-          WebExUtilsFact.setInfoCardLicenseInfo(
-            licenseInfo,
-            reportsObject.infoCardObj
-          );
-
-          logMsg = funcName + ": " + "\n" +
-            "reportInfoCardObj=" + JSON.stringify(reportsObject.siteInfoCardObj);
-          // $log.log(logMsg);
-        }, // getWebexLicenseInfoSuccess()
-
-        function getWebexLicenseInfoError(result) {
-          var funcName = "getWebexLicenseInfoError()";
-          var logMsg = "";
-
-          logMsg = funcName + ": " + "\n" +
-            "result=" + JSON.stringfy(result);
-          $log.log(logMsg);
-        } // getWebexLicenseInfoError()
-      );
-
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(sessionTicket) {
           var funcName = "initReportsObject().getSessionTicketSuccess()";
