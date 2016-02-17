@@ -31,11 +31,13 @@
 
     var rtHG = 'routeToHuntGroup';
 
+    var fromRouteCall = false;
+
     /////////////////////
 
     function populateUiModel() {
 
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.hgSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
         vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
@@ -48,7 +50,7 @@
     }
 
     function saveUiModel() {
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(vm.hgSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
@@ -72,10 +74,6 @@
 
     function activate() {
 
-      if (angular.isDefined($scope.fromRouteCall)) {
-        vm.fromRouteCall = $scope.fromRouteCall;
-      }
-
       vm.aaModel = AAModelService.getAAModel();
       var ui = AAUiModelService.getUiModel();
 
@@ -83,22 +81,19 @@
 
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if ($scope.fromRouteCall) {
+        fromRouteCall = true;
 
-        // existing action for route to hunt group?
-        if (!_.find(vm.menuEntry.actions, {
-            name: rtHG
-          })) {
-          if (vm.menuEntry.actions.length === 0) {
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
-            vm.menuEntry.addAction(action);
-          } else {
-            // make sure action is HG not AA, User, extNum, etc
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtHG, '');
+          vm.menuEntry.addAction(action);
+        } else {
+          // make sure action is HG not AA, User, extNum, etc
+          if (!(vm.menuEntry.actions[0].getName() === rtHG)) {
             vm.menuEntry.actions[0].setName(rtHG);
             vm.menuEntry.actions[0].setValue('');
-          }
+          } // else let saved value be used
         }
-
       } else {
         if ($scope.keyIndex < vm.menuEntry.entries.length) {
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];

@@ -37,10 +37,12 @@
     // the CE action verb is 'route'
     var rtExtNum = 'route';
 
+    var fromRouteCall = false;
+
     /////////////////////
 
     function populateUiModel() {
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
       } else {
         vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
@@ -54,7 +56,7 @@
         num = num.replace(/\D/g, '');
       }
 
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(num);
       } else {
         vm.menuKeyEntry.actions[0].setValue(num);
@@ -83,19 +85,21 @@
       vm.uiMenu = ui[$scope.schedule];
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
-      if (angular.isDefined($scope.fromRouteCall)) {
-        // existing action for route to external number?
-        if (!_.find(vm.menuEntry.actions, {
-            name: rtExtNum
-          })) {
-          if (vm.menuEntry.actions.length === 0) {
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
-            vm.menuEntry.addAction(action);
-          } else {
+      if ($scope.fromRouteCall) {
+        fromRouteCall = true;
+
+        // if our route is not there, add if no actions, or initialize
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+          vm.menuEntry.addAction(action);
+        } else {
+
+          if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
             // make sure action is External Number not AA, HG, User, etc
             vm.menuEntry.actions[0].setName(rtExtNum);
             vm.menuEntry.actions[0].setValue('');
           }
+
         }
 
       } else {

@@ -20,8 +20,29 @@
         }
       }, {
         "say": {
+          "description": "",
           "value": "Welcome to the AA",
           "voice": "Kate"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000"
+        }
+      }, {
+        "routeToVoiceMail": {
+          "description": "voice 1",
+          "id": "1111"
+        }
+      }, {
+        "routeToHuntGroup": {
+          "description": "Hunt Group 1",
+          "id": "2222"
+        }
+      }, {
+        "goto": {
+          "description": "",
+          "ceid": "3333"
         }
       }]
     }]
@@ -71,6 +92,70 @@
         "value": "Welcome to the AA",
         "description": "",
         "voice": "Kate"
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToUser",
+        "value": "0000",
+        "description": "user 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToVoiceMail",
+        "value": "1111",
+        "description": "voice 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToHuntGroup",
+        "value": "2222",
+        "description": "Hunt Group 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "goto",
+        "description": "",
+        "value": "3333",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",

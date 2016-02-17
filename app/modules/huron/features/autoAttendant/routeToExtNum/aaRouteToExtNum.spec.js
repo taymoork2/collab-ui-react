@@ -120,18 +120,6 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
 
-        $scope.fromRouteCall = true;
-
-        controller.menuEntry.actions = [];
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', 'fobar');
-        controller.menuEntry.actions = [];
-        controller.menuEntry.actions[0] = action;
-
-        controller.saveUiModel();
-
-        $scope.$apply();
-
-        expect(controller.menuEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
       });
 
       it('should write UI entry back into UI model when phone number changes', function () {
@@ -139,8 +127,6 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope
         });
-
-        $scope.vm = controller;
 
         var phoneNumber1 = '+14084744088';
         var phoneNumber2 = '+14084744089';
@@ -163,6 +149,28 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         aaUiModel[schedule].entries[0].actions = [];
 
+      });
+
+      it('should write phone number back into Ui Model from Route Call', function () {
+
+        var phoneNumber = '+14084744088';
+
+        var controller = $controller('AARouteToExtNumCtrl', {
+          $scope: $scope
+        });
+
+        controller.model.phoneNumberInput.phoneNumber = phoneNumber;
+
+        controller.menuEntry.actions = [];
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', 'fobar');
+        controller.menuEntry.actions = [];
+        controller.menuEntry.actions[0] = action;
+
+        controller.saveUiModel();
+
+        $scope.$apply();
+
+        expect(controller.menuEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
       });
 
       it('should be able to create new AA entry from Route Call', function () {

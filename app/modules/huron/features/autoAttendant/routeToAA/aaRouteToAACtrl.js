@@ -72,19 +72,16 @@
       if (angular.isDefined($scope.fromRouteCall)) {
 
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
-        if (!_.find(vm.menuEntry.actions, {
-            name: 'goto'
-          })) {
-          if (vm.menuEntry.actions.length === 0) {
-            action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-            vm.menuEntry.addAction(action);
-          } else {
-            // make sure action is AA not External Number, HG, User, etc
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          vm.menuEntry.addAction(action);
+        } else {
+          // make sure action is AA not External Number, HG, User, etc
+          if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
             vm.menuEntry.actions[0].setName('goto');
             vm.menuEntry.actions[0].setValue('');
           }
         }
-
       } else {
 
         // Read an existing routeToAA entry if exist or initialize it if not

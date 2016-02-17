@@ -42,10 +42,12 @@
     var routeToVoiceMail = 'routeToVoiceMail';
     var routeToUser = 'routeToUser';
 
+    var fromRouteCall = false;
+
     /////////////////////
 
     function populateUiModel() {
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.userSelected.id = vm.menuEntry.actions[0].getValue();
       } else {
         vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
@@ -60,7 +62,7 @@
 
     function saveUiModel() {
       AACommonService.setPhoneMenuStatus(true);
-      if (angular.isDefined($scope.fromRouteCall)) {
+      if (fromRouteCall) {
         vm.menuEntry.actions[0].setValue(vm.userSelected.id);
       } else {
         vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
@@ -180,20 +182,19 @@
 
       vm.uiMenu = ui[$scope.schedule];
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
+      var routeToUserOrVM = angular.isDefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
-      if (angular.isDefined($scope.fromRouteCall)) {
-        var from = angular.isDefined($scope.voicemail) && $scope.voicemail ? routeToVoiceMail : routeToUser;
+      if ($scope.fromRouteCall) {
 
-        // existing action for route to user?
-        if (!_.find(vm.menuEntry.actions, {
-            name: from
-          })) {
-          if (vm.menuEntry.actions.length === 0) {
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(from, '');
-            vm.menuEntry.addAction(action);
-          } else {
-            // make sure action is User not AA, HG, extNum, etc
-            vm.menuEntry.actions[0].setName(from);
+        fromRouteCall = true;
+
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
+          vm.menuEntry.addAction(action);
+        } else {
+          // make sure action is User||VoiceMail not AA, HG, extNum, etc
+          if (!(vm.menuEntry.actions[0].getName() === routeToUserOrVM)) {
+            vm.menuEntry.actions[0].setName(routeToUserOrVM);
             vm.menuEntry.actions[0].setValue('');
           }
         }
@@ -204,11 +205,7 @@
           vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
         } else {
           vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var action;
-          if (angular.isDefined($scope.voicemail) && $scope.voicemail)
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToVoiceMail, '');
-          else
-            action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUser, '');
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry(routeToUserOrVM, '');
           vm.menuKeyEntry.addAction(action);
         }
 

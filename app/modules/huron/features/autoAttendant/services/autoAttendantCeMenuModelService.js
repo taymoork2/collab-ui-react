@@ -350,9 +350,13 @@
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToExtension)) {
+
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
+
         setDescription(action, inAction.routeToExtension);
+
         menuEntry.addAction(action);
+
       } else if (angular.isDefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
@@ -411,6 +415,7 @@
         if (angular.isDefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
+
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -748,7 +753,8 @@
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
             newActionArray[i][actionName] = {};
-            if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
+            if (angular.isDefined(menuEntry.actions[0].description)) {
+              // descritpion always added to make consistent for UTs
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'say') {
@@ -775,6 +781,7 @@
           }
         }
       }
+
       var len = aaActionArray.length;
       if (len > 0) {
         // if there is a custom menu or a main menu at the end of the action array,

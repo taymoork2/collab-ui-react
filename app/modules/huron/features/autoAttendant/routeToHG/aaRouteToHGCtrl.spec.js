@@ -96,6 +96,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     });
 
     it('should be able to create new HG entry from Route Call', function () {
+
       $scope.fromRouteCall = true;
 
       var controller = $controller('AARouteToHGCtrl', {
@@ -119,6 +120,28 @@ describe('Controller: AARouteToHGCtrl', function () {
       aaUiModel[schedule].entries[0].actions = [];
 
     });
+    it('should populate the ui from the menuEntry', function () {
+
+      var controller = $controller('AARouteToHGCtrl', {
+        $scope: $scope
+      });
+
+      controller.hgSelected = {
+        name: "Oleg's Call Experience 1",
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+      };
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'myId');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+
+      controller.populateUiModel();
+
+      $scope.$apply();
+
+      expect(controller.hgSelected.id).toEqual('myId');
+
+    });
 
     it('should be able to create new HG entry from Route Call', function () {
 
@@ -133,11 +156,33 @@ describe('Controller: AARouteToHGCtrl', function () {
 
     });
 
+    it('should be able to change update via saveUIModel', function () {
+
+      var controller = $controller('AARouteToHGCtrl', {
+        $scope: $scope
+      });
+      controller.hgSelected = {
+        name: "Oleg's Call Experience 1",
+        id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
+      };
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'fobar');
+      controller.menuEntry.actions = [];
+      controller.menuEntry.actions[0] = action;
+
+      controller.saveUiModel();
+
+      $scope.$apply();
+
+      expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
+    });
+
   });
 
   describe('AARouteToHG', function () {
 
     it('should be able to create new HG entry', function () {
+
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope
       });
@@ -149,6 +194,7 @@ describe('Controller: AARouteToHGCtrl', function () {
     });
 
     it('should initialize the options list', function () {
+
       var controller = $controller('AARouteToHGCtrl', {
         $scope: $scope
       });
@@ -177,64 +223,6 @@ describe('Controller: AARouteToHGCtrl', function () {
         $scope.$apply();
 
         expect(controller.hgSelected.id).toEqual(huntGroups[0].uuid);
-      });
-    });
-
-    describe('saveUiModel', function () {
-      it('should populate the ui from the menuEntry', function () {
-
-        var controller = $controller('AARouteToHGCtrl', {
-          $scope: $scope
-        });
-
-        controller.hgSelected = {
-          name: "Oleg's Call Experience 1",
-          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
-        };
-
-        $scope.fromRouteCall = true;
-
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'myId');
-        controller.menuEntry.actions = [];
-        controller.menuEntry.actions[0] = action;
-
-        controller.populateUiModel();
-
-        $scope.$apply();
-
-        expect(controller.hgSelected.id).toEqual('myId');
-
-      });
-
-      it('should write UI entry back into UI model', function () {
-
-        var controller = $controller('AARouteToHGCtrl', {
-          $scope: $scope
-        });
-
-        controller.hgSelected = {
-          name: "Oleg's Call Experience 1",
-          id: "c16a6027-caef-4429-b3af-9d61ddc7964b"
-        };
-
-        controller.saveUiModel();
-
-        $scope.$apply();
-
-        expect(controller.menuKeyEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
-
-        $scope.fromRouteCall = true;
-
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToHuntgroup', 'fobar');
-        controller.menuEntry.actions = [];
-        controller.menuEntry.actions[0] = action;
-
-        controller.saveUiModel();
-
-        $scope.$apply();
-
-        expect(controller.menuEntry.actions[0].value).toEqual('c16a6027-caef-4429-b3af-9d61ddc7964b');
-
       });
     });
 

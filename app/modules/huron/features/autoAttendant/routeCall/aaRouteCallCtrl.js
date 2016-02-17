@@ -12,23 +12,21 @@
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
 
     vm.options = [{
-        "label": "Route to User",
-        "value": "routeToUser"
-      }, {
-        "label": "Route to Voicemail",
-        "value": "routeToVoiceMail"
-      }, {
-        "label": "Route to Hunt Group",
-        "value": "routeToHuntGroup"
-      }, {
-        "label": "Route to Auto Attendant",
-        "value": "goto"
-      }, {
-        "label": "Route to External Number",
-        "value": "route"
-      }
-
-    ];
+      "label": $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      "value": "routeToUser"
+    }, {
+      "label": $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      "value": "routeToVoiceMail"
+    }, {
+      "label": $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+      "value": "routeToHuntGroup"
+    }, {
+      "label": $translate.instant('autoAttendant.phoneMenuRouteAA'),
+      "value": "goto"
+    }, {
+      "label": $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+      "value": "route"
+    }];
 
     vm.selected = {
       label: '',

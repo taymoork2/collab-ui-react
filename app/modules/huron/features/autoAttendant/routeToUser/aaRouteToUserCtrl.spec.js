@@ -394,38 +394,27 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    describe('saveUiModel', function () {
-      it('should write UI entry back into UI model', function () {
+    describe('populateUi', function () {
+
+      it('should write UI entry back into UI model via populateUiModel', function () {
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope
         });
 
-        controller.userSelected = {
-          name: users[0].displayName,
-          id: users[0].id
-        };
-        controller.saveUiModel();
+        controller.menuKeyEntry.actions[0].value = users[0].id;
+
+        controller.populateUiModel();
+
+        $httpBackend.flush();
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(users[0].id);
-
-        $scope.fromRouteCall = true;
-
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', 'fobar');
-        controller.menuEntry.actions = [];
-        controller.menuEntry.actions[0] = action;
-
-        controller.saveUiModel();
-
-        $scope.$apply();
-
-        expect(controller.menuEntry.actions[0].value).toEqual(users[0].id);
+        expect(controller.userSelected.id).toEqual(users[0].id);
 
       });
-    });
 
+    });
     describe('fromRouteCall overwrite', function () {
       beforeEach(function () {
 
@@ -436,6 +425,24 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       });
 
+      it('should overwrite user id from model via saveUiModel', function () {
+        $scope.fromRouteCall = true;
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        controller.userSelected = {
+          name: users[0].displayName,
+          id: users[0].id
+        };
+
+        controller.saveUiModel();
+
+        $scope.$apply();
+
+        expect(controller.menuEntry.actions[0].value).toEqual(users[0].id);
+      });
       it('should be able to create new User entry from Route Call', function () {
         $scope.fromRouteCall = true;
 
@@ -448,6 +455,7 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       });
     });
+
     describe('fromRouteCall', function () {
       beforeEach(function () {
         $scope.fromRouteCall = true;
