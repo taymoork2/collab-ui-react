@@ -108,7 +108,7 @@
           }
         },
         function (response) {
-          vm.error = 'Error Code: ' + response.status;
+          vm.error = esErrorResponse(response);
           vm.spin = false;
         });
       return;
@@ -313,7 +313,7 @@
         },
         function (response) {
           Log.debug('Failed to retrieve ladder diagram');
-          vm.error = 'Error Code: ' + response.status;
+          vm.error = diagnosticErrorResponse(response);
           vm.spin = false;
         });
     }
@@ -343,7 +343,7 @@
           extractXmlDiagramInfo();
         },
         function (response) {
-          vm.error = 'Error Code: ' + response.status;
+          vm.error = diagnosticErrorResponse(response);
           vm.spin = false;
         });
     };
@@ -475,6 +475,39 @@
         }
       }
       return filtered;
+    }
+
+
+    function esErrorResponse(response) {
+      var message = '';
+      if (response.status === 401 || response.status === 403) {
+        message = $translate.instant('cdrLogs.cdr401And403Error');
+      } else if (response.status === 404) {
+        message =  $translate.instant('cdrLogs.cdr404Error');
+      } else if (response.status === 408) {
+        message =  $translate.instant('cdrLogs.cdr408Error');
+      } else if (response.status === 502 || response.status === 503) {
+        message = $translate.instant('cdrLogs.cdr502And503Error');
+      } else {
+        message = $translate.instant('cdrLogs.cdr500ShortError');
+      }
+      return message;
+    }
+
+    function diagnosticErrorResponse(response) {
+      var message = '';
+      if (response.status === 401 || response.status === 403) {
+        message = $translate.instant('cdrLadderDiagram.401And403Error');
+      } else if (response.status === 404) {
+        message =  $translate.instant('cdrLadderDiagram.404Error');
+      } else if (response.status === 408) {
+        message =  $translate.instant('cdrLadderDiagram.408Error');
+      } else if (response.status === 502 || response.status === 503) {
+        message = $translate.instant('cdrLadderDiagram.502And503Error');
+      } else {
+        message = $translate.instant('cdrLadderDiagram.500Error');
+      }
+      return message;
     }
 
     function init() {

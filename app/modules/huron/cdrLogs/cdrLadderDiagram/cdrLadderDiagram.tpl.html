@@ -106,10 +106,6 @@
                                 </ul>
                             </div>
                         </div>
-
-                        <div ng-show="cdrLadderDiagram.error" class="row center">
-                            <div class="col-lg-12"><span class="lg">{{query.error}}</span></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -123,10 +119,11 @@
         <div class="spinner-position" ng-if="cdrLadderDiagram.spin">
             <i class='icon icon-spinner icon-2x'></i>
         </div>
-
+<
         <div ng-if="!cdrLadderDiagram.diagramGenerated && !cdrLadderDiagram.spin">
             <div class="features-reload">
-                <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+                <br>
+                <p class="h4">{{cdrLadderDiagram.error}}</p>
                 <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
                 <button type="button" class="button btn-link" ng-click="cdrLadderDiagram.query()">{{::"cdrLadderDiagram.reload" | translate}}</button>
             </div>
