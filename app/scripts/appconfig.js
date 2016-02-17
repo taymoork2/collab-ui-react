@@ -1,9 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
-      var $window = $windowProvider.$get();
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -145,7 +144,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
+      var defaultLang = window.navigator['language' || 'userLanguage'].replace("-", "_") || 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
