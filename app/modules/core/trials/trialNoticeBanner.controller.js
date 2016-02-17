@@ -71,7 +71,7 @@
 
     function sendEmail() {
       var customerName = Authinfo.getOrgName();
-      var customerEmail = Authinfo.getUserName();
+      var customerEmail = Authinfo.getPrimaryEmail();
       var partnerEmail = vm.partnerAdminEmail;
       return EmailService.emailNotifyPartnerTrialConversionRequest(
         customerName, customerEmail, partnerEmail);

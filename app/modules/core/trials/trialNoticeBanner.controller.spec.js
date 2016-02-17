@@ -103,7 +103,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('sendRequest():', function () {
       it('should have called "sendEmail()"', function () {
-        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when({}));
+        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when());
 
         controller.sendRequest().then(function () {
           expect(controller._helpers.sendEmail).toHaveBeenCalled();
@@ -157,7 +157,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     describe('sendEmail():', function () {
       it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()"', function () {
         spyOn(Authinfo, 'getOrgName').and.returnValue('fake-cust-name');
-        spyOn(Authinfo, 'getUserName').and.returnValue('fake-cust-admin-email');
+        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-cust-admin-email');
         controller.partnerAdminEmail = 'fake-partner-admin-email';
         spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
 
