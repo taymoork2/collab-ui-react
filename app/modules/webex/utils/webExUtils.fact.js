@@ -279,6 +279,103 @@
         return deferredGetWebexLicenseInfo.promise;
       }; // getWebexLicenseInfo()
 
+      obj.getAllSitesWebexLicenseInfo = function () {
+        var deferredGetWebexLicenseInfo = $q.defer();
+
+        Orgservice.getValidLicenses().then(
+          function getValidLicensesSuccess(licenses) {
+            var funcName = "getValidLicensesSuccess()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            // $log.log(logMsg);
+
+            var allSitesLicenseInfo = [];
+
+            licenses.forEach(
+              function checkLicense(license) {
+                logMsg = funcName + ": " + "\n" +
+                  "license=" + JSON.stringify(license);
+                // $log.log(logMsg);
+
+                if (
+                  ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
+
+                  var licenseFields = license.licenseId.split("_");
+                  var siteUrl = licenseFields[3];
+                  var serviceType = licenseFields[0];
+
+                  var licenseInfo = null;
+
+                  var siteHasMCLicense = false;
+                  var siteHasECLicense = false;
+                  var siteHasSCLicense = false;
+                  var siteHasTCLicense = false;
+                  var siteHasCMRLicense = false;
+
+                  if ("MC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasMCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("EC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasECLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("SC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasSCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("TC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasTCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("CMR" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasCMRLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  }
+
+                  allSitesLicenseInfo.push(licenseInfo);
+
+                  deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+
+            deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
+          }, // getValidLicensesSuccess()
+
+          function getValidLicensesError(info) {
+            var funcName = "getValidLicensesError()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "info=" + JSON.stringify(info);
+            $log.log(logMsg);
+
+            deferredGetWebexLicenseInfo.reject(info);
+          } // getValidLicensesError()
+        ); // Orgservice.getValidLicenses().then()
+
+        return deferredGetWebexLicenseInfo.promise;
+      }; // getAllSitesWebexLicenseInfo()
+
       obj.setInfoCardLicenseInfo = function (
         licenseInfo,
         infoCardObj
