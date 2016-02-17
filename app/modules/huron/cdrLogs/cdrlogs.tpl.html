@@ -57,77 +57,76 @@
           <div class="row showgrid" id="callTime">
             <div class="columns medium-2">
               <input cs-input
-                  type="text" maxlength="11"
-                  id="startTime" name="startTime"
-                  ng-model="cdr.model.startTime"
-                  cs-input-label='{{::"cdrLogs.startTime" | translate}}'
-                  cs-input-messages="cdr.messages.time" 
-                  ng-pattern="cdr.patterns.time"
-                  ng-model-options="{updateOn: 'blur'}"
-                  ng-required="true">
+                type="text" maxlength="11"
+                id="startTime" name="startTime"
+                ng-model="cdr.model.startTime"
+                cs-input-label='{{::"cdrLogs.startTime" | translate}}'
+                cs-input-messages="cdr.messages.time" 
+                ng-pattern="cdr.patterns.time"
+                ng-model-options="{updateOn: 'blur'}"
+                ng-required="true">
             </div> 
             <div class="columns medium-2 medium-pull-8">
               <input cs-input
-                  type="text" maxlength="11"
-                  id="endTime" name="endTime" 
-                  ng-model="cdr.model.endTime"
-                  cs-input-label='{{::"cdrLogs.endTime" | translate}}'
-                  cs-input-messages="cdr.messages.time"
-                  ng-pattern="cdr.patterns.time"
-                  ng-model-options="{updateOn: 'blur'}"
-                  ng-required="true">
+                type="text" maxlength="11"
+                id="endTime" name="endTime" 
+                ng-model="cdr.model.endTime"
+                cs-input-label='{{::"cdrLogs.endTime" | translate}}'
+                cs-input-messages="cdr.messages.time"
+                ng-pattern="cdr.patterns.time"
+                ng-model-options="{updateOn: 'blur'}"
+                ng-required="true">
             </div>
           </div>
 
           <div class="row showgrid" id="callDate">
             <div class="columns columns medium-2" ng-class="{'error': cdr.searchAndUploadForm.startDate.$invalid}">
-                <label class="cs-input__label">{{::"cdrLogs.startDate" | translate}}</label>
-                <cs-datepicker 
-                    id="startDate" name="startDate"  
-                    ng-model="cdr.model.startDate"
-                    ng-messages="cdr.messages.date"
-                    ng-required="true">
-                  </cs-datepicker>
-                <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.startDate.$error" role="alert">
-                  <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidStartDate}}</div>
-                  <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
-                </div>
-              </div>    
-              <div  class="columns medium-2 medium-pull-8" ng-class="{'error': cdr.searchAndUploadForm.endDate.$invalid}">
-                <label class="cs-input__label">{{::"cdrLogs.endDate" | translate}}</label>
-                <cs-datepicker 
-                    id="endDate" name="endDate"
-                    ng-model="cdr.model.endDate" 
-                    ng-messages="cdr.messages.date"
-                    ng-change="cdr.validations.endDate()"
-                    ng-required="true">
-                </cs-datepicker>
-                <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.endDate.$error" role="alert">
-                  <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidEndDate}}</div>
-                  <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
-                </div>
+              <label class="cs-input__label">{{::"cdrLogs.startDate" | translate}}</label>
+              <cs-datepicker 
+                id="startDate" name="startDate"  
+                ng-model="cdr.model.startDate"
+                ng-messages="cdr.messages.date"
+                ng-required="true">
+              </cs-datepicker>
+              <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.startDate.$error" role="alert">
+                <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidStartDate}}</div>
+                <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
+              </div>
+            </div>    
+            <div  class="columns medium-2 medium-pull-8" ng-class="{'error': cdr.searchAndUploadForm.endDate.$invalid}">
+              <label class="cs-input__label">{{::"cdrLogs.endDate" | translate}}</label>
+              <cs-datepicker 
+                id="endDate" name="endDate"
+                ng-model="cdr.model.endDate" 
+                ng-messages="cdr.messages.date"
+                ng-required="true">
+              </cs-datepicker>
+              <div class="cs-input__messages" ng-messages="cdr.searchAndUploadForm.endDate.$error" role="alert">
+                <div class="message" ng-message="invalidRange">{{cdr.messages.date.invalidEndDate}}</div>
+                <div class="message" ng-message="invalidDate">{{cdr.messages.date.invalidFutureDate}}</div>
               </div>
             </div>
+          </div>
 
-            <div class="row showgrid hitSize">
-              <div class="columns medium-2">
-                <input cs-input 
-                    type="number" id="hitSize" name="hitSize"
-                    min="1" max="50"
-                    ng-model="cdr.model.hitSize"  
-                    cs-input-label='{{::"cdrLogs.size" | translate}}'
-                    cs-input-messages="cdr.messages.hitSize"
-                    ng-required="true">   
-              </div>
+          <div class="row showgrid hitSize">
+            <div class="columns medium-2">
+              <input cs-input 
+                type="number" id="hitSize" name="hitSize"
+                min="1" max="50"
+                ng-model="cdr.model.hitSize"  
+                cs-input-label='{{::"cdrLogs.size" | translate}}'
+                cs-input-messages="cdr.messages.hitSize"
+                ng-required="true">   
             </div>
+          </div>
 
             <div class="row showgrid">
               <div class="columns">
                 <button type="button" class="button btn--primary" 
-                      ng-disabled="cdr.searchAndUploadForm.$invalid || cdr.searchDisabled"
-                      ng-click="cdr.search()">{{::"cdrLogs.search" | translate}}</button> 
+                  ng-disabled="cdr.searchAndUploadForm.$invalid || cdr.searchDisabled"
+                  ng-click="cdr.search()">{{::"cdrLogs.search" | translate}}</button> 
                 <button type="button" class="button btn--primary" 
-                      ng-click="cdr.reset()">{{::"cdrLogs.reset" | translate}}</button>
+                  ng-click="cdr.reset()">{{::"cdrLogs.reset" | translate}}</button>
               </div>
             </div>
          </div>
