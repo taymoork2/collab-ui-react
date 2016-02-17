@@ -144,7 +144,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = window.navigator['language' || 'userLanguage'].replace("-", "_") || 'en_US';
+      var defaultLang = 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
