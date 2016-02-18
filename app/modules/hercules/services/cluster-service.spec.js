@@ -1,390 +1,354 @@
 'use strict';
 
-fdescribe('ClusterService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+describe('ClusterService', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Squared'));
+  beforeEach(module('Hercules'));
 
-  var $httpBackend, $location, Service, authinfo;
+  var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
   var rootPathV1 = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
   var rootPathV2 = 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/orgId';
 
-  beforeEach(function () {
-    module(function ($provide) {
-      authinfo = {
-        getOrgId: sinon.stub()
-      };
-      authinfo.getOrgId.returns('orgId');
-      $provide.value('Authinfo', authinfo);
-    });
-  });
+  var org = function (clusters) {
+    return {
+      id: _.uniqueId('org_'),
+      name: 'Org',
+      clusters: clusters
+    };
+  };
 
-  beforeEach(inject(function ($injector, _$location_, _ClusterService_) {
-    Service = _ClusterService_;
-    $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
-    $location = _$location_;
+  var cluster = function (connectors, options) {
+    options = options || {};
+    var provisioning = _.map(options.upgradeAvailable, function (type) {
+      return {
+        connectorType: type,
+        availableVersion: '2.0',
+        provisionedVersion: '1.0',
+      };
+    });
+    return {
+      id: _.uniqueId('cluster_'),
+      name: 'Cluster',
+      state: options.state || 'fused',
+      provisioning: provisioning,
+      connectors: connectors
+    };
+  };
+
+  var connector = function (type, options) {
+    options = options || {};
+    var alarms = _.map(_.range(options.alarms || 0), function () {
+      return {
+        title: _.uniqueId('alarm_')
+      };
+    });
+    return {
+      alarms: alarms,
+      hostSerial: _.uniqueId('serial_'),
+      hostname: options.hostname || 'host1.example.com',
+      state: options.state || 'running',
+      upgradeState: options.upgradeState || 'upgraded',
+      connectorType: type || 'c_mgmt'
+    };
+  };
+
+  beforeEach(module(function ($provide) {
+    var Authinfo = {
+      getOrgId: sinon.stub().returns('orgId')
+    };
+    $provide.value('Authinfo', Authinfo);
+    var ConfigService = {
+      getUrl: sinon.stub().returns('http://ulv.no'),
+      getUrlV2: sinon.stub().returns('http://elg.no')
+    };
+    $provide.value('ConfigService', ConfigService);
+    forceAction = sinon.stub();
+    CsdmPoller = {
+      create: sinon.stub().returns({
+        forceAction: forceAction
+      })
+    };
+    $provide.value('CsdmPoller', CsdmPoller);
   }));
 
-  describe('get and fetch functions', function () {
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _ClusterService_) {
+    $rootScope = _$rootScope_;
+    $httpBackend = _$httpBackend_;
+    ClusterService = _ClusterService_;
+  }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should start polling right away', function () {
+    $rootScope.$digest();
+    expect(CsdmPoller.create.called).toBe(true);
+  });
+
+  describe('.fetch', function () {
+    it('should contact the correct backend', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/orgId?fields=@wide')
+        .respond(org());
+      ClusterService.fetch();
+      $httpBackend.flush();
     });
 
-    it('should fetch and return data from the correct backend', function () {
+    it('should separate data based on connector types', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_ucmc'),
+          connector('c_cal')
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            connectors: [{
-              alarms: [],
-              hostname: 'host.example.com',
-              state: 'running',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
       var callback = sinon.stub();
-      Service.fetch().then(callback);
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      expect(callback.callCount).toBe(1);
-      var clusterCache = callback.args[0][0];
-      expect(clusterCache['c_mgmt']['cluster_0']).toBeDefined();
-    });
-
-    it('should separate data around connector types', function () {
-      $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }, {
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_ucmc'
-            }, {
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_cal'
-            }]
-          }]
-        });
-
-      Service.fetch();
-      $httpBackend.flush();
-
-      var c_mgmt = Service.getClustersByConnectorType('c_mgmt');
-      expect(c_mgmt.length).toBe(1);
-      var c_ucmc = Service.getClustersByConnectorType('c_ucmc');
-      expect(c_ucmc.length).toBe(1);
-      var c_cal = Service.getClustersByConnectorType('c_cal');
-      expect(c_cal.length).toBe(1);
+      var clusterCache = callback.getCall(0).args[0];
+      var clusterId = response.clusters[0].id;
+      var mgmtClusters = clusterCache.c_mgmt;
+      var ucmcClusters = clusterCache.c_ucmc;
+      var calClusters = clusterCache.c_cal;
+      expect(mgmtClusters[clusterId]).toBeDefined();
+      expect(ucmcClusters[clusterId]).toBeDefined();
+      expect(calClusters[clusterId]).toBeDefined();
+      expect(mgmtClusters[clusterId].connectors.length).toBe(1);
+      expect(ucmcClusters[clusterId].connectors.length).toBe(1);
+      expect(calClusters[clusterId].connectors.length).toBe(1);
     });
 
     it('should not expose a cluster if it has 0 connectors of the type we want', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt')
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getClustersByConnectorType('c_mgmt');
-      expect(c_mgmt.length).toBe(1);
-      var c_ucmc = Service.getClustersByConnectorType('c_ucmc');
-      expect(c_ucmc.length).toBe(0);
-      var c_cal = Service.getClustersByConnectorType('c_cal');
-      expect(c_cal.length).toBe(0);
+      var clusterCache = callback.getCall(0).args[0];
+      var clusterId = response.clusters[0].id;
+      expect(clusterCache.c_mgmt[clusterId]).toBeDefined();
+      expect(clusterCache.c_ucmc[clusterId]).not.toBeDefined();
+      expect(clusterCache.c_cal[clusterId]).not.toBeDefined();
     });
 
     it('should add aggregates and not touch the other information of the clusters', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt')
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.id).toBe('cluster_0');
-      expect(c_mgmt.name).toBe('Cluster');
-      expect(c_mgmt.state).toBe('fused');
-      expect(c_mgmt.provisioning).toEqual([]);
-      expect(c_mgmt.connectors).toEqual([{
-        alarms: [],
-        hostname: 'host1.example.com',
-        state: 'running',
-        upgradeState: 'upgraded',
-        connectorType: 'c_mgmt'
-      }]);
-      expect(c_mgmt.aggregates).toBeDefined();
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.id).toEqual(originalCluster.id);
+      expect(managementCluster.name).toEqual(originalCluster.name);
+      expect(managementCluster.state).toEqual(originalCluster.state);
+      expect(managementCluster.provisioning).toEqual(originalCluster.provisioning);
+      expect(managementCluster.connectors[0]).toEqual(originalCluster.connectors[0]);
+      expect(managementCluster.aggregates).toBeDefined();
     });
 
-    it('should merge all alarms and override state if it has some', function () {
+    it('should merge all alarms and override the state if there are alarms', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt', { alarms: 2 }),
+          connector('c_mgmt', { alarms: 1, hostname: 'host2.example.com' })
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [{
-                description: ''
-              }],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            },
-            {
-              alarms: [{
-                description: ''
-              },
-              {
-                description: ''
-              }],
-              hostname: 'host2.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.aggregates.alarms.length).toBe(3);
-      expect(c_mgmt.aggregates.state).toBe('has_alarms');
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.alarms.length).toBe(3);
+      expect(managementCluster.aggregates.state).toBe('has_alarms');
     });
 
-    it('should merge running state', function () {
+    it('should merge running states', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_mgmt', { state: 'not_configured', hostname: 'host2.example.com' })
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            },
-            {
-              alarms: [],
-              hostname: 'host2.example.com',
-              state: 'not_configured',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.aggregates.state).toBe('not_configured');
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.state).toBe('not_configured');
     });
 
     it('should merge get upgrade state', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_mgmt', { upgradeState: 'upgrading', hostname: 'host2.example.com' })
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            },
-            {
-              alarms: [],
-              hostname: 'host2.example.com',
-              state: 'running',
-              upgradeState: 'upgrading',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.aggregates.upgradeState).toBe('upgrading');
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.upgradeState).toBe('upgrading');
     });
 
-    it('should expose that an is upgrade available when there is one', function () {
+    it('should expose that an upgrade is available when there is one', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt')
+        ], { upgradeAvailable: ['c_mgmt'] })
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [{
-              connectorType: 'c_mgmt',
-              availableVersion: '2.0',
-              provisionedVersion: '1.0',
-            }],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.aggregates.provisioning).toEqual({
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.provisioning).toEqual({
         connectorType: 'c_mgmt',
         availableVersion: '2.0',
         provisionedVersion: '1.0',
       });
-      expect(c_mgmt.aggregates.upgradeAvailable).toBe(true);
+      expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    // should set .hosts with nice data
     it('should add hosts to aggregates', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_mgmt', { hostname: 'host2.example.com' }),
+          connector('c_mgmt', { hostname: 'host3.example.com' })
+        ])
+      ]);
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
-        .respond({
-          id: 'org_0',
-          name: 'Org',
-          clusters: [{
-            id: 'cluster_0',
-            name: 'Cluster',
-            state: 'fused',
-            provisioning: [],
-            connectors: [{
-              alarms: [],
-              hostname: 'host1.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            },
-            {
-              alarms: [],
-              hostname: 'host2.example.com',
-              state: 'running',
-              upgradeState: 'upgraded',
-              connectorType: 'c_mgmt'
-            }]
-          }]
-        });
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
 
-      Service.fetch();
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
       $httpBackend.flush();
 
-      var c_mgmt = Service.getCluster('c_mgmt', 'cluster_0');
-      expect(c_mgmt.aggregates.hosts.length).toBe(2);
-      expect(c_mgmt.aggregates.hosts[0]).toEqual({
-        alarms: [],
-        hostname: 'host1.example.com',
-        state: 'running',
-        upgradeState: 'upgraded'
-      });
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.hosts.length).toBe(3);
+      expect(managementCluster.aggregates.hosts[0].alarms).toEqual(originalCluster.connectors[0].alarms);
+      expect(managementCluster.aggregates.hosts[0].hostname).toEqual(originalCluster.connectors[0].hostname);
+      expect(managementCluster.aggregates.hosts[0].state).toEqual(originalCluster.connectors[0].state);
+      expect(managementCluster.aggregates.hosts[0].upgradeState).toEqual(originalCluster.connectors[0].upgradeState);
     });
 
     it('should call error callback on failure', function () {
       $httpBackend
-        .when('GET', rootPathV2 + '?fields=@wide')
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
         .respond(500, null);
 
       var callback = sinon.stub();
-      Service.fetch().then(null, callback);
+      ClusterService.fetch().then(null, callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);
     });
   });
 
-  describe('getRunningStateSeverity', function () {
+  describe('.getClustersByConnectorType', function () {
+    it('should return cached clusters as an array', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_ucmc')
+        ]),
+        cluster([
+          connector('c_mgmt')
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      ClusterService.fetch();
+      $httpBackend.flush();
+
+      var mgmtClusters = ClusterService.getClustersByConnectorType('c_mgmt');
+      expect(mgmtClusters.length).toBe(2);
+      var ucmcClusters = ClusterService.getClustersByConnectorType('c_ucmc');
+      expect(ucmcClusters.length).toBe(1);
+    });
+  });
+
+  describe('.getCluster', function () {
+    it('should return a cluster formatted for a certain type', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt')
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      ClusterService.fetch();
+      $httpBackend.flush();
+
+      var mgmtCluster = ClusterService.getCluster('c_mgmt', response.clusters[0].id);
+      var ucmcCluster = ClusterService.getCluster('c_ucmc', response.clusters[0].id);
+      expect(mgmtCluster).toBeDefined();
+      expect(mgmtCluster.aggregates).toBeDefined();
+      expect(ucmcCluster).not.toBeDefined();
+    });
+  });
+
+  describe('.getRunningStateSeverity', function () {
     it('should have an idea of which state is more critical than another', function () {
-      // $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-      // $httpBackend.flush();
-      var severity = Service.getRunningStateSeverity('not_installed');
+      var severity = ClusterService.getRunningStateSeverity('not_installed');
       expect(severity.label).toBeDefined();
       expect(severity.value).toBeDefined();
       expect(severity.label).toBe('neutral');
@@ -392,102 +356,149 @@ fdescribe('ClusterService', function () {
     });
 
     it('should default to error when the state is no known', function () {
-      // $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-      // $httpBackend.flush();
-      var severity = Service.getRunningStateSeverity('platypus');
+      var severity = ClusterService.getRunningStateSeverity('platypus');
       expect(severity.label).toBe('error');
       expect(severity.value).toBe(3);
     });
   });
 
-  describe('upgradeSoftware', function () {
+  describe('.upgradeSoftware', function () {
     it('should upgrade software using the correct backend', function () {
-      $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
       $httpBackend
-        .when('POST', rootPathV1 + '/clusters/foo/services/bar/upgrade', {})
-        .respond({
-          foo: 'bar'
-        });
+        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .respond({ foo: 'bar' });
 
       var callback = sinon.stub();
-      Service.upgradeSoftware('foo', 'bar').then(callback);
+      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt').then(callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0].foo).toBe('bar');
+      expect(callback.getCall(0).args[0].foo).toBe('bar');
     });
 
-    it('software upgrade should fail on 500 errors', function () {
-      $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
+    it('should call poller.forceAction on success', function () {
       $httpBackend
-        .when('POST', rootPathV1 + '/clusters/foo/services/bar/upgrade', {})
-        .respond(500, {
-          foo: 'bar'
-        });
+        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .respond({ foo: 'bar' });
+
+      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt');
+      $httpBackend.flush();
+
+      expect(forceAction.callCount).toBe(1);
+    });
+
+    it('should fail on 500 errors', function () {
+      $httpBackend
+        .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
+        .respond(500);
 
       var callback = sinon.stub();
-      Service.upgradeSoftware('foo', 'bar').then(undefined, callback);
+      ClusterService.upgradeSoftware('cluster_0', 'c_mgmt').then(undefined, callback);
       $httpBackend.flush();
 
       expect(callback.callCount).toBe(1);
-      expect(callback.args[0][0]).not.toBe(null);
+      expect(callback.getCall(0).args[0].foo).not.toBe(null);
     });
   });
 
-  it('should let us a connector', function () {
-    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-    $httpBackend
-      .when('GET', rootPathV1 + '/connectors/123', {})
-      .respond({
-        foo: 'bar'
-      });
+  describe('.getConnector', function () {
+    it('should be using the correct backend', function () {
+      $httpBackend
+        .when('GET', 'http://ulv.no/organizations/orgId/connectors/123')
+        .respond({ foo: 'bar' });
 
-    var callback = sinon.stub();
-    Service.getConnector('123').then(callback);
-    $httpBackend.flush();
+      var callback = sinon.stub();
+      ClusterService.getConnector('123').then(callback);
+      $httpBackend.flush();
 
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].foo).toBe('bar');
+      expect(callback.callCount).toBe(1);
+      expect(callback.getCall(0).args[0].foo).toBe('bar');
+    });
+
+    it('should fail on 500 errors', function () {
+      $httpBackend
+        .when('GET', 'http://ulv.no/organizations/orgId/connectors/123')
+        .respond(500);
+
+      var callback = sinon.stub();
+      ClusterService.getConnector('123').then(undefined, callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+    });
   });
 
-  it('should be able to delete a host', function () {
-    // TODO: test the .then part of deleting a host (hosts.length === 0 => delete cluster)
-    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-    $httpBackend
-      .when('DELETE', rootPathV1 + '/clusters/clusterid/hosts/serial')
-      .respond(200);
+  describe('.deleteHost', function () {
+    it('should be using the correct backend', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .respond(200);
 
-    var callback = sinon.stub();
-    Service.deleteHost('clusterid', 'serial').then(callback);
-    $httpBackend.flush();
+      var callback = sinon.stub();
+      ClusterService.deleteHost('clusterid', 'serial').then(callback);
+      $httpBackend.flush();
 
-    expect(callback.callCount).toBe(1);
+      expect(callback.callCount).toBe(1);
+    });
+
+    it('should call poller.forceAction on success', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .respond(200);
+
+      ClusterService.deleteHost('clusterid', 'serial');
+      $httpBackend.flush();
+
+      expect(forceAction.callCount).toBe(1);
+    });
+
+    it('should fail on 500 errors', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid/hosts/serial')
+        .respond(500);
+
+      var callback = sinon.stub();
+      ClusterService.deleteHost('clusterid', 'serial').then(undefined, callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+    });
   });
 
-  it('should handle host deletion failures', function () {
-    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-    $httpBackend
-      .when('DELETE', rootPathV1 + '/clusters/clusterid/hosts/serial')
-      .respond(500);
+  describe('.deleteCluster', function () {
+    it('should be using the correct backend', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(200);
 
-    var callback = sinon.stub();
-    Service.deleteHost('clusterid', 'serial').then(undefined, callback);
-    $httpBackend.flush();
+      var callback = sinon.stub();
+      ClusterService.deleteCluster('clusterid').then(callback);
+      $httpBackend.flush();
 
-    expect(callback.callCount).toBe(1);
-  });
+      expect(callback.callCount).toBe(1);
+    });
 
-  it('should be able to delete a cluster', function () {
-    // TODO: test the .then part of deleting a cluster
-    $httpBackend.when('GET', rootPathV2 + '?fields=@wide').respond({}); // please $httpBackend
-    $httpBackend
-      .when('DELETE', rootPathV1 + '/clusters/abc', {})
-      .respond(200);
+    it('should call poller.forceAction on success', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(200);
 
-    var callback = sinon.stub();
-    Service.deleteCluster('abc').then(callback);
-    $httpBackend.flush();
+      ClusterService.deleteCluster('clusterid');
+      $httpBackend.flush();
 
-    expect(callback.callCount).toBe(1);
+      expect(forceAction.callCount).toBe(1);
+    });
+
+    it('should fail on 500 errors', function () {
+      $httpBackend
+        .when('DELETE', 'http://ulv.no/organizations/orgId/clusters/clusterid')
+        .respond(500);
+
+      var callback = sinon.stub();
+      ClusterService.deleteCluster('clusterid').then(undefined, callback);
+      $httpBackend.flush();
+
+      expect(callback.callCount).toBe(1);
+    });
   });
 });

@@ -126,7 +126,7 @@
         state: mergeRunningState(connectors),
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
-        upgradeAvailable: _.get(provisioning, 'availableVersion', false) && provisioning.provisionedVersion !== provisioning.availableVersion,
+        upgradeAvailable: provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);
@@ -222,12 +222,8 @@
     function deleteCluster(id) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
       return $http.delete(url)
+        .then(extractDataFromResponse)
         .then(function (data) {
-          ['c_mgmt', 'c_ucmc', 'c_cal'].forEach(function (type) {
-            if (clusterCache[type][id]) {
-              delete clusterCache[type][id];
-            }
-          });
           poller.forceAction();
           return data;
         });
@@ -236,16 +232,8 @@
     function deleteHost(id, serial) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
+        .then(extractDataFromResponse)
         .then(function (data) {
-          ['c_mgmt', 'c_ucmc', 'c_cal'].forEach(function (type) {
-            var cluster = clusterCache[type][id];
-            if (cluster) {
-              _.remove(cluster.connectors, 'hostSerial', serial);
-              if (cluster.connectors.length === 0) {
-                delete clusterCache[type][id];
-              }
-            }
-          });
           poller.forceAction();
           return data;
         });
