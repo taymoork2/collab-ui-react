@@ -36,7 +36,7 @@
         200,
         startTime,
         1,
-        JSON.stringify(json)
+        json
       );
 
       return json;
@@ -54,7 +54,7 @@
         200,
         moment(),
         1,
-        JSON.stringify(json)
+        json
       );
     }
 

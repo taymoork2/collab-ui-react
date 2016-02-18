@@ -47,7 +47,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} Refer to <a ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} {{'helpdesk.help.referTo' | translate}} <a ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
