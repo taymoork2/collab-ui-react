@@ -5,6 +5,7 @@
   function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
+      document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
     });
     var vm = this;
     vm.search = search;
