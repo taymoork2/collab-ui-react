@@ -3,30 +3,30 @@
 angular.module('Core')
   .controller('SiteListCtrl', [
     '$translate',
-    'Authinfo',
-    'Config',
     '$log',
+    'Authinfo',
     'FeatureToggleService',
-    'Userservice',
-    'WebExApiGatewayService',
+    'WebExUtilsFact',
+    'SiteListService',
     function (
       $translate,
-      Authinfo,
-      Config,
       $log,
+      Authinfo,
       FeatureToggleService,
-      Userservice,
-      WebExApiGatewayService
+      WebExUtilsFact,
+      SiteListService
     ) {
       var funcName = "siteListCtrl()";
       var logMsg = "";
 
       var vm = this;
       vm.gridData = [];
+      vm.allSitesWebexLicensesArray = [];
 
-      var adminUserSupportCSV = false; // TODO
+      //getAllSitesLicenseData();
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
           var newSiteUrl = conferenceService.license.siteUrl;
@@ -67,6 +67,8 @@ angular.module('Core')
           }
         }
       );
+
+      getAllSitesLicenseData();
 
       // Start of grid set up
       var siteCsvColumnHeaderTemplate = "\n" +
@@ -188,15 +190,18 @@ angular.module('Core')
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.capacity',
-        displayName: $translate.instant('siteList.type'),
-        cellFilter: 'capacityFilter:row.entity.label',
+        field: 'siteConfLicenses',
+        displayName: $translate.instant('siteList.licenseTypes'),
+        //cellFilter: 'capacityFilter:row.entity.label',
+        cellTemplate: 'modules/core/siteList/siteLicenseTypes.tpl.html',
         sortable: false
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.volume',
-        displayName: $translate.instant('siteList.licenseCount'),
+        field: 'siteCSV',
+        displayName: $translate.instant('siteList.siteCsv'),
+        cellTemplate: siteCSVColumn,
+        headerCellTemplate: siteCsvColumnHeaderTemplate,
         sortable: false
       });
 
@@ -214,26 +219,25 @@ angular.module('Core')
         sortable: false
       });
 
-      var allowCSVToAllAdmins = false; // TODO
-      if (!allowCSVToAllAdmins) {
-        checkCSVToggle();
-      } else {
-        insertCSVColumn();
-        updateGrid();
-      }
+      //updateGridForLicense();
+
+      // TODO - uncomment the following line when feature toggle is no longer used
+      // SiteListService.updateGrid(vm.gridData);
+
+      // TODO - delete the following lines when feature toggle is no longer used
+      checkCSVToggle();
 
       function checkCSVToggle() {
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
-          function getSupportsCSVSuccess(result) {
+          function getSupportsCSVSuccess(adminUserSupportCSV) {
             var funcName = "getSupportsCSVSuccess()";
             var logMsg = "";
 
-            adminUserSupportCSV = result;
-            if (adminUserSupportCSV) {
-              insertCSVColumn();
+            if (!adminUserSupportCSV) {
+              vm.gridOptions.columnDefs.splice(2, 1);
             }
 
-            updateGrid();
+            SiteListService.updateGrid(vm.gridData);
           }, // getSupportsCSVSuccess()
 
           function getSupportsCSVError(result) {
@@ -244,146 +248,204 @@ angular.module('Core')
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
-            updateGrid();
+            vm.gridOptions.columnDefs.splice(2, 1);
+            SiteListService.updateGrid(vm.gridData);
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
       } // checkCSVToggle()
-
-      function insertCSVColumn() {
-        var columnObj = {
-          field: 'siteCSV',
-          displayName: $translate.instant('siteList.siteCsv'),
-          cellTemplate: siteCSVColumn,
-          headerCellTemplate: siteCsvColumnHeaderTemplate,
-          sortable: false
-        };
-
-        vm.gridOptions.columnDefs.splice(
-          3,
-          0,
-          columnObj
-        );
-      } // insertCSVColumn()
+      // End of delete
       // End of grid set up
 
-      function updateGrid() {
-        var funcName = "updateGrid()";
+      function updateGridForLicense() {
+        //Update the grid data with license information for each site
+        var funcName = "updateGridForLicense()";
         var logMsg = "";
 
         // $log.log(funcName);
 
-        if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-          initGridColumns();
-        } else {
-          Userservice.getUser('me', function (data, status) {
-            if (
-              (data.success) &&
-              (data.emails)
-            ) {
-              Authinfo.setEmails(data.emails);
-              initGridColumns();
-            }
-          });
-        }
-      } // updateGrid()
+        vm.gridData.forEach(
+          function processGridForLicense(siteRow) {
+            var funcName = "processGridForLicense()";
+            var logMsg = "";
+            var siteUrl = siteRow.license.siteUrl;
+            var count = 0;
 
-      function initGridColumns() {
-        var funcName = "initGridColumns()";
+            //Get the site's MC, EC, SC, TC, CMR license information
+            //MC
+            var siteMC = _.where(vm.allSitesWebexLicensesArray, {
+              webexSite: siteUrl,
+              siteHasMCLicense: true
+            });
+
+            if (siteMC != null && siteMC.length > 0) {
+              siteRow.MCLicensed = true;
+              siteRow.licenseTooltipDisplay = "";
+
+              siteMC.forEach(
+                function processDisplayText(mc) {
+                  //Grid content display
+                  siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                    capacity: mc.capacity
+                  });
+                  //Tooltip display
+                  siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "\n" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                    capacity: mc.capacity
+                  });
+                  count++;
+                }
+              ); //siteMC.forEach
+
+            } else {
+              siteRow.MCLicensed = false;
+            }
+
+            //EC
+            var siteEC = _.where(vm.allSitesWebexLicensesArray, {
+              webexSite: siteUrl,
+              siteHasECLicense: true
+            });
+
+            if (siteEC != null && siteEC.length > 0) {
+              siteRow.ECLicensed = true;
+
+              siteEC.forEach(
+                function processDisplayText(ec) {
+                  //Grid content display
+                  siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                    capacity: ec.capacity
+                  });
+                  //Tooltip display
+                  siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "\n" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                    capacity: ec.capacity
+                  });
+                  count++;
+                }
+              ); //siteEC.forEach
+
+            } else {
+              siteRow.ECLicensed = false;
+            }
+
+            //SC
+            var siteSC = _.where(vm.allSitesWebexLicensesArray, {
+              webexSite: siteUrl,
+              siteHasSCLicense: true
+            });
+
+            if (siteSC != null && siteSC.length > 0) {
+              siteRow.SCLicensed = true;
+              siteSC.forEach(
+                function processDisplayText(sc) {
+                  //Grid content display
+                  siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                    capacity: sc.capacity
+                  });
+                  //Tooltip display
+                  siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "\n" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                    capacity: sc.capacity
+                  });
+                  count++;
+                }
+              ); //siteSC.forEach
+
+            } else {
+              siteRow.SCLicensed = false;
+            }
+
+            //TC
+            var siteTC = _.where(vm.allSitesWebexLicensesArray, {
+              webexSite: siteUrl,
+              siteHasTCLicense: true
+            });
+
+            if (siteTC != null && siteTC.length > 0) {
+              siteRow.TCLicensed = true;
+              siteTC.forEach(
+                function processDisplayText(tc) {
+                  //Grid content display
+                  siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                    capacity: tc.capacity
+                  });
+                  //Tooltip display
+                  siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "\n" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                    capacity: tc.capacity
+                  });
+                  count++;
+                }
+              ); //siteTC.forEach
+
+            } else {
+              siteRow.TCLicensed = false;
+            }
+
+            //CMR
+            var siteCMR = _.where(vm.allSitesWebexLicensesArray, {
+              webexSite: siteUrl,
+              siteHasCMRLicense: true
+            });
+
+            if (siteCMR != null && siteCMR.length > 0) {
+              siteRow.CMRLicensed = true;
+
+              siteCMR.forEach(
+                function processDisplayText(cmr) {
+                  //Grid content display
+                  siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                    capacity: cmr.capacity
+                  });
+                  //Tooltip display
+                  siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "\n" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                    capacity: cmr.capacity
+                  });
+                  count++;
+                }
+              ); //siteCMR.forEach
+
+            } else {
+              siteRow.CMRLicensed = false;
+            }
+
+            if (count > 1) {
+              siteRow.multipleWebexServicesLicensed = true;
+              siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
+
+            } else {
+              siteRow.multipleWebexServicesLicensed = false;
+            }
+
+          } //processGrid()
+        ); // vm.gridData.forEach()
+
+      } //updateGridForLicense
+
+      function getAllSitesLicenseData() {
+        var funcName = "getAllSitesLicenseData()";
         var logMsg = "";
 
-        vm.gridData.forEach(
-          function processGrid(siteRow) {
-            var funcName = "processGrid()";
+        WebExUtilsFact.getAllSitesWebexLicenseInfo().then(
+          function getWebexLicenseInfoSuccess(allSitesLicenseInfo) {
+            var funcName = "getWebexLicenseInfoSuccess()";
             var logMsg = "";
 
-            var siteUrl = siteRow.license.siteUrl;
+            logMsg = funcName + ": " + "\n" +
+              "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
 
-            siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.userEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
+            vm.allSitesWebexLicensesArray = allSitesLicenseInfo;
+            updateGridForLicense();
 
-            WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
-              function isSiteSupportsIframeSuccess(result) {
-                var funcName = "isSiteSupportsIframeSuccess()";
-                var logMsg = "";
+            // $log.log(logMsg);
+          }, // getWebexLicenseInfoSuccess()
 
-                logMsg = funcName + ": " + "\n" +
-                  "result=" + JSON.stringify(result);
-                $log.log(logMsg);
-
-                siteRow.isIframeSupported = result.isIframeSupported;
-                siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
-                siteRow.isCSVSupported = result.isCSVSupported;
-
-                siteRow.showSiteLinks = true;
-
-                logMsg = funcName + ": " + "\n" +
-                  "siteUrl=" + siteUrl + "\n" +
-                  "siteRow.isCSVSupported=" + siteRow.isCSVSupported + "\n" +
-                  "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
-                  "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
-                  "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
-                $log.log(logMsg);
-
-                updateCSVColumn(siteRow);
-              }, // isSiteSupportsIframeSuccess()
-
-              function isSiteSupportsIframeError(response) {
-                var funcName = "isSiteSupportsIframeError()";
-                var logMsg = "";
-
-                siteRow.isIframeSupported = false;
-                siteRow.isAdminReportEnabled = false;
-                siteRow.showSiteLinks = true;
-                siteRow.showCSVInfo = true;
-                siteRow.isError = true;
-                if (response.response.indexOf("030048") != -1) {
-                  siteRow.isWarn = true;
-                }
-
-                logMsg = funcName + ": " + "\n" +
-                  "response=" + JSON.stringify(response);
-                $log.log(logMsg);
-              } // isSiteSupportsIframeError()
-            ); // WebExApiGatewayService.isSiteSupportsIframe().then
-          } // processGrid()
-        ); // vm.gridData.forEach()
-      } // initGridColumns()
-
-      function updateCSVColumn(siteRow) {
-        if (!siteRow.isCSVSupported) {
-          // no further data to get
-          siteRow.showCSVInfo = true;
-          return;
-        }
-
-        // TODO
-        var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvStatus(siteUrl).then(
-          function getCSVStatusSuccess(response) {
-            var funcName = "getCSVStatusSuccess()";
+          function getWebexLicenseInfoError(result) {
+            var funcName = "getWebexLicenseInfoError()";
             var logMsg = "";
 
-            logMsg = funcName + "\n" +
-              "response=" + JSON.stringify(response);
+            logMsg = funcName + ": " + "\n" +
+              "result=" + JSON.stringify(result);
             $log.log(logMsg);
-
-            siteRow.showCSVInfo = true;
-          }, // getCSVStatusSuccess()
-
-          function getCSVStatusError(response) {
-            var funcName = "getCSVStatusError()";
-            var logMsg = "";
-
-            logMsg = funcName + "\n" +
-              "response=" + JSON.stringify(response);
-            $log.log(logMsg);
-
-            siteRow.showCSVInfo = true;
-          } // getCSVStatusSuccess()
-        );
-      } // updateCSVColumn()
-    } // updateCSVColumn()
+          } // getWebexLicenseInfoError()
+        ); //getWebexLicenseInfo.then()
+      } //getAllSitesLicenseData()
+    } // End controller
 
   ]);

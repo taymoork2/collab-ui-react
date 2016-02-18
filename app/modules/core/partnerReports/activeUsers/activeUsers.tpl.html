@@ -39,7 +39,7 @@
         </table>
       </div>
     <div class="card-section-content">
-      <a  ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers; nav.resizeCards();">
+      <a  ng-click="nav.openCloseMostActive()">
         <span id="showActiveUsers" ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
         <span id="hideActiveUsrs" ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>
@@ -48,14 +48,11 @@
           <i class='icon icon-chevron-left'></i>
         </button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[0])"
-          ng-class="{'btn--primary': (nav.activeButton[0] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[0] !== nav.activeUserCurrentPage) }">
-          {{nav.activeButton[0]}}</button>
+          ng-class="{'btn--primary': (nav.activeButton[0] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[0] !== nav.activeUserCurrentPage) }">{{nav.activeButton[0]}}</button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[1])"
-          ng-class="{'btn--primary': (nav.activeButton[1] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[1] !== nav.activeUserCurrentPage) }">
-          {{nav.activeButton[1]}}</button>
+          ng-class="{'btn--primary': (nav.activeButton[1] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[1] !== nav.activeUserCurrentPage) }">{{nav.activeButton[1]}}</button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[2])" ng-show="nav.activeUsersTotalPages > 2"
-          ng-class="{'btn--primary': (nav.activeButton[2] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[2] !== nav.activeUserCurrentPage) }">
-          {{nav.activeButton[2]}}</button>
+          ng-class="{'btn--primary': (nav.activeButton[2] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[2] !== nav.activeUserCurrentPage) }">{{nav.activeButton[2]}}</button>
         <button type="button" class="actions-button btn--none" ng-click="nav.pageForward()" ng-show="nav.activeUsersTotalPages > 3">
           <i class='icon icon-chevron-right'></i>
         </button>

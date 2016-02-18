@@ -216,6 +216,7 @@
 
     function nextTab() {
       var tabs = getTabs();
+      vm.wizardNextLoad = false;
       if (angular.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;

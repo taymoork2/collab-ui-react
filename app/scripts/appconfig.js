@@ -1,9 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
-      var $window = $windowProvider.$get();
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -145,7 +144,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
+      var defaultLang = 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -1347,7 +1346,7 @@ angular
         })
         .state('trialAdd.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('trialAdd.addNumbers', {
@@ -1370,7 +1369,8 @@ angular
             }
           },
           params: {
-            currentTrial: {}
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialEdit.addNumbers', {
@@ -1394,7 +1394,7 @@ angular
         })
         .state('trialEdit.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('generateauthcode', {

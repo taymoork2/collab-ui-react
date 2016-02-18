@@ -74,6 +74,7 @@
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "hybridServicesError": "{{email}} did not qualify for the selected services",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
@@ -212,7 +213,7 @@
     "fusionDetailsTabDesc": "Connector Management",
     "huronLineDetailsTab": "Call",
     "huronLineDetailsTabDesc": "Numbers and Settings",
-    "MediafusionDetailsTab": "Media Service Management",
+    "MediafusionDetailsTab": "Hybrid Services: Media",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
     "callRoutingTabDesc": "Manage Call Routing Features Such As Call Park",
@@ -373,18 +374,18 @@
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
-    "hideActiveUsers": "Hide Most Active Users",
+    "hideActiveUsers": "Hide most active users",
     "mostActiveUsers": "Most Active Users in the {{time}}",
     "registeredUsers": "Registered Users",
-    "showActiveUsers": "Show Most Active Users",
+    "showActiveUsers": "Show most active users",
     "squaredActivity": "Total Activity",
     "sparkMessages": "Spark Messages",
     "user": "User",
     "users": "Users",
     "search": "Search",
-    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
-    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
   "avgRooms": {
@@ -411,9 +412,10 @@
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",
-    "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
-    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
+    "description": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.",
+    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
@@ -448,7 +450,7 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer Data"
@@ -599,7 +601,9 @@
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
     "userUuidError": "Input a User ID or 36 character UUID.",
     "userUuidMatchError": "User IDs or UUIDs for the calling party and called party should not match.",
-    "invalidDate": "End date should be the same day as, or any day after, the start date.",
+    "invalidStartDate": "Start date should be the same day as, or any day before, the end date.",
+    "invalidEndDate": "End date should be the same day as, or any day after, the start date.",
+    "invalidFutureDate": "Cannot be a future date.",
     "tomorrowError": "Select today's date or any date before today's date.",
     "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
     "invalidTimeTwo": "End Time should not be equal to or earlier than the Start Time.",
@@ -607,6 +611,7 @@
     "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
     "deviceNameError": "Calling Party Device and Called Party Device should not match.",
     "hitSizeError": "The request hit size should be between 1 and 50.",
+    "invalidNumber": "Please enter a valid hit size using the numbers [0-9].",
     "advancedCDR": "Advanced CDR Report",
     "local": "Local:",
     "remote": "Remote:",
@@ -725,7 +730,8 @@
     "unknown": "Unknown",
     "description": "Description",
     "user": "User",
-    "ipAddress": "IP Address"
+    "ipAddress": "IP Address",
+    "tryAgain": "Try Again"
   },
   "notifications": {
     "success": "Success notifications",
@@ -813,7 +819,8 @@
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
-    "testSSOSetupDesc": "You are ready to test your SSO configuration. Press the button below to launch a new window. If you are able to sign in successfully, you can return to this screen and press next to finalize your SSO setup.",
+    "testSSOSetupDesc": "Press the button below to test your SSO configuration. The test will open in a new browser window. Enter valid SSO credentials and verify the login was successful.",
+    "testSSOSetupDesc2": "If your test was successful, enable Single Sign On below. Otherwise, disable Single Sign On or return to the previous steps.",
     "enableSSODesc": "If you are ready to enable Single Sign-On (SSO) for all users, press the finish button. All user authentication will then be processed through your new SSO provider.",
     "IdPFileLabel": "IdP Metadata File",
     "chooseFilePlaceHolder": "Choose File...",
@@ -983,6 +990,7 @@
     "deleteDevice": "Delete Device",
     "rebootDevice": "Reboot Device",
     "reboot": "Reboot",
+    "cancel": "Cancel",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
@@ -1001,6 +1009,8 @@
     "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
     "nothingHere": "No devices yet.",
     "noDevices": "Let's enable collaboration devices",
+    "noneFound": "No Devices Found",
+    "tryAgain": "Try another Search",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room systems license is suspended.",
@@ -1138,7 +1148,7 @@
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-uc": "Share your desktop with Spark while you are on your work phone.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
       }
@@ -1238,7 +1248,7 @@
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
-    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
+    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to {{max}} or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
@@ -1271,7 +1281,6 @@
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "uploadDirSyncEmpty": "Please upload users from the directory server.",
-    "dirsyncMaxLinesError": "The directory contains more users than the maximum allowed. Please reduce the number of users to 250 or less.",
     "dirSyncStatus": "Sync Status",
     "processDirSyncStep": "Processing Directory Sync",
     "dirSyncResultStep": "Directory Sync Result",
@@ -1967,7 +1976,14 @@
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
-    "roomSystem": "Spark Room System"
+    "roomSystem": "Spark Room System",
+    "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
+    "expiredMsg": "Your trial has expired.",
+    "requestPurchaseMsg": "Do you want to request purchase information?",
+    "requestConfirmMsg": "A purchase request message was sent to {{partnerName}}",
+    "requestPurchaseBtn": "Request Purchase",
+    "requestAgainBtn": "Request Again",
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerName}} of your intent to purchase"
   },
 
   "status": {
@@ -2125,6 +2141,7 @@
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
+    "sipUrl": "Sip Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
     "notYetActivated": "No device has been activated for this location.",
@@ -2278,7 +2295,7 @@
       "hosts": "Hosts"
     },
     "activateService": {
-      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "ingress": "Extend the Cloud to your On-Premise Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
     },
@@ -2359,11 +2376,16 @@
     },
     "add-resource-dialog": {
       "title": "Register a New Media Server",
-      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to.",
+      "text1": "Create a new or choose an existing Media Cluster to assign the new Media Server to:",
       "text2": "Enter the hostname or IP address of the Media Server that you want to register to cloud. Click REGISTER RESOURCE, login to your Media Server and register.",
-      "register": "REGISTER RESOURCE",
-      "cancel": "CANCEL",
-      "hostname-placeholder": "Enter hostname or IP address"
+      "register": "Go To Media Server",
+      "cancel": "Cancel",
+      "hostname-placeholder": "Enter hostname or IP address",
+      "grant-registration-success-header-old-cluster": "You can now register the Media Server <strong>{{hostname}}</strong>, belonging to <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
+      "grant-registration-success-header-new-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
+      "grant-success-information": "Go to your Media Server within one hour to finish registration.",
+      "next": "Next",
+      "back": "Back"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2858,7 +2880,7 @@
     "events": "Events"
   },
   "processOrderPage": {
-    "errOrgCreation": "Order # {{orderId}} is being processed. Please check back after 24 hours.",
+    "errOrgCreation": "Your order is being processed. Please check back after 24 hours.",
     "info": "Status",
     "wait": "Please wait while we redirect you"
   },
@@ -2900,7 +2922,7 @@
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
-    "type": "Type",
+    "licenseTypes": "License Types",
     "siteSettings": "Configure",
     "siteReports": "Reports",
     "siteCsvColumnHeader": "User Attributes",
@@ -2920,7 +2942,8 @@
     "importFailedTooltip": "Import failed",
     "siteCSVNotAvailable": "Not available",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site. Contact support."
+    "systemError": "Unable to communicate with this WebEx site. Contact support.",
+    "multipleLicenses": "Multiple..."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3169,7 +3192,7 @@
       },
       "circular": {
         "name": "Circular",
-        "desc": "The system keeps a track of which member was sent the previous call. Circular first send tha call to next sequential idle (or available) member."
+        "desc": " Circular first sends the call to next sequential idle (or available) member. The system keeps track of which member was sent the previous call."
       },
       "topDown": {
         "name": "Top Down",
@@ -3317,12 +3340,13 @@
     "PARTNER_READ_ONLY_ADMIN": "Read-only Partner Admin"
   },
   "helpdesk": {
+    "browserTabHeaderTitle": "Help Desk Support",
     "navHeaderTitle": "Cloud Collaboration Help Desk",
     "helpdesk": "Help Desk",
     "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
-    "badUserSearchInput": "Enter at least three characters. To search by name or email, enter two words, for example John Doe or john.doe.",
+    "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
     "cancelled": "Search was cancelled",
     "searchingPleaseWait": "Searching, please wait...",
@@ -3419,12 +3443,13 @@
       "navigation-title": "Navigating by Keyboard",
       "navigation-info": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms. Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only. ",
       "search-criterias-title": "Search Criteria",
-      "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
-      "search-criterias-customers": "<strong>Customers</strong>: Display Name",
+      "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (requires two words with at least three characters each)",
+      "search-criterias-customers": "<strong>Customers</strong>: Display Name (requires at least three characters)",
       "search-criterias-devices": "<strong>Devices</strong>: For Spark Call devices: SEP number or phone number. For Spark Room systems: Display Name, Serial or MAC Address.",
       "search-criterias-note": "Note: To search for any Spark system or device, you must first select a customer.",
       "narrow-title": "Select a Customer",
-      "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
+      "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
+      "referTo": "Refer to"
     },
     "history": {
       "clear": "Clear History",
