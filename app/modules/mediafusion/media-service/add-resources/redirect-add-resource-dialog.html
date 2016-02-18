@@ -43,8 +43,15 @@
       translate="mediaFusion.add-resource-dialog.grant-success-information"></span></p>
   </div>
   <div class="modal-footer">
-    <button class="btn" ng-click="$close()">
+    <button class="btn" 
+            ng-hide="redirectResource.enableRedirectToTarget"
+            ng-click="$close()">
       <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+    </button>
+    <button class="btn" 
+            ng-show="redirectResource.enableRedirectToTarget"
+            ng-click="redirectResource.back()">
+      <span translate="mediaFusion.add-resource-dialog.back"></span>
     </button>
     <button class="btn activate-button btn--primary"
             ng-hide="redirectResource.enableRedirectToTarget"
@@ -54,7 +61,7 @@
     </button>
     <button class="btn register-button btn--primary"
             ng-show="redirectResource.enableRedirectToTarget"
-            ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster, redirectResource.createNewGroup)">
+            ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
       <span translate="mediaFusion.add-resource-dialog.register"></span>
     </button>
   </div>

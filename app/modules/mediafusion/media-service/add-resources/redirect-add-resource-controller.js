@@ -15,6 +15,7 @@
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.redirectPopUpAndClose = redirectPopUpAndClose;
+    vm.back = back;
     vm.getGroups = getGroups;
     vm.enableRedirectToTarget = false;
     vm.selectedCluster = '';
@@ -52,7 +53,7 @@
       }, XhrNotificationService.notify);
     }
 
-    function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster, isNewGroup) {
+    function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       _.each(vm.groups, function (group) {
         if (group.name == vm.selectedCluster) {
           vm.groupDetail = group;
@@ -73,6 +74,11 @@
       if (!vm.popup || vm.popup.closed || typeof vm.popup.closed == 'undefined') {
         $log.log('popup.closed');
       }
+    }
+
+    function back() {
+      vm.enableRedirectToTarget = false;
+      vm.createNewGroup = false;
     }
   }
 }());
