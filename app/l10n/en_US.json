@@ -384,7 +384,7 @@
     "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
-    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
   "avgRooms": {
@@ -414,6 +414,7 @@
     "description": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.",
     "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
@@ -448,7 +449,7 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer Data"

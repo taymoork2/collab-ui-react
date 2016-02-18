@@ -11,4 +11,22 @@
   .amExportButton {
     top: rem-calc(40);
   }
+  .help-popover {
+    background-color: $white;
+    padding: 0;
+    .icon-help {
+      font-size: rem-calc(18);
+      color: $color-primary-base;
+    }
+  }
+  .help-popover:active, .help-popover:focus {
+    box-shadow: none;
+  }
+  .popover {
+    width: rem-calc(450);
+    max-width: rem-calc(450);
+    .popover-content {
+      font-size: rem-calc(15);
+    }
+  }
 }

@@ -6,6 +6,9 @@
     <section>
       <div class="customer-media">
         <p class="report-description" translate='mediaQuality.descriptionCustomer'></p>
+        <button popover="{{::nav.mediaQualityPopover}}" popover-trigger="mouseenter" popover-placement="right" class="help-popover">
+          <i class='icon icon-help'></i>
+        </button>
         <cs-select id="mediaFilter" name="mediaFilter" class='customer-report-filter media-filter' ng-model="nav.mediaSelected" options="nav.mediaOptions" on-change-fn="nav.mediaUpdate()" is-disabled="nav.isEmpty(nav.mediaQualityStatus) || nav.isRefresh(nav.mediaQualityStatus)"></cs-select>
         <div id="mediaQualityDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.mediaQualityStatus) && !nav.isRefresh(nav.mediaQualityStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityStatus)">
