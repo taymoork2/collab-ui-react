@@ -21,7 +21,7 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
-      $scope.showToolsCard = false;
+      $scope.showToolsCard = false; 
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
