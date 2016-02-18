@@ -46,7 +46,7 @@
     function saveUiModel() {
       var num = vm.model.phoneNumberInput.phoneNumber;
       if (num) {
-        num = num.replace(/\D/g, '');
+        num = num.replace(/[-\s]*/g, '');
       }
       vm.menuKeyEntry.actions[0].setValue(num);
       AACommonService.setPhoneMenuStatus(true);

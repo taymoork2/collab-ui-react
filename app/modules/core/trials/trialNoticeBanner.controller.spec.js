@@ -15,6 +15,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
   var fakePartnerInfoData = {
     'data': {
       'partners': [{
+        'userName': 'fake-partner-email@example.com',
         'displayName': 'fakeuser admin1',
       }]
     }
@@ -78,8 +79,12 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       expect(controller.daysLeft).not.toBeNull();
     });
 
-    it('should set "partnerName"', function () {
-      expect(controller.partnerName).toBe('fakeuser admin1');
+    it('should set "partnerAdminEmail"', function () {
+      expect(controller.partnerAdminEmail).toBe('fake-partner-email@example.com');
+    });
+
+    it('should set "partnerAdminDisplayName"', function () {
+      expect(controller.partnerAdminDisplayName).toBe('fakeuser admin1');
     });
 
     describe('canShow():', function () {
@@ -92,6 +97,18 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         it('should return true if "Authinfo.isUserAdmin()" is false', function () {
           spyOn(Authinfo, 'isUserAdmin').and.returnValue(false);
           expect(controller.canShow()).toBe(false);
+        });
+      });
+    });
+
+    describe('sendRequest():', function () {
+      it('should have called "sendEmail()"', function () {
+        spyOn(controller._helpers, 'sendEmail').and.returnValue($q.when());
+
+        controller.sendRequest().then(function () {
+          expect(controller._helpers.sendEmail).toHaveBeenCalled();
+          expect(Notification.success).toHaveBeenCalled();
+          expect(controller.hasRequested).toBe(true);
         });
       });
     });
@@ -128,7 +145,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     });
 
     describe('getPrimaryPartnerInfo():', function () {
-      describe('will return a promise that resolves with partner data that...', function () {
+      describe('will resolve with partner data that...', function () {
         it('should have a "data.partners[0].displayName" property', function () {
           controller._helpers.getPrimaryPartnerInfo().then(function (partnerInfo) {
             expect(partnerInfo.data.partners[0].displayName).toBe('fakeuser admin1');
@@ -137,8 +154,18 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
       });
     });
 
-    xdescribe('sendEmail():', function () {
-      // TODO:
+    describe('sendEmail():', function () {
+      it('should have called "EmailService.emailNotifyPartnerTrialConversionRequest()"', function () {
+        spyOn(Authinfo, 'getOrgName').and.returnValue('fake-cust-name');
+        spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-cust-admin-email');
+        controller.partnerAdminEmail = 'fake-partner-admin-email';
+        spyOn(EmailService, 'emailNotifyPartnerTrialConversionRequest');
+
+        controller._helpers.sendEmail();
+        expect(EmailService.emailNotifyPartnerTrialConversionRequest)
+          .toHaveBeenCalledWith(
+            'fake-cust-name', 'fake-cust-admin-email', 'fake-partner-admin-email');
+      });
     });
   });
 });

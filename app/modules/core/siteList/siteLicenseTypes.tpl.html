@@ -1,0 +1,15 @@
+<div id="site-license-types">
+	<div ng-if="!row.entity.showCSVInfo">
+		<p class="ui-grid-cell-contents">
+			<i class="icon-spinner icon"></i>
+		</p>
+	</div>
+	<div ng-if="row.entity.showCSVInfo">
+		<div ng-if="row.entity.multipleWebexServicesLicensed">
+			<p class="ui-grid-cell-contents" tooltip-placement="top" tooltip="{{row.entity.licenseTooltipDisplay}}" tooltip-animation="false"  tooltip-append-to-body="true">
+			{{row.entity.licenseTypeContentDisplay}}</p>
+		</div>
+		<div ng-if="!row.entity.multipleWebexServicesLicensed">
+			<p class="ui-grid-cell-contents">{{row.entity.licenseTypeContentDisplay}}</p>
+		</div>
+	</div>

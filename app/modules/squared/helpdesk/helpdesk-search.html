@@ -47,7 +47,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} {{'helpdesk.help.referTo' | translate}} <a ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
@@ -193,6 +193,11 @@
     </div>
   </div>
 
+  <div class="search-stats">
+    <div ng-show="helpdeskCtrl.searchTime">
+      Search took {{helpdeskCtrl.searchTime}} ms.
+    </div>
+  </div>
 </div>
 
 
