@@ -3,24 +3,22 @@
 angular.module('Core')
   .controller('SiteListCtrl', [
     '$translate',
-    'Authinfo',
-    'Config',
     '$log',
+    'Authinfo',
     'FeatureToggleService',
     'Userservice',
     'WebExApiGatewayService',
-    'SiteListService',
     'WebExUtilsFact',
+    'SiteListService',
     function (
       $translate,
-      Authinfo,
-      Config,
       $log,
+      Authinfo,
       FeatureToggleService,
       Userservice,
       WebExApiGatewayService,
-      SiteListService,
-      WebExUtilsFact
+      WebExUtilsFact,
+      SiteListService
     ) {
       var funcName = "siteListCtrl()";
       var logMsg = "";
@@ -28,8 +26,6 @@ angular.module('Core')
       var vm = this;
       vm.gridData = [];
       vm.allSitesWebexLicensesArray = [];
-
-      var adminUserSupportCSV = false; // TODO
 
       //getAllSitesLicenseData();
 
@@ -196,10 +192,18 @@ angular.module('Core')
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.capacity',
+        field: 'siteConfLicenses',
         displayName: $translate.instant('siteList.licenseTypes'),
         //cellFilter: 'capacityFilter:row.entity.label',
         cellTemplate: 'modules/core/siteList/siteLicenseTypes.tpl.html',
+        sortable: false
+      });
+
+      vm.gridOptions.columnDefs.push({
+        field: 'siteCSV',
+        displayName: $translate.instant('siteList.siteCsv'),
+        cellTemplate: siteCSVColumn,
+        headerCellTemplate: siteCsvColumnHeaderTemplate,
         sortable: false
       });
 
@@ -228,18 +232,23 @@ angular.module('Core')
       //Update grid with site license information
       vm.gridData = SiteListService.getAllSitesLicenseData(vm.gridData);
 
+      // TODO - uncomment the following line when feature toggle is no longer used
+      // SiteListService.updateGrid(vm.gridData);
+
+      // TODO - delete the following lines when feature toggle is no longer used
+      checkCSVToggle();
+
       function checkCSVToggle() {
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
-          function getSupportsCSVSuccess(result) {
+          function getSupportsCSVSuccess(adminUserSupportCSV) {
             var funcName = "getSupportsCSVSuccess()";
             var logMsg = "";
 
-            adminUserSupportCSV = result;
-            if (adminUserSupportCSV) {
-              insertCSVColumn();
+            if (!adminUserSupportCSV) {
+              vm.gridOptions.columnDefs.splice(2, 1);
             }
 
-            updateGrid();
+            SiteListService.updateGrid(vm.gridData);
           }, // getSupportsCSVSuccess()
 
           function getSupportsCSVError(result) {
@@ -250,26 +259,12 @@ angular.module('Core')
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
-            updateGrid();
+            vm.gridOptions.columnDefs.splice(2, 1);
+            SiteListService.updateGrid(vm.gridData);
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
       } // checkCSVToggle()
-
-      function insertCSVColumn() {
-        var columnObj = {
-          field: 'siteCSV',
-          displayName: $translate.instant('siteList.siteCsv'),
-          cellTemplate: siteCSVColumn,
-          headerCellTemplate: siteCsvColumnHeaderTemplate,
-          sortable: false
-        };
-
-        vm.gridOptions.columnDefs.splice(
-          3,
-          0,
-          columnObj
-        );
-      } // insertCSVColumn()
+      // End of delete
       // End of grid set up
 
       function updateGrid() {

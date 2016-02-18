@@ -55,7 +55,7 @@ angular.module('Core').service('SiteListService', [
                       capacity: mc.capacity
                     });
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + ", " + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
                       capacity: mc.capacity
                     });
                     count++;
@@ -82,7 +82,7 @@ angular.module('Core').service('SiteListService', [
                       capacity: ec.capacity
                     });
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + ", " + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
                       capacity: ec.capacity
                     });
                     count++;
@@ -108,7 +108,7 @@ angular.module('Core').service('SiteListService', [
                       capacity: sc.capacity
                     });
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + ", " + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
                       capacity: sc.capacity
                     });
                     count++;
@@ -134,7 +134,7 @@ angular.module('Core').service('SiteListService', [
                       capacity: tc.capacity
                     });
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + ", " + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
                       capacity: tc.capacity
                     });
                     count++;
@@ -161,7 +161,7 @@ angular.module('Core').service('SiteListService', [
                       capacity: cmr.capacity
                     });
                     //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + ", " + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
                       capacity: cmr.capacity
                     });
                     count++;
@@ -175,7 +175,7 @@ angular.module('Core').service('SiteListService', [
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
-                siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay.replace(",", "");
+                siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay.replace("<br>", "");
 
               } else {
                 siteRow.multipleWebexServicesLicensed = false;
