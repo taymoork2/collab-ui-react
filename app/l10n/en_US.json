@@ -2140,6 +2140,7 @@
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
+    "sipUrl": "Sip Address",
     "issues": "Issues",
     "lastSeen": "Offline since:",
     "notYetActivated": "No device has been activated for this location.",
