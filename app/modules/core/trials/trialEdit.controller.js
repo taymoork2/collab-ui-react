@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -228,6 +228,7 @@
     vm.editTrial = editTrial;
     vm.isProceedDisabled = isProceedDisabled;
     vm.getDaysLeft = getDaysLeft;
+    vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm._helpers = {
       hasEnabled: hasEnabled,
@@ -388,7 +389,7 @@
     /**
      * Changed to chain and slice the navStates instead of navOrder
      * so that if you choose to skip a step that you are on
-     * and that state gets removed from the order, the fucntion can 
+     * and that state gets removed from the order, the fucntion can
      * still find the next state and index won't find -1
      * when trying to find the next one
      */
@@ -543,6 +544,17 @@
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset);
+    }
+
+    // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
+    function launchCustomerPortal() {
+      if (angular.isDefined($scope.trial)) {
+        $window.open($state.href('login_swap', {
+          customerOrgId: vm.currentTrial.customerOrgId,
+          customerOrgName: vm.currentTrial.customerName
+        }));
+        $state.modal.close();
+      }
     }
 
     function showDefaultFinish() {
