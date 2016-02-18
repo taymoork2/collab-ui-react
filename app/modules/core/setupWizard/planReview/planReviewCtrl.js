@@ -175,7 +175,8 @@
     function showMultiSubscriptions(billingServiceId, isTrial) {
       var isSelected = false;
 
-      var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
+      var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
+        (_.eq('Trial', vm.multiSubscriptions.selected));
       if (_.isArray(billingServiceId)) {
         for (var i in billingServiceId) {
           if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
@@ -184,7 +185,7 @@
           }
         }
       } else {
-        isSelected = _.eq(billingServiceId, vm.multiSubscriptions.selected);
+        isSelected = (_.eq(billingServiceId, vm.multiSubscriptions.selected));
       }
 
       return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
