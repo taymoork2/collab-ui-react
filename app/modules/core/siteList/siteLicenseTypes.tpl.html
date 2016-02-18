@@ -6,7 +6,7 @@
 	</div>
 	<div ng-if="row.entity.showCSVInfo">
 		<div ng-if="row.entity.multipleWebexServicesLicensed">
-			<p class="ui-grid-cell-contents" tooltip-placement="top" tooltip="{{row.entity.licenseTooltipDisplay}}" tooltip-animation="false"  tooltip-append-to-body="true">
+			<p class="ui-grid-cell-contents multi-center-license" tooltip-placement="top" tooltip-html-unsafe="{{row.entity.licenseTooltipDisplay}}" tooltip-animation="false"  tooltip-append-to-body="true">
 			{{row.entity.licenseTypeContentDisplay}}</p>
 		</div>
 		<div ng-if="!row.entity.multipleWebexServicesLicensed">
