@@ -595,7 +595,7 @@
     "cdr408Error": "Request timed out while waiting for a response from Elastic Search. Please try again at a later time.",
     "cdr409Error": "Request failed due to a processing conflict. Please verify the search data and try again.",
     "cdr500Error": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.  Lowering the hit size before retrying may prevent further errors.",
-    "cdr500ShortError": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.",    
+    "cdr500ShortError": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.",
     "cdr502And503Error": "Elastic Search is temporarily unavailable. Please try again at a later time.",
     "required": "This field is required.",
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
