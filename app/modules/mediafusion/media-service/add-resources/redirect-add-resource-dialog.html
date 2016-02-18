@@ -1,18 +1,18 @@
 <div class="redirect-add-resource">
-	<div class="modal-header">
+	<div class="modal-header" popover="">
     <button type="button" class="close" ng-click="$close()">
       <span class="sr-only" translate="common.close"></span>
     </button>
     <h5 class="modal-title"><span translate="mediaFusion.add-resource-dialog.title"></span></h5>
   </div>
   <form name="inputHostNameForm">
-  	<div class="modal-body">
+  	<div class="modal-body" ng-hide="redirectResource.enableRedirectToTarget">
   		<ol>
   			<li>
   				<p><span
 		        translate="mediaFusion.add-resource-dialog.text1"></span></p>
 		      <div class="row">
-				    <div class="large-7">
+				    <div class="large-7 columns details-value">
 				      <cs-select
 				        ng-model="redirectResource.selectedCluster"
 				        options="redirectResource.clusterList"
@@ -35,11 +35,12 @@
   	</div>
   </form>
   <div class="modal-body" ng-show="redirectResource.enableRedirectToTarget">
-    <h3><span translate="hercules.redirect-target-dialog.grant-registration-success-header"
-              translate-values="{hostname: redirectResource.hostName || ''}"></span></h3>
-
+    <h3><span ng-hide="redirectResource.createNewGroup" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-old-cluster"
+              translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span></h3>
+    <h3><span ng-show="redirectResource.createNewGroup" translate="mediaFusion.add-resource-dialog.grant-registration-success-header-new-cluster"
+              translate-values="{hostname: redirectResource.hostName || '', clustername: redirectResource.selectedCluster || ''}"></span></h3>
     <p><span
-      translate="hercules.redirect-target-dialog.grant-success-information"></span></p>
+      translate="mediaFusion.add-resource-dialog.grant-success-information"></span></p>
   </div>
   <div class="modal-footer">
     <button class="btn" ng-click="$close()">
@@ -49,12 +50,12 @@
             ng-hide="redirectResource.enableRedirectToTarget"
             ng-disabled="inputHostNameForm.$invalid"
             ng-click="redirectResource.addRedirectTargetClicked(redirectResource.hostName, redirectResource.selectedCluster)">
-      <span translate="mediaFusion.add-resource-dialog.register"></span>
+      <span translate="mediaFusion.add-resource-dialog.next"></span>
     </button>
     <button class="btn register-button btn--primary"
             ng-show="redirectResource.enableRedirectToTarget"
-            ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName)">
-      <span translate="hercules.redirect-target-dialog.register-resource-button"></span>
+            ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster, redirectResource.createNewGroup)">
+      <span translate="mediaFusion.add-resource-dialog.register"></span>
     </button>
   </div>
 
