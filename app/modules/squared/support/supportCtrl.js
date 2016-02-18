@@ -27,7 +27,7 @@ angular.module('Squared')
         Userservice.getUser('me', function (user, status) {
           if (user.success) {
             for (var i in user.roles) {
-              if (user.roles[i] in devRoles) {
+              if (user.roles[i] in devRoles && Authinfo.isCisco()) {
                 $scope.showToolsCard = true;
                 break;
               }
