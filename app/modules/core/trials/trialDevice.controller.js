@@ -13,6 +13,7 @@
     var _trialRoomSystemData = TrialRoomSystemService.getData();
     var _trialDeviceData = TrialDeviceService.getData();
 
+    // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
     vm.skipDevices = _trialDeviceData.skipDevices;
 
@@ -427,7 +428,7 @@
     }
 
     function validateRoomSystemsQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(vm.details.roomSystems);
+      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems);
       var device = scope.model;
       if (!device.enabled) {
         return true;
@@ -437,7 +438,7 @@
     }
 
     function validatePhonesQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(vm.details.phones);
+      var quantity = vm.calcQuantity(_trialCallData.details.phones);
       var device = scope.model;
       if (!device.enabled) {
         return true;
@@ -447,7 +448,7 @@
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(vm.details.roomSystems, vm.details.phones);
+      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
       var device = scope.model;
       if (!device.enabled) {
         return true;
@@ -470,7 +471,7 @@
     function _addWatcher() {
       return {
         expression: function () {
-          return vm.calcQuantity(vm.details.roomSystems, vm.details.phones);
+          return vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
