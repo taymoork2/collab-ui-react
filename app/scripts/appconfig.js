@@ -61,6 +61,24 @@ angular
           },
           authenticate: false
         })
+        .state('activatedUserLandngPage', {
+          url: '/activated-user-landing-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUserErrorPage', {
+          url: '/activate-user-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {

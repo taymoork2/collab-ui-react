@@ -6,18 +6,24 @@
     .controller('activateUserController', activateUserController);
 
   /* @ngInject */
-  function activateUserController($location, DigitalRiverService) {
+  function activateUserController($location, $window, $log, DigitalRiverService) {
 
     var vm = this;
 
-    var userId = $location.search().userId;
-
-    DigitalRiverService.activateUser(userId)
+    DigitalRiverService.activateUser('123')
       .then(function (result) {
-
-      }, function (result, status) {
-
-      });
+          if (_.get(result, 'data.success', false) === true) {
+            $window.location.href = "/#/activated-user-landing-page";
+          } else {
+            $log.error(result);
+            $window.location.href = "/#/activate-user-error-page";
+          }
+        },
+        function (result, status) {
+          $log.error(result);
+          $log.error(status);
+          $window.location.href = "/#/activate-user-error-page";
+        });
 
   }
 })();
