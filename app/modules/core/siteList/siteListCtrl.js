@@ -6,6 +6,8 @@ angular.module('Core')
     '$log',
     'Authinfo',
     'FeatureToggleService',
+    'Userservice',
+    'WebExApiGatewayService',
     'WebExUtilsFact',
     'SiteListService',
     function (
@@ -13,6 +15,8 @@ angular.module('Core')
       $log,
       Authinfo,
       FeatureToggleService,
+      Userservice,
+      WebExApiGatewayService,
       WebExUtilsFact,
       SiteListService
     ) {
@@ -252,7 +256,6 @@ angular.module('Core')
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
       } // checkCSVToggle()
-      // End of delete
-      // End of grid set up
+
     } // End controller
   ]);
