@@ -5,7 +5,7 @@
     text-align: left;
     .icon-information {
       position: relative;
-      top: 3px;
+      top: rem-calc(3);
       color: $gray-light-1;
     }
     .icon-information:hover {
