@@ -10,10 +10,10 @@
 
     var vm = this;
 
-    DigitalRiverService.activateUser('123')
+    DigitalRiverService.activateUser($location.search().uuid)
       .then(function (result) {
           if (_.get(result, 'data.success', false) === true) {
-            $window.location.href = "/#/activated-user-landing-page";
+            $window.location.href = "/#/activated-user-success-page";
           } else {
             $log.error(result);
             $window.location.href = "/#/activate-user-error-page";

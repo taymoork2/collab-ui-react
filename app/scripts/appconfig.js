@@ -61,8 +61,8 @@ angular
           },
           authenticate: false
         })
-        .state('activatedUserLandngPage', {
-          url: '/activated-user-landing-page',
+        .state('activatedUserSuccessPage', {
+          url: '/activated-user-success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
