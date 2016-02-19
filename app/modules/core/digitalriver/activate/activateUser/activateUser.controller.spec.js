@@ -1,17 +1,17 @@
 (function () {
   'use strict';
 
-  describe('Controller: activateUserController', function () {
+  describe('Controller: ActivateUserController', function () {
     var controller, DigitalRiverService;
 
     beforeEach(module('Core'));
 
-    beforeEach(inject(function (_$controller_, _$location_, _$window_, _$log_, _DigitalRiverService_, $q) {
+    beforeEach(inject(function (_$controller_, _$location_, _$state_, _$log_, _DigitalRiverService_, $q) {
       DigitalRiverService = _DigitalRiverService_;
       spyOn(DigitalRiverService, "activateUser").and.returnValue($q.when());
-      controller = _$controller_('activateUserController', {
+      controller = _$controller_('ActivateUserController', {
         $location: _$location_,
-        $window: _$window_,
+        $state: _$state_,
         $log: _$log_,
         DigitalRiverService: DigitalRiverService
       });

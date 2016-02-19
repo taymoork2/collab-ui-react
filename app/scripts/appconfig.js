@@ -55,8 +55,7 @@ angular
           views: {
             'main@': {
               template: '<div ui-view></div>',
-              controller: 'activateUserController',
-              controllerAs: 'activateUserController'
+              controller: 'ActivateUserController'
             }
           },
           authenticate: false
