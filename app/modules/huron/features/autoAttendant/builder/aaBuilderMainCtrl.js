@@ -291,6 +291,11 @@
       } else if (vm.aaModel.possibleNumberDiscrepancy) {
         vm.canSave = true;
       }
+
+      if (!AACommonService.isValid()) {
+        vm.canSave = false;
+      }
+
       return vm.canSave;
     }
 

@@ -20,7 +20,8 @@
       key: 'phoneNumberInput',
       type: 'countrylist',
       templateOptions: {
-        placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder')
+        placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder'),
+        required: true
       }
     }];
 
@@ -61,6 +62,17 @@
         if (newValue != oldValue) {
           saveUiModel();
         }
+      }
+    );
+
+    $scope.$watch('countrySelectForm.$invalid', function (invalid) {
+      AACommonService.setIsValid($scope.keyIndex, !invalid);
+    });
+
+    $scope.$on(
+      "$destroy",
+      function (event) {
+        AACommonService.setIsValid($scope.keyIndex, true);
       }
     );
 
