@@ -1249,7 +1249,7 @@
     "downloadError": "There is a problem downloading the file.",
     "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "uploadPrompt": "Drag and drop a file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
