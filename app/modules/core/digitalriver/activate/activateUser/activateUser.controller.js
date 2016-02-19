@@ -9,7 +9,7 @@
   function ActivateUserController($location, $state, $log, DigitalRiverService) {
 
     DigitalRiverService.activateUser($location.search().uuid)
-      .then(function (result) {
+      .then(function () {
         $state.go('activatedUserSuccessPage');
       })
       .catch(function (error) {
