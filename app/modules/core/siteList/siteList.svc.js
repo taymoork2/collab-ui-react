@@ -326,4 +326,5 @@ angular.module('Core').service('SiteListService', [
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumn()
   } // end top level function
+
 ]);
