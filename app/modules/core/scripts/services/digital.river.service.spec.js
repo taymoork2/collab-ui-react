@@ -27,6 +27,14 @@
         DigitalRiverService.getUserFromEmail('foo@bar.com');
         httpBackend.flush();
       });
+
+      it('getUserAuthToken', function () {
+        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
+        httpBackend.expectGET(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + "07e6a13a-a690-4857-a4ab-dd460f12478f").respond(200);
+        DigitalRiverService.getUserAuthToken('07e6a13a-a690-4857-a4ab-dd460f12478f');
+        httpBackend.flush();
+      });
+
       it('addDrUser', function () {
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
         httpBackend.expectPOST(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user', 'emailPassword').respond(201);
