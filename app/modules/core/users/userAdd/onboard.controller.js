@@ -1117,30 +1117,30 @@ angular.module('Core')
                 userResult.alertType = 'success';
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else if (userStatus === 403) {
-                if (data.userResponse[i].message === '400081') {
-                  userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email
-                  });
-                } else if (data.userResponse[i].message === '400084') {
-                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                    email: userResult.email,
-                    domain: userResult.email.split('@')[1]
-                  });
-                }
-                userResult.alertType = 'danger';
-                isComplete = false;
+              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
+                userResult.message = $translate.instant('usersPage.userExistsError', {
+                  email: userResult.email
+                });
+              } else if (userStatus === 403 && data.userResponse[i].message === '400084') {
+                userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                  email: userResult.email,
+                  domain: userResult.email.split('@')[1]
+                });
+              } else if (userStatus === 400 && data.userResponse[i].message === '400087') {
+                userResult.message = $translate.instant('usersPage.hybridServicesError', {
+                  email: userResult.email
+                });
               } else {
                 userResult.message = $translate.instant('usersPage.onboardError', {
                   email: userResult.email,
                   status: userStatus
                 });
+              }
+
+              if (userStatus !== 200) {
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
-
               $scope.results.resultList.push(userResult);
             }
 

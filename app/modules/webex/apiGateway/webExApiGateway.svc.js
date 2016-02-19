@@ -29,9 +29,23 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       // the code below is just a mock call to an existing webex api
       // this will be replaced with call to the real webex api once it is available
       var dummyResult = {
-        siteUrl: siteUrl,
-        result: 'success',
-        status: ''
+        "sitename": siteUrl,
+
+        "importStatus": {
+          "code": null,
+          "acceptedTime": null,
+          "completedTime": null,
+          "importFileName": null,
+          "errorReportLink": null
+        },
+
+        "exportStatus": {
+          "code": null,
+          "acceptedTime": null,
+          "completedTime": null,
+          "exportFileLink": null,
+          "errorReportLink": null
+        }
       };
 
       return $q.when(dummyResult);
@@ -81,7 +95,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-
     }; // csvExport()
 
     this.csvImport = function (siteUrl) {
@@ -91,17 +104,15 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-
     }; // csvImport()
 
-    this.csvFileDownload = function (siteUrl) {
+    this.csvFileDownload = function (downloadUrl) {
       var funcName = "csvFileDownload()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+        "downloadUrl=" + downloadUrl;
       $log.log(logMsg);
-
     }; // csvFileDownload()
 
     this.isSiteSupportsIframe = function (siteUrl) {
@@ -311,5 +322,5 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       return deferredIsSiteSupportsIframe.promise;
     }; // isSiteSupportsIframe()
-  } //end top level service function
+  } // end top level function
 ]);

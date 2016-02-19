@@ -49,7 +49,9 @@ angular.module('Core')
           domainManageAdd: 'DOMAINADD',
           domainManageRemove: 'DOMAINREM',
           domainManageVerify: 'DOMAINVER',
-          domainManageInstructions: 'DOMAININST'
+          domainManageInstructions: 'DOMAININST',
+          helpdeskSearch: 'HELPDESKSEARCH',
+          helpdeskOperation: 'HELPDESKOPERATION'
         },
 
         getEventAction: function (eAction) {
