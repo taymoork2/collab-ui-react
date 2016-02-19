@@ -140,8 +140,9 @@
         // formly will nest the country inside of itself, I think this is because
         // the country list contains country as a key, as well as the device.service
         // having country as a key
-        var nestedCountry = _.get(details,'shippingInfo.country.country');
-        if(nestedCountry){
+        // TODO: figure out why when we have the time
+        var nestedCountry = _.get(details, 'shippingInfo.country.country');
+        if (nestedCountry) {
           details.shippingInfo.country = nestedCountry;
         }
 
