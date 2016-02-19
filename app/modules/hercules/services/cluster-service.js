@@ -7,7 +7,11 @@
 
   /* @ngInject */
   function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, ConfigService, Authinfo) {
-    var clusterCache = {};
+    var clusterCache = {
+      c_mgmt: {},
+      c_ucmc: {},
+      c_cal: {}
+    };
     var hub = CsdmHubFactory.create();
     var poller = CsdmPoller.create(fetch, hub);
 
@@ -15,9 +19,10 @@
       deleteCluster: deleteCluster,
       deleteHost: deleteHost,
       fetch: fetch,
+      getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
-      getClustersById: getClustersById,
       getConnector: getConnector,
+      getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware
     };
@@ -37,20 +42,19 @@
       return connector;
     }
 
-    function getMostSevereRunningState(result, connector) {
+    function getRunningStateSeverity(state) {
       // we give a severity and a weight to all possible states
       // this has to be synced with the server generating the API consumed
       // by the general overview page (state of Call connectors, etc.)
-      var stateSeverity;
-      var stateSeverityValue;
-      switch (connector.state) {
+      var label, value;
+      switch (state) {
       case 'running':
-        stateSeverity = 'ok';
-        stateSeverityValue = 0;
+        label = 'ok';
+        value = 0;
         break;
       case 'not_installed':
-        stateSeverity = 'neutral';
-        stateSeverityValue = 1;
+        label = 'neutral';
+        value = 1;
         break;
       case 'disabled':
       case 'downloading':
@@ -58,26 +62,34 @@
       case 'not_configured':
       case 'uninstalling':
       case 'registered':
-        stateSeverity = 'warning';
-        stateSeverityValue = 2;
+        label = 'warning';
+        value = 2;
         break;
       case 'has_alarms':
       case 'offline':
       case 'stopped':
       case 'unknown':
       default:
-        stateSeverity = 'error';
-        stateSeverityValue = 3;
+        label = 'error';
+        value = 3;
       }
 
-      if (stateSeverityValue > result.stateSeverityValue) {
+      return {
+        label: label,
+        value: value
+      };
+    }
+
+    function getMostSevereRunningState(previous, connector) {
+      var stateSeverity = getRunningStateSeverity(connector.state);
+      if (stateSeverity.value > previous.stateSeverityValue) {
         return {
           state: connector.state,
-          stateSeverity: stateSeverity,
-          stateSeverityValue: stateSeverityValue
+          stateSeverity: stateSeverity.label,
+          stateSeverityValue: stateSeverity.value
         };
       } else {
-        return result;
+        return previous;
       }
     }
 
@@ -92,75 +104,61 @@
       return allAreUpgraded ? 'upgraded' : 'upgrading';
     }
 
-    function getRunningState(connectors) {
+    function mergeRunningState(connectors) {
       return _.chain(connectors)
         .map(overrideStateIfAlarms)
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
+        .get('state')
         .value();
     }
 
-    function buildAggregates(type, connectors) {
-      var filteredConnectorsByType = _.filter(connectors, 'connectorType', type);
-      var hostsWithThisType = _.chain(filteredConnectorsByType)
+    function buildAggregates(type, cluster) {
+      var connectors = cluster.connectors;
+      var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var hosts = _.chain(connectors)
         .pluck('hostname')
         .uniq()
         .value();
-      var runningState = getRunningState(filteredConnectorsByType);
-      var result = {
-        alarms: mergeAllAlarms(filteredConnectorsByType),
-        runningState: runningState.state,
-        runningStateSeverity: runningState.stateSeverity,
-        upgradeState: getUpgradeState(filteredConnectorsByType),
-        hosts: _.map(hostsWithThisType, function (host) {
+      return {
+        alarms: mergeAllAlarms(connectors),
+        state: mergeRunningState(connectors),
+        upgradeState: getUpgradeState(connectors),
+        provisioning: provisioning,
+        upgradeAvailable: provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
-          var connector = _.filter(filteredConnectorsByType, 'hostname', host)[0];
-          // re-use getRunningState to get running state severity among other things
-          var runningStateForHost = getRunningState([connector]);
+          var connector = _.find(connectors, 'hostname', host);
           return {
-            hostname: host,
             alarms: connector.alarms,
-            runningState: runningStateForHost.state,
-            runningStateSeverity: runningStateForHost.stateSeverity,
+            hostname: host,
+            state: connector.state,
             upgradeState: connector.upgradeState
           };
         })
       };
-      return result;
     }
 
-    function addAggregatedData(clusters) {
+    function addAggregatedData(type, clusters) {
       // We add aggregated data like alarms, states and versions to the cluster
-      // per connector type and per host + connector type
       return _.map(clusters, function (cluster) {
-        var connectors = cluster.connectors;
-        var connectorTypes = _.chain(connectors)
-          .pluck('connectorType')
-          .uniq()
-          .value();
-        cluster.aggregates = _.reduce(connectorTypes, function (acc, type) {
-          acc[type] = buildAggregates(type, connectors);
-          return acc;
-        }, {});
+        cluster.aggregates = buildAggregates(type, cluster);
         return cluster;
       });
     }
 
-    function addRunningStateToConnectors(clusters) {
-      // We add runningState and runningStateSeverity to connectors like we
-      // did at a upper level when using addAggregatedData
-      return _.map(clusters, function (cluster) {
-        var connectors = _.map(cluster.connectors, function (connector) {
-          var runningState = getRunningState([connector]);
-          connector.runningState = connector.state;
-          delete connector.state;
-          connector.runningStateSeverity = runningState.stateSeverity;
-          return connector;
-        });
-        cluster.connectors = connectors;
-        return cluster;
-      });
+    function clusterType(type, clusters) {
+      return _.chain(clusters)
+        .map(function (cluster) {
+          cluster = angular.copy(cluster);
+          cluster.connectors = _.filter(cluster.connectors, 'connectorType', type);
+          return cluster;
+        })
+        .filter(function (cluster) {
+          return cluster.connectors.length > 0;
+        })
+        .value();
     }
 
     function fetch() {
@@ -172,28 +170,43 @@
           return _.filter(response.clusters, 'state', 'fused');
         })
         .then(function (clusters) {
-          return addAggregatedData(clusters);
+          // start modeling the response to match how the UI uses it, per connectorType
+          return {
+            c_mgmt: clusterType('c_mgmt', clusters),
+            c_ucmc: clusterType('c_ucmc', clusters),
+            c_cal: clusterType('c_cal', clusters)
+          };
         })
         .then(function (clusters) {
-          // todo extract as a service function
-          return addRunningStateToConnectors(clusters);
+          var result = {
+            c_mgmt: addAggregatedData('c_mgmt', clusters.c_mgmt),
+            c_ucmc: addAggregatedData('c_ucmc', clusters.c_ucmc),
+            c_cal: addAggregatedData('c_cal', clusters.c_cal)
+          };
+          return result;
         })
         .then(function (clusters) {
-          return _.indexBy(clusters, 'id');
+          var result = {
+            c_mgmt: _.indexBy(clusters.c_mgmt, 'id'),
+            c_ucmc: _.indexBy(clusters.c_ucmc, 'id'),
+            c_cal: _.indexBy(clusters.c_cal, 'id')
+          };
+          return result;
         })
-        .then(_.partial(CsdmCacheUpdater.update, clusterCache));
-    }
-
-    function getClustersById(id) {
-      return clusterCache[id];
-    }
-
-    function getClustersByConnectorType(connectorType) {
-      return _.filter(clusterCache, function (cluster) {
-        return _.some(cluster.connectors, function (connector) {
-          return connector.connectorType === connectorType;
+        .then(function (clusters) {
+          CsdmCacheUpdater.update(clusterCache.c_mgmt, clusters.c_mgmt);
+          CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
+          CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
+          return clusterCache;
         });
-      });
+    }
+
+    function getCluster(type, id) {
+      return clusterCache[type][id];
+    }
+
+    function getClustersByConnectorType(type) {
+      return _.values(clusterCache[type]);
     }
 
     function upgradeSoftware(clusterId, serviceType) {
@@ -206,31 +219,21 @@
         });
     }
 
-    function deleteCluster(clusterId) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+    function deleteCluster(id) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
       return $http.delete(url)
+        .then(extractDataFromResponse)
         .then(function (data) {
-          if (clusterCache[clusterId]) {
-            delete clusterCache[clusterId];
-          }
           poller.forceAction();
           return data;
         });
     }
 
-    function deleteHost(clusterId, serial) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
+    function deleteHost(id, serial) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
+        .then(extractDataFromResponse)
         .then(function (data) {
-          var cluster = clusterCache[clusterId];
-          if (cluster) {
-            _.remove(cluster.connectors, {
-              hostSerial: serial
-            });
-            if (cluster.hosts.length === 0) {
-              delete clusterCache[clusterId];
-            }
-          }
           poller.forceAction();
           return data;
         });
