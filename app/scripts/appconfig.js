@@ -1685,7 +1685,7 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayClusterDetails',
+              controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
@@ -1878,7 +1878,7 @@ angular
         })
         .state('connector-details.alarm-details', {
           templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-          controller: 'AlarmController',
+          controller: 'MediaAlarmController',
           controllerAs: 'alarmCtrl',
           data: {
             displayName: 'Alarm Details'
