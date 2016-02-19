@@ -61,7 +61,7 @@ angular.module('WebExApp')
 
         cmr: {
           id: "CMR",
-          label: "Collaboration Meeting Room",
+          label: "Collaboration Meeting Rooms",
           userHasLicense: false,
           value: false
         },
