@@ -420,6 +420,9 @@ angular.module('Core')
         isCisco: function () {
           return this.getOrgId() === Config.ciscoOrgId;
         },
+        isCiscoMock: function () {
+          return this.getOrgId() === Config.ciscoMockOrgId;
+        },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
         },
