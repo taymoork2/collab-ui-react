@@ -6,51 +6,6 @@ describe('ClusterService', function () {
   beforeEach(module('Hercules'));
 
   var $rootScope, $httpBackend, ClusterService, CsdmPoller, forceAction;
-  var rootPathV1 = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
-  var rootPathV2 = 'https://hercules-integration.wbx2.com/hercules/api/v2/organizations/orgId';
-
-  var org = function (clusters) {
-    return {
-      id: _.uniqueId('org_'),
-      name: 'Org',
-      clusters: clusters
-    };
-  };
-
-  var cluster = function (connectors, options) {
-    options = options || {};
-    var provisioning = _.map(options.upgradeAvailable, function (type) {
-      return {
-        connectorType: type,
-        availableVersion: '2.0',
-        provisionedVersion: '1.0',
-      };
-    });
-    return {
-      id: _.uniqueId('cluster_'),
-      name: 'Cluster',
-      state: options.state || 'fused',
-      provisioning: provisioning,
-      connectors: connectors
-    };
-  };
-
-  var connector = function (type, options) {
-    options = options || {};
-    var alarms = _.map(_.range(options.alarms || 0), function () {
-      return {
-        title: _.uniqueId('alarm_')
-      };
-    });
-    return {
-      alarms: alarms,
-      hostSerial: _.uniqueId('serial_'),
-      hostname: options.hostname || 'host1.example.com',
-      state: options.state || 'running',
-      upgradeState: options.upgradeState || 'upgraded',
-      connectorType: type || 'c_mgmt'
-    };
-  };
 
   beforeEach(module(function ($provide) {
     var Authinfo = {
@@ -174,8 +129,13 @@ describe('ClusterService', function () {
     it('should merge all alarms and override the state if there are alarms', function () {
       var response = org([
         cluster([
-          connector('c_mgmt', { alarms: 2 }),
-          connector('c_mgmt', { alarms: 1, hostname: 'host2.example.com' })
+          connector('c_mgmt', {
+            alarms: 2
+          }),
+          connector('c_mgmt', {
+            alarms: 1,
+            hostname: 'host2.example.com'
+          })
         ])
       ]);
       $httpBackend
@@ -197,7 +157,10 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
-          connector('c_mgmt', { state: 'not_configured', hostname: 'host2.example.com' })
+          connector('c_mgmt', {
+            state: 'not_configured',
+            hostname: 'host2.example.com'
+          })
         ])
       ]);
       $httpBackend
@@ -218,7 +181,10 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
-          connector('c_mgmt', { upgradeState: 'upgrading', hostname: 'host2.example.com' })
+          connector('c_mgmt', {
+            upgradeState: 'upgrading',
+            hostname: 'host2.example.com'
+          })
         ])
       ]);
       $httpBackend
@@ -239,7 +205,9 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt')
-        ], { upgradeAvailable: ['c_mgmt'] })
+        ], {
+          upgradeAvailable: ['c_mgmt']
+        })
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -264,8 +232,12 @@ describe('ClusterService', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
-          connector('c_mgmt', { hostname: 'host2.example.com' }),
-          connector('c_mgmt', { hostname: 'host3.example.com' })
+          connector('c_mgmt', {
+            hostname: 'host2.example.com'
+          }),
+          connector('c_mgmt', {
+            hostname: 'host3.example.com'
+          })
         ])
       ]);
       $httpBackend
@@ -366,7 +338,9 @@ describe('ClusterService', function () {
     it('should upgrade software using the correct backend', function () {
       $httpBackend
         .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
-        .respond({ foo: 'bar' });
+        .respond({
+          foo: 'bar'
+        });
 
       var callback = sinon.stub();
       ClusterService.upgradeSoftware('cluster_0', 'c_mgmt').then(callback);
@@ -379,7 +353,9 @@ describe('ClusterService', function () {
     it('should call poller.forceAction on success', function () {
       $httpBackend
         .when('POST', 'http://ulv.no/organizations/orgId/clusters/cluster_0/services/c_mgmt/upgrade', {})
-        .respond({ foo: 'bar' });
+        .respond({
+          foo: 'bar'
+        });
 
       ClusterService.upgradeSoftware('cluster_0', 'c_mgmt');
       $httpBackend.flush();
@@ -405,7 +381,9 @@ describe('ClusterService', function () {
     it('should be using the correct backend', function () {
       $httpBackend
         .when('GET', 'http://ulv.no/organizations/orgId/connectors/123')
-        .respond({ foo: 'bar' });
+        .respond({
+          foo: 'bar'
+        });
 
       var callback = sinon.stub();
       ClusterService.getConnector('123').then(callback);
@@ -501,4 +479,47 @@ describe('ClusterService', function () {
       expect(callback.callCount).toBe(1);
     });
   });
+
+  function org(clusters) {
+    return {
+      id: _.uniqueId('org_'),
+      name: 'Org',
+      clusters: clusters
+    };
+  }
+
+  function cluster(connectors, options) {
+    options = options || {};
+    var provisioning = _.map(options.upgradeAvailable, function (type) {
+      return {
+        connectorType: type,
+        availableVersion: '2.0',
+        provisionedVersion: '1.0',
+      };
+    });
+    return {
+      id: _.uniqueId('cluster_'),
+      name: 'Cluster',
+      state: options.state || 'fused',
+      provisioning: provisioning,
+      connectors: connectors
+    };
+  }
+
+  function connector(type, options) {
+    options = options || {};
+    var alarms = _.map(_.range(options.alarms || 0), function () {
+      return {
+        title: _.uniqueId('alarm_')
+      };
+    });
+    return {
+      alarms: alarms,
+      hostSerial: _.uniqueId('serial_'),
+      hostname: options.hostname || 'host1.example.com',
+      state: options.state || 'running',
+      upgradeState: options.upgradeState || 'upgraded',
+      connectorType: type || 'c_mgmt'
+    };
+  }
 });
