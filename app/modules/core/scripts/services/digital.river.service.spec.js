@@ -20,7 +20,7 @@
       });
     });
 
-    describe('http methods', function () {
+    describe('http service methods', function () {
       it('getUserFromEmail', function () {
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
         httpBackend.expectGET(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/foo@bar.com/exists').respond(200);
@@ -33,12 +33,35 @@
         DigitalRiverService.addDrUser('emailPassword');
         httpBackend.flush();
       });
-      it('activateUser', function () {
+      it('activateUser with a valid uuid', function () {
         var uuid = '0b17b44a-4fea-48d4-9660-3da55df5d782';
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
         httpBackend.expectPATCH(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active').respond(200);
         DigitalRiverService.activateUser(uuid);
         httpBackend.flush();
+      });
+      it('activateUser with blank and empty uuids', function () {
+        DigitalRiverService.activateUser()
+          .then(function () {
+            fail('no error');
+          })
+          .catch(function (error) {
+            expect(error.message).toBe('blank uuid');
+          });
+        DigitalRiverService.activateUser('')
+          .then(function () {
+            fail('no error');
+          })
+          .catch(function (error) {
+            expect(error.message).toBe('blank uuid');
+          });
+        DigitalRiverService.activateUser('   ')
+          .then(function () {
+            fail('no error');
+          })
+          .catch(function (error) {
+            expect(error.message).toBe('blank uuid');
+          });
       });
     });
 

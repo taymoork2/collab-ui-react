@@ -6,7 +6,7 @@
     .service('DigitalRiverService', DigitalRiverService);
 
   /* @ngInject */
-  function DigitalRiverService($http, Config, Auth) {
+  function DigitalRiverService($http, Config, Auth, $q) {
 
     var service = {
       getUserFromEmail: getUserFromEmail,
@@ -30,6 +30,9 @@
     }
 
     function activateUser(uuid) {
+      if (!uuid) {
+        return $q.reject(new Error('blank uuid'));
+      }
       return Auth.setAccessToken().then(function () {
         return $http.patch(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
       });
