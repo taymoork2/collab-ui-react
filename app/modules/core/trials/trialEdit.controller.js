@@ -253,10 +253,6 @@
         if (vm.showMeeting) {
           updateTrialService(_messageTemplateOptionId);
         }
-
-        setViewState('trialEdit.call', vm.canSeeDevicePage && results[1]);
-        setViewState('trialEdit.meeting', results[1]);
-        setViewState('trialEdit.addNumbers', !vm.supportsPstnSetup); //only show step if not supportsPstnSetup
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;
@@ -311,7 +307,7 @@
       vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
       vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
 
-      setViewState('trialEdit.call', canAddDevice() && (hasEnabledRoomSystemTrial() || hasEnabledCallTrial()));
+      setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
       setViewState('trialEdit.meeting', hasEnabledMeetingTrial());
 
