@@ -311,7 +311,7 @@
       vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
       vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
 
-      setViewState('trialEdit.call', (hasEnabledRoomSystemTrial() || hasEnabledCallTrial() || canAddDevice()));
+      setViewState('trialEdit.call', canAddDevice() && (hasEnabledRoomSystemTrial() || hasEnabledCallTrial()));
       setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
       setViewState('trialEdit.meeting', hasEnabledMeetingTrial());
 
