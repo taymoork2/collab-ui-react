@@ -75,7 +75,7 @@
 
               logMsg = funcName + ": " + "\n" +
                 "orgLicenses=" + JSON.stringify(orgLicenses);
-              // $log.log(logMsg);
+              $log.log(logMsg);
 
               var currSite = $stateParams.site;
               var userName = $stateParams.currentUser.userName;
@@ -83,7 +83,7 @@
 
               logMsg = funcName + "\n" +
                 "userLicenses=" + JSON.stringify(userLicenses);
-              // $log.log(logMsg);
+              $log.log(logMsg);
 
               userLicenses.forEach(
                 function checkLicense(userLicense) {
@@ -95,6 +95,7 @@
 
                   // only check for webex center type of license
                   if (
+                    ("EE" == userLicenseType) ||
                     ("MC" == userLicenseType) ||
                     ("EC" == userLicenseType) ||
                     ("SC" == userLicenseType) ||
@@ -124,16 +125,24 @@
                           // $log.log(logMsg);
 
                           if (userLicense == orgLicense.licenseId) {
-                            if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                            if ("EE" == userLicenseType) {
                               webExUserSettingsModel.meetingCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
                               webExUserSettingsModel.trainingCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
                               webExUserSettingsModel.eventCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
                               webExUserSettingsModel.supportCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
                               webExUserSettingsModel.cmr.userHasLicense = true;
+                            } else {
+                              if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.meetingCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.trainingCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
+                                webExUserSettingsModel.eventCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
+                                webExUserSettingsModel.supportCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
+                                webExUserSettingsModel.cmr.userHasLicense = true;
+                              }
                             }
                           }
                         } // compareOrgLicense()
