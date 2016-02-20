@@ -2,15 +2,16 @@
   'use strict';
 
   describe('Service: DigitalRiver', function () {
-    var DigitalRiverService, httpBackend, Config;
+    var DigitalRiverService, httpBackend, Config, $q;
 
     beforeEach(module('Core'));
 
     beforeEach(
-      inject(function (_DigitalRiverService_, _$httpBackend_, _Config_) {
+      inject(function (_DigitalRiverService_, _$httpBackend_, _Config_, _$q_) {
         DigitalRiverService = _DigitalRiverService_;
         httpBackend = _$httpBackend_;
         Config = _Config_;
+        $q = _$q_;
       })
     );
 
@@ -40,28 +41,9 @@
         DigitalRiverService.activateUser(uuid);
         httpBackend.flush();
       });
-      it('activateUser with blank and empty uuids', function () {
-        DigitalRiverService.activateUser()
-          .then(function () {
-            fail('no error');
-          })
-          .catch(function (error) {
-            expect(error.message).toBe('blank uuid');
-          });
-        DigitalRiverService.activateUser('')
-          .then(function () {
-            fail('no error');
-          })
-          .catch(function (error) {
-            expect(error.message).toBe('blank uuid');
-          });
-        DigitalRiverService.activateUser('   ')
-          .then(function () {
-            fail('no error');
-          })
-          .catch(function (error) {
-            expect(error.message).toBe('blank uuid');
-          });
+      it('activateUser with missing and empty uuids', function () {
+        expect(DigitalRiverService.activateUser()).toEqual($q.reject(new Error('blank uuid')));
+        expect(DigitalRiverService.activateUser('')).toEqual($q.reject(new Error('blank uuid')));
       });
     });
 

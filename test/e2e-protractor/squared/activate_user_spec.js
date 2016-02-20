@@ -21,13 +21,4 @@ describe('Test the activateUser module', function () {
     navigation.expectCurrentUrl('#/activate-user-error-page');
   });
 
-  it('should forward to the error page when no uuid (all variants)', function () {
-    browser.get('#/activate-user');
-    navigation.expectCurrentUrl('#/activate-user-error-page');
-    browser.get('#/activate-user?uuid');
-    navigation.expectCurrentUrl('#/activate-user-error-page');
-    browser.get('#/activate-user?uuid=');
-    navigation.expectCurrentUrl('#/activate-user-error-page');
-  });
-
 });
