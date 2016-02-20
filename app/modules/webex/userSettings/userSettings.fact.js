@@ -75,7 +75,7 @@
 
               logMsg = funcName + ": " + "\n" +
                 "orgLicenses=" + JSON.stringify(orgLicenses);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               var currSite = $stateParams.site;
               var userName = $stateParams.currentUser.userName;
@@ -83,7 +83,7 @@
 
               logMsg = funcName + "\n" +
                 "userLicenses=" + JSON.stringify(userLicenses);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               userLicenses.forEach(
                 function checkLicense(userLicense) {
@@ -130,7 +130,6 @@
                               webExUserSettingsModel.trainingCenter.userHasLicense = true;
                               webExUserSettingsModel.eventCenter.userHasLicense = true;
                               webExUserSettingsModel.supportCenter.userHasLicense = true;
-                              webExUserSettingsModel.cmr.userHasLicense = true;
                             } else {
                               if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
                                 webExUserSettingsModel.meetingCenter.userHasLicense = true;
