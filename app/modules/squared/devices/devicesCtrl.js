@@ -31,6 +31,13 @@ angular.module('Squared')
         scope: $scope
       });
 
+      vm.existsDevices = function () {
+        return (vm.shouldShowList() && (
+          Object.keys(CsdmCodeService.getCodeList()).length > 0 ||
+          Object.keys(CsdmDeviceService.getDeviceList()).length > 0 ||
+          Object.keys(CsdmHuronDeviceService.getDeviceList()).length > 0));
+      };
+
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
           (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
@@ -76,23 +83,28 @@ angular.module('Squared')
           width: 70
         }, {
           field: 'displayName',
-          displayName: 'Belongs to',
+          displayName: $translate.instant('spacesPage.nameHeader'),
           sortingAlgorithm: sortFn,
           sort: {
             direction: 'asc',
-            priority: 0
+            priority: 1
           },
           sortCellFiltered: true
         }, {
-          field: 'readableState',
-          displayName: 'Status',
+          field: 'state',
+          displayName: $translate.instant('spacesPage.statusHeader'),
           cellTemplate: getTemplate('_statusTpl'),
-          sortFn: sortFn
+          sortable: true,
+          sortingAlgorithm: sortStateFn,
+          sort: {
+            direction: 'asc',
+            priority: 0
+          }
         }, {
           field: 'product',
-          displayName: 'Type',
+          displayName: $translate.instant('spacesPage.typeHeader'),
           cellTemplate: getTemplate('_productTpl'),
-          sortFn: sortFn
+          sortingAlgorithm: sortFn
         }]
       };
 
@@ -111,5 +123,8 @@ angular.module('Squared')
         return 1;
       }
 
+      function sortStateFn(a, b) {
+        return a.priority - b.priority;
+      }
     }
   );

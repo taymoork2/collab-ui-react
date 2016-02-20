@@ -9,7 +9,7 @@
           <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
         </div>
         <div cs-dropdown class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
-          <button cs-dropdown-toggle class="btn btn--header dropdown-toggle">
+          <button cs-dropdown-toggle ng-show = "tabs && tabs.length > 0"  class="btn btn--header dropdown-toggle">
             <div>
               <i class="icon-settings icon"></i>
               <span class="header-label">{{::'settings.title' | translate}}</span>
@@ -18,14 +18,6 @@
           <ul cs-dropdown-menu class="dropdown-menu" role="menu">
             <li ng-repeat="item in tabs">
               <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
-            </li>
-            <li ng-controller="SettingsMenuCtrl as langSettings">
-              <a><span | translate="common.language"></span>
-                <br>
-                <select id="languageSelector" ng-options="item.label for item in langSettings.options track by item.value"
-                        ng-model="langSettings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
-                </select>
-              </a>
             </li>
           </ul>
         </div>
@@ -41,8 +33,8 @@
     <div class="page-content-wrapper container-fluid">
       <div class="row full">
         <div class="medium-12 columns">
-          <cs-header-push-container ng-if="Utils.isAdminPage()">
-            <leader-board-bucket></leader-board-bucket>
+          <cs-header-push-container ng-if="Utils.isAdminPage()" class="license-usage">
+            <cr-leader-board-bucket></cr-leader-board-bucket>
           </cs-header-push-container>
         </div>
       </div>

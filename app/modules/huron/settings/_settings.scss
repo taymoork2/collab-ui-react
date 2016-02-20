@@ -33,6 +33,11 @@
       @extend .icon;
       @extend .icon-trash;
       font-size: 1.7rem;
+      color: $gray-light-1;
+      cursor: pointer;
+      &:hover {
+        color: $color-primary-base;
+      }
     }
 
     .icon-button-delete, .service-setup-extension {

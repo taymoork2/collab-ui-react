@@ -1,7 +1,7 @@
 'use strict';
 
 sitereports.testInfo.describeCount = 0;
-while (0 >= sitereports.testInfo.describeCount) {
+while (1 >= sitereports.testInfo.describeCount) {
   switch (sitereports.testInfo.describeCount) {
   case 1:
     sitereports.testInfo.testType = 'T30';
@@ -102,26 +102,6 @@ while (0 >= sitereports.testInfo.describeCount) {
     it('click on common reports storage usage link', function () {
       utils.click(sitereports.webexCommonStorageUsageLink);
       utils.wait(sitereports.webexCommonStorageUsageId);
-    });
-
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on common reports meetings in progress link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingInProgress);
-      utils.wait(sitereports.webexCommonMeetingsInProgressId);
-    });
-
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on common reports meetings usage link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingUsage);
-      utils.wait(sitereports.webexCommonMeetingUsageId);
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {

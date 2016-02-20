@@ -1,8 +1,8 @@
 'use strict';
 /* global Bloodhound */
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
-    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice) {
 
       $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
@@ -17,17 +17,40 @@ angular.module('Squared')
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
+      $scope.showToolsCard = false;
+
+      var devRoles = {
+        'ciscouc.devops': '',
+        'ciscouc.devsupport': ''
+      };
+      (function initializeShowToolsCard() {
+        Userservice.getUser('me', function (user, status) {
+          if (user.success) {
+            for (var i in user.roles) {
+              if (user.roles[i] in devRoles) {
+                $scope.showToolsCard = true;
+                break;
+              }
+            }
+          } else {
+            Log.debug('Get current user failed. Status: ' + status);
+          }
+        });
+      })();
 
       $scope.tabs = [{
-        title: $translate.instant('supportPage.tabs.status'),
-        state: "support.status"
-      }, {
-        title: $translate.instant('supportPage.tabs.logs'),
-        state: "support.logs"
-      }, {
-        title: $translate.instant('supportPage.tabs.orderProvisioning'),
-        state: "support.billing"
-      }];
+          title: $translate.instant('supportPage.tabs.status'),
+          state: "support.status"
+        }, {
+          title: $translate.instant('supportPage.tabs.logs'),
+          state: "support.logs"
+        }
+        // Preliminary removed the menu item because the functionality is currently not used
+        //, {
+        //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
+        //  state: "support.billing"
+        //}
+      ];
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
@@ -158,7 +181,7 @@ angular.module('Squared')
             cache: true,
             ajax: {
               headers: {
-                'Authorization': 'Bearer ' + $rootScope.token
+                'Authorization': 'Bearer ' + Storage.get('accessToken')
               }
             }
           }
@@ -176,8 +199,7 @@ angular.module('Squared')
           source: engine.ttAdapter()
         });
       };
-      //Populating authinfo data if empty.
-      $rootScope.token = Storage.get('accessToken');
+
       initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
@@ -548,6 +570,5 @@ angular.module('Squared')
           visible: Authinfo.isCisco()
         }]
       };
-
     }
   ]);

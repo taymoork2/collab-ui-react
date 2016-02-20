@@ -382,10 +382,8 @@ angular.module('Core')
         } else {
           isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
         }
-        var isOneBilling = $scope.oneBilling;
 
-        $scope.licenseExists = isSelected;
-        return isOneBilling || isSelected || isTrialSubscription;
+        return $scope.oneBilling || isSelected || isTrialSubscription;
       };
 
       function populateConf() {
@@ -837,6 +835,18 @@ angular.module('Core')
         return entitleList;
       };
 
+      // Hybrid Services entitlements
+      var getExtensionEntitlements = function (action) {
+        return _.chain($scope.extensionEntitlements)
+          .filter(function (entry) {
+            return action === 'add' && entry.entitlementState === 'ACTIVE';
+          })
+          .map(function (entry) {
+            return new Feature(entry.entitlementName, entry.entitlementState);
+          })
+          .value();
+      };
+
       var getEntitlementStrings = function (entList) {
         var entStrings = [];
         for (var e = 0; e < entList.length; e++) {
@@ -1082,10 +1092,9 @@ angular.module('Core')
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
             var numAddedUsers = 0;
-            var addedUsersList = [];
 
             for (var num = 0; num < data.userResponse.length; num++) {
-              if (data.userResponse[num].status === 200) {
+              if (data.userResponse[num].status === 200 || data.userResponse[num].status === 201) {
                 numAddedUsers++;
               }
             }
@@ -1106,70 +1115,60 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
-                // Make list of successfully onboarded users
-                var addItem = {
-                  address: data.userResponse[i].email
-                };
-                if (addItem.address.length > 0) {
-                  addedUsersList.push(addItem);
-                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else if (userStatus === 403) {
-                if (data.userResponse[i].message === '400081') {
-                  userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email
-                  });
-                } else if (data.userResponse[i].message === '400084') {
-                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                    email: userResult.email,
-                    domain: userResult.email.split('@')[1]
-                  });
-                }
-                userResult.alertType = 'danger';
-                isComplete = false;
+              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
+                userResult.message = $translate.instant('usersPage.userExistsError', {
+                  email: userResult.email
+                });
+              } else if (userStatus === 403 && data.userResponse[i].message === '400084') {
+                userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                  email: userResult.email,
+                  domain: userResult.email.split('@')[1]
+                });
+              } else if (userStatus === 400 && data.userResponse[i].message === '400087') {
+                userResult.message = $translate.instant('usersPage.hybridServicesError', {
+                  email: userResult.email
+                });
               } else {
                 userResult.message = $translate.instant('usersPage.onboardError', {
                   email: userResult.email,
                   status: userStatus
                 });
+              }
+
+              if (userStatus !== 200) {
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
-
               $scope.results.resultList.push(userResult);
             }
 
-            // Hybrid Service entitlements must be added after onboarding
-            assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
-              //concatenating the results in an array of strings for notify function
-              var successes = [];
-              var errors = [];
-              var count_s = 0;
-              var count_e = 0;
-              for (var idx in $scope.results.resultList) {
-                if ($scope.results.resultList[idx].alertType === 'success') {
-                  successes[count_s] = $scope.results.resultList[idx].message;
-                  count_s++;
-                } else {
-                  errors[count_e] = $scope.results.resultList[idx].message;
-                  count_e++;
-                }
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].message;
+                count_e++;
               }
-              //Displaying notifications
-              if (successes.length + errors.length === usersList.length) {
-                $scope.btnOnboardLoading = false;
-                Notification.notify(successes, 'success');
-                Notification.notify(errors, 'error');
-                deferred.resolve();
-              }
+            }
+            //Displaying notifications
+            if (successes.length + errors.length === usersList.length) {
+              $scope.btnOnboardLoading = false;
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+              deferred.resolve();
+            }
+            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+              $scope.$dismiss();
+            }
 
-              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-                $scope.$dismiss();
-              }
-            });
           } else {
             Log.warn('Could not onboard the user', data);
             var error = null;
@@ -1223,6 +1222,8 @@ angular.module('Core')
           } else {
             entitleList = getEntitlements('add');
           }
+          entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
             Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
@@ -1242,56 +1243,6 @@ angular.module('Core')
       $scope.updateExtensionEntitlements = function (entitlements) {
         $scope.extensionEntitlements = entitlements;
       };
-
-      function assignHybridServices(entitlements, usersList) {
-        var deferred = $q.defer();
-
-        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
-          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
-        } else {
-          // No hybrid services to assign
-          deferred.resolve();
-        }
-
-        function callback(data) {
-          if (data.success) {
-            var successResponses = [];
-            var failureResponses = [];
-            var userResponses = data.userResponse;
-
-            _.each(userResponses, function (response) {
-              var userStatus = response.status;
-              var msg;
-
-              if (userStatus === 404) {
-                msg = $translate.instant('hercules.hybridServices.result404', {
-                  email: response.email
-                });
-                failureResponses.push(msg);
-              } else if (userStatus === 409) {
-                msg = $translate.instant('hercules.hybridServices.result409');
-                failureResponses.push(msg);
-              } else if (userStatus != 200) {
-                msg = $translate.instant('hercules.hybridServices.resultOther', {
-                  email: response.email,
-                  status: userStatus
-                });
-                failureResponses.push(msg);
-              }
-            });
-
-            Notification.notify(successResponses, 'success');
-            Notification.notify(failureResponses, 'error');
-          } else {
-            Log.error('Failed updating users with entitlements.');
-            Log.error(data);
-            Notification.notify('Failed to update entitlements.', 'error');
-          }
-          deferred.resolve();
-        }
-
-        return deferred.promise;
-      }
 
       function entitleUserCallback(data, status, method) {
         $scope.results = {
@@ -1694,6 +1645,8 @@ angular.module('Core')
             } else {
               entitleList = getEntitlements('add');
             }
+            entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
             if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
@@ -1784,6 +1737,8 @@ angular.module('Core')
       var cancelDeferred;
       var saveDeferred;
       var csvHeaders;
+      var orgHeaders;
+      var maxUsers = 40000;
       var isDirSync = false;
       FeatureToggleService.supportsDirSync().then(function (enabled) {
         isDirSync = enabled;
@@ -1810,7 +1765,7 @@ angular.module('Core')
             if (userArray[0][0] === 'First Name') {
               csvHeaders = userArray.shift();
             }
-            if (userArray.length > 0) {
+            if (userArray.length > 0 && userArray.length <= maxUsers) {
               isCsvValid = true;
             }
           }
@@ -1837,7 +1792,11 @@ angular.module('Core')
           deferred.resolve();
         } else {
           var error;
-          if (userArray.length === 0) {
+          if (userArray.length > maxUsers) {
+            error = [$translate.instant('firstTimeWizard.csvMaxLinesError', {
+              max: String(maxUsers)
+            })];
+          } else {
             error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
           }
           Notification.notify(error, 'error');
@@ -1849,9 +1808,19 @@ angular.module('Core')
 
       // Wizard hook
       $scope.csvProcessingNext = bulkSave;
+      // Feature toggle
       FeatureToggleService.supportsCsvUpload().then(function (enabled) {
         if (enabled) {
           $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          return CsvDownloadService.getCsv('headers').then(function (response) {
+            orgHeaders = angular.copy(response.data.columns || []);
+            // Leave this commented out until discussion of maximum limit is done
+            // if (!hasSparkCallLicense(orgHeaders)) {
+            //   maxUsers = 500000;
+            // }
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+          });
         }
       });
 
@@ -1878,6 +1847,13 @@ angular.module('Core')
         LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
       }
 
+      function hasSparkCallLicense(inHeaders) {
+        var index = _.findIndex(inHeaders, function (h) {
+          return h.name == 'Spark Call';
+        });
+        return index !== -1;
+      }
+
       function bulkSaveWithIndividualLicenses() {
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
@@ -1894,12 +1870,10 @@ angular.module('Core')
         }
 
         function addUserErrorWithTrackingID(row, errorMsg) {
-          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
-            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-              errorMsg += '.';
-            }
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
+          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
           }
+          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
           addUserError(row, _.trim(errorMsg));
         }
 
@@ -1910,7 +1884,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {
@@ -2016,13 +1990,6 @@ angular.module('Core')
           });
         }
 
-        function hasSparkCall() {
-          var index = _.findIndex(headers, function (h) {
-            return h.name == 'Spark Call';
-          });
-          return index !== -1;
-        }
-
         function generateHeaders(serverHeaders, userHeaders) {
           var returnHeaders = [];
           var index = -1;
@@ -2072,137 +2039,133 @@ angular.module('Core')
         }
 
         function processCsvRows() {
-          return CsvDownloadService.getCsv('headers').then(function (response) {
-            headers = generateHeaders(response.data.columns || null, csvHeaders || null);
-            csvChunk = hasSparkCall() ? 4 : 10; // Rate limit for Huron
+          headers = generateHeaders(orgHeaders || null, csvHeaders || null);
+          csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
 
-            // TODO
-            // deal with AUDP -- only one column - Phone Number
+          // TODO
+          // deal with AUDP -- only one column - Phone Number
 
-            _.forEach(userArray, function (userRow, j) {
-              processingError = false;
-              var firstName = '',
-                lastName = '',
-                displayName = '',
-                id = '';
-              var directoryNumber = '',
-                directLine = '';
-              var idxDirectoryNumber = -1,
-                idxDirectLine = -1;
-              var licenseList = [];
-              var entitleList = [];
-              var numOfActiveMessageLicenses = 0;
-              var isWrongLicenseFormat = false;
+          _.forEach(userArray, function (userRow, j) {
+            processingError = false;
+            var firstName = '',
+              lastName = '',
+              displayName = '',
+              id = '';
+            var directoryNumber = '',
+              directLine = '';
+            var idxDirectoryNumber = -1,
+              idxDirectLine = -1;
+            var licenseList = [];
+            var entitleList = [];
+            var numOfActiveMessageLicenses = 0;
+            var isWrongLicenseFormat = false;
 
-              // If we haven't met the chunk size, process the next user
-              if (tempUserArray.length < csvChunk) {
-                // Basic data
-                firstName = userRow[findHeaderIndex('First Name')];
-                lastName = userRow[findHeaderIndex('Last Name')];
-                displayName = userRow[findHeaderIndex('Display Name')];
-                id = userRow[findHeaderIndex('User ID/Email (Required)')];
-                idxDirectoryNumber = findHeaderIndex('Directory Number');
-                if (idxDirectoryNumber !== -1) {
-                  directoryNumber = userRow[idxDirectoryNumber];
-                }
-                idxDirectLine = findHeaderIndex('Direct Line');
-                if (idxDirectLine !== -1) {
-                  directLine = userRow[idxDirectLine];
-                }
-                licenseList = [];
-                entitleList = [];
+            // If we haven't met the chunk size, process the next user
+            if (tempUserArray.length < csvChunk) {
+              // Basic data
+              firstName = userRow[findHeaderIndex('First Name')];
+              lastName = userRow[findHeaderIndex('Last Name')];
+              displayName = userRow[findHeaderIndex('Display Name')];
+              id = userRow[findHeaderIndex('User ID/Email (Required)')];
+              idxDirectoryNumber = findHeaderIndex('Directory Number');
+              if (idxDirectoryNumber !== -1) {
+                directoryNumber = userRow[idxDirectoryNumber];
+              }
+              idxDirectLine = findHeaderIndex('Direct Line');
+              if (idxDirectLine !== -1) {
+                directLine = userRow[idxDirectLine];
+              }
+              licenseList = [];
+              entitleList = [];
 
-                // validations
-                if (!id) {
-                  // Report required field is missing
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
-                } else if (_.contains(uniqueEmails, id)) {
-                  // Report a duplicate email
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-                } else if (directLine && !isValidDID(directLine)) {
-                  // Report an invalid DID format
-                  processingError = true;
-                  addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
-                } else {
-                  // get license and entitlements
-                  _.forEach(headers, function (header, k) {
-                    if (header.license) { // if this is a license column
-                      if (isTrue(userRow[k])) {
-                        licenseList.push(new LicenseFeature(header.license, true));
-                        // Check Active Spark Message
-                        if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                          numOfActiveMessageLicenses++;
-                        }
-                      } else if (isFalse(userRow[k])) {
-                        // TODO - in phase 2, if allow license removal, then un-comment the next line
-                        // licenseList.push(new LicenseFeature(header.license, false));
-                        _.noop();
-                      } else {
-                        isWrongLicenseFormat = true;
+              // validations
+              if (!id) {
+                // Report required field is missing
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+              } else if (_.contains(uniqueEmails, id)) {
+                // Report a duplicate email
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+              } else if (directLine && !isValidDID(directLine)) {
+                // Report an invalid DID format
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+              } else {
+                // get license and entitlements
+                _.forEach(headers, function (header, k) {
+                  if (header.license) { // if this is a license column
+                    if (isTrue(userRow[k])) {
+                      licenseList.push(new LicenseFeature(header.license, true));
+                      // Check Active Spark Message
+                      if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
+                        numOfActiveMessageLicenses++;
                       }
-                    } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
-                      if (isTrue(userRow[k]) || isFalse(userRow[k])) {
-                        _.forEach(header.entitlements, function (entitlement) {
-                          // if lincense is Calendar Service, only process if it is enabled
-                          if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                            if (isTrue(userRow[k])) {
-                              entitleList.push(new Feature(entitlement, true));
-                            } else if (isFalse(userRow[k])) {
-                              // TODO - in phase 2, if allow license removal, then un-comment the next line
-                              // entitleList.push(new Feature(entitlement, false));
-                              _.noop();
-                            }
+                    } else if (isFalse(userRow[k])) {
+                      // TODO - in phase 2, if allow license removal, then un-comment the next line
+                      // licenseList.push(new LicenseFeature(header.license, false));
+                      _.noop();
+                    } else {
+                      isWrongLicenseFormat = true;
+                    }
+                  } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
+                    if (isTrue(userRow[k]) || isFalse(userRow[k])) {
+                      _.forEach(header.entitlements, function (entitlement) {
+                        // if lincense is Calendar Service, only process if it is enabled
+                        if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
+                          if (isTrue(userRow[k])) {
+                            entitleList.push(new Feature(entitlement, true));
+                          } else if (isFalse(userRow[k])) {
+                            // TODO - in phase 2, if allow license removal, then un-comment the next line
+                            // entitleList.push(new Feature(entitlement, false));
+                            _.noop();
                           }
-                        });
-                      } else {
-                        isWrongLicenseFormat = true;
-                      }
+                        }
+                      });
+                    } else {
+                      isWrongLicenseFormat = true;
                     }
-                  });
-
-                  if (isWrongLicenseFormat) {
-                    processingError = true;
-                    addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-                  } else if (numOfActiveMessageLicenses > 1) {
-                    processingError = true;
-                    addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
-                  } else {
-                    uniqueEmails.push(id);
-                    // Do not send name and displayName if it's a DirSync org
-                    if (isDirSync) {
-                      firstName = '';
-                      lastName = '';
-                      displayName = '';
-                    }
-                    tempUserArray.push({
-                      'address': id,
-                      'name': firstName + NAME_DELIMITER + lastName,
-                      'displayName': displayName,
-                      'internalExtension': directoryNumber,
-                      'directLine': directLine,
-                      'licenses': licenseList,
-                      'entitlements': entitleList
-                    });
                   }
+                });
+
+                if (isWrongLicenseFormat) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
+                } else if (numOfActiveMessageLicenses > 1) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+                } else {
+                  uniqueEmails.push(id);
+                  // Do not send name and displayName if it's a DirSync org
+                  if (isDirSync) {
+                    firstName = '';
+                    lastName = '';
+                    displayName = '';
+                  }
+                  tempUserArray.push({
+                    'address': id,
+                    'name': firstName + NAME_DELIMITER + lastName,
+                    'displayName': displayName,
+                    'internalExtension': directoryNumber,
+                    'directLine': directLine,
+                    'licenses': licenseList,
+                    'entitlements': entitleList
+                  });
                 }
               }
+            }
 
-              // Onboard all the previous users in the temp array if there was an error processing a row
-              if (processingError) {
-                csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
-                tempUserArray = [];
-              } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
-                // Onboard the current temp array if we've met the chunk size or is the last user in list
-                csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
-                tempUserArray = [];
-              }
+            // Onboard all the previous users in the temp array if there was an error processing a row
+            if (processingError) {
+              csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
+              tempUserArray = [];
+            } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+              // Onboard the current temp array if we've met the chunk size or is the last user in list
+              csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
+              tempUserArray = [];
+            }
 
-              calculateProcessProgress();
-            });
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+            calculateProcessProgress();
           });
         }
 
@@ -2306,12 +2269,10 @@ angular.module('Core')
         }
 
         function addUserErrorWithTrackingID(row, errorMsg) {
-          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
-            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-              errorMsg += '.';
-            }
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
+          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
           }
+          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
           addUserError(row, _.trim(errorMsg));
         }
 
@@ -2322,7 +2283,7 @@ angular.module('Core')
               var addedUsersList = [];
 
               angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
+                if (user.status === 200 || user.status === 201) {
                   if (user.message === 'User Patched') {
                     $scope.model.numExistingUsers++;
                   } else {
@@ -2339,12 +2300,6 @@ angular.module('Core')
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
-
-              // Hybrid Service entitlements is added after onboarding
-              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
-                _.noop();
-              });
-
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
@@ -2401,6 +2356,7 @@ angular.module('Core')
             entitlementName: 'ciscoUC'
           });
         }
+        entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
         function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
           return csvPromise.then(function () {

@@ -23,7 +23,8 @@
       startAt: 0
     };
 
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectUserPlaceHolder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
+    vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     vm.aaModel = {};
     vm.uiMenu = {};
@@ -179,9 +180,7 @@
         vm.menuKeyEntry.addAction(action);
       }
 
-      getUsers().then(function () {
-        populateUiModel();
-      });
+      populateUiModel();
 
     }
 

@@ -153,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "コミュニケーション",
     "cloudExtensions": "ハイブリッド サービス",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "資格が付与されました",
       "404": "存在しません",
@@ -2004,7 +2004,7 @@
     "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
     "EC": "WebEx Event Centerのみ",
     "EE": "WebEx 企業 Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "をコール",
     "ST": "ストレージ",
     "SD": "Spark 会議室システム"
@@ -2691,7 +2691,7 @@
     "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
     "EC": "WebEx Event Centerのみ",
     "EE": "WebEx エンタープライズエディション",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "をコール",
     "ST": "ストレージ",
     "SD": "Spark 会議室システム"
@@ -2796,14 +2796,14 @@
     "spanishSpain": "スペイン語 (スペイン)",
     "spanishColumbian": "スペイン語 (コロンビア)",
     "french": "フランス語",
-    "indionesian": "インドネシア語",
+    "indonesian": "インドネシア語",
     "italian": "イタリア語",
     "japanese": "日本語",
     "korean": "韓国語",
     "norwegian": "ノルウェー語",
     "dutch": "オランダ語",
     "polish": "ポーランド語",
-    "portugeseBrazillian": "ポーランド語 (ブラジル)",
+    "portugueseBrazillian": "ポーランド語 (ブラジル)",
     "russian": "ロシア語",
     "swedish": "スウェーデン語",
     "turkish": "トルコ語",
@@ -2819,7 +2819,7 @@
     "spanishArgentine": "スペイン語 (アルゼンチン)",
     "spanishChilean": "スペイン語 (チリ)",
     "spanishMexican": "スペイン語 (メキシコ)",
-    "portugese": "ポルトガル語",
+    "portuguese": "ポルトガル語",
     "valencian": "バレンシア語"
   },
   "siteList": {

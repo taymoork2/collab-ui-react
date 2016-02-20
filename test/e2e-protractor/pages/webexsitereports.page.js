@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 'use strict';
 
@@ -12,8 +12,8 @@ var SiteReportsPage = function () {
   };
 
   this.t30Info = {
-    siteUrl: 'cisjsite002.webex.com',
-    testAdminUsername: 'cisjsite002@mailinator.com',
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
@@ -33,8 +33,6 @@ var SiteReportsPage = function () {
   this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
   this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
-  this.webexCommonInfoCardMeetingInProgress = element(by.id('infoCardMeetingInProgress'));
-  this.webexCommonInfoCardMeetingUsage = element(by.id('infoCardMeetingUsage'));
   this.webexReportsIndexLoading = element(by.id('reportsIndexLoading'));
   this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
   this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));

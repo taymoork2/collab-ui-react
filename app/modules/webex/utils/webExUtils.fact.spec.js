@@ -8,11 +8,6 @@ describe('WebExUtilsFact', function () {
   var $q;
   var $rootScope;
 
-  var deferredSessionTicket;
-  var deferredVersionXml;
-  var deferredSiteInfoXml;
-  var deferredEnableT30UnifiedAdminXml;
-
   var WebExXmlApiFact;
   var WebExUtilsFact;
 
@@ -21,24 +16,14 @@ describe('WebExUtilsFact', function () {
   var urlPart = 'https://' + hostName + '/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=';
   var url = urlPart + siteName;
 
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _WebExUtilsFact_) {
     $q = _$q_;
     $rootScope = _$rootScope_;
+
     WebExXmlApiFact = _WebExXmlApiFact_;
     WebExUtilsFact = _WebExUtilsFact_;
-
-    deferredSessionTicket = $q.defer();
-    deferredVersionXml = $q.defer();
-    deferredEnableT30UnifiedAdminXml = $q.defer();
-    deferredSiteInfoXml = $q.defer();
-
-    spyOn(WebExXmlApiFact, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
-    spyOn(WebExXmlApiFact, "getSiteVersion").and.returnValue(deferredVersionXml.promise);
-    spyOn(WebExXmlApiFact, "getEnableT30UnifiedAdminInfo").and.returnValue(deferredEnableT30UnifiedAdminXml.promise);
-    spyOn(WebExXmlApiFact, "getSiteInfo").and.returnValue(deferredSiteInfoXml.promise);
   }));
 
   it('calls correct logout URL', function () {

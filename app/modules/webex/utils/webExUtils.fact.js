@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExUtils').factory('WebExUtilsFact', [
+  angular.module('WebExApp').factory('WebExUtilsFact', [
     '$q',
     '$log',
     '$rootScope',
@@ -32,14 +32,14 @@
       }; // getSiteName()
 
       obj.getNewInfoCardObj = function (
-        label,
+        siteUrl,
         iconClass1,
         iconClass2
       ) {
 
         var infoCardObj = {
           id: "SiteInfo",
-          label: label,
+          label: siteUrl,
           isLicensesOverage: false,
 
           licensesTotal: {
@@ -221,7 +221,7 @@
         return enableT30UnifiedAdmin;
       }; // getEnableT30UnifiedAdmin()
 
-      obj.getWebexLicenseInfo = function (siteUrl) {
+      obj.getAllSitesWebexLicenseInfo = function () {
         var deferredGetWebexLicenseInfo = $q.defer();
 
         Orgservice.getValidLicenses().then(
@@ -233,7 +233,7 @@
               "licenses=" + JSON.stringify(licenses);
             // $log.log(logMsg);
 
-            var licenseInfo = null;
+            var allSitesLicenseInfo = [];
 
             licenses.forEach(
               function checkLicense(license) {
@@ -242,26 +242,65 @@
                 // $log.log(logMsg);
 
                 if (
-                  ("CONFERENCING" == license.licenseType) &&
-                  (0 <= license.licenseId.indexOf(siteUrl))
-                ) {
+                  ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
 
-                  var licenseVolume = license.volume;
-                  var licenseUsage = license.usage;
-                  var licensesAvailable = licenseVolume - licenseUsage;
+                  var licenseFields = license.licenseId.split("_");
+                  var siteUrl = licenseFields[3];
+                  var serviceType = licenseFields[0];
 
-                  licenseInfo = {
-                    volume: licenseVolume,
-                    usage: licenseUsage,
-                    available: licensesAvailable
-                  };
+                  var licenseInfo = null;
 
-                  deferredGetWebexLicenseInfo.resolve(licenseInfo);
+                  var siteHasMCLicense = false;
+                  var siteHasECLicense = false;
+                  var siteHasSCLicense = false;
+                  var siteHasTCLicense = false;
+                  var siteHasCMRLicense = false;
+
+                  if ("MC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasMCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("EC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasECLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("SC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasSCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("TC" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasTCLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("CMR" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasCMRLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  }
+
+                  allSitesLicenseInfo.push(licenseInfo);
+
+                  deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
                 }
               } // checkLicense()
             ); // licenses.forEach()
 
-            deferredGetWebexLicenseInfo.reject(licenseInfo);
+            deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
           }, // getValidLicensesSuccess()
 
           function getValidLicensesError(info) {
@@ -277,7 +316,7 @@
         ); // Orgservice.getValidLicenses().then()
 
         return deferredGetWebexLicenseInfo.promise;
-      }; // getWebexLicenseInfo()
+      }; // getAllSitesWebexLicenseInfo()
 
       obj.setInfoCardLicenseInfo = function (
         licenseInfo,

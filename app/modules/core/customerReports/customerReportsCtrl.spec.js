@@ -237,7 +237,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mediaOptions).toEqual(mediaOptions);
         expect(controller.mediaSelected).toEqual(mediaOptions[0]);
 
-        expect(controller.deviceDescription).toEqual('registeredEndpoints.description');
+        expect(controller.deviceDescription).toEqual('registeredEndpoints.customerDescription');
         expect(controller.deviceStatus).toEqual(REFRESH);
         expect(controller.deviceFilter).toEqual([defaultDeviceFilter]);
         expect(controller.selectedDevice).toEqual(defaultDeviceFilter);
@@ -280,10 +280,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         controller.timeSelected = timeOptions[2];
         controller.mediaUpdate();
 
-        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[2]);
-        expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[2]);
         expect(CustomerGraphService.setMediaQualityGraph).toHaveBeenCalled();
-
         expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
         expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();
         expect(CustomerGraphService.setFilesSharedGraph).not.toHaveBeenCalled();
@@ -294,7 +291,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       it('should update the registered device graph on deviceUpdated', function () {
         controller.deviceUpdate();
 
-        expect(DummyCustomerReportService.dummyDeviceData).not.toHaveBeenCalled();
         expect(CustomerReportService.getDeviceData).not.toHaveBeenCalled();
         expect(CustomerGraphService.setActiveUsersGraph).not.toHaveBeenCalled();
         expect(CustomerGraphService.setAvgRoomsGraph).not.toHaveBeenCalled();

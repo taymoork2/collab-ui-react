@@ -34,6 +34,7 @@
     vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters());
     vm.clusterLength = clusterLength;
     vm.showClusterDetails = showClusterDetails;
+    vm.addResourceButtonClicked = addResourceButtonClicked;
 
     vm.clusterListGridOptions = {
       data: 'med.aggregatedClusters',
@@ -97,6 +98,14 @@
         });
       }
       vm.showPreview = true;
+    }
+
+    function addResourceButtonClicked() {
+      $modal.open({
+        controller: 'RedirectAddResourceController',
+        controllerAs: 'redirectResource',
+        templateUrl: 'modules/mediafusion/media-service/add-resources/redirect-add-resource-dialog.html'
+      });
     }
 
     vm.enableMediaService = function (serviceId) {
@@ -168,7 +177,7 @@
   }
 
   /* @ngInject */
-  function AlarmController($stateParams) {
+  function MediaAlarmController($stateParams) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
     vm.host = $stateParams.host;
@@ -206,5 +215,5 @@
     .module('Mediafusion')
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
-    .controller('AlarmController', AlarmController);
+    .controller('MediaAlarmController', MediaAlarmController);
 }());

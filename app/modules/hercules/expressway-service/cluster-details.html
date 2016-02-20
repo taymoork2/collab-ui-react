@@ -1,69 +1,77 @@
 <div ui-view="header"></div>
-
-<cs-sp-container class="hercules-fix-paragraphs hercules-settings-table"
-                 ng-if="!expresswayClusterDetails.serviceNotInstalled()">
-
+<cs-sp-container class="hercules-fix-paragraphs hercules-settings-table">
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
-    <div class="feature-list" ng-if="expresswayClusterDetails.selectedService().alarm_count > 0">
+    <div class="feature-list" ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length > 0">
       <ul>
-        <li class="feature" ng-repeat="alarm in expresswayClusterDetails.alarms2hosts()" ng-class="{'list-item': !$first}">
+        <li class="feature" ng-repeat="alarm in clusterDetailsCtrl.cluster.aggregates.alarms" ng-class="{'list-item': !$first}">
           <a ui-sref="cluster-details.alarm-details({alarm: alarm})">
-            <i class="icon icon-error hercules-alarm status-icon"/>
-            <span class="feature-name">{{alarm.alarm.title}}</span>
+            <i class="icon icon-error red status-icon"></i>
+            <span class="feature-name">{{alarm.description}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>
     </div>
-    <p ng-if="expresswayClusterDetails.selectedService().alarm_count == 0" translate="hercules.alarms.noAlarms"></p>
+    <p ng-if="clusterDetailsCtrl.cluster.aggregates.alarms.length === 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
-
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
     <table>
       <tbody>
-      <tr>
+      <tr ng-if="!clusterDetailsCtrl.showUpgradeProgress">
         <td translate="hercules.softwareUpgrade.currentVersion"></td>
-        <td><span>{{expresswayClusterDetails.selectedService().connectors[0].version}}</span></td>
+        <td><span>{{clusterDetailsCtrl.softwareUpgrade.provisionedVersion}}</span></td>
       </tr>
-      <tr ng-if="expresswayClusterDetails.selectedService().software_upgrade_available">
-        <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
-        <td><span>{{expresswayClusterDetails.selectedService().not_approved_package.version}}</span></td>
+      <tr ng-if="clusterDetailsCtrl.showUpgradeProgress" class="software-upgrade-container">
+        <td colspan="2" ng-if="clusterDetailsCtrl.fakeUpgrade">
+          <div class="progressbar-info">
+            <span class="progressbar-label" translate="hercules.softwareUpgrade.pending"></span>
+            <span class="progressbar-progress">0 / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
+          </div>
+          <progressbar animate="true" value="10" max="100"></progressbar>
+        </td>
+        <td colspan="2" ng-if="!clusterDetailsCtrl.fakeUpgrade">
+          <div class="progressbar-info">
+            <span ng-show="!clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: clusterDetailsCtrl.upgradeDetails.upgradingHostname, version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
+            <span ng-if="clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
+            <span class="progressbar-progress">{{clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts}} / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
+          </div>
+          <progressbar ng-show="!clusterDetailsCtrl.upgradeJustFinished" animate="true" value="clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts" max="clusterDetailsCtrl.softwareUpgrade.numberOfHosts"></progressbar>
+          <progressbar ng-show="clusterDetailsCtrl.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
+        </td>
+      </tr>
+      </tr>
+      <tr ng-if="!clusterDetailsCtrl.showUpgradeProgress && clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable">
+        <td translate="hercules.softwareUpgrade.newVersion"></td>
+        <td><span>{{clusterDetailsCtrl.softwareUpgrade.availableVersion}}</span></td>
       </tr>
       </tbody>
     </table>
     <button class="btn btn--primary"
-            ng-click="expresswayClusterDetails.upgrade()"
-            ng-if="expresswayClusterDetails.selectedService().software_upgrade_available"
-            translate="hercules.softwareUpgrade.upgrade">
+            ng-click="clusterDetailsCtrl.upgrade()"
+            ng-if="!clusterDetailsCtrl.showUpgradeProgress && clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
+            translate="hercules.softwareUpgrade.upgradeNow">
     </button>
   </cs-sp-section>
-
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat="connector in expresswayClusterDetails.selectedService().connectors | orderBy:'host.host_name'"
+        <li class="feature" ng-repeat="host in clusterDetailsCtrl.cluster.aggregates.hosts | orderBy:'host.hostname'"
             ng-class="{'list-item': !$first}">
           <a
-            ui-sref="cluster-details.host-details({host: connector.host, clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">
-            <i class="fa fa-circle status-icon"
-               ng-class="connector.alarms.length > 0 ? 'hercules-state-alarm' : 'hercules-state-'+connector.state"></i>
-            <span class="feature-name">{{connector.host.host_name}}</span>
-            <span class="feature-status" ng-if="connector.alarms.length == 0"
-                  translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
-            <span class="feature-status" ng-if="connector.alarms.length > 0"
-                  translate="hercules.status.alarm"></span>
+            ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, serviceType: clusterDetailsCtrl.serviceType})">
+            <i class="fa fa-circle status-icon" ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(host.state).label"></i>
+            <span class="feature-name">{{host.hostname}}</span>
+            <span class="feature-status">
+              <span translate="{{'hercules.status.' + host.state }}"></span>
+              <span ng-if="host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
+            </span>
             <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>
     </div>
   </cs-sp-section>
-
-</cs-sp-container>
-
-<cs-sp-container class="hercules-fix-paragraphs" ng-if="expresswayClusterDetails.serviceNotInstalled()">
-  <p translate="hercules.clusters.notInstalled" translate-values="{serviceName: expresswayClusterDetails.serviceName}"></p>
 </cs-sp-container>

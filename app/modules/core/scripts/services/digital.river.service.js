@@ -12,6 +12,7 @@
       getUserFromEmail: getUserFromEmail,
       addDrUser: addDrUser,
       getDrReferrer: getDrReferrer,
+      getUserAuthToken: getUserAuthToken,
       activateUser: activateUser
     };
 
@@ -26,6 +27,12 @@
     function addDrUser(emailPassword) {
       return Auth.setAccessToken().then(function () {
         return $http.post(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user', emailPassword);
+      });
+    }
+
+    function getUserAuthToken(userid) {
+      return Auth.setAccessToken().then(function () {
+        return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid);
       });
     }
 

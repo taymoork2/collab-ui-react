@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('WebExApiGateway').service('WebExApiGatewayService', [
+angular.module('WebExApp').service('WebExApiGatewayService', [
+  '$rootScope',
   '$q',
   '$log',
   'Authinfo',
@@ -8,6 +9,7 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
   'WebExXmlApiFact',
   'WebExXmlApiInfoSvc',
   function (
+    $rootScope,
     $q,
     $log,
     Authinfo,
@@ -16,10 +18,107 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
     webExXmlApiInfoObj
   ) {
 
+    this.csvStatus = function (siteUrl) {
+      var funcName = 'csvStatus()';
+      var logMsg = '';
+
+      logMsg = funcName + '\n' +
+        'siteUrl=' + siteUrl;
+      $log.log(logMsg);
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+      var dummyResult = {
+        "sitename": siteUrl,
+
+        "importStatus": {
+          "code": null,
+          "acceptedTime": null,
+          "completedTime": null,
+          "importFileName": null,
+          "errorReportLink": null
+        },
+
+        "exportStatus": {
+          "code": null,
+          "acceptedTime": null,
+          "completedTime": null,
+          "exportFileLink": null,
+          "errorReportLink": null
+        }
+      };
+
+      return $q.when(dummyResult);
+      /*
+      return WebExXmlApiFact.getSessionTicket(siteUrl)
+        .then(
+          function dummySuccess(response) {
+            var dummyResult = null;
+
+            if (null == response) {
+              dummyResult = {
+                siteUrl: siteUrl,
+                result: 'failed',
+                code: response
+              };
+
+              $q.reject(result);
+            }
+
+            dummyResult = {
+              siteUrl: siteUrl,
+              result: 'success',
+              status: response
+            };
+
+            return result;
+          } // dummySuccess()
+        ) // WebExXmlApiFact.getSessionTicket().then()
+        .catch(
+          function dummyCatch(error) {
+            var dummyResult = {
+              siteUrl: siteUrl,
+              result: 'error',
+              code: error
+            };
+
+            $q.reject(result);
+          } // dummyCatch()
+        ); // WebExXmlApiFact.getSessionTicket().catch()
+        */
+    }; // csvStatus()
+
+    this.csvExport = function (siteUrl) {
+      var funcName = "csvExport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvExport()
+
+    this.csvImport = function (siteUrl) {
+      var funcName = "csvImport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvImport()
+
+    this.csvFileDownload = function (downloadUrl) {
+      var funcName = "csvFileDownload()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "downloadUrl=" + downloadUrl;
+      $log.log(logMsg);
+    }; // csvFileDownload()
+
     this.isSiteSupportsIframe = function (siteUrl) {
       var deferredIsSiteSupportsIframe = $q.defer();
 
-      getSessionTicket().then(
+      WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(response) {
           $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
@@ -145,10 +244,6 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
         } // getSessionTicketError()
       ); // getSessionTicket(siteUrl).then()
 
-      function getSessionTicket() {
-        return WebExXmlApiFact.getSessionTicket(siteUrl);
-      } // getSessionTicket()
-
       function getSiteData() {
         var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
         var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
@@ -227,5 +322,5 @@ angular.module('WebExApiGateway').service('WebExApiGatewayService', [
 
       return deferredIsSiteSupportsIframe.promise;
     }; // isSiteSupportsIframe()
-  } //end top level service function
+  } // end top level function
 ]);

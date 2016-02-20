@@ -1,163 +1,400 @@
-/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
 'use strict';
 
-describe('Service: Trial Service', function () {
-
+describe('Service: Trial Service:', function () {
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
-  var trialData = getJSONFixture('core/json/trials/trialData.json');
-  var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');
-  var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
-
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService',
-      'WebexTrialService');
+      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService');
+  });
 
+  beforeEach(function () {
     bard.mockService(LogMetricsService, {});
+  });
+
+  beforeEach(function () {
     bard.mockService(Authinfo, {
-      getOrgId: '1'
+      getOrgId: '1',
+      getLicenses: [{
+        'trialId': 'fake-uuid-value-0'
+      }, {
+        'trialId': 'fake-uuid-value-1'
+      }, {
+        'trialId': 'fake-uuid-value-2'
+      }]
     });
   });
 
   beforeEach(function () {
     bard.inject(this, 'TrialService');
-
-    TrialService.getData();
   });
 
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
+  // -----
+  describe('primary behaviors:', function () {
+    var trialData = getJSONFixture('core/json/trials/trialData.json');
+    var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');
+    var trialEditResponse = getJSONFixture('core/json/trials/trialEditResponse.json');
 
-  it('should exist', function () {
-    expect(TrialService).toBeDefined();
-  });
-
-  it('should start a new trial', function () {
-    $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
-    TrialService.startTrial().then(function (response) {
-      expect(response.data).toEqual(trialAddResponse);
-      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
-    });
-    $httpBackend.flush();
-  });
-
-  it('should edit a trial', function () {
-    var customerOrgId = 123;
-    var trialId = 444;
-    $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
-    TrialService.editTrial(customerOrgId, trialId).then(function (response) {
-      expect(response.data).toEqual(trialEditResponse);
-      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
-    });
-    $httpBackend.flush();
-  });
-
-  describe('start trial with enabled trials', function () {
     beforeEach(function () {
-      bard.mockService(TrialMessageService, {
-        getData: trialData.enabled.trials.messageTrial
-      });
-      bard.mockService(TrialMeetingService, {
-        getData: trialData.enabled.trials.meetingTrial
-      });
-      bard.mockService(TrialCallService, {
-        getData: trialData.enabled.trials.callTrial
-      });
-      bard.mockService(TrialRoomSystemService, {
-        getData: trialData.enabled.trials.roomSystemTrial
-      });
       TrialService.getData();
     });
 
-    it('should have offers list', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
-        var offers = angular.fromJson(data).offers;
-        return _.every(offerList, function (offer) {
-          return _.some(offers, {
-            id: offer
-          });
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should exist', function () {
+      expect(TrialService).toBeDefined();
+    });
+
+    it('should start a new trial', function () {
+      $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
+      TrialService.startTrial().then(function (response) {
+        expect(response.data).toEqual(trialAddResponse);
+        expect(LogMetricsService.logMetrics).toHaveBeenCalled();
+      });
+      $httpBackend.flush();
+    });
+
+    it('should edit a trial', function () {
+      var customerOrgId = 123;
+      var trialId = 444;
+      $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
+      TrialService.editTrial(customerOrgId, trialId).then(function (response) {
+        expect(response.data).toEqual(trialEditResponse);
+        expect(LogMetricsService.logMetrics).toHaveBeenCalled();
+      });
+      $httpBackend.flush();
+    });
+
+    describe('start trial with enabled trials', function () {
+      beforeEach(function () {
+        bard.mockService(TrialMessageService, {
+          getData: trialData.enabled.trials.messageTrial
         });
-      }).respond(200);
+        bard.mockService(TrialMeetingService, {
+          getData: trialData.enabled.trials.meetingTrial
+        });
+        bard.mockService(TrialCallService, {
+          getData: trialData.enabled.trials.callTrial
+        });
+        bard.mockService(TrialRoomSystemService, {
+          getData: trialData.enabled.trials.roomSystemTrial
+        });
+        bard.mockService(TrialDeviceService, {
+          getData: trialData.enabled.trials.deviceTrial
+        });
+        TrialService.getData();
+      });
 
-      TrialService.startTrial();
+      it('should have offers list', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
+          var offers = angular.fromJson(data).offers;
+          return _.every(offerList, function (offer) {
+            return _.some(offers, {
+              id: offer
+            });
+          });
+        }).respond(200);
 
-      expect($httpBackend.flush).not.toThrow();
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should have meeting settings', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var details = angular.fromJson(data).details;
+          return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should have device details', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var deviceList = [{
+            model: 'CISCO_SX10',
+            quantity: 2
+          }, {
+            model: 'CISCO_8865',
+            quantity: 3
+          }];
+          var devices = angular.fromJson(data).details.devices;
+          return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]);
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should not have shipping details if none were provided', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          return _.isUndefined(data.shippingInfo);
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
     });
 
-    it('should have meeting settings', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var details = angular.fromJson(data).details;
-        return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
-      }).respond(200);
+    describe('start trial with disabled trials', function () {
+      it('should have blank offers list', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          return angular.fromJson(data).offers.length === 0;
+        }).respond(200);
 
-      TrialService.startTrial();
+        TrialService.startTrial();
 
-      expect($httpBackend.flush).not.toThrow();
+        expect($httpBackend.flush).not.toThrow();
+      });
+
+      it('should have blank details', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var details = angular.fromJson(data).details;
+          return _.isEmpty(details.devices) && _.isEmpty(details.offers);
+        }).respond(200);
+
+        TrialService.startTrial();
+
+        expect($httpBackend.flush).not.toThrow();
+      });
     });
 
-    it('should have device details', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var deviceList = [{
-          model: 'sx10',
-          quantity: 2
-        }, {
-          model: '8865',
-          quantity: 3
-        }];
-        var devices = angular.fromJson(data).details.devices;
-        return _.some(devices, deviceList[0]) && _.some(devices, deviceList[1]);
-      }).respond(200);
+    describe('start call trial with skipped devices', function () {
+      beforeEach(function () {
+        bard.mockService(TrialCallService, {
+          getData: trialData.enabled.trials.skipCallTrial
+        });
+        TrialService.getData();
+      });
 
-      TrialService.startTrial();
+      it('should not have devices if call trial order page was skipped', function () {
+        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var devices = angular.fromJson(data).details.devices;
+          return _.isEmpty(devices);
+        }).respond(200);
 
-      expect($httpBackend.flush).not.toThrow();
-    });
+        TrialService.startTrial();
 
-    it('should have shipping details', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var shippingInfoList = {
-          country: "USA",
-          state: "WA",
-          name: "John Connors",
-          phoneNumber: "+1 206 256 3000",
-          address: "2901 3rd Ave Seattle",
-          postalCode: " 98121",
-          type: "CUSTOMER"
-        };
-        var shippingInfo = angular.fromJson(data).details.shippingInfo;
-        return _.some(shippingInfo, shippingInfoList[0]);
-      }).respond(200);
-
-      TrialService.startTrial();
-
-      expect($httpBackend.flush).not.toThrow();
+        expect($httpBackend.flush).not.toThrow();
+      });
     });
   });
 
-  describe('start trial with disabled trials', function () {
-    it('should have blank offers list', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        return angular.fromJson(data).offers.length === 0;
-      }).respond(200);
+  // -----
+  describe('util methods:', function () {
+    var fakeTrialId = 'fake-uuid-value-1000';
+    var fakeTrialPeriodData = {
+      startDate: '2015-12-06T00:00:00.000Z',
+      trialPeriod: 90
+    };
+    var fakeToday, fakeStartDate;
 
-      TrialService.startTrial();
-
-      expect($httpBackend.flush).not.toThrow();
+    describe('getTrialIds():', function () {
+      it('should return a list of only the trial id values from a list of objects with a "trialId" property', function () {
+        var trialIds = TrialService.getTrialIds();
+        expect(trialIds.length).toBe(3);
+        expect(trialIds).toEqual(['fake-uuid-value-0', 'fake-uuid-value-1', 'fake-uuid-value-2']);
+      });
     });
 
-    it('should have blank details', function () {
-      $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        return _.isEmpty(angular.fromJson(data).details);
-      }).respond(200);
+    describe('async methods:', function () {
+      afterEach(function () {
+        // force resolve/reject
+        $rootScope.$apply();
+      });
 
-      TrialService.startTrial();
+      describe('getTrialPeriodData():', function () {
+        describe('successful fetch of trial data:', function () {
+          beforeEach(function () {
+            spyOn(TrialService, 'getTrial').and.returnValue($q.when(fakeTrialPeriodData));
+          });
 
-      expect($httpBackend.flush).not.toThrow();
+          describe('resolves with an object that:', function () {
+            it('should have a "startDate" property as an ISO-8601 string', function () {
+              TrialService.getTrialPeriodData(fakeTrialId).then(function (trialPeriodData) {
+                expect(trialPeriodData.startDate).toBe('2015-12-06T00:00:00.000Z');
+              });
+            });
+
+            it('should have a "trialPeriodData" property as an int', function () {
+              TrialService.getTrialPeriodData(fakeTrialId).then(function (trialPeriodData) {
+                expect(trialPeriodData.trialPeriod).toBe(90);
+              });
+            });
+          });
+        });
+
+        describe('failed fetch of trial data:', function () {
+          beforeEach(function () {
+            spyOn(TrialService, 'getTrial').and.returnValue($q.reject({
+              message: 'getTrial failed'
+            }));
+          });
+
+          it('should bubble up rejection that that caused "getTrial" to reject', function () {
+            TrialService.getTrialPeriodData(fakeTrialId).catch(function (reason) {
+              expect(reason).toEqual({
+                message: 'getTrial failed'
+              });
+            });
+          });
+        });
+      });
+
+      describe('getExpirationPeriod():', function () {
+        describe('passed a trial id:', function () {
+          describe('returns a promise that:', function () {
+            beforeEach(function () {
+              fakeToday = new Date("2016-01-02T12:34:56.789Z");
+            });
+
+            it('should resolve with 29, given 1 day passed since the start date and trial period is 30', function () {
+              var fakeTrialPeriodData = $q.when({
+                startDate: '2016-01-01T00:00:00.000Z',
+                trialPeriod: 30
+              });
+              spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
+
+              TrialService.getExpirationPeriod(fakeTrialId, fakeToday)
+                .then(function (daysLeft) {
+                  expect(daysLeft).toBe(29);
+                });
+            });
+
+            it('should resolve with 30, given start date and current date are the same and trial period is 30', function () {
+              var fakeTrialPeriodData = $q.when({
+                startDate: '2016-01-02T00:00:00.000Z',
+                trialPeriod: 30
+              });
+              spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
+
+              TrialService.getExpirationPeriod(fakeTrialId, fakeToday)
+                .then(function (daysLeft) {
+                  expect(daysLeft).toBe(30);
+                });
+            });
+
+            it('should resolve with -1, given 31 days passed since the start date and trial period is 30', function () {
+              var fakeTrialPeriodData = $q.when({
+                startDate: '2015-12-02T00:00:00.000Z',
+                trialPeriod: 30
+              });
+              spyOn(TrialService, 'getTrialPeriodData').and.returnValue(fakeTrialPeriodData);
+
+              TrialService.getExpirationPeriod(fakeTrialId, fakeToday)
+                .then(function (daysLeft) {
+                  expect(daysLeft).toBe(-1);
+                });
+            });
+
+          });
+        });
+      });
+    });
+
+    describe('calcDaysLeft():', function () {
+      beforeEach(function () {
+        fakeStartDate = new Date("2016-01-01T00:00:00.000Z");
+        fakeToday = new Date("2016-02-01T00:00:00.000Z");
+      });
+
+      it('should return -1, if current date - start date is 31 and the trial period is 30', function () {
+        expect(TrialService.calcDaysLeft(fakeStartDate, 30, fakeToday)).toBe(-1);
+      });
+
+      it('should return 29, if current date - start date is 31 and the trial period is 60', function () {
+        expect(TrialService.calcDaysLeft(fakeStartDate, 60, fakeToday)).toBe(29);
+      });
+
+      it('should return 59, if current date - start date is 31 and the trial period is 90', function () {
+        expect(TrialService.calcDaysLeft(fakeStartDate, 90, fakeToday)).toBe(59);
+      });
+    });
+
+    describe('calcDaysUsed(): ', function () {
+      beforeEach(function () {
+        fakeToday = new Date(Date.UTC(2016, 1, 1)); // 2016-02-01 (note: month units are zero-based)
+      });
+
+      describe('current date and start date are on the same day', function () {
+        it('should return 0', function () {
+          fakeStartDate = new Date('2016-02-01T00:00:00.000Z');
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+
+        it('should return 0', function () {
+          fakeStartDate = new Date('2016-02-01T23:59:59.999Z');
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+
+        it('should return 0', function () {
+          fakeStartDate = new Date('2016-02-01T23:59:59.999Z');
+          fakeToday = new Date('2016-02-01T00:00:00.000Z');
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+
+        it('should return 0', function () {
+          fakeStartDate = new Date(Date.UTC(2016, 1, 1));
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+
+        it('should return 0', function () {
+          fakeStartDate = new Date(Date.UTC(2016, 1, 1, 23, 59, 59, 999));
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+
+        it('should return 0', function () {
+          fakeToday = new Date(Date.UTC(2016, 1, 1, 23, 59, 59, 999));
+          fakeStartDate = new Date(Date.UTC(2016, 1, 1, 0, 0, 0, 0));
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+      });
+
+      describe('start date falls on a day before the current date', function () {
+        it('should return 1', function () {
+          fakeStartDate = new Date('2016-01-31T00:00:00.000Z');
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(1);
+        });
+
+        it('should return 1', function () {
+          fakeStartDate = new Date('2016-01-31T23:59:59.999Z');
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(1);
+        });
+
+        it('should return 1', function () {
+          fakeStartDate = new Date(Date.UTC(2016, 0, 31));
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(1);
+        });
+
+        it('should return 1', function () {
+          fakeStartDate = new Date(Date.UTC(2016, 0, 31, 23, 59, 59, 999));
+          expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(1);
+        });
+      });
+
+      it('should return correct number of days between start date and current date', function () {
+        fakeStartDate = new Date('2016-01-01T00:00:00.000Z');
+        expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(31);
+
+        fakeStartDate = new Date('2015-01-01T00:00:00.000Z');
+        expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(396);
+      });
+
+      it('should return -1, if start date is 1 day ahead of current date', function () {
+        // no guard against future date is provided
+        fakeStartDate = new Date('2016-02-02T00:00:00.000Z');
+        expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(-1);
+      });
     });
   });
 });

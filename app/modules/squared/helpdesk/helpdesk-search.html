@@ -47,7 +47,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} {{'helpdesk.help.referTo' | translate}} <a ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
@@ -168,7 +168,7 @@
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>
-                <div ng-if="device.number"><span>{{device.number}}</span></div>
+                <div ng-if="device.numbers"><span ng-repeat="number in device.numbers">{{number}}{{$last ? '' : ', '}}</span></div>
                 <div ng-if="device.user"><span>{{device.user.displayName}}</span></div>
                 <div ng-if="device.organization.displayName" class="right">
                   <span class="belongs-to-org">{{device.organization.displayName}}</span>
@@ -178,7 +178,7 @@
           </cs-card>
         </div>
 
-        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit"
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit && helpdeskCtrl.currentSearch.deviceLimit < helpdeskCtrl.searchResultsLimit"
              class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a></span>
         </div>
@@ -193,6 +193,11 @@
     </div>
   </div>
 
+  <div class="search-stats">
+    <div ng-show="helpdeskCtrl.searchTime">
+      Search took {{helpdeskCtrl.searchTime}} ms.
+    </div>
+  </div>
 </div>
 
 

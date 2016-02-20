@@ -18,7 +18,7 @@ describe('Org Features tests', function () {
       navigation.clickFirstTimeWizard();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
       wizard.clickMessagingSetup();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Message Settings');
       utils.expectIsNotPresent(wizard.messageInteropFeature);
     });
 

@@ -11,8 +11,8 @@ var SiteSettigsPage = function () {
   };
 
   this.t30Info = {
-    siteUrl: 'cisjsite002.webex.com',
-    testAdminUsername: 'cisjsite002@mailinator.com',
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
@@ -45,6 +45,8 @@ var SiteSettigsPage = function () {
   this.configureCommonDisclaimersLink = element(by.id('CommonSettings_disclaimer'));
   this.configureCommonCompanyAddressesLink = element(by.id('CommonSettings_address'));
   this.configureCommonCMRLink = element(by.id('CommonSettings_cmr'));
+  this.configureCommonSiteInformationLink = element(by.id('CommonSettings_site_info'));
+
   this.iFramePage = element(by.id('webexIframeContainer'));
   this.siteSettingsPanel = element(by.id('webexSiteSettings'));
   this.siteInfoCardId = element(by.id('SiteInfo-card'));
@@ -60,6 +62,7 @@ var SiteSettigsPage = function () {
   this.commonProductivityToolsId = element(by.id('CommonSettings_productivity'));
   this.commonNavigationId = element(by.id('CommonSettings_navigation'));
   this.commonMobileId = element(by.id('CommonSettings_mobile'));
+  this.commonSiteInformationId = element(by.id('CommonSettings_site_info'));
   this.emaillTemplateId = element(by.id('CommonSettings_email_template'));
   this.disclaimersId = element(by.id('CommonSettings_disclaimer'));
   this.companyAddressesId = element(by.id('CommonSettings_address'));

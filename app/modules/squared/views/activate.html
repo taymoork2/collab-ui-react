@@ -7,7 +7,7 @@
         <h5 class="message-box__details" translate="activation.returnToApp"></h5>
       </section>
       <section id="codeExpired" ng-show="result.codeExpired">
-        <i class="message-box__icon icon-circle-comp-neg"></i>
+        <i class="message-box__icon icon-circle-comp-negative"></i>
         <h3 class="message-box__title message-box__title--alert activate-error" translate="activation.codeExpired" translate-values="{ deviceName: deviceName }"></h3>
         <h5 class="message-box__details" translate="activation.requestNewCode" translate-values="{ deviceName: deviceName, userEmail:userEmail }"></h5>
         <button id="sendCodeLink" class="btn btn--people btn--expand" ng-click="resendCode()" translate="activation.sendCodeLink"></button>
@@ -19,7 +19,7 @@
         <div id="testdata" eqp={{eqp}}></div>
       </section>
       <section id="exception" ng-show="result.errmsg">
-        <i class="message-box__icon icon-circle-comp-neg"></i>
+        <i class="message-box__icon icon-circle-comp-negative"></i>
         <h3 class="message-box__title message-box__title--alert" translate="activation.unexpectedError"></h3>
         <h5 class="message-box__details">{{result.errmsg}}</h5>
       </section>

@@ -13,10 +13,10 @@
         </div>
         <div cr-feature-toggle feature-hide="csvUpload" ng-controller="ExportCSVCtrl">
           <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{::'usersPage.csvFilename' | translate}}">
-            <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
+            <span id="export-icon" tooltip-placement="top" tooltip="{{::'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
           </a>
           <a id="export-in-progress" class="export-users" ng-if="exporting">
-            <span id="exporting-icon" class="icon-export" tooltip-placement="top" tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
+            <span id="exporting-icon" tooltip-placement="top" tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
           </a>
           <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
         </div>
