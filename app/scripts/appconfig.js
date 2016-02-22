@@ -1,9 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
-      var $window = $windowProvider.$get();
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -40,6 +39,16 @@ angular
           },
           authenticate: false
         })
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          }
+        })
         .state('createAccount', {
           url: '/create-account',
           views: {
@@ -47,6 +56,34 @@ angular
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
               controller: 'createAccountController',
               controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateUserController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activatedUserSuccessPage', {
+          url: '/activated-user-success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUserErrorPage', {
+          url: '/activate-user-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
@@ -145,7 +182,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
+      var defaultLang = 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -1347,7 +1384,7 @@ angular
         })
         .state('trialAdd.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('trialAdd.addNumbers', {
@@ -1370,7 +1407,8 @@ angular
             }
           },
           params: {
-            currentTrial: {}
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialEdit.addNumbers', {
@@ -1394,7 +1432,7 @@ angular
         })
         .state('trialEdit.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('generateauthcode', {
@@ -1685,7 +1723,7 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayClusterDetails',
+              controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
@@ -1878,7 +1916,7 @@ angular
         })
         .state('connector-details.alarm-details', {
           templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-          controller: 'AlarmController',
+          controller: 'MediaAlarmController',
           controllerAs: 'alarmCtrl',
           data: {
             displayName: 'Alarm Details'

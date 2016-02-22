@@ -1874,7 +1874,7 @@
       "title": "Avvia nuova versione di prova - Installazione Riunione e WebEx",
       "webexHeader": "Tipo di licenza Riunione e WebEx",
       "meetingDetails": "Riunione con 25 partecipanti",
-      "webexDetails": "WebEx Enterprise Edition con Collaboration Meeting Room",
+      "webexDetails": "WebEx Enterprise Edition con Collaboration Meeting Rooms",
       "siteUrl": "URL sito",
       "timezone": "Fuso orario",
       "webexSiteUrl": "URL sito WebEx",
@@ -2004,7 +2004,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "Chiama",
     "ST": "Storage",
     "SD": "Sistema di sale Spark"
@@ -2481,7 +2481,7 @@
     "indexPageLabel_SiteInfo_site_info": "Informazioni sito",
     "indexPageLabel_SiteInfo_site_features": "Funzioni sito",
 
-    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Cellulare",
     "indexPageLabel_CommonSettings_navigation": "Personalizzazione navigazione",
     "indexPageLabel_CommonSettings_scheduler": "Funzione di pianificazione",
@@ -2691,7 +2691,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "Chiama",
     "ST": "Storage",
     "SD": "Sistema di sale Spark"

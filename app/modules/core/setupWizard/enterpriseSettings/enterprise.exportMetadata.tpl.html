@@ -1,6 +1,6 @@
-<h3 translate="ssoModal.exportMetadataTitle"></h3>
-<div id="exportMetaDiv" ng-init="downloadHostedSp()">
-  <p translate="ssoModal.exportMetadataDesc1"></p>
-  <p translate="ssoModal.exportMetadataDesc2"></p>
+<div id="exportMetaDiv" class="sso-container copy-spacing" ng-init="downloadHostedSp()">
+  <i class="icon icon-circle-download"></i>
+  <h3 translate="ssoModal.exportMetadataTitle"></h3>
+  <p><span translate="ssoModal.exportMetadataDesc1"></span> <span translate="ssoModal.exportMetadataDesc2"></span></p>
   <a id="downloadMeta" class="btn btn--people" download={{metaFilename}} ng-href="{{url}}"><span translate="ssoModal.downloadMetadataBtn"></span></a>
 </div>

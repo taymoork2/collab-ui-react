@@ -3,8 +3,10 @@
 angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService',
     'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
+    'Userservice',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService,
-      CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
+      CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice) {
+
 
       $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
@@ -19,6 +21,26 @@ angular.module('Squared')
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
+      $scope.showToolsCard = false;
+
+      var devRoles = {
+        'ciscouc.devops': '',
+        'ciscouc.devsupport': ''
+      };
+      (function initializeShowToolsCard() {
+        Userservice.getUser('me', function (user, status) {
+          if (user.success) {
+            for (var i in user.roles) {
+              if (user.roles[i] in devRoles) {
+                $scope.showToolsCard = true;
+                break;
+              }
+            }
+          } else {
+            Log.debug('Get current user failed. Status: ' + status);
+          }
+        });
+      })();
 
       $scope.tabs = [{
         title: $translate.instant('supportPage.tabs.status'),
@@ -559,6 +581,5 @@ angular.module('Squared')
           visible: Authinfo.isCisco()
         }]
       };
-
     }
   ]);
