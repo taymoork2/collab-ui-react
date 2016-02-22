@@ -1114,7 +1114,7 @@ angular.module('Core')
           'trialExtInterest',
           'cdrsupport',
           'cdr-overview',
-          'cdrladderdiagram',
+          'cdrladderdiagram'
         ],
         Readonly_Admin: [
           'overview',
