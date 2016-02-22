@@ -309,6 +309,8 @@ describe('Controller: AARouteToUserCtrl', function () {
       var nameNumber1 = users[0].displayName.concat(' (')
         .concat(users[0].extension).concat(')');
 
+      controller.sort.minOffered = 1;
+
       controller.getUsers();
 
       $httpBackend.flush();
@@ -323,14 +325,16 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     it('should format name with error on extension correctly', function () {
 
-      cmiCompleteUserGet.respond(404);
+      cmiCompleteUserGet.respond(500);
 
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope
       });
 
-      // just the display name when no extension found (404)
+      // just the display name when it's unclear if user has extension due to CMI error (non-404)
       var nameNumber = users[0].displayName;
+
+      controller.sort.minOffered = 1;
 
       controller.getUsers();
 
@@ -339,6 +343,26 @@ describe('Controller: AARouteToUserCtrl', function () {
       $scope.$apply();
 
       expect(controller.users[0].description).toEqual(nameNumber);
+
+    });
+
+    it('should omit user with 404 on extension', function () {
+
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      controller.sort.minOffered = 0;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(controller.users.length).toEqual(0);
 
     });
 
