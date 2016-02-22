@@ -74,8 +74,7 @@ angular
           url: '/activated-user-success-page',
           views: {
             'main@': {
-              template: '<div ui-view></div>',
-              controller: 'ActivatedUserSuccessController'
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
@@ -84,8 +83,7 @@ angular
           url: '/activate-user-error-page',
           views: {
             'main@': {
-              template: '<div ui-view></div>',
-              controller: 'ActivateUserErrorController'
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
@@ -104,8 +102,7 @@ angular
           url: '/activated-product-success-page',
           views: {
             'main@': {
-              template: '<div ui-view></div>',
-              controller: 'ActivatedProductSuccessController'
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
@@ -114,8 +111,7 @@ angular
           url: '/activate-product-error-page',
           views: {
             'main@': {
-              template: '<div ui-view></div>',
-              controller: 'ActivateProductErrorController'
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
