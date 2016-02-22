@@ -39,6 +39,16 @@ angular
           },
           authenticate: false
         })
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          }
+        })
         .state('createAccount', {
           url: '/create-account',
           views: {
@@ -46,6 +56,34 @@ angular
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
               controller: 'createAccountController',
               controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateUserController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activatedUserSuccessPage', {
+          url: '/activated-user-success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUserErrorPage', {
+          url: '/activate-user-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false

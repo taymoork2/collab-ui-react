@@ -26,7 +26,7 @@
       DigitalRiverService.getUserFromEmail(vm.email)
         .then(function (result) {
           if (result.data.success === true) {
-            $window.location.href = (_.get(result, 'data.data.exists', false) === true ? "/#/drLoginForward" : "/#/create-account") + "?email=" + vm.email + "&referrer=" + DigitalRiverService.getDrReferrer();
+            $window.location.href = (_.get(result, 'data.data.exists', false) === true ? "/#/dr-login-forward" : "/#/create-account") + "?email=" + vm.email + "&referrer=" + DigitalRiverService.getDrReferrer();
           } else {
             vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
