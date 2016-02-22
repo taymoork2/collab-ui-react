@@ -42,6 +42,7 @@ angular.module('Core').service('SiteListService', [
               var logMsg = "";
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
+              siteRow.licenseTooltipDisplay = "";
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
@@ -52,7 +53,6 @@ angular.module('Core').service('SiteListService', [
 
               if (siteMC != null && siteMC.length > 0) {
                 siteRow.MCLicensed = true;
-                siteRow.licenseTooltipDisplay = "";
 
                 siteMC.forEach(
                   function processDisplayText(mc) {
@@ -107,6 +107,7 @@ angular.module('Core').service('SiteListService', [
 
               if (siteSC != null && siteSC.length > 0) {
                 siteRow.SCLicensed = true;
+
                 siteSC.forEach(
                   function processDisplayText(sc) {
                     //Grid content display
@@ -133,6 +134,7 @@ angular.module('Core').service('SiteListService', [
 
               if (siteTC != null && siteTC.length > 0) {
                 siteRow.TCLicensed = true;
+
                 siteTC.forEach(
                   function processDisplayText(tc) {
                     //Grid content display
@@ -176,6 +178,33 @@ angular.module('Core').service('SiteListService', [
 
               } else {
                 siteRow.CMRLicensed = false;
+              }
+
+              //EE
+              var siteEE = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                siteHasEELicense: true
+              });
+
+              if (siteEE != null && siteEE.length > 0) {
+                siteRow.EELicensed = true;
+
+                siteEE.forEach(
+                  function processDisplayText(ee) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    count++;
+                  }
+                ); //siteEE.forEach
+
+              } else {
+                siteRow.EELicensed = false;
               }
 
               if (count > 1) {
