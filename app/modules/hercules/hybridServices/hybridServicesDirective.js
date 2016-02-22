@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $stateParams, Authinfo, USSService, ServiceDescriptor, $timeout) {
+  function HybridServicesCtrl($scope, Authinfo, Config, USSService, ServiceDescriptor, $timeout) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -15,7 +15,7 @@
     var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
-    vm.extensions = [];
+    vm.extensions = getExtensions();
     vm.isEnabled = false;
 
     vm.getStatus = function (status) {
@@ -32,32 +32,26 @@
       return;
     }
 
-    _.forEach(extensionEntitlements, function (extensionEntitlement) {
-      if (Authinfo.isEntitled(extensionEntitlement)) {
-        vm.extensions.push({
-          id: extensionEntitlement,
-          entitled: hasEntitlement(extensionEntitlement)
-        });
-      }
-    });
 
-    // Filter out extensions that are not enabled in FMS
-    ServiceDescriptor.services(function (error, services) {
-      if (services) {
-        _.forEach(vm.extensions, function (extension) {
-          extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-            return extension.id === service.id;
+    if (hasCaaSLicense()) {
+      // Filter out extensions that are not enabled in FMS
+      ServiceDescriptor.services(function (error, services) {
+        if (services) {
+          _.forEach(vm.extensions, function (extension) {
+            extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
+              return extension.id === service.id;
+            });
+            if (extension.enabled) {
+              vm.isEnabled = true;
+            }
           });
-          if (extension.enabled) {
-            vm.isEnabled = true;
+          if (vm.isEnabled) {
+            // Only poll for statuses if there are enabled extensions
+            updateStatusForUser();
           }
-        });
-        if (vm.isEnabled) {
-          // Only poll for statuses if there are enabled extensions
-          updateStatusForUser();
         }
-      }
-    });
+      });
+    }
 
     // Periodically update the user statuses from USS
     function updateStatusForUser() {
@@ -90,6 +84,28 @@
       }
 
       return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;
+    }
+
+    function getExtensions() {
+      return _.map(extensionEntitlements, function (extensionEntitlement) {
+        if (Authinfo.isEntitled(extensionEntitlement)) {
+          return {
+            id: extensionEntitlement,
+            entitled: hasEntitlement(extensionEntitlement)
+          };
+        }
+      });
+    }
+
+    function hasCaaSLicense() {
+      var caaSLicenses = [Config.offerCodes.MC, Config.offerCodes.SC, Config.offerCodes.TC, Config.offerCodes.EC, Config.offerCodes.EE];
+      var licenseIDs = vm.user.licenseID || [];
+      var offerCodes = _.map(licenseIDs, function (licenseString) {
+        return licenseString.split('_')[0];
+      });
+      return _.some(offerCodes, function (offerCode) {
+        return _.includes(caaSLicenses, offerCode);
+      });
     }
 
     $scope.$on('$destroy', function () {
