@@ -21,7 +21,7 @@
       });
     });
 
-    describe('http service methods', function () {
+    describe('login service methods', function () {
       it('getUserFromEmail', function () {
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
         httpBackend.expectGET(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/foo@bar.com/exists').respond(200);
@@ -42,6 +42,9 @@
         DigitalRiverService.addDrUser('emailPassword');
         httpBackend.flush();
       });
+    });
+
+    describe('activate service methods', function () {
       it('activateUser with a valid uuid', function () {
         var uuid = '0b17b44a-4fea-48d4-9660-3da55df5d782';
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
@@ -50,8 +53,19 @@
         httpBackend.flush();
       });
       it('activateUser with missing and empty uuids', function () {
-        expect(DigitalRiverService.activateUser()).toEqual($q.reject(new Error('blank uuid')));
-        expect(DigitalRiverService.activateUser('')).toEqual($q.reject(new Error('blank uuid')));
+        expect(DigitalRiverService.activateUser()).toEqual($q.reject('blank uuid'));
+        expect(DigitalRiverService.activateUser('')).toEqual($q.reject('blank uuid'));
+      });
+      it('activateProduct with a valid oid', function () {
+        var oid = '0b17b44a-4fea-48d4-9660-3da55df5d782';
+        httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
+        httpBackend.expectPOST(Config.getAdminServiceUrl() + 'ordertranslator/api/digitalriver/activate/' + oid).respond(200);
+        DigitalRiverService.activateProduct(oid);
+        httpBackend.flush();
+      });
+      it('activateProduct with missing and empty oids', function () {
+        expect(DigitalRiverService.activateProduct()).toEqual($q.reject('blank oid'));
+        expect(DigitalRiverService.activateProduct('')).toEqual($q.reject('blank oid'));
       });
     });
 
