@@ -15,6 +15,8 @@
       options: []
     };
 
+    vm.roomSystemsExist = false;
+
     init();
 
     function init() {
@@ -27,26 +29,27 @@
         Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
       });
 
-      function showMultiSubscriptions(billingServiceId, isTrial) {
-        var isSelected = false;
-
-        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
-          (_.eq('Trial', vm.multiSubscriptions.selected));
-        if (_.isArray(billingServiceId)) {
-          for (var i in billingServiceId) {
-            if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
-              isSelected = true;
-              break;
-            }
-          }
-        } else {
-          isSelected = (_.eq(billingServiceId, vm.multiSubscriptions.selected));
-        }
-
-        return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
-      }
-      
     }
+
+    function showMultiSubscriptions(billingServiceId, isTrial) {
+      var isSelected = false;
+
+      var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
+        (_.eq('Trial', vm.multiSubscriptions.selected));
+      if (_.isArray(billingServiceId)) {
+        for (var i in billingServiceId) {
+          if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
+            isSelected = vm.roomSystemsExist = true;
+            break;
+          }
+        }
+      } else {
+        isSelected = vm.roomSystemsExist = _.eq(billingServiceId, vm.multiSubscriptions.selected);
+      }
+
+      return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
+    }
+    
   }
 
 })();

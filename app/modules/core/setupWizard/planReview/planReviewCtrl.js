@@ -103,7 +103,6 @@
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === "SHARED_DEVICES") {
-          vm.roomSystemsExist = true;
           if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.trialId;
@@ -177,15 +176,16 @@
 
       var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
         (_.eq('Trial', vm.multiSubscriptions.selected));
+
       if (_.isArray(billingServiceId)) {
         for (var i in billingServiceId) {
           if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
-            isSelected = true;
+            isSelected = vm.roomSystemsExist = true;
             break;
           }
         }
       } else {
-        isSelected = (_.eq(billingServiceId, vm.multiSubscriptions.selected));
+        isSelected = vm.roomSystemsExist = (_.eq(billingServiceId, vm.multiSubscriptions.selected));
       }
 
       return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
