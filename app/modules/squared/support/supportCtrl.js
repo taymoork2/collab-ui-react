@@ -26,11 +26,12 @@ angular.module('Squared')
         'ciscouc.devops': '',
         'ciscouc.devsupport': ''
       };
+
       (function initializeShowToolsCard() {
         Userservice.getUser('me', function (user, status) {
           if (user.success) {
             for (var i in user.roles) {
-              if (user.roles[i] in devRoles && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
+              if (isCiscoDevRole(user.roles[i])) {
                 $scope.showToolsCard = true;
                 break;
               }
@@ -40,6 +41,19 @@ angular.module('Squared')
           }
         });
       })();
+
+      function isCiscoDevRole(role) {
+        if (Config.isProd()) {
+          if (role in devRoles && Authinfo.isCisco()) {
+            return true;
+          }
+        } else {
+          if (role in devRoles && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
+            return true;
+          }
+        }
+        return false;
+      }
 
       $scope.tabs = [{
         title: $translate.instant('supportPage.tabs.status'),

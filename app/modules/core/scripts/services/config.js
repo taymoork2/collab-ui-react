@@ -1111,7 +1111,10 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram',
         ],
         Readonly_Admin: [
           'overview',
@@ -1128,7 +1131,7 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
         WX2_User: ['overview', 'reports', 'support', 'devReports'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
@@ -1168,9 +1171,6 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram',
           'devices',
           'device-overview',
           'devices-redux'
