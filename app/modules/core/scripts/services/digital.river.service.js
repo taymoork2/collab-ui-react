@@ -13,7 +13,8 @@
       addDrUser: addDrUser,
       getDrReferrer: getDrReferrer,
       getUserAuthToken: getUserAuthToken,
-      activateUser: activateUser
+      activateUser: activateUser,
+      activateProduct: activateProduct
     };
 
     return service;
@@ -42,6 +43,15 @@
       }
       return Auth.setAccessToken().then(function () {
         return $http.patch(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
+      });
+    }
+
+    function activateProduct(oid) {
+      if (!oid) {
+        return $q.reject(new Error('blank oid'));
+      }
+      return Auth.setAccessToken().then(function () {
+        return $http.post(Config.getAdminServiceUrl() + 'ordertranslator/api/digitalriver/activate/' + oid);
       });
     }
 
