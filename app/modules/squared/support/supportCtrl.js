@@ -21,7 +21,7 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
-      $scope.showToolsCard = false; 
+      $scope.showToolsCard = false;
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
@@ -130,7 +130,7 @@ angular.module('Squared')
 
         $scope.closeCallInfo();
 
-        $('#logsearchfield').typeahead('close');
+        //$('#logsearchfield').typeahead('close');
         $scope.userLogs = [];
         $scope.logSearchBtnLoad = true;
         //check whether email address or uuid was enetered
