@@ -39,7 +39,7 @@
 
     function activateUser(uuid) {
       if (!uuid) {
-        return $q.reject(new Error('blank uuid'));
+        return $q.reject('blank uuid');
       }
       return Auth.setAccessToken().then(function () {
         return $http.patch(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
@@ -48,7 +48,7 @@
 
     function activateProduct(oid) {
       if (!oid) {
-        return $q.reject(new Error('blank oid'));
+        return $q.reject('blank oid');
       }
       return Auth.setAccessToken().then(function () {
         return $http.post(Config.getAdminServiceUrl() + 'ordertranslator/api/digitalriver/activate/' + oid);

@@ -53,8 +53,8 @@
         httpBackend.flush();
       });
       it('activateUser with missing and empty uuids', function () {
-        expect(DigitalRiverService.activateUser()).toEqual($q.reject(new Error('blank uuid')));
-        expect(DigitalRiverService.activateUser('')).toEqual($q.reject(new Error('blank uuid')));
+        expect(DigitalRiverService.activateUser()).toEqual($q.reject('blank uuid'));
+        expect(DigitalRiverService.activateUser('')).toEqual($q.reject('blank uuid'));
       });
       it('activateProduct with a valid oid', function () {
         var oid = '0b17b44a-4fea-48d4-9660-3da55df5d782';
@@ -64,8 +64,8 @@
         httpBackend.flush();
       });
       it('activateProduct with missing and empty oids', function () {
-        expect(DigitalRiverService.activateProduct()).toEqual($q.reject(new Error('blank oid')));
-        expect(DigitalRiverService.activateProduct('')).toEqual($q.reject(new Error('blank oid')));
+        expect(DigitalRiverService.activateProduct()).toEqual($q.reject('blank oid'));
+        expect(DigitalRiverService.activateProduct('')).toEqual($q.reject('blank oid'));
       });
     });
 
