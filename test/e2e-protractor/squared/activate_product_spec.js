@@ -20,7 +20,7 @@ xdescribe('Test the activateProduct module', function () {
   });
 
   it('should forward to the error page with an invalid, un-well-formatted oid', function () {
-    browser.get('#/activate-product?uuid=' + validOid);
+    browser.get('#/activate-product?oid=' + validOid);
     navigation.expectCurrentUrl('#/activate-product-error-page');
   });
 
