@@ -7,7 +7,6 @@ angular.module('Squared')
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService,
       CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice) {
 
-
       $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
