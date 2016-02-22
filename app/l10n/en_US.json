@@ -1754,8 +1754,8 @@
     "useGlobal": "Global Settings",
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
-    "on": "ON",
-    "off": "OFF"
+    "on": "On",
+    "off": "Off"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -2093,7 +2093,7 @@
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
     "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
+    "getHuronInternationalDialingTrialOverrideError": "Failed to get international dialing override info."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",

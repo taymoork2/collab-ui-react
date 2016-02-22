@@ -1,45 +1,133 @@
 'use strict';
 
-describe('Authinfo', function () {
+describe('Authinfo:', function () {
   var provide, injector, Service;
 
-  describe('.isAllowedState', function () {
-    var defaultConfig = {
-      restrictedStates: {
-        customer: [],
-        partner: []
-      },
-      publicStates: [],
-      ciscoOnly: [],
-      ciscoOrgId: '',
-      ciscoMockOrgId: '',
-      roleStates: {},
-      serviceStates: {}
-    };
-    var defaultUser = {
-      name: 'Test',
-      orgId: 'abc',
-      orgName: 'DEADBEEF',
-      addUserEnabled: false,
-      entitleUserEnabled: false,
-      services: [],
-      roles: [],
-      managedOrgs: [],
-      setupDone: true
-    };
+  var defaultConfig = {
+    restrictedStates: {
+      customer: [],
+      partner: []
+    },
+    publicStates: [],
+    ciscoOnly: [],
+    ciscoOrgId: '',
+    ciscoMockOrgId: '',
+    roleStates: {},
+    serviceStates: {}
+  };
+  var defaultUser = {
+    name: 'Test',
+    orgId: 'abc',
+    orgName: 'DEADBEEF',
+    addUserEnabled: false,
+    entitleUserEnabled: false,
+    services: [],
+    roles: [],
+    managedOrgs: [],
+    setupDone: true
+  };
 
+  beforeEach(function () {
+    module('Core', function ($provide) {
+      provide = $provide;
+    });
+    inject(function ($injector) {
+      injector = $injector;
+    });
+    Service = function () {
+      return injector.get('Authinfo');
+    };
+  });
+
+  describe('getLicenseIsTrial():', function () {
+    var Authinfo, accountData;
     beforeEach(function () {
-      module('Core', function ($provide) {
-        provide = $provide;
+      setupConfig({
+        confMap: {
+          MS: 'onboardModal.paidMsg',
+          CF: 'onboardModal.paidConf',
+          EE: 'onboardModal.enterpriseEdition',
+          MC: 'onboardModal.meetingCenter',
+          SC: 'onboardModal.supportCenter',
+          TC: 'onboardModal.trainingCenter',
+          EC: 'onboardModal.eventCenter',
+          CO: 'onboardModal.communication'
+        }
       });
-      inject(function ($injector) {
-        injector = $injector;
-      });
-      Service = function () {
-        return injector.get('Authinfo');
+      Authinfo = setupUser();
+
+      accountData = {
+        accounts: [{
+          accountId: '1',
+          accountName: 'Atlas_Test_1',
+          accountOrgId: '1',
+          customerAdminEmail: 'test@test.com',
+          partnerId: '1',
+          partnerOrgId: '1',
+          licenses: [{
+            licenseId: 'MS_1',
+            offerName: 'MS',
+            licenseType: 'MESSAGING',
+            features: ['squared-room-moderation'],
+            volume: 100,
+            isTrial: true,
+            trialId: '1',
+            status: 'ACTIVE'
+          }, {
+            licenseId: 'CF_1',
+            offerName: 'CF',
+            licenseType: 'CONFERENCING',
+            features: ['squared-syncup'],
+            volume: 100,
+            isTrial: false,
+            trialId: '1',
+            status: 'ACTIVE'
+          }, {
+            licenseId: 'CO_1',
+            offerName: 'CO',
+            licenseType: 'COMMUNICATION',
+            features: ['ciscouc'],
+            volume: 100,
+            isTrial: true,
+            trialId: '1',
+            status: 'ACTIVE'
+          }]
+        }]
       };
     });
 
+    it('should return true if license isTrial is true', function () {
+      Authinfo.updateAccountInfo(accountData);
+      var response = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+      expect(response).toBe(true);
+    });
+
+    it('should return false if license isTrial is false', function () {
+      Authinfo.updateAccountInfo(accountData);
+      var response = Authinfo.getLicenseIsTrial('CONFERENCING');
+      expect(response).toBe(false);
+    });
+
+    it('should return undefined if licenseType is not found', function () {
+      Authinfo.updateAccountInfo(accountData);
+      var response = Authinfo.getLicenseIsTrial('BOGUS');
+      expect(response).not.toBeDefined();
+    });
+
+    it('should return undefined if entitlement is not found', function () {
+      Authinfo.updateAccountInfo(accountData);
+      var response = Authinfo.getLicenseIsTrial('COMMUNICATION', 'bogus');
+      expect(response).not.toBeDefined();
+    });
+
+    it('should return undefined if no licenseType is provided', function () {
+      Authinfo.updateAccountInfo(accountData);
+      var response = Authinfo.getLicenseIsTrial();
+      expect(response).not.toBeDefined();
+    });
+  });
+
+  describe('.isAllowedState', function () {
     it('should return false is the state is not defined and simple user', function () {
       setupConfig();
 
@@ -166,19 +254,19 @@ describe('Authinfo', function () {
       });
       expect(Authinfo.isInDelegatedAdministrationOrg()).toBe(true);
     });
-
-    function setupConfig(override) {
-      override = override || {};
-      var configMock = angular.extend({}, defaultConfig, override);
-      provide.value('Config', configMock);
-    }
-
-    function setupUser(override) {
-      override = override || {};
-      var Authinfo = Service();
-      var userData = angular.extend({}, defaultUser, override);
-      Authinfo.initialize(userData);
-      return Authinfo;
-    }
   });
+
+  function setupConfig(override) {
+    override = override || {};
+    var configMock = angular.extend({}, defaultConfig, override);
+    provide.value('Config', configMock);
+  }
+
+  function setupUser(override) {
+    override = override || {};
+    var Authinfo = Service();
+    var userData = angular.extend({}, defaultUser, override);
+    Authinfo.initialize(userData);
+    return Authinfo;
+  }
 });
