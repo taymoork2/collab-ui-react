@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $timeout, XhrNotificationService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
@@ -429,17 +429,8 @@
 
     function reportSearchSummary(searchString, res, startTime, orgId) {
       var stats = HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
-      showSearchStatsForAWhile(stats);
     }
 
-    function showSearchStatsForAWhile(stats) {
-      vm.searchTime = stats.searchTime;
-
-      $timeout.cancel(vm.searchStatsViewTimer);
-      vm.searchStatsViewTimer = $timeout(function () {
-        vm.searchTime = null;
-      }, 5000);
-    }
   }
   angular
     .module('Squared')
