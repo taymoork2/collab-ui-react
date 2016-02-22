@@ -255,6 +255,7 @@
                   var siteHasSCLicense = false;
                   var siteHasTCLicense = false;
                   var siteHasCMRLicense = false;
+                  var siteHasEELicense = false;
 
                   if ("MC" == serviceType) {
                     licenseInfo = {
@@ -288,6 +289,13 @@
                     licenseInfo = {
                       webexSite: siteUrl,
                       siteHasCMRLicense: true,
+                      offerCode: serviceType,
+                      capacity: licenseFields[2]
+                    };
+                  } else if ("EE" == serviceType) {
+                    licenseInfo = {
+                      webexSite: siteUrl,
+                      siteHasEELicense: true,
                       offerCode: serviceType,
                       capacity: licenseFields[2]
                     };
