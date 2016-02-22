@@ -753,8 +753,7 @@
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
             newActionArray[i][actionName] = {};
-            if (angular.isDefined(menuEntry.actions[0].description)) {
-              // descritpion always added to make consistent for UTs
+            if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'say') {
