@@ -46,7 +46,7 @@
     }
 
     function canShow() {
-      return ft.atlasTrialConversion && Authinfo.isUserAdmin() && TrialService.getTrialIds().length;
+      return ft.atlasTrialConversion && Authinfo.isUserAdmin() && (TrialService.getTrialIds().length > 0);
     }
 
     function sendRequest() {
