@@ -619,6 +619,11 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
+    it('checkUserExistsInDiffOrg', function () {
+      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400090'));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
     it('check hybrid services without paid licenses', function () {
       Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 400, '400087'));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
