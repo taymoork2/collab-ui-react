@@ -18,14 +18,16 @@
         </div>
         <div class="expiration">
           <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
-          <strong translate="generateActivationCodeModal.expiration" translate-values="{timeLeft: genAuthCode.timeLeft}"></strong>
+          <!--<strong translate="generateActivationCodeModal.expiration" translate-values="{timeLeft: genAuthCode.timeLeft}"></strong>-->
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer" ng-if="genAuthCode.otp.code">
-    <button class="btn btn--link btn--large" clip-copy="genAuthCode.otp.friendlyCode" clip-click-fallback="genAuthCode.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
-    <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
+    <div class="modal-footer-left">
+      <button class="btn btn--link btn--large" clip-copy="genAuthCode.otp.friendlyCode" clip-click-fallback="genAuthCode.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
+      <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
+    </div>
     <button class="btn btn--large" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
   </div>
   <div ng-show="genAuthCode.showEmail">
