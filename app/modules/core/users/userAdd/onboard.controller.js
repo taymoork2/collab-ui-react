@@ -1126,6 +1126,10 @@ angular.module('Core')
                   email: userResult.email,
                   domain: userResult.email.split('@')[1]
                 });
+              } else if (userStatus === 403 && data.userResponse[i].message === '400090') {
+                userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                  email: userResult.email
+                });
               } else if (userStatus === 400 && data.userResponse[i].message === '400087') {
                 userResult.message = $translate.instant('usersPage.hybridServicesError', {
                   email: userResult.email
