@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate,
+  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
     ExternalNumberService, ModalService) {
     var vm = this;
@@ -808,7 +808,7 @@
         } else {
           // When the toggle is OFF, update the customer if the customer has the voicemail service package
           // to disable voicemail, otherwise they are already voice only and don't
-          // require an update.  
+          // require an update.
           if (vm.hasVoicemailService) {
             return updateCustomer();
           }
@@ -867,7 +867,7 @@
           } else {
             // When the toggle is OFF, update the site if the customer has voicemail service package
             // to disable voicemail, otherwise they are already voice only and don't
-            // require an update.  
+            // require an update.
             if (vm.hasVoicemailService) {
               return updateSite();
             }
@@ -989,12 +989,10 @@
         .then(processErrors);
     }
 
-    HttpUtils.setTrackingID().then(function () {
-      var promises = [];
-      promises.push(initServiceSetup());
-      $q.all(promises).finally(function () {
-        vm.processing = false;
-      });
+    var promises = [];
+    promises.push(initServiceSetup());
+    $q.all(promises).finally(function () {
+      vm.processing = false;
     });
   }
 })();
