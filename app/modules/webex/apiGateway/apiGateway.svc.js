@@ -29,21 +29,16 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
-      // the code below is just a mock call to an existing webex api
-      // this will be replaced with call to the real webex api once it is available
+      var deferredCsvStatus = $q.defer();
 
-      return WebExRestApiFact.csvStatusReq(
+      WebExRestApiFact.csvStatusReq(
         siteUrl
       ).then(
-        function csvStatusReqSuccess(response) {
-          var funcName = "csvStatusReqSuccess()";
+        function success(response) {
+          var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "response=" + JSON.stringify(response);
-          $log.log(logMsg);
 
           var result = {
             'siteUrl': siteUrl,
@@ -52,16 +47,56 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             'completionInfo': null // not null only if status is expCompleted or impCompleted
           };
 
+          deferredCsvStatus.resolve(result);
+        },
+
+        function error(response) {
+          var funcName = "WebExRestApiFact.csvStatusReq.error()";
+          var logMsg = "";
+
+          var result = {
+            'siteUrl': siteUrl,
+            'result:': null,
+            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
+            'completionInfo': null // not null only if status is expCompleted or impCompleted
+          };
+
+          deferredCsvStatus.reject(result);
+        }
+      );
+
+      return deferredCsvStatus.promise;
+      /*
+      var result = {
+        'siteUrl': siteUrl,
+        'result:': null,
+        'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
+        'completionInfo': null // not null only if status is expCompleted or impCompleted
+      };
+      
+      return WebExRestApiFact.csvStatusReq(
+        siteUrl
+      ).then(
+        function success(response) {
+          var funcName = "WebExRestApiFact.csvStatusReq.success()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
+
           $q.resolve(result);
         } // csvStatusReqSuccess()
       ).catch(
-        function csvStatusReqCatch(result) {
-          var funcName = "csvStatusReqCatch()";
+        function errorCatch(result) {
+          var funcName = "WebExRestApiFact.csvStatusReq.errorCatch()";
           var logMsg = "";
 
           $q.reject(result);
         } // restApiReqCatch()
       ); // return WebExRestApiFact.csvStatusReq()
+      */
     }; // csvStatus()
 
     this.csvExport = function (siteUrl) {
@@ -71,38 +106,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       $log.log(logMsg);
-
-      // the code below is just a mock call to an existing webex api
-      // this will be replaced with call to the real webex api once it is available
-
-      return WebExRestApiFact.csvExportReq(
-        siteUrl
-      ).then(
-        function csvExportReqSuccess(response) {
-          var funcName = "csvExportReqSuccess()";
-          var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "response=" + JSON.stringify(response);
-          $log.log(logMsg);
-
-          var result = {
-            'siteUrl': siteUrl,
-            'result:': null,
-            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
-            'completionInfo': null // not null only if status is expCompleted or impCompleted
-          };
-
-          $q.resolve(result);
-        } // csvExportReqSuccess()
-      ).catch(
-        function csvExportReqCatch(result) {
-          var funcName = "csvExportReqCatch()";
-          var logMsg = "";
-
-          $q.reject(result);
-        } // csvExportReqCatch()
-      ); // return WebExRestApiFact.csvExportReq()
     }; // csvExport()
 
     this.csvImport = function (siteUrl) {

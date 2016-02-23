@@ -76,7 +76,7 @@
           'reqType:': reqType,
         };
 
-        return $q.when(fakeResult);
+        resolve(fakeResult);
         /*
         $http(
           httpReq
@@ -103,10 +103,16 @@
             "siteUrl=" + siteUrl;
           // $log.log(logMsg);
 
-          return $q.when(_this.sendRestApiReq(
-            siteUrl,
-            'csvStatusReq'
-          ));
+          return $q(
+            function (resolve, reject) {
+              _this.sendRestApiReq(
+                siteUrl,
+                'csvStatusReq',
+                resolve,
+                reject
+              );
+            }
+          );
         }, // csvStatusReq()
 
         csvImportReq: function (
