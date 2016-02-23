@@ -365,7 +365,10 @@
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
-    "audioCalls": "Audio Only Calls"
+    "audioCalls": "Audio Only Calls",
+    "customer": "Customer",
+    "customers": "Customers",
+    "customerSelect": "Select a customer"
   },
   "activeUsers": {
     "active": "Active",
@@ -426,7 +429,7 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
+    "callMetricsChartError": "There was an error while loading call metrics data for the selected customer(s).",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
@@ -443,7 +446,7 @@
     "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
-    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for the selected customer(s).",
     "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
     "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
