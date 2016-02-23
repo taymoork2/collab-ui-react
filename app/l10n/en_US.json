@@ -1642,7 +1642,12 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "routeExtNumPlaceHolder": "Enter Number"
+    "routeExtNumPlaceHolder": "Enter Number",
+    "newAAText": "Create New Auto Attendant",
+    "AABasic": "Basic",
+    "AABasicDesc": "Simple played messages with custom phone menu.",
+    "AACustom": "Custom",
+    "AACustomDesc": "Record a custom message and build your own phone menus."
   },
   "callPark": {
     "code": "CP",
