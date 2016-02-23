@@ -521,7 +521,7 @@
       callMetricsCancelPromise = $q.defer();
 
       return getService(detailed + callMetricsUrl + getQueryForOnePeriod(time) + getCustomerUuids(customer), callMetricsCancelPromise).then(function (response) {
-        if (angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
+        if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
           var transformData = angular.copy(callMetricsData);
           var transformDataSet = false;
           angular.forEach(response.data.data, function (item, index, array) {
@@ -556,7 +556,7 @@
 
       return getService(registeredUrl + getTrendQuery(time) + getCustomerUuids(customer), endpointsCancelPromise).then(function (response) {
         var returnArray = [];
-        if (angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
+        if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
           angular.forEach(response.data.data, function (item, index, array) {
             if (angular.isDefined(item.details) && (item.details !== null)) {
               var returnObject = item.details;
