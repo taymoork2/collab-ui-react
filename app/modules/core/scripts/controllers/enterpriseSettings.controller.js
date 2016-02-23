@@ -34,13 +34,12 @@
     }
 
     function checkRoomLicense() {
-      return Orgservice.getLicensesUsage().then(function (subscriptions) {
-        var licenses = _.get(subscriptions[0], 'licenses');
-        _.each(licenses, function (license) {
-          if (license.offerName === 'SD') {
-            sipField.isRoomLicensed = true;
-          }
+      Orgservice.getLicensesUsage().then(function (response) {
+        var licenses = _.get(response, '[0].licenses');
+        var roomLicensed = _.find(licenses, {
+          offerName: 'SD'
         });
+        sipField.isRoomLicensed = !_.isUndefined(roomLicensed);
       });
     }
 
