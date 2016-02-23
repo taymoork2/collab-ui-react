@@ -1243,11 +1243,9 @@ angular.module('Core')
 
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
-            Userservice.onboardUsers(tempUserArray, entitleList, licenseList).then(function (response) {
-              successCallback(response);
-            }).catch(function (response) {
-              errorCallback(response);
-            });
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
+              .then(successCallback)
+              .catch(errorCallback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
