@@ -483,7 +483,7 @@
   },
   "supportPage": {
     "title": "Support",
-    "subtitleLogs": "Search for logs",
+    "subtitleLogs": "Search support logs",
     "listlogsbtn": "Search",
     "noResults": "No Results.",
     "searching": "Searching...",
@@ -528,7 +528,7 @@
     "tx": "Tx",
     "errCallInfoQuery": "Failed to retrieve call info. Status: {{status}}",
     "subTitleCallFlow": "Call Flow",
-    "downloading": "This download might take up to 5 minutes. Please be patient...",
+    "downloading": "This download might take up to 5 minutes.",
     "operational": "All systems operational",
     "error": "Error in system",
     "supportResources": "Support Resources",
