@@ -46,14 +46,19 @@ angular.module('Squared')
         state: "support.status"
       }];
 
-      Orgservice.getOrgCacheOption(function (data, success) {
-        if (data.success && data.delegatedAdministration) {
+      if ((Config.isIntegration() || Config.isDev())) {
+        if (Authinfo.isInDelegatedAdministrationOrg()) {
           $scope.tabs.push({
             title: $translate.instant('supportPage.tabs.logs'),
             state: "support.logs"
           });
         }
-      });
+      } else {
+        $scope.tabs.push({
+          title: $translate.instant('supportPage.tabs.logs'),
+          state: "support.logs"
+        });
+      }
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
