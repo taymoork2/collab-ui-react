@@ -504,7 +504,17 @@
       data: {
         fields: [{
           key: 'companyVoicemailEnabled',
-          type: 'switch'
+          type: 'switch',
+          controller: function ($scope) {
+            $scope.$watch(function () {
+              return vm.model.companyVoicemail.companyVoicemailEnabled;
+            }, function (toggleValue) {
+              if (!toggleValue) {
+                displayDisableVoicemailWarning();
+              }
+            });
+          }
+
         }, {
           key: 'companyVoicemailNumber',
           type: 'select',
@@ -823,7 +833,7 @@
       // Save company site
       promises.push(
         $q.when(true)
-        .then(displayDisableVoicemailWarning)
+        //.then(displayDisableVoicemailWarning)
         .then(saveCustomer)
         .then(saveSite)
         .then(saveTimeZone)
