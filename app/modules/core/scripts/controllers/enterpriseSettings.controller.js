@@ -212,8 +212,11 @@
             if (metaData.entityId === newEntityId) {
               patchRemoteIdp(metaData.url);
             } else {
-              SSOService.deleteMeta(metaData.url);
-              postRemoteIdp();
+              SSOService.deleteMeta(metaData.url, function (status) {
+                if (status === 204) {
+                  postRemoteIdp();
+                }
+              });
             }
           } else {
             postRemoteIdp();
