@@ -33,4 +33,46 @@ describe('emailService', function () {
     expect(type).toContain('(error)');
   });
 
+  describe('helper functions:', function () {
+    describe('mkTrialPayload()', function () {
+      it('returns a custom-formed object composed from the args', function () {
+        var mkTrialPayload = EmailService._helpers.mkTrialPayload,
+          fakeCustEmail = 'fake-customer-admin@example.com',
+          fakeTrialPeriod = 90,
+          fakeOrgId = 'fake-uuid-val-1',
+          CUSTOMER_TRIAL = EmailService._types.CUSTOMER_TRIAL;
+
+        expect(mkTrialPayload(fakeCustEmail, fakeTrialPeriod, fakeOrgId)).toEqual({
+          type: CUSTOMER_TRIAL,
+          properties: {
+            CustomerEmail: fakeCustEmail,
+            TrialPeriod: fakeTrialPeriod,
+            OrganizationId: fakeOrgId
+          }
+        });
+      });
+    });
+
+    describe('mkTrialConversionReqPayload()', function () {
+      it('returns a custom-formed object composed from the args', function () {
+        var mkTrialConversionReqPayload = EmailService._helpers.mkTrialConversionReqPayload,
+          fakeCustName = 'Fake Customer, Inc.',
+          fakeCustEmail = 'fake-customer-admin@example.com',
+          fakePartnerEmail = 'fake-partner-admin@example.com',
+          NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST =
+          EmailService._types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST;
+
+        expect(mkTrialConversionReqPayload(fakeCustName, fakeCustEmail, fakePartnerEmail))
+          .toEqual({
+            type: NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
+            properties: {
+              CUSTOMER_NAME: fakeCustName,
+              CUSTOMER_EMAIL: fakeCustEmail,
+              PARTNER_EMAIL: fakePartnerEmail,
+              SUBJECT: fakeCustName + ' has requested to purchase service or extend their trial'
+            }
+          });
+      });
+    });
+  });
 });

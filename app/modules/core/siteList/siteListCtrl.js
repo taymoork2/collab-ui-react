@@ -3,30 +3,34 @@
 angular.module('Core')
   .controller('SiteListCtrl', [
     '$translate',
-    'Authinfo',
-    'Config',
     '$log',
+    'Authinfo',
     'FeatureToggleService',
     'Userservice',
     'WebExApiGatewayService',
+    'WebExUtilsFact',
+    'SiteListService',
     function (
       $translate,
-      Authinfo,
-      Config,
       $log,
+      Authinfo,
       FeatureToggleService,
       Userservice,
-      WebExApiGatewayService
+      WebExApiGatewayService,
+      WebExUtilsFact,
+      SiteListService
     ) {
       var funcName = "siteListCtrl()";
       var logMsg = "";
 
       var vm = this;
       vm.gridData = [];
+      vm.allSitesWebexLicensesArray = [];
 
-      var adminUserSupportCSV = false; // TODO
+      //getAllSitesLicenseData();
 
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
           var newSiteUrl = conferenceService.license.siteUrl;
@@ -52,6 +56,8 @@ angular.module('Core')
 
             conferenceService.showCSVInfo = false;
             conferenceService.showSiteLinks = false;
+            conferenceService.showLicenseTypes = false;
+
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
             conferenceService.isError = false;
@@ -188,15 +194,17 @@ angular.module('Core')
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.capacity',
-        displayName: $translate.instant('siteList.type'),
-        cellFilter: 'capacityFilter:row.entity.label',
+        field: 'siteConfLicenses',
+        displayName: $translate.instant('siteList.licenseTypes'),
+        cellTemplate: 'modules/core/siteList/siteLicenseTypes.tpl.html',
         sortable: false
       });
 
       vm.gridOptions.columnDefs.push({
-        field: 'license.volume',
-        displayName: $translate.instant('siteList.licenseCount'),
+        field: 'siteCSV',
+        displayName: $translate.instant('siteList.siteCsv'),
+        cellTemplate: siteCSVColumn,
+        headerCellTemplate: siteCsvColumnHeaderTemplate,
         sortable: false
       });
 
@@ -214,26 +222,26 @@ angular.module('Core')
         sortable: false
       });
 
-      var allowCSVToAllAdmins = false; // TODO
-      if (!allowCSVToAllAdmins) {
-        checkCSVToggle();
-      } else {
-        insertCSVColumn();
-        updateGrid();
-      }
+      //Update grid with site license information
+      vm.gridData = SiteListService.getAllSitesLicenseData(vm.gridData);
+
+      // TODO - uncomment the following line when feature toggle is no longer used
+      // SiteListService.updateGrid(vm.gridData);
+
+      // TODO - delete the following lines when feature toggle is no longer used
+      checkCSVToggle();
 
       function checkCSVToggle() {
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
-          function getSupportsCSVSuccess(result) {
+          function getSupportsCSVSuccess(adminUserSupportCSV) {
             var funcName = "getSupportsCSVSuccess()";
             var logMsg = "";
 
-            adminUserSupportCSV = result;
-            if (adminUserSupportCSV) {
-              insertCSVColumn();
+            if (!adminUserSupportCSV) {
+              vm.gridOptions.columnDefs.splice(2, 1);
             }
 
-            updateGrid();
+            SiteListService.updateGrid(vm.gridData);
           }, // getSupportsCSVSuccess()
 
           function getSupportsCSVError(result) {
@@ -244,146 +252,11 @@ angular.module('Core')
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
-            updateGrid();
+            vm.gridOptions.columnDefs.splice(2, 1);
+            SiteListService.updateGrid(vm.gridData);
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
       } // checkCSVToggle()
 
-      function insertCSVColumn() {
-        var columnObj = {
-          field: 'siteCSV',
-          displayName: $translate.instant('siteList.siteCsv'),
-          cellTemplate: siteCSVColumn,
-          headerCellTemplate: siteCsvColumnHeaderTemplate,
-          sortable: false
-        };
-
-        vm.gridOptions.columnDefs.splice(
-          3,
-          0,
-          columnObj
-        );
-      } // insertCSVColumn()
-      // End of grid set up
-
-      function updateGrid() {
-        var funcName = "updateGrid()";
-        var logMsg = "";
-
-        // $log.log(funcName);
-
-        if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-          initGridColumns();
-        } else {
-          Userservice.getUser('me', function (data, status) {
-            if (
-              (data.success) &&
-              (data.emails)
-            ) {
-              Authinfo.setEmails(data.emails);
-              initGridColumns();
-            }
-          });
-        }
-      } // updateGrid()
-
-      function initGridColumns() {
-        var funcName = "initGridColumns()";
-        var logMsg = "";
-
-        vm.gridData.forEach(
-          function processGrid(siteRow) {
-            var funcName = "processGrid()";
-            var logMsg = "";
-
-            var siteUrl = siteRow.license.siteUrl;
-
-            siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.userEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
-
-            WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
-              function isSiteSupportsIframeSuccess(result) {
-                var funcName = "isSiteSupportsIframeSuccess()";
-                var logMsg = "";
-
-                logMsg = funcName + ": " + "\n" +
-                  "result=" + JSON.stringify(result);
-                $log.log(logMsg);
-
-                siteRow.isIframeSupported = result.isIframeSupported;
-                siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
-                siteRow.isCSVSupported = result.isCSVSupported;
-
-                siteRow.showSiteLinks = true;
-
-                logMsg = funcName + ": " + "\n" +
-                  "siteUrl=" + siteUrl + "\n" +
-                  "siteRow.isCSVSupported=" + siteRow.isCSVSupported + "\n" +
-                  "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
-                  "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
-                  "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
-                $log.log(logMsg);
-
-                updateCSVColumn(siteRow);
-              }, // isSiteSupportsIframeSuccess()
-
-              function isSiteSupportsIframeError(response) {
-                var funcName = "isSiteSupportsIframeError()";
-                var logMsg = "";
-
-                siteRow.isIframeSupported = false;
-                siteRow.isAdminReportEnabled = false;
-                siteRow.showSiteLinks = true;
-                siteRow.showCSVInfo = true;
-                siteRow.isError = true;
-                if (response.response.indexOf("030048") != -1) {
-                  siteRow.isWarn = true;
-                }
-
-                logMsg = funcName + ": " + "\n" +
-                  "response=" + JSON.stringify(response);
-                $log.log(logMsg);
-              } // isSiteSupportsIframeError()
-            ); // WebExApiGatewayService.isSiteSupportsIframe().then
-          } // processGrid()
-        ); // vm.gridData.forEach()
-      } // initGridColumns()
-
-      function updateCSVColumn(siteRow) {
-        if (!siteRow.isCSVSupported) {
-          // no further data to get
-          siteRow.showCSVInfo = true;
-          return;
-        }
-
-        // TODO
-        var siteUrl = siteRow.license.siteUrl;
-        WebExApiGatewayService.csvStatus(siteUrl).then(
-          function getCSVStatusSuccess(response) {
-            var funcName = "getCSVStatusSuccess()";
-            var logMsg = "";
-
-            logMsg = funcName + "\n" +
-              "response=" + JSON.stringify(response);
-            $log.log(logMsg);
-
-            siteRow.showCSVInfo = true;
-          }, // getCSVStatusSuccess()
-
-          function getCSVStatusError(response) {
-            var funcName = "getCSVStatusError()";
-            var logMsg = "";
-
-            logMsg = funcName + "\n" +
-              "response=" + JSON.stringify(response);
-            $log.log(logMsg);
-
-            siteRow.showCSVInfo = true;
-          } // getCSVStatusSuccess()
-        );
-      } // updateCSVColumn()
-    } // updateCSVColumn()
-
+    } // End controller
   ]);

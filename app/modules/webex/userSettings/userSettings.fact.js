@@ -65,15 +65,8 @@
           return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
-        initUserSettingsModel: function () {
-          var funcName = "initUserSettingsModel()";
-          var logMsg = "";
-
-          webExUserSettingsModel.meetingCenter.userHasLicense = false;
-          webExUserSettingsModel.trainingCenter.userHasLicense = false;
-          webExUserSettingsModel.eventCenter.userHasLicense = false;
-          webExUserSettingsModel.supportCenter.userHasLicense = false;
-          webExUserSettingsModel.cmr.userHasLicense = false;
+        checkUserWebExEntitlement: function () {
+          var deferredCheckUserWebExEntitlement = $q.defer();
 
           Orgservice.getValidLicenses().then(
             function getOrgLicensesSuccess(orgLicenses) {
@@ -102,6 +95,7 @@
 
                   // only check for webex center type of license
                   if (
+                    ("EE" == userLicenseType) ||
                     ("MC" == userLicenseType) ||
                     ("EC" == userLicenseType) ||
                     ("SC" == userLicenseType) ||
@@ -131,16 +125,23 @@
                           // $log.log(logMsg);
 
                           if (userLicense == orgLicense.licenseId) {
-                            if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                            if ("EE" == userLicenseType) {
                               webExUserSettingsModel.meetingCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
                               webExUserSettingsModel.trainingCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
                               webExUserSettingsModel.eventCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
                               webExUserSettingsModel.supportCenter.userHasLicense = true;
-                            } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
-                              webExUserSettingsModel.cmr.userHasLicense = true;
+                            } else {
+                              if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.meetingCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.trainingCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
+                                webExUserSettingsModel.eventCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
+                                webExUserSettingsModel.supportCenter.userHasLicense = true;
+                              } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
+                                webExUserSettingsModel.cmr.userHasLicense = true;
+                              }
                             }
                           }
                         } // compareOrgLicense()
@@ -149,7 +150,10 @@
                   }
                 } // checkLicense()
               ); // userLicenses.forEach(()
+
+              deferredCheckUserWebExEntitlement.resolve(null);
             }, // getOrgLicensesSuccess()
+
             function getOrgLicensesError(response) {
               var funcName = "getOrgLicensesError()";
               var logMsg = "";
@@ -157,8 +161,23 @@
               logMsg = funcName + ": " + "\n" +
                 "response=" + JSON.stringify(response);
               $log.log(logMsg);
+
+              deferredCheckUserWebExEntitlement.reject(response);
             } // getOrgLicensesError()
-          );
+          ); // Orgservice.getValidLicenses().then()
+
+          return deferredCheckUserWebExEntitlement.promise;
+        }, // checkUserWebExEntitlement()
+
+        initUserSettingsModel: function () {
+          var funcName = "initUserSettingsModel()";
+          var logMsg = "";
+
+          webExUserSettingsModel.meetingCenter.userHasLicense = false;
+          webExUserSettingsModel.trainingCenter.userHasLicense = false;
+          webExUserSettingsModel.eventCenter.userHasLicense = false;
+          webExUserSettingsModel.supportCenter.userHasLicense = false;
+          webExUserSettingsModel.cmr.userHasLicense = false;
 
           webExUserSettingsModel.siteInfo = null;
           webExUserSettingsModel.meetingTypesInfo = null;

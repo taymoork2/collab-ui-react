@@ -542,8 +542,7 @@ input[type="file"]::-webkit-file-upload-button{
 
 .ssoDesc:after,
 #importFileDiv:after,
-#ssoFooter:after,
-.finalSSO:before {
+#ssoFooter:after {
   content: '\000A\000A';
   white-space: pre-wrap;
 }

@@ -10,6 +10,7 @@ angular.module('Squared').service('CsdmConverter',
       this.mac = obj.mac;
       this.ip = getIp(obj);
       this.serial = obj.serial;
+      this.sipUrl = obj.sipUrl;
       this.createTime = obj.createTime;
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);

@@ -2,9 +2,10 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
+      document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
     });
     var vm = this;
     vm.search = search;
@@ -37,6 +38,7 @@
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
       setCurrentSearch(search);
+      HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HISTORY);
     });
 
     function showSearchHelp() {
@@ -45,6 +47,7 @@
       $modal.open({
         templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl
       });
+      HelpdeskSplunkReporterService.reportOperation(HelpdeskSplunkReporterService.SEARCH_HELP);
     }
 
     function setCurrentSearch(search) {
@@ -100,17 +103,24 @@
     }
 
     function doSearch() {
+      var startTime = moment();
       vm.currentSearch.initSearch(vm.searchString);
       var orgFilterId = vm.currentSearch.orgFilter ? vm.currentSearch.orgFilter.id : null;
-      searchUsers(vm.searchString, orgFilterId);
+      var promises = [];
+      promises.push(searchUsers(vm.searchString, orgFilterId));
       if (!orgFilterId) {
-        searchOrgs(vm.searchString);
+        promises.push(searchOrgs(vm.searchString));
       } else {
-        searchDevices(vm.searchString, vm.currentSearch.orgFilter);
+        promises = promises.concat(searchDevices(vm.searchString, vm.currentSearch.orgFilter));
       }
+
+      $q.all(promises).then(function (res) {
+        reportSearchSummary(vm.searchString, res, startTime, orgFilterId);
+      });
     }
 
     function searchUsers(searchString, orgId) {
+      var searchDone = $q.defer();
       if (searchString.length >= 3) {
         vm.searchingForUsers = true;
         HelpdeskService.searchUsers(searchString, orgId, vm.searchResultsLimit, null, true).then(function (res) {
@@ -133,13 +143,19 @@
           } else {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
+        }).finally(function () {
+          searchDone.resolve(stats(HelpdeskSplunkReporterService.USER_SEARCH, vm.currentSearch.userSearchFailure || vm.currentSearch.userSearchResults));
         });
       } else {
         vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.USER_SEARCH, vm.currentSearch.userSearchFailure));
       }
+      return searchDone.promise;
     }
 
     function searchOrgs(searchString) {
+      var searchDone = $q.defer();
+
       if (searchString.length >= 3) {
         vm.searchingForOrgs = true;
         HelpdeskService.searchOrgs(searchString, vm.searchResultsLimit).then(function (res) {
@@ -159,13 +175,19 @@
           } else {
             vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
+        }).finally(function () {
+          searchDone.resolve(stats(HelpdeskSplunkReporterService.ORG_SEARCH, vm.currentSearch.orgSearchFailure || vm.currentSearch.orgSearchResults));
         });
       } else {
         vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORG_SEARCH, vm.currentSearch.orgSearchFailure));
       }
+      return searchDone.promise;
+
     }
 
     function searchDevices(searchString, org) {
+      var promises = [];
       var orgIsEntitledToCloudBerry = LicenseService.orgIsEntitledTo(org, Config.entitlements.room_system);
       var orgIsEntitledToHuron = LicenseService.orgIsEntitledTo(org, Config.entitlements.huron);
       vm.searchingForDevices = orgIsEntitledToCloudBerry || orgIsEntitledToHuron;
@@ -173,14 +195,16 @@
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.noDeviceEntitlements');
       }
       if (orgIsEntitledToCloudBerry) {
-        searchForCloudberryDevices(searchString, org);
+        promises.push(searchForCloudberryDevices(searchString, org));
       }
       if (orgIsEntitledToHuron) {
-        searchForHuronDevices(searchString, org);
+        promises = promises.concat(searchForHuronDevices(searchString, org));
       }
+      return promises;
     }
 
     function searchForCloudberryDevices(searchString, org) {
+      var searchDone = $q.defer();
       vm.searchingForCloudberryDevices = true;
       HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
         if (vm.currentSearch.deviceSearchResults) {
@@ -197,10 +221,15 @@
       }).finally(function () {
         vm.searchingForCloudberryDevices = false;
         vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
+        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.DEVICE_SEARCH_CLOUDBERRY, vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure));
       });
+      return searchDone.promise;
     }
 
     function searchForHuronDevices(searchString, org) {
+      var searchDone = $q.defer();
+
       vm.searchingForHuronDevices = true;
       HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
         if (vm.currentSearch.deviceSearchResults) {
@@ -222,8 +251,10 @@
       }).finally(function () {
         vm.searchingForHuronDevices = false;
         vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevicesMatchingNumber;
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.DEVICE_SEARCH_HURON_NUMBER, vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure));
       });
 
+      var search2Done = $q.defer();
       vm.searchingForHuronDevicesMatchingNumber = true;
       HelpdeskHuronService.findDevicesMatchingNumber(searchString, org.id, vm.searchResultsLimit).then(function (res) {
         if (vm.currentSearch.deviceSearchResults) {
@@ -245,7 +276,9 @@
       }).finally(function () {
         vm.searchingForHuronDevicesMatchingNumber = false;
         vm.searchingForDevices = vm.searchingForCloudberryDevices || vm.searchingForHuronDevices;
+        search2Done.resolve(stats(HelpdeskSplunkReporterService.DEVICE_SEARCH_HURON, vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure));
       });
+      return [searchDone.promise, search2Done.promise];
     }
 
     function initSearchWithOrgFilter(org) {
@@ -386,6 +419,18 @@
         angular.element('#searchInput').focus();
       }
     }
+
+    function stats(searchType, details) {
+      return {
+        "searchType": searchType,
+        "details": details
+      };
+    }
+
+    function reportSearchSummary(searchString, res, startTime, orgId) {
+      var stats = HelpdeskSplunkReporterService.reportStats(searchString, res, startTime, orgId);
+    }
+
   }
   angular
     .module('Squared')

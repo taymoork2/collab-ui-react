@@ -110,7 +110,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
           $scope: $scope
         });
 
-        var phoneNumber = '+14084744088';
+        var phoneNumber = '1408 474 4088';
 
         controller.model.phoneNumberInput.phoneNumber = phoneNumber;
 
@@ -129,15 +129,15 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         });
 
         var phoneNumber1 = '+14084744088';
-        var phoneNumber2 = '+14084744089';
+        var phoneNumber2 = '+1 408-474-4089';
 
         controller.model.phoneNumberInput.phoneNumber = phoneNumber1;
-        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ' + phoneNumber1);
+        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = "' + phoneNumber1 + '"');
 
         controller.model.phoneNumberInput.phoneNumber = phoneNumber2;
-        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ' + phoneNumber2);
+        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = "' + phoneNumber2 + '"');
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber2.replace(/\D/g, ''));
+        expect(controller.menuKeyEntry.actions[0].value).toEqual('+14084744089');
       });
 
     });
@@ -153,7 +153,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
       it('should write phone number back into Ui Model from Route Call', function () {
 
-        var phoneNumber = '+14084744088';
+        var phoneNumber = '14084744088';
 
         var controller = $controller('AARouteToExtNumCtrl', {
           $scope: $scope

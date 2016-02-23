@@ -114,7 +114,7 @@
       padding-bottom: 0.5rem;
     }
     .launch-button {
-      margin-top: 1.5rem; 
+      margin-top: 1.5rem;
       margin-bottom: 1.0rem;
     }
     .user-img {
@@ -161,10 +161,12 @@
       color: $gray-light-1;
       position: relative;
       top: -0.6rem;
+      padding-right: 2px;
       font-size: 1.0rem;
       cursor: pointer;
       i {
         top: 2px;
+        left: 3px;
       }
     }
     @media only screen and (max-width: 500px) {
@@ -330,6 +332,7 @@
   .show-more-results {
     margin-bottom: 1rem;
   }
+
 }
 .helpdesk-cards {
   .cs-card section {

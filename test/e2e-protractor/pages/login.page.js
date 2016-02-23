@@ -43,6 +43,10 @@ var LoginPage = function () {
 
   this.loginButton = element(by.cssContainingText('button[role="button"]', 'Sign In'));
 
+  this.clickLoginButton = function () {
+    this.loginButton.click();
+  };
+
   function getLoginUrl(expectedUrl) {
     var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
     if (isProductionBackend) {
