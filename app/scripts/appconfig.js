@@ -39,6 +39,16 @@ angular
           },
           authenticate: false
         })
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          }
+        })
         .state('createAccount', {
           url: '/create-account',
           views: {
@@ -46,6 +56,62 @@ angular
               templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
               controller: 'createAccountController',
               controllerAs: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateUserController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activatedUserSuccessPage', {
+          url: '/activated-user-success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUserErrorPage', {
+          url: '/activate-user-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateProduct', {
+          url: '/activate-product',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateProductController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activatedProductSuccessPage', {
+          url: '/activated-product-success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateProductErrorPage', {
+          url: '/activate-product-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
             }
           },
           authenticate: false
@@ -1685,7 +1751,7 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayClusterDetails',
+              controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
@@ -1878,7 +1944,7 @@ angular
         })
         .state('connector-details.alarm-details', {
           templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-          controller: 'AlarmController',
+          controller: 'MediaAlarmController',
           controllerAs: 'alarmCtrl',
           data: {
             displayName: 'Alarm Details'

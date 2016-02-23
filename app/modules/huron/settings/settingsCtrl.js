@@ -7,7 +7,7 @@
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService,
-    ModalService, AccountOrgService) {
+    ModalService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -21,21 +21,20 @@
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
-
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
-
     var companyCallerIdType = 'Company Caller ID';
+    var savedModel = null;
+
+    vm.init = init;
+    vm.save = save;
+    vm.isDisableInternationalDialing = isDisableInternationalDialing;
+    vm.resetSettings = resetSettings;
 
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
-    vm.init = init;
-    vm.save = save;
-    vm.isInternationalDialingCustomerInTrial = isInternationalDialingCustomerInTrial;
-    vm.resetSettings = resetSettings;
     vm.timeZoneOptions = [];
     vm.externalNumberPool = [];
     vm.externalNumberPoolBeautified = [];
@@ -43,6 +42,8 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
+    vm.disableInternationalDialing = undefined;
+
     vm.model = {
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
@@ -72,7 +73,6 @@
       showServiceAddress: false
     };
 
-    var savedModel = null;
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -404,7 +404,7 @@
         'templateOptions.isDisabled': function () {
           // if the customer is in trial and doesn't have the feature toggle
           // huronInternationalDialingTrialOverride then show toggle as disabled
-          return isInternationalDialingCustomerInTrial();
+          return isDisableInternationalDialing();
         }
       }
     }];
@@ -545,40 +545,40 @@
       }
     }];
 
-    function hasInternationalDialingOverride() {
-      return FeatureToggleService.supports(FeatureToggleService.features.huronInternationalDialingTrialOverride)
-        .then(function (result) {
-          return !!result;
-        })
-        .catch(function () {
-          return false;
-        });
+    HttpUtils.setTrackingID().then(init);
+
+    function isCommunicationLicenseInTrial(isOverride) {
+      if (!!isOverride) {
+        // customer has international dialing trial override enable international dialing toggle
+        vm.disableInternationalDialing = false;
+        return vm.disableInternationalDialing;
+      }
+
+      // no override, check if communication license is in trial period
+      vm.disableInternationalDialing = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+      if (_.isUndefined(vm.disableInternationalDialing)) {
+        return $q.reject('Failed to get trial state for COMMUNICATION license');
+      }
+
+      return vm.disableInternationalDialing;
     }
 
-    function isInternationalDialingCustomerInTrial() {
-      return hasInternationalDialingOverride().then(function (result) {
-          if (result) {
-            // return false here since the trial check is overridden
-            return false;
-          }
+    function isDisableInternationalDialing() {
+      if (angular.isDefined(vm.disableInternationalDialing)) {
+        return vm.disableInternationalDialing;
+      }
 
-          return AccountOrgService.getAccount(Authinfo.getOrgId())
-            .then(function (response) {
-              // Assume customer is in trial until proven otherwise
-              var isTrial = _.chain(response)
-                .get('data.accounts')
-                .reduce(function (isTrial, account) {
-                  return _.reduce(account.licenses, function (isTrial, license) {
-                    return license.licenseType === 'COMMUNICATION' && _.includes(license.features, 'ciscouc') ? license.isTrial : isTrial;
-                  }, isTrial);
-                }, true)
-                .value();
-              return isTrial;
-            });
-        })
+      return FeatureToggleService.supports(FeatureToggleService.features.huronInternationalDialingTrialOverride)
+        .then(isCommunicationLicenseInTrial)
+        // if we are unable get feature toggle then check license isTrial
         .catch(function (response) {
-          Notification.errorResponse(response, 'huronSettings.getOrgAccountDetailsError');
-          return true;
+          return $q.when(false)
+            .then(isCommunicationLicenseInTrial)
+            // if we are unable to get license info then default to disabling international dialing toggle
+            .catch(function (response) {
+              Notification.processErrorResponse(response, 'huronSettings.getHuronInternationalDialingTrialOverrideError');
+              return true;
+            });
         });
     }
 
@@ -1188,7 +1188,5 @@
         vm.model.callerId.callerIdName = Authinfo.getOrgName();
       }
     });
-
-    HttpUtils.setTrackingID().then(init);
   }
 })();

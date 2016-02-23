@@ -27,7 +27,7 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter email addresses or group mailers separated by commas.",
+    "userInput": "Enter email addresses separated by commas.",
     "userInputDescription": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "firstNamePlaceHolder": "First name",
     "lastNamePlaceHolder": "Last name",
@@ -94,7 +94,8 @@
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
-    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain."
+    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -110,7 +111,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
-    "userInput": "Enter email addresses or group mailers separated by commas...",
+    "userInput": "Enter email addresses separated by commas.",
     "enableServiceText": "Enable Services",
     "enableCollab": "Enable collaboration services individually",
     "enableCollabGroup": "Enable collaboration services based on group membership",
@@ -150,7 +151,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -364,7 +365,10 @@
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
-    "audioCalls": "Audio Only Calls"
+    "audioCalls": "Audio Only Calls",
+    "customer": "Customer",
+    "customers": "Customers",
+    "customerSelect": "Select a customer"
   },
   "activeUsers": {
     "active": "Active",
@@ -425,7 +429,7 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
+    "callMetricsChartError": "There was an error while loading call metrics data for the selected customer(s).",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
@@ -442,7 +446,7 @@
     "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
-    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for the selected customer(s).",
     "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
     "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
@@ -596,6 +600,7 @@
     "cdr408Error": "Request timed out while waiting for a response from Elastic Search. Please try again at a later time.",
     "cdr409Error": "Request failed due to a processing conflict. Please verify the search data and try again.",
     "cdr500Error": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.  Lowering the hit size before retrying may prevent further errors.",
+    "cdr500ShortError": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.",
     "cdr502And503Error": "Elastic Search is temporarily unavailable. Please try again at a later time.",
     "required": "This field is required.",
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
@@ -642,7 +647,12 @@
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
-    "close": "Close"
+    "close": "Close",
+    "401And403Error": "User not authorized to create Ladder Diagram.",
+    "404Error": "Diagnostic Service unable to respond at this time. Please try again at a later time.",
+    "408Error": "Request timed out while waiting for a response from Diagnostic Service. Please try again at a later time.",
+    "500Error": "Diagnostic Service encountered an internal error.",
+    "502And503Error": "Diagnostic Service is temporarily unavailable. Please try again at a later time."
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -1243,7 +1253,7 @@
     "downloadError": "There is a problem downloading the file.",
     "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "uploadPrompt": "Drag and drop a file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
@@ -1747,8 +1757,8 @@
     "useGlobal": "Global Settings",
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
-    "on": "ON",
-    "off": "OFF"
+    "on": "On",
+    "off": "Off"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1980,10 +1990,10 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to request purchase information?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerName}}",
+    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Request Purchase",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
 
   "status": {
@@ -2086,7 +2096,7 @@
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
     "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
+    "getHuronInternationalDialingTrialOverrideError": "Failed to get international dialing override info."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2573,7 +2583,7 @@
     "indexPageLabel_SiteInfo_site_info": "Site Information",
     "indexPageLabel_SiteInfo_site_features": "Site Features",
 
-    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Mobile",
     "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
     "indexPageLabel_CommonSettings_scheduler": "Scheduler",
@@ -2785,7 +2795,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "Webex Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"

@@ -141,12 +141,12 @@ angular.module('Core')
       }
 
       function assignDNForUserList() {
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           user.assignedDn = $scope.internalNumberPool[index];
         });
 
         // don't select any DID on loading the page
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           user.externalNumber = $scope.externalNumberPool[0];
           user.didDnMapMsg = undefined;
         });
@@ -1079,6 +1079,21 @@ angular.module('Core')
         $scope.results = null;
       };
 
+      function addErrorWithTrackingID(errorMsg, response) {
+        if (response && _.isFunction(response.headers)) {
+          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
+          }
+          var trackingId = response.headers('TrackingID');
+          if (!trackingId || trackingId === 'null') {
+            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
+          } else {
+            errorMsg += ' TrackingID: ' + trackingId || '';
+          }
+        }
+        return errorMsg;
+      }
+
       function onboardUsers(optionalOnboard) {
         var deferred = $q.defer();
         $scope.results = {
@@ -1087,113 +1102,115 @@ angular.module('Core')
         var isComplete = true;
         usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
-        var callback = function (data, status) {
-          if (data.success) {
-            Log.info('User onboard request returned:', data);
-            $rootScope.$broadcast('USER_LIST_UPDATED');
-            var numAddedUsers = 0;
 
-            for (var num = 0; num < data.userResponse.length; num++) {
-              if (data.userResponse[num].status === 200 || data.userResponse[num].status === 201) {
-                numAddedUsers++;
-              }
-            }
+        var successCallback = function (response) {
+          Log.info('User onboard request returned:', response.data);
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          var numAddedUsers = 0;
 
-            if (numAddedUsers > 0) {
-              var msg = 'Invited ' + numAddedUsers + ' users';
-              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
-            }
+          _.forEach(response.data.userResponse, function (user) {
+            var userResult = {
+              email: user.email,
+              alertType: null
+            };
 
-            for (var i = 0; i < data.userResponse.length; i++) {
-              var userResult = {
-                email: data.userResponse[i].email,
-                alertType: null
-              };
+            var userStatus = user.status;
 
-              var userStatus = data.userResponse[i].status;
-
-              if (userStatus === 200) {
-                userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
-                userResult.alertType = 'success';
-              } else if (userStatus === 409) {
-                userResult.message = userResult.email + ' ' + data.userResponse[i].message;
-              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
-                userResult.message = $translate.instant('usersPage.userExistsError', {
-                  email: userResult.email
-                });
-              } else if (userStatus === 403 && data.userResponse[i].message === '400084') {
-                userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                  email: userResult.email,
-                  domain: userResult.email.split('@')[1]
-                });
-              } else if (userStatus === 400 && data.userResponse[i].message === '400087') {
-                userResult.message = $translate.instant('usersPage.hybridServicesError', {
-                  email: userResult.email
-                });
-              } else {
-                userResult.message = $translate.instant('usersPage.onboardError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
-              }
-
-              if (userStatus !== 200) {
-                userResult.alertType = 'danger';
-                isComplete = false;
-              }
-              $scope.results.resultList.push(userResult);
-            }
-
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].message;
-                count_e++;
-              }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              $scope.btnOnboardLoading = false;
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-              deferred.resolve();
-            }
-            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-              $scope.$dismiss();
-            }
-
-          } else {
-            Log.warn('Could not onboard the user', data);
-            var error = null;
-            if (status) {
-              error = $translate.instant('errors.statusError', {
-                status: status
+            if (userStatus === 200 || userStatus === 201) {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
               });
-              if (data && angular.isString(data.message)) {
-                error += ' ' + $translate.instant('usersPage.messageError', {
-                  message: data.message
-                });
-              }
+              userResult.alertType = 'success';
+              numAddedUsers++;
+            } else if (userStatus === 409) {
+              userResult.message = userResult.email + ' ' + user.message;
+            } else if (userStatus === 403 && user.message === '400081') {
+              userResult.message = $translate.instant('usersPage.userExistsError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 403 && user.message === '400084') {
+              userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                email: userResult.email,
+                domain: userResult.email.split('@')[1]
+              });
+            } else if (userStatus === 403 && user.message === '400090') {
+              userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 400 && user.message === '400087') {
+              userResult.message = $translate.instant('usersPage.hybridServicesError', {
+                email: userResult.email
+              });
             } else {
-              error = 'Request failed.';
-              if (angular.isString(data)) {
-                error += ' ' + data;
-              }
-              Notification.notify(error, 'error');
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: userStatus
+              });
             }
-            Notification.notify([error], 'error');
-            isComplete = false;
-            $scope.btnOnboardLoading = false;
-            deferred.reject();
+
+            if (userStatus !== 200 && userStatus !== 201) {
+              userResult.alertType = 'danger';
+              isComplete = false;
+            }
+            $scope.results.resultList.push(userResult);
+          });
+
+          if (numAddedUsers > 0) {
+            var msg = 'Invited ' + numAddedUsers + ' users';
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
           }
-          //no need to clear tokens here since that is causing the options grid to blank during the finish process
+
+          //concatenating the results in an array of strings for notify function
+          var successes = [];
+          var errors = [];
+          var count_s = 0;
+          var count_e = 0;
+          for (var idx in $scope.results.resultList) {
+            if ($scope.results.resultList[idx].alertType === 'success') {
+              successes[count_s] = $scope.results.resultList[idx].message;
+              count_s++;
+            } else {
+              errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
+              count_e++;
+            }
+          }
+          //Displaying notifications
+          if (successes.length + errors.length === usersList.length) {
+            $scope.btnOnboardLoading = false;
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
+            deferred.resolve();
+          }
+          if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+            $scope.$dismiss();
+          }
+        };
+
+        var errorCallback = function (response) {
+          Log.warn('Could not onboard the user', response.data);
+          var error = null;
+          if (response.status) {
+            error = $translate.instant('errors.statusError', {
+              status: response.status
+            });
+            if (response.data && _.isString(response.data.message)) {
+              error += ' ' + $translate.instant('usersPage.messageError', {
+                message: response.data.message
+              });
+            }
+            error = addErrorWithTrackingID(error, response);
+          } else {
+            error = 'Request failed.';
+            if (_.isString(response.data)) {
+              error += ' ' + response.data;
+            }
+            error = addErrorWithTrackingID(error, response);
+            Notification.notify(error, 'error');
+          }
+          Notification.notify([error], 'error');
+          isComplete = false;
+          $scope.btnOnboardLoading = false;
+          deferred.reject();
         };
 
         if (angular.isArray(usersList) && usersList.length > 0) {
@@ -1226,7 +1243,9 @@ angular.module('Core')
 
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
-            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
+              .then(successCallback)
+              .catch(errorCallback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1554,7 +1573,7 @@ angular.module('Core')
         }
 
         // copy numbers to convertSelectedList
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
             return user.address === selectedUser.userName;
           });
@@ -1579,7 +1598,7 @@ angular.module('Core')
           $scope.processing = true;
           // Copying selected users to user list
           $scope.usrlist = [];
-          angular.forEach($scope.convertSelectedList, function (selectedUser, index) {
+          _.forEach($scope.convertSelectedList, function (selectedUser, index) {
             var user = {};
             var givenName = "";
             var familyName = "";
@@ -1869,55 +1888,48 @@ angular.module('Core')
           });
         }
 
-        function addUserErrorWithTrackingID(row, errorMsg) {
-          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-            errorMsg += '.';
-          }
-          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
+        function addUserErrorWithTrackingID(row, errorMsg, response) {
+          errorMsg = addErrorWithTrackingID(errorMsg, response);
           addUserError(row, _.trim(errorMsg));
         }
 
-        function callback(data, status) {
-          var params = this;
-          if (data.success) {
-            if (angular.isArray(data.userResponse)) {
-              var addedUsersList = [];
+        function successCallback(response, startIndex, length) {
+          if (_.isArray(response.data.userResponse)) {
+            var addedUsersList = [];
 
-              angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200 || user.status === 201) {
-                  if (user.message === 'User Patched') {
-                    $scope.model.numExistingUsers++;
-                  } else {
-                    $scope.model.numNewUsers++;
-                  }
-                  // Build list of successful onboards and patches
-                  var addItem = {
-                    address: user.email
-                  };
-                  if (addItem.address.length > 0) {
-                    addedUsersList.push(addItem);
-                  }
+            _.forEach(response.data.userResponse, function (user, index) {
+              if (user.status === 200 || user.status === 201) {
+                if (user.message === 'User Patched') {
+                  $scope.model.numExistingUsers++;
                 } else {
-                  addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
+                  $scope.model.numNewUsers++;
                 }
-              });
-            } else {
-              for (var i = 0; i < params.length; i++) {
-                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
+                // Build list of successful onboards and patches
+                var addItem = {
+                  address: user.email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
+              } else {
+                addUserErrorWithTrackingID(startIndex + index + 1, getErrorResponse(user.status), response);
               }
-            }
+            });
           } else {
-            var responseMessage = getErrorResponse(data, status);
-            for (var k = 0; k < params.length; k++) {
-              addUserErrorWithTrackingID(params.startIndex + k + 1, responseMessage);
+            for (var i = 0; i < length; i++) {
+              addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
             }
           }
-
-          calculateProcessProgress();
-          params.resolve();
         }
 
-        function getErrorResponse(data, status) {
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
+        }
+
+        function getErrorResponse(status) {
           var responseMessage;
           if (status === 400) {
             responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
@@ -1946,17 +1958,19 @@ angular.module('Core')
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.bulkOnboardUsers(userArray, callback.bind({
-                  startIndex: startIndex - userArray.length + 1,
-                  length: userArray.length,
-                  resolve: resolve
-                }), cancelDeferred.promise);
+                Userservice.bulkOnboardUsers(userArray, cancelDeferred.promise).then(function (response) {
+                  successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).catch(function (response) {
+                  errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).finally(function () {
+                  calculateProcessProgress();
+                  resolve();
+                });
               } else {
                 resolve();
               }
             });
           });
-
         }
 
         function calculateProcessProgress() {
@@ -2268,55 +2282,48 @@ angular.module('Core')
           });
         }
 
-        function addUserErrorWithTrackingID(row, errorMsg) {
-          if (_.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-            errorMsg += '.';
-          }
-          errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
+        function addUserErrorWithTrackingID(row, errorMsg, response) {
+          errorMsg = addErrorWithTrackingID(errorMsg, response);
           addUserError(row, _.trim(errorMsg));
         }
 
-        function callback(data, status) {
-          var params = this;
-          if (data.success) {
-            if (angular.isArray(data.userResponse)) {
-              var addedUsersList = [];
+        function successCallback(response, startIndex, length) {
+          if (_.isArray(response.data.userResponse)) {
+            var addedUsersList = [];
 
-              angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200 || user.status === 201) {
-                  if (user.message === 'User Patched') {
-                    $scope.model.numExistingUsers++;
-                  } else {
-                    $scope.model.numNewUsers++;
-                  }
-                  // Build list of successful onboards and patches
-                  var addItem = {
-                    address: user.email
-                  };
-                  if (addItem.address.length > 0) {
-                    addedUsersList.push(addItem);
-                  }
+            _.forEach(response.data.userResponse, function (user, index) {
+              if (user.status === 200 || user.status === 201) {
+                if (user.message === 'User Patched') {
+                  $scope.model.numExistingUsers++;
                 } else {
-                  addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
+                  $scope.model.numNewUsers++;
                 }
-              });
-            } else {
-              for (var i = 0; i < params.length; i++) {
-                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
+                // Build list of successful onboards and patches
+                var addItem = {
+                  address: user.email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
+              } else {
+                addUserErrorWithTrackingID(startIndex + index + 1, getErrorResponse(user.status), response);
               }
-            }
+            });
           } else {
-            var responseMessage = getErrorResponse(data, status);
-            for (var k = 0; k < params.length; k++) {
-              addUserErrorWithTrackingID(params.startIndex + k + 1, responseMessage);
+            for (var i = 0; i < length; i++) {
+              addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
             }
           }
-
-          calculateProcessProgress();
-          params.resolve();
         }
 
-        function getErrorResponse(data, status) {
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
+        }
+
+        function getErrorResponse(status) {
           var responseMessage;
           if (status === 400) {
             responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
@@ -2362,17 +2369,19 @@ angular.module('Core')
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, callback.bind({
-                  startIndex: startIndex - userArray.length + 1,
-                  length: userArray.length,
-                  resolve: resolve
-                }), cancelDeferred.promise);
+                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
+                  successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).catch(function (response) {
+                  errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).finally(function () {
+                  calculateProcessProgress();
+                  resolve();
+                });
               } else {
                 resolve();
               }
             });
           });
-
         }
 
         function calculateProcessProgress() {

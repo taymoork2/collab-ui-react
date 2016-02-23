@@ -137,6 +137,15 @@
       } else {
         details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
 
+        // formly will nest the country inside of itself, I think this is because
+        // the country list contains country as a key, as well as the device.service
+        // having country as a key
+        // TODO: figure out why when we have the time
+        var nestedCountry = _.get(details, 'shippingInfo.country.country');
+        if (nestedCountry) {
+          details.shippingInfo.country = nestedCountry;
+        }
+
         // if this is not set, remove the whole thing
         // since this may get sent with partially complete
         // data that the backend doesnt like

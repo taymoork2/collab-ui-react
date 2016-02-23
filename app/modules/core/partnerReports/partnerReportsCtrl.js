@@ -39,6 +39,7 @@
     vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
 
     vm.customerOptions = [];
     vm.customerSelected = null;

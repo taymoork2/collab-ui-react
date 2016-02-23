@@ -1,4 +1,4 @@
-<div cr-feature-toggle feature-show="huronHuntGroup">
+<div>
   <cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.createTitle' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
     <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
 
@@ -24,7 +24,4 @@
 
     </cs-setup-assistant>
   </cs-overlay-panel>
-</div>
-<div class="no-features-available" cr-feature-toggle feature-hide="huronHuntGroup">
-  <span class="h1 gray-base" translate="huronHuntGroup.noFeature"></span>
 </div>
