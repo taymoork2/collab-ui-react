@@ -135,6 +135,7 @@ angular.module('Core')
       };
       return {
         initialize: function (data) {
+          authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
           authData.username = data.name;
           authData.orgName = data.orgName;
           authData.orgId = data.orgId;
@@ -423,6 +424,9 @@ angular.module('Core')
         },
         isUserAdmin: function () {
           return this.getRoles().indexOf('Full_Admin') > -1;
+        },
+        isInDelegatedAdministrationOrg: function () {
+          return authData.isInDelegatedAdministrationOrg;
         }
       };
     }

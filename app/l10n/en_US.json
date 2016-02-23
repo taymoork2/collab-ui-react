@@ -94,7 +94,8 @@
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
-    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain."
+    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -150,7 +151,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -596,6 +597,7 @@
     "cdr408Error": "Request timed out while waiting for a response from Elastic Search. Please try again at a later time.",
     "cdr409Error": "Request failed due to a processing conflict. Please verify the search data and try again.",
     "cdr500Error": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.  Lowering the hit size before retrying may prevent further errors.",
+    "cdr500ShortError": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.",
     "cdr502And503Error": "Elastic Search is temporarily unavailable. Please try again at a later time.",
     "required": "This field is required.",
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
@@ -642,7 +644,12 @@
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
-    "close": "Close"
+    "close": "Close",
+    "401And403Error": "User not authorized to create Ladder Diagram.",
+    "404Error": "Diagnostic Service unable to respond at this time. Please try again at a later time.",
+    "408Error": "Request timed out while waiting for a response from Diagnostic Service. Please try again at a later time.",
+    "500Error": "Diagnostic Service encountered an internal error.",
+    "502And503Error": "Diagnostic Service is temporarily unavailable. Please try again at a later time."
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -1243,7 +1250,7 @@
     "downloadError": "There is a problem downloading the file.",
     "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "uploadPrompt": "Drag and drop a file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
@@ -1980,10 +1987,10 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to request purchase information?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerName}}",
+    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Request Purchase",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
 
   "status": {
@@ -2573,7 +2580,7 @@
     "indexPageLabel_SiteInfo_site_info": "Site Information",
     "indexPageLabel_SiteInfo_site_features": "Site Features",
 
-    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Mobile",
     "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
     "indexPageLabel_CommonSettings_scheduler": "Scheduler",
@@ -2785,7 +2792,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "Webex Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
