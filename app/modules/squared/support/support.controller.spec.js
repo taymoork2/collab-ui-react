@@ -9,25 +9,9 @@ describe('Controller: SupportCtrl', function () {
     'roles': roles
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _Userservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_) {
     Userservice = _Userservice_;
-    Authinfo = {
-      isCisco: function () {
-        return false;
-      },
-      isCiscoMock: function () {
-        return true;
-      },
-      isHelpDeskUser: function () {
-        return false;
-      },
-      getOrgId: function () {
-        return '123';
-      },
-      isInDelegatedAdministrationOrg: function () {
-        return true;
-      }
-    };
+    Authinfo = _Authinfo_;
 
     currentUser = {
       success: true,
@@ -52,6 +36,8 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
+
+    spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
 
     $scope = $rootScope.$new();
     Userservice = Userservice;
