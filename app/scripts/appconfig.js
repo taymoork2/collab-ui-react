@@ -88,6 +88,34 @@ angular
           },
           authenticate: false
         })
+        .state('activateProduct', {
+          url: '/activate-product',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateProductController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activatedProductSuccessPage', {
+          url: '/activated-product-success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateProductErrorPage', {
+          url: '/activate-product-error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           views: {
             'main@': {

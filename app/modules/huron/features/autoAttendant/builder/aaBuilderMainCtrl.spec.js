@@ -9,6 +9,8 @@ describe('Controller: AABuilderMainCtrl', function () {
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
+  var combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
+  var menuWithNewStep = combinedMenus['menuWithNewStep'];
   var rawCeInfo = {
     "callExperienceName": "AAA2",
     "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b",
@@ -612,6 +614,14 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.setAANameFocus();
 
       expect($scope.vm.aaNameFocus).toEqual(true);
+    });
+  });
+
+  describe('removeNewStep', function () {
+    it('should remove all New Step placeholders from a menu', function () {
+      expect(menuWithNewStep.entries.length).toEqual(4);
+      controller.removeNewStep(menuWithNewStep);
+      expect(menuWithNewStep.entries.length).toEqual(2);
     });
   });
 });
