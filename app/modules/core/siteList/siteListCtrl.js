@@ -56,6 +56,8 @@ angular.module('Core')
 
             conferenceService.showCSVInfo = false;
             conferenceService.showSiteLinks = false;
+            conferenceService.showLicenseTypes = false;
+
             conferenceService.isIframeSupported = false;
             conferenceService.isAdminReportEnabled = false;
             conferenceService.isError = false;
@@ -194,7 +196,6 @@ angular.module('Core')
       vm.gridOptions.columnDefs.push({
         field: 'siteConfLicenses',
         displayName: $translate.instant('siteList.licenseTypes'),
-        //cellFilter: 'capacityFilter:row.entity.label',
         cellTemplate: 'modules/core/siteList/siteLicenseTypes.tpl.html',
         sortable: false
       });

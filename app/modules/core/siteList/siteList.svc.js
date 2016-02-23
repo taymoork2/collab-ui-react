@@ -217,7 +217,8 @@ angular.module('Core').service('SiteListService', [
                 siteRow.licenseTooltipDisplay = null;
               }
 
-            } //processGrid()
+              siteRow.showLicenseTypes = true;
+            } // processGridForLicense()
           ); // siteListGridData.forEach()
 
           // $log.log(logMsg);
