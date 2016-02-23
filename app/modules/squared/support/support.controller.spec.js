@@ -30,7 +30,7 @@ describe('Controller: SupportCtrl', function () {
     controller = $controller('SupportCtrl', {
       $scope: $scope,
       Authinfo: Authinfo,
-      Userservice: _Userservice_,
+      Userservice: Userservice,
       Config: Config
     });
   }));
