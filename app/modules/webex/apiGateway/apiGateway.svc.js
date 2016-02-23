@@ -40,28 +40,32 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          var result = {
+          var errorResult = {
             'siteUrl': siteUrl,
-            'result:': null,
+            'errorId:': null,
+            'errorDesc': null
+          };
+
+          var successResult = {
+            'siteUrl': siteUrl,
             'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
             'completionInfo': null // not null only if status is expCompleted or impCompleted
           };
 
-          deferredCsvStatus.resolve(result);
+          deferredCsvStatus.resolve(successResult);
         },
 
         function error(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.error()";
           var logMsg = "";
 
-          var result = {
+          var errorResult = {
             'siteUrl': siteUrl,
-            'result:': null,
-            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
-            'completionInfo': null // not null only if status is expCompleted or impCompleted
+            'errorId:': null,
+            'errorDesc': null
           };
 
-          deferredCsvStatus.reject(result);
+          deferredCsvStatus.reject(errorResult);
         }
       );
 
