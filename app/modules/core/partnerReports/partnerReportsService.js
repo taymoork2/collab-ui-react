@@ -544,8 +544,7 @@
         }
         return [];
       }, function (error) {
-        var errorMessage = $translate.instant('callMetrics.callMetricsChartError');
-        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', errorMessage, []);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), []);
       });
     }
 
