@@ -21,35 +21,31 @@ angular.module('Squared')
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
       $scope.showToolsCard = false;
+      $scope.isCiscoDevRole = isCiscoDevRole;
+      $scope.initializeShowToolsCard = initializeShowToolsCard;
 
-      var devRoles = {
-        'ciscouc.devops': '',
-        'ciscouc.devsupport': ''
-      };
-
-      (function initializeShowToolsCard() {
+      function initializeShowToolsCard() {
         Userservice.getUser('me', function (user, status) {
           if (user.success) {
-            for (var i in user.roles) {
-              if (isCiscoDevRole(user.roles[i])) {
-                $scope.showToolsCard = true;
-                break;
-              }
+            if (isCiscoDevRole(user.roles)) {
+              $scope.showToolsCard = true;
             }
           } else {
             Log.debug('Get current user failed. Status: ' + status);
           }
         });
-      })();
+      }
 
-      function isCiscoDevRole(role) {
-        if (Config.isProd()) {
-          if (role in devRoles && Authinfo.isCisco()) {
-            return true;
-          }
-        } else {
-          if (role in devRoles && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
-            return true;
+      function isCiscoDevRole(roleArray) {
+        if (Array.isArray(roleArray)) {
+          if (Config.isProd()) {
+            if ((roleArray.indexOf('ciscouc.devops') >= 0 || roleArray.indexOf('ciscouc.devsupport') >= 0) && Authinfo.isCisco()) {
+              return true;
+            }
+          } else {
+            if ((roleArray.indexOf('ciscouc.devops') >= 0 || roleArray.indexOf('ciscouc.devsupport') >= 0) && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
+              return true;
+            }
           }
         }
         return false;
@@ -132,6 +128,7 @@ angular.module('Squared')
       var init = function () {
         getHealthMetrics();
         getOrg();
+        initializeShowToolsCard();
       };
 
       init();

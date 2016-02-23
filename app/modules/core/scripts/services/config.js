@@ -1230,9 +1230,7 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 

@@ -254,7 +254,19 @@ describe('Authinfo:', function () {
       });
       expect(Authinfo.isInDelegatedAdministrationOrg()).toBe(true);
     });
-  });
+
+    it('should return true if user is part of Cisco Mock Org', function () {
+      setupConfig({
+        ciscoOnly: ['blah'],
+        ciscoMockOrgId: '4567'
+      });
+
+      var Authinfo = setupUser({
+        orgId: '4567'
+      });
+
+      expect(Authinfo.isCiscoMock()).toBe(true);
+    });
 
   function setupConfig(override) {
     override = override || {};
