@@ -32,7 +32,6 @@
       return;
     }
 
-
     if (hasCaaSLicense()) {
       // Filter out extensions that are not enabled in FMS
       ServiceDescriptor.services(function (error, services) {
