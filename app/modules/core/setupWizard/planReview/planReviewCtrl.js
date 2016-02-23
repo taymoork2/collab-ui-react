@@ -6,14 +6,8 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice, Orgservice) {
+  function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
     var vm = this;
-
-    vm.multiSubscriptions = {
-      oneBilling: false,
-      selected: '',
-      options: []
-    };
 
     vm.messagingServices = {
       isNewTrial: false,
@@ -46,21 +40,10 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
-    vm.roomSystemsExist = false;
-    vm.showMultiSubscriptions = showMultiSubscriptions;
-    vm.licenseExists = false;
 
     init();
 
     function init() {
-
-      Orgservice.getLicensesUsage().then(function (subscriptions) {
-        vm.multiSubscriptions.options = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-        vm.multiSubscriptions.selected = _.first(vm.multiSubscriptions.options);
-        vm.multiSubscriptions.oneBilling = _.size(vm.multiSubscriptions.options) === 1;
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
-      });
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
@@ -170,26 +153,6 @@
       }
     }
     /////////////////
-
-    function showMultiSubscriptions(billingServiceId, isTrial) {
-      var isSelected = false;
-
-      var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
-        (_.eq('Trial', vm.multiSubscriptions.selected));
-
-      if (_.isArray(billingServiceId)) {
-        for (var i in billingServiceId) {
-          if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
-            isSelected = vm.roomSystemsExist = true;
-            break;
-          }
-        }
-      } else {
-        isSelected = vm.roomSystemsExist = (_.eq(billingServiceId, vm.multiSubscriptions.selected));
-      }
-
-      return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
-    }
 
     function populateTrialData(trial) {
       vm.trial = trial;

@@ -353,39 +353,6 @@ angular.module('Core')
         getMessengerSyncStatus();
       }
 
-      var getSubscriptions = function () {
-        if (Authinfo.hasAccount()) {
-          Orgservice.getLicensesUsage().then(function (subscriptions) {
-            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
-            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
-          });
-        }
-      };
-
-      $scope.modelChange = function () {
-        $scope.selectedSubscription = this.selectedSubscription;
-      };
-
-      $scope.showMultiSubscriptions = function (billingServiceId, isTrial) {
-        var isSelected = false;
-        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
-        if (_.isArray(billingServiceId)) {
-          for (var i in billingServiceId) {
-            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
-              isSelected = true;
-              break;
-            }
-          }
-        } else {
-          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
-        }
-
-        return $scope.oneBilling || isSelected || isTrialSubscription;
-      };
-
       function populateConf() {
         if (userLicenseIds) {
 
@@ -562,7 +529,6 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
-        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {

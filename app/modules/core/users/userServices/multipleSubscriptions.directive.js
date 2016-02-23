@@ -5,10 +5,11 @@
     .module('Core')
     .directive('multipleSubscriptions', multipleSubscriptions);
 
+  //TODO: Move showLicenses function into a Service instead of leaving it in the controller
   function multipleSubscriptions() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'module/core/users/userServices/multipleSubscriptions.tpl.html',
+      templateUrl: 'modules/core/users/userServices/multipleSubscriptions.tpl.html',
       controller: 'MultipleSubscriptionsCtrl',
       controllerAs: 'multipleSubscriptions'
     };

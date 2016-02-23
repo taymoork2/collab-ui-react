@@ -9,47 +9,46 @@
   function MultipleSubscriptionsCtrl(Orgservice) {
     var vm = this;
 
-    vm.multiSubscriptions = {
-      oneBilling: false,
-      selected: '',
-      options: []
-    };
-
+    vm.oneBilling = false;
+    vm.selectedSubscription = '';
+    vm.subscriptionOptions = [];
     vm.roomSystemsExist = false;
+
+    vm.showLicenses = showLicenses;
 
     init();
 
     function init() {
 
       Orgservice.getLicensesUsage().then(function (subscriptions) {
-        vm.multiSubscriptions.options = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-        vm.multiSubscriptions.selected = _.first(vm.multiSubscriptions.options);
-        vm.multiSubscriptions.oneBilling = _.size(vm.multiSubscriptions.options) === 1;
+        vm.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+        vm.selectedSubscription = _.first(vm.subscriptionOptions);
+        vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
       }).catch(function (response) {
         Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
       });
 
     }
 
-    function showMultiSubscriptions(billingServiceId, isTrial) {
+    function showLicenses(billingServiceId, isTrial) {
       var isSelected = false;
 
       var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial &&
-        (_.eq('Trial', vm.multiSubscriptions.selected));
+        (_.eq('Trial', vm.selectedSubscription));
       if (_.isArray(billingServiceId)) {
         for (var i in billingServiceId) {
-          if (_.eq(billingServiceId[i], vm.multiSubscriptions.selected)) {
+          if (_.eq(billingServiceId[i], vm.selectedSubscription)) {
             isSelected = vm.roomSystemsExist = true;
             break;
           }
         }
       } else {
-        isSelected = vm.roomSystemsExist = _.eq(billingServiceId, vm.multiSubscriptions.selected);
+        isSelected = vm.roomSystemsExist = _.eq(billingServiceId, vm.selectedSubscription);
       }
 
-      return vm.multiSubscriptions.oneBilling || isSelected || isTrialSubscription;
+      return vm.oneBilling || isSelected || isTrialSubscription;
     }
-    
+
   }
 
 })();
