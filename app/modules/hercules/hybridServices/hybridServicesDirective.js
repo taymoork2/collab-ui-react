@@ -98,14 +98,13 @@
     }
 
     function hasCaaSLicense() {
-      var caaSLicenses = [Config.offerCodes.MC, Config.offerCodes.SC, Config.offerCodes.TC, Config.offerCodes.EC, Config.offerCodes.EE];
-      var licenseIDs = vm.user.licenseID || [];
+      // latest update says that a "Collaboration as a Service license" is
+      // equivalent to any license
+      var licenseIDs = _.get(vm.user, 'licenseID', []);
       var offerCodes = _.map(licenseIDs, function (licenseString) {
         return licenseString.split('_')[0];
       });
-      return _.some(offerCodes, function (offerCode) {
-        return _.includes(caaSLicenses, offerCode);
-      });
+      return offerCodes.length > 0;
     }
 
     $scope.$on('$destroy', function () {

@@ -37,7 +37,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
 
   it('should not call ServiceDescriptor.services if user does not have a CaaS license', function () {
     vm = createControllerWithUser({
-      licenseID: ['WHATEVER']
+      licenseID: []
     });
     expect(ServiceDescriptor.services.called).toBe(false);
   });
