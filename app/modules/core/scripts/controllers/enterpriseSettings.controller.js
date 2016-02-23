@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config, $log) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -20,13 +20,31 @@
       isLoading: false,
       isConfirmed: null,
       urlValue: '',
+      isRoomLicensed: false,
       domainSuffix: Config.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
     var sipField = $scope.cloudSipUriField;
+    init();
 
-    $scope.setSipUri = function () {
+    function init() {
+      checkRoomLicense();
+      setSipUri();
+    }
+
+    function checkRoomLicense() {
+      return Orgservice.getLicensesUsage().then(function (subscriptions) {
+        var licenses = _.get(subscriptions[0], 'licenses');
+        _.each(licenses, function (license) {
+          if (license.offerName === 'SD') {
+            sipField.isRoomLicensed = true;
+          }
+        });
+      });
+    }
+
+    function setSipUri() {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
         var sparkDomainStr = Config.getSparkDomainCheckUrl();
@@ -46,8 +64,7 @@
         }
         sipField.inputValue = displayName;
       }, false, true);
-    };
-    $scope.setSipUri();
+    }
 
     $scope.checkSipUriAvailability = function () {
       var domain = sipField.inputValue;
