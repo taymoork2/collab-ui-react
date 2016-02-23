@@ -8,6 +8,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
   'WebExUtilsFact',
   'WebExXmlApiFact',
   'WebExXmlApiInfoSvc',
+  'WebExRestApiFact',
+
   function (
     $rootScope,
     $q,
@@ -15,8 +17,11 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj
+    webExXmlApiInfoObj,
+    WebExRestApiFact
   ) {
+
+    var _this = this;
 
     this.csvStatus = function (siteUrl) {
       var funcName = 'csvStatus()';
@@ -28,90 +33,62 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       // the code below is just a mock call to an existing webex api
       // this will be replaced with call to the real webex api once it is available
-      var dummyResult = {
-        "sitename": siteUrl,
 
-        "importStatus": {
-          "code": null,
-          "acceptedTime": null,
-          "completedTime": null,
-          "importFileName": null,
-          "errorReportLink": null
-        },
+      return WebExRestApiFact.csvStatusReq(
+        siteUrl
+      ).then(
 
-        "exportStatus": {
-          "code": null,
-          "acceptedTime": null,
-          "completedTime": null,
-          "exportFileLink": null,
-          "errorReportLink": null
+        function sendRestApiSuccess(response) {
+          var funcName = "";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
+
+          var result = {
+            'siteUrl': siteUrl,
+            'result:': null,
+            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
+            'completionInfo': null // not null only if status is expCompleted or impCompleted
+          };
+
+          $q.resolve(result);
         }
-      };
+      ).catch(
+        function restApiReqCatch(result) {
+          var funcName = "restApiReqCatch()";
+          var logMsg = "";
 
-      return $q.when(dummyResult);
-      /*
-      return WebExXmlApiFact.getSessionTicket(siteUrl)
-        .then(
-          function dummySuccess(response) {
-            var dummyResult = null;
-
-            if (null == response) {
-              dummyResult = {
-                siteUrl: siteUrl,
-                result: 'failed',
-                code: response
-              };
-
-              $q.reject(result);
-            }
-
-            dummyResult = {
-              siteUrl: siteUrl,
-              result: 'success',
-              status: response
-            };
-
-            return result;
-          } // dummySuccess()
-        ) // WebExXmlApiFact.getSessionTicket().then()
-        .catch(
-          function dummyCatch(error) {
-            var dummyResult = {
-              siteUrl: siteUrl,
-              result: 'error',
-              code: error
-            };
-
-            $q.reject(result);
-          } // dummyCatch()
-        ); // WebExXmlApiFact.getSessionTicket().catch()
-        */
+          $q.reject(result);
+        } // restApiReqCatch()
+      );
     }; // csvStatus()
 
     this.csvExport = function (siteUrl) {
-      var funcName = "csvExport()";
-      var logMsg = "";
+      var funcName = 'csvExport()';
+      var logMsg = '';
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+      logMsg = funcName + '\n' +
+        'siteUrl=' + siteUrl;
       $log.log(logMsg);
     }; // csvExport()
 
     this.csvImport = function (siteUrl) {
-      var funcName = "csvImport()";
-      var logMsg = "";
+      var funcName = 'csvImport()';
+      var logMsg = '';
 
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+      logMsg = funcName + '\n' +
+        'siteUrl=' + siteUrl;
       $log.log(logMsg);
     }; // csvImport()
 
     this.csvFileDownload = function (downloadUrl) {
-      var funcName = "csvFileDownload()";
-      var logMsg = "";
+      var funcName = 'csvFileDownload()';
+      var logMsg = '';
 
-      logMsg = funcName + "\n" +
-        "downloadUrl=" + downloadUrl;
+      logMsg = funcName + '\n' +
+        'downloadUrl=' + downloadUrl;
       $log.log(logMsg);
     }; // csvFileDownload()
 
