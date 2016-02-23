@@ -141,14 +141,23 @@
       );
     }
 
+    vm.abortSearchPromise = null;
+
     // get list of users for the provided search string
     // also retrieves extension for user for display, but not for searching
     function getUsers(searchStr, startat) {
+
+      var abortSearchPromise = vm.abortSearchPromise;
 
       // if we didn't get a start-at, we are starting over
       if (!angular.isDefined(startat)) {
         startat = vm.sort.startAt;
         vm.users = [];
+        if (vm.abortSearchPromise) {
+          vm.abortSearchPromise.resolve();
+        }
+        vm.abortSearchPromise = $q.defer();
+        abortSearchPromise = vm.abortSearchPromise;
       }
 
       var defer = $q.defer();
@@ -194,7 +203,7 @@
             // try to offer a minimum amount of matches.
             // if enough users didn't make it past sanity checks,
             // and we're still getting results back, then get some more.
-            if (_.size(vm.users) < vm.sort.minOffered && _.size(data.Resources)) {
+            if (_.size(vm.users) < vm.sort.minOffered && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
               defer.resolve(getUsers(searchStr, startat + vm.sort.maxCount));
             } else {
               // otherwise we're done

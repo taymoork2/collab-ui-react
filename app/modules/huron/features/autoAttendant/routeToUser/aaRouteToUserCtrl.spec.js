@@ -241,6 +241,10 @@ describe('Controller: AARouteToUserCtrl', function () {
     "success": true
   };
 
+  var userListFailedCISResponse = {
+    "success": false
+  };
+
   var listUsersProps = {
     "attributes": "attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID",
     "filter": "filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22",
