@@ -18,12 +18,10 @@ angular.module('WebExApp').service('WebexClientVersion', [
     Notification
   ) {
 
+    var self = this;
+
     this.relativeUrls = {
-      'clientVersions': 'partnertemplate/clientversions', //get
-      'setClientVersion': '', //post
-      'getClientVersion': '', //get
-      'getUseLatestVersion': '', //get
-      'setUseLatestVersion': '', //post
+      'clientVersions': 'clientversions', //get
       'getTemplate': 'partnertemplate/${partnerId}',
       'postTemplate': 'partnertemplate',
       'putTemplate': 'partnertemplate/${partnerTemplateId}'
@@ -79,13 +77,13 @@ angular.module('WebExApp').service('WebexClientVersion', [
       var cr = function (response) {
         return response.data.clientVersions;
       };
-      return this.getResult('clientVersions', cr);
+      return self.getResult('clientVersions', cr);
 
     }; //getWbxClientVersions
 
     this.getTotalUrl = function (name, orgId, partnerTemplate) {
-      var relativeUrl = this.relativeUrls[name];
-      var url = this.getAdminServiceUrl() + relativeUrl;
+      var relativeUrl = self.relativeUrls[name];
+      var url = self.getAdminServiceUrl() + relativeUrl;
 
       if (!angular.isUndefined(orgId)) {
         url = url.replace("${partnerId}", orgId);
@@ -104,34 +102,35 @@ angular.module('WebExApp').service('WebexClientVersion', [
 
     this.getTemplate = function (orgId) {
       var cr = function (resp) {
-        return resp.data;
+        return resp;
       };
-      return this.getResult('getTemplate', cr, orgId);
+      return self.getResult('getTemplate', cr, orgId);
     };
 
     this.postTemplate = function (orgId, useLatest, selectedVersion) {
       var cr = function (resp) {
         return resp;
       };
-      var j = this.getVersionJson("", orgId, selectedVersion, useLatest);
-      return this.post('postTemplate', j, orgId);
+      var j = self.getVersionJson("", orgId, selectedVersion, useLatest);
+      return self.post('postTemplate', j, orgId);
     };
 
     this.putTemplate = function (orgId, useLatest, selectedVersion, partnerTemplate) {
       var cr = function (resp) {
         return resp;
       };
-      var j = this.getVersionJson(partnerTemplate, orgId, selectedVersion, useLatest);
-      return this.post('postTemplate', j, partnerTemplate);
+      var j = self.getVersionJson(partnerTemplate, orgId, selectedVersion, useLatest);
+      return self.put('postTemplate', j, partnerTemplate);
     };
 
-    this.postOrPutTemplate = function (partnerTemplate, orgId, selectedVersion, useLatest) {
-      var pu = this.putTemplate;
-      var po = this.postTemplate;
-      var ge = this.getResult;
+    this.postOrPutTemplate = function (orgId, selectedVersion, useLatest) {
+      var pu = self.putTemplate;
+      var po = self.postTemplate;
+      var ge = self.getTemplate;
 
-      return ge().then(function (resp) {
-        if (resp.partnerTemplateId === "") {
+      return ge(orgId).then(function (resp) {
+        var pt = resp.data.partnerTemplateId;
+        if (pt === "") {
           //post
           po(orgId, useLatest, selectedVersion).then(function (resp) {
             return resp;
@@ -139,7 +138,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
 
           });
         } else {
-          pu(orgId, useLatest, selectedVersion, partnerTemplate).then(function (resp) {
+          pu(orgId, useLatest, selectedVersion, pt).then(function (resp) {
             return resp;
           }).catch(function (err) {
 
@@ -149,45 +148,31 @@ angular.module('WebExApp').service('WebexClientVersion', [
 
     };
 
-    // this.getSelectedWbxClientVersion = function (orgId) {
-    //   var prom = this.getResult('getClientVersion', function (response) {
-    //     return response; //for now. 
-    //   }, orgId);
-    //   return prom;
-    // };
-
-    // this.getUseLatestVersion = function (orgId) {
-    //   var prom = this.getResult('getUseLatestVersion', function (response) {
-    //     return response; //for now. 
-    //   }, orgId);
-    //   return prom;
-    // };
-
     this.getResult = function (name, convertResponse, orgId) {
-      var url = this.getTotalUrl(name, orgId);
+      var url = self.getTotalUrl(name, orgId);
       var prom = $http.get(url).then(function (response) {
         return convertResponse(response); //here we may need to do data.value
       }).catch(function (error) {
-        $q.reject(error); //-1 indicates no result due to http error.
+        $q.reject(error);
       });
       return prom;
     };
 
     this.post = function (name, json, partnerTemplate) {
-      var url = this.getTotalUrl(name, "", partnerTemplate);
-      $http.post(url, json).then(function (response) {
-        return response; //we don't care about response. Just success or failure.
+      var url = self.getTotalUrl(name, "", partnerTemplate);
+      return $http.post(url, json).then(function (response) {
+        return response;
       }).catch(function (error) {
-        $q.reject(error); //-1 indicates no result due to http error.
+        $q.reject(error);
       });
     };
 
     this.put = function (name, json, orgId) {
-      var url = this.getTotalUrl(name, orgId);
-      $http.put(url, json).then(function (response) {
-        return response; //we don't care about response. Just success or failure.
+      var url = self.getTotalUrl(name, orgId);
+      return $http.put(url, json).then(function (response) {
+        return response;
       }).catch(function (error) {
-        $q.reject(error); //-1 indicates no result due to http error.
+        $q.reject(error);
       });
     };
 

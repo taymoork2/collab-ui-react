@@ -131,7 +131,9 @@ ng-model="sel.selected"
             <cs-select
                ng-model="wbxclientversionselected"
                options="wbxclientversions"
-               placeholder="wbxclientversionplaceholder">
+               placeholder="wbxclientversionplaceholder"
+               on-change-fn="wbxclientversionselectchanged()"
+               is-disabled="useLatestWbxVersion">
             </cs-select>
           </div>
         </div>
@@ -144,8 +146,9 @@ ng-model="sel.selected"
          <div class="small-12 columns">
            <div class="row collapse" ng-if="isPartner">
              <div class="small-12 columns">
-               <label class="cs-checkbox" for="allowCustomerWbxClientVersion">
-                 <input type="checkbox" id="allowCustomerWbxClientVersion" ng-model="allowCustomerWbxClientVersions" ng-change="toggleWebexSelectLatestVersionAlways(allowCustomerWbxClientVersions)">
+               <label class="cs-checkbox" for="useLatestWbxVersion">
+                 <input type="checkbox" id="useLatestWbxVersion" ng-model="useLatestWbxVersion" 
+                 ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)">
                 <span translate="partnerProfile.alwaysProvisionWithLatest"></span>
                </label>
            </div>

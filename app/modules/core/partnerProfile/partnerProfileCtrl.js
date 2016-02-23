@@ -32,10 +32,12 @@ angular.module('Core')
         }
       };
 
-      $scope.allowCustomerWbxClientVersions = false;
-      $scope.wbxclientversionselected = 'testversion1.0';
+      $scope.useLatestWbxVersion = false;
+      $scope.wbxclientversionselected = '';
       $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
-      $scope.wbxclientversionplaceholder = 'Select webex client version';
+      $scope.wbxNoClientSelected = true;
+      $scope.wbxclientversionplaceholder = 'Select webex client version 44';
+      this.wbxclientversionplaceholder = 'Select webex client version';
       //For now restrict to one user (who is a partner)
       $scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
 
@@ -146,12 +148,24 @@ angular.module('Core')
         //$scope.wbxclientversions = "";
         var succ = function (data) {
           $scope.wbxclientversions = data;
-          $scope.wbxclientversionselected = data[0];
+          //$scope.wbxclientversionselected = data[0];
         };
         //nothing to do on error.
         WebexClientVersion.getWbxClientVersions().then(succ);
         //will need to do more stuff here. Init selected version as well. 
         //disable drop down ... but maybe not. 
+        WebexClientVersion.getTemplate(orgId).then(function (json) {
+          var clientVersion = json.data.clientVersion;
+          if (clientVersion === "") {
+            $scope.wbxNoClientSelected = true;
+            $scope.wbxclientversionselected = $scope.wbxclientversionplaceholder;
+          } else {
+            $scope.wbxNoClientSelected = false;
+            $scope.wbxclientversionselected = clientVersion;
+          }
+          
+        });
+
       };
 
       $scope.init();
@@ -223,15 +237,48 @@ angular.module('Core')
         });
       }
 
-      function toggleWebexSelectLatestVersionAlways() {
-        Log.info("TOGGLE *******");
-        $scope.allowCustomerWbxClientVersions = !$scope.allowCustomerWbxClientVersions;
-        WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
+      function toggleWebexSelectLatestVersionAlways(useLatest) {
+        Log.info("webex use latest version toggle");
+        var selected = $scope.wbxclientversionselected;
+        $scope.useLatestWbxVersion = useLatest;
+        var alwaysSelectLatest = $scope.useLatestWbxVersion;
+        //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
+        var p = WebexClientVersion.postOrPutTemplate(orgId, selected, $scope.useLatestWbxVersion);
+        var successMessage = "";
+        if (alwaysSelectLatest) {
+          successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
+        } else {
+          successMessage = $translate.instant('partnerProfile.webexVersionUseLatestFalse');
+        }
+        var failureMessage = $translate.instant('partnerProfile.webexVersionUseLatestUpdateFailed');
+        //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
+        //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
       }
+
+      function wbxclientversionselectchanged() {
+        Log.info("Webex selected version changed");
+        var versionSelected = $scope.wbxclientversionselected;
+        var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+
+        Log.info("New version selected is " + versionSelected);
+        var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
+        var failureMessage = $translate.instant('partnerProfile.webexClientVersionUpdatedFailed');
+        //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
+        //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+      }
+
+      this.wbxclientversionselectchanged = wbxclientversionselectchanged;
+
+      $scope.wbxclientversionselectchanged = _.debounce(
+        wbxclientversionselectchanged,
+        2000, {
+          'leading': true,
+          'trailing': false
+        });
 
       $scope.toggleWebexSelectLatestVersionAlways = _.debounce(
         toggleWebexSelectLatestVersionAlways,
-        2000, {
+        100, {
           'leading': true,
           'trailing': false
         });

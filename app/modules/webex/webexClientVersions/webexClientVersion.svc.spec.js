@@ -39,7 +39,7 @@ describe('WebexClientVersion Test', function () {
 
   it("should get client versions", function () {
 
-    var url = Config.getAdminServiceUrl() + 'partnertemplate/clientversions';
+    var url = Config.getAdminServiceUrl() + 'clientversions';
 
     //httpBackend.resetExpectations();
 
