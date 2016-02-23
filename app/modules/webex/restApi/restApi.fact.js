@@ -22,36 +22,6 @@
     ) {
       var _this = this;
 
-      this.sendRestApiReq = function (
-        siteUrl,
-        reqType,
-        resolve,
-        reject
-      ) {
-
-        var funcName = "sendRestApiReq()";
-        var logMsg = "";
-
-        logMsg = funcName + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
-          "reqType=" + reqType;
-        $log.log(logMsg);
-
-        var restApiUrl = null; // TODO
-        var fakeResult = null;
-
-        if ("csvStatusReq" == reqType) {
-          fakeResult = {
-            'sitename': siteUrl,
-            'result:': null,
-            'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
-            'completionInfo': null // not null only if status is expCompleted or impCompleted
-          };
-        }
-
-        $q.when(fakeResult);
-      }; //sendRestApiReq()
-
       return {
         csvStatusReq: function (
           siteUrl
@@ -64,11 +34,33 @@
             "siteUrl=" + siteUrl;
           $log.log(logMsg);
 
-          return $q.when(_this.sendRestApiReq(
-            siteUrl,
-            'csvStatusReq'
-          ));
+          var fakeResult = {
+            'sitename': siteUrl,
+            'result:': null,
+            'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
+            'completionInfo': null // not null only if status is expCompleted or impCompleted
+          };
+
+          return $q.when(fakeResult);
         }, // csvStatusReq()
+
+        csvExportReq: function (siteUrl) {
+          var funcName = "csvExportReq()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl;
+          $log.log(logMsg);
+
+          var fakeResult = {
+            'sitename': siteUrl,
+            'result:': null,
+            'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
+            'completionInfo': null // not null only if status is expCompleted or impCompleted
+          };
+
+          return $q.when(fakeResult);
+        }, // csvExportReq()
       }; // return
     } // top level function()
   ]);
