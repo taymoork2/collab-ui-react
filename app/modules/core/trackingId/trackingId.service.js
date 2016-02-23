@@ -9,11 +9,10 @@
   function TrackingId($http, Utils) {
 
     var service = {
-      generate: generate,
       increment: increment,
       clear: clear,
       get: get,
-      set: set
+      getWithoutSequence: getWithoutSequence
     };
 
     var TRACKING_ID = 'TrackingID';
@@ -37,20 +36,14 @@
       var trackingIdComponents = get().split(SEPARATOR);
       // If we already have something appended to the <SENDER_TYPE>_<UUID>
       if (trackingIdComponents.length > 2) {
-        // Convert the last component to a number
-        var lastComponent = _.chain(trackingIdComponents).last().parseInt().value();
-        // If not a number, it could have been an nvpair that we need to ignore
-        if (_.isNaN(lastComponent)) {
-          // Set initial sequence value for new sequence
-          lastComponent = INITIAL_SEQUENCE;
-        } else {
-          // Otherwise the last component is a sequence number
-          // Increment the sequence and pop off the old one
-          lastComponent++;
-          trackingIdComponents.pop();
-        }
+        // Increment the last component sequence
+        var sequence = _.chain(trackingIdComponents)
+          .pop()
+          .parseInt()
+          .add(1)
+          .value();
         // Add our new sequence number
-        trackingIdComponents.push(lastComponent);
+        trackingIdComponents.push(sequence);
       } else {
         // If we never had a sequence component, add the initial value
         trackingIdComponents.push(INITIAL_SEQUENCE);
@@ -65,6 +58,18 @@
 
     function get() {
       return trackingId;
+    }
+
+    function getWithoutSequence() {
+      if (trackingId) {
+        return _.chain(trackingId)
+          .split(SEPARATOR)
+          .dropRight(1)
+          .join(SEPARATOR)
+          .value();
+      } else {
+        return '';
+      }
     }
 
     function exists() {

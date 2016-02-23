@@ -989,9 +989,7 @@
         .then(processErrors);
     }
 
-    var promises = [];
-    promises.push(initServiceSetup());
-    $q.all(promises).finally(function () {
+    $q.all(initServiceSetup()).finally(function () {
       vm.processing = false;
     });
   }

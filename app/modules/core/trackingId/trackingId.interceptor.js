@@ -23,12 +23,40 @@
 
     // These services don't allow Access-Control-Expose-Headers header
     var exposeHeadersBlacklist = [
-      'idbroker.webex.com',
       'msgr-admin-bts.webexconnect.com',
       'msgr-admin.webexconnect.com'
     ];
 
+    // These services only allow Access-Control-Expose-Headers header on specific subdomains
+    var exposeHeadersWhiteBlacklistRegex = [
+      // Disallow all webex.com domains except for subdomain identity.webex.com
+      buildWhiteBlacklistRegex(['identity'], 'webex.com')
+    ];
+
     return interceptor;
+
+    /**
+     * Build a regex to return
+     * true if matches blacklist domain
+     * or
+     * false if matches whitelist subdomain
+     *
+     * @param {array} whitelistSubdomain The set of subdomains to allow
+     * @param {array} blacklistDomain The domain to disallow
+     */
+    function buildWhiteBlacklistRegex(whitelistSubdomain, blacklistDomain) {
+      var whitelistSubdomains = _.isArray(whitelistSubdomain) ? whitelistSubdomain : [whitelistSubdomain];
+      // Match anything with a blacklistDomain, with the exception of whitelistSubdomains
+      var regex = "^http?s:\/\/(?:(?!" + whitelistSubdomains.join('|') + ").*)\." + blacklistDomain;
+      return new RegExp(regex);
+    }
+
+    function isAllowedExposedHeaders(url) {
+      // If url doesn't include blacklist values and doesn't match an exposeHeadersWhiteBlacklistRegex
+      return !_.some(exposeHeadersBlacklist, _.partial(_.includes, url)) && !_.some(exposeHeadersWhiteBlacklistRegex, function (whiteBlacklistRegex) {
+        return whiteBlacklistRegex.test(url);
+      });
+    }
 
     function request(config) {
       // Clear TrackingID and return config if config.url includes any blacklist values
@@ -47,7 +75,7 @@
         config.headers[TRACKING_ID] = TrackingId.increment();
 
         // Add TrackingID to Access-Control-Expose-Headers if config.url doesn't include blacklist values
-        if (!_.some(exposeHeadersBlacklist, _.partial(_.includes, config.url))) {
+        if (isAllowedExposedHeaders(config.url)) {
           // Add or append tracking id header to expose headers
           var exposeHeaders = config.headers[ACCESS_CONTROL_EXPOSE_HEADERS];
           if (_.isUndefined(exposeHeaders)) {
