@@ -9,7 +9,13 @@
   function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
     var vm = $scope;
 
-    vm.features = [];
+    vm.features = [{
+      cssClass: 'HG',
+      code: 'huronHuntGroup.code',
+      label: 'huronHuntGroup.modalTitle',
+      description: 'huronHuntGroup.modalDescription',
+      toggle: 'huronHuntGroup'
+    }];
 
     vm.autoAttendant = {
       cssClass: 'AA',
@@ -17,14 +23,6 @@
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
       toggle: 'huronAutoAttendant'
-    };
-
-    vm.huntGroup = {
-      cssClass: 'HG',
-      code: 'huronHuntGroup.code',
-      label: 'huronHuntGroup.modalTitle',
-      description: 'huronHuntGroup.modalDescription',
-      toggle: 'huronHuntGroup'
     };
 
     vm.ok = ok;
@@ -39,14 +37,9 @@
 
       var aaToggle = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
 
-      var hgToggle = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
-
-      $q.all([aaToggle, hgToggle]).then(function (toggle) {
+      $q.all([aaToggle]).then(function (toggle) {
         if (toggle[0]) {
           vm.features.push(vm.autoAttendant);
-        }
-        if (toggle[1]) {
-          vm.features.push(vm.huntGroup);
         }
         vm.loading = false;
       });
