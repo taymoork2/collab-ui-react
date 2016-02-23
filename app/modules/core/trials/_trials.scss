@@ -101,3 +101,35 @@
 .days-left span {
   @extend .small;
 }
+
+.banner-msg {
+  display: table;
+  margin: 0 auto 3px;
+
+  .icon {
+    font-size: 1.7em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -0.2em;
+  }
+
+  button {
+    margin-left: 1em;
+  }
+
+  .msg--requested {
+    display: none;
+  }
+
+  &.has-requested {
+    color: $color-cta-base;
+
+    span.msg--requested {
+      display: inline;
+    }
+
+    span.msg--default {
+      display: none;
+    }
+  }
+}

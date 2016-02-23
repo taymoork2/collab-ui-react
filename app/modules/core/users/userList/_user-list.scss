@@ -7,6 +7,17 @@
    border-right: 0px;
   }
 
+  .user-status {
+    font-size: 0.6rem;
+    padding-right: rem(3);
+    &-yellow {
+      color: $brand-warning;
+    }
+    &-green {
+      color: $brand-success;
+    }
+  }
+
   .export-users {
     .icon-content-share {
       color: $gray;

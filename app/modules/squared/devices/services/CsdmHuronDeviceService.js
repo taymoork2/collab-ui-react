@@ -18,9 +18,15 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
-    var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
-      return CsdmConverter.convertHuronDevices(res.data);
+    var initialDataPromise = huronEnabled().then(function (enabled) {
+      return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
     });
+
+    function huronEnabled() {
+      return $q.when(Authinfo.isSquaredUC());
+    }
 
     function encodeHuronTags(description) {
       return (description || "").replace(/"/g, "'");
@@ -33,8 +39,10 @@
 
     var deviceCache = CsdmCacheFactory.create({
       fetch: function () {
-        return $http.get(devicesUrl).then(function (res) {
-          return CsdmConverter.convertHuronDevices(res.data);
+        return huronEnabled().then(function (enabled) {
+          return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+            return CsdmConverter.convertHuronDevices(res.data);
+          });
         });
       },
       update: function (url, obj) {

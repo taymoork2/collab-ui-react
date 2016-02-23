@@ -53,7 +53,7 @@
       var num = vm.model.phoneNumberInput.phoneNumber;
 
       if (num) {
-        num = num.replace(/\D/g, '');
+        num = num.replace(/[-\s]*/g, '');
       }
 
       if (fromRouteCall) {

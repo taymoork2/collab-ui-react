@@ -137,11 +137,9 @@
           var siteUrl = $stateParams.siteUrl || "";
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
           var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
-          var pageTitleFull = $translate.instant(
-            "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-              siteUrl: siteUrl
-            }
-          );
+          var pageTitleFull = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
+            siteUrl: siteUrl
+          });
 
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
@@ -193,31 +191,6 @@
           var logMsg = "";
 
           var _this = this;
-
-          WebExUtilsFact.getWebexLicenseInfo(_this.webExSiteSettingsObj.siteUrl).then(
-            function getWebexLicenseInfoSuccess(licenseInfo) {
-              var funcName = "getWebexLicenseInfoSuccess()";
-              var logMsg = "";
-
-              WebExUtilsFact.setInfoCardLicenseInfo(
-                licenseInfo,
-                _this.webExSiteSettingsObj.siteInfoCardObj
-              );
-
-              logMsg = funcName + ": " + "\n" +
-                "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
-              // $log.log(logMsg);
-            }, // getWebexLicenseInfoSuccess()
-
-            function getWebexLicenseInfoError(result) {
-              var funcName = "getWebexLicenseInfoError()";
-              var logMsg = "";
-
-              logMsg = funcName + ": " + "\n" +
-                "result=" + JSON.stringfy(result);
-              $log.log(logMsg);
-            } // getWebexLicenseInfoError()
-          );
 
           _this.getSiteSettingsInfoXml().then(
             function getSiteSettingsInfoXmlSuccess(getInfoResult) {

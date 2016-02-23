@@ -7,14 +7,14 @@
 
   /* @ngInject */
   function TrialResource($resource, Config, Authinfo) {
-    return $resource(Config.getAdminServiceUrl() + '/organization/:orgId/trials/:trialId', {
+    return $resource(Config.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId', {
       orgId: Authinfo.getOrgId(),
       trialId: '@trialId'
     }, {});
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService) {
+  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
     var _trialData;
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -93,46 +93,67 @@
     }
 
     function _getDetails(data) {
-      var details = {};
+      var deviceDetails = _trialData.trials.deviceTrial;
+      var details = {
+        devices: [],
+        shippingInfo: deviceDetails.shippingInfo
+      };
 
       _(data.trials)
         .filter({
           enabled: true
         })
         .forEach(function (trial) {
-          if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
-            details.devices = [];
-
-            if (!trial.skipDevices) {
-              details.shippingInfo = trial.details.shippingInfo;
-              details.shippingInfo.country = _.get(details, 'shippingInfo.country.code', '');
-              details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
-
-              // if this is not set, remove the whole thing
-              // since this may get sent with partially complete
-              // data that the backend doesnt like
-              if (details.shippingInfo.country === '') {
-                delete details.shippingInfo;
-              }
-
-              details.devices = _(trial.details.roomSystems)
-                .concat(trial.details.phones)
-                .filter({
-                  enabled: true
-                })
-                .map(function (device) {
-                  return _.pick(device, ['model', 'quantity']);
-                })
-                .value();
-            }
-          }
-
-          if (trial.type === Config.offerTypes.meetings) {
+          if (trial.type === Config.offerTypes.roomSystems) {
+            var roomSystemDevices = _(trial.details.roomSystems)
+              .filter({
+                enabled: true
+              })
+              .map(function (device) {
+                return _.pick(device, ['model', 'quantity']);
+              })
+              .value();
+            details.devices = details.devices.concat(roomSystemDevices);
+          } else if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
+            var callDevices = _(trial.details.phones)
+              .filter({
+                enabled: true
+              })
+              .map(function (device) {
+                return _.pick(device, ['model', 'quantity']);
+              })
+              .value();
+            details.devices = details.devices.concat(callDevices);
+          } else if (trial.type === Config.offerTypes.meetings) {
             details.siteUrl = _.get(trial, 'details.siteUrl', '');
             details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
         })
         .value();
+
+      if (deviceDetails.skipDevices) {
+        delete details.shippingInfo;
+        details.devices = [];
+      } else {
+        details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
+
+        // formly will nest the country inside of itself, I think this is because
+        // the country list contains country as a key, as well as the device.service
+        // having country as a key
+        // TODO: figure out why when we have the time
+        var nestedCountry = _.get(details, 'shippingInfo.country.country');
+        if (nestedCountry) {
+          details.shippingInfo.country = nestedCountry;
+        }
+
+        // if this is not set, remove the whole thing
+        // since this may get sent with partially complete
+        // data that the backend doesnt like
+        if (details.shippingInfo.country === '') {
+          delete details.shippingInfo;
+          details.devices = [];
+        }
+      }
 
       return details;
     }
@@ -154,25 +175,27 @@
     }
 
     function _makeTrial() {
-      var defaults = {
-        'customerName': '',
-        'customerEmail': '',
-        'licenseDuration': 90,
-        'licenseCount': 100,
-      };
-
       TrialMessageService.reset();
       TrialMeetingService.reset();
       TrialCallService.reset();
       TrialRoomSystemService.reset();
+      TrialDeviceService.reset();
+
+      var defaults = {
+        customerName: '',
+        customerEmail: '',
+        licenseDuration: 90,
+        licenseCount: 100
+      };
 
       _trialData = {
-        'details': angular.copy(defaults),
-        'trials': {
-          'messageTrial': TrialMessageService.getData(),
-          'meetingTrial': TrialMeetingService.getData(),
-          'callTrial': TrialCallService.getData(),
-          'roomSystemTrial': TrialRoomSystemService.getData(),
+        details: angular.copy(defaults),
+        trials: {
+          messageTrial: TrialMessageService.getData(),
+          meetingTrial: TrialMeetingService.getData(),
+          callTrial: TrialCallService.getData(),
+          roomSystemTrial: TrialRoomSystemService.getData(),
+          deviceTrial: TrialDeviceService.getData()
         },
       };
 
