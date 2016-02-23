@@ -159,6 +159,14 @@ describe('Authinfo', function () {
       expect(Authinfo.isAllowedState('blah.subblah')).toBe(true);
     });
 
+    it('should return true if user is in delegated administration org', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        isInDelegatedAdministrationOrg: true
+      });
+      expect(Authinfo.isInDelegatedAdministrationOrg()).toBe(true);
+    });
+
     function setupConfig(override) {
       override = override || {};
       var configMock = angular.extend({}, defaultConfig, override);
