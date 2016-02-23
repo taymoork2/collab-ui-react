@@ -9,35 +9,21 @@ describe('Controller: SupportCtrl', function () {
     'roles': roles
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_) {
+  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
+    Config = _Config_;
 
     currentUser = {
       success: true,
       roles: ['ciscouc.devops', 'ciscouc.devsupport']
     };
 
-    Config = {
-      isProd: function () {
-        return false;
-      },
-      getStatusPageUrl: function () {
-        return 'http://www.blah.com';
-      },
-      getScimUrl: function () {
-        return 'http://www.blah.com';
-      },
-      isIntegration: function () {
-        return true;
-      }
-    };
-
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
-
     spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
+    spyOn(Config, 'isProd').and.returnValue(false);
 
     $scope = $rootScope.$new();
     Userservice = Userservice;
