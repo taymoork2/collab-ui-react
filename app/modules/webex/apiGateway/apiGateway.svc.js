@@ -37,9 +37,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       return WebExRestApiFact.csvStatusReq(
         siteUrl
       ).then(
-
-        function sendRestApiSuccess(response) {
-          var funcName = "";
+        function csvStatusReqSuccess(response) {
+          var funcName = "csvStatusReqSuccess()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
@@ -54,15 +53,15 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           };
 
           $q.resolve(result);
-        }
+        } // csvStatusReqSuccess()
       ).catch(
-        function restApiReqCatch(result) {
-          var funcName = "restApiReqCatch()";
+        function csvStatusReqCatch(result) {
+          var funcName = "csvStatusReqCatch()";
           var logMsg = "";
 
           $q.reject(result);
         } // restApiReqCatch()
-      );
+      ); // return WebExRestApiFact.csvStatusReq()
     }; // csvStatus()
 
     this.csvExport = function (siteUrl) {
@@ -72,6 +71,38 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       $log.log(logMsg);
+
+      // the code below is just a mock call to an existing webex api
+      // this will be replaced with call to the real webex api once it is available
+
+      return WebExRestApiFact.csvExportReq(
+        siteUrl
+      ).then(
+        function csvExportReqSuccess(response) {
+          var funcName = "csvExportReqSuccess()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
+
+          var result = {
+            'siteUrl': siteUrl,
+            'result:': null,
+            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
+            'completionInfo': null // not null only if status is expCompleted or impCompleted
+          };
+
+          $q.resolve(result);
+        } // csvExportReqSuccess()
+      ).catch(
+        function csvExportReqCatch(result) {
+          var funcName = "csvExportReqCatch()";
+          var logMsg = "";
+
+          $q.reject(result);
+        } // csvExportReqCatch()
+      ); // return WebExRestApiFact.csvExportReq()
     }; // csvExport()
 
     this.csvImport = function (siteUrl) {
