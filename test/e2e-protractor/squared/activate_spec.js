@@ -16,7 +16,6 @@ describe('Self Registration Activation Page', function () {
 
     beforeEach(function () {
       iosData = iosData || activate.setup(config.deviceUserAgent.iPhone);
-      expect(iosData.encryptedQueryParam).not.toBe(null);
     });
 
     describe('Desktop activation for iOS device', function () {
@@ -70,7 +69,6 @@ describe('Self Registration Activation Page', function () {
 
     beforeEach(function () {
       androidData = androidData || activate.setup(config.deviceUserAgent.android);
-      expect(androidData.encryptedQueryParam).not.toBe(null);
     });
 
     describe('Desktop activation for android device', function () {
