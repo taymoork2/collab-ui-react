@@ -31,6 +31,7 @@
       var defaults = {
         type: Config.offerTypes.call,
         enabled: false,
+        skipCall: false,
         details: {
           phones: [{
             model: 'CISCO_8865',
@@ -48,7 +49,27 @@
             model: 'CISCO_7841',
             enabled: false,
             quantity: 0
-          }]
+          }],
+          pstnProvider: {},
+          swivelNumbers: [],
+          pstnContractInfo: {
+            companyName: '',
+            signeeFirstName: '',
+            signeeLastName: '',
+            email: ''
+          },
+          pstnNumberInfo: {
+            state: {},
+            areaCode: {},
+            numbers: []
+          },
+          emergAddr: {
+            streetAddress: '',
+            unit: '',
+            city: '',
+            state: '',
+            zip: ''
+          }
         }
       };
 

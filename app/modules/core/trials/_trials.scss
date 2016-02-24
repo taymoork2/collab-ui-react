@@ -69,6 +69,43 @@
   .pad-top {
     padding-top: 6px;
   }
+  .did-input {
+    //position: relative;
+    .tokenfield {
+        min-height: rem(144px);
+    }
+  }
+  .token {
+      background-color: $color-primary-base;
+      color: $white;
+      .close {
+          color: $white;
+      }
+      padding: rem(6px) rem(6px);
+  }
+  .no-pad {
+      padding-bottom: 0;
+  }
+  .no-flex {
+      flex: none;
+      -webkit-flex: none;
+  }
+  .max-width {
+      div > div > div > div > a {
+          width: 100%;
+      }
+  }
+  .flex-it {
+      display:flex;
+      flex-direction:row;
+  }
+  .pad-right {
+      padding-right:1.6rem;
+  }
+  .flex1 {
+      flex:1;
+      padding-left: 1px;
+  }
 }
 
 .trial-modal--complete {

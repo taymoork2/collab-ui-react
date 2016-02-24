@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService;
+  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, PstnSetupService, PstnServiceAddressService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _PstnSetupService_, _PstnServiceAddressService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -17,6 +17,8 @@ describe('Controller: TrialAddCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
+    PstnSetupService = _PstnSetupService_;
+    PstnServiceAddressService = _PstnServiceAddressService_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
@@ -55,7 +57,7 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have correct navigation state order', function () {
-    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers']);
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
   });
 
   it('should transition state', function () {
@@ -156,6 +158,10 @@ describe('Controller: TrialAddCtrl', function () {
 
       it('should notify success', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+        spyOn(PstnSetupService, 'reserveCarrierInventory').and.returnValue($q.when());
+        spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
+        spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
+        spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
         controller.startTrial();
         $scope.$apply();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');

@@ -38,18 +38,6 @@
       PENDING: PENDING
     };
 
-    var billingAddress = {
-      "billingName": "Cisco Systems",
-      "billingStreetNumber": "2200",
-      "billingStreetDirectional": "E",
-      "billingStreetName": "President George Bush",
-      "billingStreetSuffix": "Hwy",
-      "billingAddressSub": "",
-      "billingCity": "Richardson",
-      "billingState": "TX",
-      "billingZip": "75082"
-    };
-
     return service;
 
     function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
@@ -61,7 +49,6 @@
         "email": email,
         "pstnCarrierId": pstnCarrierId,
         "resellerId": Authinfo.getOrgId(),
-        "billingAddress": billingAddress,
         "numbers": numbers,
         "trial": true
       };

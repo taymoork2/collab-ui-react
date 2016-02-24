@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, PstnSetupService, PstnServiceAddressService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -54,11 +54,19 @@
       'name': 'trialEdit.addNumbers',
       'trials': [vm.callTrial],
       'enabled': true,
+    }, {
+      'name': 'trialEdit.pstn',
+      'trials': [vm.callTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialEdit.emergAddress',
+      'trials': [vm.callTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -419,6 +427,60 @@
                 vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
+              }).then(function () {
+                if (vm.callTrial.skipCall === false) {
+                  return PstnSetupService.reserveCarrierInventory(
+                    vm.customerOrgId,
+                    vm.callTrial.details.pstnProvider.uuid,
+                    vm.callTrial.details.pstnNumberInfo.numbers,
+                    false
+                  ).catch(function (response) {
+                    vm.loading = false;
+                    Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+                    return $q.reject(response);
+                  }).then(function () {
+                    return PstnSetupService.createCustomer(
+                      vm.customerOrgId,
+                      vm.callTrial.details.pstnContractInfo.companyName,
+                      vm.callTrial.details.pstnContractInfo.signeeFirstName,
+                      vm.callTrial.details.pstnContractInfo.signeeLastName,
+                      vm.callTrial.details.pstnContractInfo.email,
+                      vm.callTrial.details.pstnProvider.uuid,
+                      vm.callTrial.details.pstnNumberInfo.numbers
+                    ).catch(function (response) {
+                      vm.loading = false;
+                      Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
+                      return $q.reject(response);
+                    }).then(function () {
+                      return PstnSetupService.orderNumbers(
+                        vm.customerOrgId,
+                        vm.callTrial.details.pstnProvider.uuid,
+                        vm.callTrial.details.pstnNumberInfo.numbers
+                      ).catch(function (response) {
+                        vm.loading = false;
+                        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+                        return $q.reject(response);
+                      }).then(function () {
+                        var address = {
+                          streetAddress: vm.callTrial.details.emergAddr.streetAddress,
+                          unit: vm.callTrial.details.emergAddr.unit,
+                          city: vm.callTrial.details.emergAddr.city,
+                          state: vm.callTrial.details.emergAddr.state,
+                          zip: vm.callTrial.details.emergAddr.zip
+                        };
+                        return PstnServiceAddressService.createCustomerSite(
+                          vm.customerOrgId,
+                          vm.callTrial.details.pstnContractInfo.companyName,
+                          address
+                        );
+                      }).catch(function (response) {
+                        vm.loading = false;
+                        Notification.errorResponse(response, 'trialModal.pstn.error.siteFail');
+                        return $q.reject(response);
+                      });
+                    });
+                  });
+                }
               });
           }
         })

@@ -1,0 +1,77 @@
+<!-- PSTN Trial Modal -->
+<form id="callTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
+
+  <!-- header -->
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <h3 class="modal-title" translate="trialModal.pstn.title"></h3>
+  </div>
+
+  <!-- body -->
+  <section class="modal-body row">
+    <h5 translate="trialModal.pstn.pstnProvider"></h5>
+    <section class="row full indent">
+       <formly-form model="pstnTrial.pstn.providerSelection" fields="pstnTrial.pstnProviderField"
+        class="medium-12 columns indent">
+        </formly-form>
+    </section>
+  </section>
+  <div>
+  <div ng-if="pstnTrial.trialData.details.pstnProvider.name !== 'IntelePeer'">
+    <section class="modal-body row">
+      <h5 translate="trialModal.pstn.phoneNumbers"></h5>
+      <h6 class="indent" translate="trialModal.pstn.pleaseAdd"></h6>
+      <section class="medium-11 indent columns flex-it">
+        <div class="pad-right">
+          <h6 translate="trialModal.pstn.numbers"></h6>
+        </div>
+        <div class="did-input flex1">
+          <cs-token-field tokens="pstnTrial.manualunsavedTokens" tokenfieldid="pstnTrial.manualtokenfieldid" tokenoptions="pstnTrial.manualtokenoptions" tokenmethods="pstnTrial.manualtokenmethods"></cs-token-field>
+        </div>
+      </section>
+    </section>
+  </div>
+  <div>
+  <div ng-if="pstnTrial.trialData.details.pstnProvider.name === 'IntelePeer'">
+  <section class="modal-body row">
+      <div class="flex-it">
+        <h5 translate="trialModal.pstn.contract"></h5>
+      </div>
+    <section class="row full indent">
+       <formly-form model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
+        </formly-form>
+    </section>
+  </section>
+  <section class="modal-body row">
+    <h5 translate="trialModal.pstn.phoneNumbers"></h5>
+    <h6 translate="trialModal.pstn.pleaseAdd10" class="indent"></h6>
+    <section class="medium-12 columns">
+      <formly-form model="pstnTrial.numberSearchInfo" fields="pstnTrial.pstnStateAreaFields">
+          </formly-form>
+    </section>
+    <section class="medium-12 columns flex-it">
+      <div class="medium-2 columns pad-right">
+        <h6 class="text-right" translate="trialModal.pstn.numbers"></h6>
+      </div>
+      <div class="did-input medium-10 columns flex1">
+        <cs-token-field tokens="pstnTrial.unsavedTokens" tokenfieldid="pstnTrial.tokenfieldid" tokenoptions="pstnTrial.tokenoptions" tokenmethods="pstnTrial.tokenmethods"></cs-token-field>
+      </div>
+    </section>
+  </section>
+  </div>
+  <!-- footer -->
+  <div class="modal-footer">
+    <a class="pull-left" ng-click="pstnTrial.skip(true); trial.nextStep()" translate="trialModal.pstn.skip"></a>
+    <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
+      translate="common.back">
+    </button>
+    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="!pstnTrial.checkForInvalidTokens()">
+        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
+      </span>
+    </button>
+  </div>
+</form>

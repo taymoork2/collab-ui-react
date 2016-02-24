@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService, PstnSetupService, PstnServiceAddressService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
@@ -36,11 +36,19 @@
       'name': 'trialAdd.addNumbers',
       'trials': [vm.callTrial],
       'enabled': true,
+    }, {
+      'name': 'trialAdd.pstn',
+      'trials': [vm.callTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialAdd.emergAddress',
+      'trials': [vm.callTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
+    vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
     vm.showMeeting = false;
     vm.canEditMessage = true;
@@ -143,7 +151,7 @@
         class: 'columns medium-12',
       },
       hideExpression: function () {
-        return !vm.hasCallEntitlement();
+        return !vm.hasCallEntitlement;
       }
     }];
 
@@ -212,7 +220,7 @@
       },
     }];
 
-    vm.hasCallEntitlement = Authinfo.isSquaredUC;
+    vm.hasCallEntitlement = Authinfo.isSquaredUC();
     vm.hasTrial = hasTrial;
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
@@ -231,13 +239,15 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials),
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0];
         vm.meetingTrial.enabled = results[1];
         vm.supportsPstnSetup = results[2];
-        vm.callTrial.enabled = vm.hasCallEntitlement();
+        vm.callTrial.enabled = vm.hasCallEntitlement;
+        vm.callTrial.skipCall = !results[4] && vm.supportsPstnSetup;
         vm.messageTrial.enabled = true;
         if (vm.meetingTrial.enabled) {
           vm.showMeeting = true;
@@ -253,7 +263,15 @@
         var addNumbersModal = _.find(vm.trialStates, {
           'name': 'trialAdd.addNumbers'
         });
+        var pstnModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.pstn'
+        });
+        var emergAddressModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.emergAddress'
+        });
 
+        pstnModal.enabled = vm.supportsPstnSetup && results[4];
+        emergAddressModal.enabled = vm.supportsPstnSetup && results[4];
         devicesModal.enabled = results[3];
         meetingModal.enabled = results[1];
         addNumbersModal.enabled = !vm.supportsPstnSetup;
@@ -366,7 +384,11 @@
       return _.chain(vm.navStates)
         .indexOf($state.current.name)
         .thru(function (index) {
-          return _.slice(vm.navStates, index + 1);
+          if ($state.current.name === 'trialAdd.pstn' && vm.callTrial.skipCall === true) {
+            return _.slice(vm.navStates, index + 2);
+          } else {
+            return _.slice(vm.navStates, index + 1);
+          }
         })
         .find(function (state) {
           return !_.isUndefined(state);
@@ -425,6 +447,60 @@
                 vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
+              }).then(function () {
+                if (vm.callTrial.skipCall === false) {
+                  return PstnSetupService.reserveCarrierInventory(
+                    vm.customerOrgId,
+                    vm.callTrial.details.pstnProvider.uuid,
+                    vm.callTrial.details.pstnNumberInfo.numbers,
+                    false
+                  ).catch(function (response) {
+                    vm.loading = false;
+                    Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+                    return $q.reject(response);
+                  }).then(function () {
+                    return PstnSetupService.createCustomer(
+                      vm.customerOrgId,
+                      vm.callTrial.details.pstnContractInfo.companyName,
+                      vm.callTrial.details.pstnContractInfo.signeeFirstName,
+                      vm.callTrial.details.pstnContractInfo.signeeLastName,
+                      vm.callTrial.details.pstnContractInfo.email,
+                      vm.callTrial.details.pstnProvider.uuid,
+                      vm.callTrial.details.pstnNumberInfo.numbers
+                    ).catch(function (response) {
+                      vm.loading = false;
+                      Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
+                      return $q.reject(response);
+                    }).then(function () {
+                      return PstnSetupService.orderNumbers(
+                        vm.customerOrgId,
+                        vm.callTrial.details.pstnProvider.uuid,
+                        vm.callTrial.details.pstnNumberInfo.numbers
+                      ).catch(function (response) {
+                        vm.loading = false;
+                        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+                        return $q.reject(response);
+                      }).then(function () {
+                        var address = {
+                          streetAddress: vm.callTrial.details.emergAddr.streetAddress,
+                          unit: vm.callTrial.details.emergAddr.unit,
+                          city: vm.callTrial.details.emergAddr.city,
+                          state: vm.callTrial.details.emergAddr.state,
+                          zip: vm.callTrial.details.emergAddr.zip
+                        };
+                        return PstnServiceAddressService.createCustomerSite(
+                          vm.customerOrgId,
+                          vm.callTrial.details.pstnContractInfo.companyName,
+                          address
+                        );
+                      }).catch(function (response) {
+                        vm.loading = false;
+                        Notification.errorResponse(response, 'trialModal.pstn.error.siteFail');
+                        return $q.reject(response);
+                      });
+                    });
+                  });
+                }
               });
           }
         })
