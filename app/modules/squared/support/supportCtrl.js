@@ -56,14 +56,7 @@ angular.module('Squared')
         state: "support.status"
       }];
 
-      if ((Config.isIntegration() || Config.isDev())) {
-        if (Authinfo.isInDelegatedAdministrationOrg()) {
-          $scope.tabs.push({
-            title: $translate.instant('supportPage.tabs.logs'),
-            state: "support.logs"
-          });
-        }
-      } else {
+      if (Authinfo.isInDelegatedAdministrationOrg()) {
         $scope.tabs.push({
           title: $translate.instant('supportPage.tabs.logs'),
           state: "support.logs"
