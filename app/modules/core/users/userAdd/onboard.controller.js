@@ -1128,7 +1128,7 @@ angular.module('Core')
               userResult.message = $translate.instant('usersPage.userExistsError', {
                 email: userResult.email
               });
-            } else if (userStatus === 403 && user.message === '400084') {
+            } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
               userResult.message = $translate.instant('usersPage.claimedDomainError', {
                 email: userResult.email,
                 domain: userResult.email.split('@')[1]

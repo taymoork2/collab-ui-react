@@ -20,13 +20,30 @@
       isLoading: false,
       isConfirmed: null,
       urlValue: '',
+      isRoomLicensed: false,
       domainSuffix: Config.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
     var sipField = $scope.cloudSipUriField;
+    init();
 
-    $scope.setSipUri = function () {
+    function init() {
+      checkRoomLicense();
+      setSipUri();
+    }
+
+    function checkRoomLicense() {
+      Orgservice.getLicensesUsage().then(function (response) {
+        var licenses = _.get(response, '[0].licenses');
+        var roomLicensed = _.find(licenses, {
+          offerName: 'SD'
+        });
+        sipField.isRoomLicensed = !_.isUndefined(roomLicensed);
+      });
+    }
+
+    function setSipUri() {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
         var sparkDomainStr = Config.getSparkDomainCheckUrl();
@@ -46,8 +63,7 @@
         }
         sipField.inputValue = displayName;
       }, false, true);
-    };
-    $scope.setSipUri();
+    }
 
     $scope.checkSipUriAvailability = function () {
       var domain = sipField.inputValue;

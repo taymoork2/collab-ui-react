@@ -597,6 +597,11 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
+    it('checkOutsideClaimedDomain', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400091')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
     it('checkUserExists', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400081')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
