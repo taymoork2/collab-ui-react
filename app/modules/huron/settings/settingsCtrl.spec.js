@@ -283,7 +283,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-    //expect(ModalService.open).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
