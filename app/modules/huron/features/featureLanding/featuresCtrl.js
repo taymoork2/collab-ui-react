@@ -94,12 +94,14 @@
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      reInstantiateMasonry();
     }
 
     function reload() {
@@ -208,7 +210,21 @@
 
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
+      } else {
+        reInstantiateMasonry();
       }
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function showReloadPageIfNeeded() {
