@@ -1111,7 +1111,10 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct',
+          'activatedProductSuccessPage',
+          'activateProductErrorPage'
         ],
         Readonly_Admin: [
           'overview',
@@ -1126,10 +1129,13 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct',
+          'activatedProductSuccessPage',
+          'activateProductErrorPage'
         ],
         Support: ['support', 'reports', 'billing', 'devReports'],
-        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct', 'activatedProductSuccessPage', 'activateProductErrorPage'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
