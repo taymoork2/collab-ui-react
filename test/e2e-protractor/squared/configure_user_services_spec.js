@@ -144,8 +144,10 @@ describe('Configuring services per-user', function () {
   //////////////////////////////////////
   // NO hybrid services
   //
-  it('should add user with NO hybrid services selected', function () {
+  it('should add user with NO license for hybrid services', function () {
     users.createUser(testUser);
+
+    // we do not check anything during onboarding so no license for this user
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
@@ -154,8 +156,8 @@ describe('Configuring services per-user', function () {
     activate.setup(null, testUser);
 
     utils.searchAndClick(testUser);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.expectIsDisplayed(users.hybridServices_sidePanel_Calendar);
+    utils.expectIsDisplayed(users.hybridServices_sidePanel_UC);
     utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
