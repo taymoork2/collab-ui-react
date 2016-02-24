@@ -19,16 +19,28 @@
     </article>
   </cs-card>
 
-  <cs-card class="medium" ng-show="showHelpdeskCard">
+  <cs-card class="medium" ng-show="showToolsCard()">
     <article>
       <header>
-        <h4 translate="supportPage.cards.helpDesk"></h4>
+        <h4 translate="supportPage.cards.tools.tools"></h4>
       </header>
       <section class="indent">
-        <p class="content" translate="helpdesk.launchHelpdeskDesc"></p>
-        <div class="help-desk">
+
+        <div ng-show="showHelpdeskLink">
+          <h5 translate="supportPage.cards.tools.helpdeskSupport"></h5>
+          <p class="content" translate="supportPage.cards.tools.launchHelpdeskDesc"></p>
           <a target="_blank" ui-sref="helpdesk.search">
-            <button class="btn btn--people btn--large" style="margin-top: 20px;" translate="helpdesk.launchHelpdesk"></button>
+            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
+          </a>
+        </div>
+
+        <br>
+
+        <div ng-show="showCdrCallFlowLink">
+          <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
+          <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>
+          <a target="_blank" ui-sref="cdrsupport">
+            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
           </a>
         </div>
       </section>
@@ -63,23 +75,6 @@
         </p>
         <p class="content">
           <a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a>
-        </p>
-      </section>
-    </article>
-  </cs-card>
-</cs-card-layout>
-
-<cs-card-layout class="status">
-  <cs-card class="medium"  ng-show="showToolsCard">
-    <article>
-      <header>
-        <h4 translate="supportPage.cards.tools"></h4>
-      </header>
-      <section class="indent">
-        <p class="content">
-          <a ui-sref="cdrsupport">
-            <span>{{::'supportPage.cdrLogs' | translate}}</span>
-          </a>
         </p>
       </section>
     </article>
