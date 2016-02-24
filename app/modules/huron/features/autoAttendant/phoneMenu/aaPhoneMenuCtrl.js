@@ -101,6 +101,10 @@
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+        name: 'phoneMenuRouteUser',
+        action: 'routeToUser'
       }
     ];
 
@@ -307,10 +311,6 @@
     function addAvailableFeatures() {
       if (Config.isDev() || Config.isIntegration()) {
         vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-          name: 'phoneMenuRouteUser',
-          action: 'routeToUser'
-        }, {
           label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
           name: 'phoneMenuRouteMailbox',
           action: 'routeToVoiceMail'

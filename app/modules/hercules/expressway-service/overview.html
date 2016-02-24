@@ -14,7 +14,7 @@
           <span class="export-number" ng-if="exp.userStatusSummary.notActivated > 0">| <span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
           <span class="export-number" ng-if="exp.userStatusSummary.error > 0">| <span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></span>
           <a ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)" class="export-users-statuses-icon">
-            <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
+            <span id="export-icon" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
           </a>
         </div>
         <button class="btn btn--people add-resource-button" type="submit"

@@ -1,0 +1,11 @@
+[{
+  "user": [{
+    "uuid": "1",
+    "restriction": "DIALINGCOSTAG_INTERNATIONAL",
+    "blocked": false
+  }],
+  "customer": [{
+    "uuid": "1",
+    "restriction": "DIALINGCOSTAG_INTERNATIONAL"
+  }]
+}]

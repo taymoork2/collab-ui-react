@@ -153,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "コミュニケーション",
     "cloudExtensions": "ハイブリッド サービス",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "資格が付与されました",
       "404": "存在しません",
@@ -2004,7 +2004,7 @@
     "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
     "EC": "WebEx Event Centerのみ",
     "EE": "WebEx 企業 Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "をコール",
     "ST": "ストレージ",
     "SD": "Spark 会議室システム"
@@ -2691,7 +2691,7 @@
     "TC": "魅力的なインタラクティブトレーニングを提供しましょう",
     "EC": "WebEx Event Centerのみ",
     "EE": "WebEx エンタープライズエディション",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "をコール",
     "ST": "ストレージ",
     "SD": "Spark 会議室システム"

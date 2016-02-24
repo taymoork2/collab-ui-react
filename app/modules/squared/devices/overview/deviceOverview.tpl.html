@@ -123,6 +123,12 @@
           <p class="form-control-static">{{deviceOverview.currentDevice.mac}}</p>
         </div>
       </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.sipUrl}}</p>
+        </div>
+      </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.serial"></label>
         <div class="col-sm-8">

@@ -177,7 +177,7 @@
   }
 
   /* @ngInject */
-  function AlarmController($stateParams) {
+  function MediaAlarmController($stateParams) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
     vm.host = $stateParams.host;
@@ -215,5 +215,5 @@
     .module('Mediafusion')
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
-    .controller('AlarmController', AlarmController);
+    .controller('MediaAlarmController', MediaAlarmController);
 }());

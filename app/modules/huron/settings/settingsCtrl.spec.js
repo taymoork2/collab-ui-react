@@ -2,14 +2,14 @@
 
 describe('Controller: HuronSettingsCtrl', function () {
   var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, FeatureToggleService;
-  var HuronCustomer, ServiceSetup, PstnSetupService, ModalService, modalDefer;
+  var HuronCustomer, ServiceSetup, PstnSetupService, ModalService, modalDefer, Authinfo;
   var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
   var getDeferred;
 
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_) {
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_, _ModalService_, _Authinfo_) {
 
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -22,6 +22,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     PstnSetupService = _PstnSetupService_;
     ModalService = _ModalService_;
+    Authinfo = _Authinfo_;
     $q = _$q_;
     modalDefer = $q.defer();
 
@@ -71,12 +72,91 @@ describe('Controller: HuronSettingsCtrl', function () {
     });
     spyOn(Notification, 'notify');
     spyOn(Notification, 'processErrorResponse');
+    spyOn(Authinfo, 'getLicenseIsTrial').and.returnValue(true);
 
     controller = $controller('HuronSettingsCtrl', {
       $scope: $scope
     });
     $scope.$apply();
   }));
+
+  describe('isDisableInternationalDialing():', function () {
+    it('should disable international dialing toggle if customer is in trial', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(false));
+      Authinfo.getLicenseIsTrial.and.returnValue(true);
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(true);
+    });
+
+    it('should enable international dialing toggle if customer is NOT in trial', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(false));
+      Authinfo.getLicenseIsTrial.and.returnValue(false);
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(false);
+    });
+
+    it('should enable international dialing toggle if customer is in trial but has override', function () {
+      FeatureToggleService.supports.and.returnValue($q.when(true));
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).not.toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(false);
+    });
+
+    it('should enable international dialing toggle if get override fails but customer is NOT in trial', function () {
+      FeatureToggleService.supports.and.returnValue($q.reject());
+      Authinfo.getLicenseIsTrial.and.returnValue(false);
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(false);
+    });
+
+    it('should disable international dialing toggle if get override fails and customer is in trial', function () {
+      FeatureToggleService.supports.and.returnValue($q.reject());
+      Authinfo.getLicenseIsTrial.and.returnValue(true);
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(true);
+    });
+
+    it('should disable international dialing toggle if get override fails and unable to determine if customer is in trial', function () {
+      FeatureToggleService.supports.and.returnValue($q.reject());
+      Authinfo.getLicenseIsTrial.and.returnValue(undefined);
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+      expect(FeatureToggleService.supports).toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).toHaveBeenCalled();
+      expect(isTrial.$$state.value).toBe(true);
+    });
+
+    it('should not call services if value is already set', function () {
+      controller.disableInternationalDialing = true;
+
+      var isTrial = controller.isDisableInternationalDialing();
+      $scope.$apply();
+
+      expect(FeatureToggleService.supports).not.toHaveBeenCalled();
+      expect(Authinfo.getLicenseIsTrial).not.toHaveBeenCalled();
+      expect(isTrial).toBe(true);
+    });
+  });
 
   it('should initialize the Settings page', function () {
     controller.init();

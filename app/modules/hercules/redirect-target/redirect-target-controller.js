@@ -11,6 +11,7 @@
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
     vm.enableRedirectToTarget = false;
+    vm.back = back;
 
     function addRedirectTargetClicked(hostName) {
       RedirectTargetService.addRedirectTarget(hostName).then(function () {
@@ -21,6 +22,10 @@
     function redirectToTargetAndCloseWindowClicked(hostName) {
       $modalInstance.close();
       $window.open("https://" + encodeURIComponent(hostName) + "/fusionregistration");
+    }
+
+    function back() {
+      vm.enableRedirectToTarget = false;
     }
   }
 }());

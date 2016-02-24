@@ -18,8 +18,8 @@
         <td translate="common.status"></td>
         <td>
           <i class="fa fa-circle status-icon"
-             ng-class="'hercules-state-' + hostDetailsCtrl.host.runningStateSeverity"></i>
-          <span translate="{{'hercules.status.' + hostDetailsCtrl.host.runningState }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
+             ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(hostDetailsCtrl.host.state).label"></i>
+          <span translate="{{'hercules.status.' + hostDetailsCtrl.host.state }}"></span><span ng-if="hostDetailsCtrl.host.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
         </td>
       </tr>
       </tbody>
@@ -28,7 +28,7 @@
       <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
         <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
       </a>
-      <a href sq-click-promise="hostDetailsCtrl.deleteHost()" ng-if="hostDetailsCtrl.host.runningState === 'offline'">
+      <a href sq-click-promise="hostDetailsCtrl.deleteHost()" ng-if="hostDetailsCtrl.host.state === 'offline'">
         <button class="btn btn--negative" translate="hercules.connectors.remove"></button>
       </a>
     </div>

@@ -54,6 +54,7 @@
     var mediaCard = null;
     var mediaData = [];
     vm.mediaQualityStatus = REFRESH;
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
     vm.mediaOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.allCalls')

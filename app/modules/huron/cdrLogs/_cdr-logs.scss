@@ -15,7 +15,33 @@
     background-color: $brand-white;
     width: 100%;
     margin: 0;
-    padding: 30px;
+    padding: 10px 30px 30px 35px;
+
+    .hitSize {
+      padding-top: rem-calc(15);
+      padding-bottom: rem-calc(10);
+    }
+
+    .inline-display {
+      display: inline-block;
+      padding-right: rem-calc(35);
+    }
+
+    /* makes cs-datepicker required */
+    .searchUpload .cs-datapicker-normal {
+      button {
+        visibility: hidden;
+      }
+
+      input {
+        max-width: 75%;
+      }
+    }
+
+    .cdrDisplay {
+      padding-top: rem-calc(10);
+    }
+
     .cdr-accordion-title {
       margin: 0 0 rem-calc(10);
     }
@@ -48,55 +74,11 @@
         display: inline-flex;
         margin-right: rem-calc(10);
       }
-      .search-indent {
-        margin-left: rem-calc(30);
-      }
-      .hitsize {
-        display: block;
-        margin-top: rem-calc(15);
-      }
+
       .search-display {
         display: inline-flex;
       }
-      .search-display, .hitsize {
-        margin-bottom: 0;
-        height:vr-adjust(20) ;
-        .form-radio {
-          margin-bottom: rem-calc(10);
-        }
-        .formly-input-wrapper {
-          display: inline-flex;
-          margin-right: rem-calc(10);
-          input {
-            width: rem-calc(210);
-            margin-bottom: rem-calc(10);
-          }
-        }
-        .cdr-datepicker {
-          display: inline-flex;
-          .cs-datapicker-normal {
-            input {
-              margin-bottom: 0;
-              width: 80%;
-            }
-            .close {
-              display: none;
-            }
-          }
-          .cs-datepicker {
-            top: rem-calc(32);
-            left: 0;
-            .controls > span {
-              width: 80%;
-            }
-          }
-          .validation {
-            right: rem-calc(15);
-            top: rem-calc(9);
-            width: 10%;
-          }
-        }
-      }
+
       .has-error > .cdr-datepicker > cs-datepicker > .cs-datapicker-normal {
         border: rem-calc(2) solid #f05d3b;
       }

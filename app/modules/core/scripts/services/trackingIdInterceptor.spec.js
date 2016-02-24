@@ -13,7 +13,7 @@ describe('TrackingIDInterceptor', function () {
 
   it('should add an access-control-expose-header if doesn\'t exist', function () {
     var response = TrackingIDInterceptor.request({
-      url: 'http://cmi.huron-dev.com/some/url',
+      url: 'https://cmi.huron-dev.com/some/url',
       headers: {}
     });
 
@@ -22,7 +22,7 @@ describe('TrackingIDInterceptor', function () {
 
   it('should add an access-control-expose-header if another header already exists', function () {
     var response = TrackingIDInterceptor.request({
-      url: 'http://cmi.huron-dev.com/some/url',
+      url: 'https://cmi.huron-dev.com/some/url',
       headers: {
         'Access-Control-Expose-Headers': 'Location'
       }
@@ -32,9 +32,9 @@ describe('TrackingIDInterceptor', function () {
     expect(response.headers[exposeHeaders]).toContain('Location');
   });
 
-  it('should not add an access-control-expose-header if another domain', function () {
+  it('should not add an access-control-expose-header if in the black list', function () {
     var response = TrackingIDInterceptor.request({
-      url: 'http://atlas-integration.wbx2.com/some/url',
+      url: 'https://status.statuspage.io/some/url',
       headers: {
         'Access-Control-Expose-Headers': 'Location'
       }
