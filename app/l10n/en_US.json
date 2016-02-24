@@ -545,7 +545,6 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
-    "cdrLogs": "CDR Call Flow",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -555,7 +554,15 @@
       "sparkStatus": "Spark Status",
       "helpDesk": "Help Desk Support",
       "supportResources": "Support Resources",
-      "tools": "Tools"
+      "tools": {
+        "tools": "Tools",
+        "helpdeskSupport": "Help Desk Support",
+        "viewHelpdeskSupport": "View Help Desk Support",
+        "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+        "cdrLogs": "CDR Call Flow",
+        "viewCdrCallFlow": "View CDR Call Flow",
+        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+      }
     }
   },
   "cdrLogs": {
@@ -3471,8 +3478,6 @@
     "more": "More",
     "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
-    "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",

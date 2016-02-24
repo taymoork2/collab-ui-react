@@ -39,12 +39,12 @@ describe('Controller: SupportCtrl', function () {
     expect(controller).toBeDefined();
   });
 
-  it('should set showToolsCard to true for user has devsupport or devops role', function () {
-    $scope.initializeShowToolsCard();
-    expect($scope.showToolsCard).toEqual(true);
+  it('should show CdrCallFlowLink for user has devsupport or devops role', function () {
+    $scope.initializeShowCdrCallFlowLink();
+    expect($scope.showCdrCallFlowLink).toEqual(true);
   });
 
-  it('should return true for user has devsupport or devops role', function () {
+  it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
     var isSupportRole = $scope.isCiscoDevRole(roles);
     expect(isSupportRole).toBe(true);
   });
