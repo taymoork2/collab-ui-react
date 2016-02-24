@@ -29,12 +29,6 @@ describe('Support flow', function () {
       utils.expectIsNotDisplayed(navigation.billingTab);
     });
 
-    it('should display error for empty input', function () {
-      utils.click(navigation.logsPage);
-      utils.click(support.logSearchBtn);
-      notifications.assertError('Search input cannot be empty.');
-    });
-
     // TODO these are environment specific logs and needs to be fixed
     if (!isProductionBackend) {
       it('should search for logs by valid email address', function (done) {
