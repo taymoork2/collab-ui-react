@@ -24,9 +24,9 @@
       vm.cluster = newValue;
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       vm.softwareUpgrade = {
-        provisionedVersion: vm.cluster.provisioning.provisionedVersion,
-        availableVersion: vm.cluster.provisioning.availableVersion,
-        isUpgradeAvailable: vm.cluster.upgradeAvailable,
+        provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
+        availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
+        isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
         numberOfHosts: _.size(vm.cluster.aggregates.hosts)
       };
 

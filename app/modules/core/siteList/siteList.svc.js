@@ -42,6 +42,7 @@ angular.module('Core').service('SiteListService', [
               var logMsg = "";
               var siteUrl = siteRow.license.siteUrl;
               var count = 0;
+              siteRow.licenseTooltipDisplay = "";
 
               //Get the site's MC, EC, SC, TC, CMR license information
               //MC
@@ -52,7 +53,6 @@ angular.module('Core').service('SiteListService', [
 
               if (siteMC != null && siteMC.length > 0) {
                 siteRow.MCLicensed = true;
-                siteRow.licenseTooltipDisplay = "";
 
                 siteMC.forEach(
                   function processDisplayText(mc) {
@@ -107,6 +107,7 @@ angular.module('Core').service('SiteListService', [
 
               if (siteSC != null && siteSC.length > 0) {
                 siteRow.SCLicensed = true;
+
                 siteSC.forEach(
                   function processDisplayText(sc) {
                     //Grid content display
@@ -133,6 +134,7 @@ angular.module('Core').service('SiteListService', [
 
               if (siteTC != null && siteTC.length > 0) {
                 siteRow.TCLicensed = true;
+
                 siteTC.forEach(
                   function processDisplayText(tc) {
                     //Grid content display
@@ -178,6 +180,33 @@ angular.module('Core').service('SiteListService', [
                 siteRow.CMRLicensed = false;
               }
 
+              //EE
+              var siteEE = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                siteHasEELicense: true
+              });
+
+              if (siteEE != null && siteEE.length > 0) {
+                siteRow.EELicensed = true;
+
+                siteEE.forEach(
+                  function processDisplayText(ee) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    count++;
+                  }
+                ); //siteEE.forEach
+
+              } else {
+                siteRow.EELicensed = false;
+              }
+
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
@@ -188,7 +217,8 @@ angular.module('Core').service('SiteListService', [
                 siteRow.licenseTooltipDisplay = null;
               }
 
-            } //processGrid()
+              siteRow.showLicenseTypes = true;
+            } // processGridForLicense()
           ); // siteListGridData.forEach()
 
           // $log.log(logMsg);
@@ -302,27 +332,29 @@ angular.module('Core').service('SiteListService', [
       // TODO
       var siteUrl = siteRow.license.siteUrl;
       WebExApiGatewayService.csvStatus(siteUrl).then(
-        function getCSVStatusSuccess(response) {
-          var funcName = "getCSVStatusSuccess()";
+        function success(response) {
+          var funcName = "WebExApiGatewayService.csvStatus.success()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           siteRow.showCSVInfo = true;
-        }, // getCSVStatusSuccess()
+        }, // csvStatusSuccess()
 
-        function getCSVStatusError(response) {
-          var funcName = "getCSVStatusError()";
+        function error(response) {
+          var funcName = "WebExApiGatewayService.csvStatus.error()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           siteRow.showCSVInfo = true;
-        } // getCSVStatusError()
+        } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumn()
   } // end top level function

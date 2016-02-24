@@ -42,7 +42,8 @@
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined,
-      internationalDialingEnabled: cbUseGlobal
+      internationalDialingStatus: cbUseGlobal,
+      hideInternationalDialing: undefined
     };
 
     var internalNumberPool = [];
@@ -68,7 +69,9 @@
       getPrimarySiteInfo: getPrimarySiteInfo,
       checkCustomerVoicemail: checkCustomerVoicemail,
       getTelephonyInfoObject: getTelephonyInfoObject,
-      getInternationalDialing: getInternationalDialing
+      getInternationalDialing: getInternationalDialing,
+      isHideInternationalDialing: isHideInternationalDialing,
+      getUserInternationalDialingDetails: getUserInternationalDialingDetails
     };
 
     return telephonyInfoService;
@@ -118,7 +121,8 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       };
-      telephonyInfo.internationalDialingEnabled = cbUseGlobal;
+      telephonyInfo.internationalDialingStatus = cbUseGlobal;
+      telephonyInfo.hasCustomerVoicemail = undefined;
     }
 
     /**
@@ -406,7 +410,7 @@
       });
     }
 
-    function getInternationalDialing(userUuid) {
+    function getUserInternationalDialingDetails(userUuid) {
       return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestrictions) {
         var overRide = null;
         var custRestriction = null;
@@ -433,21 +437,67 @@
         }
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
-            telephonyInfo.internationalDialingEnabled = cbNeverAllow;
+            telephonyInfo.internationalDialingStatus = cbNeverAllow;
           } else {
-            telephonyInfo.internationalDialingEnabled = cbAlwaysAllow;
+            telephonyInfo.internationalDialingStatus = cbAlwaysAllow;
           }
         }
         var globalText;
         if (custRestriction) {
-          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.off') + ")";
+          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.off');
         } else {
-          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.on') + ")";
+          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.on');
         }
         if (!overRide) {
-          telephonyInfo.internationalDialingEnabled = globalText;
+          telephonyInfo.internationalDialingStatus = globalText;
         }
       });
     }
+
+    function isCommunicationLicenseInTrial(isOverride) {
+      if (!!isOverride) {
+        // customer has international dialing trial override show international dialing options for user
+        telephonyInfo.hideInternationalDialing = false;
+        return telephonyInfo.hideInternationalDialing;
+      }
+
+      // no override, check if communication license is in trial period
+      telephonyInfo.hideInternationalDialing = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+      if (_.isUndefined(telephonyInfo.hideInternationalDialing)) {
+        return $q.reject('Failed to get trial state for COMMUNICATION license');
+      }
+
+      return telephonyInfo.hideInternationalDialing;
+    }
+
+    function isHideInternationalDialing() {
+      if (angular.isDefined(telephonyInfo.hideInternationalDialing)) {
+        return telephonyInfo.hideInternationalDialing;
+      }
+
+      return FeatureToggleService.supports(FeatureToggleService.features.huronInternationalDialingTrialOverride)
+        .then(isCommunicationLicenseInTrial)
+        // if we are unable get feature toggle then check license isTrial
+        .catch(function (response) {
+          return $q.when(false)
+            .then(isCommunicationLicenseInTrial)
+            // if we are unable to get license info then default to hiding international dialing options for user
+            .catch(function () {
+              return true;
+            });
+        });
+    }
+
+    function getInternationalDialing(userUuid) {
+      return $q.when()
+        .then(isHideInternationalDialing)
+        .then(function (isTrial) {
+          // don't get details if company is in trial, because the feature will be hidden
+          if (!isTrial) {
+            return getUserInternationalDialingDetails(userUuid);
+          }
+        });
+    }
+
   }
 })();

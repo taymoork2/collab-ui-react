@@ -32,7 +32,7 @@
 			<i ng-if="cloudSipUriField.isError" class="red-error-icon space icon icon-error"></i>
 			<i ng-if="cloudSipUriField.isLoading" class="space icon icon-spinner"></i>
 		</div>
-		<div class="uri-check-space url-examples-style">
+		<div ng-if="cloudSipUriField.isRoomLicensed" class="uri-check-space url-examples-style">
 			<h5 class="inline">{{cloudSipUriField.inputValue}}.room{{cloudSipUriField.domainSuffix}}</h5>
 			<i ng-if="cloudSipUriField.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
 			<i ng-if="cloudSipUriField.isError" class="red-error-icon space icon icon-error"></i>

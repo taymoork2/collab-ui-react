@@ -1112,6 +1112,9 @@ angular.module('Core')
           'support',
           'editService',
           'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram',
           'activateProduct',
           'activatedProductSuccessPage',
           'activateProductErrorPage'
@@ -1134,7 +1137,7 @@ angular.module('Core')
           'activatedProductSuccessPage',
           'activateProductErrorPage'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
         WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct', 'activatedProductSuccessPage', 'activateProductErrorPage'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
@@ -1174,9 +1177,6 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram',
           'devices',
           'device-overview',
           'devices-redux'
@@ -1236,9 +1236,7 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 

@@ -89,7 +89,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
 
     describe('canShow():', function () {
       describe('if "atlasTrialConversion" feature-toggle is enabled:', function () {
-        it('should return true if "Authinfo.isUserAdmin()" is true', function () {
+        it('should return true if "Authinfo.isUserAdmin()" is true and "TrialInfo.getTrialIds()" is not empty', function () {
+          spyOn(TrialService, 'getTrialIds').and.returnValue(['fake-uuid-value-1']);
           spyOn(Authinfo, 'isUserAdmin').and.returnValue(true);
           expect(controller.canShow()).toBe(true);
         });

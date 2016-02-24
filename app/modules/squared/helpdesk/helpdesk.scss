@@ -271,8 +271,8 @@
     .cs-card {
       header {
         h5 {
-          color: $gray-dark-3;
-          font-size: 0.875rem;
+          color: $gray-dark-2;
+          font-size: 1rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
       }
@@ -328,14 +328,80 @@
         }
       }
     }
+    .search-user-results{
+      .cs-card {
+        article{
+          //min-height: 2rem;
+        }
+        header {
+          margin-bottom: -0.2rem;
+          padding-top: 0.75rem;
+        }
+        section{
+          div{
+            margin-bottom: -0.3rem !important;
+          }
+        }
+        .user-org{
+          margin-top: -0.2rem;
+          margin-bottom: -0.1rem !important;
+        }
+      }
+
+      .search-result-picture{
+        position: absolute;
+        top:0.8rem;
+        left:1rem;
+
+        div{
+          display: block;
+          width: 2rem;
+          height: 2rem;
+          background-size: cover;
+          background-position: center;
+          border-radius: 50%;
+          background-color: $gray-light-2;
+          color: $gray-dark-2;
+          .icon{
+            top: 0.5rem;
+            font-size: 1.75rem;
+            color: white !important;
+          }
+        }
+      }
+      .search-result-info{
+        //position: absolute;
+        //left:3rem;
+        padding-left:3rem;
+      }
+    }
   }
   .show-more-results {
     margin-bottom: 1rem;
   }
-  .search-stats {
-    color:$gray-light-2;
-    font-size: 0.75rem;
-    height: 1rem;
+  .search-device-results{
+    .cs-card {
+      article{
+        min-height: 11rem;
+      }
+    }
+    .device-result-picture{
+      position: absolute;
+      top:0.8rem;
+      left:1rem;
+
+      div{
+        display: block;
+        width: 3.5rem;
+        height: 3.5rem;
+        background-size: contain;
+        background-position: top center;
+      }
+    }
+    .device-result-info{
+      position: absolute;
+      left:5rem;
+    }
   }
 }
 .helpdesk-cards {
@@ -516,6 +582,30 @@
   .helpdesk-content-view .helpdesk-details .cs-card-layout.cs-card-block {
     padding-right: 0;
     padding-left: 0.5rem;
+  }
+
+  /*
+   * TODO: This has to move to 640px when the new horizontal layout comes.
+   */
+  .helpdesk-search{
+    .search-results {
+      margin-top: 0.5rem;
+      .cs-card{
+        .search-result-picture{
+          display: none;
+        }
+        .search-result-info{
+          position: static;
+        }
+
+        .device-result-picture{
+          display: none;
+        }
+        .device-result-info{
+          position: static;
+        }
+      }
+    }
   }
 }
 @media only screen and (max-width: 640px) {

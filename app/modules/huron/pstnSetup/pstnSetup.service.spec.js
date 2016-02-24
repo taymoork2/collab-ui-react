@@ -36,7 +36,8 @@ describe('Service: PstnSetupService', function () {
       "billingState": "TX",
       "billingZip": "75082"
     },
-    numbers: numbers
+    numbers: numbers,
+    trial: true
   };
 
   var updatePayload = {

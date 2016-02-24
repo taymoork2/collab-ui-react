@@ -7,21 +7,38 @@
 
   /* @ngInject */
   function TrackingIDInterceptor() {
-    var trackingID = 'TrackingID';
+    var TRACKINGID = 'TrackingID';
+    var ACCESS_CONTROL_EXPOSE_HEADERS = 'Access-Control-Expose-Headers';
+    var blackList = [
+      'statuspage.io'
+    ];
+    var whiteList = [
+      'huron-dev.com',
+      'huron-int.com',
+      'wbx2.com'
+    ];
+
+    function findListItemInUrl(list, url) {
+      var index = _.findIndex(list, function (site) {
+        return url.indexOf(site) !== -1;
+      });
+      return index !== -1;
+    }
+
     return {
       'request': function (config) {
-        if (config.url.indexOf('statuspage.io') > -1 ||
-          config.url.indexOf('hercules') > -1) {
+        var url = config.url;
+        if (findListItemInUrl(blackList, url)) {
           config.headers.TrackingID = undefined;
         }
-        if (config.url.indexOf('huron-dev.com') !== -1 || config.url.indexOf('huron-int.com') !== -1) {
-          var exposeHeaders = config.headers['Access-Control-Expose-Headers'];
-          if (angular.isUndefined(exposeHeaders)) {
-            exposeHeaders = trackingID;
-          } else if (exposeHeaders.indexOf(trackingID) == -1) {
-            exposeHeaders += ',' + trackingID;
+        if (findListItemInUrl(whiteList, url)) {
+          var exposeHeaders = config.headers[ACCESS_CONTROL_EXPOSE_HEADERS];
+          if (_.isUndefined(exposeHeaders)) {
+            exposeHeaders = TRACKINGID;
+          } else if (exposeHeaders.indexOf(TRACKINGID) === -1) {
+            exposeHeaders += ',' + TRACKINGID;
           }
-          config.headers['Access-Control-Expose-Headers'] = exposeHeaders;
+          config.headers[ACCESS_CONTROL_EXPOSE_HEADERS] = exposeHeaders;
         }
         return config;
       }
