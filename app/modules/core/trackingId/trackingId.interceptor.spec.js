@@ -57,6 +57,11 @@
 
       expect(response.headers[EXPOSE_HEADERS]).not.toContain(TRACKING_ID);
       expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
+
+      response = TrackingIdInterceptor.request(buildRequestWithExistingHeaders('https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1'));
+
+      expect(response.headers[EXPOSE_HEADERS]).not.toContain(TRACKING_ID);
+      expect(response.headers[EXPOSE_HEADERS]).toContain('Location');
     });
 
     it('should add an Access-Control-Expose-Header header if on a whitelisted subdomain', function () {

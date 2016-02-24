@@ -16,74 +16,91 @@
 
     var TrackingId;
 
-    // These services don't allow a TrackingID header
+    // These services don't allow TrackingID header
     var blacklist = [
       'statuspage.io'
     ];
 
     // These services don't allow Access-Control-Expose-Headers header
-    var exposeHeadersBlacklist = [
-      'msgr-admin-bts.webexconnect.com',
-      'msgr-admin.webexconnect.com'
-    ];
-
-    // These services only allow Access-Control-Expose-Headers header on specific subdomains
-    var exposeHeadersWhiteBlacklistRegex = [
-      // Disallow all webex.com domains except for subdomain identity.webex.com
-      buildWhiteBlacklistRegex(['identity'], 'webex.com')
+    var accessControlExposeHeadersRegexBlacklist = [
+      // Disallow all webex.com domains except for identity.webex.com subdomain
+      buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
+      buildBlacklistedDomainRegex('webexconnect.com')
     ];
 
     return interceptor;
 
     /**
-     * Build a regex to return
-     * true if matches blacklist domain
-     * or
-     * false if matches whitelist subdomain
+     * Build a regex with a blacklisted domain with an optional set of whitelisted subdomains
      *
+     * @param {string} blacklistDomain The domain to disallow
      * @param {array} whitelistSubdomain The set of subdomains to allow
-     * @param {array} blacklistDomain The domain to disallow
      */
-    function buildWhiteBlacklistRegex(whitelistSubdomain, blacklistDomain) {
-      var whitelistSubdomains = _.isArray(whitelistSubdomain) ? whitelistSubdomain : [whitelistSubdomain];
-      // Match anything with a blacklistDomain, with the exception of whitelistSubdomains
-      var regex = "^http?s:\/\/(?:(?!" + whitelistSubdomains.join('|') + ").*)\." + blacklistDomain;
+    function buildBlacklistedDomainWithWhitelistedSubdomainRegex(blacklistDomain, whitelistSubdomain) {
+      var whitelistSubdomainArray = _.isArray(whitelistSubdomain) ? whitelistSubdomain : whitelistSubdomain ? [whitelistSubdomain] : [];
+      var regex = "^http?s:\/\/(?:";
+      if (whitelistSubdomainArray.length) {
+        regex += "(?!" + whitelistSubdomainArray.join('|') + ")";
+      }
+      regex += ".*)" + blacklistDomain;
       return new RegExp(regex);
     }
 
-    function isAllowedExposedHeaders(url) {
-      // If url doesn't include blacklist values and doesn't match an exposeHeadersWhiteBlacklistRegex
-      return !_.some(exposeHeadersBlacklist, _.partial(_.includes, url)) && !_.some(exposeHeadersWhiteBlacklistRegex, function (whiteBlacklistRegex) {
-        return whiteBlacklistRegex.test(url);
+    function buildBlacklistedDomainRegex(blacklistDomain) {
+      return buildBlacklistedDomainWithWhitelistedSubdomainRegex(blacklistDomain);
+    }
+
+    function urlAllowsAccessControlExposeHeaders(url) {
+      return !_.some(accessControlExposeHeadersRegexBlacklist, function (regex) {
+        return regex.test(url);
       });
     }
 
+    function urlContainsBlacklistedValues(url) {
+      return _.some(blacklist, _.partial(_.includes, url));
+    }
+
+    function isHttpRequest(url) {
+      return _.startsWith(url, 'http');
+    }
+
+    function injectTrackingIdService() {
+      if (!TrackingId) {
+        TrackingId = $injector.get('TrackingId');
+      }
+    }
+
+    function clearTrackingIdHeader(headers) {
+      delete headers[TRACKING_ID];
+    }
+
+    function incrementTrackingIdHeader(headers) {
+      headers[TRACKING_ID] = TrackingId.increment();
+    }
+
+    function addAccessControlExposeHeader(headers) {
+      var exposeHeaders = headers[ACCESS_CONTROL_EXPOSE_HEADERS];
+      if (!exposeHeaders) {
+        exposeHeaders = TRACKING_ID;
+      } else if (!_.includes(exposeHeaders, TRACKING_ID)) {
+        exposeHeaders += ',' + TRACKING_ID;
+      }
+      headers[ACCESS_CONTROL_EXPOSE_HEADERS] = exposeHeaders;
+    }
+
     function request(config) {
-      // Clear TrackingID and return config if config.url includes any blacklist values
-      if (_.some(blacklist, _.partial(_.includes, config.url))) {
-        delete config.headers[TRACKING_ID];
+      if (urlContainsBlacklistedValues(config.url)) {
+        clearTrackingIdHeader(config.headers);
         return config;
       }
 
-      // If making an http request, increment tracking id and add to headers
-      if (_.startsWith(config.url, 'http')) {
-        if (_.isUndefined(TrackingId)) {
-          TrackingId = $injector.get('TrackingId');
-        }
+      if (isHttpRequest(config.url)) {
+        injectTrackingIdService();
 
-        // Add the incremented tracking id to the request headers
-        config.headers[TRACKING_ID] = TrackingId.increment();
+        incrementTrackingIdHeader(config.headers);
 
-        // Add TrackingID to Access-Control-Expose-Headers if config.url doesn't include blacklist values
-        if (isAllowedExposedHeaders(config.url)) {
-          // Add or append tracking id header to expose headers
-          var exposeHeaders = config.headers[ACCESS_CONTROL_EXPOSE_HEADERS];
-          if (_.isUndefined(exposeHeaders)) {
-            exposeHeaders = TRACKING_ID;
-          } else if (!_.includes(exposeHeaders, TRACKING_ID)) {
-            exposeHeaders += ',' + TRACKING_ID;
-          }
-          config.headers[ACCESS_CONTROL_EXPOSE_HEADERS] = exposeHeaders;
+        if (urlAllowsAccessControlExposeHeaders(config.url)) {
+          addAccessControlExposeHeader(config.headers);
         }
       }
 
