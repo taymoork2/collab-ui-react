@@ -163,7 +163,7 @@ angular.module('Core')
             $scope.wbxNoClientSelected = false;
             $scope.wbxclientversionselected = clientVersion;
           }
-          
+
         });
 
       };
@@ -251,6 +251,12 @@ angular.module('Core')
           successMessage = $translate.instant('partnerProfile.webexVersionUseLatestFalse');
         }
         var failureMessage = $translate.instant('partnerProfile.webexVersionUseLatestUpdateFailed');
+        p.then(function(s){
+            Notification.notify([successMessage], 'success');
+        }).catch(function(e){
+            Notification.notify([failureMessage], 'success');
+        });
+        
         //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
         //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
       }
@@ -263,6 +269,13 @@ angular.module('Core')
         Log.info("New version selected is " + versionSelected);
         var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
         var failureMessage = $translate.instant('partnerProfile.webexClientVersionUpdatedFailed');
+
+        p.then(function(s){
+            Notification.notify([successMessage], 'success');
+        }).catch(function(e){
+            Notification.notify([failureMessage], 'success');
+        });
+
         //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
         //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
       }
