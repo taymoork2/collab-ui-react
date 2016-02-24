@@ -267,6 +267,7 @@ describe('Authinfo:', function () {
 
       expect(Authinfo.isCiscoMock()).toBe(true);
     });
+  });
 
   function setupConfig(override) {
     override = override || {};
