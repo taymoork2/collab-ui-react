@@ -741,7 +741,8 @@
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "postpone": "Postpone"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1230,7 +1231,12 @@
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
         "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule"
+        "defaultWarning": "Confirm the default schedule",
+        "postponeLabel": "The next available upgrade is scheduled to begin:",
+        "postponeAction": "Postpone schedule",
+        "postponeModalTitle": "Postpone the upgrade",
+        "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+
       }
     },
     "notifications": {
