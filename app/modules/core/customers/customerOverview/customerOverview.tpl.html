@@ -80,10 +80,10 @@
             <span class="feature-details" ng-if="!customerOverview.usePartnerLogo" translate="common.disabled">
             </span>
           </li>
-          <form novalidate name="customerOverview.form" novalidate role="form">
+          <form ng-if="customerOverview.logoOverride" novalidate name="customerOverview.form" novalidate role="form">
           <li class="feature">
             <span class="feature-name" translate="customerPage.logoOverride"></span>
-            <cs-toggle-switch ng-model="customerOverview.allowCustomerLogos" toggle-id="allowCustomerLogo" name="allowCustomerLogo" size="small" ></cs-toggle-switch>
+            <cs-toggle-switch ng-model="customerOverview.allowCustomerLogos" toggle-id="allowCustomerLogo" name="allowCustomerLogo" size="small"></cs-toggle-switch>
           </li>
            </form>
         </ul>

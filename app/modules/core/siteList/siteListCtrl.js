@@ -231,11 +231,21 @@ angular.module('Core')
       // TODO - delete the following lines when feature toggle is no longer used
       checkCSVToggle();
 
+      // remove the CSV column if admin user doesn't have CSV toggle enabled
       function checkCSVToggle() {
+        var funcName = "checkCSVToggle()";
+        var logMsg = "";
+
+        $log.log(funcName);
+
         FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
           function getSupportsCSVSuccess(adminUserSupportCSV) {
             var funcName = "getSupportsCSVSuccess()";
             var logMsg = "";
+
+            logMsg = funcName + "\n" +
+              "adminUserSupportCSV=" + adminUserSupportCSV;
+            $log.log(logMsg);
 
             if (!adminUserSupportCSV) {
               vm.gridOptions.columnDefs.splice(2, 1);
