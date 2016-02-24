@@ -133,8 +133,10 @@ angular.module('Core')
         }
         return false;
       };
+
       return {
         initialize: function (data) {
+          authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
           authData.username = data.name;
           authData.orgName = data.orgName;
           authData.orgId = data.orgId;
@@ -418,11 +420,29 @@ angular.module('Core')
         isCisco: function () {
           return this.getOrgId() === Config.ciscoOrgId;
         },
+        isCiscoMock: function () {
+          return this.getOrgId() === Config.ciscoMockOrgId;
+        },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
         },
         isUserAdmin: function () {
           return this.getRoles().indexOf('Full_Admin') > -1;
+        },
+        isInDelegatedAdministrationOrg: function () {
+          return authData.isInDelegatedAdministrationOrg;
+        },
+        getLicenseIsTrial: function (licenseType, entitlement) {
+          var isTrial = _.chain(authData.licenses)
+            .reduce(function (isTrial, license) {
+              if (entitlement) {
+                return license.licenseType === licenseType && _.includes(license.features, entitlement) ? license.isTrial : isTrial;
+              }
+              return license.licenseType === licenseType ? license.isTrial : isTrial;
+            }, undefined)
+            .value();
+
+          return isTrial;
         }
       };
     }

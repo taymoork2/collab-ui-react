@@ -1,6 +1,7 @@
-<div class="leader-board row" ng-init="init()">
+<div class="leader-board row" ng-init="init()" ng-class="{ 'is-customer-admin': isCustomerAdmin, 'ft-atlas-trial-conversion': isAtlasTrialConversion }">
+  <cr-trial-notice-banner></cr-trial-notice-banner>
   <div class="subscription" ng-repeat="subscription in buckets">
-    <div ng-show="subscription.subscriptionId !== 'undefined'" class="subscriptionId"> Subscription ID {{subscription.subscriptionId}}</div>
+    <div ng-show="buckets.length > 1 && subscription.subscriptionId !== 'undefined'" class="subscriptionId"> Subscription ID {{subscription.subscriptionId}}</div>
     <cs-card class="small header-bar" ng-show="subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center title">
@@ -14,103 +15,108 @@
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity" >{{service.volume}}</span>
             <p ng-show="service.isTrial" class="text-center trial">
-              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
-            </div>
+              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+            </p>
           </div>
-        </section>
-      </article>
-      </cs-card>
-      <cs-card class="small header-bar meetings" ng-show="(subscription.cf && subscription.cf.services.length !== 0) || (subscription.count && subscription.count > 0)" >
-      <article>
-        <header class="header-section align-center">
-          <span class="bucket-header" translate="firstTimeWizard.meeting"></span>
-        </header>
-        <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
-          <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
+        </div>
+      </section>
+    </article>
+    </cs-card>
+    <cs-card class="small header-bar meetings" ng-show="(subscription.cf && subscription.cf.services.length !== 0) || (subscription.count && subscription.count > 0)" >
+    <article>
+      <header class="header-section align-center">
+        <span class="bucket-header" translate="firstTimeWizard.meeting"></span>
+      </header>
+      <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
+          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          </cs-donut>
+          <div class="text-center quantity number">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span class="quantity" >{{service.volume}}</span>
+            <p ng-show="service.isTrial" class="text-center trial">
+              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- TODO: revisit after graduation (2016-02-17) - ng-show logic -->
+      <section  class="bucket-info" ng-show="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
+        <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in subscription.sites">
+          <div class="sub-item" ng-repeat="service in services">
             <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
             </cs-donut>
-            <div class="text-center quantity number">
+            <div class="text-center">
               <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
               <span class="quantity" >{{service.volume}}</span>
               <p ng-show="service.isTrial" class="text-center trial">
-                <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
-              </div>
+                <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+              </p>
             </div>
-          </section>
-          <section  class="bucket-info" ng-show="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
-            <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in subscription.sites">
-              <div class="sub-item" ng-repeat="service in services">
-                <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
-                </cs-donut>
-                <div class="text-center">
-                  <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-                  <span class="quantity" >{{service.volume}}</span>
-                  <p ng-show="service.isTrial" class="text-center trial">
-                    <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
-                  </div>
-                  <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-                    <div class="site-url"> {{siteUrl}} </div>
-                    <div translate="leaderBoard.{{service.offerName}}"> </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section class="bucket-info" ng-show="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
-              <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
-                <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
-                <div ng-if="$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
-                <div class="sub-item text-left" ng-repeat="service in services">
-                  <div class="service-bucket">
-                    <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
-                    </cs-donut>
-                    <div class="webex">
-                      <div translate="leaderBoard.{{service.offerName}}"></div>
-                      <div ng-if="service.offerName === 'MC'" translate="leaderBoard.WebExMC"></div>
-                      <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
-                      <span class="quantity" translate="firstTimeWizard.quantity"></span>
-                      <span class ="quantity"> {{service.volume}} </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </article>
-          </cs-card>
-          <cs-card class="small header-bar people" ng-show="subscription.communication && subscription.communication.services.length !== 0">
-          <article>
-            <header class="header-section align-center">
-              <span class="bucket-header" translate="firstTimeWizard.call"></span>
-            </header>
-            <section class="bucket-info">
-              <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">
-                <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
-                </cs-donut>
-                <div class="text-center quantity number" >
-                  <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-                  <span class="quantity">{{service.volume}}</span>
-                </div>
-              </div>
-            </section>
-          </article>
-          </cs-card>
-          <cs-card class="small header-bar gray" ng-show="subscription.shared_devices && subscription.shared_devices.services.length !== 0">
-          <article>
-            <header class="header-section align-center">
-              <span class="bucket-header" translate="leaderBoard.shared_devicesTitle"></span>
-            </header>
-            <section class="bucket-info">
-              <div class="text-center" class="item-paid" ng-repeat="service in subscription.shared_devices.services">
-                <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
-                </cs-donut>
-                <div class="text-center quantity number">
-                  <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-                  <span  class="quantity">{{service.volume}}</span>
-                  <p ng-show="service.isTrial" class="text-center trial">
-                    <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
-                  </div>
-                </div>
-              </section>
-            </article>
-            </cs-card>
+            <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
+              <div class="site-url"> {{siteUrl}} </div>
+              <div translate="leaderBoard.{{service.offerName}}"> </div>
+            </div>
           </div>
         </div>
+      </section>
+      <section class="bucket-info" ng-show="!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
+        <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
+          <div ng-if="!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
+          <div ng-if="$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
+          <div class="sub-item text-left" ng-repeat="service in services">
+            <div class="service-bucket">
+              <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
+              </cs-donut>
+              <div class="webex">
+                <div translate="leaderBoard.{{service.offerName}}"></div>
+                <div ng-if="service.offerName === 'MC'" translate="leaderBoard.WebExMC"></div>
+                <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+                <span class="quantity" translate="firstTimeWizard.quantity"></span>
+                <span class ="quantity"> {{service.volume}} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+    </cs-card>
+    <cs-card class="small header-bar people" ng-show="subscription.communication && subscription.communication.services.length !== 0">
+    <article>
+      <header class="header-section align-center">
+        <span class="bucket-header" translate="firstTimeWizard.call"></span>
+      </header>
+      <section class="bucket-info">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">
+          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          </cs-donut>
+          <div class="text-center quantity number" >
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span class="quantity">{{service.volume}}</span>
+          </div>
+        </div>
+      </section>
+    </article>
+    </cs-card>
+    <cs-card class="small header-bar gray" ng-show="subscription.shared_devices && subscription.shared_devices.services.length !== 0">
+    <article>
+      <header class="header-section align-center">
+        <span class="bucket-header" translate="leaderBoard.shared_devicesTitle"></span>
+      </header>
+      <section class="bucket-info">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.shared_devices.services">
+          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+          </cs-donut>
+          <div class="text-center quantity number">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span  class="quantity">{{service.volume}}</span>
+            <p ng-show="service.isTrial" class="text-center trial">
+              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </article>
+    </cs-card>
+  </div>
+</div>

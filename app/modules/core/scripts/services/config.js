@@ -857,6 +857,10 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
+        /**
+         * Method to get Oauth Login Url with email specified
+         * @param {string} email
+         */
         getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
@@ -867,6 +871,7 @@ angular.module('Core')
             this.getOauthServiceType(),
             encodeURIComponent(email)
           ];
+
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
@@ -1093,7 +1098,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
-          'drLoginForward',
+          'dr-login-forward',
           'users',
           'user-overview',
           'userprofile',
@@ -1106,7 +1111,10 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram'
         ],
         Readonly_Admin: [
           'overview',
@@ -1123,7 +1131,7 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
         WX2_User: ['overview', 'reports', 'support', 'devReports'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
@@ -1163,13 +1171,13 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram'
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'management-service',
+          'management-service'
         ],
         'spark-room-system': [
           'devices',
@@ -1222,9 +1230,7 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 

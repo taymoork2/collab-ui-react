@@ -25,11 +25,7 @@
     });
 
     function huronEnabled() {
-      if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
-        return $q.when(true);
-      } else {
-        return FeatureToggleService.supports(FeatureToggleService.features.csdmHuron);
-      }
+      return $q.when(Authinfo.isSquaredUC());
     }
 
     function encodeHuronTags(description) {

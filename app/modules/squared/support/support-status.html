@@ -19,24 +19,6 @@
     </article>
   </cs-card>
 
-  <cs-card class="medium">
-    <article>
-      <header>
-        <h4 translate="supportPage.cards.tools"></h4>
-      </header>
-      <section class="indent">
-        <div>
-          <a ui-sref="cdrsupport">
-            <div class="monitoring-cell" id="{{health.name}}" ng-class="{operational: 'green'}">
-              <i class="fa fa-circle"></i>&nbsp;&nbsp;
-                <span>{{::'supportPage.cdrLogs' | translate}}</span>
-            </div>
-          </a>
-        </div>
-      </section>
-    </article>
-  </cs-card>
-
   <cs-card class="medium" ng-show="showHelpdeskCard">
     <article>
       <header>
@@ -81,6 +63,23 @@
         </p>
         <p class="content">
           <a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a>
+        </p>
+      </section>
+    </article>
+  </cs-card>
+</cs-card-layout>
+
+<cs-card-layout class="status">
+  <cs-card class="medium"  ng-show="showToolsCard">
+    <article>
+      <header>
+        <h4 translate="supportPage.cards.tools"></h4>
+      </header>
+      <section class="indent">
+        <p class="content">
+          <a ui-sref="cdrsupport">
+            <span>{{::'supportPage.cdrLogs' | translate}}</span>
+          </a>
         </p>
       </section>
     </article>

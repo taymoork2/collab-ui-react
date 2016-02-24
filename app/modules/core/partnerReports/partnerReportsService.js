@@ -515,42 +515,37 @@
     }
 
     function getCallMetricsData(customer, time) {
-      var query = getQueryForOnePeriod(time);
-
       if (callMetricsCancelPromise !== null && callMetricsCancelPromise !== undefined) {
         callMetricsCancelPromise.resolve(ABORT);
       }
       callMetricsCancelPromise = $q.defer();
 
-      return getService(detailed + callMetricsUrl + query + orgId + customer.value, callMetricsCancelPromise).then(function (response) {
-        if (angular.isArray(response.data.data) && response.data.data.length !== 0) {
-          return transformRawCallMetricsData(response.data.data[0]);
-        } else {
-          return [];
+      return getService(detailed + callMetricsUrl + getQueryForOnePeriod(time) + getCustomerUuids(customer), callMetricsCancelPromise).then(function (response) {
+        if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
+          var transformData = angular.copy(callMetricsData);
+          var transformDataSet = false;
+          angular.forEach(response.data.data, function (item, index, array) {
+            if (angular.isDefined(item.data) && angular.isArray(item.data) && angular.isDefined(item.data[0].details) && (item.data[0].details !== null)) {
+              var details = item.data[0].details;
+              var totalCalls = parseInt(details.totalCalls);
+
+              if (totalCalls > 0) {
+                transformData.labelData.numTotalCalls += totalCalls;
+                transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
+                transformData.dataProvider[0].numCalls += parseInt(details.totalFailedCalls);
+                transformData.dataProvider[1].numCalls += parseInt(details.totalSuccessfulCalls);
+                transformDataSet = true;
+              }
+            }
+          });
+          if (transformDataSet) {
+            return transformData;
+          }
         }
+        return [];
       }, function (error) {
-        var errorMessage = $translate.instant('callMetrics.callMetricsChartError', {
-          customer: customer.label
-        });
-        return returnErrorCheck(error, 'Loading call metrics data for customer ' + customer.label + ' failed.', errorMessage, []);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), []);
       });
-    }
-
-    function transformRawCallMetricsData(data) {
-      if (angular.isArray(data.data) && data.data.length !== 0 && data.data[0].details !== undefined && data.data[0].details !== null) {
-        var details = data.data[0].details;
-        var transformData = angular.copy(callMetricsData);
-        var totalCalls = parseInt(details.totalCalls);
-
-        if (totalCalls > 0) {
-          transformData.labelData.numTotalCalls = totalCalls;
-          transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
-          transformData.dataProvider[0].numCalls = parseInt(details.totalFailedCalls);
-          transformData.dataProvider[1].numCalls = parseInt(details.totalSuccessfulCalls);
-          return transformData;
-        }
-      }
-      return [];
     }
 
     function getRegisteredEndpoints(customer, time) {
@@ -559,50 +554,46 @@
       }
       endpointsCancelPromise = $q.defer();
 
-      return retrieveRegisteredEndpoints(customer, time);
+      return getService(registeredUrl + getTrendQuery(time) + getCustomerUuids(customer), endpointsCancelPromise).then(function (response) {
+        var returnArray = [];
+        if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
+          angular.forEach(response.data.data, function (item, index, array) {
+            if (angular.isDefined(item.details) && (item.details !== null)) {
+              var returnObject = item.details;
+              if (angular.isArray(customer)) {
+                returnObject.customer = customer[index].label;
+              } else {
+                returnObject.customer = customer.label;
+              }
+
+              returnObject.direction = NEGATIVE;
+              if ((returnObject.registeredDevicesTrend === "NaN")) {
+                returnObject.direction = POSITIVE;
+                returnObject.registeredDevicesTrend = "+0.0";
+              } else if (returnObject.registeredDevicesTrend >= 0) {
+                returnObject.direction = POSITIVE;
+                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend;
+              }
+              returnArray.push(returnObject);
+            }
+          });
+        }
+        return returnArray;
+      }, function (error) {
+        return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', $translate.instant('registeredEndpoints.registeredEndpointsError'), []);
+      });
     }
 
-    function retrieveRegisteredEndpoints(customer, time) {
+    function getCustomerUuids(customer) {
+      var url = "";
       if (angular.isArray(customer)) {
-        var returnArray = [];
-        var promises = [];
-
-        angular.forEach(customer, function (index) {
-          var promise = retrieveRegisteredEndpoints(index, time).then(function (response) {
-            returnArray.concat(response);
-          });
-          promises.push(promise);
-        });
-
-        return $q.all(promises).then(function () {
-          return returnArray;
+        angular.forEach(customer, function (item, index, array) {
+          url += orgId + item.value;
         });
       } else {
-        return getService(registeredUrl + getTrendQuery(time) + orgId + customer.value, endpointsCancelPromise).then(function (response) {
-          if (Array.isArray(response.data.data) && response.data.data[0].details !== null && response.data.data[0].details !== undefined) {
-            var data = response.data.data[0].details;
-            data.customer = customer.label;
-
-            data.direction = NEGATIVE;
-            if (data.registeredDevicesTrend === "NaN") {
-              data.direction = POSITIVE;
-              data.registeredDevicesTrend = 0;
-            } else if (data.registeredDevicesTrend >= 0) {
-              data.direction = POSITIVE;
-              data.registeredDevicesTrend = "+" + data.registeredDevicesTrend;
-            }
-
-            return [data];
-          } else {
-            return [];
-          }
-        }, function (error) {
-          var errorMessage = $translate.instant('registeredEndpoints.registeredEndpointsError', {
-            customer: customer.label
-          });
-          return returnErrorCheck(error, 'Loading registered endpoints for customer ' + customer.label + ' failed.', errorMessage, []);
-        });
+        url += orgId + customer.value;
       }
+      return url;
     }
   }
 })();

@@ -31,9 +31,7 @@
     "headers": [],
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "play",
@@ -46,9 +44,61 @@
       "url": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
+      "key": "",
+      "actions": [{
+        "name": "route",
+        "value": "1111",
+        "description": "Operator"
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }]
+  },
+  "menuWithNewStep": {
+    "type": "MENU_WELCOME",
+    "headers": [],
+    "entries": [{
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "",
+        "value": "",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "say",
+        "value": "",
+        "voice": "",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": ""
+    }, {
+      "description": "",
+      "type": "",
       "key": "",
       "actions": [{
         "name": "route",

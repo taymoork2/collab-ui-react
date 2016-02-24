@@ -161,10 +161,12 @@
       color: $gray-light-1;
       position: relative;
       top: -0.6rem;
+      padding-right: 2px;
       font-size: 1.0rem;
       cursor: pointer;
       i {
         top: 2px;
+        left: 3px;
       }
     }
     @media only screen and (max-width: 500px) {
@@ -401,7 +403,7 @@
       left:5rem;
     }
   }
-}
+
 .helpdesk-cards {
   .cs-card section {
     text-align: left;

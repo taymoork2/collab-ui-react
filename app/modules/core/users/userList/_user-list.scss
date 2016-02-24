@@ -8,15 +8,15 @@
   }
 
   .user-status {
-  font-size: 0.6rem;
-  padding-right: 3px;
-}
-.user-status-yellow {
-  color: $brand-warning;
-}
-.user-status-green {
-  color: $brand-success;
-}
+    font-size: 0.6rem;
+    padding-right: rem(3);
+    &-yellow {
+      color: $brand-warning;
+    }
+    &-green {
+      color: $brand-success;
+    }
+  }
 
   .export-users {
     .icon-content-share {

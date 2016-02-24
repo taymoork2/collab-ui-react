@@ -6,7 +6,7 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService) {
+  function AABuilderActionsCtrl($scope, $translate, $controller, AAUiModelService, AutoAttendantCeMenuModelService, Config, AACommonService) {
 
     var vm = this;
 
@@ -30,19 +30,20 @@
       actions: ['route', 'goto', 'routeToExtension']
     }];
 
+    vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");
     vm.template = ""; // no default template
     vm.schedule = "";
 
     vm.getTemplateController = getTemplateController;
-    vm.getTemplateUrl = getTemplateUrl;
+    vm.selectTemplate = selectTemplate;
     vm.removeAction = removeAction;
 
-    vm.allowStepAddsDeletes = false;
+    vm.allowStepAddsDeletes = Config.isDev() || Config.isIntegration();
 
     /////////////////////
 
-    function getTemplateUrl() {
-      return vm.template.url;
+    function selectTemplate() {
+      AACommonService.setActionStatus(true);
     }
 
     function getTemplateController() {
@@ -55,8 +56,9 @@
 
     function removeAction(index) {
       var uiMenu = vm.ui[vm.schedule];
-
       uiMenu.deleteEntryAt(index);
+
+      AACommonService.setActionStatus(true);
     }
 
     function setTemplate() {
