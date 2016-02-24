@@ -329,7 +329,7 @@
     .search-user-results{
       .cs-card {
         article{
-          min-height: 8rem;
+          //min-height: 2rem;
         }
         header {
           margin-bottom: -0.2rem;
@@ -368,8 +368,9 @@
         }
       }
       .search-result-info{
-        position: absolute;
-        left:3rem;
+        //position: absolute;
+        //left:3rem;
+        margin-left:3rem;
       }
     }
   }
