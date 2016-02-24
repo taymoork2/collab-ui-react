@@ -29,7 +29,7 @@ describe('Support flow', function () {
       utils.expectIsNotDisplayed(navigation.billingTab);
     });
 
-    it('should display error for empty input', function () {
+    xit('should display error for empty input', function () {
       utils.click(navigation.logsPage);
       utils.click(support.logSearchBtn);
       notifications.assertError('Search input cannot be empty.');
@@ -37,7 +37,7 @@ describe('Support flow', function () {
 
     // TODO these are environment specific logs and needs to be fixed
     if (!isProductionBackend) {
-      it('should search for logs by valid email address', function (done) {
+      xit('should search for logs by valid email address', function (done) {
         support.searchAndVerifyResult(support.searchValidEmail);
 
         utils.expectIsDisplayed(support.supportTable);
@@ -52,7 +52,7 @@ describe('Support flow', function () {
         });
       });
 
-      it('should search for logs by valid uuid', function () {
+      xit('should search for logs by valid uuid', function () {
         support.searchAndVerifyResult(support.searchValidUuid, support.searchValidEmail);
 
         utils.expectIsDisplayed(support.supportTable);
@@ -74,7 +74,7 @@ describe('Support flow', function () {
         utils.expectIsDisplayed(support.closeCallInfo);
       });
 
-      it('should display log-list panel on search', function () {
+      xit('should display log-list panel on search', function () {
         utils.click(support.logSearchBtn);
         utils.expectIsNotDisplayed(support.closeCallInfo);
         utils.expectIsDisplayed(support.supportTable);
@@ -118,13 +118,56 @@ describe('Support flow', function () {
     });
   });
 
+  describe('partner admin logs', function () {
+    it('should login as partner admin', function () {
+      // https://int-admin.ciscospark.com/?code=MzExNTEwZjQtM2NkYi00YTc4LTk0N2ItODRjYzc5Y2NkMTcyZTJjZTcwMjItN2Fm&state=random-string#/login/c054027f-c5bd-4598-8cd8-07c08163e8cd/Atlas%20Test%20Partner%20Organization/true
+      login.login('partner-admin', '#/login/c054027f-c5bd-4598-8cd8-07c08163e8cd/Atlas%20Test%20Partner%20Organization/true');
+    });
+
+    it('should display supoort tab for user based on role', function () {
+      utils.expectIsDisplayed(navigation.supportTab);
+    });
+
+    it('should display error for empty input', function () {
+      utils.click(navigation.supportTab);
+      utils.click(navigation.logsPage);
+      utils.click(support.logSearchBtn);
+      notifications.assertError('Search input cannot be empty.');
+    });
+
+    it('should search for logs by valid email address', function () {
+      utils.click(navigation.supportTab);
+      utils.click(navigation.logsPage);
+      utils.clear(support.logSearchField);
+      utils.sendKeys(support.logSearchField, 'atlaspartneradmin@atlas.test.com');
+      utils.click(support.logSearchBtn);
+      utils.expectIsDisplayed(support.supportTable);
+    });
+
+    it('should search for logs by valid uuid', function () {
+      utils.click(navigation.supportTab);
+      utils.click(navigation.logsPage);
+      utils.clear(support.logSearchField);
+      utils.sendKeys(support.logSearchField, support.searchValidUuid);
+      utils.click(support.logSearchBtn);
+      utils.expectIsDisplayed(support.supportTable);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+
+
   xdescribe('Billing page', function () {
     //TODO this is environment specific order and needs to be fixed
     if (isProductionBackend) {
       return;
     }
     it('should login as mock cisco support user', function () {
-      login.login('mockcisco-support-user', '#/orderprovisioning?enc=' + encodeURIComponent('VQTn2BCzyCmtO+cdZBNNXwtGx06uY4ce53gGZ%2FSwBJmD81xl9zWCln6pBM0pSv6N'));
+      login.login('mockcisco-support-user', '#/orderprovisioning?enc=' + encodeURIComponent(
+        'VQTn2BCzyCmtO+cdZBNNXwtGx06uY4ce53gGZ%2FSwBJmD81xl9zWCln6pBM0pSv6N'));
     });
 
     it('should display correct tabs for user based on role', function () {
