@@ -149,7 +149,7 @@ angular.module('Squared')
           $scope.gridRefresh = false;
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
-          Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
+          //Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           $scope.logSearchBtnLoad = false;
         }
       };
