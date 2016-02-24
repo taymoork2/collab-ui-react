@@ -1774,7 +1774,8 @@
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "getLicenseIsTrialError": "Failed to get trial state for COMMUNICATION license."
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -2148,8 +2149,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getHuronInternationalDialingTrialOverrideError": "Failed to get international dialing override info."
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
