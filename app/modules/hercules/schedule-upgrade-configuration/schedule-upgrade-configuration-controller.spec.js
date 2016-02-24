@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
-  var vm, $rootScope, $translate, $httpBackend, Authinfo, ScheduleUpgradeService, NotificationService;
+  var vm, $rootScope, $translate, Authinfo, ScheduleUpgradeService, NotificationService;
 
   var UIDataFixture = {
     scheduleTime: {
@@ -34,9 +34,8 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     $provide.value('Authinfo', Authinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $q, $controller, _$httpBackend_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, $q, $controller, _$translate_) {
     $rootScope = _$rootScope_;
-    $httpBackend = _$httpBackend_;
     $translate = _$translate_;
 
     sinon.stub($translate, 'use', function () {
@@ -61,17 +60,7 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
       ScheduleUpgradeService: ScheduleUpgradeService,
       NotificationService: NotificationService
     });
-
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
-
-  afterEach(function () {
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   it('should start in the syncing state', function () {
     expect(vm.state === 'syncing').toBe(true);
