@@ -68,8 +68,9 @@
     }
 
     function saveLogoSettings() {
-      vm.toggleAllowCustomerLogos();
-      reset();
+      vm.toggleAllowCustomerLogos(vm.allowCustomerLogos);
+      vm.form.$setPristine();
+      vm.form.$setUntouched();
     }
 
     function initCustomer() {
