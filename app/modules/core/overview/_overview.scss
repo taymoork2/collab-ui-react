@@ -115,6 +115,11 @@
       border-top-color: $color-cta-base;
     }
   }
+  .gray-light {
+    header:after {
+            border-top: 5px solid $gray-light-1;
+    }
+  }
   .user-card {
     // height: auto !important;
     header {
