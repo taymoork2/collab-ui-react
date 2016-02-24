@@ -158,8 +158,6 @@ describe('Support flow', function () {
     });
   });
 
-
-
   xdescribe('Billing page', function () {
     //TODO this is environment specific order and needs to be fixed
     if (isProductionBackend) {
