@@ -221,7 +221,6 @@
       }).finally(function () {
         vm.searchingForCloudberryDevices = false;
         vm.searchingForDevices = vm.searchingForHuronDevices || vm.searchingForHuronDevicesMatchingNumber;
-        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         searchDone.resolve(stats(HelpdeskSplunkReporterService.DEVICE_SEARCH_CLOUDBERRY, vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure));
       });
       return searchDone.promise;
