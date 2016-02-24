@@ -156,8 +156,8 @@ describe('Configuring services per-user', function () {
     activate.setup(null, testUser);
 
     utils.searchAndClick(testUser);
-    utils.expectIsDisplayed(users.hybridServices_sidePanel_Calendar);
-    utils.expectIsDisplayed(users.hybridServices_sidePanel_UC);
+    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
+    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
     utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
