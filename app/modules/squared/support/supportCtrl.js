@@ -29,6 +29,9 @@ angular.module('Squared')
           if (user.success) {
             if (isCiscoDevRole(user.roles)) {
               $scope.showCdrCallFlowLink = true;
+              setTimeout(function () {
+                $('.cs-card-layout').masonry('layout');
+              }, 200);
             }
           } else {
             Log.debug('Get current user failed. Status: ' + status);
