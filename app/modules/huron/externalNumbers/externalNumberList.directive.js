@@ -12,7 +12,8 @@
       scope: {
         numbers: '=',
         countTranslateKey: '@',
-        externalNumbers: '='
+        externalNumbers: '=',
+        questionTooltip: '@'
       }
     };
 

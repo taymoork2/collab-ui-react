@@ -54,6 +54,7 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
+      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCallsTab: 'ios-calls-tab',

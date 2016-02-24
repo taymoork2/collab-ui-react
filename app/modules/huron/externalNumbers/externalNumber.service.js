@@ -13,6 +13,7 @@
       getAllNumbers: getAllNumbers,
       getPendingNumbers: getPendingNumbers,
       getUnassignedNumbers: getUnassignedNumbers,
+      getUnassignedNumbersWithoutPending: getUnassignedNumbersWithoutPending,
       deleteNumber: deleteNumber
     };
     var allNumbers = [];
@@ -43,7 +44,7 @@
             .then(formatNumberLabels)
             .then(function (numbers) {
               unassignedNumbers = filterUnassigned(numbers);
-              allNumbers = pendingNumbers.concat(numbers);
+              allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
             });
         })
         .catch(function (response) {
@@ -102,6 +103,19 @@
 
     function getUnassignedNumbers() {
       return unassignedNumbers;
+    }
+
+    function getUnassignedNumbersWithoutPending() {
+      return getNumbersWithoutPending(unassignedNumbers);
+    }
+
+    // unable to use _.differenceBy yet
+    function getNumbersWithoutPending(numbersArray) {
+      return _.reject(numbersArray, function (numberObj) {
+        return _.some(pendingNumbers, {
+          pattern: numberObj.pattern
+        });
+      });
     }
   }
 })();
