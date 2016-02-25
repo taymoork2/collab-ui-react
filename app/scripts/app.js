@@ -65,7 +65,8 @@ angular.module('Huron', [
   'uc.didadd',
   'uc.overview',
   'uc.hurondetails',
-  'uc.cdrlogsupport'
+  'uc.cdrlogsupport',
+  'ngIcal'
 ]);
 
 angular.module('Hercules', ['Core', 'ngTagsInput']);

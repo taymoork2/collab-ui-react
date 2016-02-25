@@ -67,6 +67,7 @@
         }
         .icon-circle {
           margin-right: -0.3rem;
+          font-size: 0.75em;
         }
       }
     }
@@ -112,6 +113,11 @@
   .cta-base {
     header:after {
       border-top-color: $color-cta-base;
+    }
+  }
+  .gray-light {
+    header:after {
+            border-top: 5px solid $gray-light-1;
     }
   }
   .user-card {

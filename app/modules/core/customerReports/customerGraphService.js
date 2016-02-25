@@ -78,6 +78,10 @@
     // bar charts
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, startDuration) {
       var chartData = {
+        'autoMargins': false,
+        'marginLeft': 60,
+        'marginTop': 60,
+        'marginRight': 60,
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
         'type': 'serial',
@@ -96,8 +100,6 @@
           'fixedPosition': true,
           'shadowAlpha': 0
         },
-        'autoMargins': false,
-        'marginTop': 60,
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,
@@ -371,11 +373,11 @@
     }
 
     function mediaGraphs(data, mediaFilter) {
-      var values = ['totalDurationSum', 'partialSum', 'poorAudioQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorAudioQualityDurationSum'];
+      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       if (mediaFilter.value === 1) {
-        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorQualityDurationSum'];
-        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorQualityDurationSum'];
+        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorAudioQualityDurationSum'];
+        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorAudioQualityDurationSum'];
       } else if (mediaFilter.value === 2) {
         values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
         balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];

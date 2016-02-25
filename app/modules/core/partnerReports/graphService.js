@@ -66,7 +66,7 @@
       updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration, marginBottom) {
       var chartData = {
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
@@ -87,7 +87,9 @@
           'shadowAlpha': 0
         },
         'autoMargins': false,
+        'marginLeft': 60,
         'marginTop': 60,
+        'marginRight': 60,
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,
@@ -133,6 +135,10 @@
         chartData.chartCursor = chartCursor;
       }
 
+      if (angular.isDefined(marginBottom) && marginBottom !== null) {
+        chartData.marginBottom = marginBottom;
+      }
+
       return AmCharts.makeChart(div, chartData);
     }
 
@@ -158,7 +164,7 @@
         startDuration = 0;
       }
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), startDuration);
+      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), null, startDuration);
     }
 
     function activeUserGraphs(data) {
@@ -212,7 +218,6 @@
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
-      valueAxes[0].stackType = 'regular';
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
@@ -221,36 +226,33 @@
       legend.reversedOrder = true;
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
-      var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, startDuration);
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), null, startDuration);
     }
 
     function mediaQualityGraphs(data) {
-      var titles = ['mediaQuality.poor', 'mediaQuality.fair', 'mediaQuality.good'];
-      var values = ['poorQualityDurationSum', 'fairQualityDurationSum', 'goodQualityDurationSum'];
-      var colors = [Config.chartColors.brandDanger, Config.chartColors.brandWarning, Config.chartColors.blue];
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
-        colors = [data[0].colorOne, data[0].colorTwo, data[0].colorThree];
+      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
+      var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
+      var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
+      if (!data[0].balloon) {
+        colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
       }
       var graphs = [];
 
       for (var i = 0; i < values.length; i++) {
-        graphs[i] = angular.copy(columnBase);
+        graphs.push(angular.copy(columnBase));
         graphs[i].title = $translate.instant(titles[i]);
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
-        graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
         graphs[i].balloonText = '<span class="graph-text-balloon graph-number-color">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-number">[[totalDurationSum]]</span></span>' + '<br><span class="graph-text-balloon graph-number-color">' + $translate.instant(titles[i]) + ': ' + '<span class="graph-number"> [[' + values[i] + ']]</span></span>';
-        if (i) {
-          graphs[i].clustered = false;
-        }
+        graphs[i].clustered = false;
       }
 
       return graphs;
@@ -262,7 +264,7 @@
           return;
         }
         var startDuration = 1;
-        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        if (!data[0].balloon) {
           startDuration = 0;
         }
 
@@ -312,7 +314,7 @@
         startDuration = 0;
       }
 
-      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration);
+      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration, 60);
     }
 
     function populationGraphs(data) {
@@ -381,16 +383,12 @@
           item.absCompare = Math.abs(comparison);
           item.overallPopulation = overallPopulation;
           if (item.colorOne === null || item.colorOne === undefined) {
-            item.labelColorField = Config.chartColors.grayDarkest;
             if (comparison >= 0) {
               item.colorOne = Config.chartColors.brandInfo;
             } else {
               item.colorOne = Config.chartColors.brandDanger;
             }
-            item.balloon = true;
             item.colorTwo = Config.chartColors.blue;
-          } else {
-            item.labelColorField = Config.chartColors.grayLight;
           }
         });
 

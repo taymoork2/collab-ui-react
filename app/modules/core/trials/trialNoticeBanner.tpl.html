@@ -1,0 +1,31 @@
+<div class="banner-msg msg" ng-show="bannerCtrl.canShow()" ng-class="{ 'has-requested': bannerCtrl.hasRequested }">
+  <i class="icon icon-information"></i>
+  <span class="msg--default">
+    <span
+      translate="trials.expireWarningMsg"
+      translate-values="{ numDaysLeft: bannerCtrl.daysLeft }"
+      ng-show="bannerCtrl.daysLeft >= 0"></span>
+    <span
+      translate="trials.expiredMsg"
+      ng-show="bannerCtrl.daysLeft < 0"></span>
+    <span translate="trials.requestPurchaseMsg"></span>
+  </span>
+  <span class="msg--requested">
+    <span
+      translate="trials.requestConfirmMsg"
+      translate-values="{ partnerAdminDisplayName: bannerCtrl.partnerAdminDisplayName }"></span>
+  </span>
+  <button
+    type="button"
+    id="requestPurchaseBtn"
+    cs-btn
+    class="btn btn--cta"
+    ng-click="bannerCtrl.sendRequest()">
+    <span
+      translate="trials.requestPurchaseBtn"
+      class="msg--default"></span>
+    <span
+      translate="trials.requestAgainBtn"
+      class="msg--requested"></span>
+  </button>
+</div>

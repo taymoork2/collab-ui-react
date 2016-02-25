@@ -6,7 +6,7 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils) {
+  function DevicesCtrlHuron($scope, $q, $stateParams, DeviceService, OtpService, Config) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
@@ -16,31 +16,29 @@
 
     function activate() {
 
-      HttpUtils.setTrackingID().then(function () {
-        var promises = [];
+      var promises = [];
 
-        // reset to false when loaded
-        vm.showGenerateOtpButton = false;
+      // reset to false when loaded
+      vm.showGenerateOtpButton = false;
 
-        var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
-          vm.devices = deviceList;
-        });
-        promises.push(devicePromise);
-
-        var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
-          vm.otps = otpList;
-        });
-        promises.push(otpPromise);
-
-        return $q.all(promises)
-          .then(function () {
-            if (vm.devices.length === 0) {
-              vm.showGenerateOtpButton = true;
-            } else {
-              $scope.userOverview.addGenerateAuthCodeLink();
-            }
-          });
+      var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
+        vm.devices = deviceList;
       });
+      promises.push(devicePromise);
+
+      var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
+        vm.otps = otpList;
+      });
+      promises.push(otpPromise);
+
+      return $q.all(promises)
+        .then(function () {
+          if (vm.devices.length === 0) {
+            vm.showGenerateOtpButton = true;
+          } else {
+            $scope.userOverview.addGenerateAuthCodeLink();
+          }
+        });
     }
 
     function showDeviceDetailPanel(device) {

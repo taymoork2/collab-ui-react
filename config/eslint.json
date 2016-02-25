@@ -45,6 +45,7 @@
     "login": true,
     "manage": true,
     "meetings": true,
+    "mediaservice": true,
     "module": true,
     "moment": true,
     "navigation": true,
@@ -68,6 +69,7 @@
     "utils": true,
     "wizard": true,
     "xdescribe": true,
-    "xit": true
+    "xit": true,
+    "log": true
   }
 }

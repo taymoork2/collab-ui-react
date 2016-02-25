@@ -39,6 +39,16 @@ angular
           },
           authenticate: false
         })
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          }
+        })
         .state('createAccount', {
           url: '/create-account',
           views: {
@@ -49,6 +59,59 @@ angular
             }
           },
           authenticate: false
+        })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateUserController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser.successPage', {
+          url: '/success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser.errorPage', {
+          url: '/error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateProduct', {
+          url: '/activate-product',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateProductController'
+            }
+          }
+        })
+        .state('activateProduct.successPage', {
+          url: '/success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('activateProduct.errorPage', {
+          url: '/error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          }
         })
         .state('unauthorized', {
           views: {
@@ -131,7 +194,7 @@ angular
           }
         });
 
-      $httpProvider.interceptors.push('TrackingIDInterceptor');
+      $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
@@ -1346,7 +1409,7 @@ angular
         })
         .state('trialAdd.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('trialAdd.addNumbers', {
@@ -1369,7 +1432,8 @@ angular
             }
           },
           params: {
-            currentTrial: {}
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialEdit.addNumbers', {
@@ -1393,7 +1457,7 @@ angular
         })
         .state('trialEdit.call', {
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
-          controller: 'TrialCallCtrl',
+          controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
         .state('generateauthcode', {
@@ -1684,7 +1748,7 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayClusterDetails',
+              controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
@@ -1877,7 +1941,7 @@ angular
         })
         .state('connector-details.alarm-details', {
           templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-          controller: 'AlarmController',
+          controller: 'MediaAlarmController',
           controllerAs: 'alarmCtrl',
           data: {
             displayName: 'Alarm Details'

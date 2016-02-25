@@ -39,9 +39,6 @@ describe('First Time Wizard', function () {
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Import IdP Metadata');
     utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
-    utils.click(wizard.radiobuttons.first());
-    utils.click(wizard.finishBtn);
-    utils.expectIsDisplayed(wizard.mainviewTitle);
   });
 
   it('should complete simple add users flow', function () {

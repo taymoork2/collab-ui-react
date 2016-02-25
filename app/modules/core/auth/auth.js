@@ -95,7 +95,12 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function redirectToLogin(email) {
-    $window.location.href = Config.getOauthLoginUrl(email);
+    if (email) {
+      $window.location.href = Config.getOauthLoginUrl(email);
+    } else {
+      var $state = $injector.get('$state');
+      $state.go('login');
+    }
   }
 
   // authorize helpers

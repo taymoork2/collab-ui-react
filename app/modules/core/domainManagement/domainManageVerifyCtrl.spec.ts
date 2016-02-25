@@ -23,7 +23,12 @@ namespace domainManagement {
           $state: {params: {domain: domain, loggedOnUser: user}},
           $previousState: null,
           DomainManagementService: domainManageService,
-          $translate: Translate
+          $translate: Translate,
+          LogMetricsService: {
+            logMetrics: sinon.stub(),
+            eventType: {domainManageVerify: 'verify'},
+            eventAction: {buttonClick: 'click'}
+          }
         });
       };
 
@@ -68,6 +73,23 @@ namespace domainManagement {
         expect(ctrl.error).not.toBeNull();
 
         expect(ctrl.error).toBe("error-in-verify");
+      });
+
+      it('should record metrics on learnMore click', ()=> {
+        let ctrl, domain = {text: 'anydomain.com'};
+        ctrl = domainManagmentVerifyCtrlFactory(
+          DomainManagementService,
+          {
+            name: "testuser",
+            isLoaded: true,
+            domain: 'example.com'
+          },
+          domain
+        );
+
+        ctrl.learnMore();
+        $rootScope.$digest();
+        expect(ctrl.LogMetricsService.logMetrics.callCount).toBe(1);
       });
 
 

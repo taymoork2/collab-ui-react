@@ -414,12 +414,12 @@ li.monitoring-cell {
       margin-left: 12px;
     }
 
-    .inactive {
+    .orgnotselected {
       background-color: $gray-light-3;
       color: $gray-dark-1;
     }
 
-    .active {
+    .orgselected {
       background-color: $color-primary-darker;
       color: $brand-white;
     }
@@ -448,18 +448,17 @@ li.monitoring-cell {
       color: $brand-white;
     }
 
-    &.selected {
-      .badge-active {
-        @include badge-active-darker;
-      }
 
-      .free {
-        @include free-white;
-      }
+    .badge-active.selected {
+      @include badge-active-darker;
+    }
 
-      .red {
-        @include red-white;
-      }
+    .free.selected {
+      @include free-white;
+    }
+
+    .red.selected {
+      @include red-white;
     }
 
     &:hover {

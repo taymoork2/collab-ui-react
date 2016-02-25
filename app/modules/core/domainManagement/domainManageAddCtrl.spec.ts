@@ -17,7 +17,12 @@ namespace domainManagement {
         $stateParams: {loggedOnUser: ''},
         $previousState: {go: sinon.stub()},
         DomainManagementService: DomainManagementService,
-        $translate: $translate
+        $translate: $translate,
+        LogMetricsService: {
+          eventType: {domainManageAdd: 'add'},
+          eventAction: {buttonClick: 'click'},
+          logMetrics: sinon.stub()
+        }
       });
     }));
 
@@ -79,6 +84,19 @@ namespace domainManagement {
       DomainManagmentAddCtrl.add();
       $rootScope.$digest();
       expect(DomainManagementService.addDomain.callCount).toBe(1);
+    });
+
+    it('should post metric for add domain', ()=> {
+      DomainManagementService.addDomain = sinon.stub().returns(
+        $q.resolve());
+
+
+      let unEncoded = 'test.com';
+      //let encoded = 'test.com';
+      DomainManagmentAddCtrl.domain = unEncoded;
+      DomainManagmentAddCtrl.add();
+      $rootScope.$digest();
+      expect(DomainManagmentAddCtrl.LogMetricsService.logMetrics.callCount).toBe(1);
     });
 
     it('should set error if addDomain on the service fails', ()=> {

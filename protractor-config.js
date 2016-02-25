@@ -66,11 +66,7 @@ exports.config = {
 
     global.isProductionBackend = browser.params.isProductionBackend === 'true';
 
-    global.log = function (message) {
-      if (browser.params.log == 'true') {
-        console.log(message);
-      }
-    };
+    global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
     jasmine.getEnv().addReporter(
@@ -125,10 +121,11 @@ exports.config = {
     var RolesPage = require('./test/e2e-protractor/pages/roles.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var BasicSettigsPage = require('./test/e2e-protractor/pages/webexbasicsettings.page.js');
+    var SiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
     var SiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
     var SiteReportsPage = require('./test/e2e-protractor/pages/webexsitereports.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
-    var ManagementServicePage = require('./test/e2e-protractor/pages/managementService.page.js');
+    var MediaServicePage = require('./test/e2e-protractor/pages/mediaService.page.js');
     var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
     var UtilizationPage = require('./test/e2e-protractor/pages/utilization.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
@@ -164,10 +161,11 @@ exports.config = {
     global.roles = new RolesPage();
     global.meetings = new MeetingsPage();
     global.usersettings = new BasicSettigsPage();
+    global.sitelist = new SiteListPage();
     global.sitesettings = new SiteSettigsPage();
     global.sitereports = new SiteReportsPage();
     global.orgprofile = new OrgProfilePage();
-    global.management = new ManagementServicePage();
+    global.mediaservice = new MediaServicePage();
     global.enterpriseResource = new EnterpriseResourcePage();
     global.utilization = new UtilizationPage();
     global.meetings = new MeetingsPage();
@@ -198,3 +196,25 @@ exports.config = {
   // than the maximum time your application needs to stabilize between tasks.
   allScriptsTimeout: VERY_LONG_TIMEOUT
 };
+
+function Logger() {
+  var lastLogMessage = '';
+  var lastLogMessageCount = 0;
+
+  function log(message) {
+    if (log.verbose || browser.params.log === 'true') {
+      if (lastLogMessage === message) {
+        lastLogMessageCount++;
+      } else {
+        if (lastLogMessage && lastLogMessageCount) {
+          console.log('(Repeated ' + lastLogMessageCount + ' times...)');
+        }
+        lastLogMessage = message;
+        lastLogMessageCount = 0;
+        console.log(message);
+      }
+    }
+  }
+
+  return log;
+}

@@ -10,6 +10,8 @@ angular.module('WebExApp')
           id: "MC",
           label: "Meeting Center",
           serviceType: "MeetingCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false
         }, // meetingCenter
 
@@ -17,6 +19,8 @@ angular.module('WebExApp')
           id: "TC",
           label: "Training Center",
           serviceType: "TrainingCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false,
 
           handsOnLabAdmin: {
@@ -31,6 +35,8 @@ angular.module('WebExApp')
           id: "EC",
           label: "Event Center",
           serviceType: "EventCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false,
 
           optimizeBandwidthUsage: {
@@ -45,6 +51,8 @@ angular.module('WebExApp')
           id: "SC",
           label: "Support Center",
           serviceType: "SupportCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false
         }, // supportCenter
 
@@ -56,6 +64,8 @@ angular.module('WebExApp')
         },
 
         cmr: {
+          id: "CMR",
+          label: "Collaboration Meeting Rooms",
           value: false
         },
 

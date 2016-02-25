@@ -5,10 +5,12 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.trialDetails = {};
+    vm.stateDetails = angular.copy($stateParams.details);
 
     vm.customerOrgId = undefined;
 
@@ -246,13 +248,11 @@
         vm.callTrial.enabled = vm.hasCallEntitlement() && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
 
+        vm.canSeeDevicePage = results[3];
+
         if (vm.showMeeting) {
           updateTrialService(_messageTemplateOptionId);
         }
-
-        setViewState('trialEdit.call', results[3] && results[1]);
-        setViewState('trialEdit.meeting', results[1]);
-        setViewState('trialEdit.addNumbers', !vm.supportsPstnSetup); //only show step if not supportsPstnSetup
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;
@@ -307,9 +307,9 @@
       vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
       vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
 
-      setViewState('trialEdit.call', ((!vm.preset.roomSystems && vm.roomSystemTrial.enabled) || (!vm.preset.call && vm.callTrial.enabled)));
-      setViewState('trialEdit.addNumbers', (!vm.preset.call && vm.callTrial.enabled && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
-      setViewState('trialEdit.meeting', !vm.preset.meeting && vm.meetingTrial.enabled);
+      setViewState('trialEdit.call', canAddDevice());
+      setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
+      setViewState('trialEdit.meeting', hasEnabledMeetingTrial());
 
       addRemoveStates();
       _.forEach(vm.individualServices, function (service) {
@@ -462,29 +462,21 @@
     }
 
     function isProceedDisabled() {
-      var proceedable = false;
-      if (!proceedable && !vm.preset.message) {
-        proceedable = vm.messageTrial.enabled;
-      }
-      if (!proceedable && !vm.preset.meeting) {
-        proceedable = vm.meetingTrial.enabled;
-      }
-      if (!proceedable && !vm.preset.call) {
-        proceedable = vm.callTrial.enabled;
-      }
-      if (!proceedable && !vm.preset.roomSystems) {
-        proceedable = vm.roomSystemTrial.enabled;
-      }
-      if (!proceedable && vm.preset.roomSystems) {
-        proceedable = vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity;
-      }
-      if (!proceedable) {
-        proceedable = vm.preset.licenseCount !== vm.details.licenseCount;
-      }
-      if (!proceedable) {
-        proceedable = vm.preset.licenseDuration !== vm.details.licenseDuration;
-      }
-      return !proceedable;
+      var checks = [
+        hasEnabledAnyTrial(vm, vm.preset),
+        vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
+        vm.preset.licenseCount !== vm.details.licenseCount,
+        vm.preset.licenseDuration !== vm.details.licenseDuration,
+        canAddDevice()
+      ];
+
+      // bail at first true result
+      return !_.reduce(checks, function (currentValue, sum) {
+        if (sum) {
+          return sum;
+        }
+        return currentValue;
+      });
     }
 
     function hasEnabled(nowEnabled, previouslyEnabled) {
@@ -492,19 +484,27 @@
     }
 
     function hasEnabledMessageTrial(vmMessageTrial, vmPreset) {
-      return hasEnabled(vmMessageTrial.enabled, vmPreset.message);
+      var trial = vmMessageTrial || vm.messageTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.message);
     }
 
     function hasEnabledMeetingTrial(vmMeetingTrial, vmPreset) {
-      return hasEnabled(vmMeetingTrial.enabled, vmPreset.meeting);
+      var trial = vmMeetingTrial || vm.meetingTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.meeting);
     }
 
     function hasEnabledCallTrial(vmCallTrial, vmPreset) {
-      return hasEnabled(vmCallTrial.enabled, vmPreset.call);
+      var trial = vmCallTrial || vm.callTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.call);
     }
 
     function hasEnabledRoomSystemTrial(vmRoomSystemTrial, vmPreset) {
-      return hasEnabled(vmRoomSystemTrial.enabled, vmPreset.roomSystems);
+      var trial = vmRoomSystemTrial || vm.roomSystemTrial;
+      var preset = vmPreset || vm.preset;
+      return hasEnabled(trial.enabled, preset.roomSystems);
     }
 
     function hasEnabledAnyTrial(vm, vmPreset) {
@@ -517,6 +517,15 @@
 
     function showDefaultFinish() {
       return !hasEnabledMeetingTrial(vm.meetingTrial, vm.preset);
+    }
+
+    function canAddDevice() {
+      var stateDetails = vm.stateDetails.details;
+      var roomSystemTrialEnabled = vm.roomSystemTrial.enabled;
+      var callTrialEnabled = vm.callTrial.enabled;
+      var canSeeDevicePage = vm.canSeeDevicePage;
+
+      return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
     }
   }
 })();

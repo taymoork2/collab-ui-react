@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -20,13 +20,30 @@
       isLoading: false,
       isConfirmed: null,
       urlValue: '',
+      isRoomLicensed: false,
       domainSuffix: Config.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
     var sipField = $scope.cloudSipUriField;
+    init();
 
-    $scope.setSipUri = function () {
+    function init() {
+      checkRoomLicense();
+      setSipUri();
+    }
+
+    function checkRoomLicense() {
+      Orgservice.getLicensesUsage().then(function (response) {
+        var licenses = _.get(response, '[0].licenses');
+        var roomLicensed = _.find(licenses, {
+          offerName: 'SD'
+        });
+        sipField.isRoomLicensed = !_.isUndefined(roomLicensed);
+      });
+    }
+
+    function setSipUri() {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
         var sparkDomainStr = Config.getSparkDomainCheckUrl();
@@ -46,8 +63,7 @@
         }
         sipField.inputValue = displayName;
       }, false, true);
-    };
-    $scope.setSipUri();
+    }
 
     $scope.checkSipUriAvailability = function () {
       var domain = sipField.inputValue;
@@ -149,15 +165,15 @@
     }];
 
     $scope.enableSSOOptions = [{
-      label: $translate.instant('ssoModal.finalDisableSSO'),
-      value: 0,
-      name: 'finalssoOptions',
-      id: 'finalSsoNoProvider'
-    }, {
       label: $translate.instant('ssoModal.finalEnableSSO'),
       value: 1,
       name: 'finalssoOptions',
       id: 'finalSsoProvider'
+    }, {
+      label: $translate.instant('ssoModal.finalDisableSSO'),
+      value: 0,
+      name: 'finalssoOptions',
+      id: 'finalSsoNoProvider'
     }];
 
     $scope.$watch('options.enableSSO', function () {
@@ -187,27 +203,21 @@
       return deferred.promise;
     };
 
-    $scope.setFile = function (element) {
-      $scope.$apply(function ($scope) {
-        $scope.file = element.files[0];
-        $scope.filename = element.files[0].name;
-      });
-
-      if ($scope.file) {
-        var r = new FileReader();
-        r.onload = (function () {
-          return function (e) {
-            $rootScope.fileContents = e.target.result;
-          };
-        })($scope.file);
-        r.readAsText($scope.file);
-      } else {
-        Log.debug('Failed to read metadata file');
-        Notification.notify([$translate.instant('ssoModal.readFileFailed')], 'error');
+    $scope.idpFile = {};
+    $scope.$watch('idpFile.file', function (value) {
+      if ($scope.idpFile.file) {
+        $timeout($scope.importRemoteIdp);
       }
-    };
+    });
 
-    $scope.importRemoteIdp = function () {
+    $scope.resetFile = resetFile;
+
+    function resetFile() {
+      $scope.idpFile = {};
+    }
+    $scope.importRemoteIdp = importRemoteIdp;
+
+    function importRemoteIdp() {
       var metaUrl = null;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
@@ -218,26 +228,31 @@
             if (metaData.entityId === newEntityId) {
               patchRemoteIdp(metaData.url);
             } else {
-              SSOService.deleteMeta(metaData.url);
-              postRemoteIdp();
+              SSOService.deleteMeta(metaData.url, function (status) {
+                if (status === 204) {
+                  postRemoteIdp();
+                }
+              });
             }
           } else {
             postRemoteIdp();
           }
         } else {
           Log.debug('Failed to retrieve meta url. Status: ' + status);
-          Notification.error('ssoModal.importFailed', {
+          $scope.idpFile.error = true;
+          $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
             status: status
           });
         }
       });
-    };
+    }
 
     function deleteSSO() {
       var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
       var metaUrl = null;
       var success = true;
       SSOService.getMetaInfo(function (data, status) {
+        $scope.wizard.wizardNextLoad = true;
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           metaUrl = _.get(data, 'data[0].url');
@@ -248,9 +263,7 @@
               }
               if (success === true) {
                 Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-                Notification.success('ssoModal.disableSuccess', {
-                  status: status
-                });
+                $scope.wizard.nextTab();
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
                 Notification.error('ssoModal.disableFailed', {
@@ -272,20 +285,18 @@
       var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
       var metaUrl = null;
       SSOService.getMetaInfo(function (data, status) {
+        $scope.wizard.wizardNextLoad = true;
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           var newEntityId = checkNewEntityId(data);
           metaUrl = _.get(_.find(data.data, {
             entityId: newEntityId
           }), 'url');
-
           if (metaUrl) {
             SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
-                Notification.success('ssoModal.enableSSOSuccess', {
-                  status: status
-                });
+                $scope.wizard.nextTab();
               } else {
                 Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
                 Notification.error('ssoModal.enableSSOFailure', {
@@ -295,12 +306,10 @@
             });
           }
         } else {
-          SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, true, function (data, status) {
+          SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, true, function (data, status) {
             if (data.success) {
               Log.debug('Single Sign-On (SSO) successfully enabled for all users');
-              Notification.success('ssoModal.enableSSOSuccess', {
-                status: status
-              });
+              $scope.wizard.nextTab();
             } else {
               Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
               Notification.error('ssoModal.enableSSOFailure', {
@@ -314,15 +323,14 @@
 
     function postRemoteIdp() {
       var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
-      SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, false, function (data, status) {
+      SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
-          Notification.success('ssoModal.importSuccess', {
-            status: status
-          });
+          $scope.idpFile.success = true;
         } else {
           Log.debug('Failed to Import On-premise IdP Metadata. Status: ' + status);
-          Notification.error('ssoModal.importFailed', {
+          $scope.idpFile.error = true;
+          $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
             status: status
           });
         }
@@ -330,15 +338,14 @@
     }
 
     function patchRemoteIdp(metaUrl) {
-      SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, false, function (data, status) {
+      SSOService.patchRemoteIdp(metaUrl, $scope.idpFile.file, false, function (data, status) {
         if (data.success) {
           Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
-          Notification.success('ssoModal.importSuccess', {
-            status: status
-          });
+          $scope.idpFile.success = true;
         } else {
           Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-          Notification.error('ssoModal.importFailed', {
+          $scope.idpFile.error = true;
+          $scope.idpFile.errorMsg = $translate.instant('ssoModal.importFailed', {
             status: status
           });
         }
@@ -346,15 +353,16 @@
     }
 
     function checkNewEntityId(data) {
-      var start = $rootScope.fileContents.indexOf(strEntityDesc);
-      start = $rootScope.fileContents.indexOf(strEntityId, start) + strEntityId.length;
-      var end = $rootScope.fileContents.indexOf(strEntityIdEnd, start);
-      var newEntityId = $rootScope.fileContents.substring(start, end);
+      var start = $scope.idpFile.file.indexOf(strEntityDesc);
+      start = $scope.idpFile.file.indexOf(strEntityId, start) + strEntityId.length;
+      var end = $scope.idpFile.file.indexOf(strEntityIdEnd, start);
+      var newEntityId = $scope.idpFile.file.substring(start, end);
       return newEntityId;
     }
 
     $scope.openTest = function () {
       var entityId = null;
+      $scope.testOpened = true;
       SSOService.getMetaInfo(function (data, status) {
         if (data.success) {
           if (data.data.length > 0) {

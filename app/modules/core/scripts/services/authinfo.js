@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$location', 'Utils', 'Config', 'SessionStorage', '$translate', 'Localytics',
-    function Authinfo($rootScope, $location, Utils, Config, SessionStorage, $translate, Localytics) {
+  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics',
+    function Authinfo($rootScope, $translate, Config, Localytics) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -39,47 +39,56 @@ angular.module('Core')
       var getTabTitle = function (title) {
         return $translate.instant(title);
       };
+
       var isAllowedState = function (state) {
-        var view = (authData.roles.indexOf('PARTNER_ADMIN') > -1 || authData.roles.indexOf('PARTNER_USER') > -1 ? 'partner' : 'customer');
-        if (state) {
-          for (var b in Config.restrictedStates[view]) {
-            if (state === Config.restrictedStates[view][b]) {
-              return false;
-            }
-          }
-          // if nested state only check parent state
-          var parentState = state.split('.');
-          if (Config.allowedStates && Config.allowedStates.indexOf(parentState[0]) !== -1) {
-            return true;
-          }
-          var roles = authData.roles;
-          if (roles) {
-            for (var i in roles) {
-              var role = roles[i];
-              if (role && Config.roleStates[role] && Config.roleStates[role].indexOf(parentState[0]) !== -1 && isOnlyCiscoState(state)) {
-                return true;
-              }
-            }
-          }
-          var services = authData.services;
-          if (services) {
-            for (var j in services) {
-              var service = services[j];
-              if (service && Config.serviceStates[service.ciName] && Config.serviceStates[service.ciName].indexOf(parentState[0]) !== -1) {
-                return true;
-              }
-            }
-          }
+        if (!state) {
+          return false;
         }
+
+        var roles = authData.roles;
+        var services = authData.services || [];
+        var view = (_.includes(roles, 'PARTNER_ADMIN') || _.includes(roles, 'PARTNER_USER')) ? 'partner' : 'customer';
+
+        // check if the state is part of the restricted list for this view
+        if (_.includes(Config.restrictedStates[view], state)) {
+          return false;
+        }
+
+        var parentState = state.split('.')[0];
+        // if the state is in the allowed list, all good
+        if (_.includes(Config.publicStates, parentState)) {
+          return true;
+        }
+
+        // if state for Cisco only AND user in one of Cisco's organisation
+        if (_.includes(Config.ciscoOnly, parentState) && (authData.orgId === Config.ciscoOrgId || authData.orgId === Config.ciscoMockOrgId)) {
+          return true;
+        }
+
+        // if the state is in the allowed list of one or the user's role, all good
+        var stateAllowedByARole = _.some(roles, function (role) {
+          return _.chain(Config.roleStates)
+            .get(role)
+            .includes(parentState)
+            .value();
+        });
+        if (stateAllowedByARole) {
+          return true;
+        }
+
+        // if the state is in the allowed list of one or the user's service, all good
+        var stateAllowedByAService = _.some(services, function (service) {
+          return _.chain(Config.serviceStates)
+            .get(service.ciName)
+            .includes(parentState)
+            .value();
+        });
+        if (stateAllowedByAService) {
+          return true;
+        }
+
         return false;
       };
-
-      function isOnlyCiscoState(state) {
-        if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgId === Config.ciscoOrgId || authData.orgId ===
-            Config.ciscoMockOrgId)))
-          return true;
-        return false;
-      }
 
       //update the tabs when Authinfo data has been populated.
       var initializeTabs = function () {
@@ -124,8 +133,10 @@ angular.module('Core')
         }
         return false;
       };
+
       return {
         initialize: function (data) {
+          authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
           authData.username = data.name;
           authData.orgName = data.orgName;
           authData.orgId = data.orgId;
@@ -409,11 +420,29 @@ angular.module('Core')
         isCisco: function () {
           return this.getOrgId() === Config.ciscoOrgId;
         },
+        isCiscoMock: function () {
+          return this.getOrgId() === Config.ciscoMockOrgId;
+        },
         isEntitled: function (entitlement) {
           return isEntitled(entitlement);
         },
         isUserAdmin: function () {
           return this.getRoles().indexOf('Full_Admin') > -1;
+        },
+        isInDelegatedAdministrationOrg: function () {
+          return authData.isInDelegatedAdministrationOrg;
+        },
+        getLicenseIsTrial: function (licenseType, entitlement) {
+          var isTrial = _.chain(authData.licenses)
+            .reduce(function (isTrial, license) {
+              if (entitlement) {
+                return license.licenseType === licenseType && _.includes(license.features, entitlement) ? license.isTrial : isTrial;
+              }
+              return license.licenseType === licenseType ? license.isTrial : isTrial;
+            }, undefined)
+            .value();
+
+          return isTrial;
         }
       };
     }

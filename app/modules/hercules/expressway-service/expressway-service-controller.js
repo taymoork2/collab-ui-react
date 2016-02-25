@@ -1,9 +1,13 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('ExpresswayServiceController', ExpresswayServiceController)
+    .controller('UserErrorsController', UserErrorsController);
+
   /* @ngInject */
   function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService, ScheduleUpgradeChecker) {
-
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -30,8 +34,8 @@
     }];
 
     vm.clusters = ClusterService.getClustersByConnectorType(vm.currentServiceType);
+    vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
-    vm.clusterLength = clusterLength;
     vm.openUserStatusReportModal = openUserStatusReportModal;
     vm.openUserErrorsModal = openUserErrorsModal;
     vm.addResourceButtonClicked = addResourceButtonClicked;
@@ -81,10 +85,6 @@
           vm.serviceEnabled = enabled;
         }
       });
-    }
-
-    function clusterLength() {
-      return _.size(vm.clusters);
     }
 
     function clustersUpdated() {
@@ -150,61 +150,6 @@
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
     }
-  }
-
-  /* @ngInject */
-  function AlarmController($stateParams) {
-    var vm = this;
-    vm.alarm = $stateParams.alarm;
-  }
-
-  /* @ngInject */
-  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
-    var vm = this;
-    var cluster = ClusterService.getClustersById($stateParams.clusterId);
-    vm.host = _.find(cluster.connectors, {
-      hostname: $stateParams.host,
-      connectorType: $stateParams.serviceType
-    });
-
-    vm.deleteHost = function () {
-      return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
-        .then(function () {
-          if (ClusterService.getClustersById(cluster.id)) {
-            $state.go('cluster-details', {
-              clusterId: vm.cluster.id
-            });
-          } else {
-            $state.sidepanel.close();
-          }
-        }, XhrNotificationService.notify);
-    };
-  }
-
-  /* @ngInject */
-  function ExpresswayClusterSettingsController(ServiceStatusSummaryService, $modal, $stateParams, ClusterService, $scope, XhrNotificationService) {
-    var vm = this;
-    vm.clusterId = $stateParams.clusterId;
-    vm.serviceType = $stateParams.serviceType;
-    vm.cluster = ClusterService.getClustersById(vm.clusterId);
-    vm.saving = false;
-
-    vm.serviceNotInstalled = function () {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
-
-    vm.showDeregisterDialog = function () {
-      $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          }
-        },
-        controller: 'ClusterDeregisterController',
-        controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
-      });
-    };
   }
 
   /* @ngInject */
@@ -274,12 +219,4 @@
       vm.loading = false;
     }, vm.serviceId, 'error', vm.limit);
   }
-
-  angular
-    .module('Hercules')
-    .controller('ExpresswayServiceController', ExpresswayServiceController)
-    .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
-    .controller('AlarmController', AlarmController)
-    .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController)
-    .controller('UserErrorsController', UserErrorsController);
 }());

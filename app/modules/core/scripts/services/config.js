@@ -433,11 +433,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.cdrTab',
-            desc: 'tabs.cdrLogsTabDesc',
-            state: 'cdrsupport',
-            link: '#cdrsupport'
-          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -862,6 +857,10 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
+        /**
+         * Method to get Oauth Login Url with email specified
+         * @param {string} email
+         */
         getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
@@ -872,6 +871,7 @@ angular.module('Core')
             this.getOauthServiceType(),
             encodeURIComponent(email)
           ];
+
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
@@ -1098,7 +1098,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
-          'drLoginForward',
+          'dr-login-forward',
           'users',
           'user-overview',
           'userprofile',
@@ -1111,7 +1111,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram',
+          'activateProduct'
         ],
         Readonly_Admin: [
           'overview',
@@ -1126,10 +1130,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
-        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
@@ -1168,13 +1173,13 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram'
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'management-service',
+          'management-service'
         ],
         'spark-room-system': [
           'devices',
@@ -1227,14 +1232,12 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', '404', 'csadmin'];
+      config.publicStates = ['unauthorized', '404', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
 

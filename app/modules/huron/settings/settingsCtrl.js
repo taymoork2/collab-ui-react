@@ -5,8 +5,9 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService, ModalService) {
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService,
+    ModalService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -20,20 +21,20 @@
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
-
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
-
     var companyCallerIdType = 'Company Caller ID';
+    var savedModel = null;
+
+    vm.init = init;
+    vm.save = save;
+    vm.isDisableInternationalDialing = isDisableInternationalDialing;
+    vm.resetSettings = resetSettings;
 
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
-    vm.init = init;
-    vm.save = save;
-    vm.resetSettings = resetSettings;
     vm.timeZoneOptions = [];
     vm.externalNumberPool = [];
     vm.externalNumberPoolBeautified = [];
@@ -41,6 +42,8 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
+    vm.disableInternationalDialing = undefined;
+
     vm.model = {
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
@@ -70,7 +73,6 @@
       showServiceAddress: false
     };
 
-    var savedModel = null;
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -397,6 +399,13 @@
       templateOptions: {
         label: $translate.instant('internationalDialing.internationalDialing'),
         description: $translate.instant('internationalDialing.internationalDialingDesc')
+      },
+      expressionProperties: {
+        'templateOptions.isDisabled': function () {
+          // if the customer is in trial and doesn't have the feature toggle
+          // huronInternationalDialingTrialOverride then show toggle as disabled
+          return isDisableInternationalDialing();
+        }
       }
     }];
 
@@ -535,6 +544,43 @@
         }]
       }
     }];
+
+    init();
+
+    function isCommunicationLicenseInTrial(isOverride) {
+      if (!!isOverride) {
+        // customer has international dialing trial override enable international dialing toggle
+        vm.disableInternationalDialing = false;
+        return vm.disableInternationalDialing;
+      }
+
+      // no override, check if communication license is in trial period
+      vm.disableInternationalDialing = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc');
+      if (_.isUndefined(vm.disableInternationalDialing)) {
+        return $q.reject('Failed to get trial state for COMMUNICATION license');
+      }
+
+      return vm.disableInternationalDialing;
+    }
+
+    function isDisableInternationalDialing() {
+      if (angular.isDefined(vm.disableInternationalDialing)) {
+        return vm.disableInternationalDialing;
+      }
+
+      return FeatureToggleService.supports(FeatureToggleService.features.huronInternationalDialingTrialOverride)
+        .then(isCommunicationLicenseInTrial)
+        // if we are unable get feature toggle then check license isTrial
+        .catch(function (response) {
+          return $q.when(false)
+            .then(isCommunicationLicenseInTrial)
+            // if we are unable to get license info then default to disabling international dialing toggle
+            .catch(function (response) {
+              Notification.processErrorResponse(response, 'huronSettings.getHuronInternationalDialingTrialOverrideError');
+              return true;
+            });
+        });
+    }
 
     function getBeautifiedExternalNumber(pattern) {
       var didLabel = TelephoneNumberService.getDIDLabel(pattern);
@@ -1142,10 +1188,5 @@
         vm.model.callerId.callerIdName = Authinfo.getOrgName();
       }
     });
-
-    HttpUtils.setTrackingID().then(function () {
-      init();
-    });
-
   }
 })();

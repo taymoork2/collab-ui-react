@@ -168,7 +168,6 @@
 }
 
 .leader-board .subscriptionId {
-  padding-top: 32px;
   padding-left: 8px;
   font-size: 14px;
   color: $gray-dark-1;
@@ -182,4 +181,26 @@
 
 .subscription .cs-card {
   margin-top: 12px;
+}
+
+// override needed for 'cs-header-push-container' directive in 'main.tpl.html'
+.license-usage {
+  .push-down-container-inner {
+    padding-top: 0;  // lose 20px
+  }
+
+  .leader-board {
+    margin-top: 20px;  // gain 20px
+
+    // except customer admins with 'atlas-trial-conversion' feature-toggle enabled
+    &.is-customer-admin.ft-atlas-trial-conversion {
+      margin-top: 12px;  // we only need 12px
+
+      .subscription:first-of-type {
+        .subscriptionId {
+          display: none;
+        }
+      }
+    }
+  }
 }

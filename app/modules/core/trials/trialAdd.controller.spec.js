@@ -64,10 +64,6 @@ describe('Controller: TrialAddCtrl', function () {
     expect($state.go).toHaveBeenCalledWith('trialAdd.info');
   });
 
-  it('should default room system quantity to 0', function () {
-    expect(controller.roomSystemFields[1].model.quantity).toBe(0);
-  });
-
   it('should close the modal', function () {
     controller.closeDialogBox();
     expect($state.modal.close).toHaveBeenCalled();

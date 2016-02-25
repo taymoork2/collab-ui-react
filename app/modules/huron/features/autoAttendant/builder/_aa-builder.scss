@@ -281,6 +281,7 @@ $aa-builder-icon-color: $gray-base;
   padding-left: 1rem;
   padding-right: 1rem;
   box-shadow: none;
+  line-height: .5rem;
 
   .text-info {
     color: $brand-info;
@@ -329,8 +330,7 @@ $aa-builder-icon-color: $gray-base;
   @extend .icon-plus-circle;
 
   font-size: 2.25rem;
-  top: 0.0625rem;
-  padding: .25rem;
+  padding-right: $aa-builder-border-size;
   color: $aa-builder-border-color;
 
   &:hover {
