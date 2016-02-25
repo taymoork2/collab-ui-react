@@ -275,8 +275,14 @@
     function supports(feature) {
       return $q(function (resolve, reject) {
         if (feature === features.csvUpload) {
-          // Allow all orgs in dev or integration sites
-          if (Config.isProd()) {
+          // Block all orgs in prod with exception in the white list
+          var whiteList = [
+            '01e89ad5-72a3-4379-963a-4a35fa9e1917'
+          ];
+          var orgInWhiteList = _.find(whiteList, function (o) {
+            return o === Authinfo.getOrgId();
+          });
+          if (Config.isProd() && !orgInWhiteList) {
             resolve(false);
           } else {
             resolve(true);
