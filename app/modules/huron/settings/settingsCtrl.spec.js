@@ -363,36 +363,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(ServiceSetup.updateSite).toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-    expect(ModalService.open).toHaveBeenCalled();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-  });
-
-  it('should not disable company pilot number when toggle is OFF and cancel voicemail modal warning', function () {
-    controller.externalNumberPool = [{
-      uuid: '1234',
-      pattern: '+12292291234',
-      label: '(229) 229-1234'
-    }];
-
-    var pilotNumber = {
-      pattern: '(229) 229-1234'
-    };
-
-    controller.hasVoicemailService = true;
-    controller.model.companyVoicemail.companyVoicemailEnabled = false;
-    controller.model.companyVoicemail.companyVoicemailNumber = pilotNumber;
-
-    modalDefer.reject();
-    controller.save();
-    $scope.$apply();
-
-    expect(ModalService.open).toHaveBeenCalled();
-    expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
-    expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
-    expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-
-    expect(controller.model.companyVoicemail.companyVoicemailEnabled).toBe(true);
-    expect(controller.model.companyVoicemail.companyVoicemailNumber.pattern).toEqual('(209) 209-0003');
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
