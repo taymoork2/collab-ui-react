@@ -1721,7 +1721,7 @@ angular.module('Core')
       var saveDeferred;
       var csvHeaders;
       var orgHeaders;
-      var maxUsers = 40000;
+      var maxUsers = 250;
       var isDirSync = false;
       FeatureToggleService.supportsDirSync().then(function (enabled) {
         isDirSync = enabled;
@@ -1795,6 +1795,7 @@ angular.module('Core')
       FeatureToggleService.supportsCsvUpload().then(function (enabled) {
         if (enabled) {
           $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          maxUsers = 1100;
           return CsvDownloadService.getCsv('headers').then(function (response) {
             orgHeaders = angular.copy(response.data.columns || []);
             // Leave this commented out until discussion of maximum limit is done
