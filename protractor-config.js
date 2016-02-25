@@ -200,8 +200,8 @@ function Logger() {
   var lastLogMessageCount = 0;
 
   function log(message) {
-    if (log.verbose || browser.params.log == 'true') {
-      if (lastLogMessage == message) {
+    if (log.verbose || browser.params.log === 'true') {
+      if (lastLogMessage === message) {
         lastLogMessageCount++;
       } else {
         if (lastLogMessage && lastLogMessageCount) {
