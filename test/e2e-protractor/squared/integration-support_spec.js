@@ -68,12 +68,6 @@ describe('Support flow', function () {
         utils.expectIsDisplayed(support.closeCallInfo);
       });
 
-      xit('should display log-list panel on search', function () {
-        utils.click(support.logSearchBtn);
-        utils.expectIsNotDisplayed(support.closeCallInfo);
-        utils.expectIsDisplayed(support.supportTable);
-      });
-
       xit('should search for logs by valid email address and display log info', function () {
         support.searchAndVerifyResult(support.searchValidEmail);
       });
