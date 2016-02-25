@@ -11,12 +11,14 @@ var Notifications = function () {
   this.clearNotifications = clearNotifications;
 
   function assertError(msg1, msg2) {
-    utils.expectText(this.errorAlert, msg1, msg2)
+    utils
+      .expectText(this.errorAlert, msg1, msg2)
       .then(clearNotifications);
   }
 
   function assertSuccess(msg1, msg2) {
-    utils.expectText(this.successAlert, msg1, msg2)
+    utils
+      .expectText(this.successAlert, msg1, msg2)
       .then(clearNotifications);
   }
 
@@ -25,13 +27,18 @@ var Notifications = function () {
       log('Clear outstanding notifications');
       // If a notification is displayed, try to click it
       return alert.isDisplayed().then(function (isDisplayed) {
+        log('Clear notification: ' + alert.locator() + '. Is displayed: ' + isDisplayed);
         if (isDisplayed) {
-          log('Clear notification: ' + alert.locator());
           // The notification may still be animating, so ignore click errors
-          alert.click().then(function () {}, function () {});
+          alert.click().then(function () {
+            log('Clicked: ' + alert.locator());
+          }, function (e) {
+            log('Failed to click: ' + alert.locator() + '. Error: ' + (e && e.message || e));
+          });
         }
-        return false;
-      }, function () {
+        return !isDisplayed;
+      }, function (e) {
+        log('Alert.isDisplayed error: ' + alert.locator() + '. Error: ' + (e && e.message || e));
         return true;
       });
     }, TIMEOUT);
