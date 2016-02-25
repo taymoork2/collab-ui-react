@@ -13,14 +13,8 @@ describe('Test the activateProduct module', function () {
     navigation.expectCurrentUrl('#/login');
   });
 
-  it('should forward to the success page with a valid oid for an admin user', function () {
-    login.login('account-admin', '#/activate-product/error-page');
-    browser.get('#/activate-product?oid=' + validOid);
-    navigation.expectCurrentUrl('#/activate-product/success-page');
-  });
-
   it('should forward to the success page with a valid oid for an regular user', function () {
-    login.login('test-user', '#/activate-product/success-page');
+    login.login('test-user', '#/overview');
     browser.get('#/activate-product?oid=' + validOid);
     navigation.expectCurrentUrl('#/activate-product/success-page');
   });
