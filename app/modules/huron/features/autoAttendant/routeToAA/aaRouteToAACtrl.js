@@ -69,8 +69,7 @@
       var uiCombinedMenu = uiModel[$scope.schedule];
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
-      if (angular.isDefined($scope.fromRouteCall)) {
-
+      if ($scope.fromRouteCall) {
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
         if (vm.menuEntry.actions.length === 0) {
           action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
