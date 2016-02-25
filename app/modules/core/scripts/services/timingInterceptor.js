@@ -35,7 +35,9 @@
     return {
       request: requestHandler,
       response: responseHandler,
-      responseError: responseHandler
+      responseError: function (response) {
+        return $q.reject(responseHandler(response));
+      }
     };
   }
 

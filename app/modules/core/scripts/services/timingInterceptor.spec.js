@@ -3,12 +3,14 @@
 describe('TimingInterceptor', function () {
   beforeEach(module('Core'));
 
-  var Interceptor, Config, Authinfo, $log, now = new Date().getTime() - 1;
+  var Interceptor, Config, Authinfo, $log, now, $rootScope;
 
-  beforeEach(inject(function (_TimingInterceptor_, _Authinfo_, _$log_, _Config_) {
+  beforeEach(inject(function (_TimingInterceptor_, _Authinfo_, _$log_, _Config_, _$rootScope_) {
     $log = _$log_;
     Config = _Config_;
     Authinfo = _Authinfo_;
+    $rootScope = _$rootScope_;
+    now = new Date().getTime() - 1;
     Interceptor = _TimingInterceptor_;
   }));
 
@@ -66,6 +68,16 @@ describe('TimingInterceptor', function () {
     Interceptor.response(response);
 
     expect($log.error.callCount).toBe(0);
+  });
+
+  it('should return rejected promise from responseError', function (done) {
+    var response = {
+      config: {
+        requestTimestamp: now
+      }
+    };
+    Interceptor.responseError(response).catch(done);
+    $rootScope.$digest();
   });
 
 });
