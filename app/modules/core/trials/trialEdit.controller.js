@@ -548,13 +548,11 @@
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
     function launchCustomerPortal() {
-      if (angular.isDefined($scope.trial)) {
-        $window.open($state.href('login_swap', {
-          customerOrgId: vm.currentTrial.customerOrgId,
-          customerOrgName: vm.currentTrial.customerName
-        }));
-        $state.modal.close();
-      }
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.currentTrial.customerOrgId,
+        customerOrgName: vm.currentTrial.customerName
+      }));
+      $state.modal.close();
     }
 
     function showDefaultFinish() {

@@ -492,13 +492,11 @@
     }
 
     function launchCustomerPortal() {
-      if (angular.isDefined($scope.trial)) {
-        $window.open($state.href('login_swap', {
-          'customerOrgId': vm.customerOrgId,
-          'customerOrgName': vm.details.customerName
-        }));
-        $state.modal.close();
-      }
+      $window.open($state.href('login_swap', {
+        'customerOrgId': vm.customerOrgId,
+        'customerOrgName': vm.details.customerName
+      }));
+      $state.modal.close();
     }
 
     function showDefaultFinish() {

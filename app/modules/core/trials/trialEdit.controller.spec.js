@@ -102,17 +102,10 @@ describe('Controller: TrialEditCtrl:', function () {
     });
 
     describe('launchCustomerPortal()', function () {
-      var orig = {
-        '$scope.trial': null,
-        'controller.currentTrial': null
-      };
+      var origCurrentTrial;
 
       beforeEach(function () {
-        orig['$scope.trial'] = $scope.trial;
-        orig['controller.currentTrial'] = controller.currentTrial;
-        $scope.trial = {
-          fakedata: {}
-        };
+        origCurrentTrial = controller.currentTrial;
         controller.currentTrial = {
           customerOrgId: 'fake-customer-org-id',
           customerName: 'fake-customer-name'
@@ -121,9 +114,7 @@ describe('Controller: TrialEditCtrl:', function () {
       });
 
       afterEach(function () {
-        // restore
-        $scope.trial = orig['$scope.trial'];
-        controller.currentTrial = orig['controller.currentTrial'];
+        controller.currentTrial = origCurrentTrial;
       });
 
       describe('if $scope.trial is defined...', function () {
