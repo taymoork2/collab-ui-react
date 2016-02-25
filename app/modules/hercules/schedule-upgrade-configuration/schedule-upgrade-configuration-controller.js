@@ -169,7 +169,6 @@
           }
         }
       }).result.then(function (data) {
-        vm.whatever = 34;
         vm.postponed = data.postponed;
         vm.nextUpdate = findNextUpdate();
       });
