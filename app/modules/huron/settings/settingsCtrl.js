@@ -5,7 +5,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService,
     ModalService) {
 
@@ -545,7 +545,7 @@
       }
     }];
 
-    HttpUtils.setTrackingID().then(init);
+    init();
 
     function isCommunicationLicenseInTrial(isOverride) {
       if (!!isOverride) {
