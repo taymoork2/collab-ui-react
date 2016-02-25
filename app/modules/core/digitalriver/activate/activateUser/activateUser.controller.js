@@ -10,11 +10,11 @@
 
     DigitalRiverService.activateUser($location.search().uuid)
       .then(function () {
-        $state.go('activatedUserSuccessPage');
+        $state.go('activateUser.successPage');
       })
       .catch(function (error) {
         $log.error(error);
-        $state.go('activateUserErrorPage');
+        $state.go('activateUser.errorPage');
       });
 
   }

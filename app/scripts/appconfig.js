@@ -70,8 +70,8 @@ angular
           },
           authenticate: false
         })
-        .state('activatedUserSuccessPage', {
-          url: '/activated-user-success-page',
+        .state('activateUser.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -79,8 +79,8 @@ angular
           },
           authenticate: false
         })
-        .state('activateUserErrorPage', {
-          url: '/activate-user-error-page',
+        .state('activateUser.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -97,16 +97,16 @@ angular
             }
           }
         })
-        .state('activatedProductSuccessPage', {
-          url: '/activated-product-success-page',
+        .state('activateProduct.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
             }
           }
         })
-        .state('activateProductErrorPage', {
-          url: '/activate-product-error-page',
+        .state('activateProduct.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
