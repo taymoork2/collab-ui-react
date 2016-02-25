@@ -27,7 +27,7 @@
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter email addresses or group mailers separated by commas.",
+    "userInput": "Enter email addresses separated by commas.",
     "userInputDescription": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "firstNamePlaceHolder": "First name",
     "lastNamePlaceHolder": "Last name",
@@ -111,7 +111,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
-    "userInput": "Enter email addresses or group mailers separated by commas...",
+    "userInput": "Enter email addresses separated by commas.",
     "enableServiceText": "Enable Services",
     "enableCollab": "Enable collaboration services individually",
     "enableCollabGroup": "Enable collaboration services based on group membership",
@@ -365,13 +365,16 @@
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
-    "audioCalls": "Audio Only Calls"
+    "audioCalls": "Audio Only Calls",
+    "customer": "Customer",
+    "customers": "Customers",
+    "customerSelect": "Select a customer"
   },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
-    "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
@@ -415,7 +418,7 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.",
     "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "mediaQualityGraphError": "There was an error while loading call quality data for the selected customer(s).",
     "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
@@ -426,7 +429,7 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
+    "callMetricsChartError": "There was an error while loading call metrics data for the selected customer(s).",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
@@ -443,7 +446,7 @@
     "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
-    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for the selected customer(s).",
     "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
     "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
@@ -542,7 +545,6 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
-    "cdrLogs": "CDR Call Flow",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -552,7 +554,15 @@
       "sparkStatus": "Spark Status",
       "helpDesk": "Help Desk Support",
       "supportResources": "Support Resources",
-      "tools": "Tools"
+      "tools": {
+        "tools": "Tools",
+        "helpdeskSupport": "Help Desk Support",
+        "viewHelpdeskSupport": "View Help Desk Support",
+        "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+        "cdrLogs": "CDR Call Flow",
+        "viewCdrCallFlow": "View CDR Call Flow",
+        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+      }
     }
   },
   "cdrLogs": {
@@ -1756,8 +1766,8 @@
     "useGlobal": "Global Settings",
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
-    "on": "ON",
-    "off": "OFF"
+    "on": "On",
+    "off": "Off"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -2095,7 +2105,7 @@
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
     "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
+    "getHuronInternationalDialingTrialOverrideError": "Failed to get international dialing override info."
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2164,8 +2174,8 @@
   "generateActivationCodeModal": {
     "title": "Activation Code",
     "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
-    "emailCode": "Email the code",
-    "copyToClipboard": "Copy to clipboard",
+    "emailCode": "Email",
+    "copyToClipboard": "Copy",
     "print": "Print",
     "send": "Send",
     "to": "To",
@@ -2537,6 +2547,7 @@
     "defaultProcessError": "Unable to process request.",
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
+    "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
@@ -3470,8 +3481,6 @@
     "more": "More",
     "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
-    "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",

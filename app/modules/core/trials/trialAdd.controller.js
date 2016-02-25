@@ -254,7 +254,7 @@
           'name': 'trialAdd.addNumbers'
         });
 
-        devicesModal.enabled = results[3] && results[1];
+        devicesModal.enabled = results[3];
         meetingModal.enabled = results[1];
         addNumbersModal.enabled = !vm.supportsPstnSetup;
 

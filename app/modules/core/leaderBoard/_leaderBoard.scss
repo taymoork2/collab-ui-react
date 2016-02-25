@@ -196,8 +196,10 @@
     &.is-customer-admin.ft-atlas-trial-conversion {
       margin-top: 12px;  // we only need 12px
 
-      .subscriptionId {
-        display: none;
+      .subscription:first-of-type {
+        .subscriptionId {
+          display: none;
+        }
       }
     }
   }

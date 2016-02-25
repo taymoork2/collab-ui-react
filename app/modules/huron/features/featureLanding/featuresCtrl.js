@@ -30,6 +30,9 @@
     vm.filters = [{
       name: 'All',
       filterValue: 'all'
+    }, {
+      name: 'Hunt Group',
+      filterValue: 'HG'
     }];
     /* LIST OF FEATURES
      *
@@ -39,7 +42,14 @@
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
      *  4. Define the formatter
      * */
-    vm.features = [];
+    vm.features = [{
+      name: 'HG',
+      getFeature: HuntGroupService.getListOfHuntGroups,
+      formatter: HuronFeaturesListService.huntGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.hgName',
+      color: 'alerts'
+    }];
 
     init();
 
@@ -47,9 +57,7 @@
 
       var aaPromise = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
 
-      var hgPromise = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
-
-      $q.all([aaPromise, hgPromise]).then(function (toggles) {
+      $q.all([aaPromise]).then(function (toggles) {
         vm.loading = false;
 
         if (toggles[0]) {
@@ -65,25 +73,6 @@
             i18n: 'huronFeatureDetails.aaName',
             color: 'primary'
           });
-        }
-
-        if (toggles[1]) {
-          vm.filters.push({
-            name: 'Hunt Group',
-            filterValue: 'HG'
-          });
-          vm.features.push({
-            name: 'HG',
-            getFeature: HuntGroupService.getListOfHuntGroups,
-            formatter: HuronFeaturesListService.huntGroups,
-            isEmpty: false,
-            i18n: 'huronFeatureDetails.hgName',
-            color: 'alerts'
-          });
-        }
-
-        if (!toggles[0] && !toggles[1]) {
-          vm.noFeatures = true;
         }
 
         _.forEach(vm.features, function (feature) {
@@ -105,12 +94,14 @@
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      reInstantiateMasonry();
     }
 
     function reload() {
@@ -219,7 +210,21 @@
 
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
+      } else {
+        reInstantiateMasonry();
       }
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function showReloadPageIfNeeded() {
