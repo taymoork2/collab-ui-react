@@ -275,10 +275,10 @@
       return $q(function (resolve, reject) {
         if (feature === features.csvUpload) {
           // Allow all orgs in dev or integration sites
-          if (Config.isDev() || Config.isIntegration()) {
-            resolve(true);
-          } else {
+          if (Config.isProd()) {
             resolve(false);
+          } else {
+            resolve(true);
           }
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
