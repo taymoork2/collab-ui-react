@@ -8,17 +8,17 @@ describe('Test the activateUser module', function () {
 
   it('should forward to the success page with a valid uuid', function () {
     browser.get('#/activate-user?uuid=' + validUuid);
-    navigation.expectCurrentUrl('#/activated-user-success-page');
+    navigation.expectCurrentUrl('#/activate-user/success-page');
   });
 
   it('should forward to the error page with an invalid, well-formatted uuid', function () {
     browser.get('#/activate-user?uuid=' + validUuid + '1234');
-    navigation.expectCurrentUrl('#/activate-user-error-page');
+    navigation.expectCurrentUrl('#/activate-user/error-page');
   });
 
   it('should forward to the error page with an invalid, un-well-formatted uuid', function () {
     browser.get('#/activate-user?uuid=FOO' + validUuid);
-    navigation.expectCurrentUrl('#/activate-user-error-page');
+    navigation.expectCurrentUrl('#/activate-user/error-page');
   });
 
 });

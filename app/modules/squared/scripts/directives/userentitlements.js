@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', '$log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo', 'HttpUtils',
-    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo, HttpUtils) {
+  .controller('UserEntitlementsCtrl', ['$scope', '$timeout', '$location', '$window', 'Userservice', 'UserListService', 'Log', '$log', 'Config', 'Pagination', '$rootScope', 'Notification', '$filter', 'Utils', 'Authinfo',
+    function ($scope, $timeout, $location, $window, Userservice, UserListService, Log, $log, Config, Pagination, $rootScope, Notification, $filter, Utils, Authinfo) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.entitlements = Utils.getSqEntitlements($scope.currentUser);
 
@@ -94,64 +94,62 @@ angular.module('Squared')
        */
       $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
-        HttpUtils.setTrackingID().then(function () {
-          $scope.btn_saveLoad = true;
-          Userservice.updateUsers([{
-            'address': user.userName,
-            'name': user.name
-          }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
-            var entitleResult = {
-              msg: null,
-              type: 'null'
-            };
-            if (data.success) {
-              var userStatus = data.userResponse[0].status;
-              if (userStatus === 200) {
-                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
-                entitleResult.type = 'success';
-                if ($scope.entitlements.webExSquared === true) {
-                  angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
-                } else {
-                  angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
-                }
-              } else if (userStatus === 404) {
-                entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
-                entitleResult.type = 'error';
-              } else if (userStatus === 409) {
-                entitleResult.msg = 'Entitlement(s) previously updated.';
-                entitleResult.type = 'error';
+        $scope.btn_saveLoad = true;
+        Userservice.updateUsers([{
+          'address': user.userName,
+          'name': user.name
+        }], null, getUserEntitlementList(), 'changeEntitlement', function (data) {
+          var entitleResult = {
+            msg: null,
+            type: 'null'
+          };
+          if (data.success) {
+            var userStatus = data.userResponse[0].status;
+            if (userStatus === 200) {
+              entitleResult.msg = data.userResponse[0].email + '\'s entitlements were updated successfully.';
+              entitleResult.type = 'success';
+              if ($scope.entitlements.webExSquared === true) {
+                angular.element('.icon-' + user.id).html($filter('translate')('usersPage.active'));
               } else {
-                entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
-                entitleResult.type = 'error';
+                angular.element('.icon-' + user.id).html($filter('translate')('usersPage.inactive'));
               }
-              Notification.notify([entitleResult.msg], entitleResult.type);
-              $scope.btn_saveLoad = false;
-
-              var index = $scope.queryuserslist.map(function (element) {
-                return element.id;
-              }).indexOf($scope.currentUser.id);
-              var updatedUser = $scope.queryuserslist[index];
-              for (var i = 0; i < $rootScope.services.length; i++) {
-                var service = $rootScope.services[i].serviceId;
-                var ciName = $rootScope.services[i].ciName;
-                if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
-                  updatedUser.entitlements.push(ciName);
-                } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
-                  updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
-                }
-              }
-              $rootScope.$broadcast('entitlementsUpdated');
+            } else if (userStatus === 404) {
+              entitleResult.msg = 'Entitlements for ' + data.userResponse[0].email + ' do not exist.';
+              entitleResult.type = 'error';
+            } else if (userStatus === 409) {
+              entitleResult.msg = 'Entitlement(s) previously updated.';
+              entitleResult.type = 'error';
             } else {
-              Log.error('Failed updating user with entitlements.');
-              Log.error(data);
-              entitleResult = {
-                msg: 'Failed to update ' + user.userName + '\'s entitlements.',
-                type: 'error'
-              };
-              Notification.notify([entitleResult.msg], entitleResult.type);
-              $scope.btn_saveLoad = false;
+              entitleResult.msg = data.userResponse[0].email + '\'s entitlements were not updated, status: ' + userStatus;
+              entitleResult.type = 'error';
             }
-          });
+            Notification.notify([entitleResult.msg], entitleResult.type);
+            $scope.btn_saveLoad = false;
+
+            var index = $scope.queryuserslist.map(function (element) {
+              return element.id;
+            }).indexOf($scope.currentUser.id);
+            var updatedUser = $scope.queryuserslist[index];
+            for (var i = 0; i < $rootScope.services.length; i++) {
+              var service = $rootScope.services[i].serviceId;
+              var ciName = $rootScope.services[i].ciName;
+              if ($scope.entitlements[service] === true && updatedUser.entitlements.indexOf(ciName) === -1) {
+                updatedUser.entitlements.push(ciName);
+              } else if ($scope.entitlements[service] === false && updatedUser.entitlements.indexOf(ciName) > -1) {
+                updatedUser.entitlements.splice(updatedUser.entitlements.indexOf(ciName), 1);
+              }
+            }
+            $rootScope.$broadcast('entitlementsUpdated');
+          } else {
+            Log.error('Failed updating user with entitlements.');
+            Log.error(data);
+            entitleResult = {
+              msg: 'Failed to update ' + user.userName + '\'s entitlements.',
+              type: 'error'
+            };
+            Notification.notify([entitleResult.msg], entitleResult.type);
+            $scope.btn_saveLoad = false;
+          }
         });
       };
 

@@ -10,11 +10,11 @@
 
     DigitalRiverService.activateProduct($location.search().oid)
       .then(function () {
-        $state.go('activatedProductSuccessPage');
+        $state.go('activateProduct.successPage');
       })
       .catch(function (error) {
         $log.error(error);
-        $state.go('activateProductErrorPage');
+        $state.go('activateProduct.errorPage');
       });
 
   }

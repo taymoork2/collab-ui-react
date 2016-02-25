@@ -66,6 +66,14 @@
         }, // getUserSettingsModel()
 
         checkUserWebExEntitlement: function () {
+          var funcName = "checkUserWebExEntitlement";
+          var logMsg = "";
+
+          webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = false;
+          webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = false;
+          webExUserSettingsModel.eventCenter.isEntitledOnAtlas = false;
+          webExUserSettingsModel.supportCenter.isEntitledOnAtlas = false;
+
           var deferredCheckUserWebExEntitlement = $q.defer();
 
           Orgservice.getValidLicenses().then(
@@ -126,21 +134,19 @@
 
                           if (userLicense == orgLicense.licenseId) {
                             if ("EE" == userLicenseType) {
-                              webExUserSettingsModel.meetingCenter.userHasLicense = true;
-                              webExUserSettingsModel.trainingCenter.userHasLicense = true;
-                              webExUserSettingsModel.eventCenter.userHasLicense = true;
-                              webExUserSettingsModel.supportCenter.userHasLicense = true;
+                              webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
                             } else {
                               if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
-                                webExUserSettingsModel.meetingCenter.userHasLicense = true;
+                                webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
                               } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
-                                webExUserSettingsModel.trainingCenter.userHasLicense = true;
+                                webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
                               } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
-                                webExUserSettingsModel.eventCenter.userHasLicense = true;
+                                webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
                               } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
-                                webExUserSettingsModel.supportCenter.userHasLicense = true;
-                              } else if (webExUserSettingsModel.cmr.id == userLicenseType) {
-                                webExUserSettingsModel.cmr.userHasLicense = true;
+                                webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
                               }
                             }
                           }
@@ -173,11 +179,10 @@
           var funcName = "initUserSettingsModel()";
           var logMsg = "";
 
-          webExUserSettingsModel.meetingCenter.userHasLicense = false;
-          webExUserSettingsModel.trainingCenter.userHasLicense = false;
-          webExUserSettingsModel.eventCenter.userHasLicense = false;
-          webExUserSettingsModel.supportCenter.userHasLicense = false;
-          webExUserSettingsModel.cmr.userHasLicense = false;
+          webExUserSettingsModel.meetingCenter.isEntitledOnWebEx = false;
+          webExUserSettingsModel.trainingCenter.isEntitledOnWebEx = false;
+          webExUserSettingsModel.eventCenter.isEntitledOnWebEx = false;
+          webExUserSettingsModel.supportCenter.isEntitledOnWebEx = false;
 
           webExUserSettingsModel.siteInfo = null;
           webExUserSettingsModel.meetingTypesInfo = null;
@@ -254,7 +259,41 @@
           var user = this.getUserSettingsModel();
           var hasPMR = user.pmr.value;
           return hasPMR;
-        }, //isUserLevelPMREnabled.
+        }, //isUserLevelPMREnabled
+
+        updateCenterLicenseEntitlements: function () {
+          var funcName = "updateCenterLicenseEntitlements()";
+          var logMsg = null;
+
+          var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
+
+          webExUserSettingsModel.meetingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_meetingCenter) ? true : false;
+          webExUserSettingsModel.trainingCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_trainingCenter) ? true : false;
+          webExUserSettingsModel.eventCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_eventCenter) ? true : false;
+          webExUserSettingsModel.supportCenter.isEntitledOnWebEx = ("true" == userInfoJson.use_supportedServices.use_supportCenter) ? true : false;
+
+          logMsg = funcName + "\n" +
+            "meetingCenter.isEntitledOnWebEx=" + webExUserSettingsModel.meetingCenter.isEntitledOnWebEx + "\n" +
+            "trainingCenter.isEntitledOnWebEx=" + webExUserSettingsModel.trainingCenter.isEntitledOnWebEx + "\n" +
+            "eventCenter.isEntitledOnWebEx=" + webExUserSettingsModel.eventCenter.isEntitledOnWebEx + "\n" +
+            "supportCenter.isEntitledOnWebEx=" + webExUserSettingsModel.supportCenter.isEntitledOnWebEx + "\n" +
+            "\n" +
+            "meetingCenter.isEntitledOnAtlas=" + webExUserSettingsModel.meetingCenter.isEntitledOnAtlas + "\n" +
+            "trainingCenter.isEntitledOnAtlas=" + webExUserSettingsModel.trainingCenter.isEntitledOnAtlas + "\n" +
+            "eventCenter.isEntitledOnAtlas=" + webExUserSettingsModel.eventCenter.isEntitledOnAtlas + "\n" +
+            "supportCenter.isEntitledOnAtlas=" + webExUserSettingsModel.supportCenter.isEntitledOnAtlas;
+          $log.log(logMsg);
+
+          // var validLicenseEntitlements = true;
+          var validLicenseEntitlements = (
+            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
+            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
+            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
+            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
+          ) ? true : false;
+
+          return validLicenseEntitlements;
+        }, // updateCenterLicenseEntitlements()
 
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
@@ -265,13 +304,13 @@
           var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
           var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
-          // Start of center status update
-          var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
-
           webExUserSettingsModel.meetingCenter.isSiteEnabled = false;
           webExUserSettingsModel.eventCenter.isSiteEnabled = false;
           webExUserSettingsModel.trainingCenter.isSiteEnabled = false;
           webExUserSettingsModel.supportCenter.isSiteEnabled = false;
+
+          // Start of center status update
+          var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
           siteServiceTypes.forEach(
             function chkSiteServiceType(siteServiceType) {
@@ -519,9 +558,7 @@
           var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
           var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
-          //console.log("HERE -------");
           var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
-          //console.log("ENABLE PMR SITE LEVEL=" + enablePMRSiteLevel);
           webExUserSettingsModel.pmr.isSiteEnabled = (
             "true" == enablePMRSiteLevel
           ) ? true : false;
@@ -714,7 +751,7 @@
 
           logMsg = funcName + ":" + "\n" +
             "webExUserSettingsModel.isT31Site=" + webExUserSettingsModel.isT31Site;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           webExUserSettingsModel.disableSave = true;
           webExUserSettingsModel.disableSave2 = true;
@@ -742,19 +779,30 @@
                 ("" === webExUserSettingsModel.meetingTypesInfo.errId)
               ) {
 
-                _self.updateUserSettingsModelPart1();
-                _self.updateUserSettingsModelPart2();
-                _self.updateUserSettingsModelPart3();
+                var isValidLicenseEntitlement = _self.updateCenterLicenseEntitlements();
 
-                webExUserSettingsModel.hasLoadError = false;
-                webExUserSettingsModel.viewReady = true; // only set this after the model has finished being updated
+                if (!isValidLicenseEntitlement) {
+                  _self.setLoadingErrorDisplay(
+                    "defaultDbMismatchError",
+                    false,
+                    true,
+                    form
+                  );
+                } else {
+                  _self.updateUserSettingsModelPart1();
+                  _self.updateUserSettingsModelPart2();
+                  _self.updateUserSettingsModelPart3();
 
-                angular.element('#reloadBtn').button('reset');
-                angular.element('#reloadBtn2').button('reset');
+                  webExUserSettingsModel.hasLoadError = false;
+                  webExUserSettingsModel.viewReady = true; // only set this after the model has finished being updated
 
-                if (null != form) {
-                  form.$setPristine();
-                  form.$setUntouched();
+                  angular.element('#reloadBtn').button('reset');
+                  angular.element('#reloadBtn2').button('reset');
+
+                  if (null != form) {
+                    form.$setPristine();
+                    form.$setUntouched();
+                  }
                 }
               } else { // has invalid xml data
                 logMsg = funcName + ": " + "\n" +
@@ -860,6 +908,7 @@
             function chkSessionType(sessionType) {
               if (sessionType.sessionEnabled) {
                 userSettings.meetingTypes.push(sessionType.sessionTypeId);
+
                 if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
                 if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
                 if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
@@ -873,8 +922,8 @@
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
             !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
           $log.log("DURE blockDueToPMR=" + blockDueToPMR);
-          if (blockDueToPMR) {
 
+          if (blockDueToPMR) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
@@ -1059,7 +1108,7 @@
 
           logMsg = funcName + ": " + "resultJson=" + "\n" +
             JSON.stringify(resultJson);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           var updateStatus = "success";
           var notificationMsg = $translate.instant(successMsg);
@@ -1103,7 +1152,7 @@
 
           logMsg = funcName + ": " + "result=" + "\n" +
             result;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           angular.element('#saveBtn').button('reset');
           angular.element('#saveBtn2').button('reset');
@@ -1122,7 +1171,7 @@
           logMsg = funcName + ": " + "\n" +
             "errId=" + errId + "\n" +
             "errValue=" + errValue;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           var errMsg = "";
 
@@ -1156,7 +1205,7 @@
               function chkSessionType(sessionType) {
                 logMsg = funcName + ": " + "\n" +
                   "sessionType=" + JSON.stringify(sessionType);
-                $log.log(logMsg);
+                // $log.log(logMsg);
 
                 if (sessionType.sessionTypeId == errValue) {
                   sessionTypeName = sessionType.sessionDescription;
@@ -1168,7 +1217,7 @@
               "errId=" + errId + "\n" +
               "errValue=" + errValue + "\n" +
               "sessionTypeName=" + sessionTypeName;
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             errMsg = $translate.instant(
               "webexUserSettingsAccessErrors.110055", {
@@ -1181,7 +1230,7 @@
 
           logMsg = funcName + ": " + "\n" +
             "errMsg=" + errMsg;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           return errMsg;
         }, // getErrMsg()

@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService', 'CsvDownloadService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService', 'CsvDownloadService', 'TrackingId',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -1086,9 +1086,10 @@ angular.module('Core')
           }
           var trackingId = response.headers('TrackingID');
           if (!trackingId || trackingId === 'null') {
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
+            // If TrackingID is not allowed by CORS, fallback to TrackingId service
+            errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
           } else {
-            errorMsg += ' TrackingID: ' + trackingId || '';
+            errorMsg += ' TrackingID: ' + trackingId;
           }
         }
         return errorMsg;
@@ -1128,7 +1129,7 @@ angular.module('Core')
               userResult.message = $translate.instant('usersPage.userExistsError', {
                 email: userResult.email
               });
-            } else if (userStatus === 403 && user.message === '400084') {
+            } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
               userResult.message = $translate.instant('usersPage.claimedDomainError', {
                 email: userResult.email,
                 domain: userResult.email.split('@')[1]

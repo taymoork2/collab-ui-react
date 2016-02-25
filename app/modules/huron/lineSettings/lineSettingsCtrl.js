@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService, DialPlanService) {
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService, DialPlanService) {
     var vm = this;
 
     vm.cfModel = {
@@ -458,171 +458,167 @@
       var companyNumberObj = null;
       vm.saveInProcess = true; // Set flag for "Save" button behavior
 
-      HttpUtils.setTrackingID().then(function () {
-        var callForwardSet = processCallForward();
-        if (callForwardSet === true) {
-          if (typeof vm.directoryNumber.uuid !== 'undefined' && vm.directoryNumber.uuid !== '') {
-            // line exists
-            var promise;
-            var promises = [];
-            if (vm.callerIdInfo.callerIdSelection.value.uuid) {
-              companyNumberObj = {
-                uuid: vm.callerIdInfo.callerIdSelection.value.uuid
-              };
-            }
-            vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
-            vm.directoryNumber.companyNumber = companyNumberObj;
-            if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
-              vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
-              vm.directoryNumber.customCallerIdNumber = vm.callerIdInfo.customNumber;
-            }
-            promise = processSharedLineUsers().then(function () {
-              return listSharedLineUsers(vm.directoryNumber.uuid);
-            });
-            promises.push(promise);
-
-            var dnPromise;
-            var dnPromises = [];
-            if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== vm.assignedExternalNumber.uuid) { // external line
-              if ((vm.telephonyInfo.alternateDirectoryNumber.uuid === '' || vm.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && vm.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
-                dnPromise = LineSettings.addExternalLine(vm.directoryNumber.uuid, vm.assignedExternalNumber.pattern)
-                  .then(function () {
-                    processExternalNumberList();
-                  });
-                dnPromises.push(dnPromise);
-              } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
-                dnPromise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
-                  .then(function () {
-                    processExternalNumberList();
-                  });
-                dnPromises.push(dnPromise);
-              } else if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.assignedExternalNumber.uuid === 'none') {
-                dnPromise = LineSettings.deleteExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid)
-                  .then(function () {
-                    processExternalNumberList();
-                  });
-                dnPromises.push(dnPromise);
-              }
-            }
-
-            promises.push($q.all(dnPromises)
-              .then(function () {
-                if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
-                  return LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
-                    .then(function () {
-                      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                      vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
-                      vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
-                      esn = vm.telephonyInfo.siteSteeringDigit + vm.telephonyInfo.siteCode + vm.assignedInternalNumber.pattern;
-                      processInternalNumberList();
-                    });
-                } else { // no line change, just update settings
-                  return LineSettings.updateLineSettings(vm.directoryNumber);
-                }
-              }));
-
-            $q.all(promises)
-              .then(function () {
-                //Change dtmfid in voicemail if the primary line has changed
-                if (vm.telephonyInfo.currentDirectoryNumber.dnUsage === 'Primary' && vm.telephonyInfo.services.indexOf('VOICEMAIL') !== -1) {
-                  return HuronUser.updateDtmfAccessId(vm.currentUser.id, esn);
-                }
-              })
-              .then(function () {
-                TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
-                  .then(function () {
-                    if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
-                      TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
-                      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                    }
-                  });
-                Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-                vm.saveInProcess = false; // Set flag for "Save" button behavior
-                resetForm();
-              })
-              .catch(function (response) {
-                Notification.errorResponse(response, 'directoryNumberPanel.error');
-                vm.saveInProcess = false; // Set flag for "Save" button behavior
-              });
-          } else { // new line
-            SharedLineInfoService.getUserLineCount(vm.currentUser.id)
-              .then(function (totalLines) {
-                if (totalLines < vm.maxLines) {
-                  vm.directoryNumber.alertingName = name;
-                  if (vm.callerIdInfo.callerIdSelection.value.uuid) {
-                    companyNumberObj = {
-                      uuid: vm.callerIdInfo.callerIdSelection.value.uuid
-                    };
-                  }
-                  vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
-                  vm.directoryNumber.companyNumber = companyNumberObj;
-                  if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
-                    vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
-                    vm.directoryNumber.customCallerIdNumber = vm.callerIdInfo.customNumber;
-                  }
-                  return LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
-                    .then(function () {
-                      return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
-                        .then(function () {
-                          vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                          vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
-                          vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
-                          vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
-                          vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
-                          return processSharedLineUsers().then(function () {
-                            return listSharedLineUsers(vm.directoryNumber.uuid);
-                          });
-                        }).then(function () {
-                          Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
-                          $state.go('user-overview.communication.directorynumber', {
-                            directoryNumber: vm.directoryNumber
-                          });
-                          vm.saveInProcess = false; // Set flag for "Save" button behavior
-                        });
-                    });
-                } else {
-                  Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
-                    user: name
-                  })], 'error');
-                  $state.go('user-overview.communication');
-                  vm.saveInProcess = false; // Set flag for "Save" button behavior
-                }
-              })
-              .catch(function (response) {
-                Notification.errorResponse(response, 'directoryNumberPanel.error');
-              });
+      var callForwardSet = processCallForward();
+      if (callForwardSet === true) {
+        if (typeof vm.directoryNumber.uuid !== 'undefined' && vm.directoryNumber.uuid !== '') {
+          // line exists
+          var promise;
+          var promises = [];
+          if (vm.callerIdInfo.callerIdSelection.value.uuid) {
+            companyNumberObj = {
+              uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+            };
           }
+          vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
+          vm.directoryNumber.companyNumber = companyNumberObj;
+          if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
+            vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
+            vm.directoryNumber.customCallerIdNumber = vm.callerIdInfo.customNumber;
+          }
+          promise = processSharedLineUsers().then(function () {
+            return listSharedLineUsers(vm.directoryNumber.uuid);
+          });
+          promises.push(promise);
+
+          var dnPromise;
+          var dnPromises = [];
+          if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== vm.assignedExternalNumber.uuid) { // external line
+            if ((vm.telephonyInfo.alternateDirectoryNumber.uuid === '' || vm.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && vm.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
+              dnPromise = LineSettings.addExternalLine(vm.directoryNumber.uuid, vm.assignedExternalNumber.pattern)
+                .then(function () {
+                  processExternalNumberList();
+                });
+              dnPromises.push(dnPromise);
+            } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
+              dnPromise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
+                .then(function () {
+                  processExternalNumberList();
+                });
+              dnPromises.push(dnPromise);
+            } else if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.assignedExternalNumber.uuid === 'none') {
+              dnPromise = LineSettings.deleteExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid)
+                .then(function () {
+                  processExternalNumberList();
+                });
+              dnPromises.push(dnPromise);
+            }
+          }
+
+          promises.push($q.all(dnPromises)
+            .then(function () {
+              if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
+                return LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
+                  .then(function () {
+                    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                    vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
+                    vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                    esn = vm.telephonyInfo.siteSteeringDigit + vm.telephonyInfo.siteCode + vm.assignedInternalNumber.pattern;
+                    processInternalNumberList();
+                  });
+              } else { // no line change, just update settings
+                return LineSettings.updateLineSettings(vm.directoryNumber);
+              }
+            }));
+
+          $q.all(promises)
+            .then(function () {
+              //Change dtmfid in voicemail if the primary line has changed
+              if (vm.telephonyInfo.currentDirectoryNumber.dnUsage === 'Primary' && vm.telephonyInfo.services.indexOf('VOICEMAIL') !== -1) {
+                return HuronUser.updateDtmfAccessId(vm.currentUser.id, esn);
+              }
+            })
+            .then(function () {
+              TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
+                .then(function () {
+                  if (vm.telephonyInfo.currentDirectoryNumber.userDnUuid === "none") {
+                    TelephonyInfoService.resetCurrentUser(vm.telephonyInfo.currentDirectoryNumber.uuid);
+                    vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                  }
+                });
+              Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+              vm.saveInProcess = false; // Set flag for "Save" button behavior
+              resetForm();
+            })
+            .catch(function (response) {
+              Notification.errorResponse(response, 'directoryNumberPanel.error');
+              vm.saveInProcess = false; // Set flag for "Save" button behavior
+            });
+        } else { // new line
+          SharedLineInfoService.getUserLineCount(vm.currentUser.id)
+            .then(function (totalLines) {
+              if (totalLines < vm.maxLines) {
+                vm.directoryNumber.alertingName = name;
+                if (vm.callerIdInfo.callerIdSelection.value.uuid) {
+                  companyNumberObj = {
+                    uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+                  };
+                }
+                vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
+                vm.directoryNumber.companyNumber = companyNumberObj;
+                if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
+                  vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
+                  vm.directoryNumber.customCallerIdNumber = vm.callerIdInfo.customNumber;
+                }
+                return LineSettings.addNewLine(vm.currentUser.id, getDnUsage(), vm.assignedInternalNumber.pattern, vm.directoryNumber, vm.assignedExternalNumber)
+                  .then(function () {
+                    return TelephonyInfoService.getUserDnInfo(vm.currentUser.id)
+                      .then(function () {
+                        vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                        vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
+                        vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                        vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
+                        vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
+                        return processSharedLineUsers().then(function () {
+                          return listSharedLineUsers(vm.directoryNumber.uuid);
+                        });
+                      }).then(function () {
+                        Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                        $state.go('user-overview.communication.directorynumber', {
+                          directoryNumber: vm.directoryNumber
+                        });
+                        vm.saveInProcess = false; // Set flag for "Save" button behavior
+                      });
+                  });
+              } else {
+                Notification.notify([$translate.instant('directoryNumberPanel.maxLines', {
+                  user: name
+                })], 'error');
+                $state.go('user-overview.communication');
+                vm.saveInProcess = false; // Set flag for "Save" button behavior
+              }
+            })
+            .catch(function (response) {
+              Notification.errorResponse(response, 'directoryNumberPanel.error');
+            });
         }
-      });
+      }
     }
 
     function deleteLineSettings() {
-      HttpUtils.setTrackingID().then(function () {
-        // fill in the {{line}} and {{user}} for directoryNumberPanel.deleteConfirmation
-        vm.confirmationDialogue = $translate.instant('directoryNumberPanel.deleteConfirmation', {
-          line: vm.telephonyInfo.currentDirectoryNumber.pattern,
-          user: name
-        });
+      // fill in the {{line}} and {{user}} for directoryNumberPanel.deleteConfirmation
+      vm.confirmationDialogue = $translate.instant('directoryNumberPanel.deleteConfirmation', {
+        line: vm.telephonyInfo.currentDirectoryNumber.pattern,
+        user: name
+      });
 
-        $modal.open({
-          templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
-          scope: $scope
-        }).result.then(function () {
-          if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
-            return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
-              .then(function () {
-                TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
-                vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
-                $state.go('user-overview.communication');
-              }).then(function () {
-                return disassociateSharedLineUsers(true);
-              })
-              .catch(function (response) {
-                Notification.errorResponse(response, 'directoryNumberPanel.error');
-              });
-          }
-        });
+      $modal.open({
+        templateUrl: 'modules/huron/lineSettings/deleteConfirmation.tpl.html',
+        scope: $scope
+      }).result.then(function () {
+        if (vm.telephonyInfo.currentDirectoryNumber.dnUsage != 'Primary') {
+          return LineSettings.disassociateInternalLine(vm.currentUser.id, vm.telephonyInfo.currentDirectoryNumber.userDnUuid)
+            .then(function () {
+              TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
+              vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+              Notification.notify([$translate.instant('directoryNumberPanel.disassociationSuccess')], 'success');
+              $state.go('user-overview.communication');
+            }).then(function () {
+              return disassociateSharedLineUsers(true);
+            })
+            .catch(function (response) {
+              Notification.errorResponse(response, 'directoryNumberPanel.error');
+            });
+        }
       });
     }
 
