@@ -6,10 +6,202 @@ describe('MediaConverterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Service;
-  beforeEach(inject(function (_MediaConverterService_) {
+  var Service, $q;
+  beforeEach(inject(function (_MediaConverterService_, _$q_) {
     Service = _MediaConverterService_;
+    $q = _$q_;
   }));
+  //Converter Service
+  it('should aggregate cluster based on GroupName ', function () {
+    var mockData = [{
+
+      "cluster_type": "mf_mgmt",
+      "id": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3",
+      "name": "10.196.5.224",
+      "hosts": [{
+        "host_name": "10.196.5.224",
+        "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+      }],
+      "provisioning": [
+
+      ],
+      "provisioning_data": {
+        "approved_packages": [{
+          "service": {
+            "display_name": "Media Connector",
+            "service_type": "mf_mgmt"
+          },
+          "version": "1.0"
+        }],
+        "not_approved_packages": [
+
+        ]
+      },
+      "services": [{
+        "enabled": true,
+        "display_name": "Media Connector",
+        "service_type": "mf_mgmt",
+        "connectors": [{
+          "connector_status": {
+            "operational": false,
+            "services": {
+              "cloud": [
+
+              ],
+              "onprem": [
+
+              ]
+            }
+          },
+          "state": "offline",
+          "version": "ME-11.10.216-1-MG-8.24.94-1",
+          "host": {
+            "host_name": "10.196.5.224",
+            "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+          },
+          "alarms": [
+
+          ]
+        }]
+      }],
+      "properties": {
+        "mf.group.displayName": "trichy"
+      },
+      "assigned_property_sets": [
+        "5874b1e0-0367-4c40-b28d-6ae430241347"
+      ]
+    }];
+    var converted = Service.aggregateClusters(mockData);
+    expect(converted[0].groupName).toBe('trichy');
+    expect(converted[0].serviceStatus).toBe('offline');
+    expect(converted[0].clusters[0].properties).toBeTruthy();
+    expect(converted[0].clusters[0].name).toBe(converted[0].clusters[0].hosts[0].host_name);
+
+  });
+
+  it('Ensure No duplicate clusters are added', function () {
+    var mockData = [{
+      "cluster_type": "mf_mgmt",
+      "id": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3",
+      "name": "10.196.5.224",
+      "hosts": [{
+        "host_name": "10.196.5.224",
+        "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+      }],
+      "provisioning": [
+
+      ],
+      "provisioning_data": {
+        "approved_packages": [{
+          "service": {
+            "display_name": "Media Connector",
+            "service_type": "mf_mgmt"
+          },
+          "version": "1.0"
+        }],
+        "not_approved_packages": [
+
+        ]
+      },
+      "services": [{
+        "enabled": true,
+        "display_name": "Media Connector",
+        "service_type": "mf_mgmt",
+        "connectors": [{
+          "connector_status": {
+            "operational": false,
+            "services": {
+              "cloud": [
+
+              ],
+              "onprem": [
+
+              ]
+            }
+          },
+          "state": "offline",
+          "version": "ME-11.10.216-1-MG-8.24.94-1",
+          "host": {
+            "host_name": "10.196.5.224",
+            "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+          },
+          "alarms": [
+
+          ]
+        }]
+      }],
+      "properties": {
+        "mf.group.displayName": "trichy"
+      },
+      "assigned_property_sets": [
+        "5874b1e0-0367-4c40-b28d-6ae430241347"
+      ]
+    }, {
+      "cluster_type": "mf_mgmt",
+      "id": "03b709df-cbe8-489a-8050-a8f5520989c7",
+      "name": "10.196.5.212",
+      "hosts": [{
+        "host_name": "10.196.5.212",
+        "serial": "03b709df-cbe8-489a-8050-a8f5520989c7"
+      }],
+      "provisioning": [],
+      "provisioning_data": {
+        "approved_packages": [{
+          "service": {
+            "display_name": "Media Connector",
+            "service_type": "mf_mgmt"
+          },
+          "version": "1.0"
+        }],
+        "not_approved_packages": []
+      },
+      "services": [{
+        "enabled": true,
+        "display_name": "Media Connector",
+        "service_type": "mf_mgmt",
+        "connectors": [{
+          "connector_status": {
+            "operational": false,
+            "services": {
+              "cloud": [],
+              "onprem": []
+            }
+          },
+          "state": "offline",
+          "version": "LI-2239-1.1-ME-2.01.368-1.5-ME-2.04.380-1.1-MG-2.02.376-1.1",
+          "host": {
+            "host_name": "10.196.5.212",
+            "serial": "03b709df-cbe8-489a-8050-a8f5520989c7"
+          },
+          "alarms": [{
+            "id": "mf.container.stopped",
+            "first_reported": "2016-02-05T09:36:14.417Z",
+            "last_reported": "2016-02-05T09:36:14.417Z",
+            "severity": "alert",
+            "title": "Process error",
+            "description": "A process stopped unexpectedly, attempting a restart (ciscocitg/mediafusionmetricsmanager:2016.02.01.368)."
+          }, {
+            "id": "mf.container.stopped",
+            "first_reported": "2016-02-05T09:36:14.417Z",
+            "last_reported": "2016-02-05T09:36:14.417Z",
+            "severity": "alert",
+            "title": "Process error",
+            "description": "A process stopped unexpectedly, attempting a restart (calliopedevelopers/linus:2160)."
+          }]
+        }]
+      }],
+      "properties": {
+        "mf.group.displayName": "trichy"
+      },
+      "assigned_property_sets": ["5874b1e0-0367-4c40-b28d-6ae430241347"]
+    }];
+    var group = Service.aggregateClusters(mockData);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(1);
+
+  });
 
   // cluster conversion
 
