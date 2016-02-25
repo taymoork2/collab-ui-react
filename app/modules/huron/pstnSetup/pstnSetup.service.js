@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, PstnServiceAddressService, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
@@ -48,10 +48,13 @@
         lastName: lastName,
         email: email,
         pstnCarrierId: pstnCarrierId,
-        resellerId: Authinfo.getOrgId(),
         numbers: numbers,
         trial: true
       };
+
+      if (PstnSetup.isResellerExists()) {
+        payload.resellerId = Authinfo.getOrgId();
+      }
       return TerminusCustomerService.save({}, payload).$promise;
     }
 
