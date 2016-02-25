@@ -278,7 +278,8 @@
           if (Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76' ||
             Authinfo.getOrgId() === '5c8a3a19-0999-4016-b8e5-d8eb3c12f1f1' ||
             Authinfo.getOrgId() === '5254c34d-4010-44ce-b719-e45566c6ab1a' ||
-            Authinfo.getOrgId() === '0d45487b-039e-46b8-baf7-3ce9de07e803') {
+            Authinfo.getOrgId() === '0d45487b-039e-46b8-baf7-3ce9de07e803' ||
+            Authinfo.getOrgId() === '1eb65fdf-9643-417f-9974-ad72cae0e10f') {
             resolve(true);
           } else {
             resolve(false);

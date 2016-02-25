@@ -7,7 +7,7 @@ angular.module('Squared')
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService,
       CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice) {
 
-      $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
+      $scope.showHelpdeskLink = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -20,15 +20,18 @@ angular.module('Squared')
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
-      $scope.showToolsCard = false;
+      $scope.showCdrCallFlowLink = false;
       $scope.isCiscoDevRole = isCiscoDevRole;
-      $scope.initializeShowToolsCard = initializeShowToolsCard;
+      $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
 
-      function initializeShowToolsCard() {
+      function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
           if (user.success) {
             if (isCiscoDevRole(user.roles)) {
-              $scope.showToolsCard = true;
+              $scope.showCdrCallFlowLink = true;
+              setTimeout(function () {
+                $('.cs-card-layout').masonry('layout');
+              }, 200);
             }
           } else {
             Log.debug('Get current user failed. Status: ' + status);
@@ -51,19 +54,16 @@ angular.module('Squared')
         return false;
       }
 
+      $scope.showToolsCard = function () {
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink;
+      };
+
       $scope.tabs = [{
         title: $translate.instant('supportPage.tabs.status'),
         state: "support.status"
       }];
 
-      if ((Config.isIntegration() || Config.isDev())) {
-        if (Authinfo.isInDelegatedAdministrationOrg()) {
-          $scope.tabs.push({
-            title: $translate.instant('supportPage.tabs.logs'),
-            state: "support.logs"
-          });
-        }
-      } else {
+      if (Authinfo.isInDelegatedAdministrationOrg()) {
         $scope.tabs.push({
           title: $translate.instant('supportPage.tabs.logs'),
           state: "support.logs"
@@ -128,7 +128,7 @@ angular.module('Squared')
       var init = function () {
         getHealthMetrics();
         getOrg();
-        initializeShowToolsCard();
+        initializeShowCdrCallFlowLink();
       };
 
       init();

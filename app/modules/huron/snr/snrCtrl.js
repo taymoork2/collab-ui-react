@@ -5,7 +5,7 @@
     .module('Huron')
     .controller('SingleNumberReachInfoCtrl', SingleNumberReachInfoCtrl);
 
-  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, HttpUtils, CountryCodes, $q) {
+  function SingleNumberReachInfoCtrl($scope, $stateParams, RemoteDestinationService, TelephonyInfoService, Notification, $translate, CountryCodes, $q) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveSingleNumberReach = saveSingleNumberReach;
@@ -224,29 +224,27 @@
     }
 
     function saveSingleNumberReach() {
-      HttpUtils.setTrackingID().then(function () {
-        if (angular.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
-          if (!vm.snrInfo.singleNumberReachEnabled) {
-            deleteRemoteDestinationInfo(vm.currentUser).then(function () {
-              resetForm();
-            });
-          } else {
-            updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value).then(function () {
-              resetForm();
-            });
-          }
-        } else if (vm.snrInfo.singleNumberReachEnabled) {
-          createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
-            .then(function (response) {
-              TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
-              resetForm();
-            });
+      if (angular.isArray(vm.snrInfo.remoteDestinations) && vm.snrInfo.remoteDestinations.length > 0) {
+        if (!vm.snrInfo.singleNumberReachEnabled) {
+          deleteRemoteDestinationInfo(vm.currentUser).then(function () {
+            resetForm();
+          });
         } else {
-          // Nothing to delete, notify success
-          resetForm();
-          Notification.notify([$translate.instant('singleNumberReachPanel.removeSuccess')], 'success');
+          updateRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value).then(function () {
+            resetForm();
+          });
         }
-      });
+      } else if (vm.snrInfo.singleNumberReachEnabled) {
+        createRemoteDestinationInfo(vm.currentUser, vm.snrInfo.remoteDest, vm.snrWaitSeconds.value)
+          .then(function (response) {
+            TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
+            resetForm();
+          });
+      } else {
+        // Nothing to delete, notify success
+        resetForm();
+        Notification.notify([$translate.instant('singleNumberReachPanel.removeSuccess')], 'success');
+      }
     }
 
     function getRandomString() {

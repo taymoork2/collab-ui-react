@@ -6,7 +6,7 @@
     .controller('DeviceDetailCtrl', DeviceDetailCtrl);
 
   /* @ngInject */
-  function DeviceDetailCtrl($rootScope, $scope, $stateParams, $translate, $modal, $state, Log, DeviceService, Notification, HttpUtils) {
+  function DeviceDetailCtrl($rootScope, $scope, $stateParams, $translate, $modal, $state, Log, DeviceService, Notification) {
     var vm = this;
     vm.device = {};
     vm.reset = reset;
@@ -33,17 +33,15 @@
     }
 
     function save() {
-      HttpUtils.setTrackingID().then(function () {
-        DeviceService.updateDevice(vm.device)
-          .then(function () {
-            resetForm();
-            Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
-          })
-          .catch(function (response) {
-            Log.debug('updateDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
-            Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
-          });
-      });
+      DeviceService.updateDevice(vm.device)
+        .then(function () {
+          resetForm();
+          Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
+        })
+        .catch(function (response) {
+          Log.debug('updateDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
+          Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
+        });
     }
 
     function deactivate() {
@@ -51,19 +49,17 @@
         templateUrl: 'modules/huron/device/deactivateDeviceModal.tpl.html'
       });
 
-      HttpUtils.setTrackingID().then(function () {
-        modalInstance.result.then(function () {
-          DeviceService.deleteDevice(vm.device)
-            .then(function () {
-              $rootScope.$broadcast("deviceDeactivated");
-              Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
-              $state.go('user-overview');
-            })
-            .catch(function (response) {
-              Log.debug('deleteDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
-              Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
-            });
-        });
+      modalInstance.result.then(function () {
+        DeviceService.deleteDevice(vm.device)
+          .then(function () {
+            $rootScope.$broadcast("deviceDeactivated");
+            Notification.notify([$translate.instant('deviceDetailPage.success')], 'success');
+            $state.go('user-overview');
+          })
+          .catch(function (response) {
+            Log.debug('deleteDevice failed.  Status: ' + response.status + ' Response: ' + response.data);
+            Notification.notify([$translate.instant('deviceDetailPage.error')], 'error');
+          });
       });
     }
 

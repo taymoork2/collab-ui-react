@@ -70,8 +70,8 @@ angular
           },
           authenticate: false
         })
-        .state('activatedUserSuccessPage', {
-          url: '/activated-user-success-page',
+        .state('activateUser.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -79,8 +79,8 @@ angular
           },
           authenticate: false
         })
-        .state('activateUserErrorPage', {
-          url: '/activate-user-error-page',
+        .state('activateUser.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -95,26 +95,23 @@ angular
               template: '<div ui-view></div>',
               controller: 'ActivateProductController'
             }
-          },
-          authenticate: false
+          }
         })
-        .state('activatedProductSuccessPage', {
-          url: '/activated-product-success-page',
+        .state('activateProduct.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
             }
-          },
-          authenticate: false
+          }
         })
-        .state('activateProductErrorPage', {
-          url: '/activate-product-error-page',
+        .state('activateProduct.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
             }
-          },
-          authenticate: false
+          }
         })
         .state('unauthorized', {
           views: {
@@ -197,7 +194,7 @@ angular
           }
         });
 
-      $httpProvider.interceptors.push('TrackingIDInterceptor');
+      $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security

@@ -6,7 +6,7 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils, LineSettings, DirectoryNumber) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, TelephonyInfoService, Notification, LineSettings, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
@@ -56,37 +56,36 @@
         'services': [],
         'voicemail': {}
       };
-      HttpUtils.setTrackingID().then(function () {
-        var result = {
-          msg: null,
-          type: 'null'
-        };
 
-        if (vm.enableVoicemail) {
-          if (!isVoicemailEnabled()) {
-            vm.telephonyInfo.services.push('VOICEMAIL');
-          }
+      var result = {
+        msg: null,
+        type: 'null'
+      };
 
-          voicemailPayload.voicemail = {
-            'dtmfAccessId': vm.telephonyInfo.esn
-          };
-          updateVoicemail(voicemailPayload, result);
-        } else {
-          $modal.open({
-            templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
-            scope: $scope
-          }).result.then(function () {
-            for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
-              if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
-                vm.telephonyInfo.services.splice(j, 1);
-              }
-            }
-            updateVoicemail(voicemailPayload, result);
-          }, function () {
-            vm.reset();
-          });
+      if (vm.enableVoicemail) {
+        if (!isVoicemailEnabled()) {
+          vm.telephonyInfo.services.push('VOICEMAIL');
         }
-      });
+
+        voicemailPayload.voicemail = {
+          'dtmfAccessId': vm.telephonyInfo.esn
+        };
+        updateVoicemail(voicemailPayload, result);
+      } else {
+        $modal.open({
+          templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
+          scope: $scope
+        }).result.then(function () {
+          for (var j = 0; j < vm.telephonyInfo.services.length; j++) {
+            if (vm.telephonyInfo.services[j] === 'VOICEMAIL') {
+              vm.telephonyInfo.services.splice(j, 1);
+            }
+          }
+          updateVoicemail(voicemailPayload, result);
+        }, function () {
+          vm.reset();
+        });
+      }
     }
 
     function updateVoicemail(voicemailPayload, result) {

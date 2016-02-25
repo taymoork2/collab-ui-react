@@ -26,7 +26,7 @@
       vm.softwareUpgrade = {
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
         availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
-        isUpgradeAvailable: vm.cluster.upgradeAvailable,
+        isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
         numberOfHosts: _.size(vm.cluster.aggregates.hosts)
       };
 
