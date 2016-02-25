@@ -346,7 +346,7 @@
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName))}">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
@@ -359,6 +359,7 @@
         enableRowHeaderSelection: false,
         enableColumnResize: true,
         enableColumnMenus: false,
+        enableHorizontalScrollbar: 0,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {
