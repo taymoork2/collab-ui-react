@@ -6,12 +6,13 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($translate, $timeout, DidService, TelephoneNumberService, TrialCallService, PstnSetupService, TerminusStateService, TerminusResellerCarrierService, Authinfo, Notification) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TerminusResellerCarrierService, TrialCallService, TrialPstnService) {
     var vm = this;
 
-    vm.trialData = TrialCallService.getData();
+    vm.trialData = TrialPstnService.getData();
+    vm.callTrial = TrialCallService.getData();
     var customerId = Authinfo.getOrgId();
-    var pstnTokenLimit = 10;
+    var pstnTokenLimit = 5;
 
     vm.getStateInventory = getStateInventory;
     vm.searchCarrierInventory = searchCarrierInventory;
@@ -19,10 +20,9 @@
     vm.skip = skip;
 
     //TATA Tokenfield
-    vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
-    vm.manualunsavedtokens = [];
-    vm.manualtokenfield = 'manualdidfield';
-    vm.manualtokenoptions = {
+    vm.manualUnsavedTokens = [];
+    vm.manualTokenField = 'manualdidfield';
+    vm.manualTokenOptions = {
       delimiter: [',', ';'],
       createTokensOnBlur: true,
       limit: 100,
@@ -30,17 +30,17 @@
       minLength: 9,
       beautify: false
     };
-    vm.manualtokenmethods = {
+    vm.manualTokenMethods = {
       createtoken: createToken,
       createdtoken: manualCreatedToken,
       editedtoken: manualEditToken,
       removedtoken: manualRemovedToken,
     };
-    vm.invalidcount = 0;
+    vm.invalidCount = 0;
 
     //PSTN Lookup Tokenfield
-    vm.tokenfieldid = 'didAddField';
-    vm.tokenoptions = {
+    vm.tokenFieldId = 'didAddField';
+    vm.tokenOptions = {
       delimiter: [',', ';'],
       createTokensOnBlur: true,
       limit: pstnTokenLimit,
@@ -48,7 +48,7 @@
       minLength: 9,
       beautify: false
     };
-    vm.tokenmethods = {
+    vm.tokenMethods = {
       createtoken: createToken,
       editedtoken: editedToken,
       removedtoken: removedToken,
@@ -196,7 +196,7 @@
     init();
 
     function init() {
-      if (vm.trialData.details.pstnNumberInfo.numbers.length > 0) {
+      if (_.get(vm, 'trialData.details.pstnNumberInfo.numbers.length', 0) > 0) {
         $timeout(function () {
           $('#didAddField').tokenfield('setTokens', vm.trialData.details.pstnNumberInfo.numbers.toString());
           reinitTokens();
@@ -205,8 +205,9 @@
     }
 
     function skip(skipped) {
-      vm.trialData.skipCall = skipped;
-      vm.trialData.enabled = false;
+      vm.trialData.enabled = !skipped;
+      vm.callTrial.enabled = !skipped;
+      $timeout($scope.trial.nextStep);
     }
 
     function getStateInventory() {
@@ -263,7 +264,7 @@
     function manualCreatedToken(e) {
       if (!validateDID(e.attrs.value) || isDidAlreadyPresent(e.attrs.value)) {
         angular.element(e.relatedTarget).addClass('invalid');
-        vm.invalidcount++;
+        vm.invalidCount++;
       }
       // add to service after validation/duplicate checks
       DidService.addDid(e.attrs.value);
@@ -289,14 +290,14 @@
     function manualEditToken(e) {
       DidService.removeDid(e.attrs.value);
       if (angular.element(e.relatedTarget).hasClass('invalid')) {
-        vm.invalidcount--;
+        vm.invalidCount--;
       }
     }
 
     function reinitTokens() {
       var tmpDids = DidService.getDidList();
       // reset invalid and list before setTokens
-      vm.invalidcount = 0;
+      vm.invalidCount = 0;
       DidService.clearDidList();
       $('#manualdidfield').tokenfield('setTokens', tmpDids.toString());
     }
@@ -314,7 +315,7 @@
     }
 
     function checkForInvalidTokens() {
-      return vm.invalidcount > 0 ? false : true;
+      return vm.invalidCount > 0 ? false : true;
     }
   }
 })();

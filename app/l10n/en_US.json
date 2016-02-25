@@ -1982,6 +1982,7 @@
       "phoneNumbers": "Phone Numbers",
       "pleaseAdd": "Please add phone numbers for the customer",
       "pleaseAdd10": "Please add up to 10 phone numbers for the customer",
+      "pleaseAdd5": "Please add up to 5 phone numbers for the customer",
       "state": "State",
       "areaCode": "Area Code",
       "numbers": "Numbers",

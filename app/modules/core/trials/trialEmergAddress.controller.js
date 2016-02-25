@@ -6,10 +6,11 @@
     .controller('TrialEmergAddressCtrl', TrialEmergAddressCtrl);
 
   /* @ngInject */
-  function TrialEmergAddressCtrl($translate, TrialCallService, TerminusStateService, PstnServiceAddressService, Notification) {
+  function TrialEmergAddressCtrl($translate, Notification, PstnServiceAddressService, TerminusStateService, TrialCallService, TrialPstnService) {
     var vm = this;
 
-    vm.trial = TrialCallService.getData();
+    vm.trial = TrialPstnService.getData();
+    vm.callTrial = TrialCallService.getData();
 
     vm.addressLoading = false;
     vm.validation = false;
@@ -28,12 +29,10 @@
           type: 'input',
           className: 'medium-9 columns no-flex',
           templateOptions: {
-            required: true,
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.address'),
             labelClass: 'columns medium-2 text-right',
-            inputClass: 'columns medium-11',
-            options: vm.states
+            inputClass: 'columns medium-11'
           }
         }, {
           model: vm.trial.details.emergAddr,
@@ -59,7 +58,6 @@
           type: 'input',
           className: 'medium-5 columns no-flex',
           templateOptions: {
-            required: true,
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.city'),
             labelClass: 'columns medium-3 text-right',
@@ -71,7 +69,6 @@
           type: 'select',
           className: 'medium-4 columns max-width',
           templateOptions: {
-            required: true,
             label: $translate.instant('trialModal.pstn.state'),
             labelfield: 'abbreviation',
             valuefield: 'abbreviation',
@@ -81,10 +78,7 @@
           },
           controller: /* @ngInject */ function ($scope) {
             TerminusStateService.query().$promise.then(function (states) {
-              //   $scope.to.options = states.abbreviation;
-              $scope.to.options = _.map(states, function (state) {
-                return state.abbreviation;
-              });
+              $scope.to.options = _.map(states, 'abbreviation');
             });
           }
         }, {
@@ -93,7 +87,6 @@
           type: 'input',
           className: 'medium-3 columns no-flex',
           templateOptions: {
-            required: true,
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.zip'),
             labelClass: 'columns medium-4 text-right',
@@ -119,18 +112,14 @@
         });
     }
 
-    function resetAddress() {
-      vm.validation = false;
-      vm.trial.details.emergAddr.streetAddress = '';
-      vm.trial.details.emergAddr.unit = '';
-      vm.trial.details.emergAddr.city = '';
-      vm.trial.details.emergAddr.state = '';
-      vm.trial.details.emergAddr.zip = '';
+    function skip(skipped) {
+      vm.trial.enabled = !skipped;
+      vm.callTrial.enabled = !skipped;
     }
 
-    function skip(skipped) {
-      vm.trial.skipCall = skipped;
-      vm.trial.enabled = false;
+    function resetAddress() {
+      TrialPstnService.resetAddress();
+      vm.validation = false;
     }
   }
 })();

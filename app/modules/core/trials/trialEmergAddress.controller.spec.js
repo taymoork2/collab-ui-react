@@ -1,22 +1,22 @@
 'use strict';
 
 describe('Controller: TrialEmergAddressCtrl', function () {
-  var controller, trials, $scope, TrialCallService;
+  var controller, trials, $scope, TrialPstnService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _TrialCallService_) {
+  beforeEach(inject(function ($rootScope, $controller, _TrialPstnService_) {
     $scope = $rootScope.$new();
-    TrialCallService = _TrialCallService_;
+    TrialPstnService = _TrialPstnService_;
 
     controller = $controller('TrialEmergAddressCtrl', {
       $scope: $scope,
-      TrialCallService: TrialCallService,
+      TrialPstnService: TrialPstnService,
     });
 
-    trials = TrialCallService.getData();
+    trials = TrialPstnService.getData();
 
     $scope.$apply();
   }));
@@ -27,8 +27,8 @@ describe('Controller: TrialEmergAddressCtrl', function () {
 
   it('should skip when clicked', function () {
     controller.skip(true);
-    expect(controller.trial.skipCall).toBe(true);
-    expect(trials.skipCall).toBe(true);
+    expect(controller.trial.enabled).toBe(false);
+    expect(trials.enabled).toBe(false);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {
@@ -46,12 +46,13 @@ describe('Controller: TrialEmergAddressCtrl', function () {
     });
 
     it('should reset the address', function () {
+      controller.trial.details.emergAddr = address;
       controller.resetAddress();
-      expect(trials.details.emergAddr.streetAddress).toBe('');
-      expect(trials.details.emergAddr.unit).toBe('');
-      expect(trials.details.emergAddr.city).toBe('');
-      expect(trials.details.emergAddr.state).toBe('');
-      expect(trials.details.emergAddr.zip).toBe('');
+      expect(controller.trial.details.emergAddr.streetAddress).toBe('');
+      expect(controller.trial.details.emergAddr.unit).toBe('');
+      expect(controller.trial.details.emergAddr.city).toBe('');
+      expect(controller.trial.details.emergAddr.state).toBe('');
+      expect(controller.trial.details.emergAddr.zip).toBe('');
     });
   });
 });

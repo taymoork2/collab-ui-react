@@ -1,37 +1,31 @@
 'use strict';
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $scope, $q, TrialCallService, PstnSetupService;
+  var controller, trials, $scope, $q, TrialPstnService, PstnSetupService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _TrialCallService_, _PstnSetupService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _TrialPstnService_, _PstnSetupService_) {
     $scope = $rootScope.$new();
 
-    TrialCallService = _TrialCallService_;
+    TrialPstnService = _TrialPstnService_;
     PstnSetupService = _PstnSetupService_;
     $q = _$q_;
 
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
-      TrialCallService: TrialCallService,
+      TrialPstnService: TrialPstnService,
     });
 
-    trials = TrialCallService.getData();
+    trials = TrialPstnService.getData();
 
     $scope.$apply();
   }));
 
   it('should be created successfully', function () {
     expect(controller).toBeDefined();
-  });
-
-  it('should skip when clicked', function () {
-    controller.skip(true);
-    expect(controller.trialData.skipCall).toBe(true);
-    expect(trials.skipCall).toBe(true);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {

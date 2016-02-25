@@ -69,11 +69,8 @@
   .pad-top {
     padding-top: 6px;
   }
-  .did-input {
-    //position: relative;
-    .tokenfield {
-        min-height: rem(144px);
-    }
+  .did-input .tokenfield {
+    min-height: rem(144px);
   }
   .token {
       background-color: $color-primary-base;
@@ -91,11 +88,11 @@
       -webkit-flex: none;
   }
   .max-width {
-      div > div > div > div > a {
-          width: 100%;
-      }
+    .select-toggle {
+        width: 100%;
+    }
   }
-  .flex-it {
+  .flex-row {
       display:flex;
       flex-direction:row;
   }

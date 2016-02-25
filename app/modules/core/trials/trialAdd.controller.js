@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService, PstnSetupService, PstnServiceAddressService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
@@ -24,6 +24,7 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.trialStates = [{
       'name': 'trialAdd.meeting',
       'trials': [vm.meetingTrial],
@@ -38,11 +39,11 @@
       'enabled': true,
     }, {
       'name': 'trialAdd.pstn',
-      'trials': [vm.callTrial],
+      'trials': [vm.pstnTrial],
       'enabled': true,
     }, {
       'name': 'trialAdd.emergAddress',
-      'trials': [vm.callTrial],
+      'trials': [vm.pstnTrial],
       'enabled': true,
     }];
     // Navigate trial modal in this order
@@ -229,6 +230,7 @@
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
+    vm.getNextState = getNextState;
 
     init();
 
@@ -247,7 +249,8 @@
         vm.meetingTrial.enabled = results[1];
         vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement;
-        vm.callTrial.skipCall = !results[4] && vm.supportsPstnSetup;
+        vm.supportsHuronCallTrials = results[4];
+        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         if (vm.meetingTrial.enabled) {
           vm.showMeeting = true;
@@ -270,8 +273,8 @@
           'name': 'trialAdd.emergAddress'
         });
 
-        pstnModal.enabled = vm.supportsPstnSetup && results[4];
-        emergAddressModal.enabled = vm.supportsPstnSetup && results[4];
+        pstnModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
+        emergAddressModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
         devicesModal.enabled = results[3];
         meetingModal.enabled = results[1];
         addNumbersModal.enabled = !vm.supportsPstnSetup;
@@ -324,6 +327,14 @@
         vm.canEditMessage = true;
         vm.canEditMeeting = true;
       }
+
+      if (!vm.callTrial.enabled) {
+        vm.pstnTrial.enabled = false;
+      }
+      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement) {
+        vm.pstnTrial.enabled = true;
+      }
+
       addRemoveStates();
     }
 
@@ -380,19 +391,20 @@
       }
     }
 
+    /**
+     * Changed to chain and slice the navOrder instead of navStates
+     * so that if you choose to skip a step that you are on
+     * and that state gets removed from the order, the fucntion can 
+     * still find the next state and index won't find -1
+     * when trying to find the next one
+     */
     function getNextState() {
-      return _.chain(vm.navStates)
+      return _.chain(vm.navOrder)
         .indexOf($state.current.name)
         .thru(function (index) {
-          if ($state.current.name === 'trialAdd.pstn' && vm.callTrial.skipCall === true) {
-            return _.slice(vm.navStates, index + 2);
-          } else {
-            return _.slice(vm.navStates, index + 1);
-          }
+          return _.slice(vm.navOrder, index + 1);
         })
-        .find(function (state) {
-          return !_.isUndefined(state);
-        })
+        .find(_.partial(_.includes, vm.navStates))
         .value();
     }
 
@@ -448,58 +460,8 @@
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               }).then(function () {
-                if (vm.callTrial.skipCall === false) {
-                  return PstnSetupService.reserveCarrierInventory(
-                    vm.customerOrgId,
-                    vm.callTrial.details.pstnProvider.uuid,
-                    vm.callTrial.details.pstnNumberInfo.numbers,
-                    false
-                  ).catch(function (response) {
-                    vm.loading = false;
-                    Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
-                    return $q.reject(response);
-                  }).then(function () {
-                    return PstnSetupService.createCustomer(
-                      vm.customerOrgId,
-                      vm.callTrial.details.pstnContractInfo.companyName,
-                      vm.callTrial.details.pstnContractInfo.signeeFirstName,
-                      vm.callTrial.details.pstnContractInfo.signeeLastName,
-                      vm.callTrial.details.pstnContractInfo.email,
-                      vm.callTrial.details.pstnProvider.uuid,
-                      vm.callTrial.details.pstnNumberInfo.numbers
-                    ).catch(function (response) {
-                      vm.loading = false;
-                      Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
-                      return $q.reject(response);
-                    }).then(function () {
-                      return PstnSetupService.orderNumbers(
-                        vm.customerOrgId,
-                        vm.callTrial.details.pstnProvider.uuid,
-                        vm.callTrial.details.pstnNumberInfo.numbers
-                      ).catch(function (response) {
-                        vm.loading = false;
-                        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
-                        return $q.reject(response);
-                      }).then(function () {
-                        var address = {
-                          streetAddress: vm.callTrial.details.emergAddr.streetAddress,
-                          unit: vm.callTrial.details.emergAddr.unit,
-                          city: vm.callTrial.details.emergAddr.city,
-                          state: vm.callTrial.details.emergAddr.state,
-                          zip: vm.callTrial.details.emergAddr.zip
-                        };
-                        return PstnServiceAddressService.createCustomerSite(
-                          vm.customerOrgId,
-                          vm.callTrial.details.pstnContractInfo.companyName,
-                          address
-                        );
-                      }).catch(function (response) {
-                        vm.loading = false;
-                        Notification.errorResponse(response, 'trialModal.pstn.error.siteFail');
-                        return $q.reject(response);
-                      });
-                    });
-                  });
+                if (vm.pstnTrial.enabled) {
+                  return TrialPstnService.createPstnEntity(vm.customerOrgId);
                 }
               });
           }
@@ -516,11 +478,12 @@
           }
         })
         .then(function () {
-          vm.loading = false;
           vm.finishSetup();
           return {
             'customerOrgId': vm.customerOrgId
           };
+        }).finally(function () {
+          vm.loading = false;
         });
     }
 

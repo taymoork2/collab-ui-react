@@ -4,6 +4,7 @@
 describe('Service: Trial Service:', function () {
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',

@@ -5,6 +5,7 @@ describe('Service: Partner Reports Service', function () {
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
 
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
