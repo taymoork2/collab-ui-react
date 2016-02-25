@@ -1,9 +1,8 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, $q, Config, Userservice, Orgservice, FeatureToggleService;
+  var $scope, controller, $httpBackend, $q, Config, Userservice, FeatureToggleService;
   var getUserMe;
-  var getLicensesUsage;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -21,13 +20,12 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _Orgservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
     Config = _Config_;
     Userservice = _Userservice_;
-    Orgservice = _Orgservice_;
     FeatureToggleService = _FeatureToggleService_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
@@ -35,8 +33,6 @@ describe('Controller: PlanReviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
-    getLicensesUsage = sinon.stub().returns(getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage);
-    spyOn(Orgservice, 'getLicensesUsage');
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
@@ -73,19 +69,6 @@ describe('Controller: PlanReviewCtrl', function () {
 
     it('should calculate trial used percentage correctly', function () {
       expect(controller.trialUsedPercentage).toEqual(56);
-    });
-
-    describe('Multiple Subscriptions should be defined correctly', function () {
-
-      it('should define subscriptions correctly', function () {
-        expect(controller.multiSubscriptions.oneBilling).toEqual(false);
-        expect(controller.multiSubscriptions.options).toEqual(['SubRef101478', 'SubC2015100901', 'SubRef500522', '']);
-        expect(controller.multiSubscriptions.selected).toEqual('SubRef101478');
-      });
-
-      it('should verify there is a trial subscription', function () {
-        expect(controller.showMultiSubscriptions('', true)).toEqual(true);
-      });
     });
 
   });

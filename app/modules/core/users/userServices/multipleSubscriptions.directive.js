@@ -5,7 +5,7 @@
     .module('Core')
     .directive('multipleSubscriptions', multipleSubscriptions);
 
-  //TODO: Move showLicenses function into a Service instead of leaving it in the controller
+  //TODO: expand the template so only the template calls showLicenses
   function multipleSubscriptions() {
     var directive = {
       restrict: 'E',

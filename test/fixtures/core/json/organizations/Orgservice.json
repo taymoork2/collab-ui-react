@@ -98,17 +98,6 @@
         "capacity": 15,
         "usage": 0
       }]
-    }, {
-      "licenses": "CF_7a8bf585-492f-4d7f-b4c2-8b0f9bd55656_34",
-      "offerName": "CF",
-      "licenseType": "CONFERENCING",
-      "billingServiceId": "",
-      "features": ["squared-syncup"],
-      "volume": 10,
-      "isTrial": true,
-      "status": "ACTIVE",
-      "capacity": 20,
-      "usage": 0
     }],
     "singleSub": [{
       "subscriptionId": "srvcid-integ-uitest-1a",
@@ -121,6 +110,34 @@
         "volume": 713,
         "isTrial": false,
         "status": "ACTIVE",
+        "usage": 0
+      }]
+    }],
+    "trialSub": [{
+      "subscriptionId": "Trial",
+      "licenses": [{
+        "licenseId": "MS_0e2bec18-61aa-402b-bc20-8ef26ebe5c52",
+        "offerName": "MS",
+        "licenseType": "MESSAGING",
+        "billingServiceId": "srvcid-integ-uitest-trial",
+        "features": ["spark-room-system"],
+        "volume": 54,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "usage": 0
+      }]
+    }, {
+      "subscriptionId": "svcid-integ-sunnyway-1",
+      "licenses": [{
+        "licenseId": "CF_6b8bf585-492f-4d7f-b4c2-8b0f9bd52121_10",
+        "offerName": "CF",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "svcid-integ-sunnyway-1",
+        "features": ["squared-syncup"],
+        "volume": 5,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 15,
         "usage": 0
       }]
     }]

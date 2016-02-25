@@ -328,9 +328,6 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
       $scope.populateConf = populateConf;
-      $scope.oneBilling = false;
-      $scope.selectedSubscription = '';
-      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
