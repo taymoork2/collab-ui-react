@@ -590,6 +590,7 @@
     "jsonSizeError": "File size is above the maximum of 10 MB.",
     "jsonTypeError": "Please upload a valid json file.",
     "jsonSyntaxError": "The file contains syntax errors; please fix the errors before resubmitting.",
+    "jsonAllowedFormatError": "The file either does not contain cdrs or is formatted incorrectly.  Please verify the file's contents before resubmitting.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
     "timeStamp": "Time Stamp",
     "callingDeviceName": "Calling Device Name",
