@@ -65,6 +65,7 @@
     $scope.showUserDetails = showUserDetails;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
+    $scope.isValidThumbnail = isValidThumbnail;
 
     init();
 
@@ -340,8 +341,8 @@
 
     function configureGrid() {
 
-      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!row.entity.photos" class="user-img">' +
+      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
+        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
 
@@ -445,6 +446,21 @@
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     function firstOfType(row) {
       return row.entity.id === $scope.gridData[0].id;
+    }
+
+    function isValidThumbnail(user) {
+      if (user && user.photos) {
+        for (var i in user.photos) {
+          if (user.photos[i].type === 'thumbnail') {
+            return !(user.photos[i].value.startsWith("file:") || user.photos[i].value.length === 0);
+          }
+        } //end for
+        //There is no thumbnail
+        return false;
+      } //endif
+      else {
+        return false;
+      }
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?
