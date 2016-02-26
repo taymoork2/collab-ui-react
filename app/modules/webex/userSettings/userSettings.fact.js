@@ -920,28 +920,27 @@
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
-          var blockDueToNoSession = true;
+          var blockDueToNoSession = false;
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
-            ("true" == userSettings.meetingCenter)
+            ("false" != userSettings.meetingCenter)
           ) {
-            if (
-              (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
-              ("true" == userSettings.trainingCenter)
-            ) {
-              if (
-                (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
-                ("true" == userSettings.supportCenter)
-              ) {
-                if (
-                  (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
-                  ("true" == userSettings.eventCenter)
-                ) {
-
-                  blockDueToNoSession = false;
-                }
-              }
-            }
+        	  blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
+            ("false" == userSettings.trainingCenter)
+          ) {
+        	  blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
+            ("false" == userSettings.supportCenter)
+          ) {
+        	  blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
+            ("false" == userSettings.eventCenter)
+          ) {
+             blockDueToNoSession = false;
           }
 
           if (blockDueToNoSession) {
