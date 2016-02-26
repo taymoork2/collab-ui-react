@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -233,6 +233,11 @@
     function updateCustomerFilter(orgsData) {
       var customers = [];
       // add all customer names to the customerOptions list
+      customers.push({
+        value: Authinfo.getOrgId(),
+        label: Authinfo.getOrgName(),
+        isAllowedToManage: true
+      });
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
@@ -245,15 +250,7 @@
         return a.label.localeCompare(b.label);
       });
 
-      if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {
-        vm.customerSelected = vm.customerOptions[0];
-      } else {
-        vm.customerSelected = {
-          value: 0,
-          label: "",
-          isAllowedToManage: false
-        };
-      }
+      vm.customerSelected = vm.customerOptions[0];
       resizeCards();
     }
 
