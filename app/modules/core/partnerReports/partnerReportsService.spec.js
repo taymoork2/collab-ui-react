@@ -5,6 +5,7 @@ describe('Service: Partner Reports Service', function () {
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
 
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
@@ -76,7 +77,7 @@ describe('Service: Partner Reports Service', function () {
     userName: 'havard.nigardsoy@vijugroup.com'
   };
   var posEndpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    orgId: customers[0].customerOrgId,
     deviceRegistrationCountTrend: '4',
     yesterdaysDeviceRegistrationCount: '2',
     registeredDevicesTrend: '+5',
@@ -87,7 +88,7 @@ describe('Service: Partner Reports Service', function () {
     direction: 'positive'
   }];
   var negEndpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    orgId: customers[0].customerOrgId,
     deviceRegistrationCountTrend: '-4',
     yesterdaysDeviceRegistrationCount: '2',
     registeredDevicesTrend: '-5',
