@@ -46,6 +46,12 @@
       PstnSetup.setProvider(provider || {});
     }
 
+    function catchNotFound(response) {
+      if (_.get(response, 'status') !== 404) {
+        return $q.reject(response);
+      }
+    }
+
     function initCarriers() {
       // lookup customer carriers
       return PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
@@ -56,20 +62,20 @@
           }
           return carriers;
         })
-        // if no customer or reseller error, rethrow
-        .catch(function (response) {
-          if (response && response.status !== 404) {
-            return $q.reject(response);
-          }
-        })
+        .catch(catchNotFound)
         // if none, lookup reseller carriers
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
             return carriers;
           } else {
-            return PstnSetupService.listResellerCarriers();
+            return PstnSetupService.listResellerCarriers()
+              .then(function (carriers) {
+                PstnSetup.setResellerExists(true);
+                return carriers;
+              });
           }
         })
+        .catch(catchNotFound)
         // if none, lookup default carriers
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {

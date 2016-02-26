@@ -190,7 +190,11 @@
           filter: true
         },
         controller: /* @ngInject */ function ($scope, ServiceSetup) {
-          $scope.to.options = vm.timeZoneOptions;
+          $scope.$watchCollection(function () {
+            return vm.timeZoneOptions;
+          }, function (timeZones) {
+            $scope.to.options = timeZones;
+          });
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {

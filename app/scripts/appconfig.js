@@ -196,6 +196,7 @@ angular
 
       $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
+      $httpProvider.interceptors.push('TimingInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -1412,6 +1413,16 @@ angular
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
+        .state('trialAdd.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialAdd.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
+        })
         .state('trialAdd.addNumbers', {
           templateUrl: 'modules/core/trials/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
@@ -1459,6 +1470,16 @@ angular
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
+        })
+        .state('trialEdit.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialEdit.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',
