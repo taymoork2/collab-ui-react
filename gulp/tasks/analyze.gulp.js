@@ -34,17 +34,19 @@ gulp.task('eslint:e2e', function () {
 // vet JS files and create coverage report
 gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
   if (args.plato) {
-    messageLogger('Analyzing source with ESLint, JSCS, and Plato');
+    messageLogger('Analyzing source with ESLint, JSCS, JsonLint, and Plato');
     runSeq([
       'analyze:jscs',
       'analyze:eslint',
+      'json:verify',
       'plato',
     ], done);
   } else {
-    messageLogger('Analyzing source with ESLint and JSCS');
+    messageLogger('Analyzing source with ESLint, JSCS and JsonLint');
     runSeq([
       'analyze:jscs',
-      'analyze:eslint'
+      'analyze:eslint',
+      'json:verify',
     ], done);
   }
 
@@ -82,6 +84,7 @@ gulp.task('jsb', function (done) {
     'jsBeautifier:beautify',
     'analyze:eslint',
     'eslint:e2e',
+    'json:verify',
     done
     );
 });
@@ -91,8 +94,17 @@ gulp.task('jsb:verify', function (done) {
     'jsBeautifier:verify',
     'analyze:eslint',
     'eslint:e2e',
+    'json:verify',
     done
     );
+});
+
+gulp.task('json:verify', function(done) {
+  var jsonlint = require("gulp-jsonlint");
+  return gulp.src(['./test/**/*.json', './app/**/*.json'])
+    .pipe(jsonlint())
+    .pipe(jsonlint.reporter())
+    .pipe(jsonlint.failAfterError());
 });
 
 // Create a visualizer report
