@@ -911,11 +911,11 @@
               if (sessionType.sessionEnabled) {
                 userSettings.meetingTypes.push(sessionType.sessionTypeId);
 
-                if (userSettings.meetingCenter == "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
-                if (userSettings.trainingCenter == "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
-                if (userSettings.supportCenter == "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
-                if (userSettings.eventCenter == "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
-                if (userSettings.salesCenter == "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
+                if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
+                if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
+                if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
+                if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
+                if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
               }
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
