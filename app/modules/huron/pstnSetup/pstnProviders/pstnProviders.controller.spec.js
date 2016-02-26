@@ -49,6 +49,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect($state.go).toHaveBeenCalledWith('pstnSetup.orderNumbers');
       expect(PstnSetup.isCustomerExists()).toEqual(true);
       expect(PstnSetup.isCarrierExists()).toEqual(true);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
       expect(PstnSetup.isSiteExists()).toEqual(true);
     });
 
@@ -67,6 +68,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect($state.go).toHaveBeenCalledWith('pstnSetup.serviceAddress');
       expect(PstnSetup.isCustomerExists()).toEqual(true);
       expect(PstnSetup.isCarrierExists()).toEqual(true);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
       expect(PstnSetup.isSiteExists()).toEqual(false);
     });
 
@@ -74,7 +76,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue([]);
+      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -92,6 +94,35 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect($state.go).not.toHaveBeenCalled();
       expect(PstnSetup.isCustomerExists()).toEqual(false);
       expect(PstnSetup.isCarrierExists()).toEqual(false);
+      expect(PstnSetup.isResellerExists()).toEqual(true);
+      expect(PstnSetup.isSiteExists()).toEqual(true);
+    });
+
+    it('should be initialized with default carriers if customer and reseller don\'t exist', function () {
+      PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
+        status: 404
+      }));
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject({
+        status: 404
+      }));
+      controller = $controller('PstnProvidersCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+
+      expect(controller.providers).toEqual([jasmine.objectContaining({
+        name: PstnSetupService.INTELEPEER,
+        apiExists: true,
+        vendor: PstnSetupService.INTELEPEER
+      }), jasmine.objectContaining({
+        name: PstnSetupService.TATA,
+        apiExists: false,
+        vendor: PstnSetupService.TATA
+      })]);
+      expect($state.go).not.toHaveBeenCalled();
+      expect(PstnSetup.isCustomerExists()).toEqual(false);
+      expect(PstnSetup.isCarrierExists()).toEqual(false);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
       expect(PstnSetup.isSiteExists()).toEqual(true);
     });
 
@@ -99,7 +130,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue([]);
+      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -125,7 +156,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listResellerCarriers.and.returnValue(resellerCarrierList);
+      PstnSetupService.listResellerCarriers.and.returnValue($q.when(resellerCarrierList));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -140,13 +171,14 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect($state.go).toHaveBeenCalledWith('pstnSetup.contractInfo');
       expect(PstnSetup.isCustomerExists()).toEqual(false);
       expect(PstnSetup.isCarrierExists()).toEqual(false);
+      expect(PstnSetup.isResellerExists()).toEqual(true);
       expect(PstnSetup.isSiteExists()).toEqual(true);
     });
 
     it('should notify an error if customer carriers fail to load', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({}));
-      PstnSetupService.listResellerCarriers.and.returnValue([]);
-      PstnSetupService.listDefaultCarriers.and.returnValue([]);
+      PstnSetupService.listResellerCarriers.and.returnValue($q.when([]));
+      PstnSetupService.listDefaultCarriers.and.returnValue($q.when([]));
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -156,6 +188,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect(Notification.errorResponse).toHaveBeenCalled();
       expect(PstnSetup.isCustomerExists()).toEqual(false);
       expect(PstnSetup.isCarrierExists()).toEqual(false);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
       expect(PstnSetup.isSiteExists()).toEqual(true);
     });
 
@@ -173,6 +206,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect(Notification.errorResponse).toHaveBeenCalled();
       expect(PstnSetup.isCustomerExists()).toEqual(false);
       expect(PstnSetup.isCarrierExists()).toEqual(false);
+      expect(PstnSetup.isResellerExists()).toEqual(false);
       expect(PstnSetup.isSiteExists()).toEqual(true);
     });
   });

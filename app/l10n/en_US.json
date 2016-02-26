@@ -374,7 +374,7 @@
     "active": "Active",
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
-    "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
@@ -418,7 +418,7 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.",
     "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "mediaQualityGraphError": "There was an error while loading call quality data for the selected customer(s).",
     "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
@@ -590,6 +590,7 @@
     "jsonSizeError": "File size is above the maximum of 10 MB.",
     "jsonTypeError": "Please upload a valid json file.",
     "jsonSyntaxError": "The file contains syntax errors; please fix the errors before resubmitting.",
+    "jsonAllowedFormatError": "The file either does not contain cdrs or is formatted incorrectly.  Please verify the file's contents before resubmitting.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
     "timeStamp": "Time Stamp",
     "callingDeviceName": "Calling Device Name",
@@ -748,7 +749,8 @@
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "postpone": "Postpone"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1237,7 +1239,12 @@
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
         "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule"
+        "defaultWarning": "Confirm the default schedule",
+        "postponeLabel": "The next available upgrade is scheduled to begin:",
+        "postponeAction": "Postpone schedule",
+        "postponeModalTitle": "Postpone the upgrade",
+        "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+
       }
     },
     "notifications": {
@@ -1506,7 +1513,7 @@
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
     "actionPhoneMenu": "Phone Menu",
-    "actionRouteCall": "Transfer Call",
+    "actionRouteCall": "Route Call",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
@@ -1515,6 +1522,7 @@
     "scheduleHolidays": "Holidays",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
+    "routeCallMenuHelp": "Select the appropriate transfer end point",
     "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
@@ -1543,6 +1551,7 @@
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
+    "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
@@ -1972,6 +1981,43 @@
     },
     "numbers": {
       "title": "Start New Trial - Add Numbers"
+    },
+    "pstn": {
+      "title": "Trial Setup - Call",
+      "pstnProvider": "PSTN Provider",
+      "provider": "Provider",
+      "serviceProvider": "Select your service provider",
+      "phoneNumbers": "Phone Numbers",
+      "pleaseAdd": "Please add phone numbers for the customer",
+      "pleaseAdd10": "Please add up to 10 phone numbers for the customer",
+      "pleaseAdd5": "Please add up to 5 phone numbers for the customer",
+      "state": "State",
+      "areaCode": "Area Code",
+      "numbers": "Numbers",
+      "contract": "PSTN Contract Information",
+      "company": "Legal Company Name",
+      "firstName": "Signee's First Name",
+      "lastName": "Signee's Last Name",
+      "email": "Signee's Email Address",
+      "esa": "Emergency Service Address",
+      "esaDesc": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+      "address": "Address",
+      "unit": "Unit",
+      "city": "City",
+      "zip": "Zip",
+      "skip": "Skip and remove Call",
+      "popover": "Please provide information on the legal contact who can sign the contract",
+      "addrRetry": "Use a different address",
+      "addrFound": "This is the address found in the system.",
+      "error": {
+        "areaCodes": "Failed to get area codes for selected state",
+        "numbers": "Failed to get numbers for selected area code",
+        "noAddress": "Address was not found",
+        "reserveFail": "Numbers were not reserved",
+        "customerFail": "Customer was not created",
+        "orderFail": "Numbers were not ordered",
+        "siteFail": "Site was not created"
+      }
     },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",

@@ -5,7 +5,7 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller;
 
     init();
     var model = {
@@ -25,6 +25,8 @@
       getServiceAddress: getServiceAddress,
       setCustomerExists: setCustomerExists,
       isCustomerExists: isCustomerExists,
+      setResellerExists: setResellerExists,
+      isResellerExists: isResellerExists,
       setCarrierExists: setCarrierExists,
       isCarrierExists: isCarrierExists,
       setSiteExists: setSiteExists,
@@ -48,6 +50,7 @@
       customerEmail = '';
       serviceAddress = {};
       customerExists = false;
+      resellerExists = false;
       carrierExists = false;
       siteExists = false;
       provider = {};
@@ -116,6 +119,14 @@
 
     function isCustomerExists() {
       return customerExists;
+    }
+
+    function setResellerExists(_resellerExists) {
+      resellerExists = _resellerExists;
+    }
+
+    function isResellerExists() {
+      return resellerExists;
     }
 
     function setCarrierExists(_carrierExists) {
