@@ -93,6 +93,9 @@
           <div class="text-center quantity number" >
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity">{{service.volume}}</span>
+            <p ng-show="service.isTrial" class="text-center trial">
+              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+            </p>
           </div>
         </div>
       </section>
