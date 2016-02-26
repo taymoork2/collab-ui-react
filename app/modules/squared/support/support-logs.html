@@ -19,8 +19,8 @@
     <!--<p class="h4" translate="usersPage.tooManyUsers"></p>-->
   </div>
 
-  <div id="supportLogListPanel" class="row grid" ng-if="userLogs.length && !gridRefresh">
-    <div gridscrollbar id="supportTable" class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+  <div id="supportLogListPanel" class="row grid" ng-if="userLogs.length && !gridRefresh"><!-- ng-if="userLogs.length && !gridRefresh" -->
+    <div gridscrollbar id="supportTable" ng-show="true" class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
   </div>
 </div>
 
