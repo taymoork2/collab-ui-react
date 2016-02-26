@@ -36,7 +36,7 @@ var Notifications = function () {
             log('Failed to click: ' + alert.locator() + '. Error: ' + (e && e.message || e));
           });
         }
-        return !isDisplayed;
+        return false;
       }, function (e) {
         log('Alert.isDisplayed error: ' + alert.locator() + '. Error: ' + (e && e.message || e));
         return true;
