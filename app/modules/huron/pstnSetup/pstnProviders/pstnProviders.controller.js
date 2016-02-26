@@ -54,9 +54,10 @@
 
     function initCarriers() {
       // lookup customer carriers
-      return PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
+      return PstnSetupService.getCustomer(PstnSetup.getCustomerId())
+        .then(_.partial(PstnSetup.setCustomerExists, true))
+        .then(_.partial(PstnSetupService.listCustomerCarriers, PstnSetup.getCustomerId()))
         .then(function (carriers) {
-          PstnSetup.setCustomerExists(true);
           if (_.isArray(carriers) && carriers.length > 0) {
             PstnSetup.setCarrierExists(true);
           }
@@ -85,12 +86,8 @@
           }
         })
         // process carriers
-        .then(function (carriers) {
-          _.forEach(carriers, initCarrier);
-        })
-        .catch(function (response) {
-          Notification.errorResponse(response, 'pstnSetup.carrierListError');
-        });
+        .then(_.partialRight(_.forEach, initCarrier))
+        .catch(_.partialRight(Notification.errorResponse, 'pstnSetup.carrierListError'));
     }
 
     function processSelectedProviders() {
