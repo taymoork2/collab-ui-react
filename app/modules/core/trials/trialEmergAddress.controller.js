@@ -6,11 +6,10 @@
     .controller('TrialEmergAddressCtrl', TrialEmergAddressCtrl);
 
   /* @ngInject */
-  function TrialEmergAddressCtrl($translate, Notification, PstnServiceAddressService, TerminusStateService, TrialCallService, TrialPstnService) {
+  function TrialEmergAddressCtrl($translate, Notification, PstnServiceAddressService, TerminusStateService, TrialPstnService) {
     var vm = this;
 
     vm.trial = TrialPstnService.getData();
-    vm.callTrial = TrialCallService.getData();
 
     vm.addressLoading = false;
     vm.validation = false;
@@ -114,7 +113,6 @@
 
     function skip(skipped) {
       vm.trial.enabled = !skipped;
-      vm.callTrial.enabled = !skipped;
     }
 
     function resetAddress() {
