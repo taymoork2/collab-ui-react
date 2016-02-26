@@ -209,7 +209,7 @@
 
     function skip(skipped) {
       vm.trialData.enabled = !skipped;
-      vm.trialData.skipped = true;
+      vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
     }
 

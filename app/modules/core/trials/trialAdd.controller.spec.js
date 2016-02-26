@@ -84,6 +84,26 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.pstnTrial.enabled).toBeFalsy();
   });
 
+  it('should have call trial and not skip pstn after watch', function () {
+    controller.supportsHuronCallTrials = true;
+    controller.hasCallEntitlement = true;
+    controller.pstnTrial.enabled = false;
+    controller.callTrial.enabled = true;
+    controller.pstnTrial.skipped = false;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeTruthy();
+  });
+
+  it('should have call trial and skip pstn after watch', function () {
+    controller.supportsHuronCallTrials = true;
+    controller.hasCallEntitlement = true;
+    controller.pstnTrial.enabled = false;
+    controller.callTrial.enabled = true;
+    controller.pstnTrial.skipped = true;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeFalsy();
+  });
+
   describe('Start a new trial', function () {
     var callback;
     beforeEach(function () {
