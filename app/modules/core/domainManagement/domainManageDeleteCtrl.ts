@@ -17,7 +17,7 @@ namespace domainManagement {
 
     public deleteDomain() {
       let start = moment();
-      if (this._domainToDelete.status === this.DomainManagementService.states.verified) {
+      if (this._domainToDelete.status === this.DomainManagementService.states.verified || this._domainToDelete.status === this.DomainManagementService.states.pending) {
         this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
           () => {
             this.recordMetrics({

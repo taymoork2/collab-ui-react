@@ -69,10 +69,13 @@ class DomainManagementService {
   unverifyDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
+      let existingDomain = _.find(this._domainList, {text: domain});
+      let requestData = {
+        domain: domain,
+        removePending: (existingDomain && existingDomain.status == this._states.pending)
+      };
 
-      this.$http.post(this._invokeUnverifyDomainUrl, {
-        'domain': domain
-      }).then(res => {
+      this.$http.post(this._invokeUnverifyDomainUrl, requestData).then(res => {
         _.remove(this._domainList, {text: domain});
         deferred.resolve();
       }, err => {
