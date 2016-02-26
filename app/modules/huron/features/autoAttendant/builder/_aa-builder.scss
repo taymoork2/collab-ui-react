@@ -8,6 +8,7 @@ $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light-1;
 $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-base;
+$aa-builder-icon-color-light: $gray-light-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
@@ -134,8 +135,8 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-trash;
 
-  font-size: 1.5rem;
-  color: $aa-builder-icon-color;
+  font-size: 1.25rem;
+  color: $aa-builder-icon-color-light;
   padding-left: .25rem;
   padding-top: .25rem;
 
@@ -160,14 +161,14 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-help;
 
-  font-size: 1.25rem;
-  color: $aa-builder-icon-color;
+  font-size: 1rem;
+  color: $aa-builder-icon-color-light;
   padding-left: .25rem;
   padding-top: .25rem;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-color;
   }
 }
 
@@ -390,12 +391,12 @@ $aa-builder-icon-color: $gray-base;
 
     @extend .icon-close;
 
-    color: transparent;
+    color: $gray-light-2;
     font-size: 1.5rem;
 
     &:hover {
       cursor: pointer;
-      color: $gray-light-1;
+      color: $color-primary-base;
     }
   }
 }
