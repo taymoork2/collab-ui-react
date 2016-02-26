@@ -408,7 +408,7 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value, valueN) {
+exports.expectText = function (elem) {
   var values = [].slice.call(arguments, 1);
   return this.wait(elem).then(function () {
     var text = elem.getText();
