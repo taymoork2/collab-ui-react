@@ -192,7 +192,6 @@
           webExUserSettingsModel.hasLoadError = false;
           webExUserSettingsModel.allowRetry = false;
           webExUserSettingsModel.sessionTicketErr = false;
-          // webExUserSettingsModel.hasMinOneSessionTypeEnabled = false;
           webExUserSettingsModel.disableCancel = false;
           webExUserSettingsModel.disableCancel2 = false;
           webExUserSettingsModel.disableSave = false;
@@ -417,8 +416,6 @@
           $log.log(logMsg);
           */
 
-          // var hasMinOneSessionTypeEnabled = false;
-
           enabledSessionTypesIDs.forEach(
             function chkEnabledSessionTypeID(enabledSessionTypeID) { // loop through user's enabled session type
               webExUserSettingsModel.sessionTypes.forEach(function (sessionType) {
@@ -433,7 +430,6 @@
 
                 if (sessionType.sessionTypeId == enabledSessionTypeID) {
                   sessionType.sessionEnabled = true;
-                  // hasMinOneSessionTypeEnabled = true;
                 }
               }); // webExUserSettingsModel.sessionTypes.forEach()
             } // chkEnabledSessionTypeID()
@@ -939,17 +935,39 @@
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
           // block user from save changes if at least one MC Session Type is not selected
-          var blockDueToNoMCSessionTypeSelected = !_self.hasMinOneSessionTypeEnabled(webExUserSettingsModel.sessionTypes);
+          // var blockDueToNoMCSessionTypeSelected = !_self.hasMinOneSessionTypeEnabled(webExUserSettingsModel.sessionTypes);
+          var blockDueToNoSession = true;
+          
+          if (
+        	   (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) && 
+        	   ("true" == userSettings.meetingCenter)
+          ) {
+            if (
+                 (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
+                 ("true" == userSettings.trainingCenter)
+            ) {
+              if (
+                    (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
+                    ("true" == userSettings.supportCenter)
+              ) {
+                if (
+                      (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
+                      ("true" == userSettings.eventCenter)
+                ) {
+                   blockDueToNoSession = false;
+                  }
+                }
+              }
+           }    
 
-          $log.log("DURE blockDueToNoMCSessionTypeSelected=" + blockDueToNoMCSessionTypeSelected);
-
-          if (blockDueToNoMCSessionTypeSelected) {
+          if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            var minOneSessionTypeEnabledErr = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
-            Notification.notify([minOneSessionTypeEnabledErr], 'error');
+            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            Notification.notify([errMessage], 'error');
+            $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
             return;
           }
 
@@ -963,7 +981,7 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
