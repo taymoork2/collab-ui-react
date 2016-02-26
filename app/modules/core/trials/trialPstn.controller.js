@@ -202,7 +202,7 @@
         }, 100);
       }
 
-      if (_.has(vm.trialData,'details.pstnNumberInfo.state.abbreviation')) {
+      if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
     }
