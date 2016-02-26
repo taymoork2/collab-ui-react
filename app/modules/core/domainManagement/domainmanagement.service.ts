@@ -14,7 +14,7 @@ class DomainManagementService {
   private _invokeVerifyDomainUrl;
   private _claimDomainUrl;
 
-  constructor(private $http, Config, Authinfo, private $q, private Log, private XhrNotificationService) {
+  constructor(private $http, Config, Authinfo, private $q, private Log, private XhrNotificationService, private $translate) {
 
     // var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId()) + "Domain";  //not used anymore?
 
@@ -60,8 +60,7 @@ class DomainManagementService {
     let existingDomain = _.find(this._domainList, {text: domainToAdd});
 
     if ((!domainToAdd) || existingDomain) {
-      //TODO: Add already added translated message if existingDomain.
-      return this.$q.reject();
+      return this.$q.reject(this.$translate.instant('domainManagement.add.invalidDomainAdded'));
     }
 
     return this.getToken(domainToAdd);
