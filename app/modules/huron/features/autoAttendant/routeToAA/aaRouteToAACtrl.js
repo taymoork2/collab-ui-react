@@ -63,18 +63,35 @@
     }
 
     function activate() {
+      var action;
 
       var uiModel = AAUiModelService.getUiModel();
       var uiCombinedMenu = uiModel[$scope.schedule];
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
-      // Read an existing routeToAA entry if exist or initialize it if not
-      if ($scope.keyIndex < uiPhoneMenu.entries.length) {
-        vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
+      if ($scope.fromRouteCall) {
+        vm.menuEntry = uiCombinedMenu.entries[$scope.index];
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          vm.menuEntry.addAction(action);
+        } else {
+          // make sure action is AA not External Number, HG, User, etc
+          if (!(vm.menuEntry.actions[0].getName() === 'goto')) {
+            vm.menuEntry.actions[0].setName('goto');
+            vm.menuEntry.actions[0].setValue('');
+          }
+        }
       } else {
-        vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
-        vm.menuEntry.addAction(action);
+
+        // Read an existing routeToAA entry if exist or initialize it if not
+        if ($scope.keyIndex < uiPhoneMenu.entries.length) {
+          vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];
+        } else {
+          vm.menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('goto', '');
+          vm.menuEntry.addAction(action);
+        }
+
       }
 
       // Deduce list of Auto Attendants
@@ -85,6 +102,7 @@
       options.sort(function (a, b) {
         return a.localeCompare(b);
       });
+
       vm.options = options;
 
       populateUiModel();
