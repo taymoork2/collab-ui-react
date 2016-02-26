@@ -25,17 +25,6 @@ describe('Service: PstnSetupService', function () {
     email: "myEmail",
     pstnCarrierId: carrierId,
     resellerId: partnerId,
-    billingAddress: {
-      "billingName": "Cisco Systems",
-      "billingStreetNumber": "2200",
-      "billingStreetDirectional": "E",
-      "billingStreetName": "President George Bush",
-      "billingStreetSuffix": "Hwy",
-      "billingAddressSub": "",
-      "billingCity": "Richardson",
-      "billingState": "TX",
-      "billingZip": "75082"
-    },
     numbers: numbers,
     trial: true
   };

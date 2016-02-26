@@ -38,39 +38,26 @@
       PENDING: PENDING
     };
 
-    var billingAddress = {
-      "billingName": "Cisco Systems",
-      "billingStreetNumber": "2200",
-      "billingStreetDirectional": "E",
-      "billingStreetName": "President George Bush",
-      "billingStreetSuffix": "Hwy",
-      "billingAddressSub": "",
-      "billingCity": "Richardson",
-      "billingState": "TX",
-      "billingZip": "75082"
-    };
-
     return service;
 
     function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
       var payload = {
-        "uuid": uuid,
-        "name": name,
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-        "pstnCarrierId": pstnCarrierId,
-        "resellerId": Authinfo.getOrgId(),
-        "billingAddress": billingAddress,
-        "numbers": numbers,
-        "trial": true
+        uuid: uuid,
+        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        pstnCarrierId: pstnCarrierId,
+        resellerId: Authinfo.getOrgId(),
+        numbers: numbers,
+        trial: true
       };
       return TerminusCustomerService.save({}, payload).$promise;
     }
 
     function updateCustomerCarrier(customerId, pstnCarrierId) {
       var payload = {
-        "pstnCarrierId": pstnCarrierId
+        pstnCarrierId: pstnCarrierId
       };
       return TerminusCustomerService.update({
         customerId: customerId
