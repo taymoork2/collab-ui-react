@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, UrlConfig, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -7,7 +7,8 @@ describe('Service: Trial Service:', function () {
   beforeEach(module('Huron'));
 
   beforeEach(function () {
-    bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService', 'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService', 'UrlConfig');
+    bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
+      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
   });
 
   beforeEach(function () {
@@ -78,6 +79,9 @@ describe('Service: Trial Service:', function () {
         bard.mockService(TrialMeetingService, {
           getData: trialData.enabled.trials.meetingTrial
         });
+        bard.mockService(TrialWebexService, {
+          getData: trialData.enabled.trials.webexTrial
+        });
         bard.mockService(TrialCallService, {
           getData: trialData.enabled.trials.callTrial
         });
@@ -92,7 +96,7 @@ describe('Service: Trial Service:', function () {
 
       it('should have offers list', function () {
         $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
+          var offerList = ['MESSAGE', 'MEETING', 'WEBEX', 'ROOMSYSTEMS', 'CALL'];
           var offers = angular.fromJson(data).offers;
           return _.every(offerList, function (offer) {
             return _.some(offers, {
