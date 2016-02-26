@@ -192,6 +192,7 @@
           webExUserSettingsModel.hasLoadError = false;
           webExUserSettingsModel.allowRetry = false;
           webExUserSettingsModel.sessionTicketErr = false;
+          // webExUserSettingsModel.hasMinOneSessionTypeEnabled = false;
           webExUserSettingsModel.disableCancel = false;
           webExUserSettingsModel.disableCancel2 = false;
           webExUserSettingsModel.disableSave = false;
@@ -252,8 +253,24 @@
             }
           });
           return hasProOrStdMeetingCenter;
-
         }, //hasProOrStdMeetingCenter
+
+        //returns true if WebEx center has at least one session type enabled.
+        //Purpose: must have at least one session type enabled, 
+        //otherwise, changes cannot be saved  
+        hasMinOneSessionTypeEnabled: function (sessionTypes) {
+          $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
+          var hasMinOneSessionTypeEnabled = false;
+          sessionTypes.forEach(function (item) {
+            var mca = item.meetingCenterApplicable;
+            var sessionEnabled = item.sessionEnabled;
+            $log.log("DESS sessionEnabled=" + sessionEnabled);
+            if (sessionEnabled && mca) {
+              hasMinOneSessionTypeEnabled = true;
+            }
+          });
+          return hasMinOneSessionTypeEnabled;
+        }, //hasMinOneSessionTypeEnabled
 
         isUserLevelPMREnabled: function () {
           var user = this.getUserSettingsModel();
@@ -400,6 +417,8 @@
           $log.log(logMsg);
           */
 
+          // var hasMinOneSessionTypeEnabled = false;
+
           enabledSessionTypesIDs.forEach(
             function chkEnabledSessionTypeID(enabledSessionTypeID) { // loop through user's enabled session type
               webExUserSettingsModel.sessionTypes.forEach(function (sessionType) {
@@ -414,6 +433,7 @@
 
                 if (sessionType.sessionTypeId == enabledSessionTypeID) {
                   sessionType.sessionEnabled = true;
+                  // hasMinOneSessionTypeEnabled = true;
                 }
               }); // webExUserSettingsModel.sessionTypes.forEach()
             } // chkEnabledSessionTypeID()
@@ -917,6 +937,21 @@
               }
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
+
+          // block user from save changes if at least one MC Session Type is not selected
+          var blockDueToNoMCSessionTypeSelected = !_self.hasMinOneSessionTypeEnabled(webExUserSettingsModel.sessionTypes);
+
+          $log.log("DURE blockDueToNoMCSessionTypeSelected=" + blockDueToNoMCSessionTypeSelected);
+
+          if (blockDueToNoMCSessionTypeSelected) {
+            angular.element('#saveBtn').button('reset');
+            angular.element('#saveBtn2').button('reset');
+            webExUserSettingsModel.disableCancel = false;
+            webExUserSettingsModel.disableCancel2 = false;
+            var minOneSessionTypeEnabledErr = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            Notification.notify([minOneSessionTypeEnabledErr], 'error');
+            return;
+          }
 
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&

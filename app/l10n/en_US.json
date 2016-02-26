@@ -2445,6 +2445,7 @@
     "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
+    "mustHaveAtLeastOneSessionTypeEnabled": "Select at least one session type under each WebEx center.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },
