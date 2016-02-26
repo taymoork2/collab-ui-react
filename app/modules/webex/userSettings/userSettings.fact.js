@@ -887,6 +887,8 @@
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
+          var errMessage = null;
+
           webExUserSettingsModel.disableCancel = true;
 
           angular.element('#saveBtn').button('loading');
@@ -909,14 +911,48 @@
               if (sessionType.sessionEnabled) {
                 userSettings.meetingTypes.push(sessionType.sessionTypeId);
 
-                if (userSettings.meetingCenter === "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
-                if (userSettings.trainingCenter === "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
-                if (userSettings.supportCenter === "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
-                if (userSettings.eventCenter === "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
-                if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
+                if (userSettings.meetingCenter == "false") userSettings.meetingCenter = sessionType.meetingCenterApplicable ? "true" : "false";
+                if (userSettings.trainingCenter == "false") userSettings.trainingCenter = sessionType.trainingCenterApplicable ? "true" : "false";
+                if (userSettings.supportCenter == "false") userSettings.supportCenter = sessionType.supportCenterApplicable ? "true" : "false";
+                if (userSettings.eventCenter == "false") userSettings.eventCenter = sessionType.eventCenterApplicable ? "true" : "false";
+                if (userSettings.salesCenter == "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
               }
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
+
+          var blockDueToNoSession = true;
+          if (
+            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
+            ("true" == userSettings.meetingCenter)
+          ) {
+            if (
+              (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
+              ("true" == userSettings.trainingCenter)
+            ) {
+              if (
+                (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
+                ("true" == userSettings.supportCenter)
+              ) {
+                if (
+                  (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
+                  ("true" == userSettings.eventCenter)
+                ) {
+
+                  blockDueToNoSession = false;
+                }
+              }
+            }
+          }
+
+          if (blockDueToNoSession) {
+            angular.element('#saveBtn').button('reset');
+            angular.element('#saveBtn2').button('reset');
+            webExUserSettingsModel.disableCancel = false;
+            webExUserSettingsModel.disableCancel2 = false;
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            Notification.notify([errMessage], 'error');
+            return;
+          }
 
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
@@ -928,7 +964,7 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
