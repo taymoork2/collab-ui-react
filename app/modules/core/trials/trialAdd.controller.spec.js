@@ -77,6 +77,13 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.getNextState()).toEqual(4);
   });
 
+  it('should set call trial to false and disable pstn trial', function () {
+    controller.pstnTrial.enabled = true;
+    controller.callTrial.enabled = false;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeFalsy();
+  });
+
   describe('Start a new trial', function () {
     var callback;
     beforeEach(function () {
