@@ -217,7 +217,8 @@ angular.module('Core').service('SiteListService', [
                 siteRow.licenseTooltipDisplay = null;
               }
 
-            } //processGrid()
+              siteRow.showLicenseTypes = true;
+            } // processGridForLicense()
           ); // siteListGridData.forEach()
 
           // $log.log(logMsg);
@@ -331,27 +332,29 @@ angular.module('Core').service('SiteListService', [
       // TODO
       var siteUrl = siteRow.license.siteUrl;
       WebExApiGatewayService.csvStatus(siteUrl).then(
-        function getCSVStatusSuccess(response) {
-          var funcName = "getCSVStatusSuccess()";
+        function success(response) {
+          var funcName = "WebExApiGatewayService.csvStatus.success()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           siteRow.showCSVInfo = true;
-        }, // getCSVStatusSuccess()
+        }, // csvStatusSuccess()
 
-        function getCSVStatusError(response) {
-          var funcName = "getCSVStatusError()";
+        function error(response) {
+          var funcName = "WebExApiGatewayService.csvStatus.error()";
           var logMsg = "";
 
           logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
           siteRow.showCSVInfo = true;
-        } // getCSVStatusError()
+        } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumn()
   } // end top level function

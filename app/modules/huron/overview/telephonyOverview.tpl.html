@@ -45,10 +45,10 @@
             <i class="feature-arrow"></i>
           </a>
         </li>
-        <li class="feature">
+        <li class="feature" ng-if="!telephonyOverview.telephonyInfo.hideInternationalDialing">
           <a ui-sref="user-overview.communication.internationalDialing">
             <span class="feature-name" translate="telephonyPreview.internationalDialing"></span>
-            <span class="feature-status">{{telephonyOverview.telephonyInfo.internationalDialingEnabled}}</span>
+            <span class="feature-status">{{telephonyOverview.telephonyInfo.internationalDialingStatus}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>

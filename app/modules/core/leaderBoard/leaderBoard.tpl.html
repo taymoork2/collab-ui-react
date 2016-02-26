@@ -22,12 +22,12 @@
       </section>
     </article>
     </cs-card>
-    <cs-card class="small header-bar meetings" ng-show="_.get(subscription, 'cf.services.length', 0) > 0 || subscription.count">
+    <cs-card class="small header-bar meetings" ng-show="(subscription.cf && subscription.cf.services.length !== 0) || (subscription.count && subscription.count > 0)" >
     <article>
       <header class="header-section align-center">
         <span class="bucket-header" translate="firstTimeWizard.meeting"></span>
       </header>
-      <section ng-show="_.get(subscription, 'cf.services.length', 0) > 0" class="bucket-info">
+      <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
           </cs-donut>
@@ -81,7 +81,7 @@
       </section>
     </article>
     </cs-card>
-    <cs-card class="small header-bar people" ng-show="_.get(subscription, 'communication.services.length', 0) > 0">
+    <cs-card class="small header-bar people" ng-show="subscription.communication && subscription.communication.services.length !== 0">
     <article>
       <header class="header-section align-center">
         <span class="bucket-header" translate="firstTimeWizard.call"></span>
@@ -93,12 +93,15 @@
           <div class="text-center quantity number" >
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
             <span class="quantity">{{service.volume}}</span>
+            <p ng-show="service.isTrial" class="text-center trial">
+              <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+            </p>
           </div>
         </div>
       </section>
     </article>
     </cs-card>
-    <cs-card class="small header-bar gray" ng-show="_.get(subscription, 'shared_devices.services.length', 0) > 0">
+    <cs-card class="small header-bar gray" ng-show="subscription.shared_devices && subscription.shared_devices.services.length !== 0">
     <article>
       <header class="header-section align-center">
         <span class="bucket-header" translate="leaderBoard.shared_devicesTitle"></span>

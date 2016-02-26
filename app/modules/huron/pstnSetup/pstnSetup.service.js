@@ -62,7 +62,8 @@
         "pstnCarrierId": pstnCarrierId,
         "resellerId": Authinfo.getOrgId(),
         "billingAddress": billingAddress,
-        "numbers": numbers
+        "numbers": numbers,
+        "trial": true
       };
       return TerminusCustomerService.save({}, payload).$promise;
     }
