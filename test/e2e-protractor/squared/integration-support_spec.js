@@ -116,19 +116,11 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.supportTab);
     });
 
-    it('should display error for empty input', function () {
-      utils.click(navigation.supportTab);
-      utils.click(navigation.logsPage);
-      utils.click(support.logSearchBtn);
-      notifications.assertError('Search input cannot be empty.');
-    });
-
     it('should search for logs by valid email address', function () {
       utils.click(navigation.supportTab);
       utils.click(navigation.logsPage);
       utils.clear(support.logSearchField);
       utils.sendKeys(support.logSearchField, 'atlaspartneradmin@atlas.test.com');
-      utils.click(support.logSearchBtn);
       utils.expectIsDisplayed(support.supportTable);
     });
 
@@ -137,7 +129,6 @@ describe('Support flow', function () {
       utils.click(navigation.logsPage);
       utils.clear(support.logSearchField);
       utils.sendKeys(support.logSearchField, support.searchValidUuid);
-      utils.click(support.logSearchBtn);
       utils.expectIsDisplayed(support.supportTable);
     });
 
