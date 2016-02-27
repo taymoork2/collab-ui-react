@@ -7,11 +7,11 @@
 
   /* @ngInject */
   function HybridService($q, Authinfo, ServiceDescriptor) {
-    var extensionIds = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal'];
+    var extensionIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var entitlementNames = {
+      'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-uc': 'squaredFusionUC',
-      'squared-fusion-ec': 'squaredFusionEC',
-      'squared-fusion-cal': 'squaredFusionCal'
+      'squared-fusion-ec': 'squaredFusionEC'
     };
 
     var service = {

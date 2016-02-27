@@ -264,7 +264,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
 
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
-    return elem.getAttribute('value').then(function (result) {
+    return elem.getText().then(function (result) {
       log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
       return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
@@ -282,18 +282,6 @@ exports.expectValueToBeSet = function (elem, text, timeout) {
       return false;
     });
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
-};
-
-exports.expectValueToBeSet = function (elem, value) {
-  this.wait(elem);
-  browser.wait(function () {
-    return elem.getAttribute('value').then(function (result) {
-      log('Waiting for element to have value set: ' + elem.locator() + ' ' + value);
-      return result !== undefined && result !== null && result === value;
-    }, function () {
-      return false;
-    });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
 };
 
 exports.expectValueToContain = function (elem, value) {

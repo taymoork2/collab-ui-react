@@ -19,10 +19,11 @@
       return key === reference;
     };
 
-    $scope.isFusionEC = function()
-    {
-        var result = $.grep( vm.extensions, function(e) { return e.id == 'squared-fusion-ec'} );
-        return (result.length > 0) && result[0].enabled;
+    $scope.isFusionEC = function () {
+      var result = $.grep(vm.extensions, function (e) {
+        return e.id === 'squared-fusion-ec';
+      });
+      return (result.length > 0) && result[0].enabled;
     };
 
     init();
@@ -45,27 +46,24 @@
         });
     }
 
-    function setCheckbox(entitlement, val)
-    {
-        var state = (val) ? 'ACTIVE' : 'INACTIVE';
-        for ( var i = 0; i < $scope.vm.extensions.length; i++ ) {
-          if ( $scope.vm.extensions[i].id === entitlement )
-          {
-            if ( $scope.vm.extensions[i].entitlementState !== state ) {
-              $scope.vm.extensions[i].entitlementState = state;
-            }
-            break;
+    function setCheckbox(entitlement, val) {
+      var state = (val) ? 'ACTIVE' : 'INACTIVE';
+      for (var i = 0; i < $scope.vm.extensions.length; i++) {
+        if ($scope.vm.extensions[i].id === entitlement) {
+          if ($scope.vm.extensions[i].entitlementState !== state) {
+            $scope.vm.extensions[i].entitlementState = state;
           }
-        }      
+          break;
+        }
+      }
     }
 
     function setEntitlements(ext) {
       var i;
       // If EC requires UC be checked as well
-      if ( ext.id === 'squared-fusion-ec' ) {
+      if (ext.id === 'squared-fusion-ec') {
         setCheckbox('squared-fusion-uc', true);
-      }
-      else if ( (ext.id === 'squared-fusion-uc') && (ext.entitlementState === 'INACTIVE') ) {
+      } else if ((ext.id === 'squared-fusion-uc') && (ext.entitlementState === 'INACTIVE')) {
         setCheckbox('squared-fusion-ec', false);
       }
 
