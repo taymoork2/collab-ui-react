@@ -22,15 +22,20 @@
   }
 
   /* @ngInject */
-  function Controller(HybridService) {
+  function Controller($scope, HybridService) {
     var vm = this;
 
     vm.isEnabled = false;
     vm.extensions = [];
     vm.entitlements = [];
     vm.setEntitlements = setEntitlements;
+    vm.shouldAddIndent = shouldAddIndent;
 
     init();
+
+    $scope.shouldAddIndent = function (key, reference) {
+      return key !== reference;
+    };
 
     ////////////////
 
@@ -69,5 +74,10 @@
         });
       }
     }
+
+    $scope.$watch('squaredFusionEC.entitled', function (newVal, oldVal) {
+      if (newVal != oldVal) {
+      }
+    });
   }
 })();

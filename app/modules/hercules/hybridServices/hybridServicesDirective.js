@@ -12,7 +12,7 @@
       return;
     }
     var vm = this;
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
     vm.extensions = getExtensions();

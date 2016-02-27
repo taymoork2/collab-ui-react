@@ -3,18 +3,23 @@
     <div class="row-hybrid">
       <div id="hybrid" class="column-header">
         <i class="icon icon-circle-world"></i>
-        <h3 translate="onboardModal.hybridServices"></h3>
+        <h3>{{'onboardModal.hybridServices' | translate}}</h3>
       </div>
 
       <div class="hs-extension-list">
-        <span class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
-          <label class="cs-checkbox" for="{{extension.id}}">
-              <input type="checkbox" id="{{extension.id}}" ng-model="extension.entitlementState"
+        <div class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
+          <label class="cs-checkbox" ng-class="{'indentedCB':shouldAddIndent(extension.id,'squared-fusion-ec')}"
+                 for="{{extension.id}}">
+              <input type="checkbox"
+                     ng-model="extension.entitlementState"
+                     id="{{extension.id}}"
                      ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
                      ng-change="vm.setEntitlements()">
-              <span translate="hercules.serviceNames.{{extension.id}}"></span>
+              <span ng-if="extension.id != 'squared-fusion-uc'"
+                    translate="hercules.serviceNames.{{extension.id}}"></span>
+              <span ng-if="extension.id == 'squared-fusion-uc'"
+                    translate="hercules.serviceNames.squared-fusion-uc.full"></span>
           </label>
-        </span>      
-      </div>
+        </div>
   </div>
 </div>

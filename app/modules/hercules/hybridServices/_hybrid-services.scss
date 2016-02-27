@@ -37,15 +37,6 @@
     }
   }
 
-  .extension-description {
-    color: $gray-dark;
-    font-family: $brand-font-light;
-    font-size: 13.5px;
-    letter-spacing: 0.02em;
-    line-height: inherit;
-    padding-bottom: 10px;
-  }
-
   .row-hybrid {
     background: $gray-lightest;
     display: inline-flex;
@@ -58,7 +49,7 @@
 
     h3 {
       font-family: $brand-font-cisco-TT-Extra-Light;
-      padding-left: 5px;
+      padding-left: 15px;
     }
     .icon {
       font-size: 35px;
@@ -77,26 +68,11 @@
       font-family: $brand-font-cisco-TT-Extra-Light;
     }
     .hs-extension-list {
-      background: $gray-lightest;
-      margin-top: 5px;
       padding-top: 20px;
-      .cs-checkbox span:before {
-        margin-top: -2px;
-        margin-right: 12px;
-      }
     }
-    .hs-extension {
-        display: block;
+    .indentedCB {
+      margin-left: 27px;
     }
   }
 }
-
-.cloud-extension-label {
-  font-weight: 500;
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 2.25rem;
-  font-family: $brand-font-light;
-}
-
 
