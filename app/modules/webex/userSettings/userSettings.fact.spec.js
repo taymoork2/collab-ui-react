@@ -1,6 +1,9 @@
 'use strict';
 
-xdescribe('WebExUserSettingsFact Test', function () {
+describe('WebExUserSettingsFact multi-center licenses tests', function () {
+  var $q;
+  var $rootScope;
+
   var deferredOrgLicenses;
   var deferredWebExSessionTicket;
   var deferredWebExSiteVersionXml;
@@ -31,7 +34,6 @@ xdescribe('WebExUserSettingsFact Test', function () {
       "licenseID": [
         "EC_4c6e5366-2e44-4886-9b91-f2d2c90ebcff_200_t30citestprov13.webex.com",
         "MC_61d4e4eb-ecbc-4bac-8f6b-b8030128e1b7_200_t30citestprov13.webex.com",
-        "SC_61d4e4eb-ecbc-4bac-8f6b-b8030128e1b7_200_junk.webex.com",
         "CMR_aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa_10_t30citestprov13.webex.com",
       ],
       "trainSiteNames": ["t30citestprov13.webex.com"],
@@ -91,9 +93,13 @@ xdescribe('WebExUserSettingsFact Test', function () {
 
   beforeEach(inject(function (
     _$q_,
+    _$rootScope_,
     _Orgservice_,
     _WebExXmlApiFact_
   ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
 
     deferredOrgLicenses = _$q_.defer();
     deferredWebExSessionTicket = _$q_.defer();
@@ -124,11 +130,13 @@ xdescribe('WebExUserSettingsFact Test', function () {
     expect(userSettingsModel.supportCenter.isEntitledOnWebEx).toBeDefined();
   }));
 
-  it('can update user\'s webex service entitlement that\'s in the atlas d/b', inject(function (WebExUserSettingsFact) {
+  it('can update user settings base on webex service entitlement in the atlas d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
     WebExUserSettingsFact.checkUserWebExEntitlementOnAtlas();
+
     deferredOrgLicenses.resolve(fakeOrgLicenses);
+    $rootScope.$apply();
 
     expect(userSettingsModel.meetingCenter.isEntitledOnAtlas).toEqual(true);
     expect(userSettingsModel.trainingCenter.isEntitledOnAtlas).toEqual(false);
@@ -136,15 +144,25 @@ xdescribe('WebExUserSettingsFact Test', function () {
     expect(userSettingsModel.supportCenter.isEntitledOnAtlas).toEqual(false);
   }));
 
-  it('can update user\'s webex service entitlement that\'s in the webex d/b', inject(function (WebExUserSettingsFact) {
+  it('can update user settings base on webex service entitlement in the webex d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
     WebExUserSettingsFact.initPanel();
+
     deferredWebExSessionTicket.resolve(fakeWebExSessionTicket);
+    $rootScope.$apply();
+
     deferredWebExSiteVersionXml.resolve(fakeWebExSiteVersionXml);
+    $rootScope.$apply();
+
     deferredWebExUserInfoXml.resolve(fakeWebExUserInfoXml);
+    $rootScope.$apply();
+
     deferredWebExSiteInfoXml.resolve(fakeWebExSiteInfoXml);
+    $rootScope.$apply();
+
     deferredWebExMeetingTypeInfoXml.resolve(fakeWebExMeetingTypeInfoXml);
+    $rootScope.$apply();
 
     expect(userSettingsModel.meetingCenter.isEntitledOnWebEx).toEqual(true);
     expect(userSettingsModel.trainingCenter.isEntitledOnWebEx).toEqual(false);
