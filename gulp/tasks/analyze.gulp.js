@@ -81,6 +81,7 @@ gulp.task('jsb', function (done) {
   runSeq(
     'jsBeautifier:beautify',
     'analyze:eslint',
+    'eslint:e2e',
     done
     );
 });
@@ -89,6 +90,7 @@ gulp.task('jsb:verify', function (done) {
   runSeq(
     'jsBeautifier:verify',
     'analyze:eslint',
+    'eslint:e2e',
     done
     );
 });
