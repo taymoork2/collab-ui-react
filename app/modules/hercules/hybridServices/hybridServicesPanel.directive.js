@@ -3,39 +3,23 @@
 
   angular
     .module('Hercules')
-    .directive('hybridServicesPanel', hybridServicesPanel);
+    .directive('hybridServicesPanel', hybridServicesPanel)
+    .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanel() {
-    var directive = {
-      restrict: 'E',
-      scope: {
-        'updateEntitlements': '&bindEntitlements'
-      },
-      bindToController: true,
-      controllerAs: 'vm',
-      controller: Controller,
-      templateUrl: 'modules/hercules/hybridServices/hybridServicesPanel.tpl.html'
-    };
-
-    return directive;
-  }
-
-  /* @ngInject */
-  function Controller($scope, HybridService) {
+  function hybridServicesPanelCtrl($scope, HybridService, Authinfo) {
     var vm = this;
 
     vm.isEnabled = false;
     vm.extensions = [];
     vm.entitlements = [];
     vm.setEntitlements = setEntitlements;
-    vm.shouldAddIndent = shouldAddIndent;
-
-    init();
 
     $scope.shouldAddIndent = function (key, reference) {
-      return key !== reference;
+      return key === reference;
     };
+
+    init();
 
     ////////////////
 
@@ -55,7 +39,30 @@
         });
     }
 
-    function setEntitlements() {
+    function setCheckbox(entitlement, val)
+    {
+        var state = (val) ? 'ACTIVE' : 'INACTIVE';
+        for ( var i = 0; i < $scope.vm.extensions.length; i++ ) {
+          if ( $scope.vm.extensions[i].id === entitlement )
+          {
+            if ( $scope.vm.extensions[i].entitlementState !== state ) {
+              $scope.vm.extensions[i].entitlementState = state;
+            }
+            break;
+          }
+        }      
+    }
+
+    function setEntitlements(ext) {
+      var i;
+      // If EC requires UC be checked as well
+      if ( ext.id === 'squared-fusion-ec' ) {
+        setCheckbox('squared-fusion-uc', true);
+      }
+      else if ( (ext.id === 'squared-fusion-uc') && (ext.entitlementState === 'INACTIVE') ) {
+        setCheckbox('squared-fusion-ec', false);
+      }
+
       // US8209 says to only add entitlements, not remove them.
       // Allowing INACTIVE would remove entitlement when users are patched.
       vm.entitlements = _(vm.extensions)
@@ -74,10 +81,21 @@
         });
       }
     }
+  }
 
-    $scope.$watch('squaredFusionEC.entitled', function (newVal, oldVal) {
-      if (newVal != oldVal) {
-      }
-    });
+  /* @ngInject */
+  function hybridServicesPanel() {
+    var directive = {
+      restrict: 'E',
+      scope: {
+        'updateEntitlements': '&bindEntitlements'
+      },
+      bindToController: true,
+      controllerAs: 'vm',
+      controller: hybridServicesPanelCtrl,
+      templateUrl: 'modules/hercules/hybridServices/hybridServicesPanel.tpl.html'
+    };
+
+    return directive;
   }
 })();
