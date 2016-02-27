@@ -70,8 +70,8 @@ angular
           },
           authenticate: false
         })
-        .state('activatedUserSuccessPage', {
-          url: '/activated-user-success-page',
+        .state('activateUser.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -79,8 +79,8 @@ angular
           },
           authenticate: false
         })
-        .state('activateUserErrorPage', {
-          url: '/activate-user-error-page',
+        .state('activateUser.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
@@ -95,26 +95,23 @@ angular
               template: '<div ui-view></div>',
               controller: 'ActivateProductController'
             }
-          },
-          authenticate: false
+          }
         })
-        .state('activatedProductSuccessPage', {
-          url: '/activated-product-success-page',
+        .state('activateProduct.successPage', {
+          url: '/success-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
             }
-          },
-          authenticate: false
+          }
         })
-        .state('activateProductErrorPage', {
-          url: '/activate-product-error-page',
+        .state('activateProduct.errorPage', {
+          url: '/error-page',
           views: {
             'main@': {
               template: '<div ui-view></div>'
             }
-          },
-          authenticate: false
+          }
         })
         .state('unauthorized', {
           views: {
@@ -197,8 +194,9 @@ angular
           }
         });
 
-      $httpProvider.interceptors.push('TrackingIDInterceptor');
+      $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
+      $httpProvider.interceptors.push('TimingInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -1415,6 +1413,16 @@ angular
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
+        .state('trialAdd.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialAdd.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
+        })
         .state('trialAdd.addNumbers', {
           templateUrl: 'modules/core/trials/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
@@ -1462,6 +1470,16 @@ angular
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
+        })
+        .state('trialEdit.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialEdit.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',

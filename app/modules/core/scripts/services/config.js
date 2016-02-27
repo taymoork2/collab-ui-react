@@ -1114,7 +1114,8 @@ angular.module('Core')
           'trialExtInterest',
           'cdrsupport',
           'cdr-overview',
-          'cdrladderdiagram'
+          'cdrladderdiagram',
+          'activateProduct'
         ],
         Readonly_Admin: [
           'overview',
@@ -1129,10 +1130,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct'
         ],
         Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],

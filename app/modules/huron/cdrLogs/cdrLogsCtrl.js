@@ -207,7 +207,14 @@
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              vm.gridData.push(addNames(jsonData.cdrs));
+              if (angular.isArray(jsonData.cdrs) && angular.isArray(jsonData.cdrs[0])) {
+                vm.gridData.push(addNames(jsonData.cdrs));
+              } else if (angular.isArray(jsonData.cdrs)) {
+                vm.gridData.push(addNames([jsonData.cdrs]));
+              } else {
+                vm.dataState = 0;
+                Notification.notify($translate.instant('cdrLogs.jsonAllowedFormatError'), 'error');
+              }
             } catch (SyntaxError) {
               vm.dataState = 0;
               Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');

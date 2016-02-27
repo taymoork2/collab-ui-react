@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService', 'CsvDownloadService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService', 'CsvDownloadService', 'TrackingId',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -328,9 +328,6 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
       $scope.populateConf = populateConf;
-      $scope.oneBilling = false;
-      $scope.selectedSubscription = '';
-      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -352,39 +349,6 @@ angular.module('Core')
       if (null !== Authinfo.getOrgId()) {
         getMessengerSyncStatus();
       }
-
-      var getSubscriptions = function () {
-        if (Authinfo.hasAccount()) {
-          Orgservice.getLicensesUsage().then(function (subscriptions) {
-            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
-            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
-          });
-        }
-      };
-
-      $scope.modelChange = function () {
-        $scope.selectedSubscription = this.selectedSubscription;
-      };
-
-      $scope.showMultiSubscriptions = function (billingServiceId, isTrial) {
-        var isSelected = false;
-        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
-        if (_.isArray(billingServiceId)) {
-          for (var i in billingServiceId) {
-            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
-              isSelected = true;
-              break;
-            }
-          }
-        } else {
-          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
-        }
-
-        return $scope.oneBilling || isSelected || isTrialSubscription;
-      };
 
       function populateConf() {
         if (userLicenseIds) {
@@ -562,7 +526,6 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
-        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {
@@ -1086,9 +1049,10 @@ angular.module('Core')
           }
           var trackingId = response.headers('TrackingID');
           if (!trackingId || trackingId === 'null') {
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID || '';
+            // If TrackingID is not allowed by CORS, fallback to TrackingId service
+            errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
           } else {
-            errorMsg += ' TrackingID: ' + trackingId || '';
+            errorMsg += ' TrackingID: ' + trackingId;
           }
         }
         return errorMsg;
@@ -1757,7 +1721,7 @@ angular.module('Core')
       var saveDeferred;
       var csvHeaders;
       var orgHeaders;
-      var maxUsers = 40000;
+      var maxUsers = 250;
       var isDirSync = false;
       FeatureToggleService.supportsDirSync().then(function (enabled) {
         isDirSync = enabled;
@@ -1831,6 +1795,7 @@ angular.module('Core')
       FeatureToggleService.supportsCsvUpload().then(function (enabled) {
         if (enabled) {
           $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          maxUsers = 1100;
           return CsvDownloadService.getCsv('headers').then(function (response) {
             orgHeaders = angular.copy(response.data.columns || []);
             // Leave this commented out until discussion of maximum limit is done

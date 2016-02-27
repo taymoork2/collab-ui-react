@@ -198,7 +198,9 @@ module.exports = function() {
         vendor + '/angular-cache/dist/angular-cache.js',
         vendor + '/parse-address-bobbr/parse-address.min.js',
         vendor + '/clipboard/dist/clipboard.js',
-        vendor + '/query-command-supported/dist/queryCommandSupported.js'
+        vendor + '/query-command-supported/dist/queryCommandSupported.js',
+        vendor + '/ical.js/build/ical.js',
+        vendor + '/angular-ical/dist/js/angular-ical.js'
       ],
       scss: {
         paths: [

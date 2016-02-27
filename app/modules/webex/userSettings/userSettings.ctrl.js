@@ -62,7 +62,7 @@
       $log.log("Show panel3");
 
       $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
-      WebExUserSettingsFact.checkUserWebExEntitlement();
+      WebExUserSettingsFact.checkUserWebExEntitlementOnAtlas();
       $scope.initPanel();
     } // WebExUserSettingsCtrl()
   ]);

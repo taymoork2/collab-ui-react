@@ -61,7 +61,7 @@
         </h4>
 
         <!-- Start of Meeting Center -->
-        <div ng-if="userSettingsModel.meetingCenter.isSiteEnabled && userSettingsModel.meetingCenter.userHasLicense">
+        <div ng-if="userSettingsModel.meetingCenter.isSiteEnabled && userSettingsModel.meetingCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.meetingCenter.label}}</b><p>
 
           <table class="wx-table" id="MC"
@@ -89,7 +89,7 @@
         <!-- End of Meeting Center -->
 
         <!-- Start of Event Center -->
-        <div ng-if="userSettingsModel.eventCenter.isSiteEnabled && userSettingsModel.eventCenter.userHasLicense">
+        <div ng-if="userSettingsModel.eventCenter.isSiteEnabled && userSettingsModel.eventCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.eventCenter.label}}</b></p>
           <table class="wx-table" id="EC"
                  name="EC">
@@ -116,7 +116,7 @@
         <!-- End of Event Center -->
 
         <!-- Start of Support Center -->
-        <div ng-if="userSettingsModel.supportCenter.isSiteEnabled && userSettingsModel.supportCenter.userHasLicense">
+        <div ng-if="userSettingsModel.supportCenter.isSiteEnabled && userSettingsModel.supportCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.supportCenter.label}}</p></b>
           <table class="wx-table" id="SC"
                  name="SC">
@@ -143,7 +143,7 @@
         <!-- End of Support Center -->
 
         <!-- Start of Training Center -->
-        <div ng-if="userSettingsModel.trainingCenter.isSiteEnabled && userSettingsModel.trainingCenter.userHasLicense">
+        <div ng-if="userSettingsModel.trainingCenter.isSiteEnabled && userSettingsModel.trainingCenter.isEntitledOnWebEx">
           <p><b>{{userSettingsModel.trainingCenter.label}}</b></p>
           <table class="wx-table" id="TC"
                  name="TC">

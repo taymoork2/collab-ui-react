@@ -24,6 +24,8 @@ angular.module('Core')
       var logMsg = "";
 
       var vm = this;
+
+      vm.showGridData = false;
       vm.gridData = [];
       vm.allSitesWebexLicensesArray = [];
 
@@ -222,13 +224,11 @@ angular.module('Core')
         sortable: false
       });
 
-      //Update grid with site license information
-      vm.gridData = SiteListService.getAllSitesLicenseData(vm.gridData);
-
       // TODO - uncomment the following line when feature toggle is no longer used
-      // SiteListService.updateGrid(vm.gridData);
+      // SiteListService.updateGrid(vm);
 
       // TODO - delete the following lines when feature toggle is no longer used
+      // start of delete
       checkCSVToggle();
 
       // remove the CSV column if admin user doesn't have CSV toggle enabled
@@ -247,11 +247,12 @@ angular.module('Core')
               "adminUserSupportCSV=" + adminUserSupportCSV;
             $log.log(logMsg);
 
+            // don't show the CSV column if admin user does not have feature toggle
             if (!adminUserSupportCSV) {
               vm.gridOptions.columnDefs.splice(2, 1);
             }
 
-            SiteListService.updateGrid(vm.gridData);
+            SiteListService.updateGrid(vm);
           }, // getSupportsCSVSuccess()
 
           function getSupportsCSVError(result) {
@@ -262,11 +263,12 @@ angular.module('Core')
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
+            // don't show the CSV column if unable to access feature toggle
             vm.gridOptions.columnDefs.splice(2, 1);
-            SiteListService.updateGrid(vm.gridData);
+            SiteListService.updateGrid(vm);
           } // getSupportsCSVError()
         ); // FeatureToggleService.supports().then()
       } // checkCSVToggle()
-
+      // end of delete
     } // End controller
   ]);
