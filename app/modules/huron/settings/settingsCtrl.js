@@ -42,6 +42,7 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
+    vm.serviceNumberWarning = false;
 
     vm.model = {
       site: {
@@ -69,7 +70,9 @@
       },
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
-      showServiceAddress: false
+      showServiceAddress: false,
+      serviceNumber: {},
+      uuid: undefined
     };
 
     vm.validations = {
@@ -428,6 +431,39 @@
         }]
       }
     }, {
+      model: vm.model,
+      key: 'serviceNumber',
+      type: 'select',
+      templateOptions: {
+        type: 'csSelect',
+        inputClass: 'large-5',
+        label: $translate.instant('settingsServiceNumber.label'),
+        description: $translate.instant('settingsServiceNumber.description'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'value',
+        filter: true,
+        warnMsg: $translate.instant('settingsServiceNumber.warning')
+      },
+      controller: /* @ngInject */ function ($scope, $timeout, Authinfo, NumberSearchServiceV2) {
+        NumberSearchServiceV2.get({
+          customerId: Authinfo.getOrgId(),
+          assigned: true,
+          type: 'external'
+        }).$promise.then(function (response) {
+          vm.assignedNumbers = _.pluck(response.numbers, 'number');
+          $scope.to.options = _.map(response.numbers, function (number) {
+            number.label = TelephoneNumberService.getDIDLabel(number.number);
+            return number;
+          });
+        });
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': function () {
+          return vm.serviceNumberWarning;
+        }
+      }
+    }, {
       key: 'callerId',
       type: 'nested',
       className: 'max-width-form',
@@ -604,6 +640,16 @@
             vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
             vm.model.site.siteCode = site.siteCode;
             vm.model.site.vmCluster = site.vmCluster;
+            vm.model.uuid = site.uuid;
+            if (site.emergencyCallBackNumber) {
+              vm.model.serviceNumber = {
+                pattern: site.emergencyCallBackNumber.pattern,
+                label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
+              }
+            } else {
+              vm.serviceNumberWarning = true;
+            }
+
           });
         }
       });
@@ -660,6 +706,14 @@
           savedModel = angular.copy(vm.model);
           vm.loading = false;
         });
+    }
+
+    function isNotAssignedNumber(numbers, emergencyCallbackNumber) {
+      if (_.findIndex(numbers, emergencyCallbackNumber) === -1) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function displayDisableVoicemailWarning() {
@@ -719,6 +773,18 @@
           });
       }
 
+      function updateServiceNumber(number) {
+        var site = {};
+        site.emergencyCallBackNumber = {
+          pattern: number
+        };
+        return ServiceSetup.updateSite(vm.model.uuid, site)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
+            return $q.reject(response);
+          });
+      }
+
       function saveSite() {
         // Save the existing site voicemail pilot number, before overwritting with the new value
         var existingSiteVoicemailPilotNumber = _.get(vm, 'model.site.voicemailPilotNumber');
@@ -735,6 +801,10 @@
           if (vm.hasVoicemailService) {
             return updateSite();
           }
+        }
+
+        if (vm.model.serviceNumber !== '') {
+          return updateServiceNumber(vm.model.serviceNumber.number);
         }
       }
 
@@ -1169,6 +1239,14 @@
     }, function (newValue, oldValue, scope) {
       if (newValue && !vm.model.callerId.uuid && !vm.model.callerId.callerIdName) {
         vm.model.callerId.callerIdName = Authinfo.getOrgName();
+      }
+    });
+
+    $scope.$watch(function () {
+      return vm.model.serviceNumber && vm.assignedNumbers;
+    }, function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        vm.serviceNumberWarning = isNotAssignedNumber(vm.assignedNumbers, vm.model.serviceNumber.pattern);
       }
     });
   }
