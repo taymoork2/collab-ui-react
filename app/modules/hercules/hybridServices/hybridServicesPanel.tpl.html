@@ -15,9 +15,9 @@
                      id="{{extension.id}}"
                      ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
                      ng-change="vm.setEntitlements(extension)">
-              <span ng-if="extension.id != 'squared-fusion-uc'"
+              <span ng-if="!isFusionEC() || (extension.id !== 'squared-fusion-uc')"
                     translate="hercules.serviceNames.{{extension.id}}"></span>
-              <span ng-if="extension.id == 'squared-fusion-uc'"
+              <span ng-if="isFusionEC() && (extension.id == 'squared-fusion-uc')"
                     translate="hercules.serviceNames.squared-fusion-uc.full"></span>
           </label>
         </div>

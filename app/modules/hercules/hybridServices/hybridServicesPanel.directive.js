@@ -7,7 +7,7 @@
     .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl($scope, HybridService, Authinfo) {
+  function hybridServicesPanelCtrl($scope, HybridService) {
     var vm = this;
 
     vm.isEnabled = false;
@@ -17,6 +17,12 @@
 
     $scope.shouldAddIndent = function (key, reference) {
       return key === reference;
+    };
+
+    $scope.isFusionEC = function()
+    {
+        var result = $.grep( vm.extensions, function(e) { return e.id == 'squared-fusion-ec'} );
+        return (result.length > 0) && result[0].enabled;
     };
 
     init();
