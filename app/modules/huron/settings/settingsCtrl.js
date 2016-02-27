@@ -458,6 +458,7 @@
           });
         });
       },
+      hideExpression: '!model.showServiceAddress',
       expressionProperties: {
         'templateOptions.isWarn': function () {
           return vm.serviceNumberWarning;
