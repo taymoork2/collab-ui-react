@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl:', function () {
-  var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer, FeatureToggleService;
+  var controller, $scope, $state, $q, $translate, $window, Notification, TrialService, HuronCustomer, FeatureToggleService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
@@ -16,11 +16,12 @@ describe('Controller: TrialEditCtrl:', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _$window_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
+    $window = _$window_;
     Notification = _Notification_;
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
@@ -32,6 +33,8 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
+    spyOn($state, 'href');
+    spyOn($window, 'open');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
 
@@ -47,57 +50,85 @@ describe('Controller: TrialEditCtrl:', function () {
     $scope.$apply();
   }));
 
-  it('should be created successfully', function () {
-    expect(controller).toBeDefined();
-  });
+  describe('primary behaviors:', function () {
+    describe('getDaysLeft', function () {
+      it('should return expired', function () {
+        expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
+      });
 
-  describe('getDaysLeft', function () {
-    it('should return expired', function () {
-      expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
+      it('should return expires today', function () {
+        expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
+      });
+
+      it('should return days left', function () {
+        expect(controller.getDaysLeft(1)).toEqual(1);
+      });
     });
 
-    it('should return expires today', function () {
-      expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
+    describe('Interacting with TrialService.editTrial', function () {
+      beforeEach(function () {
+        spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
+        controller.editTrial();
+        $scope.$apply();
+      });
+
+      it('should notify success', function () {
+        expect(Notification.success).toHaveBeenCalled();
+      });
+
+      it('should close the modal', function () {
+        expect($state.modal.close).toHaveBeenCalled();
+      });
     });
 
-    it('should return days left', function () {
-      expect(controller.getDaysLeft(1)).toEqual(1);
-    });
-  });
+    describe('Edit a trial with error', function () {
+      beforeEach(function () {
+        spyOn(TrialService, "editTrial").and.returnValue($q.reject({
+          data: {
+            message: 'An error occurred'
+          }
+        }));
+        controller.editTrial();
+        $scope.$apply();
+      });
 
-  describe('Interacting with TrialService.editTrial', function () {
-    beforeEach(function () {
-      spyOn(TrialService, "editTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialEditResponse.json')));
-      controller.editTrial();
-      $scope.$apply();
-    });
+      it('should notify error', function () {
+        expect(Notification.error).toHaveBeenCalled();
+      });
 
-    it('should notify success', function () {
-      expect(Notification.success).toHaveBeenCalled();
-    });
-
-    it('should close the modal', function () {
-      expect($state.modal.close).toHaveBeenCalled();
-    });
-  });
-
-  describe('Edit a trial with error', function () {
-    beforeEach(function () {
-      spyOn(TrialService, "editTrial").and.returnValue($q.reject({
-        data: {
-          message: 'An error occurred'
-        }
-      }));
-      controller.editTrial();
-      $scope.$apply();
+      it('should not close the modal', function () {
+        expect($state.modal.close).not.toHaveBeenCalled();
+      });
     });
 
-    it('should notify error', function () {
-      expect(Notification.error).toHaveBeenCalled();
-    });
+    describe('launchCustomerPortal()', function () {
+      var origCurrentTrial;
 
-    it('should not close the modal', function () {
-      expect($state.modal.close).not.toHaveBeenCalled();
+      beforeEach(function () {
+        origCurrentTrial = controller.currentTrial;
+        controller.currentTrial = {
+          customerOrgId: 'fake-customer-org-id',
+          customerName: 'fake-customer-name'
+        };
+        controller.launchCustomerPortal();
+      });
+
+      afterEach(function () {
+        controller.currentTrial = origCurrentTrial;
+      });
+
+      describe('if $scope.trial is defined...', function () {
+        it('should call $window.open()', function () {
+          expect($window.open).toHaveBeenCalled();
+        });
+
+        it('should call $state.href() with vm.currentTrial.customer* properties', function () {
+          expect($state.href).toHaveBeenCalledWith('login_swap', {
+            customerOrgId: 'fake-customer-org-id',
+            customerOrgName: 'fake-customer-name'
+          });
+        });
+      });
     });
   });
 

@@ -6,36 +6,29 @@
     .controller('ScheduleUpgradeConfigurationCtrl', ScheduleUpgradeConfigurationCtrl);
 
   /* @ngInject */
-  function ScheduleUpgradeConfigurationCtrl($scope, $translate, Authinfo, ScheduleUpgradeService, NotificationService, TimezoneService) {
+  function ScheduleUpgradeConfigurationCtrl($scope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService, TimezoneService) {
     var vm = this;
+    vm.state = 'syncing'; // 'error' | 'idle'
     vm.data = {}; // UI data
     vm.isAdminAcknowledged = true;
-    vm.state = 'syncing'; // 'error' | 'idle'
+    vm.postponed = false;
     vm.errorMessage = '';
+    vm.nextUpdate = null;
     vm.timeOptions = getTimeOptions();
     vm.dayOptions = getDayOptions();
     vm.timezoneOptions = getTimezoneOptions();
-    vm.acknowledge = function (data) {
-      return patch(data);
-    };
+    vm.acknowledge = patch;
+    vm.openModal = openModal;
+
+    ////////
+
     ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
       .then(function (data) {
-        vm.data = {
-          scheduleTime: {
-            label: labelForTime(data.scheduleTime),
-            value: data.scheduleTime
-          },
-          scheduleDay: {
-            label: labelForDay(data.scheduleDay),
-            value: data.scheduleDay
-          },
-          scheduleTimeZone: {
-            label: labelForTimezone(data.scheduleTimeZone),
-            value: data.scheduleTimeZone
-          }
-        };
-        vm.errorMessage = '';
+        vm.data = convertDataForUI(data);
         vm.isAdminAcknowledged = data.isAdminAcknowledged;
+        vm.postponed = data.postponed;
+        vm.nextUpdate = findNextUpdate();
+        vm.errorMessage = '';
         vm.state = 'idle';
       }, function (error) {
         vm.errorMessage = error.message;
@@ -48,8 +41,28 @@
       if (newValue === oldValue || _.isEmpty(oldValue)) {
         return;
       }
-      patch(newValue);
+      patch(newValue)
+        .then(function () {
+          vm.nextUpdate = findNextUpdate();
+        });
     }, true);
+
+    function convertDataForUI(data) {
+      return {
+        scheduleTime: {
+          label: labelForTime(data.scheduleTime),
+          value: data.scheduleTime
+        },
+        scheduleDay: {
+          label: labelForDay(data.scheduleDay),
+          value: data.scheduleDay
+        },
+        scheduleTimeZone: {
+          label: labelForTimezone(data.scheduleTimeZone),
+          value: data.scheduleTimeZone
+        }
+      };
+    }
 
     function labelForTime(time) {
       var currentLanguage = $translate.use();
@@ -127,15 +140,57 @@
           scheduleTimeZone: data.scheduleTimeZone.value,
           scheduleDay: data.scheduleDay.value
         })
-        .then(function () {
+        .then(function (data) {
           NotificationService.removeNotification('acknowledgeScheduleUpgrade');
-          vm.isAdminAcknowledged = true;
+          vm.isAdminAcknowledged = data.isAdminAcknowledged;
           vm.errorMessage = '';
           vm.state = 'idle';
         }, function (error) {
           vm.errorMessage = error.message;
           vm.state = 'error';
         });
+    }
+
+    function openModal(event) {
+      event.preventDefault();
+      $modal.open({
+        templateUrl: 'modules/hercules/schedule-upgrade-configuration/postpone-modal.html',
+        controller: 'PostponeModalController',
+        controllerAs: 'postponeModal',
+        resolve: {
+          data: function () {
+            return vm.data;
+          },
+          nextUpdate: function () {
+            return vm.nextUpdate;
+          },
+          serviceType: function () {
+            return vm.serviceType;
+          }
+        }
+      }).result.then(function (data) {
+        vm.postponed = data.postponed;
+        vm.nextUpdate = findNextUpdate();
+      });
+    }
+
+    function findNextUpdate() {
+      var now = moment.tz(vm.data.scheduleTimeZone.value);
+      var time = vm.data.scheduleTime.value.split(':');
+      var nextUpdate = moment.tz(vm.data.scheduleTimeZone.value)
+        .isoWeekday(vm.data.scheduleDay.value)
+        .hours(Number(time[0]))
+        .minutes(Number(time[1]));
+
+      // the .isoWeekday() from moment.js is not made to ALWAYS get the NEXT $day (i.e. monday)
+      // and always doing a +7 is not the right thing to do either
+      if (nextUpdate.isBefore(now)) {
+        nextUpdate.add(7, 'day');
+      }
+      if (vm.postponed) {
+        nextUpdate.add(7, 'day');
+      }
+      return nextUpdate.toDate();
     }
   }
 }());

@@ -24,10 +24,10 @@
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
-      controller: '',
-      url: '',
-      help: '',
-      actions: ['route', 'goto', 'routeToExtension']
+      controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
+      url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
+      help: $translate.instant('autoAttendant.routeCallMenuHelp'),
+      actions: ['route', 'goto', 'routeToUser', 'routeToVoiceMail', 'routeToHuntGroup']
     }];
 
     vm.actionPlaceholder = $translate.instant("autoAttendant.actionPlaceholder");

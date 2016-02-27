@@ -74,7 +74,8 @@
         percentage: 85,
         colorOne: Config.chartColors.dummyGrayLight,
         colorTwo: Config.chartColors.dummyGray,
-        balloon: false
+        balloon: false,
+        labelColorField: Config.chartColors.grayLight
       }];
     }
 

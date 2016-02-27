@@ -25,7 +25,7 @@
       it('should call activateUser', function () {
         expect(DigitalRiverService.activateUser).toHaveBeenCalled();
         $scope.$apply();
-        expect($state.go).toHaveBeenCalledWith('activatedUserSuccessPage');
+        expect($state.go).toHaveBeenCalledWith('activateUser.successPage');
       });
 
     });

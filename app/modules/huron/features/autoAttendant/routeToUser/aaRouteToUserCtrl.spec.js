@@ -262,6 +262,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
@@ -393,8 +394,39 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    describe('saveUiModel', function () {
-      it('should write UI entry back into UI model', function () {
+    describe('populateUi', function () {
+
+      it('should write UI entry back into UI model via populateUiModel', function () {
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        controller.menuKeyEntry.actions[0].value = users[0].id;
+
+        controller.populateUiModel();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.userSelected.id).toEqual(users[0].id);
+
+      });
+
+    });
+    describe('fromRouteCall overwrite', function () {
+      beforeEach(function () {
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+
+        aaUiModel[schedule].entries[0].addAction(action);
+
+      });
+
+      it('should overwrite user id from model via saveUiModel', function () {
+        $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope
@@ -404,12 +436,47 @@ describe('Controller: AARouteToUserCtrl', function () {
           name: users[0].displayName,
           id: users[0].id
         };
+
         controller.saveUiModel();
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(users[0].id);
+        expect(controller.menuEntry.actions[0].value).toEqual(users[0].id);
       });
+      it('should be able to create new User entry from Route Call', function () {
+        $scope.fromRouteCall = true;
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
+        expect(controller.menuEntry.actions[0].value).toEqual('');
+
+      });
+    });
+
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+        $scope.fromRouteCall = true;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+      });
+
+      it('should be able to create new User entry from Route Call', function () {
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
+        expect(controller.menuEntry.actions[0].value).toEqual('');
+
+      });
+
     });
 
   });

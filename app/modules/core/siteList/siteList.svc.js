@@ -20,10 +20,9 @@ angular.module('Core').service('SiteListService', [
   ) {
 
     var _this = this;
-    var allSitesWebexLicensesArray = [];
 
-    this.getAllSitesLicenseData = function (siteListGridData) {
-      var funcName = "getAllSitesLicenseData()";
+    this.updateLicenseTypesColumn = function (siteListGridData) {
+      var funcName = "updateLicenseTypesColumn()";
       var logMsg = "";
 
       WebExUtilsFact.getAllSitesWebexLicenseInfo().then(
@@ -34,7 +33,7 @@ angular.module('Core').service('SiteListService', [
           logMsg = funcName + ": " + "\n" +
             "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
 
-          allSitesWebexLicensesArray = allSitesLicenseInfo;
+          var allSitesWebexLicensesArray = allSitesLicenseInfo;
 
           siteListGridData.forEach(
             function processGridForLicense(siteRow) {
@@ -233,16 +232,15 @@ angular.module('Core').service('SiteListService', [
           $log.log(logMsg);
         } // getWebexLicenseInfoError()
       ); //getWebexLicenseInfo.then()
+    }; //updateLicenseTypesColumn()
 
-      return siteListGridData;
-    }; //getAllSitesLicenseData()
-
-    this.updateGrid = function (gridData) {
+    this.updateGrid = function (vm) {
       var funcName = "updateGrid()";
       var logMsg = "";
 
       // $log.log(funcName);
 
+      // make sure that we have the signed in admin user email before we update the columns
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
         updateGridColumns();
       } else {
@@ -260,6 +258,11 @@ angular.module('Core').service('SiteListService', [
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
         var logMsg = "";
+
+        vm.showGridData = true;
+        var gridData = vm.gridData;
+
+        _this.updateLicenseTypesColumn(gridData);
 
         gridData.forEach(
           function processGrid(siteRow) {
@@ -358,5 +361,4 @@ angular.module('Core').service('SiteListService', [
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumn()
   } // end top level function
-
 ]);
