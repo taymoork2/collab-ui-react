@@ -54,7 +54,7 @@ angular.module('Squared')
       }
 
       $scope.showToolsCard = function () {
-        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink;
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskCard;
       };
 
       $scope.tabs = [{
