@@ -887,8 +887,6 @@
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
-          var errMessage = null;
-
           webExUserSettingsModel.disableCancel = true;
 
           angular.element('#saveBtn').button('loading');
@@ -920,39 +918,6 @@
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
-          var blockDueToNoSession = false;
-          if (
-            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
-            ("false" != userSettings.meetingCenter)
-          ) {
-        	  blockDueToNoSession = true;
-          } else if (
-            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
-            ("false" == userSettings.trainingCenter)
-          ) {
-        	  blockDueToNoSession = true;
-          } else if (
-            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
-            ("false" == userSettings.supportCenter)
-          ) {
-        	  blockDueToNoSession = true;
-          } else if (
-            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
-            ("false" == userSettings.eventCenter)
-          ) {
-             blockDueToNoSession = false;
-          }
-
-          if (blockDueToNoSession) {
-            angular.element('#saveBtn').button('reset');
-            angular.element('#saveBtn2').button('reset');
-            webExUserSettingsModel.disableCancel = false;
-            webExUserSettingsModel.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
-            Notification.notify([errMessage], 'error');
-            return;
-          }
-
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
             !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
@@ -963,7 +928,7 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
