@@ -5,10 +5,10 @@ describe('Invite User and Check Buckets', function () {
     utils.dumpConsoleErrors();
   });
 
+  var addEmail = utils.randomTestGmailwithSalt('buckets');
+
   //log in as admin with an account
   describe('Account Add User', function () {
-    var addEmail = utils.randomTestGmailwithSalt('buckets');
-
     it('should login and view users', function () {
       login.login('account-admin', '#/users');
     });
@@ -79,6 +79,30 @@ describe('Invite User and Check Buckets', function () {
       it('should add users successfully', function () {
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'onboarded successfully');
+        utils.expectIsNotDisplayed(users.manageDialog);
+      });
+
+      it('should logout', function() {
+        navigation.logout();
+      });
+    });
+
+    describe('Should confirm non-Hybrid Call Connect case', function() {
+      it('should login pbr-admin', function() {
+        login.login('pbr-admin', '#/users');
+      });
+
+      it('should confirm Hybrid Services shows "Call Service" only', function() {
+        navigation.clickUsers();
+        utils.click(users.addUsers);
+        utils.expectIsDisplayed(users.manageDialog);
+
+        utils.sendKeys(users.addUsersField, addEmail);
+        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+        utils.click(users.nextButton);
+
+        utils.expectTextToBeSet(users.hybridServices_UC, 'Call Service');        
+        utils.click(users.closeAddUsers);
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
