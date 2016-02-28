@@ -1,7 +1,14 @@
-<div class="leader-board row" ng-init="init()" ng-class="{ 'is-customer-admin': isCustomerAdmin, 'ft-atlas-trial-conversion': isAtlasTrialConversion }">
+<div class="leader-board row" ng-init="init()" ng-class="{
+    'is-customer-admin': isCustomerAdmin,
+    'ft-atlas-trial-conversion': isAtlasTrialConversion,
+    'has-active-trial': hasActiveTrial
+  }">
   <cr-trial-notice-banner></cr-trial-notice-banner>
   <div class="subscription" ng-repeat="subscription in buckets">
-    <div ng-show="buckets.length > 1 && subscription.subscriptionId !== 'undefined'" class="subscriptionId"> Subscription ID {{subscription.subscriptionId}}</div>
+    <div class="subscriptionId"
+      ng-class="{ 'has-active-trial': subscription.hasActiveTrial }"
+      ng-show="buckets.length > 1 && subscription.subscriptionId !== 'undefined'">
+      Subscription ID {{subscription.subscriptionId}}</div>
     <cs-card class="small header-bar" ng-show="subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center title">

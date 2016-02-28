@@ -114,6 +114,66 @@
     }
 }
 
+.support-logs {
+  background-color: $white;
+}
+
+.support-logs table {
+  background-color: $white;
+}
+
+.support-logs .searchbox input {
+  font-size: .875rem;
+  width: 25rem;
+}
+
+.support-logs .searchbox .searchinput > input, .support-logs .searchbox .searchinput > .input {
+  max-width: 500px;
+}
+
+.support-logs .gridStyle {
+  height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
+}
+
+.support-logs .grid-refresh {
+  margin-top: 32px;
+}
+
+.support-logs .empty-list {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  color: $gray-darker;
+}
+
+.support-logs .empty-list p {
+  font-size: 1rem;
+  padding: 24px 0 0 32px;
+}
+
+.support-logs .ui-grid-header-cell.header-email-address {
+  padding-left: 12px;
+}
+
+.support-logs .ui-grid-header-cell.header-client-log .ui-grid-cell-contents,
+.support-logs .ui-grid-header-cell.header-call-flow-logs .ui-grid-cell-contents{
+  text-align: center;
+}
+
+.support-logs .ui-grid-cell.email-address {
+  padding-left: 12px;
+}
+
+.support-logs .ui-grid-row-selected .ui-grid-cell.client-log .icon,
+.support-logs .ui-grid-row-selected .ui-grid-cell.call-flow-logs .icon {
+  color: $white;
+}
+
+/*.support-logs .ui-grid-header {
+  border-bottom: 0;
+}*/
+
 
 //--------- billing ---------//
 .order-list {

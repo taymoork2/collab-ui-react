@@ -175,7 +175,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
-    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support.",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support. ",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -483,7 +483,7 @@
   },
   "supportPage": {
     "title": "Support",
-    "subtitleLogs": "Search for logs",
+    "subtitleLogs": "Search support logs",
     "listlogsbtn": "Search",
     "noResults": "No Results.",
     "searching": "Searching...",
@@ -528,7 +528,7 @@
     "tx": "Tx",
     "errCallInfoQuery": "Failed to retrieve call info. Status: {{status}}",
     "subTitleCallFlow": "Call Flow",
-    "downloading": "This download might take up to 5 minutes. Please be patient...",
+    "downloading": "This download might take up to 5 minutes.",
     "operational": "All systems operational",
     "error": "Error in system",
     "supportResources": "Support Resources",
@@ -1774,7 +1774,8 @@
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "getLicenseIsTrialError": "Failed to get trial state for COMMUNICATION license."
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -2005,7 +2006,7 @@
       "unit": "Unit",
       "city": "City",
       "zip": "Zip",
-      "skip": "Skip and remove Call",
+      "skip": "Skip and add numbers later",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
       "addrFound": "This is the address found in the system.",
@@ -2148,8 +2149,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getHuronInternationalDialingTrialOverrideError": "Failed to get international dialing override info."
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
