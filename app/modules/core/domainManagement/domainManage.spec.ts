@@ -7,7 +7,6 @@ namespace domainManagement {
       addDomain: undefined,
       domainList: [],
       getVerifiedDomains: undefined,
-      getVerificationTokens: undefined,
       states: {pending: 'pending'}
     };
     beforeEach(angular.mock.module('Core'));
@@ -21,7 +20,6 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
-        DomainManagementService.getVerificationTokens = sinon.stub().returns(undefined);
         ctrl = $controller('DomainManagementCtrl', {
           Authinfo: {getOrgId: sinon.stub().returns('org-id')},
           CiService: {

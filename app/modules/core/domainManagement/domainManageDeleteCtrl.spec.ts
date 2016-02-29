@@ -7,7 +7,6 @@ namespace domainManagement {
       addDomain: undefined,
       domainList: [],
       getVerifiedDomains: undefined,
-      getVerificationTokens: undefined,
       unclaimDomain: undefined,
       unverifyDomain: undefined,
       states: {pending: 'pending', verified: 'verified'}

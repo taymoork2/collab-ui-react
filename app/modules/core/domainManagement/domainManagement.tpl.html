@@ -36,7 +36,7 @@
                 </li>
                 <li>
                   <a ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-show="domain.status==='pending' && domain.token"
+                     ng-show="domain.status==='pending'"
                      translate="domainManagement.actions.instructions"></a>
                 </li>
               </ul>
@@ -44,7 +44,7 @@
           </td>
           <td>
             <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                    ng-if="domain.status==='pending' && domain.token"
+                    ng-if="domain.status==='pending'"
                     class="btn--cta verify-btn" translate="domainManagement.verifyDomain"></button>
           </td>
         </tr>

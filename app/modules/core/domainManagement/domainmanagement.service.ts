@@ -48,11 +48,11 @@ class DomainManagementService {
     return this._states;
   }
 
-  get domainList() {
+  public get domainList() {
     return this._domainList;
   }
 
-  addDomain(domainToAdd) {
+  public addDomain(domainToAdd) {
 
     //we always normalize to lowercase.
     domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
@@ -66,7 +66,7 @@ class DomainManagementService {
     return this.getToken(domainToAdd);
   }
 
-  unverifyDomain(domain) {
+  public unverifyDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
       let existingDomain = _.find(this._domainList, {text: domain});
@@ -113,7 +113,7 @@ class DomainManagementService {
     return deferred.promise;
   }
 
-  claimDomain(domain) {
+  public claimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
       this.$http.post(this._claimDomainUrl, {
@@ -137,7 +137,7 @@ class DomainManagementService {
     return deferred.promise;
   }
 
-  unclaimDomain(domain) {
+  public unclaimDomain(domain) {
     let deferred = this.$q.defer();
     if (domain) {
       this.$http.delete(this._claimDomainUrl + '/' + window.btoa(domain)).then(() => {
@@ -158,7 +158,7 @@ class DomainManagementService {
     return deferred.promise;
   }
 
-  getVerifiedDomains(disableCache) {
+  public getVerifiedDomains(disableCache) {
     let deferred = this.$q.defer();
     let scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
 
@@ -180,40 +180,7 @@ class DomainManagementService {
     return deferred.promise;
   }
 
-  getVerificationTokens():void {
-
-    let pendingDomains = _.filter(this._domainList, {status: this.states.pending});
-
-    if (!pendingDomains || pendingDomains.length < 1)
-      return;
-
-    _.each(pendingDomains, domain => {
-      this.getToken(domain.text);
-    });
-  }
-
-  private loadDomainlist(domainArray, domainStatus, overridePredicate) {
-
-    _.each(domainArray, dom => {
-
-      let domLower = dom.toLowerCase();
-      let alreadyAddedMatch = _.find(this._domainList, {text: domLower});
-
-      if (!alreadyAddedMatch || (overridePredicate && overridePredicate(alreadyAddedMatch))) {
-
-        if (alreadyAddedMatch)
-          _.remove(this._domainList, {text: domLower});
-
-        this._domainList.push({
-          text: domLower,
-          token: '',
-          status: domainStatus
-        });
-      }
-    });
-  }
-
-  private getToken(domain) {
+  public getToken(domain) {
 
     let deferred = this.$q.defer();
 
@@ -238,6 +205,27 @@ class DomainManagementService {
     });
 
     return deferred.promise;
+  }
+
+  private loadDomainlist(domainArray, domainStatus, overridePredicate) {
+
+    _.each(domainArray, dom => {
+
+      let domLower = dom.toLowerCase();
+      let alreadyAddedMatch = _.find(this._domainList, {text: domLower});
+
+      if (!alreadyAddedMatch || (overridePredicate && overridePredicate(alreadyAddedMatch))) {
+
+        if (alreadyAddedMatch)
+          _.remove(this._domainList, {text: domLower});
+
+        this._domainList.push({
+          text: domLower,
+          token: '',
+          status: domainStatus
+        });
+      }
+    });
   }
 }
 angular.module('Core')

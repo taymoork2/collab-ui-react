@@ -56,6 +56,7 @@ namespace domainManagement {
         let service = {
           domainList: [{text: "superdomain.com", status: 'verified'}],
           verifyDomain: sinon.stub().returns(deferred.promise),//$q.reject("error-in-verify")),
+          getToken: sinon.stub().returns($q.resolve('faketoken')),
           states: DomainManagementService.states
         };
 
@@ -113,8 +114,8 @@ namespace domainManagement {
           expect(ctrl.operationAllowed).toBeFalsy();
         });
 
-        it('should allow verify of same domain as user', ()=> {
-          let ctrl, domain = {text: 'example.com'};
+        it('should allow verify of same domain as user if has token', ()=> {
+          let ctrl, domain = {text: 'example.com' , token: 'thetoken'};
           ctrl = domainManagmentVerifyCtrlFactory(
             DomainManagementService,
             {
@@ -127,10 +128,25 @@ namespace domainManagement {
 
           expect(ctrl.operationAllowed).toBeTruthy();
         });
+
+        it('should not allow verify of same domain as user if no token', ()=> {
+          let ctrl, domain = {text: 'example.com'};
+          ctrl = domainManagmentVerifyCtrlFactory(
+            DomainManagementService,
+            {
+              name: "testuser",
+              isLoaded: true,
+              domain: 'example.com'
+            },
+            domain
+          );
+
+          expect(ctrl.operationAllowed).toBeFalsy();
+        });
       });
 
       describe("with previous domains verified", ()=> {
-        let ctrl, domain = {text: 'anydomain.com'};
+        let ctrl, domain = {text: 'anydomain.com', token: 'sometoken'};
         beforeEach(()=> {
           DomainManagementService.domainList = [{text: "verifieddomain.com", status: 'verified'}];
           ctrl = domainManagmentVerifyCtrlFactory(
@@ -186,6 +202,10 @@ namespace domainManagement {
 
     verifyDomain(domain) {
       this._verifyDomainInvoked.text = domain;
+      return this.$q.resolve();
+    }
+
+    getToken(domain) {
       return this.$q.resolve();
     }
 

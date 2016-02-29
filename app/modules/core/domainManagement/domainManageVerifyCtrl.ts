@@ -20,6 +20,12 @@ namespace domainManagement {
         if (this.domainName != this._loggedOnUser.domain)
           this._error = $translate.instant('domainManagement.verify.preventLockoutError', {domain: this._loggedOnUser.domain});
       }
+
+      if (this._domain && this._domain.text && !this._domain.token) {
+        DomainManagementService.getToken(this._domain.text).then((res) => {
+          this._domain.token = res;
+        })
+      }
     }
 
     get domainName() {
@@ -41,6 +47,9 @@ namespace domainManagement {
     get operationAllowed() {
       //input validation:
       if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
+        return false;
+
+      if (!this.domain.token)
         return false;
 
       return !this._error;
