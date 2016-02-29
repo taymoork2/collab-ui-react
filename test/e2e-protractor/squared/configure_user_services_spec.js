@@ -7,7 +7,7 @@ describe('Configuring services per-user', function () {
 
   var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';
   var absolutePath = utils.resolvePath(file);
-  var fileText = 'First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\r\n';
+  var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
 
   var i;
   var bImportUsers = false;
@@ -17,13 +17,18 @@ describe('Configuring services per-user', function () {
   var numUsers = 10 * 3; // batch size is 10
   for (i = 0; i < numUsers; i++) {
     userList[i] = utils.randomTestGmailwithSalt('config_user');
-    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
+    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',f,t,t,f\r\n';
   }
 
   // Make file for import CSV testing
   utils.writeFile(absolutePath, fileText);
 
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
+    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 
@@ -234,8 +239,12 @@ describe('Configuring services per-user', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-
     utils.click(inviteusers.bulkUpload);
+    utils.click(inviteusers.nextButton);
+  });
+
+  it('should land to the download template section', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.nextButton);
   });
 
@@ -243,15 +252,6 @@ describe('Configuring services per-user', function () {
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
     bImportUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
-    utils.click(inviteusers.nextButton);
-  });
-
-  it('should land to assign services section', function () {
-    // Need a license for valid HS services
-    utils.click(users.paidMtgCheckbox);
-
-    // Select hybrid services
-    utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
   });
 

@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService;
+  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService, TrialPstnService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_, _TrialPstnService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -17,6 +17,7 @@ describe('Controller: TrialAddCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     EmailService = _EmailService_;
     FeatureToggleService = _FeatureToggleService_;
+    TrialPstnService = _TrialPstnService_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
@@ -55,7 +56,7 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have correct navigation state order', function () {
-    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers']);
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
   });
 
   it('should transition state', function () {
@@ -67,6 +68,40 @@ describe('Controller: TrialAddCtrl', function () {
   it('should close the modal', function () {
     controller.closeDialogBox();
     expect($state.modal.close).toHaveBeenCalled();
+  });
+
+  it('should test that if the current and next state are removed, then it can still find the next value', function () {
+    controller.navOrder = [1, 2, 3, 4, 5, 6];
+    controller.navStates = [1, 4];
+    $state.current.name = 2;
+    expect(controller.getNextState()).toEqual(4);
+  });
+
+  it('should set call trial to false and disable pstn trial', function () {
+    controller.pstnTrial.enabled = true;
+    controller.callTrial.enabled = false;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeFalsy();
+  });
+
+  it('should have call trial and not skip pstn after watch', function () {
+    controller.supportsHuronCallTrials = true;
+    controller.hasCallEntitlement = true;
+    controller.pstnTrial.enabled = false;
+    controller.callTrial.enabled = true;
+    controller.pstnTrial.skipped = false;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeTruthy();
+  });
+
+  it('should have call trial and skip pstn after watch', function () {
+    controller.supportsHuronCallTrials = true;
+    controller.hasCallEntitlement = true;
+    controller.pstnTrial.enabled = false;
+    controller.callTrial.enabled = true;
+    controller.pstnTrial.skipped = true;
+    $scope.$apply();
+    expect(controller.pstnTrial.enabled).toBeFalsy();
   });
 
   describe('Start a new trial', function () {
@@ -148,6 +183,7 @@ describe('Controller: TrialAddCtrl', function () {
     describe('With Squared UC', function () {
       beforeEach(function () {
         controller.callTrial.enabled = true;
+        controller.pstnTrial.enabled = false;
       });
 
       it('should have Squared UC offer', function () {
@@ -158,6 +194,38 @@ describe('Controller: TrialAddCtrl', function () {
         spyOn(HuronCustomer, 'create').and.returnValue($q.when());
         controller.startTrial();
         $scope.$apply();
+        expect(HuronCustomer.create).toHaveBeenCalled();
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+        expect(Notification.notify.calls.count()).toEqual(1);
+      });
+
+      it('error should notify error', function () {
+        spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
+        controller.startTrial();
+        $scope.$apply();
+        expect(Notification.errorResponse).toHaveBeenCalled();
+        expect(Notification.errorResponse.calls.count()).toEqual(1);
+      });
+    });
+
+    describe('With Squared UC and PSTN', function () {
+      beforeEach(function () {
+        controller.callTrial.enabled = true;
+        controller.pstnTrial.enabled = true;
+      });
+
+      it('should have Squared UC offer', function () {
+        expect(controller.callTrial.enabled).toBeTruthy();
+        expect(controller.pstnTrial.enabled).toBeTruthy();
+      });
+
+      it('should notify success', function () {
+        spyOn(HuronCustomer, 'create').and.returnValue($q.when());
+        spyOn(TrialPstnService, 'createPstnEntity').and.returnValue($q.when());
+        controller.startTrial();
+        $scope.$apply();
+        expect(HuronCustomer.create).toHaveBeenCalled();
+        expect(TrialPstnService.createPstnEntity).toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
         expect(Notification.notify.calls.count()).toEqual(1);
       });

@@ -23,6 +23,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
+    this.getCsvStates = function () {
+      return _this.csvStates;
+    }; // getCsvStates()
+
     this.csvStatus = function (siteUrl) {
       var funcName = 'csvStatus()';
       var logMsg = '';
@@ -30,6 +34,18 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       // $log.log(logMsg);
+
+      var errorResult = {
+        'siteUrl': siteUrl,
+        'errorId:': null,
+        'errorDesc': null
+      };
+
+      var successResult = {
+        'siteUrl': siteUrl,
+        'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
+        'completionInfo': null // not null only if status is expCompleted or impCompleted
+      };
 
       var deferredCsvStatus = $q.defer();
 
@@ -40,18 +56,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          var errorResult = {
-            'siteUrl': siteUrl,
-            'errorId:': null,
-            'errorDesc': null
-          };
-
-          var successResult = {
-            'siteUrl': siteUrl,
-            'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
-            'completionInfo': null // not null only if status is expCompleted or impCompleted
-          };
-
           deferredCsvStatus.resolve(successResult);
         },
 
@@ -59,25 +63,12 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.error()";
           var logMsg = "";
 
-          var errorResult = {
-            'siteUrl': siteUrl,
-            'errorId:': null,
-            'errorDesc': null
-          };
-
           deferredCsvStatus.reject(errorResult);
         }
       );
 
       return deferredCsvStatus.promise;
       /*
-      var result = {
-        'siteUrl': siteUrl,
-        'result:': null,
-        'status': null, // null, expInProgress, expCompleted, impInProgress, impCompleted
-        'completionInfo': null // not null only if status is expCompleted or impCompleted
-      };
-      
       return WebExRestApiFact.csvStatusReq(
         siteUrl
       ).then(

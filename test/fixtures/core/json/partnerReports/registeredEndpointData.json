@@ -1,7 +1,7 @@
 {
   "data": [{
     "details": {
-      "orgId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
       "deviceRegistrationCountTrend": "4",
       "yesterdaysDeviceRegistrationCount": "2",
       "registeredDevicesTrend": "5",
@@ -11,7 +11,7 @@
     }
   }, {
     "details": {
-      "orgId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
       "deviceRegistrationCountTrend": "-4",
       "yesterdaysDeviceRegistrationCount": "2",
       "registeredDevicesTrend": "-5",

@@ -355,7 +355,8 @@
     "percentage": 85,
     "colorOne": "#F3F3F3",
     "colorTwo": "#ECECEC",
-    "balloon": false
+    "balloon": false,
+    "labelColorField": "#ccc"
   }],
   "activeUser": {
     "one": [{

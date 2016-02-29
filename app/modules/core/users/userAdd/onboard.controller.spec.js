@@ -61,8 +61,6 @@ describe('OnboardCtrl: Ctrl', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
 
-    getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -72,8 +70,6 @@ describe('OnboardCtrl: Ctrl', function () {
       }
     });
 
-    spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-    spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardUsers');
     spyOn(Userservice, 'bulkOnboardUsers');
@@ -456,43 +452,6 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.populateConf();
       expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
       expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
-    });
-  });
-
-  describe('getLicensesUsage', function () {
-
-    describe('for single subscriptions', function () {
-      beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.singleSub));
-        initController();
-      });
-
-      it('should verify that there is one subscriptionId', function () {
-        expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
-        expect(Authinfo.isInitialized).toHaveBeenCalled();
-        expect($scope.oneBilling).toEqual(true);
-        expect($scope.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
-        expect($scope.showMultiSubscriptions('srvcid-integ-uitest-1a', false)).toEqual(true);
-      });
-    });
-
-    describe('for multiple subscriptions', function () {
-      beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.multiSub));
-        initController();
-      });
-
-      it('should verify that there are multiple subscriptionIds', function () {
-        expect($scope.oneBilling).toEqual(false);
-        expect($scope.subscriptionOptions).toEqual(['svcid-integ-sunnyway-1a', 'svcid-integ-sunnyway-1', undefined]);
-        expect($scope.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
-        expect($scope.showMultiSubscriptions('svcid-integ-sunnyway-1a', false)).toEqual(true);
-      });
-
-      it('should verify that there is a trial subscription', function () {
-        expect($scope.oneBilling).toEqual(false);
-        expect($scope.showMultiSubscriptions('', true)).toEqual(true);
-      });
     });
   });
 

@@ -66,11 +66,7 @@ exports.config = {
 
     global.isProductionBackend = browser.params.isProductionBackend === 'true';
 
-    global.log = function (message) {
-      if (browser.params.log == 'true') {
-        console.log(message);
-      }
-    };
+    global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
     jasmine.getEnv().addReporter(
@@ -200,3 +196,25 @@ exports.config = {
   // than the maximum time your application needs to stabilize between tasks.
   allScriptsTimeout: VERY_LONG_TIMEOUT
 };
+
+function Logger() {
+  var lastLogMessage = '';
+  var lastLogMessageCount = 0;
+
+  function log(message) {
+    if (log.verbose || browser.params.log === 'true') {
+      if (lastLogMessage === message) {
+        lastLogMessageCount++;
+      } else {
+        if (lastLogMessage && lastLogMessageCount) {
+          console.log('(Repeated ' + lastLogMessageCount + ' times...)');
+        }
+        lastLogMessage = message;
+        lastLogMessageCount = 0;
+        console.log(message);
+      }
+    }
+  }
+
+  return log;
+}
