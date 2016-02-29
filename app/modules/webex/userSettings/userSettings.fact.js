@@ -924,25 +924,21 @@
 
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true) &&
             (userSettings.meetingCenter != "true")
           ) {
             blockDueToNoSession = true;
           } else if (
             (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true) &&
             (userSettings.trainingCenter != "true")
           ) {
             blockDueToNoSession = true;
           } else if (
             (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true) &&
             (userSettings.eventCenter != "true")
           ) {
             blockDueToNoSession = true;
           } else if (
             (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true) &&
             (userSettings.supportCenter != "true")
           ) {
             blockDueToNoSession = true;
