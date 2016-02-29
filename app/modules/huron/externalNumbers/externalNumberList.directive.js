@@ -13,7 +13,8 @@
         numbers: '=',
         countTranslateKey: '@',
         externalNumbers: '=',
-        questionTooltip: '@'
+        tooltipText: '@',
+        tooltipClass: '@'
       }
     };
 

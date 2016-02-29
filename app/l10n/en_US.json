@@ -1789,7 +1789,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "editNumbers": "Edit Phone Numbers",
-    "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If you feel it has took longer than expected, please contact the provider.",
+    "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
     "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
