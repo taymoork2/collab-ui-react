@@ -254,7 +254,6 @@
           return hasProOrStdMeetingCenter;
         }, //hasProOrStdMeetingCenter
 
-
         isUserLevelPMREnabled: function () {
           var user = this.getUserSettingsModel();
           var hasPMR = user.pmr.value;
@@ -292,7 +291,6 @@
             (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
           ) ? true : false;
 
-          validLicenseEntitlements = true;
           return validLicenseEntitlements;
         }, // updateCenterLicenseEntitlements()
 
@@ -920,37 +918,34 @@
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
-          
           // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
           // once block save flag has been set to true, skip checking other centers and go straight to block save
           var blockDueToNoSession = false;
 
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true)
+            (blockDueToNoSession != true) &&
+            (userSettings.meetingCenter != "true")
           ) {
-            blockDueToNoSession = (userSettings.meetingCenter == "true") ? false : true;
-          }
-
-          if (
+            blockDueToNoSession = true;
+          } else if (
             (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true)
+            (blockDueToNoSession != true) &&
+            (userSettings.trainingCenter != "true")
           ) {
-            blockDueToNoSession = (userSettings.trainingCenter == "true") ? false : true;
-          }
-
-          if (
+            blockDueToNoSession = true;
+          } else if (
             (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true)
+            (blockDueToNoSession != true) &&
+            (userSettings.eventCenter != "true")
           ) {
-            blockDueToNoSession = (userSettings.eventCenter == "true") ? false : true;
-          }
-
-          if (
+            blockDueToNoSession = true;
+          } else if (
             (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
-            (blockDueToNoSession != true)
+            (blockDueToNoSession != true) &&
+            (userSettings.supportCenter != "true")
           ) {
-            blockDueToNoSession = (userSettings.supportCenter == "true") ? false : true;
+            blockDueToNoSession = true;
           }
 
           if (blockDueToNoSession) {
@@ -958,16 +953,15 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            this.errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
             Notification.notify([errMessage], 'error');
             $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
             return;
           }
 
-          
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
-            !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);     
+            !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
           $log.log("DURE blockDueToPMR=" + blockDueToPMR);
 
           if (blockDueToPMR) {
@@ -975,7 +969,7 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            this.errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
