@@ -31,8 +31,6 @@
     vm.init = init;
     vm.save = save;
     vm.resetSettings = resetSettings;
-    vm.getAssignedNumber = getAssignedNumber;
-    vm.getServiceNumber = getServiceNumber;
 
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
@@ -44,7 +42,7 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
-    vm.serviceNumberWarning = false;
+    vm.assignedNumbers = [];
 
     vm.model = {
       site: {
@@ -76,6 +74,7 @@
       internationalDialingUuid: null,
       showServiceAddress: false,
       serviceNumber: {},
+      serviceNumberWarning: false
     };
 
     vm.validations = {
@@ -464,7 +463,7 @@
       hideExpression: '!model.showServiceAddress',
       expressionProperties: {
         'templateOptions.isWarn': function () {
-          return vm.serviceNumberWarning;
+          return vm.model.serviceNumberWarning;
         }
       }
     }, {
@@ -652,7 +651,7 @@
                 label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
               };
             } else {
-              vm.serviceNumberWarning = true;
+              vm.model.serviceNumberWarning = true;
             }
 
           });
@@ -1242,18 +1241,12 @@
       }
     });
 
-    function getAssignedNumber() {
+    $scope.$watchGroup([function () {
       return vm.assignedNumbers;
-    }
-
-    function getServiceNumber() {
-      return vm.model.serviceNumber.pattern;
-    }
-
-    $scope.$watchGroup(['settings.getAssignedNumber()', 'settings.getServiceNumber()'], function (newValues, oldValues) {
-      if (!_.includes(newValues, undefined)) {
-        vm.serviceNumberWarning = isNotAssignedNumber(newValues[0], newValues[1]);
-      }
+    }, function () {
+      return vm.model.serviceNumber;
+    }], function (newValues, oldValues) {
+      vm.model.serviceNumberWarning = isNotAssignedNumber(newValues[0], _.get(newValues[1], 'pattern'));
     });
   }
 })();
