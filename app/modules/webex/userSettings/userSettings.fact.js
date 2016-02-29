@@ -65,16 +65,14 @@
           return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
-        checkUserWebExEntitlement: function () {
-          var funcName = "checkUserWebExEntitlement";
+        checkUserWebExEntitlementOnAtlas: function () {
+          var funcName = "checkUserWebExEntitlementOnAtlas";
           var logMsg = "";
 
           webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.eventCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.supportCenter.isEntitledOnAtlas = false;
-
-          var deferredCheckUserWebExEntitlement = $q.defer();
 
           Orgservice.getValidLicenses().then(
             function getOrgLicensesSuccess(orgLicenses) {
@@ -156,8 +154,6 @@
                   }
                 } // checkLicense()
               ); // userLicenses.forEach(()
-
-              deferredCheckUserWebExEntitlement.resolve(null);
             }, // getOrgLicensesSuccess()
 
             function getOrgLicensesError(response) {
@@ -167,13 +163,9 @@
               logMsg = funcName + ": " + "\n" +
                 "response=" + JSON.stringify(response);
               $log.log(logMsg);
-
-              deferredCheckUserWebExEntitlement.reject(response);
             } // getOrgLicensesError()
           ); // Orgservice.getValidLicenses().then()
-
-          return deferredCheckUserWebExEntitlement.promise;
-        }, // checkUserWebExEntitlement()
+        }, // checkUserWebExEntitlementOnAtlas()
 
         initUserSettingsModel: function () {
           var funcName = "initUserSettingsModel()";
@@ -655,12 +647,6 @@
         initPanel: function () {
           var funcName = "initPanel()";
           var logMsg = "";
-
-          /*
-          logMsg = funcName + ": " +
-            "START";
-          $log.log(logMsg);
-          */
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');

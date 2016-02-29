@@ -1,11 +1,11 @@
 'use strict';
 
-describe('WebEx site list', function () {
+xdescribe('WebEx site list', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
 
-  it('should allow login as admin user', function () {
+  it('should allow login as admin user ' + sitelist.t31CSVToggleUser.testAdminUsername, function () {
     login.loginThroughGui(sitelist.t31CSVToggleUser.testAdminUsername, sitelist.t31CSVToggleUser.testAdminPassword);
   });
 

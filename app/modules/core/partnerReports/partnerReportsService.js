@@ -497,11 +497,7 @@
           angular.forEach(response.data.data, function (item, index, array) {
             if (angular.isDefined(item.details) && (item.details !== null)) {
               var returnObject = item.details;
-              if (angular.isArray(customer)) {
-                returnObject.customer = customer[index].label;
-              } else {
-                returnObject.customer = customer.label;
-              }
+              returnObject.customer = getCustomerName(customer, returnObject.orgId);
 
               returnObject.direction = NEGATIVE;
               if ((returnObject.registeredDevicesTrend === "NaN")) {
@@ -519,6 +515,20 @@
       }, function (error) {
         return returnErrorCheck(error, 'Loading registered endpoints for the selected customer(s) failed.', $translate.instant('registeredEndpoints.registeredEndpointsError'), []);
       });
+    }
+
+    function getCustomerName(customer, uuid) {
+      if (angular.isArray(customer)) {
+        var customerName = "";
+        angular.forEach(customer, function (org, orgIndex, orgArray) {
+          if (org.value === uuid) {
+            customerName = org.label;
+          }
+        });
+        return customerName;
+      } else {
+        return customer.label;
+      }
     }
 
     function getCustomerUuids(customer) {
