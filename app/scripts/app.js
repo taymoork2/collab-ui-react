@@ -23,6 +23,7 @@
 
 angular.module('Core', [
   'core.trial',
+  'core.onboard',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',

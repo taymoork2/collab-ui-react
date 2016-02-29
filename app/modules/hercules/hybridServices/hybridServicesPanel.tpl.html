@@ -8,16 +8,16 @@
 
       <div class="hs-extension-list">
         <div class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
-          <label class="cs-checkbox" ng-class="{'indentedCB':shouldAddIndent(extension.id,'squared-fusion-ec')}"
+          <label class="cs-checkbox" ng-class="{'indentedCB':vm.shouldAddIndent(extension.id,'squared-fusion-ec')}"
                  for="{{extension.id}}">
               <input type="checkbox"
                      ng-model="extension.entitlementState"
                      id="{{extension.id}}"
                      ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
                      ng-change="vm.setEntitlements(extension)">
-              <span ng-if="!isFusionEC() || (extension.id !== 'squared-fusion-uc')"
+              <span ng-if="extension.id !== 'squared-fusion-uc'"
                     translate="hercules.serviceNames.{{extension.id}}"></span>
-              <span ng-if="isFusionEC() && (extension.id == 'squared-fusion-uc')"
+              <span ng-if="extension.id == 'squared-fusion-uc'"
                     translate="hercules.serviceNames.squared-fusion-uc.full"></span>
           </label>
         </div>

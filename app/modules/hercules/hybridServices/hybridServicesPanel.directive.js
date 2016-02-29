@@ -3,28 +3,21 @@
 
   angular
     .module('Hercules')
-    .directive('hybridServicesPanel', hybridServicesPanel)
-    .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
+    .directive('hybridServicesPanel', hybridServicesPanel);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl($scope, HybridService) {
+  function Controller(HybridService) {
     var vm = this;
 
     vm.isEnabled = false;
     vm.extensions = [];
     vm.entitlements = [];
     vm.setEntitlements = setEntitlements;
+    vm.shouldAddIndent = shouldAddIndent;
 
-    $scope.shouldAddIndent = function (key, reference) {
+    function shouldAddIndent(key, reference) {
       return key === reference;
-    };
-
-    $scope.isFusionEC = function () {
-      var result = $.grep(vm.extensions, function (e) {
-        return e.id === 'squared-fusion-ec';
-      });
-      return (result.length > 0) && result[0].enabled;
-    };
+    }
 
     init();
 
@@ -48,10 +41,10 @@
 
     function setCheckbox(entitlement, val) {
       var state = (val) ? 'ACTIVE' : 'INACTIVE';
-      for (var i = 0; i < $scope.vm.extensions.length; i++) {
-        if ($scope.vm.extensions[i].id === entitlement) {
-          if ($scope.vm.extensions[i].entitlementState !== state) {
-            $scope.vm.extensions[i].entitlementState = state;
+      for (var i = 0; i < vm.extensions.length; i++) {
+        if (vm.extensions[i].id === entitlement) {
+          if (vm.extensions[i].entitlementState !== state) {
+            vm.extensions[i].entitlementState = state;
           }
           break;
         }
@@ -96,7 +89,7 @@
       },
       bindToController: true,
       controllerAs: 'vm',
-      controller: hybridServicesPanelCtrl,
+      controller: Controller,
       templateUrl: 'modules/hercules/hybridServices/hybridServicesPanel.tpl.html'
     };
 

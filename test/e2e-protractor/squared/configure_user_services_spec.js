@@ -4,6 +4,7 @@
 
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('config_solo');
+  var testUser2 = utils.randomTestGmailwithSalt('config_solo');
 
   var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';
   var absolutePath = utils.resolvePath(file);
@@ -205,7 +206,7 @@ describe('Configuring services per-user', function () {
     // Enter test email into edit box
     // Note, this should NOT be changed to first/last/email so that we can test both cases
     utils.click(users.emailAddressRadio);
-    utils.sendKeys(users.addUsersField, testUser);
+    utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2 );
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
 
@@ -213,18 +214,23 @@ describe('Configuring services per-user', function () {
     utils.click(users.paidMsgCheckbox);
 
     // Enable a hybrid service
-    utils.click(users.hybridServices_UC);
+    utils.click(users.hybridServices_UE);
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
 
     activate.setup(null, testUser);
+    activate.setup(null, testUser2);
 
     utils.searchAndClick(testUser);
     utils.expectIsDisplayed(users.messageService);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_EC, 'On');
     utils.click(users.closeSidePanel);
+    
+    // Cleanup
     utils.deleteUser(testUser);
+    utils.deleteUser(testUser2);
   });
 
   ///////////////////////////////////////////////////////////////
@@ -284,7 +290,9 @@ describe('Configuring services per-user', function () {
   afterAll(function () {
     // Delete file
     utils.deleteFile(absolutePath);
+    
     deleteUtils.deleteUser(testUser);
+    deleteUtils.deleteUser2(testUser);
 
     if (bImportUsers) {
       for (i = 0; i < userList.length; i++) {

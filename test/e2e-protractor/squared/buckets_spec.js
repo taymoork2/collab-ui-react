@@ -44,7 +44,7 @@ describe('Invite User and Check Buckets', function () {
         utils.expectIsDisplayed(users.communicationLicenses);
       });
 
-      it('click on Hybrid Services individually', function() {
+      it('click on Hybrid Services individually', function () {
         // Defualt is all check boxes unchecked
         utils.expectCheckbox(users.hybridServices_Cal, false);
         utils.expectCheckbox(users.hybridServices_UC, false);
@@ -82,28 +82,8 @@ describe('Invite User and Check Buckets', function () {
         utils.expectIsNotDisplayed(users.manageDialog);
       });
 
-      it('should logout', function() {
+      it('should logout', function () {
         navigation.logout();
-      });
-    });
-
-    describe('Should confirm non-Hybrid Call Connect case', function() {
-      it('should login pbr-admin', function() {
-        login.login('pbr-admin', '#/users');
-      });
-
-      it('should confirm Hybrid Services shows "Call Service" only', function() {
-        navigation.clickUsers();
-        utils.click(users.addUsers);
-        utils.expectIsDisplayed(users.manageDialog);
-
-        utils.sendKeys(users.addUsersField, addEmail);
-        utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-        utils.click(users.nextButton);
-
-        utils.expectTextToBeSet(users.hybridServices_UC, 'Call Service');        
-        utils.click(users.closeAddUsers);
-        utils.expectIsNotDisplayed(users.manageDialog);
       });
     });
 
