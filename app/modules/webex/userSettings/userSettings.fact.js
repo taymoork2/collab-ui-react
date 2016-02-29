@@ -254,48 +254,6 @@
           return hasProOrStdMeetingCenter;
         }, //hasProOrStdMeetingCenter
 
-        //returns true if WebEx center has at least one session type enabled.
-        //Purpose: must have at least one session type enabled, 
-        //otherwise, changes cannot be saved  
-        /* hasMinOneSessionTypeEnabled: function (sessionTypes) {
-          // $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
-          var hasMinOneSessionTypeEnabled = false;
-          var funcName = "hasMinOneSessionTypeEnabled()";
-          var logMsg = null;
-
-          sessionTypes.forEach(function (item) {
-            var mca = item.meetingCenterApplicable;
-            var eca = item.eventCenterApplicable;
-            var tca = item.trainingCenterApplicable;
-            var sca = item.supportCenterApplicable;
-            var sessionEnabled = item.sessionEnabled;
-
-            logMsg = funcName + "\n" +
-              "mca= " + mca + "\n" +
-              "eca= " + tca + "\n" +
-              "tca= " + tca + "\n" +
-              "sca= " + sca + "\n" +
-              "\n" +
-              "sessionEnabled= " + sessionEnabled;
-            $log.log(logMsg);
-
-            if (sessionEnabled && mca) {
-              hasMinOneSessionTypeEnabled = true;
-            }
-            if (sessionEnabled && eca) {
-              hasMinOneSessionTypeEnabled = true;
-            }
-            if (sessionEnabled && tca) {
-              hasMinOneSessionTypeEnabled = true;
-            }
-            if (sessionEnabled && sca) {
-              hasMinOneSessionTypeEnabled = true;
-            }
-          });
-          return hasMinOneSessionTypeEnabled;
-        },
-        hasMinOneSessionTypeEnabled
-        */
 
         isUserLevelPMREnabled: function () {
           var user = this.getUserSettingsModel();
