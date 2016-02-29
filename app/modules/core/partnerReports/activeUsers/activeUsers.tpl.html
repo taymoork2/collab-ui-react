@@ -43,8 +43,8 @@
         <span id="showActiveUsers" ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
         <span id="hideActiveUsrs" ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>
-      <div id="activeCarousel" class="pull-right" ng-show="nav.displayMostActive && (nav.activeUsersTotalPages > 1)">
-        <button type="button" class="actions-button btn--none" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3">
+      <div id="activeCarousel" class="pull-right" ng-show="nav.showMostActiveUsers && (nav.activeUsersTotalPages > 1)">
+        <button type="button" class="carousel-control" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3" ng-disabled="nav.activeUserCurrentPage <= 1">
           <i class='icon icon-chevron-left'></i>
         </button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[0])"
@@ -53,7 +53,7 @@
           ng-class="{'btn--primary': (nav.activeButton[1] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[1] !== nav.activeUserCurrentPage) }">{{nav.activeButton[1]}}</button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[2])" ng-show="nav.activeUsersTotalPages > 2"
           ng-class="{'btn--primary': (nav.activeButton[2] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[2] !== nav.activeUserCurrentPage) }">{{nav.activeButton[2]}}</button>
-        <button type="button" class="actions-button btn--none" ng-click="nav.pageForward()" ng-show="nav.activeUsersTotalPages > 3">
+        <button type="button" class="carousel-control" ng-click="nav.pageForward()" ng-show="nav.activeUsersTotalPages > 3" ng-disabled="nav.activeUserCurrentPage >= nav.activeUsersTotalPages">
           <i class='icon icon-chevron-right'></i>
         </button>
       </div>
