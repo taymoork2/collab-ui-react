@@ -2,6 +2,8 @@ class DomainManagementService {
 
   private _domainList = [];
 
+  private _enforceUsersInVerifiedAndClaimedDomains;
+
   private _states = {
     pending: 'pending',
     verified: 'verified',
@@ -50,6 +52,10 @@ class DomainManagementService {
 
   public get domainList() {
     return this._domainList;
+  }
+
+  public get enforceUsersInVerifiedAndClaimedDomains() {
+    return this._enforceUsersInVerifiedAndClaimedDomains;
   }
 
   public addDomain(domainToAdd) {
@@ -171,6 +177,8 @@ class DomainManagementService {
       this.loadDomainlist(data.verifiedDomains, this.states.verified, overrideIf => (overrideIf.status == this.states.pending));
 
       this.loadDomainlist(data.pendingDomains, this.states.pending, null);
+
+      this._enforceUsersInVerifiedAndClaimedDomains = true;
 
       deferred.resolve(this._domainList);
     }, err => {

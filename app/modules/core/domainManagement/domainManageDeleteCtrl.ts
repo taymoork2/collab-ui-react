@@ -73,8 +73,9 @@ namespace domainManagement {
       return this._domainToDelete && this._domainToDelete.text;
     }
 
-    get domainIsPending() {
-      return this._domainToDelete && this._domainToDelete.status == this.DomainManagementService.states.pending;
+    get showWarning() {
+      return this._domainToDelete && this.DomainManagementService.enforceUsersInVerifiedAndClaimedDomains &&
+        this._domainToDelete.status != this.DomainManagementService.states.pending;
     }
 
     get error() {
