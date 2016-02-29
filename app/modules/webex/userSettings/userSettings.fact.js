@@ -960,15 +960,15 @@
             webExUserSettingsModel.disableCancel2 = false;
             this.errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
             Notification.notify([errMessage], 'error');
-            $log.log("DURE blockDueToPMR=" + blockDueToPMR);
+            $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
             return;
           }
 
           
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
-            !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
-          $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
+            !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);     
+          $log.log("DURE blockDueToPMR=" + blockDueToPMR);
 
           if (blockDueToPMR) {
             angular.element('#saveBtn').button('reset');
