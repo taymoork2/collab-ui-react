@@ -12,6 +12,9 @@ var glob = require('glob');
 var log = $.util.log;
 var messageLogger = require('../utils/messageLogger.gulp')();
 var runSeq = require('run-sequence');
+var fs = require('fs');
+var _  = require('lodash');
+var util = require('gulp-util');
 
 // Lint E2E test files
 gulp.task('eslint:e2e', function () {
@@ -39,6 +42,7 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
       'analyze:jscs',
       'analyze:eslint',
       'json:verify',
+      'languages:verify',
       'plato',
     ], done);
   } else {
@@ -47,6 +51,7 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
       'analyze:jscs',
       'analyze:eslint',
       'json:verify',
+      'languages:verify',
     ], done);
   }
 
@@ -85,6 +90,7 @@ gulp.task('jsb', function (done) {
     'analyze:eslint',
     'eslint:e2e',
     'json:verify',
+    'languages:verify',
     done
     );
 });
@@ -95,16 +101,47 @@ gulp.task('jsb:verify', function (done) {
     'analyze:eslint',
     'eslint:e2e',
     'json:verify',
+    'languages:verify',
     done
     );
 });
 
-gulp.task('json:verify', function(done) {
+gulp.task('json:verify', function() {
   var jsonlint = require("gulp-jsonlint");
   return gulp.src(['./test/**/*.json', './app/**/*.json'])
     .pipe(jsonlint())
     .pipe(jsonlint.reporter())
     .pipe(jsonlint.failAfterError());
+});
+
+gulp.task('languages:verify', function(done) {
+  var L10N_DIR = 'app/l10n';
+  var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/ig;
+  var L10N_SOURCE = 'app/modules/core/l10n/languages.js';
+  
+  var languages = fs.readFileSync(L10N_SOURCE, "utf8").match(L10N_SOURCE_REGEX);
+
+  var files = fs.readdirSync(L10N_DIR).map(function(file) {
+    return file.replace('.json', '');
+  });
+
+  var missingFiles = _.difference(languages, files);
+  if (missingFiles.length) {
+    return done(new util.PluginError({
+      plugin: 'languages:verify',
+      message: 'Localization files are missing for the following languages: ' + missingFiles.join(', ')
+    }));
+  }
+
+  var missingRefs = _.difference(files, languages);
+  if (missingRefs.length) {
+    return done(new util.PluginError({
+      plugin: 'languages:verify',
+      message: 'The following localization files are not referenced in code: ' + missingRefs.join(', ')
+    }));
+  }
+
+  done();
 });
 
 // Create a visualizer report
