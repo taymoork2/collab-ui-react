@@ -65,6 +65,18 @@ namespace domainManagement {
       expect(DomainManagementService.unclaimDomain.callCount).toBe(1);
     });
 
+    it('delete a proper pending domain should invoke unverifyDomain on service', () => {
+      let ctrl = controllerFactory({text: 'test.example.com', status: 'pending'}, {email: sinon.stub()});
+      DomainManagementService.unclaimDomain = sinon.stub().returns($q.resolve());
+      DomainManagementService.unverifyDomain = sinon.stub().returns($q.resolve());
+
+      ctrl.deleteDomain();
+
+      $rootScope.$digest();
+      expect(DomainManagementService.unclaimDomain.callCount).toBe(0);
+      expect(DomainManagementService.unverifyDomain.callCount).toBe(1);
+    });
+
     let controllerFactory = (domain, user)=> {
       return $controller('DomainManageDeleteCtrl', {
         $stateParams: {domain: domain, loggedOnUser: user},
