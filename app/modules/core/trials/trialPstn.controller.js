@@ -6,11 +6,10 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TerminusResellerCarrierService, TrialCallService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
-    vm.callTrial = TrialCallService.getData();
     var customerId = Authinfo.getOrgId();
     var pstnTokenLimit = 5;
 
@@ -202,11 +201,15 @@
           reinitTokens();
         }, 100);
       }
+
+      if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
+        getStateInventory();
+      }
     }
 
     function skip(skipped) {
       vm.trialData.enabled = !skipped;
-      vm.callTrial.enabled = !skipped;
+      vm.trialData.skipped = skipped;
       $timeout($scope.trial.nextStep);
     }
 

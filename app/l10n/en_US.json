@@ -2010,7 +2010,7 @@
       "unit": "Unit",
       "city": "City",
       "zip": "Zip",
-      "skip": "Skip and remove Call",
+      "skip": "Skip and add numbers later",
       "popover": "Please provide information on the legal contact who can sign the contract",
       "addrRetry": "Use a different address",
       "addrFound": "This is the address found in the system.",
@@ -2402,7 +2402,16 @@
       "running": "Running",
       "needs_attention": "Needs attention",
       "alarm": "Alarm",
-      "Unknown": "Registering"
+      "Unknown": "Registering",
+      "nohosts": "No Hosts Registered"
+    },
+    "deleteGroup": {
+      "title": "Delete Cluster",
+      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
+      "errorHeader": "Unexpected Error",
+      "errorMessage": "Unable delete {{groupName}}.",
+      "keep": "Keep",
+      "delete": "Delete"
     },
     "clusters": {
       "listing": {
@@ -2415,9 +2424,9 @@
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
-      "deregisterCausesListItem1": "This system will no longer be accepting any calls.",
+      "deregisterCausesListItem1": "The system will no longer accept any calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
@@ -2486,7 +2495,8 @@
     "noCluster": "No Media Service Clusters Connected to Spark",
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
-    "moveHost": "MOVE HOST"
+    "moveHost": "MOVE HOST",
+    "deleteCluster": "DELETE CLUSTER"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",

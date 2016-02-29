@@ -331,7 +331,7 @@
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement) {
+      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 

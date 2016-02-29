@@ -75,5 +75,8 @@ describe('Test localization options for pages', function () {
   it('Should have loaded Locale #' + (n++) + ' without browser errors/exceptions/etc', function () {
     landing.expectSelectLanguageRange(19, 20);
   });
+  it('Should have loaded Locale #' + (n++) + ' without browser errors/exceptions/etc', function () {
+    landing.expectSelectLanguageRange(20, 21);
+  });
 
 });

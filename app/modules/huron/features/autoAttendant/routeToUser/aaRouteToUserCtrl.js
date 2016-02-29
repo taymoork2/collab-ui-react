@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineService) {
 
     var vm = this;
 
@@ -20,7 +20,8 @@
       by: 'name',
       order: 'ascending',
       maxCount: 10,
-      startAt: 0
+      startAt: 0,
+      minOffered: 5 // try to offer at least this many minimum matches (may require multiple GETs if lots of users don't have extensions or voicemail)
     };
 
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -138,34 +139,92 @@
       );
     }
 
+    // get extension's voicemail profile
+    function getVoicemailProfile(pattern) {
+      return LineService.query({
+        customerId: Authinfo.getOrgId(),
+        pattern: pattern
+      }).$promise.then(
+        function (response) {
+          // success
+          return response[0].voiceMailProfile;
+        },
+        function (response) {
+          // failure
+          return null;
+        }
+      );
+    }
+
+    vm.abortSearchPromise = null;
+
     // get list of users for the provided search string
     // also retrieves extension for user for display, but not for searching
-    function getUsers(searchStr) {
+    function getUsers(searchStr, startat) {
+
+      var abortSearchPromise = vm.abortSearchPromise;
+
+      // if we didn't get a start-at, we are starting over
+      if (!angular.isDefined(startat)) {
+        startat = vm.sort.startAt;
+        vm.users = [];
+        if (vm.abortSearchPromise) {
+          vm.abortSearchPromise.resolve();
+        }
+        vm.abortSearchPromise = $q.defer();
+        abortSearchPromise = vm.abortSearchPromise;
+      }
 
       var defer = $q.defer();
 
-      UserListService.listUsers(vm.sort.startAt, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
+      UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data, status) {
         if (data.success) {
-          vm.users = [];
+          var userInfoPromises = [];
           _.each(data.Resources, function (aUser) {
-            getUserExtension(aUser.id).then(function (extension) {
+            userInfoPromises.push(getUserExtension(aUser.id).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
+                // and for voicemail, only add to the list if they have a voicemail profile for the extension
+                if (angular.isDefined($scope.voicemail) && $scope.voicemail) {
+                  getVoicemailProfile(extension).then(function (voicemailProfile) {
+                    if (voicemailProfile) {
+                      vm.users.push({
+                        description: formatName(aUser, extension),
+                        id: aUser.id
+                      });
+                    }
+                  });
+                } else {
+                  // not voicemail, just add the user with extension
+                  vm.users.push({
+                    description: formatName(aUser, extension),
+                    id: aUser.id
+                  });
+                }
+              }
+            }, function (error) {
+              // if it's not found, there is no extension, don't add to list.
+              if (error.status != 404) {
+                // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
                 vm.users.push({
-                  description: formatName(aUser, extension),
+                  description: formatName(aUser, ''),
                   id: aUser.id
                 });
               }
-            }, function (error) {
-              // CMI user call failed, not clear if user has extension or not, show just the user in the UI
-              vm.users.push({
-                description: formatName(aUser, ''),
-                id: aUser.id
-              });
 
-            });
+            }));
           });
-          defer.resolve(data.Resources);
+          $q.all(userInfoPromises).then(function () {
+            // try to offer a minimum amount of matches.
+            // if enough users didn't make it past sanity checks,
+            // and we're still getting results back, then get some more.
+            if (_.size(vm.users) < vm.sort.minOffered && _.size(data.Resources) && !abortSearchPromise.promise.$$state.status) {
+              defer.resolve(getUsers(searchStr, startat + vm.sort.maxCount));
+            } else {
+              // otherwise we're done
+              defer.resolve(data.Resources);
+            }
+          });
         } else {
           defer.reject();
         }
