@@ -6,6 +6,10 @@
       <p translate="hercules.settings.call.feature"></p>
       <h6><strong translate="hercules.settings.call.awareHeading"></strong></h6>
       <p><span translate="hercules.settings.call.aware"></span><br><span style="color:#CCC" translate="hercules.settings.call.on"></span></p>
+      <div class="hercules-connect-setting"
+           ng-controller="DomainManagementCtrl as dv"
+           ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
+
       <h6 ng-if="expresswayServiceSettings.squaredFusionEcEntitled">
         <strong translate="hercules.settings.call.connectHeading"></strong>
         <span class="switch small right">
@@ -17,10 +21,6 @@
       </h6>
       <p translate="hercules.settings.call.connect"></p>
 
-      <div class="hercules-connect-setting"
-           ng-if="expresswayServiceSettings.squaredFusionEc"
-           ng-controller="DomainManagementCtrl as dv"
-           ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
       <div class="hercules-sip-settings"
            ng-if="expresswayServiceSettings.squaredFusionEc"
            ng-include
