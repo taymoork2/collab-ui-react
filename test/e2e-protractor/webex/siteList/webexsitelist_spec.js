@@ -1,6 +1,6 @@
 'use strict';
 
-describe('WebEx site list', function () {
+xdescribe('WebEx site list', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
