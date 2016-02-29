@@ -105,7 +105,7 @@
             _.extend(vm.trial.details.emergAddr, response);
           } else {
             vm.validation = false;
-            Notification.errorResponse('trialModal.pstn.error.noAddress');
+            Notification.error('trialModal.pstn.error.noAddress');
           }
           vm.addressLoading = false;
         });
@@ -113,6 +113,7 @@
 
     function skip(skipped) {
       vm.trial.enabled = !skipped;
+      vm.trial.skipped = skipped;
     }
 
     function resetAddress() {
