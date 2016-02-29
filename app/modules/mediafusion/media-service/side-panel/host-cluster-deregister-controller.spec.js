@@ -19,7 +19,6 @@ describe('Controller: HostClusterDeregisterController', function () {
     orgName = '123';
 
     MediaClusterService = {
-      deleteGroup: sinon.stub(),
       deleteCluster: sinon.stub()
     };
 
@@ -46,27 +45,10 @@ describe('Controller: HostClusterDeregisterController', function () {
       $window: windowMock,
       log: log
     });
-    sinon.spy(controller, 'deleteCluster');
-
   }));
 
   it('check if HostClusterDeregisterController is Defined', function () {
     expect(controller).toBeDefined();
-  });
-
-  it('check if Delete Group is called', function () {
-    spyOn(MediaClusterService, 'deleteGroup').and.returnValue($q.when());
-    controller.deleteCluster();
-    expect(MediaClusterService.deleteGroup).toHaveBeenCalled();
-    expect(controller.saving).toBe(false);
-
-  });
-
-  it('check if delete group is called with  assigned_property_sets', function () {
-
-    spyOn(MediaClusterService, 'deleteGroup').and.returnValue($q.when());
-    controller.deleteCluster();
-    expect(MediaClusterService.deleteGroup).toHaveBeenCalledWith(cluster.assigned_property_sets);
   });
 
   it('check if DeRegister is called', function () {

@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('GroupDetailsController',
 
     /* @ngInject */
-    function ($stateParams) {
+    function ($stateParams, $modal) {
 
       var vm = this;
       vm.displayName = null;
@@ -34,6 +34,19 @@ angular.module('Mediafusion')
           });
         });
         return _.toArray(alarms);
+      };
+
+      vm.deleteGroup = function () {
+        $modal.open({
+          resolve: {
+            groupName: function () {
+              return vm.displayName;
+            }
+          },
+          controller: 'DeleteClusterController',
+          controllerAs: "deleteClust",
+          templateUrl: 'modules/mediafusion/media-service/side-panel/delete-cluster-dialog.html'
+        });
       };
 
       vm.alarms = vm.alarmsSummary();

@@ -90,6 +90,25 @@ describe('MediaConverterService', function () {
 
   });
 
+  it('Ensure No duplicate clusters are added', function () {
+    var group = Service.aggregateClusters(clusterdata);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(3);
+
+  });
+
+  it('Ensure No duplicate clusters are added and empty clusters are shown', function () {
+    var grpData = ['bangalore'];
+    var group = Service.aggregateClusters(clusterdata, grpData);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(4);
+
+  });
+
   // cluster conversion
 
   it('should aggregate cluster status from hosts in cluster where connectors are running or disabled', function () {
