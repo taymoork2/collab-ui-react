@@ -35,11 +35,10 @@
       return clusterCache;
     };
 
-    var getAggegatedClusters = function (clusters) {
+    var getAggegatedClusters = function (clusters, groupList) {
       $log.log("In getAggregatedClusters");
       //$log.log("clusterCache : ", clusterCache);
-
-      return MediaConverterService.aggregateClusters(clusters);
+      return MediaConverterService.aggregateClusters(clusters, groupList);
     };
 
     var setProperty = function (clusterId, property, value) {

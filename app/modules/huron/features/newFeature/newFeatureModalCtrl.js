@@ -6,7 +6,7 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService, $modal, Config) {
     var vm = $scope;
 
     vm.features = [{
@@ -49,10 +49,19 @@
       if (featureCode === 'HG') {
         $state.go('huronHuntGroup');
       } else if (featureCode === 'AA') {
-        $state.go('huronfeatures.aabuilder', {
-          aaName: '',
-          aaTemplate: 'template1'
-        });
+
+        if (Config.isDev() || Config.isIntegration()) {
+          $modal.open({
+            templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
+            controller: 'AATypeSelectCtrl'
+          });
+        } else {
+          $state.go('huronfeatures.aabuilder', {
+            aaName: '',
+            aaTemplate: 'template1'
+          });
+        }
+
       }
       $modalInstance.close(featureCode);
     }

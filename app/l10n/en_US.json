@@ -1507,13 +1507,17 @@
     "builderTitle": "Auto Attendant Builder",
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
-    "builderNewStepInfo": "You can add actions here to add to your Auto Attendant.  Create as many as you want, and link them all together.",
-    "builderNewStepChoiceHelp": "Say Message - Play an uninterruptible recording to the caller",
+    "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
+    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
+    "actionSayMessageHint": "Play an uninterruptable message.",
     "actionPhoneMenu": "Phone Menu",
+    "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionRouteCall": "Route Call",
+    "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
+    "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
@@ -1638,7 +1642,12 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "routeExtNumPlaceHolder": "Enter Number"
+    "routeExtNumPlaceHolder": "Enter Number",
+    "newAAText": "Create New Auto Attendant",
+    "AABasic": "Basic",
+    "AABasicDesc": "Simple played messages with custom phone menu.",
+    "AACustom": "Custom",
+    "AACustomDesc": "Record a custom message and build your own phone menus."
   },
   "callPark": {
     "code": "CP",
@@ -2406,7 +2415,16 @@
       "running": "Running",
       "needs_attention": "Needs attention",
       "alarm": "Alarm",
-      "Unknown": "Registering"
+      "Unknown": "Registering",
+      "nohosts": "No Hosts Registered"
+    },
+    "deleteGroup": {
+      "title": "Delete Cluster",
+      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
+      "errorHeader": "Unexpected Error",
+      "errorMessage": "Unable delete {{groupName}}.",
+      "keep": "Keep",
+      "delete": "Delete"
     },
     "clusters": {
       "listing": {
@@ -2419,9 +2437,9 @@
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
-      "deregisterCausesListItem1": "This system will no longer be accepting any calls.",
+      "deregisterCausesListItem1": "The system will no longer accept any calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
@@ -2490,7 +2508,8 @@
     "noCluster": "No Media Service Clusters Connected to Spark",
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
-    "moveHost": "MOVE HOST"
+    "moveHost": "MOVE HOST",
+    "deleteCluster": "DELETE CLUSTER"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",

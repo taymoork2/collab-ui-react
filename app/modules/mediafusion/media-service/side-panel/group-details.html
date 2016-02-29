@@ -2,7 +2,7 @@
 
 <cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
 
-  <cs-sp-section>
+  <cs-sp-section ng-if="groupDetails.clusterList.length > 0">
     <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
     <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
       <ul>
@@ -15,11 +15,10 @@
         </li>
       </ul>
     </div>
-    <p ng-if="groupDetails.alarmsList.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
+    <p ng-if="groupDetails.alarms.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
   </cs-sp-section>
 
   <cs-sp-section>
-    <!-- FIX IT, REMOVE TABLE -->
     <table>
       <thead>
         <tr>
@@ -58,6 +57,19 @@
           </a>
         </li>
       </ul>
+    </div>
+    <p ng-if="groupDetails.clusterList.length == 0" translate="mediaFusion.serviceStatus.nohosts"></p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="groupDetails.clusterList.length == 0">
+    <div>
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--negative"
+              style="margin-top: 15px;"
+              ng-click="sp.close(); groupDetails.deleteGroup();"
+              translate="mediaFusion.deleteCluster">
+      </button>
     </div>
   </cs-sp-section>
 
