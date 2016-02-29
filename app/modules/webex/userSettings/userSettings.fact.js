@@ -257,19 +257,45 @@
         //returns true if WebEx center has at least one session type enabled.
         //Purpose: must have at least one session type enabled, 
         //otherwise, changes cannot be saved  
-        hasMinOneSessionTypeEnabled: function (sessionTypes) {
-          $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
+        /* hasMinOneSessionTypeEnabled: function (sessionTypes) {
+          // $log.log("YURE sessionTypes=" + JSON.stringify(sessionTypes));
           var hasMinOneSessionTypeEnabled = false;
+          var funcName = "hasMinOneSessionTypeEnabled()";
+          var logMsg = null;
+
           sessionTypes.forEach(function (item) {
             var mca = item.meetingCenterApplicable;
+            var eca = item.eventCenterApplicable;
+            var tca = item.trainingCenterApplicable;
+            var sca = item.supportCenterApplicable;
             var sessionEnabled = item.sessionEnabled;
-            $log.log("DESS sessionEnabled=" + sessionEnabled);
+
+            logMsg = funcName + "\n" +
+              "mca= " + mca + "\n" +
+              "eca= " + tca + "\n" +
+              "tca= " + tca + "\n" +
+              "sca= " + sca + "\n" +
+              "\n" +
+              "sessionEnabled= " + sessionEnabled;
+            $log.log(logMsg);
+
             if (sessionEnabled && mca) {
+              hasMinOneSessionTypeEnabled = true;
+            }
+            if (sessionEnabled && eca) {
+              hasMinOneSessionTypeEnabled = true;
+            }
+            if (sessionEnabled && tca) {
+              hasMinOneSessionTypeEnabled = true;
+            }
+            if (sessionEnabled && sca) {
               hasMinOneSessionTypeEnabled = true;
             }
           });
           return hasMinOneSessionTypeEnabled;
-        }, //hasMinOneSessionTypeEnabled
+        },
+        hasMinOneSessionTypeEnabled
+        */
 
         isUserLevelPMREnabled: function () {
           var user = this.getUserSettingsModel();
@@ -308,6 +334,7 @@
             (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
           ) ? true : false;
 
+          validLicenseEntitlements = true;
           return validLicenseEntitlements;
         }, // updateCenterLicenseEntitlements()
 
@@ -902,6 +929,7 @@
         updateUserSettings: function (form) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
+          var errMessage = null;
 
           webExUserSettingsModel.disableCancel = true;
 
@@ -934,54 +962,62 @@
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
-          // block user from save changes if at least one MC Session Type is not selected
-          // var blockDueToNoMCSessionTypeSelected = !_self.hasMinOneSessionTypeEnabled(webExUserSettingsModel.sessionTypes);
-          var blockDueToNoSession = true;
           
+          // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
+          // once block save flag has been set to true, skip checking other centers and go straight to block save
+          var blockDueToNoSession = false;
+
           if (
-        	   (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) && 
-        	   ("true" == userSettings.meetingCenter)
+            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
+            (blockDueToNoSession != true)
           ) {
-            if (
-                 (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
-                 ("true" == userSettings.trainingCenter)
-            ) {
-              if (
-                    (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
-                    ("true" == userSettings.supportCenter)
-              ) {
-                if (
-                      (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
-                      ("true" == userSettings.eventCenter)
-                ) {
-                   blockDueToNoSession = false;
-                  }
-                }
-              }
-           }    
+            blockDueToNoSession = (userSettings.meetingCenter == "true") ? false : true;
+          }
+
+          if (
+            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
+            (blockDueToNoSession != true)
+          ) {
+            blockDueToNoSession = (userSettings.trainingCenter == "true") ? false : true;
+          }
+
+          if (
+            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
+            (blockDueToNoSession != true)
+          ) {
+            blockDueToNoSession = (userSettings.eventCenter == "true") ? false : true;
+          }
+
+          if (
+            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
+            (blockDueToNoSession != true)
+          ) {
+            blockDueToNoSession = (userSettings.supportCenter == "true") ? false : true;
+          }
 
           if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            this.errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
             Notification.notify([errMessage], 'error');
-            $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
+            $log.log("DURE blockDueToPMR=" + blockDueToPMR);
             return;
           }
 
+          
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
             !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
-          $log.log("DURE blockDueToPMR=" + blockDueToPMR);
+          $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
 
           if (blockDueToPMR) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            this.errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
