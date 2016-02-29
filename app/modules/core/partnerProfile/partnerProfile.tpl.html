@@ -125,7 +125,7 @@ ng-model="sel.selected"
       <div class="row form-spacing">
         <div class="small-12 columns">
           <div class="row collapse" ng-if="isPartner">
-           <p><span translate="partnerProfile.webexClientVersion"></span>  
+           <p><h4 translate="partnerProfile.webexClientVersion"></h4>  
               <span class="badge"></span>
             </p>
             <cs-select
@@ -151,6 +151,8 @@ ng-model="sel.selected"
                  ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)">
                 <span translate="partnerProfile.alwaysProvisionWithLatest"></span>
                </label>
+               <p>
+               <span class="client-version-indent" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></span>
            </div>
           </div>
          </div>

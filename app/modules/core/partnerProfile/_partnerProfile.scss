@@ -16,6 +16,10 @@
   }
 }
 
+.client-version-indent {
+    padding-left: 1cm;
+}
+
 .partner-profile {
   & label {
     @include vr-spacing(mb, 0.25);

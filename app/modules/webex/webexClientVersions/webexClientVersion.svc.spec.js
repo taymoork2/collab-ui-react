@@ -33,11 +33,19 @@ describe('WebexClientVersion Test', function () {
     expect(td).toBe("testData");
   });
 
-  it("shoud get test data", function () {
-    expect(Config.getAdminServiceUrl()).toBe("https://atlas-integration.wbx2.com/admin/api/v1/");
+  it("shoud get admin service url", function () {
+    expect(Config.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
   });
 
-  it("should get client versions", function () {
+  it("shoud get admin service url", function () {
+    expect(WebexClientVersion.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
+  });
+
+  it("shoud get client versions url when getTotalUrl(clientVersions) called", function () {
+    expect(WebexClientVersion.getTotalUrl('clientVersions')).toBe('https://atlas-integration.wbx2.com/admin/api/v1/clientversions');
+  });
+
+  it('should get client versions', function () {
 
     var url = Config.getAdminServiceUrl() + 'clientversions';
 
@@ -57,8 +65,8 @@ describe('WebexClientVersion Test', function () {
     httpBackend.flush();
   });
 
-  it("Test of a test", function () {
-    expect("x").toBe("x");
+  it('Test of a test', function () {
+    expect('x').toBe('x');
   });
 
 });
