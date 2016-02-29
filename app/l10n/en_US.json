@@ -3477,16 +3477,6 @@
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
     },
-    "email": {
-      "header": "Send email",
-      "description": "Enter email addresses to receive an email with the DNS verification token and instructions for {{domain}}.",
-      "exampleEmail": "Enter email addresses separated by commas.",
-      "invalidEmail": "This is not a valid email address.",
-      "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
-      "beforeVerify": "Before you verify",
-      "sendEmail": "Send instructions"
-    },
     "verify": {
       "header": "Verify domain",
       "verifyThis": "Before you verify",
