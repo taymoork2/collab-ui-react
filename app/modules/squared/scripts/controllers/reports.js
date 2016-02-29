@@ -13,7 +13,7 @@ angular.module('Squared').controller('ReportsCtrl', [
   '$translate',
   'CannedDataService',
   'Userservice',
-  'WebExUtilsFact',
+  'WebExApiGatewayService',
   'Storage',
   'FeatureToggleService',
   function (
@@ -29,7 +29,7 @@ angular.module('Squared').controller('ReportsCtrl', [
     $translate,
     CannedDataService,
     Userservice,
-    WebExUtilsFact,
+    WebExApiGatewayService,
     Storage,
     FeatureToggleService
   ) {
@@ -78,7 +78,7 @@ angular.module('Squared').controller('ReportsCtrl', [
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);

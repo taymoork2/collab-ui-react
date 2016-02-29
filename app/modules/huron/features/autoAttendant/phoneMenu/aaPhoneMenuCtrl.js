@@ -101,6 +101,10 @@
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+        name: 'phoneMenuRouteUser',
+        action: 'routeToUser'
       }
     ];
 
@@ -232,18 +236,21 @@
           // both timeout options have the same action name so
           // we distinguish by the number of attempts allowed
           if (entry.attempts === 1) {
-            vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+            vm.selectedTimeout = vm.timeoutActions[0];
           } else {
-            vm.selectedTimeout = angular.copy(vm.timeoutActions[1]);
-            vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+            vm.selectedTimeout = vm.timeoutActions[1];
+            vm.selectedTimeout.childOptions = vm.repeatOptions;
             if (entry.attempts >= 2 && entry.attempts <= 6) {
-              vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[entry.attempts - 2]);
+              vm.selectedTimeout.selectedChild = vm.repeatOptions[entry.attempts - 2];
             } else {
               // this case should never happens.
-              vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
+              vm.selectedTimeout.selectedChild = vm.repeatOptions[0];
             }
           }
+        } else {
+          setDefaultTimeoutOption();
         }
+
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
@@ -270,6 +277,13 @@
       }
     }
 
+    function setDefaultTimeoutOption() {
+      // default option is repeat menu 3x
+      vm.selectedTimeout = vm.timeoutActions[1];
+      vm.selectedTimeout.childOptions = vm.repeatOptions;
+      vm.selectedTimeout.selectedChild = vm.repeatOptions[2];
+    }
+
     function createOptionMenu() {
       // we're adding a new AA so create the CeMenu
       var menu = AutoAttendantCeMenuModelService.newCeMenu();
@@ -284,9 +298,7 @@
       menu.entries.push(keyEntry);
 
       menu.attempts = 4;
-      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
-      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
-      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+      setDefaultTimeoutOption();
 
       // remove key that is in use from creating the new key entry
       setAvailableKeys();
@@ -299,10 +311,6 @@
     function addAvailableFeatures() {
       if (Config.isDev() || Config.isIntegration()) {
         vm.keyActions.push({
-          label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-          name: 'phoneMenuRouteUser',
-          action: 'routeToUser'
-        }, {
           label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
           name: 'phoneMenuRouteMailbox',
           action: 'routeToVoiceMail'

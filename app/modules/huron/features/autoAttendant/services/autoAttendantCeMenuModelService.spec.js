@@ -9,6 +9,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   // Welcome menu
   var wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
   var ceWelcome = wmenu.ceWelcome;
+  var ceWelcomeNoDescription = wmenu.ceWelcomeNoDescription;
   var welcomeMenu = wmenu.welcomeMenu;
   var ceWelcome2 = {
     "callExperienceName": "AA Welcome",
@@ -60,6 +61,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('getWelcomeMenu', function () {
     it('should return welcomeMenu from parsing ceWelcome', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
+
       expect(angular.equals(_welcomeMenu, welcomeMenu)).toBe(true);
     });
   });
@@ -89,13 +91,17 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   });
 
   describe('updateMenu', function () {
-    it('should be able to update an ceRecord with welcomeMenu', function () {
+    it('should be able to update an ceRecord with welcomeMenu (no description in goto case)', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
+
       _ceRecord.callExperienceName = 'AA Welcome';
-      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeNoDescription, 'regularOpenActions');
       var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
-      expect(angular.equals(_ceRecord, ceWelcome)).toBe(true);
+
+      expect(angular.equals(_ceRecord, ceWelcomeNoDescription)).toBe(true);
+
       expect(success).toBe(true);
+
     });
   });
 
@@ -104,13 +110,20 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 2);
+
+      // if this splice to removes actions after play .. should be length -1
+      _welcomeMenu.entries.splice(1, _welcomeMenu.entries.length - 1);
+
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'regularOpenActions');
       var customMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _customMenu);
+
       expect(welcomeMenuSuccess).toBe(true);
+
       expect(customMenuSuccess).toBe(true);
+
       expect(angular.equals(_ceRecord, ceCustom)).toBe(true);
+
     });
   });
 
@@ -119,7 +132,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 2);
+
+      // if this splice to removes actions after play .. should be length -1
+      _welcomeMenu.entries.splice(1, _welcomeMenu.entries.length - 1);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'regularOpenActions');
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
@@ -134,7 +149,9 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 2);
+
+      // if this splice to removes actions after play .. should be length -1
+      _welcomeMenu.entries.splice(1, _welcomeMenu.entries.length - 1);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOptionUnsorted, 'regularOpenActions');
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
@@ -161,6 +178,66 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'regularOpenActions', 'MENU_OPTION');
       expect(deleteSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(true);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 1st param is null', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(null, 'regularOpenActions', 'MENU_OPTION');
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 1st param is undefined', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(undefined, 'regularOpenActions', 'MENU_OPTION');
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 2nd param is null', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, null, 'MENU_OPTION');
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 2nd param is undefined', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, undefined, 'MENU_OPTION');
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 3rd param is null', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'regularOpenActions', null);
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
+    });
+  });
+
+  describe('deleteMenu', function () {
+    it('should not succeed if 3rd param is undefined', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'regularOpenActions', undefined);
+      expect(deleteSuccess).toBe(false);
+      expect(angular.equals(_ceRecord, ceWelcome2)).toBe(false);
     });
   });
 
@@ -210,8 +287,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_menuEntry.getDescription()).toBe('menu entry');
       _menuEntry.setType('type');
       expect(_menuEntry.getType()).toBe('type');
-      _menuEntry.setIsConfigured(false);
-      expect(_menuEntry.isConfigured).toBe(false);
       _menuEntry.setKey('7');
       expect(_menuEntry.getKey()).toBe('7');
       _menuEntry.setTimeout('5');

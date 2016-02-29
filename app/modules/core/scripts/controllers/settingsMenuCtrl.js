@@ -31,8 +31,11 @@ angular.module('Core')
         value: 'fr_FR',
         label: $translate.instant('languages.french')
       }, {
+        value: 'fr_CA',
+        label: $translate.instant('languages.frenchCanadian')
+      }, {
         value: 'id_ID',
-        label: $translate.instant('languages.indionesian')
+        label: $translate.instant('languages.indonesian')
       }, {
         value: 'it_IT',
         label: $translate.instant('languages.italian')
@@ -53,7 +56,7 @@ angular.module('Core')
         label: $translate.instant('languages.polish')
       }, {
         value: 'pt_BR',
-        label: $translate.instant('languages.portugeseBrazillian')
+        label: $translate.instant('languages.portugueseBrazillian')
       }, {
         value: 'ru_RU',
         label: $translate.instant('languages.russian')

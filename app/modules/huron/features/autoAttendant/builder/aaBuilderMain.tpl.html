@@ -6,7 +6,7 @@
   </div>
 
   <div ng-if="aaBuilderMain.ui.ceInfo.getName()" class="aa-builder-frame">
-    <div class="aa-builder-container">
+    <div class="aa-builder-container" id="builderScrollContainer">
       <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
     </div>
   </div>

@@ -237,6 +237,11 @@
       return {
         name: vm.model.name,
         numbers: vm.model.numbers.map(function (numberObj) {
+          if (numberObj.type === 'internal') {
+            numberObj.type = 'NUMBER_FORMAT_EXTENSION';
+          } else if (numberObj.type === 'external') {
+            numberObj.type = 'NUMBER_FORMAT_DIRECT_LINE';
+          }
           return {
             type: numberObj.type,
             number: numberObj.number

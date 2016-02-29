@@ -22,23 +22,36 @@ function ex_usage {
     local cmd_basename="`basename $0`"
     case "${cmd_basename}" in
         "curl-atlas" )
-            echo "ex. GET list of organizations (for 'curl-atlas')"
+            echo "ex. GET list of organizations"
             echo "  ${cmd_basename} pbr-admin GET /organizations"
             echo ""
-            echo "ex. GET list of organizations (output response header only) (for 'curl-atlas')"
+            echo "ex. GET list of organizations (output response header only)"
             echo "  ${cmd_basename} pbr-admin GET -I /organizations"
             echo ""
-            echo "ex. POST a JSON payload (filename is './payload.json') to create a new organization (for 'curl-atlas')"
+            echo "ex. POST a JSON payload (filename is './payload.json') to create a new organization"
             echo "  ${cmd_basename} partner-admin POST --data @payload.json /organizations"
             echo ""
-            echo "ex. DELETE a user. (for 'curl-atlas')"
+            echo "ex. DELETE a user."
             echo "  ${cmd_basename} partner-admin DELETE '/user?email=testuser@example.com'"
             ;;
         "curl-wdm" )
             # TODO: add examples
             ;;
         "curl-ci" )
-            # TODO: add examples
+            echo "ex. GET info of an organization (from CI SCIM)"
+            echo "  ${cmd_basename} partner-admin GET /Orgs/{org_id}"
+            ;;
+        "curl-huron" )
+            echo "ex. GET info of an organization (from Huron)"
+            echo "  ${cmd_basename} partner-admin GET /common/customers/{org_id}"
+            ;;
+        "curl-cca" )
+            echo "ex. GET info of an organization (from Huron)"
+            echo "  ${cmd_basename} partner-admin GET https://cmi.huron-int.com/api/v1/common/customers/{org_id}"
+            echo ""
+            echo "ex. GET info of an organization (from Atlas)"
+            echo "  ${cmd_basename} partner-admin GET https://atlas-integration.wbx2.com/admin/api/v1/organizations/{org_id}"
+            echo ""
             ;;
     esac
 }
@@ -48,12 +61,12 @@ if [ $# -lt 3 ]; then
     echo "usage: `basename $0` <usr_label> <method> [...<`basename $0`-options>] [...<curl-options>] <endpoint_uri>"
     echo ""
     echo "A wrapper around curl, to simplify REST calls to Cisco Spark endpoints."
-    echo "- See 'test_helper.coffee' for the user labels available for use."
-    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/atlas-server.html' for Atlas URIs available for use."
-    echo "- See 'http://wikicentral.cisco.com/display/IDENTITY/Common+Identity+3.0+RESTFul+APIs' for CI URIs available for use."
-    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/wdm-server-device-mgmt.html' for WDM URIs available for use."
+    echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.coffee' for user labels available for use"
+    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/atlas-server.html' for Atlas URIs available for use"
+    echo "- See 'http://wikicentral.cisco.com/display/IDENTITY/Common+Identity+3.0+RESTFul+APIs' for CI URIs available for use"
+    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/wdm-server-device-mgmt.html' for WDM URIs available for use"
     echo ""
-    echo "'`basename $0`' options:"
+    echo "'`basename $0`-options':"
     echo "  '--print-only',  Print the command that would be run instead of actually running it."
     echo "  '--pretty-print-json',  Pretty-print JSON response (error if the response is not JSON-formatted)"
     echo "  '--json-req-mode',  Force 'Content-Type: application/json'"

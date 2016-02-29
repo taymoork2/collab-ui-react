@@ -52,10 +52,12 @@
   .collapse-fields {
     .formly-field {
       padding-bottom: 5px;
-      // max-height: 40px;
     }
     .form-group {
       margin-bottom: 0;
+    }
+    input.form-control {
+      margin: 0;
     }
   }
   .small {
@@ -66,6 +68,40 @@
   }
   .pad-top {
     padding-top: 6px;
+  }
+  .did-input .tokenfield {
+    min-height: rem(144px);
+  }
+  .token {
+      background-color: $color-primary-base;
+      color: $white;
+      .close {
+          color: $white;
+      }
+      padding: rem(6px) rem(6px);
+  }
+  .no-pad {
+      padding-bottom: 0;
+  }
+  .no-flex {
+      flex: none;
+      -webkit-flex: none;
+  }
+  .max-width {
+    .select-toggle {
+        width: 100%;
+    }
+  }
+  .flex-row {
+      display:flex;
+      flex-direction:row;
+  }
+  .pad-right {
+      padding-right:1.6rem;
+  }
+  .flex1 {
+      flex:1;
+      padding-left: 1px;
   }
 }
 
@@ -98,4 +134,36 @@
 
 .days-left span {
   @extend .small;
+}
+
+.banner-msg {
+  display: table;
+  margin: 0 auto 3px;
+
+  .icon {
+    font-size: 1.7em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -0.2em;
+  }
+
+  button {
+    margin-left: 1em;
+  }
+
+  .msg--requested {
+    display: none;
+  }
+
+  &.has-requested {
+    color: $color-cta-base;
+
+    span.msg--requested {
+      display: inline;
+    }
+
+    span.msg--default {
+      display: none;
+    }
+  }
 }

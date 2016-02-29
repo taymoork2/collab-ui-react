@@ -19,9 +19,11 @@
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       atlasReportTrials: 'atlas-report-trials',
+      atlasTrialConversion: 'atlas-trial-conversion',
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
+      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
       androidAddGuestRelease: 'android-add-guest-release',
       androidCallsTab: 'android-calls-tab',
@@ -116,6 +118,7 @@
       webRoapCalls: 'web-roap-calls',
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
+      winHuronCalls: 'win-huron-calls',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
       winOutboundDialing: 'win-outbound-dialing',
@@ -125,6 +128,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
+      huronCallTrials: 'huron-call-trials'
     };
 
     var service = {
@@ -270,9 +274,19 @@
 
     function supports(feature) {
       return $q(function (resolve, reject) {
-        //TODO temporary hardcoded checks for huron
         if (feature === features.csvUpload) {
-          resolve(true);
+          // Block all orgs in prod with exception in the white list
+          var whiteList = [
+            '01e89ad5-72a3-4379-963a-4a35fa9e1917'
+          ];
+          var orgInWhiteList = _.find(whiteList, function (o) {
+            return o === Authinfo.getOrgId();
+          });
+          if (Config.isProd() && !orgInWhiteList) {
+            resolve(false);
+          } else {
+            resolve(true);
+          }
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);

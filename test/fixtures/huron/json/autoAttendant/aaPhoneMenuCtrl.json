@@ -82,9 +82,7 @@
     "attempts": 1,
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "1",
       "actions": [{
         "name": "repeatActionsOnInput",
@@ -98,9 +96,7 @@
       "url": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "2",
       "actions": [{
         "name": "runActionsOnInput",
@@ -116,9 +112,7 @@
     }],
     "headers": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "",
@@ -138,6 +132,11 @@
     "entries": [],
     "headers": []
   },
+  "ceMenuNoAttempt": {
+    "type": "MENU_OPTION",
+    "entries": [],
+    "headers": []
+  },
   "combinedMenu": {
     "type": "MENU_WELCOME",
     "headers": [],
@@ -146,9 +145,7 @@
       "attempts": 1,
       "entries": [{
         "description": "",
-        "isConfigured": true,
         "type": "",
-        "isTouched": false,
         "key": "1",
         "actions": [{
           "name": "repeatActionsOnInput",
@@ -162,9 +159,7 @@
         "url": ""
       }, {
         "description": "",
-        "isConfigured": true,
         "type": "",
-        "isTouched": false,
         "key": "2",
         "language": "",
         "voice": "",
@@ -182,8 +177,6 @@
       }],
       "headers": [{
         "description": "",
-        "isConfigured": true,
-        "isTouched": false,
         "key": "",
         "language": "",
         "voice": "",
@@ -200,8 +193,6 @@
         "url": ""
       }, {
         "description": "",
-        "isConfigured": true,
-        "isTouched": false,
         "key": "",
         "language": "",
         "voice": "",

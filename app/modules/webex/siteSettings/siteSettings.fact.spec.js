@@ -6,27 +6,13 @@ describe('WebExSiteSettingsFact Test', function () {
   var siteUrl = 'go.webex.com';
   var siteName = "go";
 
-  var deferred;
-  var $rootScope;
-
-  beforeEach(module('WebExXmlApi'));
-  beforeEach(module('WebExSiteSettings'));
-  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(module(function ($provide) {
     var $stateParams = {
       'siteUrl': siteUrl
     };
     $provide.value('$stateParams', $stateParams);
-  }));
-
-  beforeEach(inject(function (_$translate_, _WebExXmlApiFact_, _$q_, _$rootScope_) {
-    var $translate = _$translate_;
-    deferred = _$q_.defer();
-    $rootScope = _$rootScope_;
-
-    spyOn($translate, 'use').and.returnValue(locale);
-    spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferred.promise);
   }));
 
   it('can initialize the site settings', inject(function (WebExSiteSettingsFact) {
@@ -229,24 +215,10 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(siteSettingsObj.siteName).toEqual(siteName);
   }));
 
-  it('can get a session ticket', inject(function (WebExSiteSettingsFact) {
-    deferred.resolve("ticket");
-    $rootScope.$apply();
-    var sessionTicket = WebExSiteSettingsFact.getSessionTicket(siteUrl);
-    expect(sessionTicket).toBeDefined();
-    expect(sessionTicket.$$state.value).toEqual("ticket");
-  }));
-
   it('can get a category', inject(function (WebExSiteSettingsFact) {
     WebExSiteSettingsFact.initSiteSettingsObj();
     var obj = WebExSiteSettingsFact.getCategoryObj("SiteInfo");
     expect(obj.id).toEqual("SiteInfo");
-  }));
-
-  it('can get card for a centre', inject(function (WebExSiteSettingsFact) {
-    WebExSiteSettingsFact.initSiteSettingsObj();
-    var obj = WebExSiteSettingsFact.getCenterSettingsCardObj("TC");
-    expect(obj.id).toEqual("TC");
   }));
 
   xit('can update display information', inject(function (WebExSiteSettingsFact) {

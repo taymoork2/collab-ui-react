@@ -18,7 +18,13 @@
       };
     }
 
-    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
+    HelpdeskHuronService.getDevice(vm.orgId, vm.deviceId).then(initDeviceView, function (err) {
+      if (err.status === 404) {
+        vm.notFound = true;
+      } else {
+        XhrNotificationService.notify(err);
+      }
+    });
 
     function initDeviceView(device) {
       vm.device = device;
@@ -34,7 +40,7 @@
         }, XhrNotificationService.notify);
       }
 
-      HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId).then(function (deviceNumbers) {
+      HelpdeskHuronService.getDeviceNumbers(vm.deviceId, vm.orgId, vm.device.ownerUser ? vm.device.ownerUser.uuid : null).then(function (deviceNumbers) {
         vm.deviceNumbers = deviceNumbers;
       }, XhrNotificationService.notify);
 

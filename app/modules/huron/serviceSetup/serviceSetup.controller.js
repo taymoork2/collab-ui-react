@@ -6,9 +6,9 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate,
+  function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService) {
+    ExternalNumberService, ModalService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -190,7 +190,11 @@
           filter: true
         },
         controller: /* @ngInject */ function ($scope, ServiceSetup) {
-          $scope.to.options = vm.timeZoneOptions;
+          $scope.$watchCollection(function () {
+            return vm.timeZoneOptions;
+          }, function (timeZones) {
+            $scope.to.options = timeZones;
+          });
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -744,6 +748,24 @@
       });
     }
 
+    function displayDisableVoicemailWarning() {
+      if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled')) {
+        return ModalService.open({
+            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+            close: $translate.instant('common.disable'),
+            dismiss: $translate.instant('common.cancel'),
+            type: 'negative'
+          })
+          .result
+          .catch(function () {
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+            vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber);
+            return $q.reject();
+          });
+      }
+    }
+
     function initNext() {
       if (vm.form.$invalid) {
         Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
@@ -790,7 +812,7 @@
         } else {
           // When the toggle is OFF, update the customer if the customer has the voicemail service package
           // to disable voicemail, otherwise they are already voice only and don't
-          // require an update.  
+          // require an update.
           if (vm.hasVoicemailService) {
             return updateCustomer();
           }
@@ -849,7 +871,7 @@
           } else {
             // When the toggle is OFF, update the site if the customer has voicemail service package
             // to disable voicemail, otherwise they are already voice only and don't
-            // require an update.  
+            // require an update.
             if (vm.hasVoicemailService) {
               return updateSite();
             }
@@ -935,6 +957,7 @@
       // to be ignored after processing this promise chain.
       function saveCompanySite() {
         return $q.when(true)
+          .then(displayDisableVoicemailWarning)
           .then(saveCustomer)
           .then(saveSite)
           .then(saveTimezone)
@@ -970,12 +993,8 @@
         .then(processErrors);
     }
 
-    HttpUtils.setTrackingID().then(function () {
-      var promises = [];
-      promises.push(initServiceSetup());
-      $q.all(promises).finally(function () {
-        vm.processing = false;
-      });
+    $q.all(initServiceSetup()).finally(function () {
+      vm.processing = false;
     });
   }
 })();

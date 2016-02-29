@@ -57,8 +57,9 @@
   }
   .generate-activation-code {
     font-size: 13px;
-    line-height: 18px;
+    line-height: 21px;
     padding-bottom: 10px;
+    padding-right: rem-calc(70);
   }
   .activation-button {
     span {
@@ -74,9 +75,11 @@
 
 .generate-activation-code {
   .form-group {
-    margin-left: 5px;
+    margin-bottom: 0;
+    margin-left: 22px;
   }
   .control-label {
+    margin-top: 7px;
     text-align: left;
   }
   .row {
@@ -121,6 +124,7 @@
       font-size: 75px;
     }
   }
+  .modal-footer-left { float: left; }
 }
 
 @media print {

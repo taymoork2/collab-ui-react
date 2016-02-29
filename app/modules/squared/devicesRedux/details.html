@@ -64,7 +64,7 @@
               class="fa fa-circle device-status"
               ng-class="deviceDetails.device.cssColorClass"
             />
-            <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
+            <span ng-bind-html="deviceDetails.device.state.readableState | highlight:devices.search"></span>
           </div>
           <div class="tag-container" style="display: flex; align-items: center; flex-wrap: wrap;">
             <span

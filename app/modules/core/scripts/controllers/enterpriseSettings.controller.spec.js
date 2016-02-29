@@ -40,6 +40,12 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       }
     }));
 
+    Orgservice.getLicensesUsage = jasmine.createSpy().and.returnValue($q.when([{
+      licenses: [{
+        offerName: 'SD'
+      }]
+    }]));
+
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, status) {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
@@ -94,7 +100,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('should disable the field and clear error on the field validation', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect($scope.cloudSipUriField.isError).toEqual(false);
@@ -116,10 +122,33 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     it('addSipUriDomain should error gracefully', function () {
       $scope.cloudSipUriField.isUrlAvailable = true;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.isConfirmed = true;
       $scope._saveDomain();
       $scope.$apply();
       expect(Notification.error).toHaveBeenCalled();
+    });
+  });
+
+  describe('test if checkRoomLicense function sets isRoomLicensed to true', function () {
+    beforeEach(initController);
+
+    it('checkRoomLicense should set Room license to true', function () {
+      expect($scope.cloudSipUriField.isRoomLicensed).toEqual(true);
+    });
+  });
+
+  describe('test if checkRoomLicense function sets isRoomLicensed to false', function () {
+    beforeEach(function () {
+      Orgservice.getLicensesUsage.and.returnValue($q.when([{
+        licenses: [{
+          offerName: 'CF'
+        }]
+      }]));
+      initController();
+    });
+
+    it('checkRoomLicense should set Room license to false', function () {
+      expect($scope.cloudSipUriField.isRoomLicensed).toEqual(false);
     });
   });
 });

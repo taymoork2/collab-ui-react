@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils, currentDevice;
+  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, currentDevice;
 
   var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
@@ -17,7 +17,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_, _HttpUtils_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
 
@@ -26,7 +26,6 @@ describe('Controller: DevicesCtrlHuron', function () {
     DeviceService = _DeviceService_;
     OtpService = _OtpService_;
     Config = _Config_;
-    HttpUtils = _HttpUtils_;
 
     $stateParams.currentUser = stateParams.currentUser;
 
@@ -36,8 +35,6 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
 
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
-
-    spyOn(HttpUtils, 'setTrackingID').and.returnValue($q.when('TrackingID is set'));
 
     controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,
@@ -79,14 +76,12 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
 
     it('should show OTP button if no devices', function () {
-      userOverview.removeGenerateAuthCodeLink.calls.reset();
       DeviceService.loadDevices.and.returnValue($q.when(emptyArray));
 
       $scope.$broadcast('deviceDeactivated');
       $scope.$apply();
 
       expect(controller.showGenerateOtpButton).toEqual(true);
-      expect($scope.userOverview.removeGenerateAuthCodeLink.calls.count()).toEqual(1);
     });
 
     it('should not call activate when Huron entitlement is removed', function () {

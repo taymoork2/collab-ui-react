@@ -15,9 +15,9 @@ describe('Service Setup tests', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
     });
 
-    it('should show the invite users flow', function () {
+    it('should show the add users flow', function () {
       navigation.clickAddUsers();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(inviteusers.bulkUpload);
     });
 
@@ -28,12 +28,12 @@ describe('Service Setup tests', function () {
 
     it('should show the communications flow', function () {
       navigation.clickCommunicationWizard();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Call Settings');
     });
 
     it('should show the messaging flow', function () {
       navigation.clickMessagingSetup();
-      utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Message Settings');
     });
 
     afterEach(function () {

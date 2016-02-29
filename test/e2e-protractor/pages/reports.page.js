@@ -4,29 +4,6 @@
 /* global LONG_TIMEOUT */
 
 var ReportsPage = function () {
-  // customer reports
-  this.entitlements = element(by.id('avgEntitlementsdiv'));
-  this.calls = element(by.id('avgCallsdiv'));
-  this.conversations = element(by.id('avgConversationsdiv'));
-  this.activeUsers = element(by.id('activeUsersdiv'));
-  this.onboarding = element(by.id('onboardingFunnelDiv'));
-  this.convOneOnOne = element(by.id('convOneOnOnediv'));
-  this.convGroup = element(by.id('convGroupdiv'));
-  this.calls = element(by.id('callsdiv'));
-  this.callsAvgDuration = element(by.id('callsAvgDurationdiv'));
-  this.contentShared = element(by.id('contentShareddiv'));
-  this.contentShareSizes = element(by.id('contentShareSizesdiv'));
-
-  this.entitlementsRefresh = element(by.id('avg-entitlements-refresh'));
-  this.callsRefresh = element(by.id('avg-calls-refresh'));
-  this.conversationsRefresh = element(by.id('avg-conversations-refresh'));
-  this.activeUsersRefresh = element(by.id('active-users-refresh'));
-
-  this.refreshButton = element(by.id('reports-click-div'));
-  this.refreshData = element(by.id('reportsRefreshData'));
-  this.reloadedTime = element(by.id('lastReloadedTime'));
-
-  // partner reports
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
   this.customerSelect = element(by.id('customerFilter'));
@@ -34,39 +11,110 @@ var ReportsPage = function () {
   this.engagement = element(by.id('engagementReports'));
   this.quality = element(by.id('qualityReports'));
 
+  // Total Rooms
+  this.totalRoomsHeader = element(by.cssContainingText('.report-section-header', 'Total Rooms'));
+  this.totalRoomsDescription = element(by.css('.customer-avg-rooms')).element(by.css('.report-description'));
+  this.totalRoomsGraph = element(by.id('avgRoomsdiv'));
+
   // active user
+  this.activeHeader = element(by.cssContainingText('.report-section-header', 'Active Users'));
+  this.partnerActiveHeader = element(by.id('activeUser')).element(by.cssContainingText('article header h4', 'Active Users'));
+  this.activeCustomerDescription = element(by.css('.customer-active-user')).element(by.css('.report-description'));
+  this.activePartnerDescription = element(by.id('activeUser')).element(by.css('article section p'));
+  this.activeUsers = element(by.id('activeUsersdiv'));
+
+  // most active users
+  this.activeUsersTable = element(by.css('.active-users-table'));
+  this.showHideActiveUsers = element(by.css('a.report-sides')).all(by.css('span'));
+  this.mostActiveCarousel = element(by.id('activeCarousel'));
+  this.mostActiveSearch = element(by.css('.active-search'));
+  this.mostActiveDescription = element(by.css('.active-table')).element(by.css('.report-description'));
+  this.mostActiveHeader = element(by.css('.active-table')).element(by.css('.report-section-header'));
+  this.partnermostActiveHeader = element(by.css('.card-section-content div h4'));
+  this.partnerMostActiveDescription = element(by.css('.card-section-content div p'));
   this.showmostActiveButton = element(by.id('showActiveUsers'));
   this.hidemostActiveButton = element(by.id('hideActiveUsrs'));
-  this.activeUsersTable = element(by.css('.active-users-table'));
   this.activeUsersTableContent = element.all(by.repeater('user in nav.mostActiveUsers'));
-  this.activeCarousel = element(by.id('activeCarousel')).all(by.css('button'));
-  this.activeUserGraph = element(by.id('activeUsersdiv')).all(by.css('div')).first();
-  this.activeUserRefresh = element(by.id('activeUsersRefreshDiv'));
-  this.activeDescription = element(by.id('activeUserDesc'));
+
+  // Files Shared
+  this.filesSharedHeader = element(by.cssContainingText('.report-section-header', 'Files Shared'));
+  this.filesSharedDescription = element(by.css('.customer-files-shared')).element(by.css('.report-description'));
+  this.filesSharedDiv = element(by.id('filesSharedDiv'));
 
   // active user population
-  this.activePopulationGraph = element(by.id('activeUserPopulationChart')).all(by.css('div')).first();
-  this.activePopulationRefresh = element(by.id('activeUserPopulationRefreshDiv'));
-  this.activePopulationDescription = '.active-user-population';
+  this.activePopulationHeader = element(by.id('userPopulation')).element(by.cssContainingText('article header h4', 'Active User Population by Company'));
+  this.activePopulationDescription = element(by.id('activeUserPopulationDiv')).element(by.css('p'));
+  this.activePopulationGraph = element(by.id('activeUserPopulationChart'));
 
-  // registered endpoints
+  // registered endpoints graph
+  this.endpointsHeader = element(by.cssContainingText('.report-section-header', 'Registered Endpoints'));
+  this.customerEndpointsDescription = element(by.css('.customer-devices')).element(by.css('.report-description'));
+  this.endpointFilter = element(by.id('deviceFilter'));
+  this.endpointsDiv = element(by.id('devicesDiv'));
+
+  // registered endpoints table
+  this.regEndpointHeader = element(by.id('reg-endpoints')).element(by.cssContainingText('article header h4', 'Registered Endpoints'));
+  this.endpointDescription = element(by.id('reg-endpoints')).element(by.css('article section p'));
   this.registeredEndpointsTable = element(by.css('.registeredEndpoints')).element(by.css('.table'));
-  this.noEndpointRefresh = element(by.id('endpointRefreshDiv'));
-  this.endpointDescription = '.registeredEndpoints';
 
   // call metrics
-  this.callMetricsGraph = element(by.id('callMetricsDiv')).all(by.css('div')).first();
-  this.metricsRefresh = element(by.id('callMetricsRefreshDiv'));
-  this.metricsDescription = '.call-metrics';
+  this.metricsHeader = element(by.cssContainingText('.report-section-header', 'Call Metrics'));
+  this.customerMetricsDescription = element(by.css('.customer-media')).element(by.css('.report-description'));
+  this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
+  this.metricsData = element.all(by.css('.metrics-display'));
+  this.partnerMetricsHeader = element(by.id('callMetrics')).element(by.cssContainingText('article header h4', 'Call Metrics'));
+  this.callMetricsGraph = element(by.id('callMetricsDiv'));
+  this.partnerMetricsDescription = element(by.id('callMetrics')).element(by.css('article section p'));
 
   // media quality
-  this.mediaQualityGraph = element(by.id('mediaQualityDiv')).all(by.css('div')).first();
-  this.mediaRefresh = element(by.id('mediaQualityRefreshDiv'));
-  this.mediaDescription = '.media-quality';
+  this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
+  this.customerMediaDescription = element(by.css('.customer-media')).element(by.css('.report-description'));
+  this.mediaFilter = element(by.id('mediaFilter'));
+  this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
+  this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
+  this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
+  this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 
-  this.scrollToElement = function (element) {
-    return element.getLocation().then(function (location) {
-      return browser.executeScript('window.scrollTo(0,' + (location.y + 100) + ');');
+  this.showHideActiveVisibility = function (show, hide, partner) {
+    if (partner) {
+      if (show) {
+        utils.expectIsDisplayed(this.showmostActiveButton);
+      } else {
+        utils.expectIsNotDisplayed(this.showmostActiveButton);
+      }
+
+      if (hide) {
+        utils.expectIsDisplayed(this.hidemostActiveButton);
+      } else {
+        utils.expectIsNotDisplayed(this.hidemostActiveButton);
+      }
+    } else {
+      this.showHideActiveUsers.each(function (element, index) {
+        var test = show;
+        if (index === 1) {
+          test = hide;
+        }
+
+        if (test) {
+          utils.expectIsDisplayed(element);
+        } else {
+          utils.expectIsNotDisplayed(element);
+        }
+      });
+    }
+  };
+
+  this.metricsDataPresent = function (state) {
+    var text = ['Total Calls', 'Call Minutes', 'Call Failure Rate'];
+    this.metricsData.each(function (element, index) {
+      if (state) {
+        utils.expectIsNotPresent(element);
+      } else {
+        utils.expectIsPresent(element);
+        utils.expectIsPresent(element.element(by.css('.metrics-numeral')));
+        utils.expectIsPresent(element.element(by.css('.metrics-text')));
+        utils.expectTextToBeSet(element.element(by.css('.metrics-text')), text[index]);
+      }
     });
   };
 
@@ -96,10 +144,6 @@ var ReportsPage = function () {
   this.numOptions = function (dropdown) {
     utils.wait(dropdown.element(by.css('.dropdown-menu')));
     return dropdown.all(by.css('li')).count();
-  };
-
-  this.verifyLegend = function (graph, text) {
-    utils.expectIsPresent(element(by.id(graph)).element(by.css('.amChartsLegend')).element(by.cssContainingText('tspan', text)));
   };
 
   this.getOption = function (select, text) {

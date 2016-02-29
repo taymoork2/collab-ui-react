@@ -25,7 +25,7 @@ var Navigation = function () {
   this.developmentTab = element(by.css('li.developmentTab > a'));
   this.servicesTab = element(by.css('li.servicesTab > a'));
   this.meetingsTab = element(by.css('a[href="#meetings"]'));
-  this.mediaFusionMgmtTab = element(by.css('a[href="#mediafusionconnector"]'));
+  this.mediaServiceMgmtTab = element(by.css('a[href="#mediaservice"]'));
   this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
   this.utilizationTab = element(by.css('a[href="#utilization"]'));
 
@@ -44,11 +44,12 @@ var Navigation = function () {
   this.orgname = element(by.binding('orgname'));
   this.userInfoButton = element(by.css('.user-info button'));
   this.logoutButton = element(by.css('#logout-btn a'));
+  this.videoLink = element(by.id('videoTutorial-lnk'));
 
   this.headerSearch = element(by.css('.header-search'));
   this.settingsMenu = element(by.css('.settings-menu .dropdown-toggle'));
   this.planReview = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Plan Review'));
-  this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Invite Users'));
+  this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Add Users'));
   this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Call'));
   this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
@@ -68,10 +69,17 @@ var Navigation = function () {
     utils.click(this.servicesTab);
   };
 
-  this.clickMediaFusionManagement = function () {
+  this.clickMediaServiceManagement = function () {
     this.clickServicesTab();
-    utils.click(this.mediaFusionMgmtTab);
-    this.expectCurrentUrl('/mediafusionconnector');
+    utils.click(this.mediaServiceMgmtTab);
+    this.expectCurrentUrl('/mediaservice');
+
+  };
+
+  this.clickMediaServiceSettingsTab = function () {
+    utils.click(this.serviceSettings);
+    this.expectCurrentUrl('/mediaservice/settings');
+
   };
 
   this.clickHome = function () {
@@ -228,6 +236,11 @@ var Navigation = function () {
   this.support = function () {
     utils.click(this.userInfoButton);
     utils.click(this.supportLink);
+  }
+
+  this.videoTutorial = function () {
+    utils.click(this.userInfoButton);
+    utils.click(this.videoLink);
   }
 
   this.launchPartnerOrgPortal = function () {

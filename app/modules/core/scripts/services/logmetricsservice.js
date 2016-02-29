@@ -45,7 +45,13 @@ angular.module('Core')
           convertUsers: 'CONVERTUSERS',
           bulkUsers: 'BULKUSERS',
           bulkCsvUsers: 'BULKCSVUSERS',
-          bulkDirSyncUsers: 'BULKDIRSYNCUSERS'
+          bulkDirSyncUsers: 'BULKDIRSYNCUSERS',
+          domainManageAdd: 'DOMAINADD',
+          domainManageRemove: 'DOMAINREM',
+          domainManageVerify: 'DOMAINVER',
+          domainManageInstructions: 'DOMAININST',
+          helpdeskSearch: 'HELPDESKSEARCH',
+          helpdeskOperation: 'HELPDESKOPERATION'
         },
 
         getEventAction: function (eAction) {

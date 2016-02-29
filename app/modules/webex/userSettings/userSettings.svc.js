@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WebExUserSettings')
+angular.module('WebExApp')
   .service('WebexUserSettingsSvc', [
     function WebexUserSettingsModel() {
       return {
@@ -10,6 +10,8 @@ angular.module('WebExUserSettings')
           id: "MC",
           label: "Meeting Center",
           serviceType: "MeetingCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false
         }, // meetingCenter
 
@@ -17,6 +19,8 @@ angular.module('WebExUserSettings')
           id: "TC",
           label: "Training Center",
           serviceType: "TrainingCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false,
 
           handsOnLabAdmin: {
@@ -31,6 +35,8 @@ angular.module('WebExUserSettings')
           id: "EC",
           label: "Event Center",
           serviceType: "EventCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false,
 
           optimizeBandwidthUsage: {
@@ -45,6 +51,8 @@ angular.module('WebExUserSettings')
           id: "SC",
           label: "Support Center",
           serviceType: "SupportCenter",
+          isEntitledOnAtlas: false,
+          isEntitledOnWebEx: false,
           isSiteEnabled: false
         }, // supportCenter
 
@@ -56,6 +64,8 @@ angular.module('WebExUserSettings')
         },
 
         cmr: {
+          id: "CMR",
+          label: "Collaboration Meeting Rooms",
           value: false
         },
 

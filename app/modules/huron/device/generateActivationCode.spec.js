@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
-  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, HttpUtils, OtpService, $q;
+  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, OtpService, $q;
   beforeEach(module('Huron'));
 
   var stateParams = {
@@ -15,18 +15,21 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     sinon.spy(Notification, "notify");
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _HttpUtils_, _OtpService_, _$q_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _OtpService_, _$q_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
-    HttpUtils = _HttpUtils_;
     OtpService = _OtpService_;
     $q = _$q_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+
+    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
+    spyOn(OtpService, 'generateOtp').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/0001000200030004.json')));
 
     controller = $controller('GenerateActivationCodeCtrl', {
       $scope: $scope,
@@ -34,10 +37,6 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       $stateParams: stateParams
     });
     controller.showEmail = false;
-    spyOn(HttpUtils, 'setTrackingID').and.returnValue('TrackingID is set');
-    spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
-    spyOn(OtpService, 'generateOtp').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/0001000200030004.json')));
-
     controller.otp = {
       code: 'old'
     };
