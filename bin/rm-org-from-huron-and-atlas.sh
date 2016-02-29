@@ -4,13 +4,13 @@ if [ $# -lt 2 ]; then
   echo "usage: `basename $0` <user_label> <org_id> [--force]"
   echo ""
   echo "Remove a test organization in Huron and Atlas."
-  echo "- See 'test_helper.coffee' for the user labels available for use."
+  echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.coffee' for user labels available for use"
   echo ""
   echo "ex. Delete from Huron and if successful, then Atlas"
-  echo "  `basename $0` seattle-partner {org_id}"
+  echo "  `basename $0` seattle-partner <org_id>"
   echo ""
   echo "ex. Delete from Huron and regardless of failure, then Atlas"
-  echo "  `basename $0` seattle-partner {org_id} --force"
+  echo "  `basename $0` seattle-partner <org_id> --force"
   exit 1
 fi
 
@@ -89,7 +89,7 @@ fi
 
 # delete from Huron
 echo -n "[INFO] Deleting org '$org_id' from Huron (integration): "
-nuke_org "./bin/curl-huron ${user_label} ${method} ${curl_args} ${huron_org_path}"
+nuke_org "$WX2_ADMIN_WEB_CLIENT_HOME/bin/curl-huron ${user_label} ${method} ${curl_args} ${huron_org_path}"
 
 if [ "$option_force" != "--force" ]; then
   if [ $? ]; then
@@ -99,4 +99,4 @@ fi
 
 # delete from Atlas
 echo -n "[INFO] Deleting org '$org_id' from Atlas (integration): "
-nuke_org "./bin/curl-atlas ${user_label} ${method} ${curl_args} ${atlas_org_path}"
+nuke_org "$WX2_ADMIN_WEB_CLIENT_HOME/bin/curl-atlas ${user_label} ${method} ${curl_args} ${atlas_org_path}"

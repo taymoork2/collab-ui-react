@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
-  var vm, $rootScope, $translate, $httpBackend, Authinfo, ScheduleUpgradeService, NotificationService;
+  var vm, $rootScope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService;
 
   var UIDataFixture = {
     scheduleTime: {
-      label: '03:00 a.m.',
+      label: '03:00 AM',
       value: '03:00'
     },
     scheduleDay: {
@@ -24,7 +24,8 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     scheduleTime: '03:00',
     scheduleTimeZone: 'America/New_York',
     scheduleDay: 1,
-    isAdminAcknowledged: false
+    isAdminAcknowledged: false,
+    postponed: false
   };
 
   beforeEach(module(function ($provide) {
@@ -34,9 +35,8 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     $provide.value('Authinfo', Authinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $q, $controller, _$httpBackend_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, $q, $controller, _$translate_) {
     $rootScope = _$rootScope_;
-    $httpBackend = _$httpBackend_;
     $translate = _$translate_;
 
     sinon.stub($translate, 'use', function () {
@@ -54,24 +54,27 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
       removeNotification: sinon.stub()
     };
 
+    $modal = {
+      open: sinon.stub().returns({
+        result: {
+          then: function (callback) {
+            callback({
+              postponed: 12
+            });
+          }
+        }
+      })
+    };
+
     vm = $controller('ScheduleUpgradeConfigurationCtrl', {
       $scope: $rootScope.$new(),
       $translate: $translate,
+      $modal: $modal,
       Authinfo: Authinfo,
       ScheduleUpgradeService: ScheduleUpgradeService,
       NotificationService: NotificationService
     });
-
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
-
-  afterEach(function () {
-    $httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   it('should start in the syncing state', function () {
     expect(vm.state === 'syncing').toBe(true);
@@ -108,13 +111,34 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     expect(ScheduleUpgradeService.patch.calledOnce).toBe(true);
   });
 
+  it('should open a modal when calling openModal', function () {
+    vm.data = angular.copy(UIDataFixture);
+    vm.openModal({
+      preventDefault: function () {}
+    });
+    $rootScope.$digest();
+    expect($modal.open.calledOnce).toBe(true);
+  });
+
+  it('should changed vm.postponed when the modal is closed with success', function () {
+    vm.data = angular.copy(UIDataFixture);
+    expect(vm.postponed).toBe(false);
+    vm.openModal({
+      preventDefault: function () {}
+    });
+    expect(vm.postponed).toBe(12);
+  });
+
   it('should have called ScheduleUpgradeService.patch when UI data changed', function () {
     expect(ScheduleUpgradeService.patch.called).toBe(false);
     // let's pretend the first time is from the API
     vm.data = angular.copy(UIDataFixture);
     $rootScope.$digest();
     // and now it's because the user changed it
-    vm.data.scheduleTime = '04:00';
+    vm.data.scheduleTime = {
+      label: '04:00 AM',
+      value: '04:00'
+    };
     $rootScope.$digest();
     expect(ScheduleUpgradeService.patch.calledOnce).toBe(true);
   });

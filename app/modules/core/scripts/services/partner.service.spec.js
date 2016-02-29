@@ -2,6 +2,7 @@
 
 describe('Partner Service -', function () {
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   var $httpBackend, $translate, $rootScope, PartnerService, Authinfo, Config;
 

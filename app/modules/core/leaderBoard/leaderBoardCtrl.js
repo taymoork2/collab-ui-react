@@ -22,52 +22,62 @@ angular.module('Core')
 
       $scope.isCustomerAdmin = Authinfo.isCustomerAdmin();
       $scope.isAtlasTrialConversion = false;
+      $scope.hasActiveTrial = false;
+      $scope.trialExistsInSubscription = trialExistsInSubscription;
 
       var getLicenses = function () {
-        Orgservice.getLicensesUsage().then(function (subscriptions) {
-          $scope.buckets = [];
-          for (var index in subscriptions) {
-            var licenses = subscriptions[index]['licenses'];
-            var subscription = {};
-            subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
-            if (licenses.length === 0) {
-              $scope.bucketKeys.forEach(function (bucket) {
-                subscription[bucket] = {};
-                subscription[bucket].unlimited = true;
-              });
-            } else {
-              licenses.forEach(function (license) {
-                var bucket = license.licenseType.toLowerCase();
-                if (!(bucket === "cmr" || bucket === "conferencing")) {
+        Orgservice.getLicensesUsage()
+          .then(function (subscriptions) {
+            // check if active trial exists
+            $scope.hasActiveTrial = _.some(subscriptions, trialExistsInSubscription);
+
+            return subscriptions;
+          })
+          .then(function (subscriptions) {
+            $scope.buckets = [];
+            for (var index in subscriptions) {
+              var licenses = subscriptions[index]['licenses'];
+              var subscription = {};
+              subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
+              subscription['hasActiveTrial'] = trialExistsInSubscription(subscriptions[index]);
+              if (licenses.length === 0) {
+                $scope.bucketKeys.forEach(function (bucket) {
                   subscription[bucket] = {};
-                  var a = subscription[bucket];
-                  a["services"] = [];
-                }
-                if (license.offerName !== "CF") {
-                  if (license.siteUrl) {
-                    if (!subscription["sites"]) {
-                      subscription["sites"] = {};
-                    }
-                    if (!subscription["sites"][license.siteUrl]) {
-                      subscription["sites"][license.siteUrl] = [];
-                    }
-                    subscription["sites"][license.siteUrl].push(license);
-                    subscription["licensesCount"] = subscription.sites[license.siteUrl].length;
-                    subscription.count = Object.keys(subscription["sites"]).length;
-                  } else {
-                    subscription[bucket]["services"].push(license);
+                  subscription[bucket].unlimited = true;
+                });
+              } else {
+                licenses.forEach(function (license) {
+                  var bucket = license.licenseType.toLowerCase();
+                  if (!(bucket === 'cmr' || bucket === 'conferencing')) {
+                    subscription[bucket] = {};
+                    var a = subscription[bucket];
+                    a['services'] = [];
                   }
-                } else {
-                  subscription["cf"] = {
-                    "services": []
-                  };
-                  subscription["cf"]["services"].push(license);
-                }
-              });
+                  if (license.offerName !== 'CF') {
+                    if (license.siteUrl) {
+                      if (!subscription['sites']) {
+                        subscription['sites'] = {};
+                      }
+                      if (!subscription['sites'][license.siteUrl]) {
+                        subscription['sites'][license.siteUrl] = [];
+                      }
+                      subscription['sites'][license.siteUrl].push(license);
+                      subscription['licensesCount'] = subscription.sites[license.siteUrl].length;
+                      subscription.count = Object.keys(subscription['sites']).length;
+                    } else {
+                      subscription[bucket]['services'].push(license);
+                    }
+                  } else {
+                    subscription['cf'] = {
+                      'services': []
+                    };
+                    subscription['cf']['services'].push(license);
+                  }
+                });
+              }
+              $scope.buckets.push(subscription);
             }
-            $scope.buckets.push(subscription);
-          }
-        });
+          });
       };
 
       function init() {
@@ -84,6 +94,13 @@ angular.module('Core')
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();
       });
+
+      function trialExistsInSubscription(subscription) {
+        var licenses = _.get(subscription, 'licenses', []);
+        return _.some(licenses, function (license) {
+          return license.isTrial;
+        });
+      }
     }
   ])
   .directive('crLeaderBoardBucket', function () {

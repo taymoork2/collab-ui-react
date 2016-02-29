@@ -1,0 +1,48 @@
+<div class="mediafusion-notification-config">
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="deleteClust.close()">
+      <span class="sr-only" translate="common.close"></span>
+    </button>
+    <div ng-show="deleteClust.error">
+      <h5 class="modal-title" translate="mediaFusion.deleteGroup.errorHeader"></h5>
+    </div>
+    <div ng-hide="loading || deleteClust.error">
+      <h5 class="modal-title" translate="mediaFusion.deleteGroup.title"></h5>
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <div ng-show="deleteClust.error" class="alert alert-danger" style="margin-bottom: 30px">
+      {{deleteClust.error}}
+    </div>
+
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+
+    <div ng-hide="loading || deleteClust.error">
+      <p>{{deleteClust.deleteAreYouSure}}</p>
+    </div>
+  </div>
+
+  <div class="modal-footer" ng-hide="deleteClust.error">
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--negative pull-right"
+            ng-click="deleteClust.delete()">
+      <span ng-hide="saving" translate="mediaFusion.deleteGroup.delete"></span>
+        <span ng-show="saving">
+          <i class="icon icon-spinner"/>
+        </span>
+    </button>
+    <button id="convertCancelButton" class="btn pull-right" ng-click="deleteClust.close()"
+            style="margin-right: 10px">
+      <span translate="mediaFusion.deleteGroup.keep"></span>
+    </button>
+  </div>
+  <div class="modal-footer" ng-show="deleteClust.error">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="deleteClust.close()"
+            style="margin-right: 10px">
+      <span translate="common.ok"></span>
+    </button>
+  </div>
+</div>
+

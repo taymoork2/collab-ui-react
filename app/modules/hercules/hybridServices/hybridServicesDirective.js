@@ -7,7 +7,7 @@
     .controller('HybridServicesCtrl', HybridServicesCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, Authinfo, Config, USSService, ServiceDescriptor, $timeout) {
+  function HybridServicesCtrl($scope, $timeout, Authinfo, Config, USSService, ServiceDescriptor, Orgservice) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -32,7 +32,30 @@
       return;
     }
 
-    if (hasCaaSLicense()) {
+    Orgservice.getLicensesUsage()
+      .then(function (subscriptions) {
+        var hasAnyLicense = _.some(subscriptions, function (subscription) {
+          return subscription.licenses && subscription.licenses.length > 0;
+        });
+        if (hasAnyLicense) {
+          checkEntitlements({
+            enforceLicenseCheck: true
+          });
+        } else {
+          checkEntitlements({
+            enforceLicenseCheck: false
+          });
+        }
+      }, function () {
+        checkEntitlements({
+          enforceLicenseCheck: false
+        });
+      });
+
+    function checkEntitlements(options) {
+      if (options.enforceLicenseCheck && !hasCaaSLicense()) {
+        return;
+      }
       // Filter out extensions that are not enabled in FMS
       ServiceDescriptor.services(function (error, services) {
         if (services) {

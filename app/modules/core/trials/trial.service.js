@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
+  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
     var _trialData;
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -180,6 +180,7 @@
       TrialCallService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
+      TrialPstnService.reset();
 
       var defaults = {
         customerName: '',
@@ -195,7 +196,8 @@
           meetingTrial: TrialMeetingService.getData(),
           callTrial: TrialCallService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
-          deviceTrial: TrialDeviceService.getData()
+          deviceTrial: TrialDeviceService.getData(),
+          pstnTrial: TrialPstnService.getData()
         },
       };
 

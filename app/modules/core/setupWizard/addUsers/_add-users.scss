@@ -7,10 +7,11 @@
     .file-download-content {
       @extend .center;
       align-self: center;
-      .icon-download {
-        font-size: rem(100);
-        margin-bottom: rem(20);
-        color: $gray-light;
+      .icon {
+        font-size: 7rem;
+        margin-bottom: 2rem;
+        color: $gray-dark-1;
+        display: block;
       }
       h4 {
         margin-top: rem(20);
@@ -40,10 +41,11 @@
   }
   .file-drop-content {
     align-self: center;
-    .icon-circle-attachment {
-      font-size: 100px;
-      margin-bottom: 20px;
-      color: $gray-light;
+    .icon {
+      font-size: 7rem;
+      margin-bottom: 2rem;
+      color: $gray-dark-1;
+      display: block;
     }
   }
   .file-drop-inactive {
