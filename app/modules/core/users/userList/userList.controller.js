@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser, $log) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.manageUsers');
     $scope.load = true;
@@ -99,6 +99,8 @@
 
       //list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
+        $scope.currentDataPosition = 0;
+        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
     }
