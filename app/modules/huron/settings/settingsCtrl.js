@@ -714,11 +714,7 @@
     }
 
     function isNotAssignedNumber(numbers, emergencyCallbackNumber) {
-      if (!_.includes(numbers, emergencyCallbackNumber)) {
-        return true;
-      } else {
-        return false;
-      }
+      return !_.includes(numbers, emergencyCallbackNumber);
     }
 
     function displayDisableVoicemailWarning() {
@@ -779,15 +775,17 @@
       }
 
       function saveServiceNumber() {
-        var site = {};
-        site.emergencyCallBackNumber = {
-          pattern: vm.model.serviceNumber.number
-        };
-        return ServiceSetup.updateSite(vm.model.uuid, site)
-          .catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
-            return $q.reject(response);
-          });
+        if (vm.model.serviceNumber !== '') {
+          var site = {};
+          site.emergencyCallBackNumber = {
+            pattern: vm.model.serviceNumber.number
+          };
+          return ServiceSetup.updateSite(vm.model.uuid, site)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
+              return $q.reject(response);
+            });
+        }
       }
 
       function saveSite() {
@@ -1243,15 +1241,15 @@
         vm.model.callerId.callerIdName = Authinfo.getOrgName();
       }
     });
-    
-    function getAssignedNumber(){
-        return vm.assignedNumbers;
+
+    function getAssignedNumber() {
+      return vm.assignedNumbers;
     }
 
     function getServiceNumber() {
-        return vm.model.serviceNumber.pattern;
+      return vm.model.serviceNumber.pattern;
     }
-    
+
     $scope.$watchGroup(['settings.getAssignedNumber()', 'settings.getServiceNumber()'], function (newValues, oldValues) {
       if (!_.includes(newValues, undefined)) {
         vm.serviceNumberWarning = isNotAssignedNumber(newValues[0], newValues[1]);
