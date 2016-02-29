@@ -221,44 +221,42 @@ describe('Controller: Partner Reports', function () {
       });
     });
 
-    describe('pageForward', function () {
-      it('should change carousel button numbers', function () {
+    describe('Most Active Paging', function () {
+      it('pageForward should change carousel button numbers', function () {
         controller.activeUsersTotalPages = 4;
-        controller.activeUserCurrentPage = controller.activeButton[2];
+        controller.activeUserCurrentPage = 1;
+
+        controller.pageForward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(2);
+
         controller.pageForward();
         expect(controller.activeButton[0]).toBe(2);
         expect(controller.activeButton[1]).toBe(3);
         expect(controller.activeButton[2]).toBe(4);
+        expect(controller.activeUserCurrentPage).toBe(3);
       });
 
-      it('should not change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 3;
-        controller.activeUserCurrentPage = controller.activeButton[2];
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-      });
-    });
-
-    describe('pageBackward', function () {
-      it('should change carousel button numbers', function () {
+      it('pageBackward should change carousel button numbers', function () {
+        controller.activeUsersTotalPages = 4;
         controller.activeButton[0] = 2;
         controller.activeButton[1] = 3;
         controller.activeButton[2] = 4;
-        controller.activeUserCurrentPage = 2;
+        controller.activeUserCurrentPage = 3;
 
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
-      });
+        expect(controller.activeUserCurrentPage).toBe(2);
 
-      it('should not change carousel button numbers', function () {
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(1);
       });
     });
 
