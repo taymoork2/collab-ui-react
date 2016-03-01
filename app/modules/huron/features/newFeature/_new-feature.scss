@@ -30,6 +30,29 @@
 
 .feature-icon-container {
   @include vr-spacing(pt, 2.5);
+  .icons {
+    width: rem-calc(120);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    color: $gray-base;
+    &.show-line:before {
+      content: ' ';
+      border-left: 1px solid $gray-base;
+      height: 1rem;
+      position: relative;
+      top: rem-calc(46);
+      left: 50%;
+    }
+  }
+  .icon {
+    font-size: 24px;
+    flex: 1;
+    &:first-child {
+      flex-basis: 100%;
+      padding-bottom: 24px;
+    }
+  }
 }
 
 .feature-icon-circle {      // Icon in the option.
@@ -66,4 +89,7 @@
   @include vr-spacing(pt, 2);
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
+  &.text-center {
+    padding: 20px 30%;
+  }
 }
