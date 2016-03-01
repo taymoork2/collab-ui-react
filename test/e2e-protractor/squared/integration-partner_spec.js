@@ -8,7 +8,12 @@ describe('Partner flow', function () {
   var accessToken;
   var appWindow;
 
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
+    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 

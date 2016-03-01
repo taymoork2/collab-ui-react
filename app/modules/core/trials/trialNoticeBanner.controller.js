@@ -12,8 +12,10 @@
     };
 
     vm.canShow = canShow;
-    vm.daysLeft = 0;
+    vm.daysLeft = null;
     vm.hasRequested = false;
+    vm.partnerAdminEmail = null;
+    vm.partnerAdminDisplayName = null;
     vm.sendRequest = sendRequest;
     vm._helpers = {
       getDaysLeft: getDaysLeft,
@@ -37,20 +39,24 @@
             partnerInfo = results[2];
           ft.atlasTrialConversion = enabled;
           vm.daysLeft = daysLeft;
-          vm.partnerName = _.get(partnerInfo, 'data.partners[0].displayName');
+
+          vm.partnerAdminEmail = _.get(partnerInfo, 'data.partners[0].userName');
+          vm.partnerAdminDisplayName = _.get(partnerInfo, 'data.partners[0].displayName');
         });
     }
 
     function canShow() {
-      return ft.atlasTrialConversion && Authinfo.isUserAdmin();
+      return ft.atlasTrialConversion && Authinfo.isUserAdmin() && (TrialService.getTrialIds().length > 0);
     }
 
     function sendRequest() {
-      // TODO: add sendEmail() here
-      Notification.success('trials.requestConfirmNotifyMsg', {
-        partnerName: vm.partnerName
-      });
-      vm.hasRequested = true;
+      return vm._helpers.sendEmail()
+        .then(function () {
+          Notification.success('trials.requestConfirmNotifyMsg', {
+            partnerAdminDisplayName: vm.partnerAdminDisplayName
+          });
+          vm.hasRequested = true;
+        });
     }
 
     function getDaysLeft() {
@@ -64,7 +70,11 @@
     }
 
     function sendEmail() {
-      // TODO: need to work around server-side-only available encryption for email template params
+      var customerName = Authinfo.getOrgName();
+      var customerEmail = Authinfo.getPrimaryEmail();
+      var partnerEmail = vm.partnerAdminEmail;
+      return EmailService.emailNotifyPartnerTrialConversionRequest(
+        customerName, customerEmail, partnerEmail);
     }
   }
 })();

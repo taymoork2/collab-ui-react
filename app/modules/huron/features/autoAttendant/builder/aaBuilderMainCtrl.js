@@ -22,6 +22,7 @@
     vm.getSaveErrorMessages = getSaveErrorMessages;
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
+    vm.removeNewStep = removeNewStep;
     vm.saveUiModel = saveUiModel;
     vm.setupTemplate = setupTemplate;
     vm.templateName = $stateParams.aaTemplate;
@@ -225,6 +226,21 @@
       );
     }
 
+    function removeNewStep(menu) {
+      menu.entries = _.reject(menu.entries, function (entry) {
+        // Remove New Step placeholder.  New Step has two respresentation in the UI model:
+        // 1) When a New Step is added by an user, it is defined by a menuEntry with an empty
+        // actions array in UI model.  It was stored as an empty menuEntry {} into
+        // the CE definition.
+        // 2) When an empty menuEntry {} is read from CE definition, it is translated into
+        // the UI model as a menuEntry with an un-configured action in actions array and
+        // action.name set to "".
+        return angular.isDefined(entry.actions) &&
+          (entry.actions.length === 0 ||
+            (entry.actions.length === 1 && entry.actions[0].name.length === 0));
+      });
+    }
+
     function saveAARecords() {
 
       var aaRecords = vm.aaModel.aaRecords;
@@ -239,6 +255,10 @@
       if (vm.ui.isOpenHours && !AAValidationService.isPhoneMenuValidationSuccess(vm.ui.openHours)) {
         return;
       }
+
+      vm.removeNewStep(vm.ui.openHours);
+      vm.removeNewStep(vm.ui.closedHours);
+      vm.removeNewStep(vm.ui.holidays);
 
       vm.saveUiModel();
 

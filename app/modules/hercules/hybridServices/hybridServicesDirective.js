@@ -1,104 +1,152 @@
-'use strict';
-angular
-  .module('Hercules')
-  .controller('HybridServicesCtrl', ['$log', '$rootScope', 'UserListService', '$scope', '$stateParams', '$translate', 'Authinfo', 'USSService', 'ServiceDescriptor', '$timeout',
-    function ($log, $rootScope, UserListService, $scope, $stateParams, $translate, Authinfo, USSService, ServiceDescriptor, $timeout) {
-      if (!Authinfo.isFusion()) {
-        return;
-      }
-      $scope.currentUser = $stateParams.currentUser;
-      $scope.extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+(function () {
+  'use strict';
 
-      var hasEntitlement = function (entitlement) {
-        if (!angular.isDefined($scope.currentUser)) {
-          return false;
-        }
+  angular
+    .module('Hercules')
+    .directive('herculesCloudExtensions', herculesCloudExtensions)
+    .controller('HybridServicesCtrl', HybridServicesCtrl);
 
-        return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(entitlement) > -1;
-      };
+  /* @ngInject */
+  function HybridServicesCtrl($scope, $timeout, Authinfo, Config, USSService, ServiceDescriptor, Orgservice) {
+    if (!Authinfo.isFusion()) {
+      return;
+    }
+    var vm = this;
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+    var stopDelayedUpdates = false;
+    var delayedUpdateTimer = null;
+    vm.extensions = getExtensions();
+    vm.isEnabled = false;
 
-      if ($scope.extensionEntitlements.every(function (extensionEntitlement) {
-          return !Authinfo.isEntitled(extensionEntitlement);
-        })) {
-        return;
-      }
+    vm.getStatus = function (status) {
+      return USSService.decorateWithStatus(status);
+    };
 
-      $scope.extensions = [];
-      _.forEach($scope.extensionEntitlements, function (extensionEntitlement) {
-        if (Authinfo.isEntitled(extensionEntitlement)) {
-          $scope.extensions.push({
-            id: extensionEntitlement,
-            entitled: hasEntitlement(extensionEntitlement)
+    vm.extensionIcon = function (id) {
+      return ServiceDescriptor.serviceIcon(id);
+    };
+
+    if (extensionEntitlements.every(function (extensionEntitlement) {
+        return !Authinfo.isEntitled(extensionEntitlement);
+      })) {
+      return;
+    }
+
+    Orgservice.getLicensesUsage()
+      .then(function (subscriptions) {
+        var hasAnyLicense = _.some(subscriptions, function (subscription) {
+          return subscription.licenses && subscription.licenses.length > 0;
+        });
+        if (hasAnyLicense) {
+          checkEntitlements({
+            enforceLicenseCheck: true
+          });
+        } else {
+          checkEntitlements({
+            enforceLicenseCheck: false
           });
         }
+      }, function () {
+        checkEntitlements({
+          enforceLicenseCheck: false
+        });
       });
 
+    function checkEntitlements(options) {
+      if (options.enforceLicenseCheck && !hasCaaSLicense()) {
+        return;
+      }
       // Filter out extensions that are not enabled in FMS
       ServiceDescriptor.services(function (error, services) {
         if (services) {
-          _.forEach($scope.extensions, function (extension) {
+          _.forEach(vm.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id;
             });
             if (extension.enabled) {
-              $scope.isEnabled = true;
+              vm.isEnabled = true;
             }
           });
-          if ($scope.isEnabled) {
+          if (vm.isEnabled) {
             // Only poll for statuses if there are enabled extensions
             updateStatusForUser();
           }
         }
       });
+    }
 
-      // Periodically update the user statuses from USS
-      function updateStatusForUser() {
-        if (angular.isDefined($scope.currentUser)) {
-          USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-            if (activationStatus && activationStatus.userStatuses) {
-              _.forEach($scope.extensions, function (extension) {
-                extension.status = _.find(activationStatus.userStatuses, function (status) {
-                  return extension.id === status.serviceId;
-                });
+    // Periodically update the user statuses from USS
+    function updateStatusForUser() {
+      if (angular.isDefined(vm.user)) {
+        USSService.getStatusesForUser(vm.user.id, function (err, activationStatus) {
+          if (activationStatus && activationStatus.userStatuses) {
+            _.forEach(vm.extensions, function (extension) {
+              extension.status = _.find(activationStatus.userStatuses, function (status) {
+                return extension.id === status.serviceId;
               });
-            }
-            delayedUpdateStatusForUser();
-          });
-        }
+            });
+          }
+          delayedUpdateStatusForUser();
+        });
+      }
+    }
+
+    function delayedUpdateStatusForUser() {
+      if (stopDelayedUpdates) {
+        return;
+      }
+      delayedUpdateTimer = $timeout(function () {
+        updateStatusForUser();
+      }, 5000);
+    }
+
+    function hasEntitlement(entitlement) {
+      if (!angular.isDefined(vm.user)) {
+        return false;
       }
 
-      function delayedUpdateStatusForUser() {
-        if ($scope.stopDelayedUpdates) {
-          return;
-        }
-        $scope.delayedUpdateTimer = $timeout(function () {
-          updateStatusForUser();
-        }, 5000);
-      }
+      return vm.user.entitlements && vm.user.entitlements.indexOf(entitlement) > -1;
+    }
 
-      $scope.getStatus = function (status) {
-        return USSService.decorateWithStatus(status);
-      };
-
-      $scope.$on('$destroy', function () {
-        $scope.stopDelayedUpdates = true;
-        if ($scope.delayedUpdateTimer) {
-          $timeout.cancel($scope.delayedUpdateTimer);
+    function getExtensions() {
+      return _.map(extensionEntitlements, function (extensionEntitlement) {
+        if (Authinfo.isEntitled(extensionEntitlement)) {
+          return {
+            id: extensionEntitlement,
+            entitled: hasEntitlement(extensionEntitlement)
+          };
         }
       });
+    }
 
-      $scope.extensionIcon = function (id) {
-        return ServiceDescriptor.serviceIcon(id);
-      };
+    function hasCaaSLicense() {
+      // latest update says that a "Collaboration as a Service license" is
+      // equivalent to any license
+      var licenseIDs = _.get(vm.user, 'licenseID', []);
+      var offerCodes = _.map(licenseIDs, function (licenseString) {
+        return licenseString.split('_')[0];
+      });
+      return offerCodes.length > 0;
     }
-  ])
-  .directive('herculesCloudExtensions', [
-    function () {
-      return {
-        restrict: 'E',
-        scope: false,
-        controller: 'HybridServicesCtrl',
-        templateUrl: 'modules/hercules/hybridServices/hybridServices.tpl.html'
-      };
-    }
-  ]);
+
+    $scope.$on('$destroy', function () {
+      stopDelayedUpdates = true;
+      if (delayedUpdateTimer) {
+        $timeout.cancel(delayedUpdateTimer);
+      }
+    });
+  }
+
+  function herculesCloudExtensions() {
+    return {
+      scope: true,
+      restrict: 'E',
+      controller: 'HybridServicesCtrl',
+      controllerAs: 'hybridServicesCtrl',
+      bindToController: {
+        user: '='
+      },
+      templateUrl: 'modules/hercules/hybridServices/hybridServices.tpl.html'
+    };
+  }
+}());

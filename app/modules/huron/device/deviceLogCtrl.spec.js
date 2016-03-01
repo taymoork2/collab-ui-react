@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DeviceLogCtrl', function () {
-  var controller, $scope, $q, $stateParams, $interval, $intervalSpy, Config, HttpUtils, Notification, currentDevice, DeviceService, DeviceLogService;
+  var controller, $scope, $q, $stateParams, $interval, $intervalSpy, Config, Notification, currentDevice, DeviceService, DeviceLogService;
 
   var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
@@ -17,14 +17,13 @@ describe('Controller: DeviceLogCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$interval_, _Config_, _HttpUtils_, _Notification_, _DeviceService_, _DeviceLogService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$interval_, _Config_, _Notification_, _DeviceService_, _DeviceLogService_) {
     $scope = _$rootScope_.$new();
 
     $q = _$q_;
     $stateParams = _$stateParams_;
     $interval = _$interval_;
     Config = _Config_;
-    HttpUtils = _HttpUtils_;
     Notification = _Notification_;
     DeviceService = _DeviceService_;
     DeviceLogService = _DeviceLogService_;

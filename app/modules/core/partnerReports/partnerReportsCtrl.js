@@ -39,6 +39,7 @@
     vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
 
     vm.customerOptions = [];
     vm.customerSelected = null;
@@ -290,32 +291,17 @@
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.tableData !== ABORT && response.graphData !== ABORT) {
-          setActiveUserGraph(response.graphData);
-          setActivePopulationGraph(response.populationGraph, response.overallPopulation);
-
           vm.mostActiveUsers = [];
-          if (vm.customerSelected.isAllowedToManage && angular.isDefined(response.tableData)) {
-            vm.mostActiveUsers = response.tableData;
-          }
-
           vm.displayMostActive = false;
-          if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
-            vm.displayMostActive = true;
-          }
-
-          if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
-            var totalUsers = vm.mostActiveUsers.length;
-            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-          } else {
-            vm.activeUsersTotalPages = 0;
-          }
+          vm.activeUsersTotalPages = 0;
           vm.activeUserCurrentPage = 1;
           vm.activeButton = [1, 2, 3];
           vm.activeUserPredicate = activeUsersSort[4];
-
-          vm.activeUsersRefresh = SET;
-          if (response.graphData.length === 0) {
-            vm.activeUsersRefresh = EMPTY;
+          if (angular.isArray(response.tableData) && (response.tableData.length > 0)) {
+            vm.mostActiveUsers = response.tableData;
+            vm.displayMostActive = true;
+            var totalUsers = vm.mostActiveUsers.length;
+            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
           }
 
           vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
@@ -323,10 +309,16 @@
             customer: vm.customerSelected.label
           });
 
+          vm.activeUsersRefresh = EMPTY;
           vm.activeUserPopulationRefresh = EMPTY;
-          if (response.populationGraph.length !== 0) {
-            vm.activeUserPopulationRefresh = SET;
-            resizeCards();
+          if (response.graphData.length > 0) {
+            vm.activeUsersRefresh = SET;
+            setActiveUserGraph(response.graphData);
+            if (response.populationGraph.length > 0) {
+              setActivePopulationGraph(response.populationGraph, response.overallPopulation);
+              vm.activeUserPopulationRefresh = SET;
+              resizeCards();
+            }
           }
         }
         activeUsers = document.getElementById('activeUser');

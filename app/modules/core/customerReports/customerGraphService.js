@@ -373,11 +373,11 @@
     }
 
     function mediaGraphs(data, mediaFilter) {
-      var values = ['totalDurationSum', 'partialSum', 'poorAudioQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorAudioQualityDurationSum'];
+      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       if (mediaFilter.value === 1) {
-        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorQualityDurationSum'];
-        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorQualityDurationSum'];
+        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorAudioQualityDurationSum'];
+        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorAudioQualityDurationSum'];
       } else if (mediaFilter.value === 2) {
         values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
         balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];

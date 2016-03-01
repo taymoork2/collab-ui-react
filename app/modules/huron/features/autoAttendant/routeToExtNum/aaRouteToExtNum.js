@@ -38,19 +38,33 @@
     // the CE action verb is 'route'
     var rtExtNum = 'route';
 
+    var fromRouteCall = false;
+
     /////////////////////
 
     function populateUiModel() {
-      vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+      if (fromRouteCall) {
+        vm.model.phoneNumberInput.phoneNumber = vm.menuEntry.actions[0].getValue();
+      } else {
+        vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+      }
     }
 
     function saveUiModel() {
       var num = vm.model.phoneNumberInput.phoneNumber;
+
       if (num) {
         num = num.replace(/[-\s]*/g, '');
       }
-      vm.menuKeyEntry.actions[0].setValue(num);
+
+      if (fromRouteCall) {
+        vm.menuEntry.actions[0].setValue(num);
+      } else {
+        vm.menuKeyEntry.actions[0].setValue(num);
+      }
+
       AACommonService.setPhoneMenuStatus(true);
+
     }
 
     // when the phone number is changed in the UI, save to model
@@ -83,12 +97,32 @@
       vm.uiMenu = ui[$scope.schedule];
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
 
-      if ($scope.keyIndex < vm.menuEntry.entries.length) {
-        vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+      if ($scope.fromRouteCall) {
+        fromRouteCall = true;
+
+        // if our route is not there, add if no actions, or initialize
+        if (vm.menuEntry.actions.length === 0) {
+          action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+          vm.menuEntry.addAction(action);
+        } else {
+
+          if (!(vm.menuEntry.actions[0].getName() === rtExtNum)) {
+            // make sure action is External Number not AA, HG, User, etc
+            vm.menuEntry.actions[0].setName(rtExtNum);
+            vm.menuEntry.actions[0].setValue('');
+          }
+
+        }
+
       } else {
-        vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
-        vm.menuKeyEntry.addAction(action);
+
+        if ($scope.keyIndex < vm.menuEntry.entries.length) {
+          vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+        } else {
+          vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtExtNum, '');
+          vm.menuKeyEntry.addAction(action);
+        }
       }
 
       populateUiModel();

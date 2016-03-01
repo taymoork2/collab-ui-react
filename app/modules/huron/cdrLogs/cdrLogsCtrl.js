@@ -6,11 +6,11 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyValidationMessages, formlyConfig, CdrService, Notification) {
+  function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyConfig, CdrService, Notification) {
     var vm = this;
     var ABORT = 'ABORT';
-    var SEARCH = "SEARCH";
-    var UPLOAD = "UPLOAD";
+    vm.SEARCH = 1;
+    vm.UPLOAD = 2;
     var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
     var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
 
@@ -20,19 +20,6 @@
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
 
-    vm.gridData = [];
-    vm.dataState = null;
-    vm.selectedCDR = null;
-    vm.model = {
-      'searchUpload': SEARCH,
-      'startTime': moment().format(timeFormat),
-      'endTime': moment().format(timeFormat),
-      'startDate': moment().subtract(1, 'days').format(dateFormat),
-      'endDate': moment().format(dateFormat),
-      'hitSize': 50
-    };
-
-    formlyValidationMessages.addStringMessage('required', $translate.instant('cdrLogs.required'));
     formlyConfig.setType({
       name: 'custom-file',
       templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
@@ -40,159 +27,144 @@
       overwriteOk: true
     });
 
-    var validations = {
-      callingUser: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[3].formControl)) {
-          scope.model.callingUser = value;
-          scope.fields[3].formControl.$validate();
-        }
-        // name/uuid are now verified only once the search button is clicked and a notification is thrown
-        return true;
+    vm.gridData = [];
+    vm.dataState = null;
+    vm.selectedCDR = null;
+    vm.model = {
+      'callingPartyNumber': '',
+      'calledPartyNumber': '',
+      'searchUpload': vm.SEARCH,
+      'startTime': moment().format(timeFormat),
+      'endTime': moment().format(timeFormat),
+      'startDate': moment().subtract(1, 'days').format(dateFormat),
+      'endDate': moment().format(dateFormat),
+      'hitSize': 50
+    };
+
+    //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
+    $scope.cdr = {
+      model: {}
+    };
+    $scope.$watch("cdr.model.endDate", function () {
+      vm.validations.endDate();
+    });
+    $scope.$watch("cdr.model.startDate", function () {
+      vm.validations.startDate();
+    });
+
+    vm.radioOptions = [{
+      label: $translate.instant('cdrLogs.searchForm'),
+      value: vm.SEARCH,
+      name: 'radioSearchUpload',
+      id: 'cdrSearch'
+    }, {
+      label: $translate.instant('cdrLogs.uploadFile'),
+      value: vm.UPLOAD,
+      name: 'radioSearchUpload',
+      id: 'cdrUpload'
+    }];
+    vm.radioSelected = vm.SEARCH;
+
+    vm.messages = {
+      number: {
+        pattern: $translate.instant('cdrLogs.phoneNumberError'),
+        invalid: $translate.instant('cdrLogs.phoneNumberErrorTwo')
       },
-      calledUser: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        // name/uuid are now verified only once the search button is clicked and a notification is thrown
-        return (value !== scope.model.callingUser) || angular.isUndefined(value) || value === "";
+      time: {
+        required: $translate.instant('cdrLogs.required'),
+        pattern: $translate.instant('cdrLogs.invalidTime')
       },
-      callingNumber: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[5].formControl)) {
-          scope.model.callingPartyNumber = value;
-          scope.fields[5].formControl.$validate();
-        }
-        return /^(\+1)?([0-9]+)$/.test(value) || (value === undefined) || (value === "");
+      date: {
+        invalidStartDate: $translate.instant('cdrLogs.invalidStartDate'),
+        invalidEndDate: $translate.instant('cdrLogs.invalidEndDate'),
+        invalidFutureDate: $translate.instant('cdrLogs.invalidFutureDate')
       },
-      calledNumber: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        return (/^(\+1)?([0-9]+)$/.test(value) && (value !== scope.model.callingPartyNumber)) || (value === undefined) || (value === "");
-      },
-      callingDevice: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[7].formControl)) {
-          scope.model.callingPartyDevice = value;
-          scope.fields[7].formControl.$validate();
-        }
-        return true;
-      },
-      calledDevice: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        return (value !== scope.model.callingPartyDevice) || (value === undefined) || (value === "");
-      },
-      startTime: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[9].formControl)) {
-          scope.model.startTime = value;
-          scope.fields[9].formControl.$validate();
-        }
-        return /([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?/.test(value);
-      },
-      endTime: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        var timeOne = CdrService.formDate(scope.model.startDate, scope.model.startTime);
-        var timeTwo = CdrService.formDate(scope.model.endDate, value);
-        var noError = /([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?/.test(value) && (timeTwo > timeOne);
-        scope.showError = !noError;
-        return noError;
-      },
-      startDate: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        scope.model.startDate = value;
-        var noError = moment(today).format() >= moment(value).format();
-        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
-          scope.fields[7].formControl.$validate();
-        }
-        if (noError && !angular.isUndefined(scope.fields[11].formControl)) {
-          scope.fields[9].formControl.$validate();
-        }
-        vm.searchAndUploadForm.$setDirty();
-        scope.showError = !noError;
-        return noError;
-      },
-      endDate: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        scope.model.endDate = value;
-        var noError = (moment(value).format() >= moment(scope.model.startDate).format()) && (moment(today).format() >= moment(value).format());
-        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
-          scope.fields[7].formControl.$validate();
-        }
-        vm.searchAndUploadForm.$setDirty();
-        scope.showError = !noError;
-        return noError;
-      },
-      hitSize: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        return /([1-5]?[0-9])/.test(value) && (0 < value) && (value < 51);
+      hitSize: {
+        required: $translate.instant('cdrLogs.required'),
+        number: $translate.instant('cdrLogs.invalidNumber'),
+        min: $translate.instant('cdrLogs.hitSizeError'),
+        max: $translate.instant('cdrLogs.hitSizeError')
       }
     };
 
-    var messages = {
-      blank: function () {
-        return "";
-      },
-      callingUser: function () {
-        return $translate.instant('cdrLogs.userUuidError');
-      },
-      calledUser: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (value === scope.model.callingUser) {
-          return $translate.instant('cdrLogs.userUuidMatchError');
-        } else {
-          return $translate.instant('cdrLogs.userUuidError');
+    vm.patterns = {
+      number: /^(\+1)?([0-9]+)$/,
+      time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
+    };
+
+    vm.search = function () {
+      vm.searchDisabled = true;
+      vm.gridData = null;
+      vm.dataState = 1;
+      vm.selectedCDR = null;
+      CdrService.query(vm.model).then(function (response) {
+        if (response !== ABORT) {
+          vm.gridData = response;
+          if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
+            setupScrolling(vm.gridData);
+          } else {
+            vm.dataState = 0;
+          }
         }
-      },
+      }).finally(function () {
+        vm.searchDisabled = false;
+      });
+    };
+
+    vm.reset = function () {
+      vm.selectedCDR = null;
+      vm.model.callingUser = "";
+      vm.model.calledUser = "";
+      vm.model.callingPartyNumber = "";
+      vm.model.calledPartyNumber = "";
+      vm.model.callingPartyDevice = "";
+      vm.model.calledPartyDevice = "";
+      vm.model.startTime = moment().format(timeFormat);
+      vm.model.endTime = moment().format(timeFormat);
+      vm.model.startDate = moment().subtract(1, 'days').format(dateFormat);
+      vm.model.endDate = moment().format(dateFormat);
+      vm.model.hitSize = 50;
+      vm.searchAndUploadForm.$setPristine();
+    };
+
+    vm.validations = {
       callingNumber: function () {
-        return $translate.instant('cdrLogs.phoneNumberError');
-      },
-      calledNumber: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (value === scope.model.callingPartyNumber) {
-          return $translate.instant('cdrLogs.phoneNumberErrorTwo');
-        } else {
-          return $translate.instant('cdrLogs.phoneNumberError');
+        var isValid = true;
+        if (vm.model.calledPartyNumber !== "") {
+          isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
+        }
+        vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
+        if (isValid) {
+          vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
         }
       },
-      calledDevice: function () {
-        return $translate.instant('cdrLogs.deviceNameError');
-      },
-      startTime: function () {
-        return $translate.instant('cdrLogs.invalidTime');
-      },
-      endTime: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        var timeOne = CdrService.formDate(scope.model.startDate, scope.model.startTime);
-        var timeTwo = CdrService.formDate(scope.model.endDate, value);
-        if (timeTwo <= timeOne) {
-          return $translate.instant('cdrLogs.invalidTimeTwo');
-        } else {
-          return $translate.instant('cdrLogs.invalidTime');
+      calledNumber: function () {
+        var isValid = true;
+        if (vm.model.callingPartyNumber !== "") {
+          isValid = !(vm.model.callingPartyNumber === vm.model.calledPartyNumber);
+        }
+        vm.searchAndUploadForm.calledPartyNumber.$setValidity("invalid", isValid);
+        if (isValid) {
+          vm.searchAndUploadForm.callingPartyNumber.$setValidity("invalid", isValid);
         }
       },
       startDate: function () {
-        return $translate.instant('cdrLogs.tomorrowError');
+        var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
+        vm.searchAndUploadForm.startDate.$setValidity("invalidRange", isValid);
+        isValid = !!(moment(today).format() >= moment(vm.model.startDate).format());
+        vm.searchAndUploadForm.startDate.$setValidity("invalidDate", isValid);
       },
-      endDate: function (viewValue, modelValue, scope) {
-        var value = viewValue || modelValue;
-        if (moment(today).format() < moment(value).format()) {
-          return $translate.instant('cdrLogs.tomorrowError');
-        } else {
-          return $translate.instant('cdrLogs.invalidDate');
-        }
-      },
-      hitSize: function () {
-        return $translate.instant('cdrLogs.hitSizeError');
+      endDate: function () {
+        var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
+        vm.searchAndUploadForm.endDate.$setValidity("invalidRange", isValid);
+        isValid = !!(moment(today).format() >= moment(vm.model.endDate).format());
+        vm.searchAndUploadForm.endDate.$setValidity("invalidDate", isValid);
       }
     };
 
     var expression = {
-      hideSearch: function (viewValue, modelValue, scope) {
-        return scope.model.searchUpload !== SEARCH;
-      },
       hideUpload: function (viewValue, modelValue, scope) {
-        return scope.model.searchUpload !== UPLOAD;
-      },
-      searchDisabled: function (viewValue, modelValue, scope) {
-        return vm.searchAndUploadForm.$invalid;
+        return scope.model.searchUpload !== vm.UPLOAD;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
         return angular.isUndefined(scope.model.uploadFile);
@@ -201,261 +173,6 @@
 
     vm.fields = [{
       fieldGroup: [{
-        key: 'searchRadio',
-        type: 'radio',
-        className: 'search-display form-radio',
-        templateOptions: {
-          label: $translate.instant('cdrLogs.searchForm'),
-          value: SEARCH,
-          model: 'searchUpload'
-        }
-      }, {
-        key: 'uploadRadio',
-        type: 'radio',
-        className: 'upload-radio form-radio search-display',
-        templateOptions: {
-          label: $translate.instant('cdrLogs.uploadFile'),
-          value: UPLOAD,
-          model: 'searchUpload'
-        }
-      }, {
-        key: 'callingUser',
-        type: 'input',
-        className: 'search-display search-indent',
-        validators: {
-          user: {
-            expression: validations.callingUser,
-            message: messages.callingUser
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.userLabel'),
-          type: 'text',
-          maxlength: 36,
-          placeholder: $translate.instant('cdrLogs.callingParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'calledUser',
-        type: 'input',
-        className: 'search-display',
-        validators: {
-          user: {
-            expression: validations.calledUser,
-            message: messages.calledUser
-          }
-        },
-        templateOptions: {
-          type: 'text',
-          maxlength: 36,
-          placeholder: $translate.instant('cdrLogs.calledParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'callingPartyNumber',
-        type: 'input',
-        className: 'search-display search-indent',
-        validators: {
-          phoneNumber: {
-            expression: validations.callingNumber,
-            message: messages.callingNumber
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.number'),
-          type: 'text',
-          maxlength: 10,
-          placeholder: $translate.instant('cdrLogs.callingParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'calledPartyNumber',
-        type: 'input',
-        className: 'search-display',
-        validators: {
-          phoneNumber: {
-            expression: validations.calledNumber,
-            message: messages.calledNumber
-          }
-        },
-        templateOptions: {
-          type: 'text',
-          maxlength: 10,
-          placeholder: $translate.instant('cdrLogs.calledParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'callingPartyDevice',
-        type: 'input',
-        className: 'search-display search-indent',
-        validators: {
-          deviceName: {
-            expression: validations.callingDevice,
-            message: messages.blank
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.device'),
-          type: 'text',
-          placeholder: $translate.instant('cdrLogs.callingParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'calledPartyDevice',
-        type: 'input',
-        className: 'search-display',
-        validators: {
-          deviceName: {
-            expression: validations.calledDevice,
-            message: messages.calledDevice
-          }
-        },
-        templateOptions: {
-          type: 'text',
-          placeholder: $translate.instant('cdrLogs.calledParty')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'startTime',
-        type: 'input',
-        className: 'search-display search-indent',
-        validators: {
-          time: {
-            expression: validations.startTime,
-            message: messages.startTime
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.startTime'),
-          required: true,
-          type: 'text',
-          placeholder: $translate.instant('cdrLogs.timeExample')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'endTime',
-        type: 'input',
-        className: 'search-display',
-        validators: {
-          time: {
-            expression: validations.endTime,
-            message: messages.endTime
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.endTime'),
-          required: true,
-          type: 'text',
-          placeholder: $translate.instant('cdrLogs.timeExample')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'startDate',
-        type: 'datepicker',
-        className: 'search-display search-indent',
-        validators: {
-          time: {
-            expression: validations.startDate,
-            message: messages.startDate
-          }
-        },
-        templateOptions: {
-          inputClass: 'cdr-datepicker',
-          label: $translate.instant('cdrLogs.startDate'),
-          required: true,
-          placeholder: $translate.instant('cdrLogs.dateExample')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'endDate',
-        type: 'datepicker',
-        className: 'search-display',
-        validators: {
-          time: {
-            expression: validations.endDate,
-            message: messages.endDate
-          }
-        },
-        templateOptions: {
-          inputClass: 'cdr-datepicker',
-          label: $translate.instant('cdrLogs.endDate'),
-          required: true,
-          placeholder: $translate.instant('cdrLogs.dateExample')
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'hitSize',
-        type: 'input',
-        className: 'hitsize search-indent',
-        validators: {
-          hitSize: {
-            expression: validations.hitSize,
-            message: messages.hitSize
-          }
-        },
-        templateOptions: {
-          label: $translate.instant('cdrLogs.size'),
-          required: true,
-          type: 'number'
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
-        key: 'submit',
-        type: 'button',
-        className: 'form-button',
-        templateOptions: {
-          btnClass: 'btn btn--primary search-button',
-          label: $translate.instant('cdrLogs.search'),
-          onClick: function (options, scope) {
-            options.templateOptions.disabled = true;
-            vm.gridData = null;
-            vm.dataState = 1;
-            vm.selectedCDR = null;
-            CdrService.query(scope.model).then(function (response) {
-              if (response !== ABORT) {
-                vm.gridData = response;
-                if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
-                  setupScrolling(vm.gridData);
-                } else {
-                  vm.dataState = 0;
-                }
-              }
-            }).finally(function () {
-              options.templateOptions.disabled = false;
-            });
-          }
-        },
-        hideExpression: 'expression.hideSearch',
-        expressionProperties: {
-          'templateOptions.disabled': expression.searchDisabled
-        }
-      }, {
-        key: 'reset',
-        type: 'button',
-        className: 'form-button',
-        templateOptions: {
-          btnClass: 'btn btn--primary search-button',
-          label: $translate.instant('cdrLogs.reset'),
-          onClick: function (options, scope) {
-            vm.selectedCDR = null;
-
-            vm.model.callingUser = "";
-            vm.model.calledUser = "";
-            vm.model.callingPartyNumber = "";
-            vm.model.calledPartyNumber = "";
-            vm.model.callingPartyDevice = "";
-            vm.model.calledPartyDevice = "";
-            vm.model.startTime = moment().format(timeFormat);
-            vm.model.endTime = moment().format(timeFormat);
-            vm.model.startDate = moment().subtract(1, 'days').format(dateFormat);
-            vm.model.endDate = moment().format(dateFormat);
-            vm.model.hitSize = 50;
-
-            vm.searchAndUploadForm.$setPristine();
-          }
-        },
-        hideExpression: 'expression.hideSearch'
-      }, {
         key: 'uploadFile',
         type: 'custom-file',
         className: 'upload-display',
@@ -490,7 +207,14 @@
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              vm.gridData.push(addNames(jsonData.cdrs));
+              if (angular.isArray(jsonData.cdrs) && angular.isArray(jsonData.cdrs[0])) {
+                vm.gridData.push(addNames(jsonData.cdrs));
+              } else if (angular.isArray(jsonData.cdrs)) {
+                vm.gridData.push(addNames([jsonData.cdrs]));
+              } else {
+                vm.dataState = 0;
+                Notification.notify($translate.instant('cdrLogs.jsonAllowedFormatError'), 'error');
+              }
             } catch (SyntaxError) {
               vm.dataState = 0;
               Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');

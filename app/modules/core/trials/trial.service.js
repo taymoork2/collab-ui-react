@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
+  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
     var _trialData;
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -137,6 +137,15 @@
       } else {
         details.shippingInfo.state = _.get(details, 'shippingInfo.state.abbr', '');
 
+        // formly will nest the country inside of itself, I think this is because
+        // the country list contains country as a key, as well as the device.service
+        // having country as a key
+        // TODO: figure out why when we have the time
+        var nestedCountry = _.get(details, 'shippingInfo.country.country');
+        if (nestedCountry) {
+          details.shippingInfo.country = nestedCountry;
+        }
+
         // if this is not set, remove the whole thing
         // since this may get sent with partially complete
         // data that the backend doesnt like
@@ -171,6 +180,7 @@
       TrialCallService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
+      TrialPstnService.reset();
 
       var defaults = {
         customerName: '',
@@ -186,7 +196,8 @@
           meetingTrial: TrialMeetingService.getData(),
           callTrial: TrialCallService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
-          deviceTrial: TrialDeviceService.getData()
+          deviceTrial: TrialDeviceService.getData(),
+          pstnTrial: TrialPstnService.getData()
         },
       };
 

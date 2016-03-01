@@ -7,7 +7,7 @@ describe('Configuring services per-user', function () {
 
   var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';
   var absolutePath = utils.resolvePath(file);
-  var fileText = 'First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\r\n';
+  var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
 
   var i;
   var bImportUsers = false;
@@ -17,7 +17,7 @@ describe('Configuring services per-user', function () {
   var numUsers = 10 * 3; // batch size is 10
   for (i = 0; i < numUsers; i++) {
     userList[i] = utils.randomTestGmailwithSalt('config_user');
-    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
+    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',f,t,t,f\r\n';
   }
 
   // Make file for import CSV testing
@@ -144,8 +144,10 @@ describe('Configuring services per-user', function () {
   //////////////////////////////////////
   // NO hybrid services
   //
-  it('should add user with NO hybrid services selected', function () {
+  it('should add user with NO license for hybrid services', function () {
     users.createUser(testUser);
+
+    // we do not check anything during onboarding so no license for this user
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
@@ -154,8 +156,8 @@ describe('Configuring services per-user', function () {
     activate.setup(null, testUser);
 
     utils.searchAndClick(testUser);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
+    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
     utils.click(users.closeSidePanel);
     utils.deleteUser(testUser);
   });
@@ -232,8 +234,12 @@ describe('Configuring services per-user', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-
     utils.click(inviteusers.bulkUpload);
+    utils.click(inviteusers.nextButton);
+  });
+
+  it('should land to the download template section', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.click(inviteusers.nextButton);
   });
 
@@ -241,15 +247,6 @@ describe('Configuring services per-user', function () {
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
     bImportUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
-    utils.click(inviteusers.nextButton);
-  });
-
-  it('should land to assign services section', function () {
-    // Need a license for valid HS services
-    utils.click(users.paidMtgCheckbox);
-
-    // Select hybrid services
-    utils.click(users.hybridServices_UC);
     utils.click(inviteusers.nextButton);
   });
 

@@ -71,7 +71,7 @@ var ReportsPage = function () {
   this.customerMediaDescription = element(by.css('.customer-media')).element(by.css('.report-description'));
   this.mediaFilter = element(by.id('mediaFilter'));
   this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
-  this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('article header h4', 'Device Media Quality'));
+  this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
   this.mediaQualityGraph = element(by.id('mediaQualityDiv'));
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 

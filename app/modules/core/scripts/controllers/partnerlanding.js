@@ -157,8 +157,8 @@
       multiSelect: false,
       rowHeight: 44,
       enableRowHeaderSelection: false,
-      enableColumnResize: true,
       enableColumnMenus: false,
+      enableColumnResizing: true,
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -178,6 +178,7 @@
         displayName: $translate.instant('customerPage.customerNameHeader'),
         width: '25%',
         cellTemplate: nameTemplate,
+        cellClass: 'ui-grid-add-column-border',
         sortingAlgorithm: partnerAtTopSort,
         sort: {
           direction: 'asc',
@@ -188,21 +189,21 @@
         displayName: $translate.instant('customerPage.message'),
         width: '12%',
         cellTemplate: serviceTemplate,
-        headerClass: 'align-center',
+        headerCellClass: 'align-center',
         sortingAlgorithm: serviceSort
       }, {
         field: 'conferencing',
         displayName: $translate.instant('customerPage.meeting'),
         width: '12%',
         cellTemplate: serviceTemplate,
-        headerClass: 'align-center',
+        headerCellClass: 'align-center',
         sortingAlgorithm: serviceSort
       }, {
         field: 'communications',
         displayName: $translate.instant('customerPage.call'),
         width: '12%',
         cellTemplate: serviceTemplate,
-        headerClass: 'align-center',
+        headerCellClass: 'align-center',
         sortingAlgorithm: serviceSort
       }, {
         field: 'notes',
@@ -214,7 +215,8 @@
         displayName: $translate.instant('customerPage.actionHeader'),
         sortable: false,
         cellTemplate: actionTemplate,
-        width: '90'
+        width: '95',
+        cellClass: 'align-center'
       }]
     };
 

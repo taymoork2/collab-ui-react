@@ -7,8 +7,25 @@
   }
 }
 
-.ngHeaderText.colt1, 
-.ngHeaderText.colt2, 
+.ui-grid-header-cell:last-child .ui-grid-cell-contents {
+  padding-right: 10px;
+}
+
+.ui-grid-header-cell.align-center,
+.ui-grid-cell:last-child.align-center {
+  text-align: center;
+}
+
+.ui-grid-cell.ui-grid-add-column-border {
+  border-right: 1px solid $gray-light-3;
+}
+
+.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
+  border-right: 1px solid $gray-light-3;
+}
+
+.ngHeaderText.colt1,
+.ngHeaderText.colt2,
 .ngHeaderText.colt3 {
   text-align: center;
 }

@@ -22,7 +22,7 @@
     "ui-router-extras": "=0.1.0",
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
-    "cisco-ui": "~2.16.3",
+    "cisco-ui": "~2.16.4",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",
@@ -53,7 +53,8 @@
     "parse-address-bobbr": "",
     "clipboard": "~1.5.5",
     "query-command-supported": "~1.0.0",
-    "punycode": "^1.4.0"
+    "punycode": "^1.4.0",
+    "angular-ical": "~1.1.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0",

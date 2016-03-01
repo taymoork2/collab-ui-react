@@ -1,9 +1,8 @@
 'use strict';
 /* global Bloodhound */
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
-    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
-
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService) {
       $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
@@ -17,20 +16,58 @@ angular.module('Squared')
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
+      $scope.showCdrCallFlowLink = false;
+      $scope.isCiscoDevRole = isCiscoDevRole;
+      $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
+      $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
+      $scope.gridRefresh = false;
+      $scope.showToolsCard = false;
+
+      function initializeShowCdrCallFlowLink() {
+        Userservice.getUser('me', function (user, status) {
+          if (user.success) {
+            if (isCiscoDevRole(user.roles)) {
+              $scope.showCdrCallFlowLink = true;
+              setTimeout(function () {
+                $('.cs-card-layout').masonry('layout');
+              }, 200);
+            }
+          } else {
+            Log.debug('Get current user failed. Status: ' + status);
+          }
+        });
+      }
+
+      function isCiscoDevRole(roleArray) {
+        if (Array.isArray(roleArray)) {
+          if (Config.isProd()) {
+            if ((roleArray.indexOf('ciscouc.devops') >= 0 || roleArray.indexOf('ciscouc.devsupport') >= 0) && Authinfo.isCisco()) {
+              return true;
+            }
+          } else {
+            if ((roleArray.indexOf('ciscouc.devops') >= 0 || roleArray.indexOf('ciscouc.devsupport') >= 0) && (Authinfo.isCisco() || Authinfo.isCiscoMock())) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      $scope.showToolsCard = function () {
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskCard;
+      };
 
       $scope.tabs = [{
-          title: $translate.instant('supportPage.tabs.status'),
-          state: "support.status"
-        }, {
+        title: $translate.instant('supportPage.tabs.status'),
+        state: "support.status"
+      }];
+
+      if (Authinfo.isInDelegatedAdministrationOrg()) {
+        $scope.tabs.push({
           title: $translate.instant('supportPage.tabs.logs'),
           state: "support.logs"
-        }
-        // Preliminary removed the menu item because the functionality is currently not used
-        //, {
-        //  title: $translate.instant('supportPage.tabs.orderProvisioning'),
-        //  state: "support.billing"
-        //}
-      ];
+        });
+      }
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
@@ -87,9 +124,33 @@ angular.module('Squared')
         });
       };
 
+      //Retrieving logs for user
+      $scope.getLogs = function () {
+        $scope.gridRefresh = true;
+
+        $scope.closeCallInfo();
+
+        //$('#logsearchfield').typeahead('close');
+        $scope.userLogs = [];
+        $scope.logSearchBtnLoad = true;
+        //check whether email address or uuid was enetered
+        $scope.searchInput = $('#logsearchfield').val();
+        if ($scope.searchInput) {
+          searchLogs($scope.searchInput);
+          $('#noResults').text([$filter('translate')('supportPage.searching')]);
+        } else {
+          $scope.gridRefresh = false;
+          $('#noResults').text([$filter('translate')('supportPage.noResults')]);
+          Log.debug('Search input cannot be empty.');
+          //Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
+          $scope.logSearchBtnLoad = false;
+        }
+      };
+
       var init = function () {
         getHealthMetrics();
         getOrg();
+        initializeShowCdrCallFlowLink();
       };
 
       init();
@@ -180,7 +241,7 @@ angular.module('Squared')
         });
       };
 
-      initializeTypeahead();
+      //initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
         //Initializing typeahead engine when authinfo is ready
@@ -195,25 +256,6 @@ angular.module('Squared')
       var validateCallStartTime = function (callStart) {
         var re = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}Z$/;
         return re.test(callStart);
-      };
-
-      //Retrieving logs for user
-      $scope.getLogs = function () {
-        $scope.closeCallInfo();
-        $('#logsearchfield').typeahead('close');
-        $scope.userLogs = [];
-        $scope.logSearchBtnLoad = true;
-        //check whether email address or uuid was enetered
-        $scope.searchInput = $('#logsearchfield').val();
-        if ($scope.searchInput) {
-          searchLogs($scope.searchInput);
-          $('#noResults').text([$filter('translate')('supportPage.searching')]);
-        } else {
-          $('#noResults').text([$filter('translate')('supportPage.noResults')]);
-          Log.debug('Search input cannot be empty.');
-          Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
-          $scope.logSearchBtnLoad = false;
-        }
       };
 
       $scope.formatDate = function (date) {
@@ -278,17 +320,20 @@ angular.module('Squared')
                 };
                 $scope.userLogs.push(log);
                 $scope.logSearchBtnLoad = false;
+                $scope.gridRefresh = false;
                 $('#logs-panel').show();
               }
             } else {
               $('#noResults').text([$filter('translate')('supportPage.noResults')]);
               $scope.logSearchBtnLoad = false;
+              $scope.gridRefresh = false;
               $('#logs-panel').show();
             }
           } else {
             $('#noResults').text([$filter('translate')('supportPage.noResults')]);
             $('#logs-panel').show();
             $scope.logSearchBtnLoad = false;
+            $scope.gridRefresh = false;
             Log.debug('Failed to retrieve user logs. Status: ' + status);
             Notification.notify([$translate.instant('supportPage.errLogQuery', {
               status: status
@@ -404,25 +449,21 @@ angular.module('Squared')
             window.location.assign(data.tempURL);
           } else {
             Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
-            Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant('supportPage.status') + ': ' + status], 'error');
+            Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant(
+              'supportPage.status') + ': ' + status], 'error');
           }
         });
       };
 
       $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
-
-        var output = $filter('translate')('supportPage.downloading');
-        var downloadDialog = window.confirm(output);
-        if (downloadDialog === true) {
-          CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-            if (data.success) {
-              window.location.assign(data.resultsUrl);
-            } else {
-              Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
-              Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
-            }
-          });
-        }
+        CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
+          if (data.success) {
+            window.location.assign(data.resultsUrl);
+          } else {
+            Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
+            Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
+          }
+        });
       };
 
       $scope.downloadFlow = function (downloadUrl) {
@@ -488,20 +529,35 @@ angular.module('Squared')
         return $scope.userLogs.indexOf(rowItem);
       };
 
+      $scope.openDownloadCallLogModal = function (rowEntity) {
+        ModalService.open({
+          title: $translate.instant('supportPage.callflowLogsAction'),
+          message: $translate.instant('supportPage.downloading'),
+          close: $translate.instant('common.ok'),
+          dismiss: $translate.instant('common.cancel'),
+          type: 'primary'
+        }).result.then(function () {
+          $scope.getCallflowCharts(rowEntity.orgId, rowEntity.userId, rowEntity.locusId, rowEntity.callStart, rowEntity.fullFilename, true);
+        });
+      };
+
       var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
+      var callFlowTemplate =
+        '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
-      var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
+      var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openDownloadCallLogModal(row.entity, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
-      var callInfoTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></span></a></div>';
+      var callInfoTemplate =
+        '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></span></a></div>';
 
-      var callSummaryTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallSummary(row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></a></div>';
+      var callSummaryTemplate =
+        '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallSummary(row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></a></div>';
 
       $scope.gridOptions = {
         data: 'userLogs',
         multiSelect: false,
-        rowHeight: 48,
+        rowHeight: 45,
         enableRowHeaderSelection: false,
         enableColumnResize: true,
         enableColumnMenus: false,
@@ -511,7 +567,9 @@ angular.module('Squared')
         columnDefs: [{
           field: 'emailAddress',
           displayName: $filter('translate')('supportPage.logEmailAddress'),
-          sortable: true
+          sortable: true,
+          cellClass: 'email-address',
+          headerCellClass: 'header-email-address'
         }, {
           field: 'locusId',
           displayName: $filter('translate')('supportPage.logLocusId'),
@@ -524,18 +582,25 @@ angular.module('Squared')
           field: 'clientLog',
           displayName: $filter('translate')('supportPage.logAction'),
           sortable: false,
-          cellTemplate: clientLogTemplate
+          cellTemplate: clientLogTemplate,
+          cellClass: 'client-log',
+          headerCellClass: 'header-client-log',
+          maxWidth: 200
         }, {
           field: 'callflowLogs',
           displayName: $filter('translate')('supportPage.callflowLogsAction'),
           sortable: false,
-          cellTemplate: callFlowLogsTemplate
+          cellTemplate: callFlowLogsTemplate,
+          cellClass: 'call-flow-logs',
+          headerCellClass: 'header-call-flow-logs',
+          maxWidth: 200
         }, {
           field: 'callFlow',
           displayName: $filter('translate')('supportPage.callflowAction'),
           sortable: false,
           cellTemplate: callFlowTemplate,
-          visible: Authinfo.isCisco()
+          visible: Authinfo.isCisco(),
+          cellClass: 'call-flow'
         }, {
           field: 'callInfo',
           displayName: $filter('translate')('supportPage.callAction'),
@@ -550,6 +615,5 @@ angular.module('Squared')
           visible: Authinfo.isCisco()
         }]
       };
-
     }
   ]);

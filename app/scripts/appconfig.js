@@ -1,9 +1,8 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$windowProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
-    function ($windowProvider, $httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
-      var $window = $windowProvider.$get();
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
       // sidepanel helper
@@ -40,6 +39,16 @@ angular
           },
           authenticate: false
         })
+        .state('dr-login-forward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          }
+        })
         .state('createAccount', {
           url: '/create-account',
           views: {
@@ -50,6 +59,59 @@ angular
             }
           },
           authenticate: false
+        })
+        .state('activateUser', {
+          url: '/activate-user',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateUserController'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser.successPage', {
+          url: '/success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateUser.errorPage', {
+          url: '/error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          },
+          authenticate: false
+        })
+        .state('activateProduct', {
+          url: '/activate-product',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>',
+              controller: 'ActivateProductController'
+            }
+          }
+        })
+        .state('activateProduct.successPage', {
+          url: '/success-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('activateProduct.errorPage', {
+          url: '/error-page',
+          views: {
+            'main@': {
+              template: '<div ui-view></div>'
+            }
+          }
         })
         .state('unauthorized', {
           views: {
@@ -132,8 +194,9 @@ angular
           }
         });
 
-      $httpProvider.interceptors.push('TrackingIDInterceptor');
+      $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
+      $httpProvider.interceptors.push('TimingInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -145,7 +208,7 @@ angular
 
       $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-      var defaultLang = ($window.navigator.language || $window.navigator.userLanguage || 'en_US').replace("-", "_");
+      var defaultLang = 'en_US';
 
       //Tell the module what language to use by default
       $translateProvider.preferredLanguage(defaultLang);
@@ -1350,6 +1413,16 @@ angular
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
+        .state('trialAdd.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialAdd.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
+        })
         .state('trialAdd.addNumbers', {
           templateUrl: 'modules/core/trials/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
@@ -1397,6 +1470,16 @@ angular
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
+        })
+        .state('trialEdit.pstn', {
+          templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+          controller: 'TrialPstnCtrl',
+          controllerAs: 'pstnTrial'
+        })
+        .state('trialEdit.emergAddress', {
+          templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+          controller: 'TrialEmergAddressCtrl',
+          controllerAs: 'eAddressTrial'
         })
         .state('generateauthcode', {
           parent: 'modal',
@@ -1686,7 +1769,7 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayClusterDetails',
+              controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
@@ -1879,7 +1962,7 @@ angular
         })
         .state('connector-details.alarm-details', {
           templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
-          controller: 'AlarmController',
+          controller: 'MediaAlarmController',
           controllerAs: 'alarmCtrl',
           data: {
             displayName: 'Alarm Details'
