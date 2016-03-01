@@ -65,8 +65,8 @@
           return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
-        checkUserWebExEntitlementOnAtlas: function () {
-          var funcName = "checkUserWebExEntitlementOnAtlas";
+        initUserWebExEntitlementOnAtlas: function () {
+          var funcName = "initUserWebExEntitlementOnAtlas";
           var logMsg = "";
 
           webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = false;
@@ -165,7 +165,7 @@
               $log.log(logMsg);
             } // getOrgLicensesError()
           ); // Orgservice.getValidLicenses().then()
-        }, // checkUserWebExEntitlementOnAtlas()
+        }, // initUserWebExEntitlementOnAtlas()
 
         initUserSettingsModel: function () {
           var funcName = "initUserSettingsModel()";
@@ -274,6 +274,11 @@
             "eventCenter.isEntitledOnAtlas=" + webExUserSettingsModel.eventCenter.isEntitledOnAtlas + "\n" +
             "supportCenter.isEntitledOnAtlas=" + webExUserSettingsModel.supportCenter.isEntitledOnAtlas;
           $log.log(logMsg);
+        }, // updateCenterLicenseEntitlements()
+
+        isValidLicenseEntitleMent: function () {
+          var funcName = "isValidLicenseEntitleMent()";
+          var logMsg = "";
 
           // var validLicenseEntitlements = true;
           var validLicenseEntitlements = (
@@ -284,7 +289,7 @@
           ) ? true : false;
 
           return validLicenseEntitlements;
-        }, // updateCenterLicenseEntitlements()
+        }, // isValidLicenseEntitleMent()
 
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
@@ -764,7 +769,9 @@
                 ("" === webExUserSettingsModel.meetingTypesInfo.errId)
               ) {
 
-                var isValidLicenseEntitlement = _self.updateCenterLicenseEntitlements();
+                _self.updateCenterLicenseEntitlements();
+
+                var isValidLicenseEntitlement = _self.isValidLicenseEntitleMent();
 
                 if (!isValidLicenseEntitlement) {
                   _self.setLoadingErrorDisplay(
