@@ -1,7 +1,7 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
 namespace domainManagement {
 
-  fdescribe('DomainManageDeleteCtrl', () => {
+  describe('DomainManageDeleteCtrl', () => {
 
     let Config, $q, $rootScope, $controller, $translate, DomainManagementService = {
       addDomain: undefined,

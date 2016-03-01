@@ -3464,12 +3464,11 @@
     },
     "add": {
       "header": "Add domains",
-      "description": "Add domains in your organization to be verified. If you have users in multiple domains, repeat this step until you have added all of them. You will be required to verify your own domain before any others.",
+      "description": "Add domains in your organization to be verified. If you have users in multiple domains, repeat this step until you have added all of them.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
       "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
-      "invalidDomainAdded": "This domain name is already added."
-
+      "invalidDomainAdded": "This domain is already added."
     },
     "delete": {
       "header": "Remove domain",
