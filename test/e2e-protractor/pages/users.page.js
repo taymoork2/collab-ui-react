@@ -162,7 +162,11 @@ var UsersPage = function () {
 
   this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
   this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
-  this.hybridServices_sidePanel_EC = element(by.id('squared-fusion-ec-status'));
+
+  this.callServiceAware_link = element(by.id('link_squared-fusion-uc'));
+
+  this.callServiceAwareToggleStatus = element(by.id('callServiceAware_status'));
+  this.callServiceConnectToggleStatus = element(by.id('callServiceConnect_status'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));

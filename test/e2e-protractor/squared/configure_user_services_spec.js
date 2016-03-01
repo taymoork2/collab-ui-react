@@ -75,9 +75,17 @@ describe('Configuring services per-user', function () {
     utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+
+    // Get into the call service settings, make sure EC is off!
+    utils.click(users.callServiceAware_link);
+    utils.expectTextToBeSet(users.callServiceAwareToggleStatus, 'On');
+    utils.expectTextToBeSet(users.callServiceConnectToggleStatus, 'Off');
+
+    utils.click(users.closeSidePanel);
   });
 
   it('should add standard team rooms service', function () {
+    utils.searchAndClick(testUser);
     utils.click(users.servicesActionButton);
     utils.click(users.editServicesButton);
     utils.waitForModal().then(function () {
@@ -206,7 +214,7 @@ describe('Configuring services per-user', function () {
     // Enter test email into edit box
     // Note, this should NOT be changed to first/last/email so that we can test both cases
     utils.click(users.emailAddressRadio);
-    utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2 );
+    utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
 
@@ -214,23 +222,32 @@ describe('Configuring services per-user', function () {
     utils.click(users.paidMsgCheckbox);
 
     // Enable a hybrid service
-    utils.click(users.hybridServices_UE);
+    utils.click(users.hybridServices_EC);
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
 
     activate.setup(null, testUser);
     activate.setup(null, testUser2);
+  });
 
-    utils.searchAndClick(testUser);
-    utils.expectIsDisplayed(users.messageService);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_EC, 'On');
-    utils.click(users.closeSidePanel);
-    
-    // Cleanup
-    utils.deleteUser(testUser);
-    utils.deleteUser(testUser2);
+  it('should check Manually Added User(s) have licenses and entitlments properly set, then delete users.', function () {
+    var arUsers = [testUser, testUser2];
+    for (var i = 0; i < arUsers.length; i++) {
+      utils.searchAndClick(arUsers[i]);
+      utils.expectIsDisplayed(users.messageService);
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+
+      // Get into the call service settings
+      utils.click(users.callServiceAware_link);
+      utils.expectTextToBeSet(users.callServiceAwareToggleStatus, 'On');
+      utils.expectTextToBeSet(users.callServiceConnectToggleStatus, 'On');
+
+      utils.click(users.closeSidePanel);
+
+      // Cleanup
+      utils.deleteUser(arUsers[i]);
+    }
   });
 
   ///////////////////////////////////////////////////////////////
@@ -290,7 +307,7 @@ describe('Configuring services per-user', function () {
   afterAll(function () {
     // Delete file
     utils.deleteFile(absolutePath);
-    
+
     deleteUtils.deleteUser(testUser);
     deleteUtils.deleteUser2(testUser);
 

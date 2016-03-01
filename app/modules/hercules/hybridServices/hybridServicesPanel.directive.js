@@ -6,7 +6,7 @@
     .directive('hybridServicesPanel', hybridServicesPanel);
 
   /* @ngInject */
-  function Controller(HybridService) {
+  function Controller(HybridService, OnboardService) {
     var vm = this;
 
     vm.isEnabled = false;
@@ -14,6 +14,9 @@
     vm.entitlements = [];
     vm.setEntitlements = setEntitlements;
     vm.shouldAddIndent = shouldAddIndent;
+    vm.huronCallEntitlement = function (ext) {
+      return ((ext !== 'squared-fusion-cal') && OnboardService.huronCallEntitlement);
+    };
 
     function shouldAddIndent(key, reference) {
       return key === reference;

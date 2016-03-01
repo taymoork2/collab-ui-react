@@ -8,6 +8,7 @@
   /* @ngInject */
   function OnboardService(HybridService) {
     var service = {
+      huronCallEntitlement: false
     };
 
     return service;

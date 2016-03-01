@@ -8,17 +8,15 @@
 
       <div class="hs-extension-list">
         <div class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
-          <label class="cs-checkbox" ng-class="{'indentedCB':vm.shouldAddIndent(extension.id,'squared-fusion-ec')}"
+          <label class="cs-checkbox" ng-class="{'indentedCB':vm.shouldAddIndent(extension.id,'squared-fusion-ec'), 'disabled':vm.huronCallEntitlement(extension.id)}"
                  for="{{extension.id}}">
               <input type="checkbox"
                      ng-model="extension.entitlementState"
                      id="{{extension.id}}"
                      ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
-                     ng-change="vm.setEntitlements(extension)">
-              <span ng-if="extension.id !== 'squared-fusion-uc'"
-                    translate="hercules.serviceNames.{{extension.id}}"></span>
-              <span ng-if="extension.id == 'squared-fusion-uc'"
-                    translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+                     ng-change="vm.setEntitlements(extension)"
+                     ng-disabled="vm.huronCallEntitlement(extension.id)">
+              <span translate="hercules.serviceNames.{{extension.id == 'squared-fusion-uc' ? 'squared-fusion-uc.full' : extension.id}}"></span>
           </label>
         </div>
   </div>

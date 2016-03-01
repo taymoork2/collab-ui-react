@@ -368,17 +368,6 @@ exports.isSelected = function (elem) {
   });
 };
 
-exports.expectSelected = function (selected, state) {
-  if (state === undefined) {
-    state = true;
-  }
-  if (state) {
-    expect(selected).toBeTruthy();
-  } else {
-    expect(selected).toBeFalsy();
-  }
-};
-
 exports.clear = function (elem) {
   this.wait(elem).then(function () {
     log('Clear element: ' + elem.locator());
@@ -474,6 +463,13 @@ exports.expectCheckbox = function (elem, value) {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
     var input = elem.element(by.tagName('input'));
     expect(input.isSelected()).toBe(value);
+  });
+};
+
+exports.expectSelected = function (elem, value) {
+  return this.wait(elem).then(function () {
+    log('Waiting for element to be selected: ' + elem.locator() + ' ' + value);
+    expect(elem.isSelected()).toBe(value);
   });
 };
 

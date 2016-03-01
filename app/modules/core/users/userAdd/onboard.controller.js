@@ -641,6 +641,9 @@
 
     $scope.$watch('radioStates.commRadio', function (newVal, oldVal) {
       if (newVal != oldVal) {
+        // Store value of checkbox in service (cast to bool)
+        OnboardService.huronCallEntitlement = !!newVal;
+
         // Do not change wizard text when configuring bulk user services
         if (angular.isDefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
           if ($scope.radioStates.commRadio) {
@@ -1228,7 +1231,10 @@
 
     $scope.extensionEntitlements = [];
     $scope.updateExtensionEntitlements = function (entitlements) {
-      $scope.hybridCallServiceAware = _.some(entitlements, {entitlementName: 'squaredFusionUC', entitlementState: 'ACTIVE'});
+      $scope.hybridCallServiceAware = _.some(entitlements, {
+        entitlementName: 'squaredFusionUC',
+        entitlementState: 'ACTIVE'
+      });
 
       $scope.extensionEntitlements = entitlements;
     };
