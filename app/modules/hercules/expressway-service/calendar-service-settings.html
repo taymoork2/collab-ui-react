@@ -2,6 +2,7 @@
   <div class="row">
     <div class="large-4 columns">
       <schedule-upgrade-configuration ng-if="expresswayServiceSettings.showScheduleUpgrade" service-type="exp.currentServiceType"></schedule-upgrade-configuration>
+      <div ng-include src="'modules/hercules/expressway-service/default-webex-site-setting.html'"></div>
       <div ng-include src="'modules/hercules/expressway-service/email-notification-setting.html'"></div>
       <div ng-include src="'modules/hercules/expressway-service/deactivate-service-setting.html'"></div>
     </div>

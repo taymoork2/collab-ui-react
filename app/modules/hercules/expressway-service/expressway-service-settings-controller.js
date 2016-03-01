@@ -74,6 +74,39 @@
       });
     };
 
+    vm.options = [];
+    vm.defaultWebExSiteOrgLevel = '';
+    vm.selectPlaceholder = 'Select or type in a default WebEx site';
+    vm.combo = true;
+    vm.searchable = true;
+    activate();
+
+    function activate() {}
+
+    ServiceDescriptor.getAllWebExSiteOrgLevel(function (error, allWebExSitesOrgLevel) {
+      if (!error) {
+        vm.options = _.uniq(allWebExSitesOrgLevel);
+      } else {
+        vm.options = [];
+      }
+    });
+
+    ServiceDescriptor.getDefaultWebExSiteOrgLevel(function (error, defaultWebExSiteOrgLevel) {
+      if (!error) {
+        vm.defaultWebExSiteOrgLevel = defaultWebExSiteOrgLevel;
+      } else {
+        vm.defaultWebExSiteOrgLevel = '';
+      }
+    });
+
+    vm.setDefaultWebExSiteOrgLevel = function () {
+      ServiceDescriptor.setDefaultWebExSiteOrgLevel(vm.defaultWebExSiteOrgLevel, function (err) {
+        if (err) {
+          return XhrNotificationService.notify(err);
+        }
+      });
+    };
+
     vm.config = "";
     ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
       if (!error) {
