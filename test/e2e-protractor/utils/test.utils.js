@@ -396,14 +396,16 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value, value2) {
+exports.expectText = function (elem) {
+  var values = [].slice.call(arguments, 1);
   return this.wait(elem).then(function () {
-    log('Expecting element to contain text: ' + elem.locator() + ' -> ' + value);
-    expect(elem.getText()).toContain(value);
-    if (value2) {
-      log('Expecting element to contain second text: ' + elem.locator() + ' -> ' + value2);
-      expect(elem.getText()).toContain(value2);
-    }
+    var text = elem.getText();
+    var locator = elem.locator();
+    values.forEach(function (value) {
+      log('Expecting element ' + locator + ' to contain text: ' + value);
+      expect(text).toContain(value);
+    });
+    return true;
   });
 };
 

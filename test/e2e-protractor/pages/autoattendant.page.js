@@ -4,6 +4,8 @@ var AutoAttendantPage = function () {
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
   this.newFeatureButton = element(by.css('.new-feature-button'));
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
+  this.basicAA = element(by.css('.icon-Basic'));
+  this.customAA = element(by.css('.icon-Custom'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -35,6 +37,7 @@ var AutoAttendantPage = function () {
   this.phonesayMessageVoice = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.phonesayMessageVoiceOptions = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
+  this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.css('.icon-plus-circle'));
   this.phoneMenuKeys = element.all(by.css('div.aa-pm-key-select .icon-chevron-down'));
   this.phoneMenuKeyOptions = element.all(by.css('div.aa-pm-key-select .dropdown-menu'));

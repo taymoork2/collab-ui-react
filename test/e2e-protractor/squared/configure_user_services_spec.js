@@ -24,7 +24,12 @@ describe('Configuring services per-user', function () {
   // Make file for import CSV testing
   utils.writeFile(absolutePath, fileText);
 
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
+    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 

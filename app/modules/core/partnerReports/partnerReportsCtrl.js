@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -60,46 +60,6 @@
     var callMetrics = null;
     var mediaQuality = null;
 
-    function resizeCards() {
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 300);
-    }
-
-    function showHideCards(filter) {
-      var engagementElems = [activeUsers, regEndpoints, userPopulation];
-      var qualityElems = [callMetrics, mediaQuality];
-      if (filter === 'all') {
-        if (!vm.showEngagement) {
-          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
-          vm.showEngagement = true;
-        }
-        if (!vm.showQuality) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          vm.showQuility = true;
-        }
-      } else if (filter === 'engagement') {
-        if (vm.showQuality === true) {
-          $('.cs-card-layout').masonry('remove', qualityElems);
-          vm.showQuality = false;
-        }
-        if (vm.showEngagement === false) {
-          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          vm.showEngagement = true;
-        }
-      } else if (filter === 'quality') {
-        if (vm.showQuality === false) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          vm.showQuality = true;
-        }
-        if (vm.showEngagement === true) {
-          $('.cs-card-layout').masonry('remove', engagementElems);
-          vm.showEngagement = false;
-        }
-      }
-      resizeCards();
-    }
-
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week'),
@@ -115,29 +75,23 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    vm.openCloseMostActive = function () {
-      vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
-    };
-
-    vm.customersSet = function () {
-      return vm.customerSelected === null;
-    };
-
-    vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
-    };
-
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
-    };
-
+    // Graph data status checks
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
     };
 
     vm.isEmpty = function (tab) {
       return tab === EMPTY;
+    };
+
+    // Controls for Most Active Users Table
+    vm.openCloseMostActive = function () {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resizeCards();
+    };
+
+    vm.activePage = function (num) {
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.mostActiveSort = function (num) {
@@ -153,24 +107,24 @@
       }
     };
 
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
       }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
+      vm.activeUserCurrentPage = num;
+      resizeCards();
+    };
+
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
     };
 
     vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
-      }
-      if (vm.activeUserCurrentPage !== 1) {
+      if (vm.activeUserCurrentPage > 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
     };
@@ -230,9 +184,54 @@
       vm.endpointRefresh = EMPTY;
     }
 
+    function resizeCards() {
+      setTimeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 300);
+    }
+
+    function showHideCards(filter) {
+      var engagementElems = [activeUsers, regEndpoints, userPopulation];
+      var qualityElems = [callMetrics, mediaQuality];
+      if (filter === 'all') {
+        if (!vm.showEngagement) {
+          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          vm.showEngagement = true;
+        }
+        if (!vm.showQuality) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuility = true;
+        }
+      } else if (filter === 'engagement') {
+        if (vm.showQuality === true) {
+          $('.cs-card-layout').masonry('remove', qualityElems);
+          vm.showQuality = false;
+        }
+        if (vm.showEngagement === false) {
+          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          vm.showEngagement = true;
+        }
+      } else if (filter === 'quality') {
+        if (vm.showQuality === false) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuality = true;
+        }
+        if (vm.showEngagement === true) {
+          $('.cs-card-layout').masonry('remove', engagementElems);
+          vm.showEngagement = false;
+        }
+      }
+      resizeCards();
+    }
+
     function updateCustomerFilter(orgsData) {
       var customers = [];
       // add all customer names to the customerOptions list
+      customers.push({
+        value: Authinfo.getOrgId(),
+        label: Authinfo.getOrgName(),
+        isAllowedToManage: true
+      });
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
@@ -245,15 +244,7 @@
         return a.label.localeCompare(b.label);
       });
 
-      if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {
-        vm.customerSelected = vm.customerOptions[0];
-      } else {
-        vm.customerSelected = {
-          value: 0,
-          label: "",
-          isAllowedToManage: false
-        };
-      }
+      vm.customerSelected = vm.customerOptions[0];
       resizeCards();
     }
 

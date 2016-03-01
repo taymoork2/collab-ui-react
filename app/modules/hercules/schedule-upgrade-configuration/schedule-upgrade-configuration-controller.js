@@ -143,6 +143,7 @@
         .then(function (data) {
           NotificationService.removeNotification('acknowledgeScheduleUpgrade');
           vm.isAdminAcknowledged = data.isAdminAcknowledged;
+          vm.postponed = data.postponed;
           vm.errorMessage = '';
           vm.state = 'idle';
         }, function (error) {
@@ -180,7 +181,8 @@
       var nextUpdate = moment.tz(vm.data.scheduleTimeZone.value)
         .isoWeekday(vm.data.scheduleDay.value)
         .hours(Number(time[0]))
-        .minutes(Number(time[1]));
+        .minutes(Number(time[1]))
+        .seconds(0);
 
       // the .isoWeekday() from moment.js is not made to ALWAYS get the NEXT $day (i.e. monday)
       // and always doing a +7 is not the right thing to do either

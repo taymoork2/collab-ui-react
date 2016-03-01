@@ -66,7 +66,7 @@ var LandingPage = function () {
     return element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first();
   }
 
-  var nMaxLangs = 20;
+  var nMaxLangs = 21;
 
   this.clickLang = function (index) {
     var list = element.all(by.id('languageSelector option'));

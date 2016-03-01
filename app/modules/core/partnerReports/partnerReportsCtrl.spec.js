@@ -31,6 +31,10 @@ describe('Controller: Partner Reports', function () {
     value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
     label: 'Test Org Two',
     isAllowedToManage: true
+  }, {
+    value: '1',
+    label: 'Test Partner',
+    isAllowedToManage: true
   }];
   var endpointResponse = [{
     orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
@@ -43,6 +47,11 @@ describe('Controller: Partner Reports', function () {
     customer: 'Test Org One',
     direction: 'positive'
   }];
+
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('Test Partner')
+  };
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -107,7 +116,8 @@ describe('Controller: Partner Reports', function () {
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
         DonutChartService: DonutChartService,
-        DummyReportService: DummyReportService
+        DummyReportService: DummyReportService,
+        Authinfo: Authinfo
       });
       $scope.$apply();
     }));
@@ -211,44 +221,42 @@ describe('Controller: Partner Reports', function () {
       });
     });
 
-    describe('pageForward', function () {
-      it('should change carousel button numbers', function () {
+    describe('Most Active Paging', function () {
+      it('pageForward should change carousel button numbers', function () {
         controller.activeUsersTotalPages = 4;
-        controller.activeUserCurrentPage = controller.activeButton[2];
+        controller.activeUserCurrentPage = 1;
+
+        controller.pageForward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(2);
+
         controller.pageForward();
         expect(controller.activeButton[0]).toBe(2);
         expect(controller.activeButton[1]).toBe(3);
         expect(controller.activeButton[2]).toBe(4);
+        expect(controller.activeUserCurrentPage).toBe(3);
       });
 
-      it('should not change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 3;
-        controller.activeUserCurrentPage = controller.activeButton[2];
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-      });
-    });
-
-    describe('pageBackward', function () {
-      it('should change carousel button numbers', function () {
+      it('pageBackward should change carousel button numbers', function () {
+        controller.activeUsersTotalPages = 4;
         controller.activeButton[0] = 2;
         controller.activeButton[1] = 3;
         controller.activeButton[2] = 4;
-        controller.activeUserCurrentPage = 2;
+        controller.activeUserCurrentPage = 3;
 
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
-      });
+        expect(controller.activeUserCurrentPage).toBe(2);
 
-      it('should not change carousel button numbers', function () {
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(1);
       });
     });
 
@@ -258,58 +266,6 @@ describe('Controller: Partner Reports', function () {
         $scope.$apply();
 
         expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('PartnerReportCtrl - loading failed', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_) {
-      $scope = $rootScope.$new();
-      $q = _$q_;
-      $translate = _$translate_;
-      PartnerReportService = _PartnerReportService_;
-      GraphService = _GraphService_;
-      DonutChartService = _DonutChartService_;
-
-      spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
-      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
-
-      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
-      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
-      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
-      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
-
-      controller = $controller('PartnerReportCtrl', {
-        $scope: $scope,
-        $translate: $translate,
-        $q: $q,
-        PartnerReportService: PartnerReportService,
-        GraphService: GraphService,
-        DonutChartService: DonutChartService
-      });
-      $scope.$apply();
-    }));
-
-    describe('Initializing Controller', function () {
-      it('should be created successfully and all expected calls completed', function () {
-        expect(controller).toBeDefined();
-
-        expect(PartnerReportService.getOverallActiveUserData).toHaveBeenCalled();
-        expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
-      });
-
-      it('should set all page variables empty defaults', function () {
-        expect(controller.activeUsersRefresh).toEqual('empty');
-        expect(controller.mostActiveUsers).toEqual([]);
-
-        expect(controller.customerOptions).toEqual([]);
-        expect(controller.customerSelected).toEqual({
-          value: 0,
-          label: '',
-          isAllowedToManage: false
-        });
-        expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
       });
     });
   });

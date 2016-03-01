@@ -10,16 +10,14 @@ var Notifications = function () {
   this.assertSuccess = assertSuccess;
   this.clearNotifications = clearNotifications;
 
-  function assertError(msg1, msg2) {
-    utils
-      .expectText(this.errorAlert, msg1, msg2)
-      .then(clearNotifications);
+  function assertError() {
+    var args = [this.errorAlert].concat([].slice.call(arguments));
+    utils.expectText.apply(utils, args).then(clearNotifications);
   }
 
-  function assertSuccess(msg1, msg2) {
-    utils
-      .expectText(this.successAlert, msg1, msg2)
-      .then(clearNotifications);
+  function assertSuccess() {
+    var args = [this.successAlert].concat([].slice.call(arguments));
+    utils.expectText.apply(utils, args).then(clearNotifications);
   }
 
   function clearNotifications() {
