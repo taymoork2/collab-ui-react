@@ -23,7 +23,7 @@ angular
       var queryParams = 'queryParams';
 
       Auth.setAuthorizationHeader();
-      Config.setProductionBackend($location.search().backend);
+      Config.setProductionBackendForE2E($location.search()['prod-backend-for-e2e']);
 
       $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
         if (typeof to.authenticate === 'undefined' || to.authenticate) {

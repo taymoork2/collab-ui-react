@@ -4,8 +4,9 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter', 'Storage',
     function ($location, Utils, $filter, Storage) {
 
+      var PROD_BACKEND_FOR_E2E = 'prod-backend-for-e2e';
+
       var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
-      var isProdBackend = isProductionBackend();
       var getCurrentHostname = function () {
         return $location.host() || '';
       };
@@ -581,11 +582,11 @@ angular.module('Core')
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return !isProdBackend && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+          return !config.isProductionBackendForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
         },
 
         isIntegration: function () {
-          return !isProdBackend && getCurrentHostname() === 'int-admin.ciscospark.com';
+          return !config.isProductionBackendForE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
         isProd: function () {
@@ -593,7 +594,7 @@ angular.module('Core')
         },
 
         isCfe: function () {
-          return !isProdBackend && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+          return !config.isProductionBackendForE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
         },
 
         getEnv: function () {
@@ -1080,18 +1081,16 @@ angular.module('Core')
         }
       };
 
-      config.setProductionBackend = function (_backend) {
-        if (angular.isDefined(_backend)) {
-          // Store in localStorage so new windows pick up the value
-          // Will be cleared on logout
-          Storage.put('backend', _backend);
-          isProdBackend = isProductionBackend();
+      config.setProductionBackendForE2E = function (backend) {
+        if (angular.isDefined(backend)) {
+          // Store in localStorage so new windows pick up the value, will be cleared on logout
+          Storage.put(PROD_BACKEND_FOR_E2E, backend);
         }
       };
 
-      function isProductionBackend() {
-        return Storage.get('backend') === 'production';
-      }
+      config.isProductionBackendForE2E = function () {
+        return Storage.get(PROD_BACKEND_FOR_E2E) === 'true';
+      };
 
       config.roleStates = {
         // Customer Admin

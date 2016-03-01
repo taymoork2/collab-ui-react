@@ -55,7 +55,7 @@ var LoginPage = function () {
       } else {
         url += '?';
       }
-      url += 'backend=production';
+      url += 'prod-backend-for-e2e=true';
     }
     return url;
   }
