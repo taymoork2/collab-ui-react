@@ -1224,6 +1224,8 @@
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Add email addresses to receive email notifications about service impacting alarms and software upgrades.",
       "emailNotificationsSaving": "Saving.",
+      "defaultWebExSiteOrgLevelHeading": "Default WebEx site for @webex",
+      "setDefaultWebExSiteOrgLevel": "Select or type in a default WebEx site name (without \".webex.com\") for your organization. This default site will be used when users add @webex to a meeting invite.",
       "documentationHeading": "Documentation and software",
       "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> for further information about Hybrid Services.",
       "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",

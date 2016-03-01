@@ -1,0 +1,18 @@
+<h5 translate="{{'hercules.settings.defaultWebExSiteOrgLevelHeading'}}"></h5>
+<p translate="{{'hercules.settings.setDefaultWebExSiteOrgLevel'}}"></p>
+<div ng-controller="ExpresswayServiceSettingsController">
+    <form id="defaultWebExSiteSettingOrgLevelForm">
+        <div class="row">
+            <div class="large-12">
+                <cs-select
+                        ng-model="expresswayServiceSettings.defaultWebExSiteOrgLevel"
+                        options="expresswayServiceSettings.options"
+                        on-change-fn="expresswayServiceSettings.setDefaultWebExSiteOrgLevel()"
+                        placeholder="expresswayServiceSettings.selectPlaceholder"
+                        combo="true"
+                        >
+                </cs-select>
+            </div>
+        </div>
+    </form>
+</div>
