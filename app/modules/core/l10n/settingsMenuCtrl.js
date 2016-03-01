@@ -5,17 +5,13 @@
     .module('Core')
     .controller('SettingsMenuCtrl', SettingsMenuCtrl);
 
-  function SettingsMenuCtrl($scope, $state, $translate, Authinfo, $rootScope, $http, languages) {
+  function SettingsMenuCtrl($state, $translate, Authinfo, $rootScope, $http, languages) {
     var vm = this;
-
-    vm.selected = {};
-    vm.filterPlaceholder = $translate.instant('common.select');
-    vm.selectPlaceholder = $translate.instant('common.selectLanguage');
 
     vm.options = _.map(languages, function (lang) {
       return {
         value: lang.value,
-        label: $translate.instant('lang.label')
+        label: $translate.instant(lang.label)
       };
     });
 
@@ -23,7 +19,7 @@
       return lang.value === $translate.use();
     }) || {};
 
-    $scope.updateLanguage = function () {
+    vm.updateLanguage = function () {
       $translate.use(vm.selected.value).then(function () {
         Authinfo.initializeTabs();
         $state.go('login');
