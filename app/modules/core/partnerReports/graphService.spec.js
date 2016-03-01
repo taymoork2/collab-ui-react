@@ -37,12 +37,12 @@ describe('Service: Graph Service', function () {
       activeUsersChart = GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
     });
 
-    it('should have created a graph when setActiveUsersGraph is called the first time', function () {
+    it('should have created a graph when getActiveUsersGraph is called the first time', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(validateService.validate).not.toHaveBeenCalled();
     });
 
-    it('should update graph when setActiveUsersGraph is called a second time', function () {
+    it('should update graph when getActiveUsersGraph is called a second time', function () {
       GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
