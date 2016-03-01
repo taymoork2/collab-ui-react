@@ -1042,12 +1042,13 @@ angular.module('Core')
         $scope.results = null;
       };
 
-      function addErrorWithTrackingID(errorMsg, response) {
-        if (response && _.isFunction(response.headers)) {
+      function addErrorWithTrackingID(errorMsg, response, headers) {
+        var headersFunc = (response && response.headers) ? response.headers : headers;
+        if (_.isFunction(headersFunc)) {
           if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
             errorMsg += '.';
           }
-          var trackingId = response.headers('TrackingID');
+          var trackingId = headersFunc('TrackingID');
           if (!trackingId || trackingId === 'null') {
             // If TrackingID is not allowed by CORS, fallback to TrackingId service
             errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
@@ -1247,7 +1248,7 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function entitleUserCallback(data, status, method) {
+      function entitleUserCallback(data, status, method, headers) {
         $scope.results = {
           resultList: []
         };
@@ -1300,7 +1301,7 @@ angular.module('Core')
               successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
               count_s++;
             } else {
-              errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+              errors.push(addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
               count_e++;
             }
           }
@@ -1326,7 +1327,7 @@ angular.module('Core')
           Log.warn('Could not entitle the user', data);
           var error = null;
           if (status) {
-            error = $translate.instant('error.statusError', {
+            error = $translate.instant('errors.statusError', {
               status: status
             });
             if (data && angular.isString(data.message)) {
@@ -1340,6 +1341,7 @@ angular.module('Core')
               error += ' ' + data;
             }
           }
+          error = addErrorWithTrackingID(error, null, headers);
           if (method !== 'convertUser') {
             Notification.notify([error], 'error');
             isComplete = false;
