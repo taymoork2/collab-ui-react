@@ -80,8 +80,8 @@
 
     // variables for active user population
     var activeUserPopulationChartId = 'activeUserPopulationChart';
-    var popBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
-    var populationBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + "</span><br><span class='percent-large'>[[overallPopulation]]%</span>";
+    var popBalloonTextOne = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
+    var popBalloonTextTwo = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + "</span><br><span class='percent-large'>[[overallPopulation]]%</span>";
 
     // variables for the call metrics section
     var callMetricsDiv = 'callMetricsDiv';
@@ -371,7 +371,7 @@
       graph.fontSize = 26;
       graph.valueField = 'percentage';
       graph.columnWidth = 0.8;
-      graph.balloonText = popBalloonText;
+      graph.balloonText = popBalloonTextOne;
       graph.showBalloon = data[0].balloon;
 
       var graphs = [graph, {
@@ -380,7 +380,7 @@
         'lineThickness': 2,
         'lineColor': data[0].colorTwo,
         'balloonColor': Config.chartColors.grayLight,
-        'balloonText': populationBalloonText,
+        'balloonText': popBalloonTextTwo,
         'showBalloon': data[0].balloon,
         "animationPlayed": true
       }];
