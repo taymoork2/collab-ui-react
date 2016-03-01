@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -263,18 +263,19 @@
     }
 
     function setActiveUserGraph(data) {
-      if (activeUsersChart === null || activeUsersChart === undefined) {
-        activeUsersChart = GraphService.createActiveUsersGraph(data);
-      } else {
-        GraphService.updateActiveUsersGraph(data, activeUsersChart);
+      var tempActiveUsersChart = GraphService.getActiveUsersGraph(data, activeUsersChart);
+      if (angular.isDefined(tempActiveUsersChart) && tempActiveUsersChart) {
+        activeUsersChart = tempActiveUsersChart;
+        resizeCards();
       }
+      activeUsers = document.getElementById('activeUser');
     }
 
     function setActivePopulationGraph(data, overallPopulation) {
-      if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
-        activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data, overallPopulation);
-      } else {
-        GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+      var tempActivePopChart = GraphService.getActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+      if (angular.isDefined(tempActivePopChart) && tempActivePopChart) {
+        activeUserPopulationChart = tempActivePopChart;
+        resizeCards();
       }
       userPopulation = document.getElementById('userPopulation');
     }
@@ -308,21 +309,19 @@
             if (response.populationGraph.length > 0) {
               setActivePopulationGraph(response.populationGraph, response.overallPopulation);
               vm.activeUserPopulationRefresh = SET;
-              resizeCards();
             }
           }
         }
-        activeUsers = document.getElementById('activeUser');
         resizeCards();
         return;
       });
     }
 
     function setMediaQualityGraph(data) {
-      if (mediaQualityChart === null || mediaQualityChart === undefined) {
-        mediaQualityChart = GraphService.createMediaQualityGraph(data);
-      } else {
-        GraphService.updateMediaQualityGraph(data, mediaQualityChart);
+      var tempMediaChart = GraphService.getMediaQualityGraph(data, mediaQualityChart);
+      if (angular.isDefined(tempMediaChart) && tempMediaChart !== null) {
+        mediaQualityChart = tempMediaChart;
+        resizeCards();
       }
       mediaQuality = document.getElementById('mediaQuality');
     }
@@ -332,11 +331,9 @@
         if (response !== ABORT) {
           setMediaQualityGraph(response);
 
-          if (response.length === 0) {
-            vm.mediaQualityRefresh = EMPTY;
-          } else {
+          vm.mediaQualityRefresh = EMPTY;
+          if (response.length > 0) {
             vm.mediaQualityRefresh = SET;
-            resizeCards();
           }
         }
         return;
@@ -344,10 +341,10 @@
     }
 
     function setCallMetricsGraph(data) {
-      if (callMetricsDonutChart === null || callMetricsDonutChart === undefined) {
-        callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
-      } else {
-        DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
+      var tempMetricsChart = GraphService.getCallMetricsDonutChart(data, callMetricsDonutChart);
+      if (angular.isDefined(tempMetricsChart) && tempMetricsChart !== null) {
+        callMetricsDonutChart = tempMetricsChart;
+        resizeCards();
       }
       callMetrics = document.getElementById('callMetrics');
     }
@@ -357,14 +354,12 @@
         if (response !== ABORT) {
           setCallMetricsGraph(response);
 
-          if (angular.isArray(response) && response.length === 0) {
-            vm.callMetricsRefresh = EMPTY;
-          } else {
+          vm.callMetricsRefresh = EMPTY;
+          if (angular.isArray(response.dataProvider) && response.dataProvider.length > 0) {
             vm.callMetricsRefresh = SET;
-            resizeCards();
           }
+          resizeCards();
         }
-        return;
       });
     }
 

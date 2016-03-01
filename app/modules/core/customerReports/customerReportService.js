@@ -462,7 +462,6 @@
       }
       metricsCancelPromise = $q.defer();
       var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
-
       var returnArray = {
         dataProvider: [],
         displayData: {}

@@ -43,6 +43,30 @@
       'decimalSeparator': '.',
       'thousandsSeparator': ','
     };
+    var defaultBalloon = {
+      'adjustBorderColor': true,
+      'borderThickness': 1,
+      'fillAlpha': 1,
+      'fillColor': Config.chartColors.brandWhite,
+      'fixedPosition': true,
+      'shadowAlpha': 0
+    };
+    var exportMenu = {
+      "enabled": true,
+      "libs": {
+        "autoLoad": false
+      },
+      "menu": [{
+        "class": "export-main",
+        "label": $translate.instant('reportsPage.downloadOptions'),
+        "menu": [{
+          "label": $translate.instant('reportsPage.saveAs'),
+          "title": $translate.instant('reportsPage.saveAs'),
+          "class": "export-list",
+          "menu": ["PNG", "JPG", "PDF"]
+        }, 'PRINT']
+      }]
+    };
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -51,19 +75,24 @@
     var usersTitle = $translate.instant('activeUsers.users');
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
 
+    // variables for media quality
     var mediaQualityDiv = 'mediaQualityDiv';
 
+    // variables for active user population
     var activeUserPopulationChartId = 'activeUserPopulationChart';
-    var customerPopBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
+    var popBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
     var populationBalloonText = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + "</span><br><span class='percent-large'>[[overallPopulation]]%</span>";
 
+    // variables for the call metrics section
+    var callMetricsDiv = 'callMetricsDiv';
+    var callMetricsBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
+    var callMetricsLabelText = '[[percents]]%<br>[[callCondition]]';
+
     return {
-      createActiveUsersGraph: createActiveUsersGraph,
-      updateActiveUsersGraph: updateActiveUsersGraph,
-      createMediaQualityGraph: createMediaQualityGraph,
-      updateMediaQualityGraph: updateMediaQualityGraph,
-      createActiveUserPopulationGraph: createActiveUserPopulationGraph,
-      updateActiveUserPopulationGraph: updateActiveUserPopulationGraph,
+      getActiveUsersGraph: getActiveUsersGraph,
+      getMediaQualityGraph: getMediaQualityGraph,
+      getActiveUserPopulationGraph: getActiveUserPopulationGraph,
+      getCallMetricsDonutChart: getCallMetricsDonutChart
     };
 
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration, marginBottom) {
@@ -78,14 +107,7 @@
         'dataProvider': data,
         'valueAxes': valueAxes,
         'graphs': graphs,
-        'balloon': {
-          'adjustBorderColor': true,
-          'borderThickness': 1,
-          'fillAlpha': 1,
-          'fillColor': Config.chartColors.brandWhite,
-          'fixedPosition': true,
-          'shadowAlpha': 0
-        },
+        'balloon': angular.copy(defaultBalloon),
         'autoMargins': false,
         'marginLeft': 60,
         'marginTop': 60,
@@ -106,22 +128,7 @@
           number: 1e+12,
           prefix: "T"
         }],
-        'export': {
-          "enabled": true,
-          "libs": {
-            "autoLoad": false
-          },
-          "menu": [{
-            "class": "export-main",
-            "label": $translate.instant('reportsPage.downloadOptions'),
-            "menu": [{
-              "label": $translate.instant('reportsPage.saveAs'),
-              "title": $translate.instant('reportsPage.saveAs'),
-              "class": "export-list",
-              "menu": ["PNG", "JPG", "PDF"]
-            }, 'PRINT']
-          }]
-        }
+        'export': angular.copy(exportMenu)
       };
 
       if (angular.isDefined(legend) && legend !== null) {
@@ -140,6 +147,26 @@
       }
 
       return AmCharts.makeChart(div, chartData);
+    }
+
+    function getActiveUsersGraph(data, chart) {
+      if (angular.isDefined(chart) && chart !== null) {
+        if (data === null || data === 'undefined' || data.length === 0) {
+          return;
+        }
+        var startDuration = 1;
+        if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
+          startDuration = 0;
+        }
+
+        chart.dataProvider = data;
+        chart.graphs = activeUserGraphs(data);
+        chart.startDuration = startDuration;
+        chart.validateData();
+      } else {
+        chart = createActiveUsersGraph(data);
+      }
+      return chart;
     }
 
     function createActiveUsersGraph(data) {
@@ -168,43 +195,45 @@
     }
 
     function activeUserGraphs(data) {
-      var graphOne = angular.copy(columnBase);
-      graphOne.title = usersTitle;
-      graphOne.fillColors = 'colorOne';
-      graphOne.colorField = 'colorOne';
-      graphOne.legendColor = data[0].colorOne;
-      graphOne.valueField = 'totalRegisteredUsers';
-      graphOne.balloonText = activeUsersBalloonText;
-      graphOne.showBalloon = data[0].balloon;
+      var colors = ['colorOne', 'colorTwo'];
+      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
+      var values = ['totalRegisteredUsers', 'activeUsers'];
+      var titles = [usersTitle, activeUsersTitle];
+      var graphs = [];
 
-      var graphTwo = angular.copy(columnBase);
-      graphTwo.title = activeUsersTitle;
-      graphTwo.fillColors = 'colorTwo';
-      graphTwo.colorField = 'colorTwo';
-      graphTwo.legendColor = data[0].colorTwo;
-      graphTwo.valueField = 'activeUsers';
-      graphTwo.balloonText = activeUsersBalloonText;
-      graphTwo.showBalloon = data[0].balloon;
-      graphTwo.clustered = false;
+      for (var i = 0; i < values.length; i++) {
+        graphs.push(angular.copy(columnBase));
+        graphs[i].title = titles[i];
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].legendColor = secondaryColors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].balloonText = activeUsersBalloonText;
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].clustered = false;
+      }
 
-      return [graphOne, graphTwo];
+      return graphs;
     }
 
-    function updateActiveUsersGraph(data, activeUsersChart) {
-      if (activeUsersChart !== null) {
+    function getMediaQualityGraph(data, chart) {
+      if (angular.isDefined(chart) && chart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
           return;
         }
         var startDuration = 1;
-        if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
+        if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        activeUsersChart.dataProvider = data;
-        activeUsersChart.graphs = activeUserGraphs(data);
-        activeUsersChart.startDuration = startDuration;
-        activeUsersChart.validateData();
+        chart.dataProvider = data;
+        chart.graphs = mediaQualityGraphs(data);
+        chart.startDuration = startDuration;
+        chart.validateData();
+      } else {
+        chart = createMediaQualityGraph(data);
       }
+      return chart;
     }
 
     function createMediaQualityGraph(data) {
@@ -258,21 +287,39 @@
       return graphs;
     }
 
-    function updateMediaQualityGraph(data, mediaQualityChart) {
-      if (mediaQualityChart !== null) {
+    function getActiveUserPopulationGraph(data, chart, overallPopulation) {
+      if (angular.isDefined(chart) && chart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
           return;
         }
+
         var startDuration = 1;
         if (!data[0].balloon) {
           startDuration = 0;
         }
 
-        mediaQualityChart.dataProvider = data;
-        mediaQualityChart.graphs = mediaQualityGraphs(data);
-        mediaQualityChart.startDuration = startDuration;
-        mediaQualityChart.validateData();
+        var valueAxes = [angular.copy(axis)];
+        valueAxes[0].autoGridCount = false;
+        valueAxes[0].minimum = 0;
+        valueAxes[0].maximum = 100;
+        valueAxes[0].unit = "%";
+
+        if (data[0].percentage > overallPopulation && data[0].percentage > 100) {
+          valueAxes[0].maximum = data[0].percentage;
+        } else if (overallPopulation > 100) {
+          valueAxes[0].maximum = overallPopulation;
+        }
+
+        chart.dataProvider = modifyPopulation(data, overallPopulation);
+        chart.graphs = populationGraphs(data);
+        chart.startDuration = startDuration;
+        chart.valueAxes = valueAxes;
+        chart.validateData();
+      } else {
+        chart = createActiveUserPopulationGraph(data, overallPopulation);
       }
+
+      return chart;
     }
 
     function createActiveUserPopulationGraph(data, overallPopulation) {
@@ -310,7 +357,7 @@
       };
 
       var startDuration = 1;
-      if (data[0].colorTwo === Config.chartColors.dummyGray) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
@@ -319,17 +366,15 @@
 
     function populationGraphs(data) {
       var graph = angular.copy(columnBase);
-      graph.type = 'column';
       graph.fillColors = 'colorOne';
       graph.colorField = 'colorOne';
-      graph.balloonColor = Config.chartColors.grayLight;
       graph.fontSize = 26;
       graph.valueField = 'percentage';
       graph.columnWidth = 0.8;
-      graph.balloonText = customerPopBalloonText;
+      graph.balloonText = popBalloonText;
       graph.showBalloon = data[0].balloon;
 
-      var graphTwo = {
+      var graphs = [graph, {
         'type': 'step',
         'valueField': 'overallPopulation',
         'lineThickness': 2,
@@ -338,42 +383,9 @@
         'balloonText': populationBalloonText,
         'showBalloon': data[0].balloon,
         "animationPlayed": true
-      };
+      }];
 
-      return [graph, graphTwo];
-    }
-
-    function updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation) {
-      if (activeUserPopulationChart !== null) {
-        if (data === null || data === 'undefined' || data.length === 0) {
-          return;
-        }
-
-        var startDuration = 1;
-        if (data[0].colorTwo === Config.chartColors.dummyGray) {
-          startDuration = 0;
-        }
-
-        var valueAxes = [angular.copy(axis)];
-        valueAxes[0].autoGridCount = false;
-        valueAxes[0].minimum = 0;
-        valueAxes[0].maximum = 100;
-        valueAxes[0].unit = "%";
-
-        if (data[0].percentage > overallPopulation && data[0].percentage > 100) {
-          valueAxes[0].maximum = data[0].percentage;
-        } else if (overallPopulation > 100) {
-          valueAxes[0].maximum = overallPopulation;
-        }
-
-        activeUserPopulationChart.dataProvider = modifyPopulation(data, overallPopulation);
-        activeUserPopulationChart.graphs = populationGraphs(data);
-        activeUserPopulationChart.startDuration = startDuration;
-        activeUserPopulationChart.valueAxes = valueAxes;
-        activeUserPopulationChart.validateData();
-      }
-
-      return activeUserPopulationChart;
+      return graphs;
     }
 
     function modifyPopulation(data, overallPopulation) {
@@ -408,5 +420,99 @@
       return data;
     }
 
+    // Donut Graphs below here
+    function createDonutChart(div, balloonText, labelText, textColor, centerLabel, labelsEnabled, dataProvider) {
+      return AmCharts.makeChart(div, {
+        "type": "pie",
+        "balloonText": balloonText,
+        "balloon": angular.copy(defaultBalloon),
+        "innerRadius": "75%",
+        "labelText": labelText,
+        "color": textColor,
+        "colorField": "color",
+        "labelColorField": textColor,
+        "titleField": "label",
+        "valueField": "value",
+        "fontFamily": "Arial",
+        "fontSize": 14,
+        "percentPrecision": 0,
+        "labelRadius": 25,
+        "creditsPosition": "bottom-left",
+        "radius": "30%",
+        "outlineAlpha": 1,
+        "dataProvider": dataProvider,
+        "startDuration": 0,
+        "allLabels": centerLabel,
+        "labelsEnabled": labelsEnabled,
+        "export": angular.copy(exportMenu)
+      });
+    }
+
+    function getCallMetricsDonutChart(data, chart) {
+      if (angular.isDefined(chart) && chart !== null && angular.isArray(data.dataProvider) && data.dataProvider.length === 2) {
+        if (!angular.isArray(data) && data.length !== 0) {
+          var balloonText = callMetricsBalloonText;
+          var labelsEnabled = true;
+          var textColor = Config.chartColors.grayDarkest;
+          if (data.dummy) {
+            balloonText = "";
+            labelsEnabled = false;
+            textColor = Config.chartColors.brandWhite;
+          }
+
+          chart.dataProvider = data.dataProvider;
+          chart.allLabels = getCallMetricsLabels(data.labelData);
+          chart.balloonText = balloonText;
+          chart.labelsEnabled = labelsEnabled;
+          chart.color = textColor;
+          chart.labelColorField = textColor;
+          chart.validateNow(true, false);
+        }
+      } else {
+        chart = createCallMetricsDonutChart(data);
+      }
+      return chart;
+    }
+
+    function createCallMetricsDonutChart(data) {
+      if (!angular.isArray(data.dataProvider) || data.dataProvider.length !== 2) {
+        return;
+      }
+
+      var balloonText = callMetricsBalloonText;
+      var labelsEnabled = true;
+      var textColor = Config.chartColors.grayDarkest;
+      if (data.dummy) {
+        balloonText = "";
+        labelsEnabled = false;
+        textColor = Config.chartColors.brandWhite;
+      }
+
+      return createDonutChart(callMetricsDiv, balloonText, callMetricsLabelText, textColor, getCallMetricsLabels(data.labelData), labelsEnabled, data.dataProvider);
+    }
+
+    function getCallMetricsLabels(data) {
+      return [{
+        "align": "center",
+        "size": "42",
+        "text": data.numTotalCalls,
+        "y": 112
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCalls'),
+        "y": 162
+      }, {
+        "align": "center",
+        "size": "30",
+        "text": data.numTotalMinutes,
+        "y": 197
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCallMinutes'),
+        "y": 232
+      }];
+    }
   }
 })();

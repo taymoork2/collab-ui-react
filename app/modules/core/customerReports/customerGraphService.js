@@ -39,6 +39,30 @@
       'valueWidth': 0,
       'verticalGap': 20
     };
+    var defaultBalloon = {
+      'adjustBorderColor': true,
+      'borderThickness': 1,
+      'fillAlpha': 1,
+      'fillColor': Config.chartColors.brandWhite,
+      'fixedPosition': true,
+      'shadowAlpha': 0
+    };
+    var exportMenu = {
+      "enabled": true,
+      "libs": {
+        "autoLoad": false
+      },
+      "menu": [{
+        "class": "export-main",
+        "label": $translate.instant('reportsPage.downloadOptions'),
+        "menu": [{
+          "label": $translate.instant('reportsPage.saveAs'),
+          "title": $translate.instant('reportsPage.saveAs'),
+          "class": "export-list",
+          "menu": ["PNG", "JPG", "PDF"]
+        }, 'PRINT']
+      }]
+    };
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -92,14 +116,7 @@
         'dataProvider': data,
         'valueAxes': valueAxes,
         'graphs': graphs,
-        'balloon': {
-          'adjustBorderColor': true,
-          'borderThickness': 1,
-          'fillAlpha': 1,
-          'fillColor': Config.chartColors.brandWhite,
-          'fixedPosition': true,
-          'shadowAlpha': 0
-        },
+        'balloon': angular.copy(defaultBalloon),
         'categoryField': categoryField,
         'categoryAxis': catAxis,
         'usePrefixes': true,
@@ -121,22 +138,7 @@
           'decimalSeparator': '.',
           'thousandsSeparator': ','
         },
-        'export': {
-          "enabled": true,
-          "libs": {
-            "autoLoad": false
-          },
-          "menu": [{
-            "class": "export-main",
-            "label": $translate.instant('reportsPage.downloadOptions'),
-            "menu": [{
-              "label": $translate.instant('reportsPage.saveAs'),
-              "title": $translate.instant('reportsPage.saveAs'),
-              "class": "export-list",
-              "menu": ["PNG", "JPG", "PDF"]
-            }, 'PRINT']
-          }]
-        }
+        'export': angular.copy(exportMenu)
       };
 
       if (angular.isDefined(legend) && legend !== null) {
@@ -482,14 +484,7 @@
       return AmCharts.makeChart(div, {
         "type": "pie",
         "balloonText": balloonText,
-        'balloon': {
-          'adjustBorderColor': true,
-          'borderThickness': 1,
-          'fillAlpha': 1,
-          'fillColor': Config.chartColors.brandWhite,
-          'fixedPosition': true,
-          'shadowAlpha': 0
-        },
+        "balloon": angular.copy(defaultBalloon),
         "innerRadius": "65%",
         "labelText": labelText,
         "colorField": "color",
@@ -505,22 +500,7 @@
         "outlineAlpha": 1,
         "dataProvider": dataProvider,
         "startDuration": 0,
-        "export": {
-          "enabled": true,
-          "libs": {
-            "autoLoad": false
-          },
-          "menu": [{
-            "class": "export-main",
-            "label": $translate.instant('reportsPage.downloadOptions'),
-            "menu": [{
-              "label": $translate.instant('reportsPage.saveAs'),
-              "title": $translate.instant('reportsPage.saveAs'),
-              "class": "export-list",
-              "menu": ["PNG", "JPG", "PDF"]
-            }, 'PRINT']
-          }]
-        }
+        "export": angular.copy(exportMenu)
       });
     }
 
