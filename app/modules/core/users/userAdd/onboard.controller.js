@@ -62,6 +62,8 @@
       id: 'radioNamesAndEmail'
     }];
 
+    OnboardService.huronCallEntitlement = false;
+
     /****************************** Did to Dn Mapping START *******************************/
     //***
     //***
