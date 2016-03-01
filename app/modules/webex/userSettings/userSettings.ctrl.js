@@ -27,8 +27,7 @@
       $rootScope.$broadcast('displayNameUpdated');
 
       $scope.initPanel = function () {
-        WebExUserSettingsFact.initUserWebExEntitlementOnAtlas();
-        WebExUserSettingsFact.initPanel();
+        WebExUserSettingsFact.getUserSettingsFromWebEx();
       }; // initPanel()
 
       $scope.getUserSettingsInfo = function (form) {
@@ -63,6 +62,7 @@
       $log.log("Show panel3");
 
       $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
+      WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
       $scope.initPanel();
     } // WebExUserSettingsCtrl()
   ]);
