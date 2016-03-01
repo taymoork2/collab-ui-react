@@ -8,17 +8,24 @@ describe('Site List Service', function () {
   beforeEach(module('WebExApp'));
 
   //Declare the variables
-  var $rootScope, SiteListService, WebExUtilsFact, fake_authInfo, fake_gridData, fake_allSitesLicenseInfo, fake_gridDataWithFinalLicenseInfo;
+  var $q, $rootScope, SiteListService, WebExApiGatewayService, WebExUtilsFact, fake_authInfo, fake_gridData, fake_allSitesLicenseInfo, fake_gridDataWithFinalLicenseInfo;
+  var deferred_licenseInfo;
 
   //Inject the required dependent services/factories/data/etc
   beforeEach(inject(function (
+    _$q_,
     _$rootScope_,
     _SiteListService_,
+    _WebExApiGatewayService_,
     _WebExUtilsFact_
   ) {
+    $q = _$q_;
     $rootScope = _$rootScope_;
     SiteListService = _SiteListService_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
     WebExUtilsFact = _WebExUtilsFact_;
+
+    deferred_licenseInfo = $q.defer();
 
     //Define the mock data
     fake_authInfo = {
@@ -133,50 +140,55 @@ describe('Site List Service', function () {
         "siteUrl": "t30citestprov9.webex.com"
       },
       "isCustomerPartner": false
+    }, {
+      "label": "Meeting Center 200",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8da91fa1_200_cisjsite031.webex.com",
+        "offerName": "MC",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "SubCt30test1443208885",
+        "features": ["webex-squared", "squared-call-initiation", "squared-syncup", "cloudmeetings"],
+        "volume": 25,
+        "isTrial": false,
+        "status": "PENDING",
+        "capacity": 200,
+        "siteUrl": "cisjsite031.webex.com"
+      },
+      "isCustomerPartner": false
     }];
 
     fake_allSitesLicenseInfo = [{
       "webexSite": "sjsite14.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "t30citestprov9.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite04.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite14.webex.com",
-      "siteHasMCLicense": false,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": true
+      "siteHasCMRLicense": true,
+      "offerCode": "CMR",
+      "capacity": "100"
     }, {
       "webexSite": "cisjsite031.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite04.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "25"
     }];
 
     fake_gridDataWithFinalLicenseInfo = [{
@@ -326,12 +338,13 @@ describe('Site List Service', function () {
     }];
 
     //Create spies
-    spyOn(_WebExUtilsFact_, "getAllSitesWebexLicenseInfo").and.returnValue(fake_allSitesLicenseInfo);
+    spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
+    spyOn(SiteListService, "updateLicenseTypesColumn");
 
   }));
 
   //1. Test suite to check things exist
-  describe(': Check things exists', function () {
+  describe(': Check things exist', function () {
     it(': should exist as a service', function () {
       expect(SiteListService).toBeDefined();
     });
@@ -340,6 +353,48 @@ describe('Site List Service', function () {
       expect(fake_allSitesLicenseInfo).not.toBe(null);
     });
 
+  });
+
+  //2. Test suite for license tests
+  xdescribe(': Using then and done', function () {
+    //2. Test spec
+    it('xxx', function (done) {
+      deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+
+      SiteListService.updateLicenseTypesColumn(fake_gridData).then(function (finalGridData) {
+
+        alert("2. fake_gridData = " + JSON.stringify(fake_gridData));
+        alert("2. finalGridData = " + JSON.stringify(finalGridData));
+
+        expect(finalGridData[0]).not.toBe(null);
+        done();
+      });
+
+    });
+  });
+
+  //2. Test spec for license types column
+  describe(': Check license types column', function () {
+
+    it(': site has only single licensed WebEx service', function () {
+
+      //deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+      //$rootScope.$apply();
+
+      //var response = SiteListService.getAllSitesLicenseData(fake_gridData); //.then(function (response) {
+      //expect(response).not.toBe(null);
+
+      alert("3. BEFORE fake_gridData = " + JSON.stringify(fake_gridData));
+      SiteListService.updateLicenseTypesColumn(fake_gridData);
+      deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+      $rootScope.$apply();
+      alert("3. AFTER fake_gridData = " + JSON.stringify(fake_gridData));
+
+      expect(SiteListService.updateLicenseTypesColumn).toHaveBeenCalled();
+
+      //expect(SiteListService.getAllSitesLicenseData).toHaveBeenCalled(); //With(fake_gridData);
+      //expect(finalGridData[0]).not.toBe(null);
+    });
   });
 
 });
