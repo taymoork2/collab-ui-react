@@ -30,6 +30,9 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.featureTypeAA, 12000);
       utils.click(autoattendant.featureTypeAA);
 
+      utils.wait(autoattendant.basicAA, 12000);
+      utils.click(autoattendant.basicAA);
+
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);

@@ -42,6 +42,7 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
+    vm.assignedNumbers = [];
 
     vm.model = {
       site: {
@@ -51,7 +52,9 @@
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
-        vmCluster: undefined
+        vmCluster: undefined,
+        emergencyCallBackNumber: {},
+        uuid: undefined
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
@@ -69,7 +72,9 @@
       },
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
-      showServiceAddress: false
+      showServiceAddress: false,
+      serviceNumber: {},
+      serviceNumberWarning: false
     };
 
     vm.validations = {
@@ -428,6 +433,40 @@
         }]
       }
     }, {
+      model: vm.model,
+      key: 'serviceNumber',
+      type: 'select',
+      templateOptions: {
+        type: 'csSelect',
+        inputClass: 'large-5',
+        label: $translate.instant('settingsServiceNumber.label'),
+        description: $translate.instant('settingsServiceNumber.description'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'value',
+        filter: true,
+        warnMsg: $translate.instant('settingsServiceNumber.warning')
+      },
+      controller: /* @ngInject */ function ($scope, $timeout, Authinfo, NumberSearchServiceV2) {
+        NumberSearchServiceV2.get({
+          customerId: Authinfo.getOrgId(),
+          assigned: true,
+          type: 'external'
+        }).$promise.then(function (response) {
+          vm.assignedNumbers = _.map(response.numbers, 'number');
+          $scope.to.options = _.map(response.numbers, function (number) {
+            number.label = TelephoneNumberService.getDIDLabel(number.number);
+            return number;
+          });
+        });
+      },
+      hideExpression: '!model.showServiceAddress',
+      expressionProperties: {
+        'templateOptions.isWarn': function () {
+          return vm.model.serviceNumberWarning;
+        }
+      }
+    }, {
       key: 'callerId',
       type: 'nested',
       className: 'max-width-form',
@@ -604,6 +643,17 @@
             vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
             vm.model.site.siteCode = site.siteCode;
             vm.model.site.vmCluster = site.vmCluster;
+            vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
+            vm.model.uuid = site.uuid;
+            if (site.emergencyCallBackNumber) {
+              vm.model.serviceNumber = {
+                pattern: site.emergencyCallBackNumber.pattern,
+                label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
+              };
+            } else {
+              vm.model.serviceNumberWarning = true;
+            }
+
           });
         }
       });
@@ -662,6 +712,10 @@
         });
     }
 
+    function isNotAssignedNumber(numbers, emergencyCallbackNumber) {
+      return !_.includes(numbers, emergencyCallbackNumber);
+    }
+
     function displayDisableVoicemailWarning() {
       if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.companyVoicemail.companyVoicemailEnabled')) {
         return ModalService.open({
@@ -717,6 +771,20 @@
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
             return $q.reject(response);
           });
+      }
+
+      function saveServiceNumber() {
+        if (vm.model.serviceNumber !== '') {
+          var site = {};
+          site.emergencyCallBackNumber = {
+            pattern: vm.model.serviceNumber.number
+          };
+          return ServiceSetup.updateSite(vm.model.uuid, site)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
+              return $q.reject(response);
+            });
+        }
       }
 
       function saveSite() {
@@ -836,6 +904,7 @@
         //.then(displayDisableVoicemailWarning)
         .then(saveCustomer)
         .then(saveSite)
+        .then(saveServiceNumber)
         .then(saveTimeZone)
         .catch(_.noop)
         .then(getCustomer)
@@ -1170,6 +1239,14 @@
       if (newValue && !vm.model.callerId.uuid && !vm.model.callerId.callerIdName) {
         vm.model.callerId.callerIdName = Authinfo.getOrgName();
       }
+    });
+
+    $scope.$watchGroup([function () {
+      return vm.assignedNumbers;
+    }, function () {
+      return vm.model.serviceNumber;
+    }], function (newValues, oldValues) {
+      vm.model.serviceNumberWarning = isNotAssignedNumber(newValues[0], _.get(newValues[1], 'pattern'));
     });
   }
 })();

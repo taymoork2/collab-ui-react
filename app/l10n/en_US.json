@@ -1507,13 +1507,17 @@
     "builderTitle": "Auto Attendant Builder",
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
-    "builderNewStepInfo": "You can add actions here to add to your Auto Attendant.  Create as many as you want, and link them all together.",
-    "builderNewStepChoiceHelp": "Say Message - Play an uninterruptible recording to the caller",
+    "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
+    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
+    "actionSayMessageHint": "Play an uninterruptable message.",
     "actionPhoneMenu": "Phone Menu",
+    "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionRouteCall": "Route Call",
+    "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
+    "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
@@ -1638,7 +1642,12 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "routeExtNumPlaceHolder": "Enter Number"
+    "routeExtNumPlaceHolder": "Enter Number",
+    "newAAText": "Create New Auto Attendant",
+    "AABasic": "Basic",
+    "AABasicDesc": "Simple played messages with custom phone menu.",
+    "AACustom": "Custom",
+    "AACustomDesc": "Record a custom message and build your own phone menus."
   },
   "callPark": {
     "code": "CP",
@@ -2158,6 +2167,14 @@
     "saveSuccess": "Emergency Service Address updated successfully.",
     "saveError": "Error occurred updating Emergency Service Address."
   },
+  "settingsServiceNumber": {
+    "label": "Emergency Service Number",
+    "description": "Alternate emergency contact number that will be used in case the calling device is not assigned an individual's phone number.",
+    "savePrompt": "Save this number?",
+    "saveSuccess": "Emergency Service Number updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Number.",
+    "warning": "Please select a number assinged to a user or Spark Call feature"
+  },
   "didManageModal": {
     "buttonText": "Add Numbers",
     "title": "Add Phone Numbers",
@@ -2501,6 +2518,7 @@
     "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
+    "mustHaveAtLeastOneSessionTypeEnabled": "Select at least one session type under each WebEx center.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },

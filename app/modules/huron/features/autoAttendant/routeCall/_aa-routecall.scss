@@ -1,13 +1,13 @@
 .aa-route-call {
-  min-width: vr-adjust(440);
-  @include vr-spacing(pt, 1.2); 
+  @include vr-spacing(pt, 1.2);
 }
+
 .aa-route-call-select {
   min-width: vr-adjust(300);
 
   & .country-list {
     min-width: vr-adjust(300);
-    
+
     .dropdown-menu {
       width: vr-adjust(300);
     }
@@ -15,7 +15,7 @@
 
   & .select-toggle {
 
-    @include vr-spacing(pr, 1.75); 
+    @include vr-spacing(pr, 1.75);
 
     & > i {
       &.icon {
@@ -23,7 +23,7 @@
       }
     }
   }
- 
+
   & .aa-route-action {
     & .csSelect-container {
       @include vr-spacing(pt, 1);
