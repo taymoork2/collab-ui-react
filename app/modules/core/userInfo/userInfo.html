@@ -15,8 +15,12 @@
     <li class="divider"></li>
     <li ng-controller="SettingsMenuCtrl as langSettings">
       <a class="select-lng-dropdown">
-        <select id="languageSelector" ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
+        <select 
+          id="languageSelector" 
+          ng-options="item.label for item in langSettings.options track by item.value"
+          ng-model="langSettings.selected" 
+          ng-change="langSettings.updateLanguage()" 
+          onclick="event.stopPropagation();">
         </select>
       </a>
     </li>

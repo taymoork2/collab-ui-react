@@ -3,7 +3,7 @@
 describe('Controller: AABuilderLaneCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope;
+  var $rootScope, $scope, $timeout;
   var aaUiModel = {
     openHours: {}
   };
@@ -11,9 +11,10 @@ describe('Controller: AABuilderLaneCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $timeout = _$timeout_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
 
@@ -29,9 +30,11 @@ describe('Controller: AABuilderLaneCtrl', function () {
     it('add a new menu entry into the menu model', function () {
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       controller.addAction(-1);
+      $timeout.flush();
       expect(aaUiModel['openHours']['entries'].length).toEqual(1);
 
       controller.addAction(0);
+      $timeout.flush();
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
     });
   });
@@ -40,14 +43,17 @@ describe('Controller: AABuilderLaneCtrl', function () {
     it('insert a new menu entry into the menu model', function () {
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       controller.addAction(-1);
+      $timeout.flush();
       expect(aaUiModel['openHours']['entries'].length).toEqual(1);
       aaUiModel['openHours']['entries'][0].setKey('0');
 
       controller.addAction(0);
+      $timeout.flush();
       expect(aaUiModel['openHours']['entries'].length).toEqual(2);
       aaUiModel['openHours']['entries'][1].setKey('1');
 
       controller.addAction(0);
+      $timeout.flush();
       expect(aaUiModel['openHours']['entries'].length).toEqual(3);
       expect(aaUiModel['openHours']['entries'][0].getKey()).toEqual('0');
       expect(aaUiModel['openHours']['entries'][1].getKey()).toEqual('');

@@ -297,6 +297,8 @@ describe('Controller: HuronSettingsCtrl', function () {
       pattern: '(229) 229-1234'
     };
 
+    controller.model.serviceNumber = '';
+
     controller.hasVoicemailService = true;
     controller.model.site.voicemailPilotNumber = controller.externalNumberPool[0].pattern;
 
