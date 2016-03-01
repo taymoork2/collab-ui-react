@@ -19,7 +19,6 @@
       <div>
         <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceAware.entitled && callServiceAware.status"
-              id="callServiceAware_status"
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceAware.status && callServiceAware.entitled"
@@ -61,7 +60,6 @@
     <div>
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
-              id="callServiceConnect_status"
               ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
               translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceConnect.status && callServiceConnect.entitled"
