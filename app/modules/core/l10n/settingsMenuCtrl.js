@@ -5,7 +5,7 @@
     .module('Core')
     .controller('SettingsMenuCtrl', SettingsMenuCtrl);
 
-  function SettingsMenuCtrl($state, $translate, Authinfo, $rootScope, $http, languages) {
+  function SettingsMenuCtrl($state, $translate, Authinfo, $rootScope, languages) {
     var vm = this;
 
     vm.options = _.map(languages, function (lang) {
