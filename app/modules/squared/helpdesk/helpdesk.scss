@@ -384,8 +384,6 @@
         }
       }
       .search-result-info{
-        //position: absolute;
-        //left:3rem;
         padding-left:3rem;
       }
     }
@@ -524,13 +522,6 @@
   @extend .helpdesk-header-dropdown-menu;
   width: 10rem;
 }
-//.helpdesk-history-dropdown-menu.dropdown-menu:before {
-//  left: 80% !important;
-//}
-//.helpdesk-history-dropdown-menu.dropdown-menu:after {
-//  left: 80% !important;
-//}
-
 
 .helpdesk-spark-status-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
@@ -546,12 +537,6 @@
     margin: 1rem;
   }
 }
-//.helpdesk-spark-status-dropdown-menu.dropdown-menu:before {
-//  left: 92% !important;
-//}
-//.helpdesk-spark-status-dropdown-menu.dropdown-menu:after {
-//  left: 92% !important;
-//}
 
 @media only screen and (max-width: 1024px) {
   .helpdesk-details {
@@ -572,18 +557,7 @@
     }
   }
 }
-//@media only screen and (max-width: 960px) {
-//  .helpdesk-app-container {
-//    .fixed.top-bar- {
-//      //.dropdown-menu:before {
-//      //  left: 80% !important;
-//      //}
-//      //.dropdown-menu:after {
-//      //  left: 80% !important;
-//      //}
-//    }
-//  }
-//}
+
 @media only screen and (max-width: 800px) {
   .helpdesk-cards {
     .cs-card-layout {
@@ -633,12 +607,6 @@
         right: 0;
         top: 52px;
       }
-      //.dropdown-menu:before {
-      //  display: none;
-      //}
-      //.dropdown-menu:after {
-      //  display: none;
-      //}
     }
   }
   .helpdesk-search {
