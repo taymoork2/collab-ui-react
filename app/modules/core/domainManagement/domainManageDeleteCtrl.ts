@@ -10,7 +10,7 @@ namespace domainManagement {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
 
-      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)) {
+      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && DomainManagementService.enforceUsersInVerifiedAndClaimedDomains && this._loggedOnUser.domain == this._domainToDelete.text)) {
         this._error = $translate.instant('domainManagement.delete.preventLockoutError');
       }
     }
