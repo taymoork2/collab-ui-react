@@ -3453,7 +3453,7 @@
   },
   "domainManagement": {
     "title": "Domains",
-    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
@@ -3482,8 +3482,7 @@
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
-      "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
       "header": "Claim domain",
@@ -3493,7 +3492,6 @@
     },
     "actions": {
       "instructions": "View token and instructions",
-      "mail": "Mail token and instructions",
       "unverify": "Remove domain",
       "unclaim": "Release domain",
       "delete": "Remove"
@@ -3503,8 +3501,7 @@
       "done": "Done",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
-      "beforeVerify": "Before you verify",
-      "sendEmail": "Send instructions"
+      "beforeVerify": "Before you verify"
     }
   }
 }
