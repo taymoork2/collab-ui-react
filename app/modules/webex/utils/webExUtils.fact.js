@@ -241,8 +241,6 @@
                   "license=" + JSON.stringify(license);
                 $log.log(logMsg);
 
-                alert(logMsg);
-
                 if (
                   ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
 
