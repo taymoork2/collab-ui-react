@@ -3453,7 +3453,7 @@
   },
   "domainManagement": {
     "title": "Domains",
-    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect.",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
@@ -3463,18 +3463,18 @@
       "actionsHeader": "Actions"
     },
     "add": {
-      "header": "Add domains",
-      "description": "Add domains in your organization to be verified. If you have users in multiple domains, repeat this step until you have added all of them.",
+      "header": "Add domain",
+      "description": "Add your organization's domain. If you have multiple domains, repeat this step.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
       "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
-      "invalidDomainAdded": "This domain is already added."
+      "invalidDomainAdded": "This domain was already added."
     },
     "delete": {
       "header": "Remove domain",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
-      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
     },
     "verify": {
       "header": "Verify domain",
@@ -3491,10 +3491,10 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "View token and instructions",
+      "instructions": "Retrieve verification token",
       "unverify": "Remove domain",
       "unclaim": "Release domain",
-      "delete": "Remove"
+      "delete": "Remove domain"
     },
     "instructions": {
       "title": "Token and instructions",
