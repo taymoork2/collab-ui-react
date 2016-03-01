@@ -81,10 +81,6 @@ describe('Invite User and Check Buckets', function () {
         notifications.assertSuccess(addEmail, 'onboarded successfully');
         utils.expectIsNotDisplayed(users.manageDialog);
       });
-
-      it('should logout', function () {
-        navigation.logout();
-      });
     });
 
     afterAll(function () {

@@ -56,7 +56,6 @@
     }
 
     function setEntitlements(ext) {
-      var i;
       // If EC requires UC be checked as well
       if (ext.id === 'squared-fusion-ec') {
         setCheckbox('squared-fusion-uc', true);
