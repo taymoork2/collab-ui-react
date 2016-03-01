@@ -2167,6 +2167,14 @@
     "saveSuccess": "Emergency Service Address updated successfully.",
     "saveError": "Error occurred updating Emergency Service Address."
   },
+  "settingsServiceNumber": {
+    "label": "Emergency Service Number",
+    "description": "Alternate emergency contact number that will be used in case the calling device is not assigned an individual's phone number.",
+    "savePrompt": "Save this number?",
+    "saveSuccess": "Emergency Service Number updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Number.",
+    "warning": "Please select a number assinged to a user or Spark Call feature"
+  },
   "didManageModal": {
     "buttonText": "Add Numbers",
     "title": "Add Phone Numbers",
