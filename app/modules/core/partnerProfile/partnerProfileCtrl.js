@@ -36,7 +36,7 @@ angular.module('Core')
       $scope.wbxclientversionselected = '';
       $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
       $scope.wbxNoClientSelected = true;
-      $scope.wbxclientversionplaceholder = 'Select webex client version 44';
+      $scope.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
       this.wbxclientversionplaceholder = 'Select webex client version';
       //For now restrict to one user (who is a partner)
       $scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
@@ -154,7 +154,16 @@ angular.module('Core')
         WebexClientVersion.getWbxClientVersions().then(succ);
         //will need to do more stuff here. Init selected version as well. 
         //disable drop down ... but maybe not. 
-        WebexClientVersion.getTemplate(orgId).then(function (json) {
+
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.getTemplate(pid);
+        });
+
+        //var p = WebexClientVersion.getTemplate(orgId)
+
+        p.then(function (json) {
           var clientVersion = json.data.clientVersion;
           if (clientVersion === "") {
             $scope.wbxNoClientSelected = true;
@@ -243,7 +252,12 @@ angular.module('Core')
         $scope.useLatestWbxVersion = useLatest;
         var alwaysSelectLatest = $scope.useLatestWbxVersion;
         //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
-        var p = WebexClientVersion.postOrPutTemplate(orgId, selected, $scope.useLatestWbxVersion);
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.postOrPutTemplate(pid, selected, $scope.useLatestWbxVersion);
+        });
+        //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, $scope.useLatestWbxVersion);
         var successMessage = "";
         if (alwaysSelectLatest) {
           successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
@@ -264,7 +278,14 @@ angular.module('Core')
       function wbxclientversionselectchanged() {
         Log.info("Webex selected version changed");
         var versionSelected = $scope.wbxclientversionselected;
-        var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+        });
+
+        //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
 
         Log.info("New version selected is " + versionSelected);
         var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');

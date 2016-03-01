@@ -48,6 +48,16 @@ angular.module('WebExApp').service('WebexClientVersion', [
     };
 
     /**
+        Note, partnerid is different than org id. Must look up 
+        partnerid using the orgid.
+    */
+    this.getPartnerIdGivenOrgId = function (orgId) {
+      var url = this.getAdminServiceUrl() + "partners/" + orgId;
+      var prom = $http.get(url);
+      return prom;
+    };
+
+    /**
         Sample: data in response
 
                    {
