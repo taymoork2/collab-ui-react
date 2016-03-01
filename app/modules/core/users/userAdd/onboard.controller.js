@@ -1071,6 +1071,7 @@ angular.module('Core')
           Log.info('User onboard request returned:', response.data);
           $rootScope.$broadcast('USER_LIST_UPDATED');
           var numAddedUsers = 0;
+          var numFailedUsers = 0;
           var hybridMessage = '';
 
           _.forEach(response.data.userResponse, function (user) {
@@ -1104,8 +1105,10 @@ angular.module('Core')
               });
             } else if (userStatus === 400 && user.message === '400087') {
               hybridMessage = $translate.instant('usersPage.hybridServicesError');
+              numFailedUsers++;
             } else if (userStatus === 400 && user.message === '400093') {
               hybridMessage = $translate.instant('usersPage.hybridServicesComboError');
+              numFailedUsers++;
             } else {
               userResult.message = $translate.instant('usersPage.onboardError', {
                 email: userResult.email,
@@ -1120,7 +1123,9 @@ angular.module('Core')
             $scope.results.resultList.push(userResult);
           });
 
-          Notification.notify(hybridMessage, 'error');
+          if (numFailedUsers >= 1) {
+            Notification.error(hybridMessage);
+          }
 
           if (numAddedUsers > 0) {
             var msg = 'Invited ' + numAddedUsers + ' users';
