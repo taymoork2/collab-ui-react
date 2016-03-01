@@ -1071,8 +1071,8 @@ angular.module('Core')
           Log.info('User onboard request returned:', response.data);
           $rootScope.$broadcast('USER_LIST_UPDATED');
           var numAddedUsers = 0;
-          var numFailedUsers = 0;
-          var hybridMessage = '';
+          var hybridCheck = false;
+          var hybridMessage = {};
 
           _.forEach(response.data.userResponse, function (user) {
             var userResult = {
@@ -1104,11 +1104,11 @@ angular.module('Core')
                 email: userResult.email
               });
             } else if (userStatus === 400 && user.message === '400087') {
-              hybridMessage = $translate.instant('usersPage.hybridServicesError');
-              numFailedUsers++;
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesError');
+              hybridCheck = true;
             } else if (userStatus === 400 && user.message === '400093') {
-              hybridMessage = $translate.instant('usersPage.hybridServicesComboError');
-              numFailedUsers++;
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesComboError');
+              hybridCheck = true;
             } else {
               userResult.message = $translate.instant('usersPage.onboardError', {
                 email: userResult.email,
@@ -1120,12 +1120,14 @@ angular.module('Core')
               userResult.alertType = 'danger';
               isComplete = false;
             }
-            $scope.results.resultList.push(userResult);
-          });
 
-          if (numFailedUsers >= 1) {
-            Notification.error(hybridMessage);
-          }
+            if (hybridCheck) {
+              $scope.results.resultList.push(hybridMessage);
+            } else {
+              $scope.results.resultList.push(userResult);
+            }
+            
+          });
 
           if (numAddedUsers > 0) {
             var msg = 'Invited ' + numAddedUsers + ' users';
@@ -1142,10 +1144,19 @@ angular.module('Core')
               successes[count_s] = $scope.results.resultList[idx].message;
               count_s++;
             } else {
-              errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
+              if (!hybridCheck) {
+                errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
+                //count_e++;
+              }
+              // errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
               count_e++;
             }
           }
+          if (hybridCheck) {
+            errors.length = count_e;
+            errors[0] = addErrorWithTrackingID($scope.results.resultList[0].message, response);
+          }
+
           //Displaying notifications
           if (successes.length + errors.length === usersList.length) {
             $scope.btnOnboardLoading = false;
