@@ -146,7 +146,7 @@
           return connector.connectorType === connectorType;
         })
         .all(function (connector) {
-          return connector.runningState !== 'not_configured';
+          return connector.state !== 'not_configured';
         })
         .value();
     }
