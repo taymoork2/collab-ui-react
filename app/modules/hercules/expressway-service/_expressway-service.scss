@@ -25,6 +25,15 @@
   top:0.1em;
 }
 
+.hercules.call-service{
+  .call-aware, .call-connect{
+    padding-top: 2rem;
+  }
+  .feature-settings{
+    padding-bottom: 1rem;
+  }
+}
+
 .hercules-trash-icon {
   color: $color-alerts
 }
