@@ -1146,9 +1146,7 @@ angular.module('Core')
             } else {
               if (!hybridCheck) {
                 errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
-                //count_e++;
               }
-              // errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
               count_e++;
             }
           }
