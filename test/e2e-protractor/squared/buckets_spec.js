@@ -19,7 +19,7 @@ describe('Invite User and Check Buckets', function () {
 
     it('should ensure call service enabled', function () {
       navigation.ensureHybridService(navigation.callServicePage);
-      navigation.ensureCallServiceAware();
+      // $HSE navigation.ensureCallServiceAware();
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {
@@ -45,7 +45,8 @@ describe('Invite User and Check Buckets', function () {
         utils.expectIsDisplayed(users.communicationLicenses);
       });
 
-      it('click on Hybrid Services individually', function () {
+      // $HSE
+      xit('click on Hybrid Services individually', function () {
         // Defualt is all check boxes unchecked
         utils.expectCheckbox(users.hybridServices_Cal, false);
         utils.expectCheckbox(users.hybridServices_UC, false);
