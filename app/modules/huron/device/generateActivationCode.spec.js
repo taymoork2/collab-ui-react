@@ -97,7 +97,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
             userId: stateParams.currentUser.id,
             customerId: stateParams.currentUser.meta.customerId,
             oneTimePassword: otp.code,
-            expiresOn: 'January 23, 2015 3:16 AM (CST)' // otp.expiresOn formatted
+            expiresOn: moment(otp.expiresOn).tz(jstz.determine().name()).format('MMMM DD, YYYY h:mm A (z)')
           }).respond(200);
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
