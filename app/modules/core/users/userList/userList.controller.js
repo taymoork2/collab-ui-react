@@ -100,6 +100,8 @@
 
       //list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
+        $scope.currentDataPosition = 0;
+        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
     }

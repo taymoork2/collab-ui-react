@@ -11,7 +11,7 @@ var AutoAttendantPage = function () {
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css(' .aa-selected-phones .select-options')).all(by.tagName('li'));
   this.saveButton = element(by.name('saveButton'));
-  this.closeEditButton = element(by.css('button.close'));
+  this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
@@ -97,6 +97,13 @@ var AutoAttendantPage = function () {
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
+  this.schedule = element(by.css('.aa-schedule-container'));
+  this.addschedule = element(by.linkText('Add Additional Hours'));
+  this.starttime = element(by.id('starttime'));
+  this.endtime = element(by.id('endtime'));
+  this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
+  this.scheduletrash = element(by.css('.aa-schedule-trash'));
+  this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
 

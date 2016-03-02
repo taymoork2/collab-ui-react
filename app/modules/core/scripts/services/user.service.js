@@ -62,19 +62,19 @@
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData
-        }).success(function (data, status) {
+        }).success(function (data, status, headers) {
           data = data || {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
           if (angular.isFunction(callback)) {
-            callback(data, status, method);
+            callback(data, status, method, headers);
           }
-        }).error(function (data, status) {
+        }).error(function (data, status, headers) {
           data = data || {};
           data.success = false;
           data.status = status;
           if (angular.isFunction(callback)) {
-            callback(data, status, method);
+            callback(data, status, method, headers);
           }
         });
       }

@@ -66,45 +66,16 @@
           var vevent = new ical.Component('vevent');
 
           // create vtimezone
-          var timezoneComp = new ical.Component('vtimezone');
-          timezoneComp.addPropertyWithValue('tzid', 'Europe/London');
-          timezoneComp.addPropertyWithValue('x-lic-location', 'Europe/London');
-          calendar.addSubcomponent(timezoneComp);
-
-          var timezone = new ical.Timezone({
-            component: timezoneComp,
-            tzid: 'Europe/London'
-          });
 
           // Server iCalendar parse seems to want Time with a particular date (year, month, day)
           // Or at least default year, month, day don't parse on server side
           // But we are doing recurrence based on day of week, so what particular date?
           // The date of the first day selected?  Today?
 
-          var p = new ical.Property('dtstart');
-          p.setValue(new ical.Time({
-            year: 2015,
-            month: 7,
-            day: 14,
-            hour: hoursRange.starttime.getHours(),
-            minute: hoursRange.starttime.getMinutes(),
-            second: 0,
-            isDate: false
-          }, timezone));
-          p.setParameter('tzid', 'Europe/London');
+          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime);
           vevent.addProperty(p);
 
-          p = new ical.Property('dtend');
-          p.setValue(new ical.Time({
-            year: 2015,
-            month: 7,
-            day: 14,
-            hour: hoursRange.endtime.getHours(),
-            minute: hoursRange.endtime.getMinutes(),
-            second: 0,
-            isDate: false
-          }, timezone));
-          p.setParameter('tzid', 'Europe/London');
+          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime);
           vevent.addProperty(p);
 
           // recurrence
@@ -118,6 +89,38 @@
           calendar.addSubcomponent(vevent);
         }
       }
+    }
+
+    function getTz(calendar) {
+      var tz = 'UTC/GMT';
+      var timezoneComp = new ical.Component('vtimezone');
+      timezoneComp.addPropertyWithValue('tzid', tz);
+      timezoneComp.addPropertyWithValue('x-lic-location', tz);
+      calendar.addSubcomponent(timezoneComp);
+
+      var timezone = new ical.Timezone({
+        component: timezoneComp,
+        tzid: tz
+      });
+      return timezone;
+    }
+
+    function getiCalDateTime(calendar, dateType, time) {
+      var currentDate = new Date();
+      var timezone = getTz(calendar);
+      var tz = 'UTC/GMT';
+      var p = new ical.Property(dateType);
+      p.setValue(new ical.Time({
+        year: currentDate.getFullYear(),
+        month: currentDate.getMonth(),
+        day: currentDate.getDate(),
+        hour: time.getHours(),
+        minute: time.getMinutes(),
+        second: 0,
+        isDate: false
+      }, timezone));
+      p.setParameter('tzid', tz);
+      return p;
     }
 
     function getHoursRanges(calendarRaw) {
