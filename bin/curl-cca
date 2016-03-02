@@ -1,0 +1,164 @@
+#!/bin/sh
+
+function abort {
+    >&2 echo "Aborting '`basename $0`'"
+    exit 1
+}
+
+cwd=`pwd`
+# get project top-level dir (look for 'fabfile.py')
+while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
+    cd ..
+done
+top_dir=`pwd`
+cd $cwd
+
+if [ "${top_dir}" = "/" ]; then
+    >&2 echo "Error: traversed to '/' while trying to find top-level dir"
+    abort
+fi
+
+function ex_usage {
+    local cmd_basename="`basename $0`"
+    case "${cmd_basename}" in
+        "curl-atlas" )
+            echo "ex. GET list of organizations"
+            echo "  ${cmd_basename} pbr-admin GET /organizations"
+            echo ""
+            echo "ex. GET list of organizations (output response header only)"
+            echo "  ${cmd_basename} pbr-admin GET -I /organizations"
+            echo ""
+            echo "ex. POST a JSON payload (filename is './payload.json') to create a new organization"
+            echo "  ${cmd_basename} partner-admin POST --data @payload.json /organizations"
+            echo ""
+            echo "ex. DELETE a user."
+            echo "  ${cmd_basename} partner-admin DELETE '/user?email=testuser@example.com'"
+            ;;
+        "curl-wdm" )
+            # TODO: add examples
+            ;;
+        "curl-ci" )
+            echo "ex. GET info of an organization (from CI SCIM)"
+            echo "  ${cmd_basename} partner-admin GET /Orgs/{org_id}"
+            ;;
+        "curl-huron" )
+            echo "ex. GET info of an organization (from Huron)"
+            echo "  ${cmd_basename} partner-admin GET /common/customers/{org_id}"
+            ;;
+        "curl-cca" )
+            echo "ex. GET info of an organization (from Huron)"
+            echo "  ${cmd_basename} partner-admin GET https://cmi.huron-int.com/api/v1/common/customers/{org_id}"
+            echo ""
+            echo "ex. GET info of an organization (from Atlas)"
+            echo "  ${cmd_basename} partner-admin GET https://atlas-integration.wbx2.com/admin/api/v1/organizations/{org_id}"
+            echo ""
+            ;;
+    esac
+}
+
+if [ $# -lt 3 ]; then
+    # TODO: update examples for other endpoint urls
+    echo "usage: `basename $0` <usr_label> <method> [...<`basename $0`-options>] [...<curl-options>] <endpoint_uri>"
+    echo ""
+    echo "A wrapper around curl, to simplify REST calls to Cisco Spark endpoints."
+    echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.coffee' for user labels available for use"
+    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/atlas-server.html' for Atlas URIs available for use"
+    echo "- See 'http://wikicentral.cisco.com/display/IDENTITY/Common+Identity+3.0+RESTFul+APIs' for CI URIs available for use"
+    echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/wdm-server-device-mgmt.html' for WDM URIs available for use"
+    echo ""
+    echo "'`basename $0`-options':"
+    echo "  '--print-only',  Print the command that would be run instead of actually running it."
+    echo "  '--pretty-print-json',  Pretty-print JSON response (error if the response is not JSON-formatted)"
+    echo "  '--json-req-mode',  Force 'Content-Type: application/json'"
+    echo ""
+    echo "'curl-options':"
+    echo "  Any valid option that can be passed to 'curl'. See curl(1)."
+    echo ""
+    ex_usage `basename $0`
+    exit 1
+fi
+
+usr_label=${1}
+method=${2}
+endpoint_uri=$(eval echo \$$#)  # <- indirect reference to get last positional param
+
+# strip out first, second, and last positional args, the rest are passed through to 'curl'
+curl_opts=( $@ )
+last_position=$(( $# - 1 ))
+unset -v curl_opts[0]
+unset -v curl_opts[1]
+unset -v curl_opts[$last_position]
+
+# iterate through remaining args, look for special options only meaningful to this script
+print_only="false"
+pretty_print_json="false"
+json_req_mode="false"
+i=0
+for arg in "${curl_opts[@]}"; do
+    case "${arg}" in
+        "--print-only" )
+            print_only="true"
+            unset -v curl_opts[$(( 2 + $i ))]  # <- offset for first two args
+            ;;
+        "--pretty-print-json" )
+            pretty_print_json="true"
+            unset -v curl_opts[$(( 2 + $i ))]
+            ;;
+        "--json-req-mode" )
+            json_req_mode="true"
+            unset -v curl_opts[$(( 2 + $i ))]
+            ;;
+        "--data" )
+            # if a '--data' arg is present, see if the next arg specifies a *.json filename payload
+            next_arg="${curl_opts[$(( 2 + $i + 1 ))]}"
+            if [[ "$next_arg" =~ @.*.json$ ]]; then
+                json_req_mode="true"
+            fi
+            ;;
+
+    esac
+    let "i += 1"
+done
+
+source ${top_dir}/bin/include/curl-api-helpers
+
+url_endpoint_prefix="`get_url_endpoint_prefix $( basename $0 )`"
+[ $? -eq 0 ] || abort
+
+# get bearer token
+bearer_token="`${top_dir}/bin/curl-get-bearer-token.sh ${usr_label}`"
+[ $? -eq 0 ] || abort
+
+# check that the pending operation isn't harmful
+if [ "`basename $0`" = "curl-atlas" ]; then
+    is_safe_atlas_operation "${method}" "${endpoint_uri}"
+    [ $? -eq 0 ] || abort
+fi
+
+# add an override header to force content-type to json as appropriate
+content_type_override=""
+if [ "${json_req_mode}" = "true" ]; then
+    content_type_override="-H 'Content-Type: application/json'"
+fi
+
+# final command to run
+cmd="curl --request ${method} \
+    -H 'Authorization: Bearer ${bearer_token}' \
+    ${content_type_override} \
+    ${curl_opts[@]} \
+    '${url_endpoint_prefix}${endpoint_uri}'"
+
+# echo command only if '--print-only' set
+if [ "$print_only" = "true" ]; then
+    if [ "$pretty_print_json" = "true" ]; then
+        cmd="$cmd | python -m 'json.tool'"
+    fi
+    echo $cmd
+else
+    # pipe to pretty-printer if '--pretty-print-json' set
+    if [ "$pretty_print_json" = "true" ]; then
+        eval "$cmd" | python -m 'json.tool'
+    else
+        eval "$cmd"
+    fi
+fi
