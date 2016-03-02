@@ -31,7 +31,8 @@ describe('TimingInterceptor', function () {
   it('should log if threshold reached and not in prod', function () {
     var response = {
       config: {
-        requestTimestamp: now - 10000
+        headers: {},
+        requestTimestamp: now - 15000
       }
     };
     Config.isProd = sinon.stub().returns(false);
@@ -45,7 +46,7 @@ describe('TimingInterceptor', function () {
   it('should not log in prod', function () {
     var response = {
       config: {
-        requestTimestamp: now - 10000
+        requestTimestamp: now - 15000
       }
     };
     Config.isProd = sinon.stub().returns(true);
