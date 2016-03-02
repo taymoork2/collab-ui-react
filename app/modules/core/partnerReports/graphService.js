@@ -5,68 +5,12 @@
     .service('GraphService', GraphService);
 
   /* @ngInject */
-  function GraphService($translate, Config) {
-    // Base variables for building grids and charts
-    var columnBase = {
-      'type': 'column',
-      'fillAlphas': 1,
-      'lineAlpha': 0,
-      'balloonColor': Config.chartColors.grayLight,
-      'columnWidth': 0.6
-    };
-    var axis = {
-      'axisColor': Config.chartColors.grayLight,
-      'gridColor': Config.chartColors.grayLight,
-      'color': Config.chartColors.grayDarkest,
-      'gridAlpha': 0,
-      'axisAlpha': 1,
-      'tickLength': 0
-    };
-    var legendBase = {
-      'color': Config.chartColors.grayDarkest,
-      'align': 'center',
-      'autoMargins': false,
-      'switchable': false,
-      'fontSize': 13,
-      'markerLabelGap': 10,
-      'markerType': 'square',
-      'markerSize': 10,
-      'position': 'bottom',
-      'equalWidths': false,
-      'horizontalGap': 5,
-      'valueAlign': 'left',
-      'valueWidth': 0,
-      'verticalGap': 20
-    };
-    var numFormatBase = {
-      'precision': 0,
-      'decimalSeparator': '.',
-      'thousandsSeparator': ','
-    };
-    var defaultBalloon = {
-      'adjustBorderColor': true,
-      'borderThickness': 1,
-      'fillAlpha': 1,
-      'fillColor': Config.chartColors.brandWhite,
-      'fixedPosition': true,
-      'shadowAlpha': 0
-    };
-    var exportMenu = {
-      "enabled": true,
-      "libs": {
-        "autoLoad": false
-      },
-      "menu": [{
-        "class": "export-main",
-        "label": $translate.instant('reportsPage.downloadOptions'),
-        "menu": [{
-          "label": $translate.instant('reportsPage.saveAs'),
-          "title": $translate.instant('reportsPage.saveAs'),
-          "class": "export-list",
-          "menu": ["PNG", "JPG", "PDF"]
-        }, 'PRINT']
-      }]
-    };
+  function GraphService($translate, Config, CommonGraphService) {
+    // Keys for base variables in CommonGraphService
+    var COLUMN = 'column';
+    var AXIS = 'axis';
+    var LEGEND = 'legend';
+    var NUMFORMAT = 'numFormat';
 
     // variables for the active users section
     var activeUserDiv = 'activeUsersdiv';
@@ -79,7 +23,7 @@
     var mediaQualityDiv = 'mediaQualityDiv';
 
     // variables for active user population
-    var activeUserPopulationChartId = 'activeUserPopulationChart';
+    var activePopDiv = 'activeUserPopulationChart';
     var popBalloonTextOne = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + "</span><br><span class='percent-large'>[[percentage]]%</span>";
     var popBalloonTextTwo = "<span class='percent-label'>" + $translate.instant('activeUserPopulation.averageLabel') + '<br>' + $translate.instant('activeUserPopulation.acrossCustomers') + "</span><br><span class='percent-large'>[[overallPopulation]]%</span>";
 
@@ -95,67 +39,13 @@
       getCallMetricsDonutChart: getCallMetricsDonutChart
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration, marginBottom) {
-      var chartData = {
-        'startDuration': startDuration,
-        'startEffect': 'easeOutSine',
-        'type': 'serial',
-        'addClassNames': true,
-        'fontFamily': 'Arial',
-        'backgroundColor': Config.chartColors.brandWhite,
-        'backgroundAlpha': 1,
-        'dataProvider': data,
-        'valueAxes': valueAxes,
-        'graphs': graphs,
-        'balloon': angular.copy(defaultBalloon),
-        'autoMargins': false,
-        'marginLeft': 60,
-        'marginTop': 60,
-        'marginRight': 60,
-        'categoryField': categoryField,
-        'categoryAxis': catAxis,
-        'usePrefixes': true,
-        'prefixesOfBigNumbers': [{
-          number: 1e+3,
-          prefix: "K"
-        }, {
-          number: 1e+6,
-          prefix: "M"
-        }, {
-          number: 1e+9,
-          prefix: "B"
-        }, {
-          number: 1e+12,
-          prefix: "T"
-        }],
-        'export': angular.copy(exportMenu)
-      };
-
-      if (angular.isDefined(legend) && legend !== null) {
-        chartData.legend = legend;
-      }
-      if (angular.isDefined(numFormat) && numFormat !== null) {
-        chartData.numberFormatter = numFormat;
-      }
-
-      if (angular.isDefined(chartCursor) && chartCursor !== null) {
-        chartData.chartCursor = chartCursor;
-      }
-
-      if (angular.isDefined(marginBottom) && marginBottom !== null) {
-        chartData.marginBottom = marginBottom;
-      }
-
-      return AmCharts.makeChart(div, chartData);
-    }
-
     function getActiveUsersGraph(data, chart) {
       if (angular.isDefined(chart) && chart !== null) {
         if (data === null || data === 'undefined' || data.length === 0) {
           return;
         }
         var startDuration = 1;
-        if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
+        if (!data[0].balloon) {
           startDuration = 0;
         }
 
@@ -175,23 +65,24 @@
         return;
       }
 
-      var graphs = activeUserGraphs(data);
-      var valueAxes = [angular.copy(axis)];
+      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
-      var catAxis = angular.copy(axis);
+      var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
 
-      var legend = angular.copy(legendBase);
-      legend.labelText = '[[title]]';
-
       var startDuration = 1;
-      if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
+      if (!data[0].balloon) {
         startDuration = 0;
       }
 
-      return createGraph(data, activeUserDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), null, startDuration);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, activeUserGraphs(data), 'modifiedDate', catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
+      chartData.legend.labelText = '[[title]]';
+
+      return AmCharts.makeChart(activeUserDiv, chartData);
     }
 
     function activeUserGraphs(data) {
@@ -202,7 +93,7 @@
       var graphs = [];
 
       for (var i = 0; i < values.length; i++) {
-        graphs.push(angular.copy(columnBase));
+        graphs.push(CommonGraphService.getBaseVariable(COLUMN));
         graphs[i].title = titles[i];
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
@@ -241,25 +132,26 @@
         return;
       }
 
-      var graphs = mediaQualityGraphs(data);
-      var catAxis = angular.copy(axis);
+      var catAxis = CommonGraphService.getBaseVariable(AXIS);
       catAxis.gridPosition = 'start';
 
-      var valueAxes = [angular.copy(axis)];
+      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
-
-      var legend = angular.copy(legendBase);
-      legend.reversedOrder = true;
 
       var startDuration = 1;
       if (!data[0].balloon) {
         startDuration = 0;
       }
 
-      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, angular.copy(numFormatBase), null, startDuration);
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, mediaQualityGraphs(data), 'modifiedDate', catAxis);
+      chartData.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
+      chartData.legend = CommonGraphService.getBaseVariable(LEGEND);
+      chartData.legend.reversedOrder = true;
+
+      return AmCharts.makeChart(mediaQualityDiv, chartData);
     }
 
     function mediaQualityGraphs(data) {
@@ -273,7 +165,7 @@
       var graphs = [];
 
       for (var i = 0; i < values.length; i++) {
-        graphs.push(angular.copy(columnBase));
+        graphs.push(CommonGraphService.getBaseVariable(COLUMN));
         graphs[i].title = $translate.instant(titles[i]);
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
@@ -298,7 +190,7 @@
           startDuration = 0;
         }
 
-        var valueAxes = [angular.copy(axis)];
+        var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
         valueAxes[0].autoGridCount = false;
         valueAxes[0].minimum = 0;
         valueAxes[0].maximum = 100;
@@ -328,27 +220,31 @@
       }
 
       data = modifyPopulation(data, overallPopulation);
-      var graphs = populationGraphs(data);
+      var catAxis = CommonGraphService.getBaseVariable(AXIS);
+      catAxis.axisAlpha = 0;
+      catAxis.fontSize = 15;
+      catAxis.autoWrap = true;
+      catAxis.labelColorField = "labelColorField";
 
-      var categoryAxis = angular.copy(axis);
-      categoryAxis.axisAlpha = 0;
-      categoryAxis.fontSize = 15;
-      categoryAxis.autoWrap = true;
-      categoryAxis.labelColorField = "labelColorField";
-
-      var valueAxes = [angular.copy(axis)];
+      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
       valueAxes[0].autoGridCount = false;
       valueAxes[0].minimum = 0;
       valueAxes[0].maximum = 100;
       valueAxes[0].unit = "%";
-
       if (data[1].percentage > overallPopulation && data[1].percentage > 100) {
         valueAxes[0].maximum = data[1].percentage;
       } else if (overallPopulation > 100) {
         valueAxes[0].maximum = overallPopulation;
       }
 
-      var chartCursor = {
+      var startDuration = 1;
+      if (!data[0].balloon) {
+        startDuration = 0;
+      }
+
+      var chartData = CommonGraphService.getBaseSerialGraph(data, startDuration, valueAxes, populationGraphs(data), 'customerName', catAxis);
+      chartData.marginBottom = 60;
+      chartData.chartCursor = {
         "cursorAlpha": 0,
         "categoryBalloonEnabled": false,
         "oneBalloonOnly": true,
@@ -356,16 +252,11 @@
         "showNextAvailable": true
       };
 
-      var startDuration = 1;
-      if (!data[0].balloon) {
-        startDuration = 0;
-      }
-
-      return createGraph(data, activeUserPopulationChartId, graphs, valueAxes, categoryAxis, 'customerName', null, null, chartCursor, startDuration, 60);
+      return AmCharts.makeChart(activePopDiv, chartData);
     }
 
     function populationGraphs(data) {
-      var graph = angular.copy(columnBase);
+      var graph = CommonGraphService.getBaseVariable(COLUMN);
       graph.fillColors = 'colorOne';
       graph.colorField = 'colorOne';
       graph.fontSize = 26;
@@ -420,34 +311,6 @@
       return data;
     }
 
-    // Donut Graphs below here
-    function createDonutChart(div, balloonText, labelText, textColor, centerLabel, labelsEnabled, dataProvider) {
-      return AmCharts.makeChart(div, {
-        "type": "pie",
-        "balloonText": balloonText,
-        "balloon": angular.copy(defaultBalloon),
-        "innerRadius": "75%",
-        "labelText": labelText,
-        "color": textColor,
-        "colorField": "color",
-        "labelColorField": textColor,
-        "titleField": "label",
-        "valueField": "value",
-        "fontFamily": "Arial",
-        "fontSize": 14,
-        "percentPrecision": 0,
-        "labelRadius": 25,
-        "creditsPosition": "bottom-left",
-        "radius": "30%",
-        "outlineAlpha": 1,
-        "dataProvider": dataProvider,
-        "startDuration": 0,
-        "allLabels": centerLabel,
-        "labelsEnabled": labelsEnabled,
-        "export": angular.copy(exportMenu)
-      });
-    }
-
     function getCallMetricsDonutChart(data, chart) {
       if (angular.isDefined(chart) && chart !== null && angular.isArray(data.dataProvider) && data.dataProvider.length === 2) {
         if (!angular.isArray(data) && data.length !== 0) {
@@ -488,7 +351,13 @@
         textColor = Config.chartColors.brandWhite;
       }
 
-      return createDonutChart(callMetricsDiv, balloonText, callMetricsLabelText, textColor, getCallMetricsLabels(data.labelData), labelsEnabled, data.dataProvider);
+      var chartData = CommonGraphService.getBasePieChart(data.dataProvider, balloonText, "75%", "30%", callMetricsLabelText, labelsEnabled, "label", "value", "color", textColor);
+      chartData.color = textColor;
+      chartData.labelColorField = textColor;
+      chartData.allLabels = getCallMetricsLabels(data.labelData);
+      chartData.color = textColor;
+
+      return AmCharts.makeChart(callMetricsDiv, chartData);
     }
 
     function getCallMetricsLabels(data) {
