@@ -7,7 +7,6 @@ namespace domainManagement {
       addDomain: undefined,
       domainList: [],
       getVerifiedDomains: undefined,
-      getVerificationTokens: undefined,
       states: {pending: 'pending'}
     };
     beforeEach(angular.mock.module('Core'));
@@ -21,7 +20,6 @@ namespace domainManagement {
       let ctrl;
       beforeEach(inject(($controller, $translate)=> {
         DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
-        DomainManagementService.getVerificationTokens = sinon.stub().returns(undefined);
         ctrl = $controller('DomainManagementCtrl', {
           Authinfo: {getOrgId: sinon.stub().returns('org-id')},
           CiService: {
@@ -54,22 +52,6 @@ namespace domainManagement {
 
       it('should create the ctrl and set domain', ()=> {
         expect(ctrl.domain).toBe('test.example.com');
-      });
-    });
-
-    describe('DomainManageEmailCtrl', ()=> {
-      let ctrl;
-      beforeEach(inject(($controller, $translate)=> {
-        ctrl = $controller('DomainManageEmailCtrl', {
-          $stateParams: {domain: {text: 'test.example.com'}, loggedOnUser: {email: 'user-email'}},
-          $previousState: {go: sinon.stub()},
-          DomainManagementService: DomainManagementService,
-          $translate: $translate
-        });
-      }));
-
-      it('should create the ctrl and set email', ()=> {
-        expect(ctrl.email).toBe('user-email');
       });
     });
 
