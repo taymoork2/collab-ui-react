@@ -1106,7 +1106,7 @@ angular.module('Core')
             } else if (userStatus === 400 && user.message === '400087') {
               hybridMessage.message = $translate.instant('usersPage.hybridServicesError');
               hybridCheck = true;
-            } else if (userStatus === 400 && user.message === '400093') {
+            } else if (userStatus === 400 && user.message === '400094') {
               hybridMessage.message = $translate.instant('usersPage.hybridServicesComboError');
               hybridCheck = true;
             } else {
@@ -1126,7 +1126,7 @@ angular.module('Core')
             } else {
               $scope.results.resultList.push(userResult);
             }
-            
+
           });
 
           if (numAddedUsers > 0) {
@@ -1145,13 +1145,12 @@ angular.module('Core')
               count_s++;
             } else {
               if (!hybridCheck) {
-                errors[count_e] = addErrorWithTrackingID($scope.results.resultList[idx].message, response);
+                errors.push(addErrorWithTrackingID($scope.results.resultList[idx].message, response));
               }
               count_e++;
             }
           }
           if (hybridCheck) {
-            errors.length = count_e;
             errors[0] = addErrorWithTrackingID($scope.results.resultList[0].message, response);
           }
 
@@ -1161,7 +1160,11 @@ angular.module('Core')
             Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
             deferred.resolve();
+          } else if (errors.length === 1 && hybridCheck) {
+            Notification.notify(errors, 'error');
+            deferred.resolve();
           }
+
           if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
             $scope.$dismiss();
           }
