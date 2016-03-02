@@ -75,6 +75,32 @@ $aa-builder-icon-color-light: $gray-light-1;
   padding-left: 2rem;
 }
 
+.aa-schedule-modal {
+  width: 785px;
+  background: #FFF none repeat scroll 0% 0%;
+  .aa-schedule-days {
+    padding: 4px;
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .aa-schedule-subtitle {
+    font-size: 20px
+  }
+  .aa-schedule-trash {
+    font-size: 35px;
+    color: #858688;
+    float: right;
+  }
+}
+
+.aa-schedule-container {
+  cursor: pointer;
+  h3{
+    display: inline-block;
+  }
+}
+
 .aa-flex-row-item {
   display: flex;
   flex: 1 1 auto;
