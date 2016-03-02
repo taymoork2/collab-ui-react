@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var THRESHOLD = 10 * 1000;
+  var THRESHOLD = 15 * 1000;
 
   angular
     .module('Core')
@@ -20,11 +20,11 @@
       var duration = response.config.responseTimestamp - response.config.requestTimestamp;
       if (!Config.isProd() && duration > THRESHOLD) {
         $log.error(
-          'HTTP Request exceeded max threshold. \n' +
-          'Threshold: ' + Math.round(THRESHOLD / 1000) + ' seconds. \n' +
-          'Actual time: ' + Math.round(duration / 1000) + ' seconds. \n' +
+          'Request exceeded max threshold of ' + Math.round(THRESHOLD / 1000) + ' seconds. \n' +
+          'Duration: ' + Math.round(duration / 1000) + ' seconds. \n' +
           'Request: ' + response.config.method + ' ' + response.config.url + '\n' +
           (response.config.data ? 'Data: ' + JSON.stringify(response.config.data) + '\n' : '') +
+          (response.config.headers.TrackingID ? 'Tracking ID: ' + response.config.headers.TrackingID + '\n' : '') +
           'User: ' + Authinfo.getUserName() + ' (' + Authinfo.getUserId() + ')\n' +
           'Organization: ' + Authinfo.getOrgName() + ' (' + Authinfo.getOrgId() + ')'
         );
