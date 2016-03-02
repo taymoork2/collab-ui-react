@@ -314,7 +314,7 @@ describe('Configuring services per-user', function () {
     utils.deleteFile(absolutePath);
 
     deleteUtils.deleteUser(testUser);
-    deleteUtils.deleteUser2(testUser);
+    deleteUtils.deleteUser(testUser2);
 
     if (bImportUsers) {
       for (i = 0; i < userList.length; i++) {
