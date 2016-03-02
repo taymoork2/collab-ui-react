@@ -392,6 +392,17 @@ angular.module('Core')
         }
       }
 
+      $scope.checkCMR = function (confModel, cmrLics) {
+        if (!confModel) {
+          confModel = true;
+        } else {
+          confModel = false;
+          angular.forEach(cmrLics, function (cmrLic) {
+            cmrLic.cmrModel = confModel;
+          });
+        }
+      };
+
       function createFeatures(obj) {
         return {
           siteUrl: _.get(obj, 'license.siteUrl', ''),
