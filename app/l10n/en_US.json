@@ -1190,6 +1190,16 @@
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "<a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a>",
+      "callAware": {
+        "enable": "Enable Call Service Aware for Users."
+      },
+      "calendar": {
+        "enable": "Enable Calendar Service Aware for Users."
+      },
+      "connect": {
+        "enable": "Enable Call Service Connect for Users."
+      },
       "scheduleUpgrade": {
         "title": "Confirm the Schedule for Automatic Software Upgrades",
         "description": "A schedule for automatic software upgrades of your Connectors has been set.",

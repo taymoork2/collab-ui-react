@@ -32,6 +32,7 @@
 
     function checkIfConnectorsConfigured(connectorType) {
       var clusters = ClusterService.getExpresswayClusters();
+
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
       });
@@ -48,6 +49,14 @@
       }
     }
 
+    function addNotification(noUsersActivatedId, serviceId, notification) {
+      NotificationService.addNotification(
+        NotificationService.types.TODO,
+        noUsersActivatedId,
+        4,
+        notification, [serviceId]);
+    }
+
     function checkUserStatuses(serviceId) {
       if (serviceId == "squared-fusion-mgmt") {
         return;
@@ -59,11 +68,26 @@
       var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
         0);
       if (needsUserActivation) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          noUsersActivatedId,
-          4,
-          'modules/hercules/notifications/no_users_activated.html', [serviceId]);
+        switch (serviceId) {
+          case "squared-fusion-cal":
+            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+            break;
+          case "squared-fusion-uc":
+            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+                if (!error) {
+                  if (enabled) {
+                    addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+                  }
+                  else {
+                    addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+                  }
+                }
+              }
+            );
+            break;
+          default:
+            break;
+        }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
         var userErrorsId = serviceId + ':userErrors';
