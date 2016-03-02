@@ -109,7 +109,7 @@
           },
           function (response) {
             // failure
-            if (vm.isDeleted) {
+            if (vm.isDeleted && !vm.opehours.length) {
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
               vm.ui.isClosedHours = true;
