@@ -80,13 +80,13 @@
     );
 
     $scope.$watch('countrySelectForm.$invalid', function (invalid) {
-      AACommonService.setIsValid($scope.keyIndex, !invalid);
+      AACommonService.setIsValid($scope.schedule + "-" + $scope.index + "-" + $scope.keyIndex, !invalid);
     });
 
     $scope.$on(
       "$destroy",
       function (event) {
-        AACommonService.setIsValid($scope.keyIndex, true);
+        AACommonService.setIsValid($scope.schedule + "-" + $scope.index + "-" + $scope.keyIndex, true);
       }
     );
 

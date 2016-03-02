@@ -178,6 +178,8 @@
           aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
+          AACommonService.resetFormStatus();
+
           Notification.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
@@ -210,6 +212,9 @@
           aaRecords.push(newAaRecord);
           vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
           vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
+
+          AACommonService.resetFormStatus();
+
           Notification.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName
           });
@@ -275,8 +280,6 @@
           }
         }
       }
-
-      AACommonService.resetFormStatus();
 
       if (isNewRecord) {
         createCE();
