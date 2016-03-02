@@ -1195,11 +1195,24 @@
             return (user.address == usersList[i].address);
           });
 
-          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+      $scope.clearPanel = function () {
+        resetUsersfield();
+        $scope.radioStates.subLicense = {};
+        $scope.results = null;
+      };
+
+      function addErrorWithTrackingID(errorMsg, response, headers) {
+        var headersFunc = (response && response.headers) ? response.headers : headers;
+        if (_.isFunction(headersFunc)) {
+          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
           }
-          if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
-            usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+          var trackingId = headersFunc('TrackingID');
+          if (!trackingId || trackingId === 'null') {
+            // If TrackingID is not allowed by CORS, fallback to TrackingId service
+            errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
+          } else {
+            errorMsg += ' TrackingID: ' + trackingId;
           }
         }
 
@@ -1240,6 +1253,12 @@
 
       $scope.extensionEntitlements = entitlements;
     };
+        var successCallback = function (response) {
+          Log.info('User onboard request returned:', response.data);
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          var numAddedUsers = 0;
+          var hybridCheck = false;
+          var hybridMessage = {};
 
     function entitleUserCallback(data, status, method) {
       $scope.results = {
@@ -1251,12 +1270,52 @@
       if (data.success) {
         Log.info('User successfully updated', data);
 
-        for (var i = 0; i < data.userResponse.length; i++) {
+            if (userStatus === 200 || userStatus === 201) {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
+              });
+              userResult.alertType = 'success';
+              numAddedUsers++;
+            } else if (userStatus === 409) {
+              userResult.message = userResult.email + ' ' + user.message;
+            } else if (userStatus === 403 && user.message === '400081') {
+              userResult.message = $translate.instant('usersPage.userExistsError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
+              userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                email: userResult.email,
+                domain: userResult.email.split('@')[1]
+              });
+            } else if (userStatus === 403 && user.message === '400090') {
+              userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 400 && user.message === '400087') {
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesError');
+              hybridCheck = true;
+            } else if (userStatus === 400 && user.message === '400094') {
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesComboError');
+              hybridCheck = true;
+            } else {
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: userStatus
+              });
+            }
 
-          var userResult = {
-            email: data.userResponse[i].email,
-            alertType: null
-          };
+            if (userStatus !== 200 && userStatus !== 201) {
+              userResult.alertType = 'danger';
+              isComplete = false;
+            }
+
+            if (hybridCheck) {
+              $scope.results.resultList.push(hybridMessage);
+            } else {
+              $scope.results.resultList.push(userResult);
+            }
+
+          });
 
           var userStatus = data.userResponse[i].status;
 
@@ -1284,32 +1343,40 @@
           }
         }
 
-        //concatenating the results in an array of strings for notify function
-        var successes = [];
-        var errors = [];
-        var count_s = 0;
-        var count_e = 0;
-        for (var idx in $scope.results.resultList) {
-          if ($scope.results.resultList[idx].alertType === 'success') {
-            successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-            count_s++;
-          } else {
-            errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
-            count_e++;
+          //concatenating the results in an array of strings for notify function
+          var successes = [];
+          var errors = [];
+          var count_s = 0;
+          var count_e = 0;
+          for (var idx in $scope.results.resultList) {
+            if ($scope.results.resultList[idx].alertType === 'success') {
+              successes[count_s] = $scope.results.resultList[idx].message;
+              count_s++;
+            } else {
+              if (!hybridCheck) {
+                errors.push(addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+              }
+              count_e++;
+            }
           }
-        }
+          if (hybridCheck) {
+            errors[0] = addErrorWithTrackingID($scope.results.resultList[0].message, response);
+          }
 
-        //Displaying notifications
-        if (method !== 'convertUser') {
+          //Displaying notifications
           if (successes.length + errors.length === usersList.length) {
             $scope.btnOnboardLoading = false;
             $scope.btnSaveEntLoad = false;
             Notification.notify(successes, 'success');
             Notification.notify(errors, 'error');
+            deferred.resolve();
+          } else if (errors.length === 1 && hybridCheck) {
+            Notification.notify(errors, 'error');
+            deferred.resolve();
           }
-        } else {
-          if (count_s > 0) {
-            convertSuccess.push.apply(convertSuccess, successes);
+
+          if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+            $scope.$dismiss();
           }
           if (count_e > 0) {
             convertFailures.push.apply(convertFailures, errors);
@@ -1435,13 +1502,11 @@
       return deferred.promise;
     };
 
-    $scope.getServicesNextText = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
-        return 'common.next';
-      } else {
-        return 'common.save';
-      }
-    };
+      function entitleUserCallback(data, status, method, headers) {
+        $scope.results = {
+          resultList: []
+        };
+        var isComplete = true;
 
     // Wizard hook for modal save button
     $scope.assignDnAndDirectLinesNext = function () {
@@ -1505,11 +1570,20 @@
           $scope.saveDisabled = false;
         }
 
-        if (changedKey === 'ciscoUC' && newEntitlements[changedKey]) {
-          $scope.$emit('wizardNextText', 'next');
-        } else if (changedKey === 'ciscoUC') {
-          $scope.$emit('wizardNextText', 'finish');
-        }
+          //concatenating the results in an array of strings for notify function
+          var successes = [];
+          var errors = [];
+          var count_s = 0;
+          var count_e = 0;
+          for (var idx in $scope.results.resultList) {
+            if ($scope.results.resultList[idx].alertType === 'success') {
+              successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+              count_s++;
+            } else {
+              errors.push(addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
+              count_e++;
+            }
+          }
 
       });
     };
@@ -1601,44 +1675,23 @@
       }
     };
 
-    $scope.convertUsers = function () {
-      $scope.btnConvertLoad = true;
-      convertPending = true;
-      convertCancelled = false;
-      convertBacked = false;
-      convertSuccess = [];
-      convertFailures = [];
-      convertStartTime = moment();
-      convertUsersInBatch();
-    };
-
-    function convertUsersInBatch() {
-      var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
-      $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
-      Userservice.migrateUsers(batch, function (data, status) {
-        var successMovedUsers = [];
-
-        for (var i = 0; i < data.userResponse.length; i++) {
-          if (data.userResponse[i].status !== 200) {
-            convertFailures.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
-          } else {
-            var user = {
-              'address': data.userResponse[i].email
-            };
-            var userArray = batch.filter(function (batchObj) {
-              return user.address === batchObj.userName;
+        } else {
+          Log.warn('Could not entitle the user', data);
+          var error = null;
+          if (status) {
+            error = $translate.instant('errors.statusError', {
+              status: status
             });
             user.assignedDn = userArray[0].assignedDn;
             user.externalNumber = userArray[0].externalNumber;
             successMovedUsers.push(user);
           }
-        }
-
-        if (successMovedUsers.length > 0) {
-          var entitleList = [];
-          var licenseList = [];
-          if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-            licenseList = getAccountLicenses('patch');
+          error = addErrorWithTrackingID(error, null, headers);
+          if (method !== 'convertUser') {
+            Notification.notify([error], 'error');
+            isComplete = false;
+            $scope.btnOnboardLoading = false;
+            $scope.btnSaveEntLoad = false;
           } else {
             entitleList = getEntitlements('add');
           }
@@ -1845,9 +1898,18 @@
       LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
     }
 
-    function hasSparkCallLicense(inHeaders) {
-      var index = _.findIndex(inHeaders, function (h) {
-        return h.name == 'Spark Call';
+      /////////////////////////////
+      // Bulk CSV Onboarding logic
+      var userArray = [];
+      var isCsvValid = false;
+      var cancelDeferred;
+      var saveDeferred;
+      var csvHeaders;
+      var orgHeaders;
+      $scope.maxUsers = 250;
+      var isDirSync = false;
+      FeatureToggleService.supportsDirSync().then(function (enabled) {
+        isDirSync = enabled;
       });
       return index !== -1;
     }
@@ -1860,11 +1922,27 @@
       $scope.model.numMaxUsers = userArray.length;
       $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
 
-      function addUserError(row, errorMsg) {
-        $scope.model.userErrorArray.push({
-          row: row,
-          error: errorMsg
-        });
+      $scope.$watch('model.file', function (value) {
+        $timeout(validateCsv);
+      });
+      $scope.resetFile = resetFile;
+
+      function validateCsv() {
+        if ($scope.model.file) {
+          setUploadProgress(0);
+          userArray = $.csv.toArrays($scope.model.file);
+          if (angular.isArray(userArray) && userArray.length > 0) {
+            if (userArray[0][0] === 'First Name') {
+              csvHeaders = userArray.shift();
+            }
+            if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
+              isCsvValid = true;
+            }
+          }
+          setUploadProgress(100);
+        } else {
+          isCsvValid = false;
+        }
       }
 
       function addUserErrorWithTrackingID(row, errorMsg, response) {
@@ -1895,16 +1973,32 @@
             }
           });
         } else {
-          for (var i = 0; i < length; i++) {
-            addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+          var error;
+          if (userArray.length > $scope.maxUsers) {
+            error = [$translate.instant('firstTimeWizard.csvMaxLinesError', {
+              max: String($scope.maxUsers)
+            })];
+          } else {
+            error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
           }
         }
       }
 
-      function errorCallback(response, startIndex, length) {
-        var responseMessage = getErrorResponse(response.status);
-        for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+        return deferred.promise;
+      };
+
+      // Wizard hook
+      $scope.csvProcessingNext = bulkSave;
+      // Feature toggle
+      FeatureToggleService.supportsCsvUpload().then(function (enabled) {
+        if (enabled) {
+          $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          $scope.maxUsers = 1100;
+          return CsvDownloadService.getCsv('headers').then(function (response) {
+            orgHeaders = angular.copy(response.data.columns || []);
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+          });
         }
       }
 
@@ -1952,9 +2046,59 @@
         });
       }
 
-      function calculateProcessProgress() {
-        $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
-        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+      function getBulkErrorResponse(status, messageCode, email) {
+        var responseMessage;
+        messageCode = messageCode || '';
+        email = email || '';
+
+        if (status === 400) {
+          if (messageCode === '400087') {
+            responseMessage = $translate.instant('usersPage.hybridServicesError');
+          } else if (messageCode === '400094') {
+            responseMessage = $translate.instant('usersPage.hybridServicesComboError');
+          } else {
+            responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
+          }
+        } else if (status === 401) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
+        } else if (status === 403) {
+          if (messageCode === '400081') {
+            responseMessage = $translate.instant('usersPage.userExistsError', {
+              email: email
+            });
+          } else if (messageCode === '400084' || messageCode === '400091') {
+            responseMessage = $translate.instant('usersPage.claimedDomainError', {
+              email: email,
+              domain: email.split('@')[1]
+            });
+          } else if (messageCode === '400090') {
+            responseMessage = $translate.instant('usersPage.userExistsInDiffOrgError', {
+              email: email
+            });
+          } else {
+            responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
+          }
+        } else if (status === 404) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
+        } else if (status === 408 || status == 504) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
+        } else if (status === 409) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
+        } else if (status === 500) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
+        } else if (status === 502 || status === 503) {
+          responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
+        } else if (status === -1) {
+          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
+        } else {
+          responseMessage = $translate.instant('firstTimeWizard.processBulkError');
+        }
+        return responseMessage;
+      }
+
+      function bulkSaveWithIndividualLicenses() {
+        saveDeferred = $q.defer();
+        cancelDeferred = $q.defer();
 
         if ($scope.model.numTotalUsers >= userArray.length) {
           $scope.model.userErrorArray.sort(function (a, b) {
@@ -1966,32 +2110,64 @@
         }
       }
 
-      function isValidDID(value) {
-        if (value) {
-          try {
-            return TelephoneNumberService.validateDID(value);
-          } catch (e) {
-            return false;
+        function addUserErrorWithTrackingID(row, errorMsg, response) {
+          errorMsg = addErrorWithTrackingID(errorMsg, response);
+          addUserError(row, _.trim(errorMsg));
+        }
+
+        function successCallback(response, startIndex, length) {
+          if (_.isArray(response.data.userResponse)) {
+            var addedUsersList = [];
+
+            _.forEach(response.data.userResponse, function (user, index) {
+              if (user.status === 200 || user.status === 201) {
+                if (user.message === 'User Patched') {
+                  $scope.model.numExistingUsers++;
+                } else {
+                  $scope.model.numNewUsers++;
+                }
+                // Build list of successful onboards and patches
+                var addItem = {
+                  address: user.email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
+              } else {
+                addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              }
+            });
+          } else {
+            for (var i = 0; i < length; i++) {
+              addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+            }
           }
         }
         return true;
       }
 
-      function findHeaderIndex(name) {
-        return _.findIndex(headers, function (h) {
-          return h.name == name;
-        });
-      }
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getBulkErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
+        }
 
-      function generateHeaders(serverHeaders, userHeaders) {
-        var returnHeaders = [];
-        var index = -1;
-        if (!serverHeaders || !userHeaders) {
-          return [];
-        } else {
-          _.forEach(userHeaders, function (uHeader) {
-            index = _.findIndex(serverHeaders, function (sHeader) {
-              return sHeader.name == uHeader;
+        function onboardCsvUsers(startIndex, userArray, csvPromise) {
+          return csvPromise.then(function () {
+            return $q(function (resolve, reject) {
+              if (userArray.length > 0) {
+                Userservice.bulkOnboardUsers(userArray, cancelDeferred.promise).then(function (response) {
+                  successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).catch(function (response) {
+                  errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).finally(function () {
+                  calculateProcessProgress();
+                  resolve();
+                });
+              } else {
+                resolve();
+              }
             });
             if (index !== -1) {
               returnHeaders.push(serverHeaders[index]);
@@ -2275,7 +2451,7 @@
               if (user.message === 'User Patched') {
                 $scope.model.numExistingUsers++;
               } else {
-                $scope.model.numNewUsers++;
+                addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
               }
               // Build list of successful onboards and patches
               var addItem = {
@@ -2295,31 +2471,23 @@
         }
       }
 
-      function errorCallback(response, startIndex, length) {
-        var responseMessage = getErrorResponse(response.status);
-        for (var k = 0; k < length; k++) {
-          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getBulkErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
         }
       }
 
-      function getErrorResponse(status) {
-        var responseMessage;
-        if (status === 400) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
-        } else if (status === 403 || status === 401) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
-        } else if (status === 404) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
-        } else if (status === 408 || status == 504) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
-        } else if (status === 409) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
-        } else if (status === 500) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
-        } else if (status === 502 || status === 503) {
-          responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
-        } else if (status === -1) {
-          responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
+        // Get license/entitlements
+        var entitleList = [];
+        var licenseList = [];
+        var isCommunicationSelected;
+        if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+          licenseList = getAccountLicenses('additive') || [];
+          isCommunicationSelected = !!_.find(licenseList, function (license) {
+            return _.startsWith(license.id, 'CO_');
+          });
         } else {
           responseMessage = $translate.instant('firstTimeWizard.processBulkError');
         }

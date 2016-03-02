@@ -37,6 +37,7 @@ $overlay-panel-height: 93px;
 
   // Input control.
   input {
+    height: 44px; // prevents Firefox from clipping top of text
     &:focus ~ .input-hint {
       border-top: solid rem(1px) $brand-primary;
     }

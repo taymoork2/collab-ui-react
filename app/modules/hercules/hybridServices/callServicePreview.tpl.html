@@ -47,7 +47,7 @@
 
   </cs-sp-section>
   <cs-sp-section class="cloud-extensions"
-                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS && !callServiceConnect.huronEntitled">
+                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
       <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled"
@@ -71,4 +71,3 @@
     </div>
   </cs-sp-section>
 </cs-sp-container>
-
