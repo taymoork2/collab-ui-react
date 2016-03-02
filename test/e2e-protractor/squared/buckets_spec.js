@@ -19,6 +19,7 @@ describe('Invite User and Check Buckets', function () {
 
     it('should ensure call service enabled', function () {
       navigation.ensureHybridService(navigation.callServicePage);
+      navigation.ensureCallServiceAware();
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {

@@ -43,6 +43,7 @@ describe('Configuring services per-user', function () {
 
   it('should ensure call service enabled', function () {
     navigation.ensureHybridService(navigation.callServicePage);
+    navigation.ensureCallServiceAware();
   });
 
   it('should add a user and select hybrid services', function () {
@@ -83,8 +84,8 @@ describe('Configuring services per-user', function () {
 
     // Get into the call service settings, make sure EC is off!
     utils.click(users.callServiceAware_link);
-    utils.expectTextToBeSet(users.callServiceAwareToggleStatus, 'On');
-    utils.expectTextToBeSet(users.callServiceConnectToggleStatus, 'Off');
+    utils.expectCSToggle(users.callServiceAwareToggle, true);
+    utils.expectCSToggle(users.callServiceConnectToggle, false);
 
     utils.click(users.closeSidePanel);
   });
@@ -245,8 +246,8 @@ describe('Configuring services per-user', function () {
 
       // Get into the call service settings
       utils.click(users.callServiceAware_link);
-      utils.expectTextToBeSet(users.callServiceAwareToggleStatus, 'On');
-      utils.expectTextToBeSet(users.callServiceConnectToggleStatus, 'On');
+      utils.expectCSToggle(users.callServiceAwareToggle, true);
+      utils.expectCSToggle(users.callServiceConnectToggle, true);
 
       utils.click(users.closeSidePanel);
 

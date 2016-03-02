@@ -468,11 +468,8 @@ exports.expectCheckbox = function (elem, value) {
   });
 };
 
-exports.expectSelected = function (elem, value) {
-  return this.wait(elem).then(function () {
-    log('Waiting for element to be selected: ' + elem.locator() + ' ' + value);
-    expect(elem.isSelected()).toBe(value);
-  });
+exports.expectCSToggle = function (elem, value) {
+  expect(elem.isSelected()).toBe(value);
 };
 
 exports.expectRadioSelected = function (elem) {

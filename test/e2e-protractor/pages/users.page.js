@@ -165,8 +165,8 @@ var UsersPage = function () {
 
   this.callServiceAware_link = element(by.id('link_squared-fusion-uc'));
 
-  this.callServiceAwareToggleStatus = element(by.id('callServiceAware_status'));
-  this.callServiceConnectToggleStatus = element(by.id('callServiceConnect_status'));
+  this.callServiceAwareToggle = element(by.id('callServiceAwareEntitledToggle'));
+  this.callServiceConnectToggle = element(by.id('callServiceConnectEntitledToggle'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
