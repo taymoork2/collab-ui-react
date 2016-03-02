@@ -1155,14 +1155,14 @@ angular.module('Core')
           //Displaying notifications
           if ($scope.results.resultList.length === usersList.length) {
             $scope.btnOnboardLoading = false;
-            Notification.success(successes, 'success');
+            Notification.success(successes);
             if (hybridCheck) {
-              Notification.error(errors[0], 'error');
+              Notification.error(errors[0]);
             } else {
-              Notification.error(errors, 'error');
-            }     
+              Notification.error(errors);
+            }
             deferred.resolve();
-          }
+          } 
           if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
             $scope.$dismiss();
           }
