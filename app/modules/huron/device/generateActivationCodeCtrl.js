@@ -6,7 +6,7 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification, HttpUtils) {
+  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $stateParams.currentUser.userName;
@@ -23,18 +23,18 @@
     vm.clipboardFallback = clipboardFallback;
 
     function activate() {
-      HttpUtils.setTrackingID().then(function () {
-        if (vm.otp === 'new') {
-          return OtpService.generateOtp(vm.userName).then(function (otpObj) {
-            vm.otp = otpObj;
-            vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-            setQRCode(vm.otp.code);
-          });
-        } else {
+      if (vm.otp === 'new') {
+        return OtpService.generateOtp(vm.userName).then(function (otpObj) {
+          vm.otp = otpObj;
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
           setQRCode(vm.otp.code);
-        }
-      });
+        });
+      } else if (vm.otp.code) {
+        vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
+        setQRCode(vm.otp.code);
+      } else {
+        $state.go('users.list');
+      }
     }
 
     function setQRCode(code) {

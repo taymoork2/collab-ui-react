@@ -6,14 +6,13 @@
   <div class="modal-body">
     <p translate="domainManagement.instructions.beforeVerify"></p>
     <p class="domainInput">{{dmpopup.domain.text}}</p>
-    <p translate="domainManagement.instructions.instructions" translate-value-name="{{dmpopup.domain.text}}"></p>
+    <p translate="domainManagement.instructions.instructions"></p>
     <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
-    <p translate="domainManagement.instructions.howto"></p>
+    <p translate="domainManagement.instructions.howto" translate-value-click="dmpopup.learnMore()" translate-compile></p>
   </div>
 
 
   <div class="modal-footer">
-    <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
     <button ng-click="dmpopup.cancel()" class="btn--primary"
             translate="domainManagement.instructions.done"></button>
   </div>

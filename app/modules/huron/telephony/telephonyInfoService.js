@@ -42,7 +42,8 @@
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined,
-      internationalDialingEnabled: cbUseGlobal
+      internationalDialingStatus: cbUseGlobal,
+      hideInternationalDialing: undefined
     };
 
     var internalNumberPool = [];
@@ -68,7 +69,8 @@
       getPrimarySiteInfo: getPrimarySiteInfo,
       checkCustomerVoicemail: checkCustomerVoicemail,
       getTelephonyInfoObject: getTelephonyInfoObject,
-      getInternationalDialing: getInternationalDialing
+      getInternationalDialing: getInternationalDialing,
+      getUserInternationalDialingDetails: getUserInternationalDialingDetails
     };
 
     return telephonyInfoService;
@@ -118,7 +120,8 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       };
-      telephonyInfo.internationalDialingEnabled = cbUseGlobal;
+      telephonyInfo.internationalDialingStatus = cbUseGlobal;
+      telephonyInfo.hasCustomerVoicemail = undefined;
     }
 
     /**
@@ -406,7 +409,7 @@
       });
     }
 
-    function getInternationalDialing(userUuid) {
+    function getUserInternationalDialingDetails(userUuid) {
       return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestrictions) {
         var overRide = null;
         var custRestriction = null;
@@ -433,21 +436,34 @@
         }
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
-            telephonyInfo.internationalDialingEnabled = cbNeverAllow;
+            telephonyInfo.internationalDialingStatus = cbNeverAllow;
           } else {
-            telephonyInfo.internationalDialingEnabled = cbAlwaysAllow;
+            telephonyInfo.internationalDialingStatus = cbAlwaysAllow;
           }
         }
         var globalText;
         if (custRestriction) {
-          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.off') + ")";
+          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.off');
         } else {
-          globalText = cbUseGlobal + "(" + $translate.instant('internationalDialingPanel.on') + ")";
+          globalText = cbUseGlobal + " " + $translate.instant('internationalDialingPanel.on');
         }
         if (!overRide) {
-          telephonyInfo.internationalDialingEnabled = globalText;
+          telephonyInfo.internationalDialingStatus = globalText;
         }
       });
     }
+
+    function getInternationalDialing(userUuid) {
+      return $q.when(InternationalDialing.isDisableInternationalDialing())
+        .then(function (isHide) {
+          telephonyInfo.hideInternationalDialing = isHide;
+
+          // don't get details if feature is hidden
+          if (!isHide) {
+            return getUserInternationalDialingDetails(userUuid);
+          }
+        });
+    }
+
   }
 })();

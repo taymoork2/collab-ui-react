@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification;
+  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification, $interval, $intervalSpy;
 
   var externalNumbers, modalDefer;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_, _$interval_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
@@ -16,6 +16,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     DialPlanService = _DialPlanService_;
     Notification = _Notification_;
     $q = _$q_;
+    $interval = _$interval_;
 
     $stateParams.currentCustomer = {
       customerOrgId: '5555-6666'
@@ -28,7 +29,9 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     }];
 
     modalDefer = $q.defer();
-
+    spyOn($interval, 'cancel').and.callThrough();
+    $intervalSpy = jasmine.createSpy('$interval', $interval);
+    $intervalSpy.and.callThrough();
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
@@ -40,7 +43,8 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.when('+1'));
 
     controller = $controller('ExternalNumberDetailCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $interval: $intervalSpy
     });
 
     $scope.$apply();
@@ -107,6 +111,11 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
     expect(controller.allNumbers.length).toEqual(2);
     expect(Notification.success).not.toHaveBeenCalled();
+  });
+
+  it('should cancel( the timeout on destroy method', function () {
+    $scope.$destroy();
+    expect($intervalSpy.cancel.calls.count()).toEqual(1);
   });
 
 });

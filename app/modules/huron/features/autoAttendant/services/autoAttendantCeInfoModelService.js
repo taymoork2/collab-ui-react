@@ -87,6 +87,14 @@
     this.name = name;
   };
 
+  CeInfo.prototype.getSchedule = function () {
+    return this.scheduleId;
+  };
+
+  CeInfo.prototype.setSchedule = function (scheduleId) {
+    this.scheduleId = scheduleId;
+  };
+
   CeInfo.prototype.addResource = function (resource) {
     this.resources[this.resources.length] = resource;
   };
@@ -210,6 +218,7 @@
       }
       aaRecord.assignedResources = resources;
       aaRecord.callExperienceName = ceInfo.getName();
+      aaRecord.scheduleId = ceInfo.getSchedule();
     }
 
     function deleteCeInfo(aaResourceRecords, ceInfo) {

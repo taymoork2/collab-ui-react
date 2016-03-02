@@ -4,6 +4,11 @@
 @import 'mediaQuality/_media-quality-customer';
 @import 'registeredEndpoints/_registered-endpoints';
 
+@keyframes graphAxisFade {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
 .customer-reports {
   @extend %content-subheader;
   @extend %page-content-padding;
@@ -41,17 +46,10 @@
     .barchart {
       font-size: rem-calc(11);
       height: vr-adjust(375);
-      width: 75%;
+      width: 85%;
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
-      overflow: visible !important;
-      .amcharts-chart-div{
-        overflow: visible !important;
-        svg {
-          overflow: visible !important;
-        }
-      }
     }
     .amExportButton {
       left: calc(95% + .1rem);
@@ -111,6 +109,10 @@
         text-align: center;
         margin: 0;
       }
+    }
+    .active-chart .amcharts-value-axis .amcharts-axis-label {
+      opacity: 0;
+      animation: graphAxisFade 2s ease-in-out 1 forwards;
     }
   }
 }

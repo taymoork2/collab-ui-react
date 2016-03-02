@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, PstnServiceAddressService, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
@@ -38,38 +38,29 @@
       PENDING: PENDING
     };
 
-    var billingAddress = {
-      "billingName": "Cisco Systems",
-      "billingStreetNumber": "2200",
-      "billingStreetDirectional": "E",
-      "billingStreetName": "President George Bush",
-      "billingStreetSuffix": "Hwy",
-      "billingAddressSub": "",
-      "billingCity": "Richardson",
-      "billingState": "TX",
-      "billingZip": "75082"
-    };
-
     return service;
 
     function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
       var payload = {
-        "uuid": uuid,
-        "name": name,
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-        "pstnCarrierId": pstnCarrierId,
-        "resellerId": Authinfo.getOrgId(),
-        "billingAddress": billingAddress,
-        "numbers": numbers
+        uuid: uuid,
+        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        pstnCarrierId: pstnCarrierId,
+        numbers: numbers,
+        trial: true
       };
+
+      if (PstnSetup.isResellerExists()) {
+        payload.resellerId = Authinfo.getOrgId();
+      }
       return TerminusCustomerService.save({}, payload).$promise;
     }
 
     function updateCustomerCarrier(customerId, pstnCarrierId) {
       var payload = {
-        "pstnCarrierId": pstnCarrierId
+        pstnCarrierId: pstnCarrierId
       };
       return TerminusCustomerService.update({
         customerId: customerId

@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -39,6 +39,7 @@
     vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
 
     vm.customerOptions = [];
     vm.customerSelected = null;
@@ -51,13 +52,137 @@
     vm.endpointDescription = "";
     vm.trend = "";
     vm.devices = "";
-    vm.resizeCards = resizeCards;
+
     vm.showHideCards = showHideCards;
-    vm.activeUsers = null;
-    vm.regEndpoints = null;
-    vm.userPopulation = null;
-    vm.callMetrics = null;
-    vm.mediaQuality = null;
+    var activeUsers = null;
+    var regEndpoints = null;
+    var userPopulation = null;
+    var callMetrics = null;
+    var mediaQuality = null;
+
+    vm.timeOptions = [{
+      value: 0,
+      label: $translate.instant('reportsPage.week'),
+      description: $translate.instant('reportsPage.week2')
+    }, {
+      value: 1,
+      label: $translate.instant('reportsPage.month'),
+      description: $translate.instant('reportsPage.month2')
+    }, {
+      value: 2,
+      label: $translate.instant('reportsPage.threeMonths'),
+      description: $translate.instant('reportsPage.threeMonths2')
+    }];
+    vm.timeSelected = vm.timeOptions[0];
+
+    // Graph data status checks
+    vm.isRefresh = function (tab) {
+      return tab === REFRESH;
+    };
+
+    vm.isEmpty = function (tab) {
+      return tab === EMPTY;
+    };
+
+    // Controls for Most Active Users Table
+    vm.openCloseMostActive = function () {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resizeCards();
+    };
+
+    vm.activePage = function (num) {
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
+    };
+
+    vm.mostActiveSort = function (num) {
+      if (vm.activeUserPredicate === activeUsersSort[num]) {
+        vm.activeUserReverse = !vm.activeUserReverse;
+      } else {
+        if (num >= 2) {
+          vm.activeUserReverse = true;
+        } else {
+          vm.activeUserReverse = false;
+        }
+        vm.activeUserPredicate = activeUsersSort[num];
+      }
+    };
+
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
+      }
+      vm.activeUserCurrentPage = num;
+      resizeCards();
+    };
+
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
+        vm.changePage(vm.activeUserCurrentPage + 1);
+      }
+    };
+
+    vm.pageBackward = function () {
+      if (vm.activeUserCurrentPage > 1) {
+        vm.changePage(vm.activeUserCurrentPage - 1);
+      }
+    };
+
+    vm.updateReports = function () {
+      setAllDummyData();
+      setTimeBasedText();
+
+      if (vm.customerSelected.value !== 0) {
+        vm.activeUsersRefresh = REFRESH;
+        vm.activeUserPopulationRefresh = REFRESH;
+        vm.mostActiveDescription = "";
+        getActiveUserReports();
+
+        vm.callMetricsRefresh = REFRESH;
+        getCallMetricsReports();
+
+        vm.mediaQualityRefresh = REFRESH;
+        getMediaQualityReports();
+
+        vm.endpointRefresh = REFRESH;
+        getRegisteredEndpoints();
+      } else {
+        setAllNoData();
+      }
+      resizeCards();
+    };
+
+    init();
+
+    function init() {
+      $timeout(function () {
+        setAllDummyData();
+      }, 30);
+
+      setTimeBasedText();
+      PartnerReportService.getOverallActiveUserData(vm.timeSelected);
+      PartnerReportService.getCustomerList().then(function (response) {
+        updateCustomerFilter(response);
+        if (vm.customerSelected.value !== 0) {
+          getRegisteredEndpoints();
+          getMediaQualityReports();
+          getActiveUserReports();
+          getCallMetricsReports();
+        } else {
+          setAllNoData();
+        }
+        resizeCards();
+      });
+    }
+
+    function setAllNoData() {
+      vm.activeUserPopulationRefresh = EMPTY;
+      vm.activeUsersRefresh = EMPTY;
+      vm.mediaQualityRefresh = EMPTY;
+      vm.callMetricsRefresh = EMPTY;
+      vm.endpointRefresh = EMPTY;
+    }
 
     function resizeCards() {
       setTimeout(function () {
@@ -66,8 +191,8 @@
     }
 
     function showHideCards(filter) {
-      var engagementElems = [vm.activeUsers, vm.regEndpoints, vm.userPopulation];
-      var qualityElems = [vm.callMetrics, vm.mediaQuality];
+      var engagementElems = [activeUsers, regEndpoints, userPopulation];
+      var qualityElems = [callMetrics, mediaQuality];
       if (filter === 'all') {
         if (!vm.showEngagement) {
           $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
@@ -96,138 +221,17 @@
           vm.showEngagement = false;
         }
       }
-      vm.resizeCards();
-    }
-
-    vm.timeOptions = [{
-      value: 0,
-      label: $translate.instant('reportsPage.week'),
-      description: $translate.instant('reportsPage.week2')
-    }, {
-      value: 1,
-      label: $translate.instant('reportsPage.month'),
-      description: $translate.instant('reportsPage.month2')
-    }, {
-      value: 2,
-      label: $translate.instant('reportsPage.threeMonths'),
-      description: $translate.instant('reportsPage.threeMonths2')
-    }];
-    vm.timeSelected = vm.timeOptions[0];
-
-    vm.customersSet = function () {
-      return vm.customerSelected === null;
-    };
-
-    vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
-    };
-
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
-    };
-
-    vm.isRefresh = function (tab) {
-      return tab === REFRESH;
-    };
-
-    vm.isEmpty = function (tab) {
-      return tab === EMPTY;
-    };
-
-    vm.mostActiveSort = function (num) {
-      if (vm.activeUserPredicate === activeUsersSort[num]) {
-        vm.activeUserReverse = !vm.activeUserReverse;
-      } else {
-        if (num >= 2) {
-          vm.activeUserReverse = true;
-        } else {
-          vm.activeUserReverse = false;
-        }
-        vm.activeUserPredicate = activeUsersSort[num];
-      }
-    };
-
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
-      }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
-        vm.changePage(vm.activeUserCurrentPage + 1);
-      }
-    };
-
-    vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
-      }
-      if (vm.activeUserCurrentPage !== 1) {
-        vm.changePage(vm.activeUserCurrentPage - 1);
-      }
-    };
-
-    vm.updateReports = function () {
-      setAllDummyData();
-      setTimeBasedText();
-
-      if (vm.customerSelected.value !== 0) {
-        vm.activeUsersRefresh = REFRESH;
-        vm.activeUserPopulationRefresh = REFRESH;
-        vm.mostActiveDescription = "";
-        getActiveUserReports();
-
-        vm.callMetricsRefresh = REFRESH;
-        getCallMetricsReports();
-
-        vm.mediaQualityRefresh = REFRESH;
-        getMediaQualityReports();
-
-        vm.endpointRefresh = REFRESH;
-        getRegisteredEndpoints();
-      } else {
-        setAllNoData();
-      }
-      vm.resizeCards();
-    };
-
-    init();
-
-    function init() {
-      $timeout(function () {
-        setAllDummyData();
-      }, 30);
-
-      setTimeBasedText();
-      PartnerReportService.getOverallActiveUserData(vm.timeSelected);
-      PartnerReportService.getCustomerList().then(function (response) {
-        updateCustomerFilter(response);
-        if (vm.customerSelected.value !== 0) {
-          getRegisteredEndpoints();
-          getMediaQualityReports();
-          getActiveUserReports();
-          getCallMetricsReports();
-        } else {
-          setAllNoData();
-        }
-        vm.resizeCards();
-      });
-
-    }
-
-    function setAllNoData() {
-      vm.activeUserPopulationRefresh = EMPTY;
-      vm.activeUsersRefresh = EMPTY;
-      vm.mediaQualityRefresh = EMPTY;
-      vm.callMetricsRefresh = EMPTY;
-      vm.endpointRefresh = EMPTY;
+      resizeCards();
     }
 
     function updateCustomerFilter(orgsData) {
       var customers = [];
       // add all customer names to the customerOptions list
+      customers.push({
+        value: Authinfo.getOrgId(),
+        label: Authinfo.getOrgName(),
+        isAllowedToManage: true
+      });
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
@@ -240,17 +244,8 @@
         return a.label.localeCompare(b.label);
       });
 
-      if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {
-        vm.customerSelected = vm.customerOptions[0];
-      } else {
-        vm.customerSelected = {
-          value: 0,
-          label: "",
-          isAllowedToManage: false
-        };
-      }
-      vm.resizeCards();
-
+      vm.customerSelected = vm.customerOptions[0];
+      resizeCards();
     }
 
     function setAllDummyData() {
@@ -281,38 +276,23 @@
       } else {
         GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
       }
-      vm.userPopulation = document.getElementById('userPopulation');
+      userPopulation = document.getElementById('userPopulation');
     }
 
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.tableData !== ABORT && response.graphData !== ABORT) {
-          setActiveUserGraph(response.graphData);
-          setActivePopulationGraph(response.populationGraph, response.overallPopulation);
-
           vm.mostActiveUsers = [];
-          if (vm.customerSelected.isAllowedToManage && angular.isDefined(response.tableData)) {
-            vm.mostActiveUsers = response.tableData;
-          }
-
           vm.displayMostActive = false;
-          if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
-            vm.displayMostActive = true;
-          }
-
-          if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
-            var totalUsers = vm.mostActiveUsers.length;
-            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-          } else {
-            vm.activeUsersTotalPages = 0;
-          }
+          vm.activeUsersTotalPages = 0;
           vm.activeUserCurrentPage = 1;
           vm.activeButton = [1, 2, 3];
           vm.activeUserPredicate = activeUsersSort[4];
-
-          vm.activeUsersRefresh = SET;
-          if (response.graphData.length === 0) {
-            vm.activeUsersRefresh = EMPTY;
+          if (angular.isArray(response.tableData) && (response.tableData.length > 0)) {
+            vm.mostActiveUsers = response.tableData;
+            vm.displayMostActive = true;
+            var totalUsers = vm.mostActiveUsers.length;
+            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
           }
 
           vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
@@ -320,13 +300,20 @@
             customer: vm.customerSelected.label
           });
 
+          vm.activeUsersRefresh = EMPTY;
           vm.activeUserPopulationRefresh = EMPTY;
-          if (response.populationGraph.length !== 0) {
-            vm.activeUserPopulationRefresh = SET;
+          if (response.graphData.length > 0) {
+            vm.activeUsersRefresh = SET;
+            setActiveUserGraph(response.graphData);
+            if (response.populationGraph.length > 0) {
+              setActivePopulationGraph(response.populationGraph, response.overallPopulation);
+              vm.activeUserPopulationRefresh = SET;
+              resizeCards();
+            }
           }
         }
-        vm.activeUsers = document.getElementById('activeUser');
-        vm.resizeCards();
+        activeUsers = document.getElementById('activeUser');
+        resizeCards();
         return;
       });
     }
@@ -337,7 +324,7 @@
       } else {
         GraphService.updateMediaQualityGraph(data, mediaQualityChart);
       }
-      vm.mediaQuality = document.getElementById('mediaQuality');
+      mediaQuality = document.getElementById('mediaQuality');
     }
 
     function getMediaQualityReports() {
@@ -349,6 +336,7 @@
             vm.mediaQualityRefresh = EMPTY;
           } else {
             vm.mediaQualityRefresh = SET;
+            resizeCards();
           }
         }
         return;
@@ -361,7 +349,7 @@
       } else {
         DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
       }
-      vm.callMetrics = document.getElementById('callMetrics');
+      callMetrics = document.getElementById('callMetrics');
     }
 
     function getCallMetricsReports() {
@@ -373,6 +361,7 @@
             vm.callMetricsRefresh = EMPTY;
           } else {
             vm.callMetricsRefresh = SET;
+            resizeCards();
           }
         }
         return;
@@ -388,10 +377,11 @@
             vm.registeredEndpoints = response;
             vm.endpointRefresh = SET;
             vm.dummyTable = false;
+            resizeCards();
           }
         }
       });
-      vm.regEndpoints = document.getElementById('reg-endpoints');
+      regEndpoints = document.getElementById('reg-endpoints');
     }
 
     function setTimeBasedText() {

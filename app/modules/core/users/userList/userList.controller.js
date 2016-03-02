@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.manageUsers');
     $scope.load = true;
@@ -64,6 +64,7 @@
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.showUserDetails = showUserDetails;
     $scope.getUserPhoto = getUserPhoto;
+    $scope.firstOfType = firstOfType;
 
     init();
 
@@ -99,8 +100,14 @@
 
       //list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
+        $scope.currentDataPosition = 0;
+        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
+    }
+
+    function getTemplate(name) {
+      return $templateCache.get('modules/core/users/userList/templates/' + name + '.html');
     }
 
     function getUserList(startAt) {
@@ -342,7 +349,7 @@
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
@@ -355,6 +362,7 @@
         enableRowHeaderSelection: false,
         enableColumnResize: true,
         enableColumnMenus: false,
+        enableHorizontalScrollbar: 0,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -395,6 +403,7 @@
           field: 'userStatus',
           cellFilter: 'userListFilter',
           sortable: false,
+          cellTemplate: getTemplate('status.tpl'),
           displayName: $translate.instant('usersPage.status')
         }, {
           field: 'action',
@@ -431,6 +440,11 @@
         $scope.currentUserPhoto = null;
       }
       return $scope.currentUserPhoto;
+    }
+
+    // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
+    function firstOfType(row) {
+      return row.entity.id === $scope.gridData[0].id;
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

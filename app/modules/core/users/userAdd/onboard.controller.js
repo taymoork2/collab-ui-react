@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService', 'CsvDownloadService', 'TrackingId',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -141,12 +141,12 @@ angular.module('Core')
       }
 
       function assignDNForUserList() {
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           user.assignedDn = $scope.internalNumberPool[index];
         });
 
         // don't select any DID on loading the page
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           user.externalNumber = $scope.externalNumberPool[0];
           user.didDnMapMsg = undefined;
         });
@@ -328,9 +328,6 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
       $scope.populateConf = populateConf;
-      $scope.oneBilling = false;
-      $scope.selectedSubscription = '';
-      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -352,41 +349,6 @@ angular.module('Core')
       if (null !== Authinfo.getOrgId()) {
         getMessengerSyncStatus();
       }
-
-      var getSubscriptions = function () {
-        if (Authinfo.hasAccount()) {
-          Orgservice.getLicensesUsage().then(function (subscriptions) {
-            $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-            $scope.selectedSubscription = _.first($scope.subscriptionOptions);
-            $scope.oneBilling = _.size($scope.subscriptionOptions) === 1;
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
-          });
-        }
-      };
-
-      $scope.modelChange = function () {
-        $scope.selectedSubscription = this.selectedSubscription;
-      };
-
-      $scope.showMultiSubscriptions = function (billingServiceId, isTrial) {
-        var isSelected = false;
-        var isTrialSubscription = (_.isUndefined(billingServiceId) || _.isEmpty(billingServiceId)) && isTrial;
-        if (_.isArray(billingServiceId)) {
-          for (var i in billingServiceId) {
-            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
-              isSelected = true;
-              break;
-            }
-          }
-        } else {
-          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
-        }
-        var isOneBilling = $scope.oneBilling;
-
-        $scope.licenseExists = isSelected;
-        return isOneBilling || isSelected || isTrialSubscription;
-      };
 
       function populateConf() {
         if (userLicenseIds) {
@@ -564,7 +526,6 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
-        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {
@@ -837,6 +798,18 @@ angular.module('Core')
         return entitleList;
       };
 
+      // Hybrid Services entitlements
+      var getExtensionEntitlements = function (action) {
+        return _.chain($scope.extensionEntitlements)
+          .filter(function (entry) {
+            return action === 'add' && entry.entitlementState === 'ACTIVE';
+          })
+          .map(function (entry) {
+            return new Feature(entry.entitlementName, entry.entitlementState);
+          })
+          .value();
+      };
+
       var getEntitlementStrings = function (entList) {
         var entStrings = [];
         for (var e = 0; e < entList.length; e++) {
@@ -1069,6 +1042,23 @@ angular.module('Core')
         $scope.results = null;
       };
 
+      function addErrorWithTrackingID(errorMsg, response, headers) {
+        var headersFunc = (response && response.headers) ? response.headers : headers;
+        if (_.isFunction(headersFunc)) {
+          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+            errorMsg += '.';
+          }
+          var trackingId = headersFunc('TrackingID');
+          if (!trackingId || trackingId === 'null') {
+            // If TrackingID is not allowed by CORS, fallback to TrackingId service
+            errorMsg += ' TrackingID: ' + TrackingId.getWithoutSequence();
+          } else {
+            errorMsg += ' TrackingID: ' + trackingId;
+          }
+        }
+        return errorMsg;
+      }
+
       function onboardUsers(optionalOnboard) {
         var deferred = $q.defer();
         $scope.results = {
@@ -1077,124 +1067,135 @@ angular.module('Core')
         var isComplete = true;
         usersList = getUsersList();
         Log.debug('Entitlements: ', usersList);
-        var callback = function (data, status) {
-          if (data.success) {
-            Log.info('User onboard request returned:', data);
-            $rootScope.$broadcast('USER_LIST_UPDATED');
-            var numAddedUsers = 0;
-            var addedUsersList = [];
 
-            for (var num = 0; num < data.userResponse.length; num++) {
-              if (data.userResponse[num].status === 200) {
-                numAddedUsers++;
-              }
+        var successCallback = function (response) {
+          Log.info('User onboard request returned:', response.data);
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          var numAddedUsers = 0;
+          var hybridCheck = false;
+          var hybridMessage = {};
+
+          _.forEach(response.data.userResponse, function (user) {
+            var userResult = {
+              email: user.email,
+              alertType: null
+            };
+
+            var userStatus = user.status;
+
+            if (userStatus === 200 || userStatus === 201) {
+              userResult.message = $translate.instant('usersPage.onboardSuccess', {
+                email: userResult.email
+              });
+              userResult.alertType = 'success';
+              numAddedUsers++;
+            } else if (userStatus === 409) {
+              userResult.message = userResult.email + ' ' + user.message;
+            } else if (userStatus === 403 && user.message === '400081') {
+              userResult.message = $translate.instant('usersPage.userExistsError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 403 && (user.message === '400084' || user.message === '400091')) {
+              userResult.message = $translate.instant('usersPage.claimedDomainError', {
+                email: userResult.email,
+                domain: userResult.email.split('@')[1]
+              });
+            } else if (userStatus === 403 && user.message === '400090') {
+              userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
+                email: userResult.email
+              });
+            } else if (userStatus === 400 && user.message === '400087') {
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesError');
+              hybridCheck = true;
+            } else if (userStatus === 400 && user.message === '400094') {
+              hybridMessage.message = $translate.instant('usersPage.hybridServicesComboError');
+              hybridCheck = true;
+            } else {
+              userResult.message = $translate.instant('usersPage.onboardError', {
+                email: userResult.email,
+                status: userStatus
+              });
             }
 
-            if (numAddedUsers > 0) {
-              var msg = 'Invited ' + numAddedUsers + ' users';
-              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
+            if (userStatus !== 200 && userStatus !== 201) {
+              userResult.alertType = 'danger';
+              isComplete = false;
             }
 
-            for (var i = 0; i < data.userResponse.length; i++) {
-              var userResult = {
-                email: data.userResponse[i].email,
-                alertType: null
-              };
-
-              var userStatus = data.userResponse[i].status;
-
-              if (userStatus === 200) {
-                userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
-                userResult.alertType = 'success';
-                // Make list of successfully onboarded users
-                var addItem = {
-                  address: data.userResponse[i].email
-                };
-                if (addItem.address.length > 0) {
-                  addedUsersList.push(addItem);
-                }
-              } else if (userStatus === 409) {
-                userResult.message = userResult.email + ' ' + data.userResponse[i].message;
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else if (userStatus === 403) {
-                if (data.userResponse[i].message === '400081') {
-                  userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email
-                  });
-                } else if (data.userResponse[i].message === '400084') {
-                  userResult.message = $translate.instant('usersPage.claimedDomainError', {
-                    email: userResult.email,
-                    domain: userResult.email.split('@')[1]
-                  });
-                }
-                userResult.alertType = 'danger';
-                isComplete = false;
-              } else {
-                userResult.message = $translate.instant('usersPage.onboardError', {
-                  email: userResult.email,
-                  status: userStatus
-                });
-                userResult.alertType = 'danger';
-                isComplete = false;
-              }
-
+            if (hybridCheck) {
+              $scope.results.resultList.push(hybridMessage);
+            } else {
               $scope.results.resultList.push(userResult);
             }
 
-            // Hybrid Service entitlements must be added after onboarding
-            assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
-              //concatenating the results in an array of strings for notify function
-              var successes = [];
-              var errors = [];
-              var count_s = 0;
-              var count_e = 0;
-              for (var idx in $scope.results.resultList) {
-                if ($scope.results.resultList[idx].alertType === 'success') {
-                  successes[count_s] = $scope.results.resultList[idx].message;
-                  count_s++;
-                } else {
-                  errors[count_e] = $scope.results.resultList[idx].message;
-                  count_e++;
-                }
-              }
-              //Displaying notifications
-              if (successes.length + errors.length === usersList.length) {
-                $scope.btnOnboardLoading = false;
-                Notification.notify(successes, 'success');
-                Notification.notify(errors, 'error');
-                deferred.resolve();
-              }
+          });
 
-              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-                $scope.$dismiss();
-              }
-            });
-          } else {
-            Log.warn('Could not onboard the user', data);
-            var error = null;
-            if (status) {
-              error = $translate.instant('errors.statusError', {
-                status: status
-              });
-              if (data && angular.isString(data.message)) {
-                error += ' ' + $translate.instant('usersPage.messageError', {
-                  message: data.message
-                });
-              }
-            } else {
-              error = 'Request failed.';
-              if (angular.isString(data)) {
-                error += ' ' + data;
-              }
-              Notification.notify(error, 'error');
-            }
-            Notification.notify([error], 'error');
-            isComplete = false;
-            $scope.btnOnboardLoading = false;
-            deferred.reject();
+          if (numAddedUsers > 0) {
+            var msg = 'Invited ' + numAddedUsers + ' users';
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
           }
-          //no need to clear tokens here since that is causing the options grid to blank during the finish process
+
+          //concatenating the results in an array of strings for notify function
+          var successes = [];
+          var errors = [];
+          var count_s = 0;
+          var count_e = 0;
+          for (var idx in $scope.results.resultList) {
+            if ($scope.results.resultList[idx].alertType === 'success') {
+              successes[count_s] = $scope.results.resultList[idx].message;
+              count_s++;
+            } else {
+              if (!hybridCheck) {
+                errors.push(addErrorWithTrackingID($scope.results.resultList[idx].message, response));
+              }
+              count_e++;
+            }
+          }
+          if (hybridCheck) {
+            errors[0] = addErrorWithTrackingID($scope.results.resultList[0].message, response);
+          }
+
+          //Displaying notifications
+          if (successes.length + errors.length === usersList.length) {
+            $scope.btnOnboardLoading = false;
+            Notification.notify(successes, 'success');
+            Notification.notify(errors, 'error');
+            deferred.resolve();
+          } else if (errors.length === 1 && hybridCheck) {
+            Notification.notify(errors, 'error');
+            deferred.resolve();
+          }
+
+          if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+            $scope.$dismiss();
+          }
+        };
+
+        var errorCallback = function (response) {
+          Log.warn('Could not onboard the user', response.data);
+          var error = null;
+          if (response.status) {
+            error = $translate.instant('errors.statusError', {
+              status: response.status
+            });
+            if (response.data && _.isString(response.data.message)) {
+              error += ' ' + $translate.instant('usersPage.messageError', {
+                message: response.data.message
+              });
+            }
+            error = addErrorWithTrackingID(error, response);
+          } else {
+            error = 'Request failed.';
+            if (_.isString(response.data)) {
+              error += ' ' + response.data;
+            }
+            error = addErrorWithTrackingID(error, response);
+            Notification.notify(error, 'error');
+          }
+          Notification.notify([error], 'error');
+          isComplete = false;
+          $scope.btnOnboardLoading = false;
+          deferred.reject();
         };
 
         if (angular.isArray(usersList) && usersList.length > 0) {
@@ -1223,9 +1224,13 @@ angular.module('Core')
           } else {
             entitleList = getEntitlements('add');
           }
+          entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
-            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
+              .then(successCallback)
+              .catch(errorCallback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1243,57 +1248,7 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function assignHybridServices(entitlements, usersList) {
-        var deferred = $q.defer();
-
-        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
-          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
-        } else {
-          // No hybrid services to assign
-          deferred.resolve();
-        }
-
-        function callback(data) {
-          if (data.success) {
-            var successResponses = [];
-            var failureResponses = [];
-            var userResponses = data.userResponse;
-
-            _.each(userResponses, function (response) {
-              var userStatus = response.status;
-              var msg;
-
-              if (userStatus === 404) {
-                msg = $translate.instant('hercules.hybridServices.result404', {
-                  email: response.email
-                });
-                failureResponses.push(msg);
-              } else if (userStatus === 409) {
-                msg = $translate.instant('hercules.hybridServices.result409');
-                failureResponses.push(msg);
-              } else if (userStatus != 200) {
-                msg = $translate.instant('hercules.hybridServices.resultOther', {
-                  email: response.email,
-                  status: userStatus
-                });
-                failureResponses.push(msg);
-              }
-            });
-
-            Notification.notify(successResponses, 'success');
-            Notification.notify(failureResponses, 'error');
-          } else {
-            Log.error('Failed updating users with entitlements.');
-            Log.error(data);
-            Notification.notify('Failed to update entitlements.', 'error');
-          }
-          deferred.resolve();
-        }
-
-        return deferred.promise;
-      }
-
-      function entitleUserCallback(data, status, method) {
+      function entitleUserCallback(data, status, method, headers) {
         $scope.results = {
           resultList: []
         };
@@ -1346,7 +1301,7 @@ angular.module('Core')
               successes[count_s] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
               count_s++;
             } else {
-              errors[count_e] = $scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message;
+              errors.push(addErrorWithTrackingID($scope.results.resultList[idx].email + ' ' + $scope.results.resultList[idx].message, null, headers));
               count_e++;
             }
           }
@@ -1372,7 +1327,7 @@ angular.module('Core')
           Log.warn('Could not entitle the user', data);
           var error = null;
           if (status) {
-            error = $translate.instant('error.statusError', {
+            error = $translate.instant('errors.statusError', {
               status: status
             });
             if (data && angular.isString(data.message)) {
@@ -1386,6 +1341,7 @@ angular.module('Core')
               error += ' ' + data;
             }
           }
+          error = addErrorWithTrackingID(error, null, headers);
           if (method !== 'convertUser') {
             Notification.notify([error], 'error');
             isComplete = false;
@@ -1603,7 +1559,7 @@ angular.module('Core')
         }
 
         // copy numbers to convertSelectedList
-        angular.forEach($scope.usrlist, function (user, index) {
+        _.forEach($scope.usrlist, function (user, index) {
           var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
             return user.address === selectedUser.userName;
           });
@@ -1628,7 +1584,7 @@ angular.module('Core')
           $scope.processing = true;
           // Copying selected users to user list
           $scope.usrlist = [];
-          angular.forEach($scope.convertSelectedList, function (selectedUser, index) {
+          _.forEach($scope.convertSelectedList, function (selectedUser, index) {
             var user = {};
             var givenName = "";
             var familyName = "";
@@ -1694,6 +1650,8 @@ angular.module('Core')
             } else {
               entitleList = getEntitlements('add');
             }
+            entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
             if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
@@ -1777,12 +1735,19 @@ angular.module('Core')
         }]
       };
 
+      /////////////////////////////
       // Bulk CSV Onboarding logic
       var userArray = [];
       var isCsvValid = false;
       var cancelDeferred;
       var saveDeferred;
-      var MAX_USERS = 250;
+      var csvHeaders;
+      var orgHeaders;
+      var maxUsers = 250;
+      var isDirSync = false;
+      FeatureToggleService.supportsDirSync().then(function (enabled) {
+        isDirSync = enabled;
+      });
 
       $scope.onFileSizeError = function () {
         Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
@@ -1803,9 +1768,9 @@ angular.module('Core')
           userArray = $.csv.toArrays($scope.model.file);
           if (angular.isArray(userArray) && userArray.length > 0) {
             if (userArray[0][0] === 'First Name') {
-              userArray.shift();
+              csvHeaders = userArray.shift();
             }
-            if (userArray.length > 0 && userArray.length <= MAX_USERS) {
+            if (userArray.length > 0 && userArray.length <= maxUsers) {
               isCsvValid = true;
             }
           }
@@ -1832,8 +1797,10 @@ angular.module('Core')
           deferred.resolve();
         } else {
           var error;
-          if (userArray.length > MAX_USERS) {
-            error = [$translate.instant('firstTimeWizard.csvMaxLinesError')];
+          if (userArray.length > maxUsers) {
+            error = [$translate.instant('firstTimeWizard.csvMaxLinesError', {
+              max: String(maxUsers)
+            })];
           } else {
             error = [$translate.instant('firstTimeWizard.uploadCsvEmpty')];
           }
@@ -1846,6 +1813,22 @@ angular.module('Core')
 
       // Wizard hook
       $scope.csvProcessingNext = bulkSave;
+      // Feature toggle
+      FeatureToggleService.supportsCsvUpload().then(function (enabled) {
+        if (enabled) {
+          $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+          maxUsers = 1100;
+          return CsvDownloadService.getCsv('headers').then(function (response) {
+            orgHeaders = angular.copy(response.data.columns || []);
+            // Leave this commented out until discussion of maximum limit is done
+            // if (!hasSparkCallLicense(orgHeaders)) {
+            //   maxUsers = 500000;
+            // }
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+          });
+        }
+      });
 
       $scope.initBulkMetric = initBulkMetric;
       $scope.sendBulkMetric = sendBulkMetric;
@@ -1870,6 +1853,407 @@ angular.module('Core')
         LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
       }
 
+      function hasSparkCallLicense(inHeaders) {
+        var index = _.findIndex(inHeaders, function (h) {
+          return h.name == 'Spark Call';
+        });
+        return index !== -1;
+      }
+
+      function bulkSaveWithIndividualLicenses() {
+        saveDeferred = $q.defer();
+        cancelDeferred = $q.defer();
+
+        $scope.model.userErrorArray = [];
+        $scope.model.numMaxUsers = userArray.length;
+        $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
+
+        function addUserError(row, errorMsg) {
+          $scope.model.userErrorArray.push({
+            row: row,
+            error: errorMsg
+          });
+        }
+
+        function addUserErrorWithTrackingID(row, errorMsg, response) {
+          errorMsg = addErrorWithTrackingID(errorMsg, response);
+          addUserError(row, _.trim(errorMsg));
+        }
+
+        function successCallback(response, startIndex, length) {
+          if (_.isArray(response.data.userResponse)) {
+            var addedUsersList = [];
+
+            _.forEach(response.data.userResponse, function (user, index) {
+              if (user.status === 200 || user.status === 201) {
+                if (user.message === 'User Patched') {
+                  $scope.model.numExistingUsers++;
+                } else {
+                  $scope.model.numNewUsers++;
+                }
+                // Build list of successful onboards and patches
+                var addItem = {
+                  address: user.email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
+              } else {
+                addUserErrorWithTrackingID(startIndex + index + 1, getErrorResponse(user.status), response);
+              }
+            });
+          } else {
+            for (var i = 0; i < length; i++) {
+              addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+            }
+          }
+        }
+
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
+        }
+
+        function getErrorResponse(status) {
+          var responseMessage;
+          if (status === 400) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
+          } else if (status === 403 || status === 401) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
+          } else if (status === 404) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
+          } else if (status === 408 || status == 504) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
+          } else if (status === 409) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
+          } else if (status === 500) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
+          } else if (status === 502 || status === 503) {
+            responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
+          } else if (status === -1) {
+            responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
+          } else {
+            responseMessage = $translate.instant('firstTimeWizard.processBulkError');
+          }
+
+          return responseMessage;
+        }
+
+        function onboardCsvUsers(startIndex, userArray, csvPromise) {
+          return csvPromise.then(function () {
+            return $q(function (resolve, reject) {
+              if (userArray.length > 0) {
+                Userservice.bulkOnboardUsers(userArray, cancelDeferred.promise).then(function (response) {
+                  successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).catch(function (response) {
+                  errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).finally(function () {
+                  calculateProcessProgress();
+                  resolve();
+                });
+              } else {
+                resolve();
+              }
+            });
+          });
+        }
+
+        function calculateProcessProgress() {
+          $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
+          $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+
+          if ($scope.model.numTotalUsers >= userArray.length) {
+            $scope.model.userErrorArray.sort(function (a, b) {
+              return a.row - b.row;
+            });
+            $rootScope.$broadcast('USER_LIST_UPDATED');
+            resetFile();
+            saveDeferred.resolve();
+          }
+        }
+
+        function isValidDID(value) {
+          if (value) {
+            try {
+              return TelephoneNumberService.validateDID(value);
+            } catch (e) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        function findHeaderIndex(name) {
+          return _.findIndex(headers, function (h) {
+            return h.name == name;
+          });
+        }
+
+        function generateHeaders(serverHeaders, userHeaders) {
+          var returnHeaders = [];
+          var index = -1;
+          if (!serverHeaders || !userHeaders) {
+            return [];
+          } else {
+            _.forEach(userHeaders, function (uHeader) {
+              index = _.findIndex(serverHeaders, function (sHeader) {
+                return sHeader.name == uHeader;
+              });
+              if (index !== -1) {
+                returnHeaders.push(serverHeaders[index]);
+              }
+            });
+          }
+          return returnHeaders || [];
+        }
+
+        function checkCalendarService() {
+          return Orgservice.getHybridServiceAcknowledged().then(function (response) {
+            if (response.status === 200) {
+              _.forEach(response.data.items, function (item) {
+                if (item.id === Config.entitlements.fusion_cal) {
+                  isCalendarServiceEnabled = item.enabled;
+                }
+              });
+            }
+          });
+        }
+
+        function isTrue(inputString) {
+          var bTrue = false;
+          if (angular.isString(inputString)) {
+            var inToUpper = inputString.toUpperCase();
+            bTrue = (inToUpper === 'T' || inToUpper === 'TRUE');
+          }
+          return bTrue;
+        }
+
+        function isFalse(inputString) {
+          var bFalse = false;
+          if (angular.isString(inputString)) {
+            var inToUpper = inputString.toUpperCase();
+            bFalse = (inToUpper === 'F' || inToUpper === 'FALSE');
+          }
+          return bFalse;
+        }
+
+        function processCsvRows() {
+          headers = generateHeaders(orgHeaders || null, csvHeaders || null);
+          csvChunk = hasSparkCallLicense(headers) ? 2 : 10; // Rate limit for Huron
+
+          // TODO
+          // deal with AUDP -- only one column - Phone Number
+
+          _.forEach(userArray, function (userRow, j) {
+            processingError = false;
+            var firstName = '',
+              lastName = '',
+              displayName = '',
+              id = '';
+            var directoryNumber = '',
+              directLine = '';
+            var idxDirectoryNumber = -1,
+              idxDirectLine = -1;
+            var licenseList = [];
+            var entitleList = [];
+            var numOfActiveMessageLicenses = 0;
+            var isWrongLicenseFormat = false;
+
+            // If we haven't met the chunk size, process the next user
+            if (tempUserArray.length < csvChunk) {
+              // Basic data
+              firstName = userRow[findHeaderIndex('First Name')];
+              lastName = userRow[findHeaderIndex('Last Name')];
+              displayName = userRow[findHeaderIndex('Display Name')];
+              id = userRow[findHeaderIndex('User ID/Email (Required)')];
+              idxDirectoryNumber = findHeaderIndex('Directory Number');
+              if (idxDirectoryNumber !== -1) {
+                directoryNumber = userRow[idxDirectoryNumber];
+              }
+              idxDirectLine = findHeaderIndex('Direct Line');
+              if (idxDirectLine !== -1) {
+                directLine = userRow[idxDirectLine];
+              }
+              licenseList = [];
+              entitleList = [];
+
+              // validations
+              if (!id) {
+                // Report required field is missing
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+              } else if (_.contains(uniqueEmails, id)) {
+                // Report a duplicate email
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+              } else if (directLine && !isValidDID(directLine)) {
+                // Report an invalid DID format
+                processingError = true;
+                addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+              } else {
+                // get license and entitlements
+                _.forEach(headers, function (header, k) {
+                  if (header.license) { // if this is a license column
+                    if (isTrue(userRow[k])) {
+                      licenseList.push(new LicenseFeature(header.license, true));
+                      // Check Active Spark Message
+                      if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
+                        numOfActiveMessageLicenses++;
+                      }
+                    } else if (isFalse(userRow[k])) {
+                      // TODO - in phase 2, if allow license removal, then un-comment the next line
+                      // licenseList.push(new LicenseFeature(header.license, false));
+                      _.noop();
+                    } else {
+                      isWrongLicenseFormat = true;
+                    }
+                  } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
+                    if (isTrue(userRow[k]) || isFalse(userRow[k])) {
+                      _.forEach(header.entitlements, function (entitlement) {
+                        // if lincense is Calendar Service, only process if it is enabled
+                        if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
+                          if (isTrue(userRow[k])) {
+                            entitleList.push(new Feature(entitlement, true));
+                          } else if (isFalse(userRow[k])) {
+                            // TODO - in phase 2, if allow license removal, then un-comment the next line
+                            // entitleList.push(new Feature(entitlement, false));
+                            _.noop();
+                          }
+                        }
+                      });
+                    } else {
+                      isWrongLicenseFormat = true;
+                    }
+                  }
+                });
+
+                if (isWrongLicenseFormat) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
+                } else if (numOfActiveMessageLicenses > 1) {
+                  processingError = true;
+                  addUserError(j + 1, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+                } else {
+                  uniqueEmails.push(id);
+                  // Do not send name and displayName if it's a DirSync org
+                  if (isDirSync) {
+                    firstName = '';
+                    lastName = '';
+                    displayName = '';
+                  }
+                  tempUserArray.push({
+                    'address': id,
+                    'name': firstName + NAME_DELIMITER + lastName,
+                    'displayName': displayName,
+                    'internalExtension': directoryNumber,
+                    'directLine': directLine,
+                    'licenses': licenseList,
+                    'entitlements': entitleList
+                  });
+                }
+              }
+            }
+
+            // Onboard all the previous users in the temp array if there was an error processing a row
+            if (processingError) {
+              csvPromise = onboardCsvUsers(j - 1, tempUserArray, csvPromise);
+              tempUserArray = [];
+            } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+              // Onboard the current temp array if we've met the chunk size or is the last user in list
+              csvPromise = onboardCsvUsers(j, tempUserArray, csvPromise);
+              tempUserArray = [];
+            }
+
+            calculateProcessProgress();
+          });
+        }
+
+        // Onboard users in chunks
+        // Separate chunks on invalid rows
+        var csvChunk = 0; // Rate limit for Huron
+        var csvPromise = $q.when();
+        var tempUserArray = [];
+        var uniqueEmails = [];
+        var processingError;
+        var headers;
+        var isCalendarServiceEnabled = false;
+
+        checkCalendarService().then(function () {
+          return processCsvRows();
+        });
+
+        return saveDeferred.promise;
+      }
+
+      $scope.cancelProcessCsv = function () {
+        cancelDeferred.resolve();
+        saveDeferred.resolve();
+      };
+
+      /////////////////////////////////
+      // Bulk DirSync Onboarding logic
+      // Wizard hooks
+      $scope.dirsyncProcessingNext = bulkSave;
+
+      $scope.installConnectorNext = function () {
+        return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+          return $q(function (resolve, reject) {
+            if (dirSyncEnabled) {
+              // getStatus() is in the parent scope - AddUserCtrl
+              if (angular.isFunction($scope.getStatus)) {
+                $scope.getStatus();
+                resolve();
+              } else {
+                reject();
+              }
+            } else {
+              $scope.dirsyncStatus = $translate.instant('firstTimeWizard.syncNotConfigured');
+              $scope.numUsersInSync = '';
+              $scope.dirsyncUserCountText = '';
+              resolve();
+            }
+          });
+
+        });
+      };
+
+      $scope.syncStatusNext = function () {
+        var deferred = $q.defer();
+
+        if (!$scope.wizard.isLastStep()) {
+          // load synced users to userArray
+          // userList and useNameList are in the parent scope - AddUserCtrl
+          userArray = [];
+          if ($scope.userList && $scope.userList.length > 0) {
+            userArray = $scope.userList.map(function (user, idx) {
+              var userData = [];
+              userData.push(''); // DirSync can't change first name
+              userData.push(''); // DirSync can't change last name
+              userData.push(''); // DirSync can't change display name
+              userData.push(user.Email);
+              userData.push(''); // No Directory Number
+              userData.push(''); // No Direct Line
+              return userData;
+            });
+          }
+
+          if (userArray.length === 0) {
+            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+            deferred.reject();
+          } else {
+            deferred.resolve();
+          }
+        } else {
+          deferred.resolve();
+        }
+
+        return deferred.promise;
+      };
+
+      // The existing bulkSave
+      // TODO- remove after the feature toggle of CSV is no longer active
       function bulkSave() {
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
@@ -1885,63 +2269,48 @@ angular.module('Core')
           });
         }
 
-        function addUserErrorWithTrackingID(row, errorMsg) {
-          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
-            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
-              errorMsg += '.';
-            }
-            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
-          }
+        function addUserErrorWithTrackingID(row, errorMsg, response) {
+          errorMsg = addErrorWithTrackingID(errorMsg, response);
           addUserError(row, _.trim(errorMsg));
         }
 
-        function callback(data, status) {
-          var params = this;
-          if (data.success) {
-            if (angular.isArray(data.userResponse)) {
-              var addedUsersList = [];
+        function successCallback(response, startIndex, length) {
+          if (_.isArray(response.data.userResponse)) {
+            var addedUsersList = [];
 
-              angular.forEach(data.userResponse, function (user, index) {
-                if (user.status === 200) {
-                  if (user.message === 'User Patched') {
-                    $scope.model.numExistingUsers++;
-                  } else {
-                    $scope.model.numNewUsers++;
-                  }
-                  // Build list of successful onboards and patches
-                  var addItem = {
-                    address: user.email
-                  };
-                  if (addItem.address.length > 0) {
-                    addedUsersList.push(addItem);
-                  }
+            _.forEach(response.data.userResponse, function (user, index) {
+              if (user.status === 200 || user.status === 201) {
+                if (user.message === 'User Patched') {
+                  $scope.model.numExistingUsers++;
                 } else {
-                  addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
+                  $scope.model.numNewUsers++;
                 }
-              });
-
-              // Hybrid Service entitlements must be added after onboarding
-              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
-
-              });
-
-            } else {
-              for (var i = 0; i < params.length; i++) {
-                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
+                // Build list of successful onboards and patches
+                var addItem = {
+                  address: user.email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
+              } else {
+                addUserErrorWithTrackingID(startIndex + index + 1, getErrorResponse(user.status), response);
               }
-            }
+            });
           } else {
-            var responseMessage = getErrorResponse(data, status);
-            for (var k = 0; k < params.length; k++) {
-              addUserErrorWithTrackingID(params.startIndex + k + 1, responseMessage);
+            for (var i = 0; i < length; i++) {
+              addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
             }
           }
-
-          calculateProcessProgress();
-          params.resolve();
         }
 
-        function getErrorResponse(data, status) {
+        function errorCallback(response, startIndex, length) {
+          var responseMessage = getErrorResponse(response.status);
+          for (var k = 0; k < length; k++) {
+            addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+          }
+        }
+
+        function getErrorResponse(status) {
           var responseMessage;
           if (status === 400) {
             responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
@@ -1981,22 +2350,25 @@ angular.module('Core')
             entitlementName: 'ciscoUC'
           });
         }
+        entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
         function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, callback.bind({
-                  startIndex: startIndex - userArray.length + 1,
-                  length: userArray.length,
-                  resolve: resolve
-                }), cancelDeferred.promise);
+                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
+                  successCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).catch(function (response) {
+                  errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+                }).finally(function () {
+                  calculateProcessProgress();
+                  resolve();
+                });
               } else {
                 resolve();
               }
             });
           });
-
         }
 
         function calculateProcessProgress() {
@@ -2080,68 +2452,5 @@ angular.module('Core')
         return saveDeferred.promise;
       }
 
-      $scope.cancelProcessCsv = function () {
-        cancelDeferred.resolve();
-        saveDeferred.resolve();
-      };
-
-      // Bulk DirSync Onboarding logic
-      // Wizard hooks
-      $scope.dirsyncProcessingNext = bulkSave;
-
-      $scope.installConnectorNext = function () {
-        return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-          return $q(function (resolve, reject) {
-            if (dirSyncEnabled) {
-              // getStatus() is in the parent scope - AddUserCtrl
-              if (angular.isFunction($scope.getStatus)) {
-                $scope.getStatus();
-                resolve();
-              } else {
-                reject();
-              }
-            } else {
-              $scope.dirsyncStatus = $translate.instant('firstTimeWizard.syncNotConfigured');
-              $scope.numUsersInSync = '';
-              $scope.dirsyncUserCountText = '';
-              resolve();
-            }
-          });
-
-        });
-      };
-
-      $scope.syncStatusNext = function () {
-        var deferred = $q.defer();
-
-        if (!$scope.wizard.isLastStep()) {
-          // load synced users to userArray
-          // userList and useNameList are in the parent scope - AddUserCtrl
-          userArray = [];
-          if ($scope.userList && $scope.userList.length > 0) {
-            userArray = $scope.userList.map(function (user, idx) {
-              var userData = [];
-              userData.push($scope.useNameList[idx].firstName);
-              userData.push($scope.useNameList[idx].lastName);
-              userData.push(user.Name);
-              userData.push(user.Email);
-              userData.push(''); // No Directory Number
-              userData.push(''); // No Direct Line
-              return userData;
-            });
-          }
-
-          if (userArray.length === 0) {
-            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
-            deferred.reject();
-          } else {
-            deferred.resolve();
-          }
-        } else {
-          deferred.resolve();
-        }
-
-        return deferred.promise;
-      };
     }
   ]);

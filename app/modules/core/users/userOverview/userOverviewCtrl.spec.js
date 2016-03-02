@@ -178,11 +178,6 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.dropDownItems.length).toBe(1);
     });
 
-    it('GenerateAuthCodeLink should be removed when removeGenerateAuthCodeLink method is called on controller', function () {
-      controller.removeGenerateAuthCodeLink();
-      expect(controller.dropDownItems.length).toBe(0);
-    });
-
   });
 
 });

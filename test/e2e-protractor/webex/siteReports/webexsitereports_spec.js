@@ -4,29 +4,27 @@ sitereports.testInfo.describeCount = 0;
 while (1 >= sitereports.testInfo.describeCount) {
   switch (sitereports.testInfo.describeCount) {
   case 1:
-    sitereports.testInfo.siteType = 'T30';
-    sitereports.testInfo.siteUrl = "cisjsite002.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T30 site ' + sitereports.testInfo.siteUrl;
+    sitereports.testInfo.testType = 'T30';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t30Info.siteUrl;
     break;
 
   default:
-    sitereports.testInfo.siteType = 'T31';
-    sitereports.testInfo.siteUrl = "sjsite14.cisco.com";
-    sitereports.testInfo.describeText = 'WebEx site reports iframe test for T31 site ' + sitereports.testInfo.siteUrl;
+    sitereports.testInfo.testType = 'T31';
+    sitereports.testInfo.describeText = 'WebEx site reports iframe test for ' + sitereports.testInfo.testType + ' site ' + sitereports.t31Info.siteUrl;
   }
 
-  xdescribe(sitereports.testInfo.describeText, function () {
+  describe(sitereports.testInfo.describeText, function () {
     afterEach(function () {
       utils.dumpConsoleErrors();
     });
 
-    if (sitereports.testInfo.siteType == "T31") {
-      it('should signin as ' + sitereports.testAdmin1.username + ' for T31 site config test', function () {
-        login.loginThroughGui(sitereports.testAdmin1.username, sitereports.testAdmin1.password);
+    if (sitereports.testInfo.testType == "T31") {
+      it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site config test', function () {
+        login.loginThroughGui(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
       });
     } else {
-      it('should signin as ' + sitereports.testAdmin2.username + ' for T30 site config test', function () {
-        login.loginThroughGui(sitereports.testAdmin2.username, sitereports.testAdmin2.password);
+      it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site config test', function () {
+        login.loginThroughGui(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
       });
     }
 
@@ -35,17 +33,17 @@ while (1 >= sitereports.testInfo.describeCount) {
       utils.click(sitereports.conferencing);
     });
 
-    if (sitereports.testInfo.siteType == "T31") {
-      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
-        utils.click(sitereports.configureSJSITE14Cog);
+    if (sitereports.testInfo.testType == "T31") {
+      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T31ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.sjsite14CardsSectionId);
+        utils.wait(sitereports.t31CardsSectionId);
       });
     } else {
-      it('should click on reports cog for ' + sitereports.testInfo.siteUrl + ' and navigate to webex reports index', function () {
-        utils.click(sitereports.configureCISJSITE002Cog);
+      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T30ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.cisjsite002CardsSectionId);
+        utils.wait(sitereports.t30CardsSectionId);
       });
     }
 
@@ -53,17 +51,17 @@ while (1 >= sitereports.testInfo.describeCount) {
       navigation.clickReports();
     });
 
-    if (sitereports.testInfo.siteType == "T31") {
+    if (sitereports.testInfo.testType == "T31") {
       it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
         utils.click(sitereports.webexReportsLink);
         utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.sjsite14CardsSectionId);
+        utils.wait(sitereports.t31CardsSectionId);
       });
     } else {
       it('should navigate to webex reports index for site ' + sitereports.testInfo.siteUrl, function () {
         utils.click(sitereports.webexReportsLink);
         utils.wait(sitereports.webexSiteReportsPanel);
-        utils.wait(sitereports.cisjsite002CardsSectionId);
+        utils.wait(sitereports.t30CardsSectionId);
       });
     }
 
@@ -104,26 +102,6 @@ while (1 >= sitereports.testInfo.describeCount) {
     it('click on common reports storage usage link', function () {
       utils.click(sitereports.webexCommonStorageUsageLink);
       utils.wait(sitereports.webexCommonStorageUsageId);
-    });
-
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on common reports meetings in progress link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingInProgress);
-      utils.wait(sitereports.webexCommonMeetingsInProgressId);
-    });
-
-    it('click on reports index breadcrumb and should navigate to site reports index', function () {
-      utils.click(sitereports.webexReportCrumb2);
-      utils.wait(sitereports.webexSiteReportsPanel);
-    });
-
-    it('click on common reports meetings usage link in wide card', function () {
-      utils.click(sitereports.webexCommonInfoCardMeetingUsage);
-      utils.wait(sitereports.webexCommonMeetingUsageId);
     });
 
     it('click on reports index breadcrumb and should navigate to site reports index', function () {

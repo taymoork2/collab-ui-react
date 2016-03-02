@@ -1,21 +1,46 @@
 <div class="sq-devices-page-overview">
   <div ui-view="header"></div>
 
-  <cs-sp-container>
+  <cs-sp-container ng-if="deviceOverview.currentDevice.needsActivation">
+    <div class="activationOverview">
+      <img
+        class="activationImage"
+        src="images/devices-hi/activation_code.png"
+      />
+      <div class="activationDescription" translate="deviceOverviewPage.notYetActivated"></div>
+      <div class="activationDescription" translate="deviceOverviewPage.deviceCodeExpires" translate-values="{inXDays: deviceOverview.currentDevice.expiryTime}"></div>
+    </div>
+    <div class="activationButtons">
+      <button
+        ng-click="deviceOverview.deleteDevice()"
+        class="btn"
+        ng-disabled="deviceOverview.resettingCode">
+        <span translate="deviceOverviewPage.deleteLocation"></span>
+      </button>
+
+      <button
+        ng-click="deviceOverview.resetCode()"
+        class="btn">
+        <span ng-hide="deviceOverview.resettingCode" translate="deviceOverviewPage.getNewCode"></span>
+        <div ng-show="deviceOverview.resettingCode" cs-loader class="loader-example--small"></div>
+      </button>
+    </div>
+  </cs-sp-container>
+  <cs-sp-container ng-if="!deviceOverview.currentDevice.needsActivation">
     <cs-sp-section>
-      <div id="overview">
+      <div class="overview">
         <img
-          id="overviewImage"
+          class="overviewImage"
           ng-if="deviceOverview.currentDevice.image"
           ng-src="{{deviceOverview.currentDevice.image}}"
         />
-        <div id="overviewDescription">
+        <div class="overviewDescription">
           <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
           <i
             class="fa fa-circle device-status device-status"
             ng-class="deviceOverview.currentDevice.cssColorClass">
           </i>
-          <span>{{deviceOverview.currentDevice.readableState}}</span>
+          <span>{{deviceOverview.currentDevice.state.readableState}}</span>
           <p ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</p>
         </div>
       </div>
@@ -48,14 +73,43 @@
           class="btn btn-action"
           ng-if="deviceOverview.currentDevice.canDelete">
           <span
-            translate="spacesPage.delete">
+            translate="common.delete">
           </span>
         </button>
       </div>
     </cs-sp-section>
+    <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
+      <div class="section-title-row">
+        <span class="section-name" translate="deviceOverviewPage.issues"></span>
+      </div>
+      <div>
+        <div class="deviceIssue" ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
+          <p>
+            <i
+              class="fa fa-circle device-status device-status-red">
+            </i>
+            {{event.type}}
+          </p>
+          <p>{{event.message}}</p>
+        </div>
+      </div>
+    </cs-sp-section>
+
     <cs-sp-section ng-show="deviceOverview.deviceHasInformation">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+        <label class="col-sm-4 control-label">Lines</label>
+        <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
+        <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded && deviceOverview.lines">
+          <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
+            <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
+            <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
+            <span class="badge primary primaryLineBadge" ng-if="line.usage === 'Primary'">Primary</span>
+          </p>
+          <span ng-hide="deviceOverview.lines">-</span>
+        </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.ip">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.ipAddr"></label>
@@ -67,6 +121,12 @@
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.macAddr"></label>
         <div class="col-sm-8">
           <p class="form-control-static">{{deviceOverview.currentDevice.mac}}</p>
+        </div>
+      </div>
+      <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl">
+        <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{deviceOverview.currentDevice.sipUrl}}</p>
         </div>
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
@@ -99,28 +159,6 @@
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
           <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
-        </div>
-      </div>
-      <div
-        class="feature-list activation-code-pane"
-        ng-show="deviceOverview.currentDevice.needsActivation">
-        <p>{{'deviceOverviewPage.expires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
-      </div>
-    </cs-sp-section>
-
-    <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
-      <div class="section-title-row">
-        <span class="section-name" translate="deviceOverviewPage.issues"></span>
-      </div>
-      <div>
-        <div class="deviceIssue" ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
-          <p>
-            <i
-              class="fa fa-circle device-status device-status-red">
-            </i>
-            {{event.type}}
-          </p>
-          <p>{{event.message}}</p>
         </div>
       </div>
     </cs-sp-section>

@@ -5,8 +5,7 @@ describe('UserInfoController', function () {
 
   var controller, $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, $controller, $q) {
     $rootScope = _$rootScope_;
@@ -64,8 +63,7 @@ describe('UserInfoController WebEx logout', function () {
   var Auth, deferredLogout, WebExUtilsFact, $timeout;
   var $window, $scope, $rootScope;
 
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (_$rootScope_, $controller, $q, _Auth_, _WebExUtilsFact_, _$timeout_) {
     $rootScope = _$rootScope_;

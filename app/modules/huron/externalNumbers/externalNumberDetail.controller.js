@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -30,7 +30,13 @@
 
     function init() {
       setCountryCode()
-        .then(listPhoneNumbers);
+        .then(function () {
+          listPhoneNumbers();
+          var interval = $interval(listPhoneNumbers, 10000);
+          $scope.$on('$destroy', function () {
+            $interval.cancel(interval);
+          });
+        });
     }
 
     function listPhoneNumbers() {

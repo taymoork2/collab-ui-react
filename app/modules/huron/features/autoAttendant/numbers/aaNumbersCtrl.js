@@ -31,7 +31,7 @@
     // available number list offered in GUI
     vm.availablePhoneNums = [];
 
-    vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
+    vm.selectPlaceHolder = $translate.instant('autoAttendant.selectNumberPlaceHolder');
 
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 

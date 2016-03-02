@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', '$log',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', 'Log',
+    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, Log) {
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
@@ -10,8 +10,6 @@ angular.module('Core')
       var storedState = 'storedState';
       var storedParams = 'storedParams';
       var queryParams = SessionStorage.popObject('queryParams');
-
-      $rootScope.token = Storage.get('accessToken');
 
       var pageParam = $location.search().pp;
       if (pageParam) {
@@ -26,15 +24,17 @@ angular.module('Core')
         SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
 
-      $scope.login = function () {
-        Auth.redirectToLogin();
+      $scope.login = function (keyCode) {
+        if (!keyCode || (keyCode === 13 && $scope.loginForm.email.$valid)) {
+          Auth.redirectToLogin($scope.email);
+        }
       };
 
       var authorizeUser = function () {
         $scope.loading = true;
         var loadingDelayPromise = $timeout(function () {}, loadingDelay);
 
-        Auth.authorize($rootScope.token)
+        Auth.authorize()
           .then(function () {
             if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
               $state.go('firsttimewizard');
@@ -49,14 +49,10 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-
               } else if (Authinfo.isPartnerAdmin()) {
-                if (Auth.isLoginMarked()) {
-                  LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-                  Auth.clearLoginMarker();
-                }
+                Log.debug('Sending "partner logged in" metrics');
+                LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 state = 'partneroverview';
-
               } else if (Authinfo.isSupportUser()) {
                 state = 'support.status';
               } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
@@ -66,26 +62,16 @@ angular.module('Core')
               }
               $rootScope.services = Authinfo.getServices();
 
-              if (state !== 'partneroverview' && Auth.isLoginMarked()) {
+              if (state !== 'partneroverview') {
+                Log.debug('Sending "customer logged in" metrics');
                 LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-                Auth.clearLoginMarker();
               }
-
               return loadingDelayPromise.then(function () {
                 $state.go(state, params);
               });
             }
           }).catch(function (error) {
-            if (error) {
-              Auth.logout();
-              // $timeout(function () {
-              //   $scope.result = error;
-              //   $timeout(Auth.logout, logoutDelay);
-              // }, loadingDelay);
-            } else {
-              Auth.logout();
-              // $timeout(Auth.logout, logoutDelay);
-            }
+            $state.go('login-error');
           });
       };
 
@@ -93,7 +79,7 @@ angular.module('Core')
         authorizeUser();
       });
 
-      if (!_.isEmpty($rootScope.token)) {
+      if (!_.isEmpty(Storage.get('accessToken'))) {
         authorizeUser();
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
         Auth.redirectToLogin();

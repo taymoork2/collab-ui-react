@@ -1,11 +1,47 @@
 .sq-devices-page {
   @extend %grid-subheader;
   @extend %page-background-white;
+
+  .ui-grid-cell:first-child ,
+  .ui-grid-header-cell:first-child  {
+   border-right: 0px;
+
+    .space_avatar {
+      margin: 4px 5px 4px 30px;
+      width: 35px;
+    }
+  }
 }
+
+.none_found {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
+  @include vr-spacing(pt, 10);
+  background-color: $gray-lightest;
+  align-items: center;
+  justify-content: center;
+  i {
+    font-size: 7em;
+    @include vr-spacing(mb, 1.5);
+  }
+  button {
+    @include vr-spacing(mt, 1);
+  }
+  h4, h1 {
+    @include vr-spacing(mv, .5);
+  }
+  i, h5 {
+    color: $gray-light-1;
+  }
+}
+
 
 .sq-devices-page-overview {
   .activation-code-pane h3 {
-    color: #00c1aa;
+    color: $color-people-light;
   }
   .message-container {
     position: absolute;
@@ -43,19 +79,40 @@
     width: 141px;
   }
 
-  #overview {
+  .activationOverview {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+  }
+
+  .activationImage {
+    margin: 15px 0 40px 0;
+    width: 116px;
+  }
+
+  .activationDescription {
+    text-align: center;
+  }
+
+  .activationButtons {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .overview {
     display: flex;
     align-items: center;
     justify-content: center
   }
 
-  #overviewImage {
+  .overviewImage {
     width: 144px;
-    margin: 15px 25px 15px 0;
+    margin: 15px 15px 15px 0;
   }
 
-  #overviewDescription {
-    margin: 0 0 0 25px;
+  .overviewDescription {
+    margin: 0 0 0 15px;
   }
 
   .deviceIssue {
@@ -67,6 +124,14 @@
   i {
     top: 15px;
   }
+}
+
+.line-row {
+  display: flex;
+}
+
+.primaryLineBadge {
+  margin-left: 10px;
 }
 
 .modal-success, .modal-warning {
@@ -176,14 +241,8 @@
   }
 }
 
-.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
-  border-right: 0;
-}
 
-.ui-grid-cell .space_avatar {
-  margin: 4px 5px 4px 30px;
-  width: 35px;
-}
+
 
 #addDeviceModal {
   .device-added {
@@ -199,6 +258,10 @@
   .btn {
     transition: none;
   }
+  #newRoom {
+    margin-top: 10px;
+    margin-bottom: 25px;
+  }
 }
 
 #remoteSupportModal {
@@ -207,6 +270,9 @@
   }
   input {
     margin-right: 15px;
+  }
+  #display-key {
+    width: 100%;
   }
 }
 

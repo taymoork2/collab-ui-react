@@ -5,8 +5,9 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService) {
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, Notification, ServiceSetup, PstnSetupService,
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService,
+    ModalService, InternationalDialing) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -20,20 +21,20 @@
     var DEFAULT_SITE_CODE = '100';
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
-
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
-
     var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
-
     var companyCallerIdType = 'Company Caller ID';
+    var savedModel = null;
+    var initErrors = [];
+
+    vm.init = init;
+    vm.save = save;
+    vm.resetSettings = resetSettings;
 
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
-    vm.init = init;
-    vm.save = save;
-    vm.resetSettings = resetSettings;
     vm.timeZoneOptions = [];
     vm.externalNumberPool = [];
     vm.externalNumberPoolBeautified = [];
@@ -41,6 +42,8 @@
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
     vm.customer = undefined;
+    vm.assignedNumbers = [];
+
     vm.model = {
       site: {
         siteIndex: DEFAULT_SITE_INDEX,
@@ -49,7 +52,9 @@
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
-        vmCluster: undefined
+        vmCluster: undefined,
+        emergencyCallBackNumber: {},
+        uuid: undefined
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
@@ -67,10 +72,11 @@
       },
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
-      showServiceAddress: false
+      showServiceAddress: false,
+      serviceNumber: {},
+      serviceNumberWarning: false
     };
 
-    var savedModel = null;
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -197,7 +203,11 @@
         filter: true
       },
       controller: /* @ngInject */ function ($scope) {
-        $scope.to.options = vm.timeZoneOptions;
+        $scope.$watchCollection(function () {
+          return vm.timeZoneOptions;
+        }, function (timeZones) {
+          $scope.to.options = timeZones;
+        });
       },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -397,6 +407,13 @@
       templateOptions: {
         label: $translate.instant('internationalDialing.internationalDialing'),
         description: $translate.instant('internationalDialing.internationalDialingDesc')
+      },
+      expressionProperties: {
+        'templateOptions.isDisabled': function () {
+          // if the customer is in trial and doesn't have the feature toggle
+          // huronInternationalDialingTrialOverride then show toggle as disabled
+          return InternationalDialing.isDisableInternationalDialing();
+        }
       }
     }];
 
@@ -414,6 +431,40 @@
           noFormControl: true,
           template: '<hr-settings-service-address></hr-settings-service-address>'
         }]
+      }
+    }, {
+      model: vm.model,
+      key: 'serviceNumber',
+      type: 'select',
+      templateOptions: {
+        type: 'csSelect',
+        inputClass: 'large-5',
+        label: $translate.instant('settingsServiceNumber.label'),
+        description: $translate.instant('settingsServiceNumber.description'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'value',
+        filter: true,
+        warnMsg: $translate.instant('settingsServiceNumber.warning')
+      },
+      controller: /* @ngInject */ function ($scope, $timeout, Authinfo, NumberSearchServiceV2) {
+        NumberSearchServiceV2.get({
+          customerId: Authinfo.getOrgId(),
+          assigned: true,
+          type: 'external'
+        }).$promise.then(function (response) {
+          vm.assignedNumbers = _.map(response.numbers, 'number');
+          $scope.to.options = _.map(response.numbers, function (number) {
+            number.label = TelephoneNumberService.getDIDLabel(number.number);
+            return number;
+          });
+        });
+      },
+      hideExpression: '!model.showServiceAddress',
+      expressionProperties: {
+        'templateOptions.isWarn': function () {
+          return vm.model.serviceNumberWarning;
+        }
       }
     }, {
       key: 'callerId',
@@ -492,7 +543,17 @@
       data: {
         fields: [{
           key: 'companyVoicemailEnabled',
-          type: 'switch'
+          type: 'switch',
+          controller: function ($scope) {
+            $scope.$watch(function () {
+              return vm.model.companyVoicemail.companyVoicemailEnabled;
+            }, function (toggleValue) {
+              if (!toggleValue) {
+                displayDisableVoicemailWarning();
+              }
+            });
+          }
+
         }, {
           key: 'companyVoicemailNumber',
           type: 'select',
@@ -536,15 +597,9 @@
       }
     }];
 
-    function getBeautifiedExternalNumber(pattern) {
-      var didLabel = TelephoneNumberService.getDIDLabel(pattern);
-      var externalNumber = _.findWhere(vm.externalNumberPoolBeautified, {
-        pattern: didLabel
-      });
-      return externalNumber;
-    }
+    init();
 
-    function initServiceAddress() {
+    function loadServiceAddress() {
       return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
         .then(function (carriers) {
           if (_.get(carriers, '[0].apiExists') === true) {
@@ -561,76 +616,122 @@
       }
     }
 
-    function init() {
-      var promises = [];
-      vm.loading = true;
-      var errors = [];
-      promises.push(HuronCustomer.get().then(function (customer) {
-        vm.customer = customer;
-        angular.forEach(customer.links, function (service) {
-          if (service.rel === 'voicemail') {
-            vm.hasVoicemailService = true;
-          } else if (service.rel === 'voice') {
-            vm.hasVoiceService = true;
-          }
-        });
-      }).then(function () {
-        return initTimeZone();
-      }).catch(function (response) {
-        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
-      }).then(function () {
-        return listInternalExtensionRanges();
-      }).then(function () {
-        return getInternationalDialing();
-      }).then(function () {
-        return setServiceValues();
-      }).then(function () {
-        return ServiceSetup.listSites().then(function () {
-          if (ServiceSetup.sites.length !== 0) {
-            return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
-              vm.firstTimeSetup = false;
-              vm.model.site.steeringDigit = site.steeringDigit;
-              vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
-              vm.model.site.siteCode = site.siteCode;
-              vm.model.site.vmCluster = site.vmCluster;
-            });
-          }
-        });
-      }).then(function () {
-        if (vm.hasVoicemailService) {
-          return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
-            if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-              // There may be existing customers who have yet to set the company
-              // voicemail number; likely they have it set to orgId.
-              vm.model.site.voicemailPilotNumber = undefined;
-            } else if (voicemail.pilotNumber) {
-              vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
-              vm.model.companyVoicemail.companyVoicemailEnabled = true;
-
-              var existingVoicemailNumber = {};
-              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
-              vm.model.companyVoicemail.companyVoicemailNumber = existingVoicemailNumber;
+    function loadCustomerServices() {
+      return HuronCustomer.get()
+        .then(function (customer) {
+          vm.customer = customer;
+          _.forEach(customer.links, function (service) {
+            if (service.rel === 'voicemail') {
+              vm.hasVoicemailService = true;
+            } else if (service.rel === 'voice') {
+              vm.hasVoiceService = true;
             }
-          }).catch(function (response) {
-            Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
+          });
+        })
+        .catch(function (response) {
+          initErrors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
+          return $q.reject(response);
+        });
+    }
+
+    function loadSite() {
+      return ServiceSetup.listSites().then(function () {
+        if (ServiceSetup.sites.length !== 0) {
+          return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+            vm.firstTimeSetup = false;
+            vm.model.site.steeringDigit = site.steeringDigit;
+            vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+            vm.model.site.siteCode = site.siteCode;
+            vm.model.site.vmCluster = site.vmCluster;
+            vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
+            vm.model.uuid = site.uuid;
+            if (site.emergencyCallBackNumber) {
+              vm.model.serviceNumber = {
+                pattern: site.emergencyCallBackNumber.pattern,
+                label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
+              };
+            } else {
+              vm.model.serviceNumberWarning = true;
+            }
+
           });
         }
-      }).then(function () {
-        return loadExternalNumberPool();
-      }));
+      });
+    }
+
+    function loadVoicemail() {
+      if (vm.hasVoicemailService) {
+        return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
+          if (voicemail.pilotNumber === Authinfo.getOrgId()) {
+            // There may be existing customers who have yet to set the company
+            // voicemail number; likely they have it set to orgId.
+            vm.model.site.voicemailPilotNumber = undefined;
+          } else if (voicemail.pilotNumber) {
+            vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
+            vm.model.companyVoicemail.companyVoicemailEnabled = true;
+
+            var existingVoicemailNumber = {};
+            existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
+            vm.model.companyVoicemail.companyVoicemailNumber = existingVoicemailNumber;
+          }
+        }).catch(function (response) {
+          initErrors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailGetError'));
+          return $q.reject(response);
+        });
+      }
+    }
+
+    function init() {
+      vm.loading = true;
+      initErrors = [];
+
+      var promises = [];
+
+      promises.push(loadCustomerServices()
+        .then(loadTimeZone)
+        .then(loadInternalNumbers)
+        .then(loadInternationalDialing)
+        .then(loadDialPlan)
+        .then(loadSite)
+        .then(loadVoicemail)
+        .then(loadExternalNumbers)
+      );
 
       // Caller ID
       clearCallerIdFields();
-      promises.push(getCompanyCallerId());
-      promises.push(initServiceAddress());
+      promises.push(loadCallerId());
+      promises.push(loadServiceAddress());
 
-      $q.all(promises).finally(function () {
-        if (errors.length > 0) {
-          Notification.notify(errors, 'error');
-        }
-        savedModel = angular.copy(vm.model);
-        vm.loading = false;
-      });
+      $q.all(promises)
+        .finally(function () {
+          if (initErrors.length > 0) {
+            Notification.notify(initErrors, 'error');
+          }
+          savedModel = angular.copy(vm.model);
+          vm.loading = false;
+        });
+    }
+
+    function isNotAssignedNumber(numbers, emergencyCallbackNumber) {
+      return !_.includes(numbers, emergencyCallbackNumber);
+    }
+
+    function displayDisableVoicemailWarning() {
+      if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.get(vm, 'model.companyVoicemail.companyVoicemailEnabled')) {
+        return ModalService.open({
+            title: $translate.instant('huronSettings.disableCompanyVoicemailTitle'),
+            message: $translate.instant('huronSettings.disableCompanyVoicemailMessage'),
+            close: $translate.instant('common.disable'),
+            dismiss: $translate.instant('common.cancel'),
+            type: 'negative'
+          })
+          .result
+          .catch(function () {
+            vm.model.companyVoicemail.companyVoicemailEnabled = true;
+            vm.model.companyVoicemail.companyVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber);
+            return $q.reject();
+          });
+      }
     }
 
     function save() {
@@ -670,6 +771,20 @@
             errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
             return $q.reject(response);
           });
+      }
+
+      function saveServiceNumber() {
+        if (vm.model.serviceNumber !== '') {
+          var site = {};
+          site.emergencyCallBackNumber = {
+            pattern: vm.model.serviceNumber.number
+          };
+          return ServiceSetup.updateSite(vm.model.uuid, site)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));
+              return $q.reject(response);
+            });
+        }
       }
 
       function saveSite() {
@@ -786,12 +901,14 @@
       // Save company site
       promises.push(
         $q.when(true)
+        //.then(displayDisableVoicemailWarning)
         .then(saveCustomer)
         .then(saveSite)
+        .then(saveServiceNumber)
         .then(saveTimeZone)
         .catch(_.noop)
         .then(getCustomer)
-        .then()
+        .then(loadExternalNumbers)
         .catch(_.noop)
       );
 
@@ -825,7 +942,7 @@
         })
         .finally(function () {
           if (hasNewInternalNumberRange) {
-            listInternalExtensionRanges().then(function () {
+            loadInternalNumbers().then(function () {
               vm.processing = false;
               savedModel = angular.copy(vm.model);
             });
@@ -836,7 +953,7 @@
         });
     }
 
-    function initTimeZone() {
+    function loadTimeZone() {
       return ServiceSetup.getTimeZones().then(function (timezones) {
         vm.timeZoneOptions = timezones;
         if (vm.hasVoicemailService) {
@@ -860,7 +977,7 @@
       });
     }
 
-    function listInternalExtensionRanges() {
+    function loadInternalNumbers() {
       return ServiceSetup.listInternalNumberRanges().then(function () {
         vm.model.numberRanges = ServiceSetup.internalNumberRanges;
 
@@ -954,7 +1071,7 @@
       }
     }
 
-    function getCompanyCallerId() {
+    function loadCallerId() {
       return CallerId.listCompanyNumbers().then(function (companyNumbers) {
         var companyCallerId = _.find(companyNumbers, function (companyNumber) {
           return companyNumber.externalCallerIdType === companyCallerIdType;
@@ -970,7 +1087,7 @@
       });
     }
 
-    function loadExternalNumberPool(pattern) {
+    function loadExternalNumbers(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
         vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
@@ -984,8 +1101,8 @@
       });
     }
 
-    function setServiceValues() {
-      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+    function loadDialPlan() {
+      return DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
         if (response.extensionGenerated === 'true') {
           vm.hideFieldInternalNumberRange = true;
         } else {
@@ -1044,7 +1161,7 @@
         if (vm.model.callerId.callerIdEnabled && !vm.model.callerId.uuid) {
           if (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber) {
             CallerId.saveCompanyNumber(data).then(function () {
-              getCompanyCallerId();
+              loadCallerId();
               deferred.resolve();
             }).catch(function (response) {
               deferred.reject(response);
@@ -1065,7 +1182,7 @@
       return deferred.promise;
     }
 
-    function getInternationalDialing() {
+    function loadInternationalDialing() {
       return ServiceSetup.listCosRestrictions().then(function (cosRestrictions) {
         var cosRestriction;
         if (cosRestrictions.length > 0) {
@@ -1090,7 +1207,7 @@
         restriction: INTERNATIONAL_DIALING
       };
       return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType).then(function () {
-        getInternationalDialing();
+        loadInternationalDialing();
       });
     }
 
@@ -1124,9 +1241,12 @@
       }
     });
 
-    HttpUtils.setTrackingID().then(function () {
-      init();
+    $scope.$watchGroup([function () {
+      return vm.assignedNumbers;
+    }, function () {
+      return vm.model.serviceNumber;
+    }], function (newValues, oldValues) {
+      vm.model.serviceNumberWarning = isNotAssignedNumber(newValues[0], _.get(newValues[1], 'pattern'));
     });
-
   }
 })();

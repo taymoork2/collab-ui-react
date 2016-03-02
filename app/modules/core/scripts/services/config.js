@@ -107,7 +107,7 @@ angular.module('Core')
           ciRedirectUrl: 'redirect_uri=%s',
           oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
           oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
+          oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s&email=%s',
           oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
           oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
           oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
@@ -209,6 +209,13 @@ angular.module('Core')
           cfe: 'https://hercules-e.wbx2.com/v1',
           integration: 'https://hercules-integration.wbx2.com/v1',
           prod: 'https://hercules-a.wbx2.com/v1'
+        },
+
+        herculesUrlV2: {
+          dev: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          cfe: 'https://hercules-e.wbx2.com/hercules/api/v2',
+          integration: 'https://hercules-integration.wbx2.com/hercules/api/v2',
+          prod: 'https://hercules-a.wbx2.com/hercules/api/v2'
         },
 
         ussUrl: {
@@ -425,11 +432,6 @@ angular.module('Core')
             desc: 'tabs.vtsDetailsTabDesc',
             state: 'vts',
             link: '#vts'
-          }, {
-            title: 'tabs.cdrTab',
-            desc: 'tabs.cdrLogsTabDesc',
-            state: 'cdrsupport',
-            link: '#cdrsupport'
           }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
@@ -855,15 +857,21 @@ angular.module('Core')
           return oAuth2Url[this.getEnv()];
         },
 
-        getOauthLoginUrl: function () {
+        /**
+         * Method to get Oauth Login Url with email specified
+         * @param {string} email
+         */
+        getOauthLoginUrl: function (email) {
           var acu = this.adminClientUrl[this.getEnv()];
           var params = [
             this.getOauth2Url(),
             this.getClientId(),
             this.oauthClientRegistration.atlas.scope,
             encodeURIComponent(acu),
-            this.getOauthServiceType()
+            this.getOauthServiceType(),
+            encodeURIComponent(email)
           ];
+
           return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
         },
 
@@ -960,6 +968,17 @@ angular.module('Core')
             'cfe': this.herculesUrl.cfe,
             'integration': this.herculesUrl.integration,
             'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
+        },
+
+        getHerculesUrlV2: function () {
+          var herculesUrl = {
+            'dev': this.herculesUrlV2.dev,
+            'cfe': this.herculesUrlV2.cfe,
+            'integration': this.herculesUrlV2.integration,
+            'prod': this.herculesUrlV2.prod
           };
 
           return herculesUrl[this.getEnv()];
@@ -1079,7 +1098,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
-          'drLoginForward',
+          'dr-login-forward',
           'users',
           'user-overview',
           'userprofile',
@@ -1092,7 +1111,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram',
+          'activateProduct'
         ],
         Readonly_Admin: [
           'overview',
@@ -1107,15 +1130,16 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
-        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
         PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup'],
+        PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -1149,13 +1173,13 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram'
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'management-service',
+          'management-service'
         ],
         'spark-room-system': [
           'devices',
@@ -1163,10 +1187,7 @@ angular.module('Core')
           'devices-redux'
         ],
         'squared-fusion-uc': [
-          'call-service',
-          'devices',
-          'device-overview',
-          'devices-redux'
+          'call-service'
         ],
         'squared-fusion-cal': [
           'calendar-service'
@@ -1211,14 +1232,12 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 
       // These states do not require a role/service check
-      config.allowedStates = ['unauthorized', '404', 'csadmin'];
+      config.publicStates = ['unauthorized', '404', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
 

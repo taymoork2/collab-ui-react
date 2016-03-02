@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo, CsvDownloadService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -12,6 +12,8 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMigrateUsers;
   var getMyFeatureToggles;
   var sites;
+  var fusionServices;
+  var headers;
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var $controller;
@@ -19,7 +21,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -34,6 +36,7 @@ describe('OnboardCtrl: Ctrl', function () {
     FeatureToggleService = _FeatureToggleService_;
     SyncService = _SyncService_;
     Authinfo = _Authinfo_;
+    CsvDownloadService = _CsvDownloadService_;
     var current = {
       step: {
         name: 'fakeStep'
@@ -55,14 +58,21 @@ describe('OnboardCtrl: Ctrl', function () {
     getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     sites = getJSONFixture('huron/json/settings/sites.json');
+    fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
+    headers = getJSONFixture('core/json/users/headers.json');
 
-    getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.when());
+    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
+    spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
+      if (type === 'headers') {
+        return $q.when(headers);
+      } else {
+        return $q.when({});
+      }
+    });
 
-    spyOn(Authinfo, 'isInitialized').and.returnValue(true);
-    spyOn(Authinfo, 'hasAccount').and.returnValue(true);
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardUsers');
+    spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
     spyOn(SyncService, 'isMessengerSync');
 
@@ -77,6 +87,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
   }));
@@ -90,28 +101,30 @@ describe('OnboardCtrl: Ctrl', function () {
     $scope.$apply();
   }
 
-  describe('Bulk Users CSV', function () {
-    beforeEach(initController);
-    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001,1-555-555-5001\nJane,Doe,Jane Doe,janedoe@example.com,5002,1-555-555-5002";
-    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001\nJane,Doe,Jane Doe,janedoe@example.com,5002";
+  function onBoardUsersResponse(statusCode, responseMessage) {
+    return {
+      data: {
+        userResponse: [{
+          status: statusCode,
+          message: responseMessage,
+          email: 'blah@example.com'
+        }, {
+          status: statusCode,
+          message: responseMessage,
+          email: 'blah@example.com'
+        }]
+      }
+    };
+  }
 
-    function fakeOnboardUsers(successFlag, statusCode, responseMessage) {
-      return function (userArray, entitleList, licenseList, callback) {
-        var data = {
-          success: successFlag,
-          userResponse: [{
-            status: statusCode,
-            message: responseMessage,
-            email: 'blah@example.com'
-          }, {
-            status: statusCode,
-            message: responseMessage,
-            email: 'blah@example.com'
-          }]
-        };
-        callback(data);
-      };
-    }
+  describe('Bulk Users CSV, When FeatureToggle CSV is False', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'supportsCsvUpload').and.returnValue($q.when(false));
+      initController();
+    });
+    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nJohn,Doe,John Doe,johndoe@example.com,5001,1-555-555-5001\nJane,Doe,Jane Doe,janedoe@example.com,5002,1-555-555-5002";
+    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nJohn,Doe,John Doe,johndoe@example.com,5001x\nJane,Doe,Jane Doe,janedoe@example.com,5002x";
+
     beforeEach(installPromiseMatchers);
 
     describe('Upload CSV', function () {
@@ -169,7 +182,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $timeout.flush();
       });
       it('should report new users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -181,7 +194,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200, 'User Patched'));
+        Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201, 'User Patched')));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -194,7 +207,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 500));
+        Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -207,7 +220,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users when API fails', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(false));
+        Userservice.onboardUsers.and.returnValue($q.reject(onBoardUsersResponse(500)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -224,7 +237,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.$apply();
         $timeout.flush();
 
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -237,16 +250,167 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should stop processing when cancelled', function () {
-        Userservice.onboardUsers.and.stub();
+        Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(-1)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
-        expect(promise).not.toBeResolved();
-        expect($scope.model.processProgress).toEqual(0);
-        expect($scope.model.numTotalUsers).toEqual(0);
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
         expect($scope.model.numNewUsers).toEqual(0);
         expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
+
+        $scope.cancelProcessCsv();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+      });
+    });
+  });
+
+  describe('Bulk Users CSV, When FeatureToggle CSV is True', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'supportsCsvUpload').and.returnValue($q.when(true));
+      initController();
+    });
+    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,f,f,f,f";
+    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
+
+    beforeEach(installPromiseMatchers);
+
+    describe('Upload CSV', function () {
+      describe('without file content', function () {
+        it('should have 0 upload progress', function () {
+          expect($scope.model.uploadProgress).toEqual(0);
+        });
+        it('should not go to the next step', function () {
+          var promise = $scope.csvUploadNext();
+          $scope.$apply();
+          expect(promise).toBeRejected();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        });
+      });
+      describe('with file content', function () {
+        beforeEach(function () {
+          $scope.model.file = twoValidUsers;
+          $scope.$apply();
+          $timeout.flush();
+        });
+        it('should have 100 upload progress when the file model changes', function () {
+          expect($scope.model.uploadProgress).toEqual(100);
+        });
+        it('should go to next step', function () {
+          var promise = $scope.csvUploadNext();
+          $scope.$apply();
+          expect(promise).toBeResolved();
+        });
+        it('should not allow to go next after resetting file', function () {
+          $scope.resetFile();
+          $scope.$apply();
+          $timeout.flush();
+          var promise = $scope.csvUploadNext();
+          $scope.$apply();
+          expect(promise).toBeRejected();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        });
+      });
+      it('should notify error on file size error', function () {
+        $scope.onFileSizeError();
+        $scope.$apply();
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+      it('should notify error on file type error', function () {
+        $scope.onFileTypeError();
+        $scope.$apply();
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+    });
+
+    describe('Process CSV and Save Users', function () {
+      beforeEach(function () {
+        $scope.model.file = twoValidUsers;
+        $scope.$apply();
+        $timeout.flush();
+      });
+      it('should report new users', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(2);
+        expect($scope.model.numExistingUsers).toEqual(0);
         expect($scope.model.userErrorArray.length).toEqual(0);
+      });
+      it('should report existing users', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201, 'User Patched')));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(0);
+        expect($scope.model.numExistingUsers).toEqual(2);
+        expect($scope.model.userErrorArray.length).toEqual(0);
+      });
+
+      it('should report error users', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(0);
+        expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
+      });
+
+      it('should report error users when API fails', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.reject(onBoardUsersResponse(500)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(0);
+        expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
+      });
+
+      it('should report error users when invalid CSV', function () {
+        $scope.model.file = twoInvalidUsers;
+        $scope.$apply();
+        $timeout.flush();
+
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(0);
+        expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
+      });
+
+      it('should stop processing when cancelled', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(-1)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(0);
+        expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
 
         $scope.cancelProcessCsv();
         $scope.$apply();
@@ -288,43 +452,6 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.populateConf();
       expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
       expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
-    });
-  });
-
-  describe('getLicensesUsage', function () {
-
-    describe('for single subscriptions', function () {
-      beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.singleSub));
-        initController();
-      });
-
-      it('should verify that there is one subscriptionId', function () {
-        expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
-        expect(Authinfo.isInitialized).toHaveBeenCalled();
-        expect($scope.oneBilling).toEqual(true);
-        expect($scope.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
-        expect($scope.showMultiSubscriptions('srvcid-integ-uitest-1a', false)).toEqual(true);
-      });
-    });
-
-    describe('for multiple subscriptions', function () {
-      beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.when(getLicensesUsage.multiSub));
-        initController();
-      });
-
-      it('should verify that there are multiple subscriptionIds', function () {
-        expect($scope.oneBilling).toEqual(false);
-        expect($scope.subscriptionOptions).toEqual(['svcid-integ-sunnyway-1a', 'svcid-integ-sunnyway-1', undefined]);
-        expect($scope.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
-        expect($scope.showMultiSubscriptions('svcid-integ-sunnyway-1a', false)).toEqual(true);
-      });
-
-      it('should verify that there is a trial subscription', function () {
-        expect($scope.oneBilling).toEqual(false);
-        expect($scope.showMultiSubscriptions('', true)).toEqual(true);
-      });
     });
   });
 
@@ -384,7 +511,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('assignDNForUserList', function () {
 
-      var promise = $scope.assignDNForUserList();
+      $scope.assignDNForUserList();
       $scope.$apply();
       expect($scope.usrlist[0].externalNumber.pattern).toEqual('null');
       expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
@@ -421,32 +548,31 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
   });
-  describe('403 errors during onboarding', function () {
+  describe('status errors during onboarding', function () {
     beforeEach(initController);
 
-    function testOnboardUsers(successFlag, statusCode, responseMessage) {
-      return function (userArray, entitleList, licenseList, callback) {
-        var data = {
-          success: successFlag,
-          userResponse: [{
-            status: statusCode,
-            message: responseMessage
-          }, {
-            status: statusCode,
-            message: responseMessage
-          }]
-        };
-        callback(data);
-      };
-    }
-
     it('checkClaimedDomain', function () {
-      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400084'));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400084')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkOutsideClaimedDomain', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400091')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExists', function () {
-      Userservice.onboardUsers.and.callFake(testOnboardUsers(true, 403, '400081'));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400081')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExistsInDiffOrg', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400090')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('check hybrid services without paid licenses', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(400, '400087')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });

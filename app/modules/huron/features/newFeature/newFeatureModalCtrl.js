@@ -6,10 +6,16 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService, $modal, Config) {
     var vm = $scope;
 
-    vm.features = [];
+    vm.features = [{
+      cssClass: 'HG',
+      code: 'huronHuntGroup.code',
+      label: 'huronHuntGroup.modalTitle',
+      description: 'huronHuntGroup.modalDescription',
+      toggle: 'huronHuntGroup'
+    }];
 
     vm.autoAttendant = {
       cssClass: 'AA',
@@ -17,14 +23,6 @@
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
       toggle: 'huronAutoAttendant'
-    };
-
-    vm.huntGroup = {
-      cssClass: 'HG',
-      code: 'huronHuntGroup.code',
-      label: 'huronHuntGroup.modalTitle',
-      description: 'huronHuntGroup.modalDescription',
-      toggle: 'huronHuntGroup'
     };
 
     vm.ok = ok;
@@ -39,14 +37,9 @@
 
       var aaToggle = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
 
-      var hgToggle = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
-
-      $q.all([aaToggle, hgToggle]).then(function (toggle) {
+      $q.all([aaToggle]).then(function (toggle) {
         if (toggle[0]) {
           vm.features.push(vm.autoAttendant);
-        }
-        if (toggle[1]) {
-          vm.features.push(vm.huntGroup);
         }
         vm.loading = false;
       });
@@ -56,10 +49,19 @@
       if (featureCode === 'HG') {
         $state.go('huronHuntGroup');
       } else if (featureCode === 'AA') {
-        $state.go('huronfeatures.aabuilder', {
-          aaName: '',
-          aaTemplate: 'template1'
-        });
+
+        if (Config.isDev() || Config.isIntegration()) {
+          $modal.open({
+            templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
+            controller: 'AATypeSelectCtrl'
+          });
+        } else {
+          $state.go('huronfeatures.aabuilder', {
+            aaName: '',
+            aaTemplate: 'template1'
+          });
+        }
+
       }
       $modalInstance.close(featureCode);
     }

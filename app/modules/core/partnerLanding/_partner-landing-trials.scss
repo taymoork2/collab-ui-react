@@ -13,11 +13,17 @@
   position: relative;
 }
 
-#trialHeader {
-  margin-bottom: 10px;
+.trialHeader {
   display: flex;
   align-items: flex-end;
-  padding: .5rem 0;
+  @include vr-spacing(pb,0.25);
+  & > span {
+    color: $gray-dark-2;
+    line-height: inherit;
+    & ~ span {
+      text-align: center;
+    }
+  }
 }
 
 .trialRow {
@@ -29,34 +35,25 @@
   color: $brand-danger;
 }
 
-#expiredTrials {
-  padding-top: 30px;
+.expiredTrials {
+  @include vr-spacing(pt,2);
+  @include vr-spacing(pb,0.5);
+}
+
+.viewAll {
+  @include vr-spacing(pt,0.5);
 }
 
 .trialTitle {
   font-family: $brand-font-cisco-TT-Extra-Light;
   color: $top-bar-inverse-link-disabled-color;
-  @extend %ui-pb;
+  @include vr-spacing(mb,1);
 }
-
-.trialHeading {
-  color: $gray-dark-2;
-  line-height: 1;
-  text-align: center;
-  &--customer {
-    text-align: left
-  }
-}
-
-.expiredCustomer {
-  line-height: 20px;
-  color: $brand-primary;
-  text-align: left;
+.userTitle {
+  @include vr-spacing(mb,0.75);
 }
 
 .expired {
-  font-size: 13px;
-  line-height: 20px;
   color: $btn-link-disabled-color;
   text-align: center;
 }

@@ -20,8 +20,76 @@
         }
       }, {
         "say": {
+          "description": "",
           "value": "Welcome to the AA",
           "voice": "Kate"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000"
+        }
+      }, {
+        "routeToVoiceMail": {
+          "description": "voice 1",
+          "id": "1111"
+        }
+      }, {
+        "routeToHuntGroup": {
+          "description": "Hunt Group 1",
+          "id": "2222"
+        }
+      }, {
+        "goto": {
+          "description": "",
+          "ceid": "3333"
+        }
+      }]
+    }]
+  },
+
+  "ceWelcomeNoDescription": {
+    "callExperienceName": "AA Welcome",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+    }],
+    "actionSets": [{
+      "name": "regularOpenActions",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi"
+        }
+      }, {
+        "route": {
+          "description": "Operator",
+          "destination": "1111"
+        }
+      }, {
+        "say": {
+          "value": "Welcome to the AA",
+          "voice": "Kate"
+        }
+      }, {
+        "routeToUser": {
+          "description": "user 1",
+          "id": "0000"
+        }
+      }, {
+        "routeToVoiceMail": {
+          "description": "voice 1",
+          "id": "1111"
+        }
+      }, {
+        "routeToHuntGroup": {
+          "description": "Hunt Group 1",
+          "id": "2222"
+        }
+      }, {
+        "goto": {
+          "ceid": "3333"
         }
       }]
     }]
@@ -32,9 +100,7 @@
     "headers": [],
     "entries": [{
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "play",
@@ -50,9 +116,7 @@
       "voice": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "route",
@@ -68,15 +132,77 @@
       "voice": ""
     }, {
       "description": "",
-      "isConfigured": true,
       "type": "",
-      "isTouched": false,
       "key": "",
       "actions": [{
         "name": "say",
         "value": "Welcome to the AA",
         "description": "",
         "voice": "Kate"
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToUser",
+        "value": "0000",
+        "description": "user 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToVoiceMail",
+        "value": "1111",
+        "description": "voice 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "routeToHuntGroup",
+        "value": "2222",
+        "description": "Hunt Group 1",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "type": "",
+      "key": "",
+      "actions": [{
+        "name": "goto",
+        "description": "",
+        "value": "3333",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",

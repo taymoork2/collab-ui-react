@@ -428,20 +428,14 @@
       description: 'This is a mock description',
       deviceStatus: {
         status: 'Online',
-        ipAddress: '10.47.10.1',
-        progressStatus: false,
-        isValid: true
       }
     }, {
       uuid: "66236784-0f09-4daa-89d6-750f315a921d",
       name: "SEP5566778899",
-      model: '',
+      model: 'Cisco 8861',
       description: '',
       deviceStatus: {
-        status: '',
-        ipAddress: '',
-        progressStatus: false,
-        isValid: true
+        status: 'Offline',
       }
     }],
     huronUserNumbers: {
@@ -461,7 +455,8 @@
         "internal": "2345",
         "external": null,
         "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18",
-        "dnUsage": "shared"
+        "dnUsage": "shared",
+        "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']
       }]
     },
     huronDeviceSearchResult: [{
@@ -505,27 +500,80 @@
         "uuid": "0472df70-779b-4819-8c35-a2f7abc69fe8",
         "pattern": "2900"
       },
-      "e164Mask": "+14084744520"
+      "e164Mask": "+14084744520",
+      "dnUsage": 'primary'
     }, {
       "directoryNumber": {
         "uuid": "3472df70-779b-4819-8c35-a2f7abc69fe8",
         "pattern": "3300"
       },
-      "e164Mask": null
+      "e164Mask": null,
+      "dnUsage": 'shared',
+      "users": ['d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f', '74c2ca8d-99ca-4bdf-b6b9-a142d503f024']
+    }],
+    huronDevicesForNumber: [{
+      "endpoint": {
+        "uuid": "c498a32e-8b95-4e38-aa70-2a8c90b1f0f4",
+        "name": "SEP5ABCD7DB89F6"
+      },
+      "e164Mask": null,
+      "uuid": "4f7f009b-ef6a-4115-bbc0-00852cafcd2f"
+    }, {
+      "endpoint": {
+        "uuid": "69f85c9c-4581-4fb0-80ee-b4af193701f0",
+        "name": "SEP1CDEA7DA89D3"
+      },
+      "e164Mask": "+4797100288",
+      "uuid": "1df077dc-8983-42a1-9e47-5d58ee711aae"
+    }],
+    huronNumberSearch: {
+      "numbers": [{
+        "uuid": "4edbff96-da50-40f1-bca8-5b15486a6be9",
+        "number": "+14084744527",
+        "type": "external",
+        "directoryNumber": {
+          "uuid": "26cd541b-0978-4677-a237-7b3f2a514a1a"
+        }
+      }, {
+        "uuid": "f5897251-4c58-43d5-8527-16d36543504a",
+        "number": "2027",
+        "type": "internal",
+        "directoryNumber": {
+          "uuid": "a85a7321-cdf6-4cd0-be3c-611da264c8ef"
+        }
+      }]
+    },
+    huronUsersUsingNumber: [{
+      "user": {
+        "uuid": "46f5c4bf-8756-4220-b124-6852d8b4c7a9",
+        "userId": "karcisco+tsic-cust1user2@gmail.com"
+      },
+      "dnUsage": "Undefined",
+      "uuid": "f5897251-4c58-43d5-8527-16d36543504a"
+    }, {
+      "user": {
+        "uuid": "943e7651-8646-4c3b-9770-7143c116cce0",
+        "userId": "karcisco+tsic-cust1user1@gmail.com"
+      },
+      "dnUsage": "Undefined",
+      "uuid": "3bc624c5-a47e-460d-b8cc-12ee3642cea5"
     }],
     logs: {
       search: [{
         filename: "logFile1",
-        timestamp: "2016-04-25T11:46:24.757Z"
+        timestamp: "2016-01-25T11:46:24.757Z",
+        platform: "wx2-osx"
       }, {
         filename: "logFile2",
-        timestamp: "2016-02-25T11:46:24.757Z"
+        timestamp: "2016-02-04T11:02:48.354Z"
       }, {
         filename: "logFile3",
-        timestamp: "2016-01-25T11:46:24.757Z"
+        timestamp: "2016-02-08T09:18:54.238Z",
+        platform: "wx2-osx"
       }, {
         filename: "logFile4",
-        timestamp: "2016-04-25T11:46:25.757Z"
+        timestamp: "2016-01-25T11:19:19.443Z",
+        platform: "wx2-osx"
       }],
       download: "http://someverylongurl.txt"
     }

@@ -9,7 +9,7 @@ auth =
 
   'pbr-admin':
     user: 'pbr-org-admin@squared2webex.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'partner-admin':
@@ -79,12 +79,12 @@ auth =
 
   'customer-support-admin':
     user: 'admin@csreptestdom.collaborate.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'customer-support-user':
     user: 'regUser1@csreptestdom.collaborate.com'
-    pass: 'P@ssword123'
+    pass: 'C1sc0123!'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'customer-regular-user':

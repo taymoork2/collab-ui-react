@@ -10,7 +10,7 @@
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
       pstnSetup: 'huron-pstn-setup',
-      csvUpload: 'csvUpload',
+      csvUpload: 'atlas-csv-upload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
@@ -19,9 +19,11 @@
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
       atlasReportTrials: 'atlas-report-trials',
+      atlasTrialConversion: 'atlas-trial-conversion',
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
+      huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
       androidAddGuestRelease: 'android-add-guest-release',
       androidCallsTab: 'android-calls-tab',
@@ -116,6 +118,7 @@
       webRoapCalls: 'web-roap-calls',
       webTeams: 'web-teams',
       winGuestCall: 'win-guest-call',
+      winHuronCalls: 'win-huron-calls',
       winMentionsList: 'win-mentions-list',
       winMentionsTab: 'win-mentions-tab',
       winOutboundDialing: 'win-outbound-dialing',
@@ -125,21 +128,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-    };
-
-    var service = {
-      getUrl: getUrl,
-      getFeatureForUser: getFeatureForUser,
-      getFeaturesForUser: getFeaturesForUser,
-      getFeatureForOrg: getFeatureForOrg,
-      getFeaturesForOrg: getFeaturesForOrg,
-      setFeatureToggles: setFeatureToggles,
-      generateFeatureToggleRule: generateFeatureToggleRule,
-      supports: supports,
-      supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload,
-      supportsDirSync: supportsDirSync,
-      features: features,
+      huronCallTrials: 'huron-call-trials'
     };
 
     var toggles = {};
@@ -165,6 +154,21 @@
         cache: true
       }
     });
+
+    var service = {
+      getUrl: getUrl,
+      getFeatureForUser: getFeatureForUser,
+      getFeaturesForUser: getFeaturesForUser,
+      getFeatureForOrg: getFeatureForOrg,
+      getFeaturesForOrg: getFeaturesForOrg,
+      setFeatureToggles: setFeatureToggles,
+      generateFeatureToggleRule: generateFeatureToggleRule,
+      supports: supports,
+      supportsPstnSetup: supportsPstnSetup,
+      supportsCsvUpload: supportsCsvUpload,
+      supportsDirSync: supportsDirSync,
+      features: features
+    };
 
     return service;
 
@@ -270,8 +274,7 @@
 
     function supports(feature) {
       return $q(function (resolve, reject) {
-        //TODO temporary hardcoded checks for huron
-        if (feature === features.csvUpload) {
+        if (feature === features.csvUpload && !Config.isProd()) {
           resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
@@ -297,7 +300,6 @@
       });
     }
 
-    //TODO temporary
     function supportsPstnSetup() {
       return supports(features.pstnSetup);
     }

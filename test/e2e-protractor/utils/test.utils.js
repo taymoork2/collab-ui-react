@@ -108,13 +108,6 @@ exports.getToken = function () {
   });
 };
 
-exports.retrieveToken = function () {
-  return element(by.tagName('body')).evaluate('token').then(function (token) {
-    expect(token).not.toBeNull();
-    return token;
-  });
-};
-
 exports.scrollTop = function () {
   browser.executeScript('window.scrollTo(0,0);');
 };
@@ -146,6 +139,7 @@ exports.wait = function (elem, timeout) {
     log('Waiting for element to be visible: ' + elem.locator());
     return EC.visibilityOf(elem)().thenCatch(function () {
       // handle a possible stale element
+      log('Possible stale element: ' + elem.locator());
       return false;
     });;
   }
@@ -341,8 +335,7 @@ exports.click = function (elem, maxRetry) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
       return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator());
-        log(e);
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
         return exports.click(elem, --maxRetry);
       });
     }
@@ -415,12 +408,16 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value, value2) {
+exports.expectText = function (elem) {
+  var values = [].slice.call(arguments, 1);
   return this.wait(elem).then(function () {
-    expect(elem.getText()).toContain(value);
-    if (value2) {
-      expect(elem.getText()).toContain(value2);
-    }
+    var text = elem.getText();
+    var locator = elem.locator();
+    values.forEach(function (value) {
+      log('Expecting element ' + locator + ' to contain text: ' + value);
+      expect(text).toContain(value);
+    });
+    return true;
   });
 };
 
