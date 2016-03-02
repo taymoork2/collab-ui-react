@@ -449,18 +449,14 @@
     }
 
     function isValidThumbnail(user) {
-      if (user && user.photos) {
-        for (var i in user.photos) {
-          if (user.photos[i].type === 'thumbnail') {
-            return !(user.photos[i].value.startsWith("file:") || user.photos[i].value.length === 0);
-          }
-        } //end for
-        //There is no thumbnail
-        return false;
-      } //endif
-      else {
-        return false;
-      }
+      var photos = _.get(user, 'photos', []);
+      var thumbs = _.filter(photos, {
+        type: 'thumbnail'
+      });
+      var validThumbs = _.filter(thumbs, function (thumb) {
+        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
+      });
+      return !_.isEmpty(validThumbs);
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?
