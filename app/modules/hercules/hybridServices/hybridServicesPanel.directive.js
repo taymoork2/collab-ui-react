@@ -37,7 +37,7 @@
           vm.extensions.sort(function (a, b) {
             if (a.id === 'squared-fusion-uc') return -1;
             if (a.id === 'squared-fusion-cal') return 1;
-            if (a.id === 'squared-fusion-ec' && b.id =='squared-fusion-cal' ) return -1;
+            if (a.id === 'squared-fusion-ec' && b.id == 'squared-fusion-cal') return -1;
             return 0;
           });
         });
