@@ -112,6 +112,11 @@ auth =
     pass: 'Cisco@123'
     org:  '021fffdc-dd5e-49ca-b9d6-013445e3c3ae'
 
+  'helpdesk-admin':
+    user: 'tom.vasset+marvelhelpdesk@gmail.com'
+    pass: 'C1sc0123!'
+    org: 'ce8d17f8-1734-4a54-8510-fae65acc505e'
+
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
 

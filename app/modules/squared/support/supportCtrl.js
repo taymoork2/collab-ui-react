@@ -3,7 +3,7 @@
 angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService) {
-      $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
+      $scope.showHelpdeskLink = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -21,7 +21,6 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
-      $scope.showToolsCard = false;
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
@@ -54,7 +53,7 @@ angular.module('Squared')
       }
 
       $scope.showToolsCard = function () {
-        return $scope.showCdrCallFlowLink || $scope.showHelpdeskCard;
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink;
       };
 
       $scope.tabs = [{
