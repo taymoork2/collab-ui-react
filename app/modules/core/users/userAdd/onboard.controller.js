@@ -1153,18 +1153,16 @@ angular.module('Core')
           }
 
           //Displaying notifications
-          if ((successes.length + errors.length === usersList.length) && hybridCheck) {
+          if ($scope.results.resultList.length === usersList.length) {
             $scope.btnOnboardLoading = false;
-            Notification.notify(successes, 'success');
-            Notification.notify(errors[0], 'error');
-            deferred.resolve();
-          } else if (successes.length + errors.length === usersList.length) {
-            $scope.btnOnboardLoading = false;
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+            Notification.success(successes, 'success');
+            if (hybridCheck) {
+              Notification.error(errors[0], 'error');
+            } else {
+              Notification.error(errors, 'error');
+            }     
             deferred.resolve();
           }
-
           if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
             $scope.$dismiss();
           }
