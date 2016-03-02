@@ -1312,7 +1312,7 @@
     "runDirSyncAgain": "Sync Again",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses.",
-    "uploadSub": "Best method for adding many users at the same time.",
+    "uploadSub": "Best method for adding up to {{maxUsers}} users at a time.",
     "downloadSub": "Download CSV template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
