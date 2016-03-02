@@ -133,7 +133,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
   it('can update user settings base on webex service entitlement in the atlas d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
-    WebExUserSettingsFact.checkUserWebExEntitlementOnAtlas();
+    WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
 
     deferredOrgLicenses.resolve(fakeOrgLicenses);
     $rootScope.$apply();
@@ -147,7 +147,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
   it('can update user settings base on webex service entitlement in the webex d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
-    WebExUserSettingsFact.initPanel();
+    WebExUserSettingsFact.getUserSettingsFromWebEx();
 
     deferredWebExSessionTicket.resolve(fakeWebExSessionTicket);
     $rootScope.$apply();
