@@ -178,7 +178,7 @@ class DomainManagementService {
 
       this.loadDomainlist(data.pendingDomains, this.states.pending, null);
 
-      this._enforceUsersInVerifiedAndClaimedDomains = true;
+      this._enforceUsersInVerifiedAndClaimedDomains = data.enforceVerifiedDomains;
 
       deferred.resolve(this._domainList);
     }, err => {
