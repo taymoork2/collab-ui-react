@@ -1253,10 +1253,10 @@
       "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
       "callAware": {
         "enable": "Enable Call Service Aware for Users.",
-        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service Aware for your users."
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
       },
       "calendar": {
-        "enable": "Enable Calendar Service Aware for Users.",
+        "enable": "Enable Calendar Service for Users.",
         "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
       },
       "connect": {
