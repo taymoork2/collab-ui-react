@@ -3,7 +3,7 @@ describe('DomainManagementService', () => {
 
   beforeEach(angular.mock.module('Core'));
 
-  let $httpBackend, DomainManagementService:any, Config, Authinfo, XhrNotificationService;
+  let $httpBackend, DomainManagementService:any, Config, Authinfo, XhrNotificationService, $rootScope;
 
   beforeEach(() => {
     angular.mock.module($provide => {
@@ -24,11 +24,12 @@ describe('DomainManagementService', () => {
     });
   });
 
-  beforeEach(inject(($injector, _DomainManagementService_, _Config_) => {
+  beforeEach(inject(($injector, _DomainManagementService_, _Config_, _$rootScope_) => {
     Config = _Config_;
     DomainManagementService = _DomainManagementService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
+    $rootScope = _$rootScope_;
   }));
 
   afterEach(() => {
@@ -156,6 +157,43 @@ describe('DomainManagementService', () => {
     $httpBackend.flush();
   });
 
+  it('verify empty domain should immediately reject', ()=> {
+
+    let domain = undefined;
+    let token = 'mock-token';
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._domainList.push({text: domain, status: 'pending', token: token});
+
+    DomainManagementService.verifyDomain(domain).then(res=> {
+      fail();
+    }, err => {
+      expect(err).toBeUndefined();
+    });
+    $rootScope.$digest();
+  });
+
+  it('verify domain with failing verify should set error on reject', ()=> {
+    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
+    let domain = 'super.example.com';
+    let token = 'mock-token';
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._domainList.push({text: domain, status: 'pending', token: token});
+    $httpBackend.expectPOST(url, (data:any)=> {
+      data = JSON.parse(data);
+      expect(data.domain).toBe(domain);
+      expect(data.claimDomain).toBeDefined();
+      expect(data.claimDomain).toBeFalsy();
+      return true;
+    }).respond(500, 'error-in-request', null, 'error');
+
+    DomainManagementService.verifyDomain(domain).then(res=> {
+      fail();
+    }, err => {
+      expect(err).toBeDefined();
+    });
+    $httpBackend.flush();
+  });
+
   it('delete pending should invoke api with removePending flag', ()=> {
     let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
 
@@ -182,6 +220,48 @@ describe('DomainManagementService', () => {
     });
     $httpBackend.flush();
     //$rootScope.$digest();
+
+  });
+
+  it('when delete empty domain, service should immediately reject', ()=> {
+    let domain = false;
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._domainList.push({text: false, status: 'pending'});
+    DomainManagementService.unverifyDomain(domain).then(res=> {
+      fail();
+    }, err=> {
+      expect(err).toBeUndefined();
+    });
+    $rootScope.$digest();
+    //$httpBackend.flush(); no need to flush
+  });
+
+  it('when delete pending and api fails error should be returned with a reject', ()=> {
+    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+
+    $httpBackend
+      .expectPOST(url, (data:any)=> {
+          data = JSON.parse(data);
+          expect(data).not.toBeNull();
+          expect(data.removePending).toBeDefined();
+          expect(data.removePending).toBeTruthy();  //correct flag
+          expect(data.domain).toBe(domain);
+
+          return true;
+        }
+      ).respond(500, 'error-in-request', null, 'error');
+
+    //when('POST', url).respond({});
+    let domain = 'super-domain.com';
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._domainList.push({text: domain, status: 'pending'});
+    DomainManagementService.unverifyDomain(domain).then(res=> {
+      fail();
+
+    }, err=> {
+      expect(err).toBeDefined();
+    });
+    $httpBackend.flush();
 
   });
 

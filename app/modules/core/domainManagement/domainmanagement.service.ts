@@ -74,7 +74,7 @@ class DomainManagementService {
 
   public unverifyDomain(domain) {
     if (!domain) {
-      this.$q.reject();
+      return this.$q.reject();
     }
 
     let existingDomain = _.find(this._domainList, {text: domain});
@@ -87,7 +87,7 @@ class DomainManagementService {
       _.remove(this._domainList, {text: domain});
     }, err => {
       this.Log.error('Failed to unverify domain:' + domain, err);
-      this.$q.reject(this.getErrorMessage(err));
+      return this.$q.reject(this.getErrorMessage(err));
     });
   }
 
@@ -96,7 +96,7 @@ class DomainManagementService {
 
     if (!domain) {
       this.Log.error('attempt to delete a domain not in list:' + domain);
-      this.$q.reject();
+      return this.$q.reject();
     }
     return this.$http.post(this._invokeVerifyDomainUrl, {
         "domain": domain,
@@ -108,14 +108,14 @@ class DomainManagementService {
           domainInList.status = this.states.verified;
       }, err => {
         this.Log.error('Failed to verify domain:' + domain, err);
-        this.$q.reject(this.getErrorMessage(err));
+        return this.$q.reject(this.getErrorMessage(err));
       });
   }
 
   public claimDomain(domain) {
     //let deferred = this.$q.defer();
     if (!domain) {
-      this.$q.reject();
+      return this.$q.reject();
     }
     return this.$http.post(this._claimDomainUrl, {
         data: [{'domain': domain}]
@@ -129,7 +129,7 @@ class DomainManagementService {
 
       }, err => {
         this.Log.error('Failed to claim domain:' + domain, err);
-        this.$q.reject(this.getErrorMessage(err));
+        return this.$q.reject(this.getErrorMessage(err));
       });
   }
 
@@ -146,7 +146,7 @@ class DomainManagementService {
 
     }, err => {
       this.Log.error('Failed to unclaim domain:' + domain, err);
-      this.$q.reject(this.getErrorMessage(err));
+      return this.$q.reject(this.getErrorMessage(err));
     });
   }
 
@@ -188,9 +188,9 @@ class DomainManagementService {
       } else {
         pendingDomain.token = res.data.token;
       }
-      this.$q.resolve(res.data.token);
+      return this.$q.resolve(res.data.token);
     }, err => {
-      this.$q.reject(this.getErrorMessage(err));
+      return this.$q.reject(this.getErrorMessage(err));
     });
   }
 

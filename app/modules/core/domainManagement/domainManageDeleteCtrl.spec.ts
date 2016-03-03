@@ -3,7 +3,7 @@ namespace domainManagement {
 
   describe('DomainManageDeleteCtrl', () => {
 
-    let Config, $q, $rootScope, $controller, $translate, $injector, DomainManagementService:any;
+    let Config, $q, $rootScope, $controller, $translate, DomainManagementService:any;
 
     //noinspection TypeScriptValidateTypes
     beforeEach(module('Core'));
