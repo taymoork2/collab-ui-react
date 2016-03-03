@@ -1668,7 +1668,7 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Record a custom message and build your own phone menus."
+    "AACustomDesc": "Create a custom Auto Attendant."
   },
   "callPark": {
     "code": "CP",
