@@ -112,7 +112,7 @@ describe('Support flow', function () {
       login.login('partner-admin', '#/login/c054027f-c5bd-4598-8cd8-07c08163e8cd/Atlas%20Test%20Partner%20Organization/true');
     });
 
-    it('should display supoort tab for user based on role', function () {
+    it('should display support tab for user based on role', function () {
       utils.expectIsDisplayed(navigation.supportTab);
     });
 

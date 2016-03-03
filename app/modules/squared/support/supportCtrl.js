@@ -61,6 +61,13 @@ angular.module('Squared')
         state: "support.status"
       }];
 
+      //TODO remove test
+      /*$scope.tabs.push({
+        title: $translate.instant('supportPage.tabs.logs'),
+        state: "support.logs"
+      });*/
+
+      //ADD BACK
       if (Authinfo.isInDelegatedAdministrationOrg()) {
         $scope.tabs.push({
           title: $translate.instant('supportPage.tabs.logs'),
@@ -141,7 +148,7 @@ angular.module('Squared')
           $scope.gridRefresh = false;
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
-          //Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
+          Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           $scope.logSearchBtnLoad = false;
         }
       };
@@ -240,11 +247,12 @@ angular.module('Squared')
         });
       };
 
+      //TODO: Fix $(...).typeahead is not a function console error
       //initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
         //Initializing typeahead engine when authinfo is ready
-        initializeTypeahead();
+        //initializeTypeahead();
       });
 
       var validateLocusId = function (locusId) {
@@ -598,19 +606,24 @@ angular.module('Squared')
           displayName: $filter('translate')('supportPage.callflowAction'),
           sortable: false,
           cellTemplate: callFlowTemplate,
-          visible: Authinfo.isCisco(),
-          cellClass: 'call-flow'
+          cellClass: 'call-flow',
+          headerCellClass: 'header-call-flow',
+          visible: Authinfo.isCisco()
         }, {
           field: 'callInfo',
           displayName: $filter('translate')('supportPage.callAction'),
           sortable: false,
           cellTemplate: callInfoTemplate,
+          cellClass: 'call-info',
+          headerCellClass: 'header-call-info',
           visible: Authinfo.isCisco()
         }, {
           field: 'callSummary',
           displayName: $filter('translate')('supportPage.callSummaryAction'),
           sortable: false,
           cellTemplate: callSummaryTemplate,
+          cellClass: 'call-summary',
+          headerCellClass: 'header-call-summary',
           visible: Authinfo.isCisco()
         }]
       };

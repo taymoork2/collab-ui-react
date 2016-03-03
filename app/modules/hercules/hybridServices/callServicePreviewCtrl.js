@@ -26,7 +26,6 @@ angular.module('Hercules')
         name: 'squaredFusionEC',
         entitled: isEntitled('squared-fusion-ec'),
         orgEntitled: Authinfo.isFusionEC(),
-        huronEntitled: isEntitled('ciscouc'),
         enabledInFMS: false,
         enterpriseDn: enterpriseDn ? enterpriseDn.value : null
       };
@@ -90,7 +89,7 @@ angular.module('Hercules')
         if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
           entitlements.push({
             entitlementName: $scope.callServiceConnect.name,
-            entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true && $scope.callServiceConnect.huronEntitled !== true ? 'ACTIVE' : 'INACTIVE'
+            entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true ? 'ACTIVE' : 'INACTIVE'
           });
         }
 

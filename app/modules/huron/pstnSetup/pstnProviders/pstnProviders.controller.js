@@ -52,10 +52,15 @@
       }
     }
 
+    function initCustomer(customer) {
+      PstnSetup.setIsTrial(_.get(customer, 'trial', false));
+      PstnSetup.setCustomerExists(true);
+    }
+
     function initCarriers() {
       // lookup customer carriers
       return PstnSetupService.getCustomer(PstnSetup.getCustomerId())
-        .then(_.partial(PstnSetup.setCustomerExists, true))
+        .then(initCustomer)
         .then(_.partial(PstnSetupService.listCustomerCarriers, PstnSetup.getCustomerId()))
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
