@@ -29,7 +29,7 @@
 
     function _makeTrial() {
       var defaults = {
-        type: Config.offerTypes.call,
+        type: Config.offerTypes.pstn,
         enabled: false,
         skipped: false,
         details: {
