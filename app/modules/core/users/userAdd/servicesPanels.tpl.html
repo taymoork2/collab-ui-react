@@ -73,10 +73,10 @@
               {{lic.site}}
             </div>
             <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
-              <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" label="WebEx {{cfLic.label}}"></cs-checkbox>
+              <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" label="WebEx {{cfLic.label}}"></cs-checkbox>
               <div ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
-                  <cs-checkbox ckid="{{cmrLic.licenseId}}" class="indentedCheckbox" ng-click="cfLic.confModel = true;" ng-model="cmrLic.cmrModel" label="WebEx {{cmrLic.label}}" isdisabled="false"></cs-checkbox>
+                  <cs-checkbox ckid="{{cmrLic.licenseId}}" class="indentedCheckbox" ng-click="licenseHandler(cmrLic.licenseId); cfLic.confModel = true; cmrLic.cmrModel = !cmrLic.cmrModel" ng-model="cmrLic.cmrModel" label="WebEx {{cmrLic.label}}" isdisabled="false"></cs-checkbox>
                 </div>
               </div>
             </div>
