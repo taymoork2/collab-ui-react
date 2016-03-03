@@ -123,12 +123,10 @@
                 NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
               }
             });
+          } else {
+            NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
           }
-        })
-        .else(function () {
-          NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-        })
-        .catch(function () {});
+        });
     }
 
     function checkCallServiceConnect(serviceId) {
