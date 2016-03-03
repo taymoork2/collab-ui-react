@@ -1545,7 +1545,7 @@
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
-    "scheduleAddAdditionalHours": "Add Additional Hours",
+    "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
