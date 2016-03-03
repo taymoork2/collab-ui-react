@@ -471,7 +471,8 @@ angular.module('Core')
           message: 'MESSAGE',
           meetings: 'MEETINGS',
           call: 'CALL',
-          roomSystems: 'ROOMSYSTEMS'
+          roomSystems: 'ROOMSYSTEMS',
+          pstn: 'PSTN'
         },
 
         //WARNING: Deprecated, use offerTypes
