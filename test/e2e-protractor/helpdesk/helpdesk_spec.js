@@ -3,12 +3,12 @@ describe('Helpdesk Page', function () {
     utils.dumpConsoleErrors();
   });
 
-
-  describe('Login to support page with helpdesk role', function () {
+  // To be replaced by unit test
+  xdescribe('Login to support page with helpdesk role', function () {
 
     it('should log in to helpdesk via support page', function () {
       // Precondition is that this user has helpdesk access...
-      login.login('helpdesk-admin', '#');//#/support/');
+      login.login('helpdesk-admin', '#'); //#/support/');
     });
 
     it('should show the tools card with helpdesk launch button', function () {
@@ -22,7 +22,8 @@ describe('Helpdesk Page', function () {
     });
   });
 
-  describe('Login to support page without helpdesk role', function () {
+  // To be replaced by unit tests
+  xdescribe('Login to support page without helpdesk role', function () {
 
     it('should log in to helpdesk via support page', function () {
       login.login('mockcisco-support-user', '#');
@@ -37,6 +38,5 @@ describe('Helpdesk Page', function () {
       navigation.logout();
     });
   });
-
 
 });

@@ -19,18 +19,18 @@
     </article>
   </cs-card>
 
-  <cs-card id="supportPageToolsCard" class="medium" ng-show="showToolsCard()">
+  <cs-card id="supportPageToolsCard" class="medium" ng-if="showToolsCard()">
     <article>
       <header>
         <h4 translate="supportPage.cards.tools.tools"></h4>
       </header>
       <section class="indent">
 
-        <div ng-show="showHelpdeskLink">
+        <div ng-show="showHelpdeskLink()">
           <h5 translate="supportPage.cards.tools.helpdeskSupport"></h5>
           <p class="content" translate="supportPage.cards.tools.launchHelpdeskDesc"></p>
-          <a target="_blank" ui-sref="helpdesk.search">
-            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
+          <a target="_blank">
+            <button id="toolsCardHelpdeskButton" ng-click="gotoHelpdesk()" class="btn btn--people btn--medium" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
           </a>
         </div>
 

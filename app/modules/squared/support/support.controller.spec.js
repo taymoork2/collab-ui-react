@@ -2,22 +2,33 @@
 describe('Controller: SupportCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var controller, Authinfo, Userservice, currentUser, Config, $scope;
+  var httpBackend, $compile, controller, Authinfo, Userservice, currentUser, Config, $scope, $templateCache;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
   var user = {
     'success': true,
     'roles': roles
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
+  function stubAllHttpGetRequests() {
+    httpBackend.when('GET', function (url) {
+      return true; // all http GET requests
+    }).respond({});
+  }
+
+  beforeEach(inject(function ($httpBackend, _$templateCache_, _$compile_, $rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     Config = _Config_;
+    $templateCache = _$templateCache_;
+    $compile = _$compile_;
+    httpBackend = $httpBackend;
 
     currentUser = {
       success: true,
       roles: ['ciscouc.devops', 'ciscouc.devsupport']
     };
+
+    stubAllHttpGetRequests();
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
@@ -49,4 +60,32 @@ describe('Controller: SupportCtrl', function () {
     expect(isSupportRole).toBe(true);
   });
 
+  describe('ToolsCard', function () {
+    it('has helpdesk button only if user has helpdesk role', function () {
+
+      var html = $templateCache.get("modules/squared/support/support-status.html");
+      var view = $compile(angular.element(html))($scope);
+
+      sinon.stub(Authinfo, 'isHelpDeskUser');
+      var helpdeskButtonClicked = sinon.spy($scope, 'gotoHelpdesk');
+
+      Authinfo.isHelpDeskUser.returns(true);
+      $scope.$digest();
+      view.find("toolsCardHelpdeskButton").click();
+      expect(helpdeskButtonClicked.calledOnce);
+
+      helpdeskButtonClicked.reset();
+
+      Authinfo.isHelpDeskUser.returns(false);
+      $scope.$digest();
+      view.find("toolsCardHelpdeskButton").click();
+      expect(helpdeskButtonClicked.called).toBeFalsy();
+    });
+  });
+
+  function mockAllHttpRequests() {
+    httpBackend.when('GET', function (url) {
+      return true; // all http GET requests
+    }).respond({});
+  }
 });

@@ -3,7 +3,6 @@
 angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService) {
-      $scope.showHelpdeskLink = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -21,6 +20,11 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
+      $scope.gotoHelpdesk = gotoHelpdesk;
+
+      function gotoHelpdesk() {
+        $state.go("helpdesk.search");
+      }
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
@@ -52,8 +56,12 @@ angular.module('Squared')
         return false;
       }
 
+      $scope.showHelpdeskLink = function () {
+        return Authinfo.isHelpDeskUser();
+      };
+
       $scope.showToolsCard = function () {
-        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink;
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
       };
 
       $scope.tabs = [{
