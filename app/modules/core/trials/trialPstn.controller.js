@@ -36,6 +36,7 @@
       removedtoken: manualRemovedToken,
     };
     vm.invalidCount = 0;
+    vm.areaCodeOptions = [];
 
     //PSTN Lookup Tokenfield
     vm.tokenFieldId = 'didAddField';
@@ -217,11 +218,10 @@
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
           _.forEach(response.areaCodes, function (areaCode, index) {
-            if (areaCode.count < pstnTokenLimit) {
-              response.areaCodes.splice(index, 1);
+            if (areaCode.count >= pstnTokenLimit) {
+              vm.areaCodeOptions.push(areaCode);
             }
           });
-          vm.areaCodeOptions = response.areaCodes;
         }).catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.areaCodes');
         });
