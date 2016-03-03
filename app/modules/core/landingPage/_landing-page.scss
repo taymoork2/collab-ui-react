@@ -252,6 +252,35 @@ li.monitoring-cell {
   }
 }
 
+.cta {
+  background-color: $brand-white;
+  padding: 20px 15px;
+  border-bottom: 1px solid $gray-dark;
+  font-family: $brand-font-cisco-TT-Extra-Light;
+
+  section {
+    min-height: 115px;
+  }
+
+  h3 {
+    font-size: 21px;
+    color: $gray-darker;
+    margin-top: 5px;
+  }
+
+  p {
+    font-family: $brand-font-cisco-TT-Extra-Light;
+  }
+
+  .progress {
+    margin-bottom: 6px;
+  }
+
+  .btn {
+    margin-top: 7px;
+  }
+}
+
 .unlicensed-users {
   .users-info {
     padding-top: 8px;
