@@ -55,7 +55,7 @@ var LoginPage = function () {
       } else {
         url += '?';
       }
-      url += 'backend=production';
+      url += 'test-env-config=e2e-prod';
     }
     return url;
   }

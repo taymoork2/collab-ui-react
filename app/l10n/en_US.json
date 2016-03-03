@@ -1070,7 +1070,8 @@
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
-      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+      "add-resource-button-information": " to start the registration and configuration of your Expressways.",
+      "setupCloudSipUriHeader": "Define SIP Spark Address."
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1249,6 +1250,19 @@
       }
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "callAware": {
+        "title": "Enable Call Service Aware for Users.",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
+      },
+      "calendar": {
+        "title": "Enable Calendar Service for Users.",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
+      },
+      "connect": {
+        "title": "Enable Call Service Connect for Users.",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+      },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
@@ -3118,7 +3132,7 @@
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "MissingEncryptionKey": {
-        "type": " Missing encryption option key",
+        "type": "Missing encryption option key",
         "message": "Please add an encryption option key"
       },
       "ConfiguredForTestAutomation": {
