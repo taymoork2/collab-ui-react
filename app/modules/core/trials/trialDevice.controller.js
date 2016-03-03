@@ -102,7 +102,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled || isPreviouslyDisabled(vm.sx10);
+          return disabled || vm.sx10.readonly;
         }
       },
       watcher: _addWatcher(),
@@ -151,7 +151,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled || isPreviouslyDisabled(vm.phone8865);
+          return disabled || vm.phone8865.readonly;
         }
       },
       watcher: _addWatcher(),
@@ -198,7 +198,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled || isPreviouslyDisabled(vm.phone8845);
+          return disabled || vm.phone8845.readonly;
         }
       },
       watcher: _addWatcher(),
@@ -245,7 +245,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled || isPreviouslyDisabled(vm.phone8841);
+          return disabled || vm.phone8841.readonly;
         }
       },
       watcher: _addWatcher(),
@@ -292,7 +292,7 @@
           if (disabled) {
             scope.model.quantity = 0;
           }
-          return disabled || isPreviouslyDisabled(vm.phone7841);
+          return disabled || vm.phone7841.readonly;
         }
       },
       watcher: _addWatcher(),
@@ -450,7 +450,15 @@
     }
 
     function validateTotalQuantity($viewValue, $modelValue, scope) {
-      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
+      var devices = _(_trialRoomSystemData.details.roomSystems)
+        .concat(_trialCallData.details.phones)
+        .flatten()
+        .value();
+      var storedQuantity = vm.calcQuantity(_.filter(devices, {
+        readonly: true
+      }));
+      var totalQuantity = vm.calcQuantity(devices);
+      var quantity = totalQuantity - storedQuantity;
       var device = scope.model;
       if (!device.enabled) {
         return true;
@@ -477,6 +485,7 @@
         },
         listener: function (field, newValue, oldValue) {
           if (newValue !== oldValue) {
+            // trigger validation when quantity has changed
             field.formControl.$validate();
           }
         }
@@ -530,21 +539,19 @@
     }
 
     function setQuantity(deviceModel) {
+      var localQuantity = deviceModel.quantity;
+      var storedQuantity = vm.getQuantity(deviceModel);
+
       // Get current quantity for addTrial else get from $stateParams
-      var quant = deviceModel.quantity || vm.getQuantity(deviceModel);
-      deviceModel.quantity = quant;
-      deviceModel.enabled = !!quant;
+      deviceModel.quantity = localQuantity || storedQuantity;
+      deviceModel.enabled = !!deviceModel.quantity;
+      deviceModel.readonly = !!storedQuantity;
     }
 
     function getQuantity(deviceModel) {
       return _.get(_.find(_.get($stateParams, 'details.details.devices', []), {
         model: deviceModel.model
       }), 'quantity', 0);
-    }
-
-    function isPreviouslyDisabled(deviceModel) {
-      // get quantity only checks from stateparams, which is gotten from querying trials
-      return !!vm.getQuantity(deviceModel);
     }
   }
 })();
