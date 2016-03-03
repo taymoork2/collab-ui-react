@@ -15,7 +15,11 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Localytics) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Localytics, Config) {
+    var NO_TIMEOUT = 0;
+    var FAILURE_TIMEOUT = NO_TIMEOUT;
+    var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
+
     return {
       success: success,
       error: error,
@@ -47,7 +51,7 @@
       if (type === 'error') {
         Localytics.push('Error Message', notifications);
       }
-      toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? 3000 : 0);
+      toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT);
     }
 
     function errorResponse(response, errorKey, errorParams) {
