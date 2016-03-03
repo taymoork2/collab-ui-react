@@ -151,6 +151,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should list pending orders', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
     var promise = PstnSetupService.listPendingOrders(customerId);
     promise.then(function (orderList) {
       expect(angular.equals(orderList, customerOrderList)).toEqual(true);
@@ -169,6 +170,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should list pending numbers', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders/' + orderId).respond(customerOrder);
     var promise = PstnSetupService.listPendingNumbers(customerId, 'INTELEPEER');
     promise.then(function (numbers) {

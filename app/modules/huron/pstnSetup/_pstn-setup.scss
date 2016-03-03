@@ -113,14 +113,17 @@
     }
   }
 
-  .modal-body {
-    margin: 0;
-    .formly-field {
-      padding-bottom: 0;
-    }
-    + .modal-body {
-      margin-top: rem-calc(10);
-    }
+  > .modal-body {
+    padding: 0;
+    background-color: $white;
+  }
+
+  .tab-content {
+    padding: 2rem;
+  }
+
+  .tokenfield {
+    margin-top: 1rem;
   }
 
   .search-results {
@@ -133,6 +136,10 @@
 
   .formly-field-inline {
     align-items: flex-start;
+  }
+
+  .form-inline .form-control {
+    width: 100%;
   }
 
   .search-button {
