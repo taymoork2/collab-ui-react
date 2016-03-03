@@ -9,13 +9,13 @@ describe('ServiceStateChecker', function () {
     id: 0,
     connectors: [{
       connectorType: 'c_mgmt',
-      runningState: 'not_configured'
+      state: 'not_configured'
     }, {
       connectorType: 'c_cal',
-      runningState: 'not_configured'
+      state: 'not_configured'
     }, {
       connectorType: 'c_cal',
-      runningState: 'not_configured'
+      state: 'not_configured'
     }]
   };
 
@@ -23,13 +23,13 @@ describe('ServiceStateChecker', function () {
     id: 0,
     connectors: [{
       connectorType: 'c_mgmt',
-      runningState: 'running'
+      state: 'running'
     }, {
       connectorType: 'c_cal',
-      runningState: 'running'
+      state: 'running'
     }, {
       connectorType: 'c_cal',
-      runningState: 'running'
+      state: 'running'
     }]
   };
 

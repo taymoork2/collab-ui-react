@@ -275,7 +275,7 @@ describe('Huron Auto Attendant', function () {
       // Last/3rd menu option is Route Call
       utils.click(autoattendant.newStepSelectLast);
       utils.expectIsDisplayed(autoattendant.routeCall);
-    });
+    }, 60000);
 
     it('should Route Call to external number in the Route Call via New Step dialog in the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.click(autoattendant.routeCallChoose);
@@ -307,6 +307,42 @@ describe('Huron Auto Attendant', function () {
     //      autoattendant.assertUpdateSuccess();
 
     //    }, 60000);
+
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, 12000);
+      utils.click(autoattendant.addschedule);
+      utils.click(autoattendant.starttime);
+      utils.sendKeys(autoattendant.starttime, '01:00AM');
+      utils.click(autoattendant.endtime);
+      utils.sendKeys(autoattendant.endtime, '05:00PM');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.click(autoattendant.day1);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    it('should update a AA Schedule', function () {
+      utils.click(autoattendant.schedule);
+      utils.click(autoattendant.starttime);
+      utils.sendKeys(autoattendant.starttime, '2:30AM');
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess();
+    }, 60000);
+
+    it('should delete a AA Schedule', function () {
+      utils.click(autoattendant.schedule);
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.click(autoattendant.scheduletrash);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
 
     it('should close AA edit and return to landing page', function () {
 

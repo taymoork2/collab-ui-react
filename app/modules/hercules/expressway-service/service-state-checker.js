@@ -2,7 +2,7 @@
   'use strict';
 
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo) {
+  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, FeatureToggleService) {
 
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
@@ -31,6 +31,7 @@
     }
 
     function checkIfConnectorsConfigured(connectorType) {
+
       var clusters = ClusterService.getClustersByConnectorType(connectorType);
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
@@ -48,6 +49,14 @@
       }
     }
 
+    function addNotification(noUsersActivatedId, serviceId, notification) {
+      NotificationService.addNotification(
+        NotificationService.types.TODO,
+        noUsersActivatedId,
+        4,
+        notification, [serviceId]);
+    }
+
     function checkUserStatuses(serviceId) {
       if (serviceId === 'squared-fusion-mgmt') {
         return;
@@ -59,11 +68,24 @@
       var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
         0);
       if (needsUserActivation) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          noUsersActivatedId,
-          4,
-          'modules/hercules/notifications/no_users_activated.html', [serviceId]);
+        switch (serviceId) {
+        case "squared-fusion-cal":
+          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+          break;
+        case "squared-fusion-uc":
+          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+            if (!error) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+              }
+            }
+          });
+          break;
+        default:
+          break;
+        }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
         var userErrorsId = serviceId + ':userErrors';
@@ -79,6 +101,29 @@
       }
     }
 
+    function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
+        .then(function (support) {
+          if (support) {
+            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
+              if (!org || !org.orgSettings || !org.orgSettings.sipCloudDomain) {
+                NotificationService.addNotification(
+                  NotificationService.types.TODO,
+                  'sipUriDomainEnterpriseNotConfigured',
+                  5,
+                  'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
+              } else {
+                NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+              }
+            });
+          }
+        })
+        .else(function () {
+          NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+        })
+        .catch(function () {});
+    }
+
     function checkCallServiceConnect(serviceId) {
       if (serviceId !== 'squared-fusion-uc') {
         return;
@@ -89,6 +134,7 @@
             id: 'squared-fusion-ec'
           });
           if (callServiceConnect && callServiceConnect.enabled) {
+            handleAtlasSipUriDomainEnterpriseNotification(serviceId);
             USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
               if (!org || !org.sipDomain || org.sipDomain === '') {
                 NotificationService.addNotification(
@@ -122,7 +168,7 @@
           return connector.connectorType === connectorType;
         })
         .all(function (connector) {
-          return connector.runningState !== 'not_configured';
+          return connector.state !== 'not_configured';
         })
         .value();
     }

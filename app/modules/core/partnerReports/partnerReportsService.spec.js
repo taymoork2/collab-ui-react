@@ -123,6 +123,11 @@ describe('Service: Partner Reports Service', function () {
     "date": "2015-04-20"
   };
 
+  var emptyCallMetricsArray = {
+    dataProvider: [],
+    displayData: {}
+  };
+
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
@@ -298,7 +303,7 @@ describe('Service: Partner Reports Service', function () {
     it('should get empty array for GET failure', function () {
       $httpBackend.whenGET(callMetricsUrl + customers[0].customerOrgId).respond(500, error);
       PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
-        expect(data).toEqual([]);
+        expect(data).toEqual(emptyCallMetricsArray);
       });
       $httpBackend.flush();
     });

@@ -239,7 +239,7 @@
               function checkLicense(license) {
                 logMsg = funcName + ": " + "\n" +
                   "license=" + JSON.stringify(license);
-                // $log.log(logMsg);
+                $log.log(logMsg);
 
                 if (
                   ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
