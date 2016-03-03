@@ -463,7 +463,7 @@ exports.expectSwitchState = function (elem, value) {
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.tagName('input'));
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
     expect(input.isSelected()).toBe(value);
   });
 };
