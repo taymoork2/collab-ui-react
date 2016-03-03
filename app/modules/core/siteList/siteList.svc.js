@@ -332,7 +332,6 @@ angular.module('Core').service('SiteListService', [
         return;
       }
 
-      // TODO
       var siteUrl = siteRow.license.siteUrl;
       WebExApiGatewayService.csvStatus(siteUrl).then(
         function success(response) {
@@ -343,6 +342,8 @@ angular.module('Core').service('SiteListService', [
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
+
+          // TODO: parse response and update the row column accordingly
 
           siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()
