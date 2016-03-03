@@ -25,6 +25,8 @@
     vm.validateTotalQuantity = validateTotalQuantity;
     vm.calcQuantity = calcQuantity;
     vm.skip = skip;
+    vm.getQuantity = getQuantity;
+    vm.setQuantity = setQuantity;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -52,11 +54,11 @@
       model: 'CISCO_7841'
     });
 
-    setQuantity(vm.sx10);
-    setQuantity(vm.phone8865);
-    setQuantity(vm.phone8845);
-    setQuantity(vm.phone8841);
-    setQuantity(vm.phone7841);
+    vm.setQuantity(vm.sx10);
+    vm.setQuantity(vm.phone8865);
+    vm.setQuantity(vm.phone8845);
+    vm.setQuantity(vm.phone8841);
+    vm.setQuantity(vm.phone7841);
 
     vm.roomSystemFields = [{
       model: vm.sx10,
@@ -528,7 +530,8 @@
     }
 
     function setQuantity(deviceModel) {
-      var quant = getQuantity(deviceModel);
+      // Get current quantity for addTrial else get from $stateParams
+      var quant = deviceModel.quantity || vm.getQuantity(deviceModel);
       deviceModel.quantity = quant;
       deviceModel.enabled = !!quant;
     }
@@ -541,7 +544,7 @@
 
     function isPreviouslyDisabled(deviceModel) {
       // get quantity only checks from stateparams, which is gotten from querying trials
-      return !!getQuantity(deviceModel);
+      return !!vm.getQuantity(deviceModel);
     }
   }
 })();

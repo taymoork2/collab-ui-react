@@ -80,6 +80,30 @@ describe('Controller: TrialDeviceController', function () {
       expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
       expect(controller.calcQuantity(devices3)).toEqual(0);
     });
+
+    it('should set quantity to current value', function () {
+      var deviceModel = {
+        enabled: true,
+        quantity: 3
+      };
+
+      controller.setQuantity(deviceModel);
+
+      expect(deviceModel.quantity).toBe(3);
+    });
+
+    it('should set quantity to $paramValue value', function () {
+      var deviceModel = {
+        enabled: false,
+        quantity: 0
+      };
+      spyOn(controller, 'getQuantity').and.returnValue(2);
+
+      controller.setQuantity(deviceModel);
+
+      expect(deviceModel.quantity).toBe(2);
+      expect(deviceModel.enabled).toBe(true);
+    });
   });
 
   describe('input quantity validation', function () {
