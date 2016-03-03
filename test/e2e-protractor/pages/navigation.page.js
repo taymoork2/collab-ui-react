@@ -36,6 +36,8 @@ var Navigation = function () {
   this.callServicePage = element(by.css('a[href="#services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
+  this.ecToggler = element(by.id('squaredFusionEc-toggler'));
+  this.ecTogglerSwitch = element(by.css('label[for="squaredFusionEc-toggler"]'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -262,6 +264,14 @@ var Navigation = function () {
       utils.expectIsDisplayed(navigation.deactivateService);
     });
   }
+
+  this.ensureCallServiceAware = function () {
+    this.ecToggler.isSelected().then(function (selected) {
+      if (!selected) {
+        utils.click(navigation.ecTogglerSwitch);
+      }
+    });
+  };
 };
 
 module.exports = Navigation;

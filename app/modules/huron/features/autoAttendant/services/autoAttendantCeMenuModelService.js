@@ -350,9 +350,13 @@
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToExtension)) {
+
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
+
         setDescription(action, inAction.routeToExtension);
+
         menuEntry.addAction(action);
+
       } else if (angular.isDefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
@@ -411,6 +415,7 @@
         if (angular.isDefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
+
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -454,6 +459,11 @@
           if (menuEntry.actions.length > 0) {
             menu.addEntry(menuEntry);
           }
+        } else {
+          var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
+          if (angular.isDefined(optionMenu)) {
+            menu.addEntry(optionMenu);
+          }
         }
       }
 
@@ -482,11 +492,26 @@
       // makes up of welcome menu's action objects, main menu object and custom menu object.
       // mainMenu is refered to as OPTION menu in the UI.
       //
+
+      // returns only the first menu it finds
       var i = getActionIndex(ceActionArray, 'runActionsOnInput');
       if (i >= 0) {
         var menu = new CeMenu();
         menu.setType('MENU_OPTION');
         var ceActionsOnInput = ceActionArray[i].runActionsOnInput;
+        if (angular.isDefined(ceActionArray[i]['runActionsOnInput'])) {
+          return getOptionMenuFromAction(ceActionArray[i]);
+        }
+      }
+      return undefined;
+    }
+
+    function getOptionMenuFromAction(optionMenuAction) {
+
+      if (angular.isDefined(optionMenuAction) && angular.isDefined(optionMenuAction.runActionsOnInput)) {
+        var menu = new CeMenu();
+        menu.setType('MENU_OPTION');
+        var ceActionsOnInput = optionMenuAction.runActionsOnInput;
         var menuEntry;
 
         // Collect the accouncement header
@@ -547,7 +572,6 @@
           return menu;
         }
       }
-
       return undefined;
     }
 
@@ -600,12 +624,6 @@
               entries = entries.pop();
             }
           }
-        }
-      }
-      var optionMenu = getOptionMenu(ceRecord, actionSetName);
-      if (angular.isDefined(welcomeMenu)) {
-        if (angular.isDefined(optionMenu)) {
-          welcomeMenu.addEntry(optionMenu);
         }
       }
       return welcomeMenu;
@@ -735,16 +753,15 @@
       return true;
     }
 
-    function createWelcomeMenu(aaActionArray, aaMenu) {
+    function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
-      var foundOptionMenu = false;
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
+        newActionArray[i] = {};
         if (menuEntry.type === 'MENU_OPTION') {
-          // the option menu will be added down below
-          foundOptionMenu = true;
+          newActionArray[i].runActionsOnInput = new MainMenu();
+          createOptionMenu(newActionArray[i].runActionsOnInput, menuEntry);
         } else {
-          newActionArray[i] = {};
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
             newActionArray[i][actionName] = {};
@@ -761,22 +778,17 @@
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToVoiceMail') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToUser') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
               }
+            } else if (actionName === 'goto') {
+              newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToHuntGroup') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             }
-          }
-        }
-      }
-      var len = aaActionArray.length;
-      if (len > 0) {
-        // if there is a custom menu or a main menu at the end of the action array,
-        // retain it and copy over.
-        for (var j = 0; j < len; j++) {
-          if (angular.isDefined(aaActionArray[j].runCustomActions) ||
-            (foundOptionMenu && angular.isDefined(aaActionArray[j].runActionsOnInput))) {
-            newActionArray.push(aaActionArray[j]);
           }
         }
       }
@@ -793,7 +805,7 @@
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
-      actionSet.actions = createWelcomeMenu(actionSet.actions, aaMenu);
+      actionSet.actions = createWelcomeMenu(aaMenu);
 
       return true;
     }
@@ -959,22 +971,11 @@
       if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
-      for (var i = 0; i < aaMenu.entries.length; i++) {
-        var menu = aaMenu.entries[i];
-        if (menu.type === 'MENU_CUSTOM' && menu.entries) {
-          updateCustomMenu(ceRecord, actionSetName, menu);
-        }
-        if (menu.type == 'MENU_OPTION' && menu.entries) {
-          updateOptionMenu(ceRecord, actionSetName, menu);
-        }
-      }
-      if (aaMenu.type == 'MENU_WELCOME') {
+      if (aaMenu.type === 'MENU_WELCOME') {
         updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
-      }
-      if (aaMenu.type == 'MENU_OPTION') {
+      } else if (aaMenu.type === 'MENU_OPTION') {
         updateOptionMenu(ceRecord, actionSetName, aaMenu);
-      }
-      if (aaMenu.type == 'MENU_CUSTOM') {
+      } else if (aaMenu.type === 'MENU_CUSTOM') {
         updateCustomMenu(ceRecord, actionSetName, aaMenu);
       }
       return true;

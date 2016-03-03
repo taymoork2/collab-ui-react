@@ -8,6 +8,7 @@ $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light-1;
 $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-base;
+$aa-builder-icon-color-light: $gray-light-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
@@ -55,6 +56,11 @@ $aa-builder-icon-color: $gray-base;
   flex-direction: row;
   margin-left: 10px;
   margin-right: 10px;
+
+  & .popover {
+    width: 50%;
+  }
+
 }
 
 .aa-flex-row.centered {
@@ -67,6 +73,32 @@ $aa-builder-icon-color: $gray-base;
   padding-bottom: .25rem;
   padding-right: 2rem;
   padding-left: 2rem;
+}
+
+.aa-schedule-modal {
+  width: 785px;
+  background: #FFF none repeat scroll 0% 0%;
+  .aa-schedule-days {
+    padding: 4px;
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .aa-schedule-subtitle {
+    font-size: 20px
+  }
+  .aa-schedule-trash {
+    font-size: 35px;
+    color: #858688;
+    float: right;
+  }
+}
+
+.aa-schedule-container {
+  cursor: pointer;
+  h3{
+    display: inline-block;
+  }
 }
 
 .aa-flex-row-item {
@@ -129,8 +161,8 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-trash;
 
-  font-size: 1.5rem;
-  color: $aa-builder-icon-color;
+  font-size: 1.25rem;
+  color: $aa-builder-icon-color-light;
   padding-left: .25rem;
   padding-top: .25rem;
 
@@ -155,14 +187,14 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-help;
 
-  font-size: 1.25rem;
-  color: $aa-builder-icon-color;
+  font-size: 1rem;
+  color: $aa-builder-icon-color-light;
   padding-left: .25rem;
   padding-top: .25rem;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-color;
   }
 }
 
@@ -321,7 +353,45 @@ $aa-builder-icon-color: $gray-base;
     padding: 0;
     text-align: center;
     vertical-align: middle;
+
+    & .popover {
+      background-color: transparent;
+      border: 0;
+      margin-top: 0;
+      color: $gray-dark-1;
+
+      &.bottom >.arrow {
+        background-color: transparent;
+        border-bottom-color: transparent;
+
+        &:after {
+          border-color: transparent;
+          border-bottom-color: transparent;
+          border-width: 0;
+        }
+      }
+
+      & .popover-content {
+        font-size: $h6-font-size;
+        padding-top: .25rem;
+      }
+    }
+
   }
+}
+
+.aa-panel.ng-enter, .aa-panel.ng-leave {
+  transition: 0.5s ease-in-out all;
+}
+
+.aa-panel.ng-enter,
+.aa-panel.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.aa-panel.ng-leave,
+.aa-panel.ng-enter.ng-enter-active {
+  opacity:1;
 }
 
 .aa-add-step-icon {
@@ -347,12 +417,12 @@ $aa-builder-icon-color: $gray-base;
 
     @extend .icon-close;
 
-    color: transparent;
+    color: $gray-light-2;
     font-size: 1.5rem;
 
     &:hover {
       cursor: pointer;
-      color: $gray-light-1;
+      color: $color-primary-base;
     }
   }
 }

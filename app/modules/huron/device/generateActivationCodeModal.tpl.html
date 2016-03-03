@@ -18,38 +18,27 @@
         </div>
         <div class="expiration">
           <span translate="generateActivationCodeModal.expires" translate-values="{date: genAuthCode.otp.friendlyExpiresOn}"></span>
-          <strong translate="generateActivationCodeModal.expiration" translate-values="{timeLeft: genAuthCode.timeLeft}"></strong>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer" ng-if="genAuthCode.otp.code">
+    <div class="modal-footer-left">
+      <button class="btn btn--link btn--large" clip-copy="genAuthCode.otp.friendlyCode" clip-click-fallback="genAuthCode.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
+      <button class="btn btn--link btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
+    </div>
     <button class="btn btn--large" ng-disabled="genAuthCode.showEmail" ng-click="genAuthCode.activateEmail()" translate="generateActivationCodeModal.emailCode"></button>
-    <button class="btn btn--large" clip-copy="genAuthCode.otp.friendlyCode" clip-click-fallback="genAuthCode.clipboardFallback(copy)">{{'generateActivationCodeModal.copyToClipboard' | translate}}</button>
-    <button class="btn btn--large" cr-print print-element-id="printActivationCode" translate="generateActivationCodeModal.print"></button>
   </div>
   <div ng-show="genAuthCode.showEmail">
 
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
-          <div class="col-sm-6">
-            <input type="email" id="to" class="form-control" ng-model="genAuthCode.email.to">
-          </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label for="to" class="col-sm-1 control-label" translate="generateActivationCodeModal.to"></label>
+        <div class="col-sm-6">
+          <input type="email" id="to" class="form-control" ng-model="genAuthCode.email.to">
         </div>
-        <!-- <div class="form-group">
-          <label class="col-sm-2 control-label" translate="generateActivationCodeModal.subject"></label>
-          <div class="col-sm-9">
-            <p class="form-control-static">{{genAuthCode.email.subject}}</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="message" class="col-sm-2 control-label" translate="generateActivationCodeModal.message"></label>
-          <div class="col-sm-10">
-            <textarea class="form-control" id="message" rows="3" ng-model="genAuthCode.email.message"></textarea>
-          </div>
-        </div> -->
       </div>
+    </div>
 
     <div class="modal-footer">
       <button class="btn btn--primary btn--large" ng-click="genAuthCode.sendActivationCodeEmail()" translate="generateActivationCodeModal.send"></button>

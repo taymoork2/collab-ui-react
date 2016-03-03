@@ -93,7 +93,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
   visibility: hidden;
 }
 
-.indent-checkbox {
+.indent-checkbox .cs-input-checkbox {
   margin-left: 30px;
 }
 
@@ -106,4 +106,15 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 .messagebox,
 .messagebox-backdrop {
   background-image: url(../images/bg_3515.jpg);
+}
+
+
+.ui-grid-cell .dropdown-menu, .ui-grid-cell .dropdown-menu .sub-menu, .dropdown-menu .ui-grid-cell .sub-menu {
+  right: 15px;
+  left: auto;
+  top: 34px;
+}
+
+.actions-menu.open .dropdown-menu, .actions-menu.open .dropdown-menu .sub-menu, .dropdown-menu .actions-menu.open .sub-menu {
+  top: 34px;
 }

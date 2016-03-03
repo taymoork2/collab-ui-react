@@ -5,7 +5,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, FeatureToggleService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, FeatureToggleService, HuntGroupService;
   var listOfAAs = getJSONFixture('huron/json/autoAttendant/aaList.json');
   var emptyListOfAAs = [];
   var getAAListSuccessResp = function (data) {
@@ -42,7 +42,7 @@ describe('Features Controller', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _Log_, _Notification_, _FeatureToggleService_, _HuntGroupService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -52,6 +52,7 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
+    HuntGroupService = _HuntGroupService_;
 
     Log = _Log_;
     Notification = _Notification_;
@@ -61,7 +62,7 @@ describe('Features Controller', function () {
     getDeferred = $q.defer();
 
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(getDeferred.promise);
-
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue($q.when());
     spyOn(Notification, 'error');
 
     spyOn(FeatureToggleService, 'supports').and.callFake(function (feature) {

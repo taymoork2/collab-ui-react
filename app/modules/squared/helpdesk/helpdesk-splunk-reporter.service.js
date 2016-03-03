@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskSplunkReporterService(LogMetricsService, Log) {
+  function HelpdeskSplunkReporterService(LogMetricsService) {
 
     function reportStats(searchString, res, startTime, orgId) {
 

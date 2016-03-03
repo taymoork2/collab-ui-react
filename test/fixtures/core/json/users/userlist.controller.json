@@ -1,0 +1,29 @@
+{
+  "photoUser": {
+    "photos": [{
+      "type": "photo",
+      "value": "https://8cfe469da28dbd62836a-08244a00f2e0f8b2f531535e46828f3f.ssl.cf1.rackcdn.com/V1~f978f816bc7136cda26b15d1819530ce~XoOzFSRdS_K1wcBaxeOm2Q==~1600"
+    }, {
+      "type": "thumbnail",
+      "value": "https://8cfe469da28dbd62836a-08244a00f2e0f8b2f531535e46828f3f.ssl.cf1.rackcdn.com/V1~f978f816bc7136cda26b15d1819530ce~XoOzFSRdS_K1wcBaxeOm2Q==~80"
+    }]
+  },
+  "fileThumb": {
+    "photos": [{
+      "type": "photo",
+      "value": "https://8cfe469da28dbd62836a-08244a00f2e0f8b2f531535e46828f3f.ssl.cf1.rackcdn.com/V1~f978f816bc7136cda26b15d1819530ce~XoOzFSRdS_K1wcBaxeOm2Q==~1600"
+    }, {
+      "type": "thumbnail",
+      "value": "file://fake.jpg"
+    }]
+  },
+  "emptyThumb": {
+    "photos": [{
+      "type": "photo",
+      "value": "https://8cfe469da28dbd62836a-08244a00f2e0f8b2f531535e46828f3f.ssl.cf1.rackcdn.com/V1~f978f816bc7136cda26b15d1819530ce~XoOzFSRdS_K1wcBaxeOm2Q==~1600"
+    }, {
+      "type": "thumbnail",
+      "value": ""
+    }]
+  }
+}

@@ -4,7 +4,12 @@ describe('Squared Add & Entitle User Flows', function () {
   var inputEmail = utils.randomTestGmail();
   var adminEmail = 'atlasmapservice+ll1@gmail.com';
 
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
+    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 

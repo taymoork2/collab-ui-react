@@ -8,11 +8,6 @@ var ActivatePage = function () {
   this.sendCodeLink = element(by.id('sendCodeLink'));
   this.testData = element(by.id('testdata'));
 
-  this.expectNewEqp = function () {
-    utils.wait(activate.testData);
-    expect(activate.testData.getAttribute('eqp')).not.toBeNull();
-  };
-
   // setup -- specify deviceUA = '' for web activation
   this.setup = function setup(deviceUA, email) {
     var obj = {

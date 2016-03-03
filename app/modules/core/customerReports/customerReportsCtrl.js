@@ -54,6 +54,7 @@
     var mediaCard = null;
     var mediaData = [];
     vm.mediaQualityStatus = REFRESH;
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
     vm.mediaOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.allCalls')
@@ -109,17 +110,23 @@
 
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
-    vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
     vm.searchMostActive = searchMostActive;
     vm.deviceUpdate = deviceUpdate;
 
+    // Graph data status checks
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
     };
 
     vm.isEmpty = function (tab) {
       return tab === EMPTY;
+    };
+
+    // Controls for Most Active Users Table
+    vm.mostActiveUserSwitch = function () {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resizeCards();
     };
 
     vm.activePage = function (num) {
@@ -181,11 +188,6 @@
       setTimeout(function () {
         $('.cs-card-layout').masonry('layout');
       }, 300);
-    }
-
-    function mostActiveUserSwitch() {
-      vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
     }
 
     function resetCards(filter) {

@@ -35,6 +35,7 @@
     vm.clusterLength = clusterLength;
     vm.showClusterDetails = showClusterDetails;
     vm.addResourceButtonClicked = addResourceButtonClicked;
+    vm.clusterList = [];
 
     vm.clusterListGridOptions = {
       data: 'med.aggregatedClusters',
@@ -83,10 +84,18 @@
     function clustersUpdated() {
       //ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
       $log.log("clustersUpdated :");
-      vm.clusters = _.values(MediaClusterService.getClusters());
-      $log.log("clustersUpdated clusters :", vm.clusters);
-      vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters(vm.clusters));
-      $log.log("clustersUpdated aggregatedClusters :", vm.aggregatedClusters);
+
+      MediaClusterService.getGroups().then(function (group) {
+        // vm.groups = group;
+        vm.clusterList = [];
+        _.each(group, function (group) {
+          vm.clusterList.push(group.name);
+        });
+        vm.clusters = _.values(MediaClusterService.getClusters());
+        //$log.log("clustersUpdated clusters :", vm.clusters);
+        vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters(vm.clusters, vm.clusterList));
+        //$log.log("clustersUpdated aggregatedClusters :", vm.aggregatedClusters);
+      });
 
     }
 
@@ -177,7 +186,7 @@
   }
 
   /* @ngInject */
-  function AlarmController($stateParams) {
+  function MediaAlarmController($stateParams) {
     var vm = this;
     vm.alarm = $stateParams.alarm;
     vm.host = $stateParams.host;
@@ -215,5 +224,5 @@
     .module('Mediafusion')
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
-    .controller('AlarmController', AlarmController);
+    .controller('MediaAlarmController', MediaAlarmController);
 }());

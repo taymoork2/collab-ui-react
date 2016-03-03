@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
+
   /* @ngInject */
   function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService, $timeout) {
     var vm = this;
@@ -9,46 +13,44 @@
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
+    vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
     var wasUpgrading = false;
-    var promise;
+    var promise = null;
     $scope.$watch(function () {
-      return ClusterService.getClustersById(vm.clusterId);
+      return ClusterService.getCluster(vm.serviceType, vm.clusterId);
     }, function (newValue, oldValue) {
       vm.cluster = newValue;
-      // for shorter 'variables' in the HTML
-      vm.clusterAggregates = vm.cluster.aggregates[vm.serviceType];
-      var provisioning = _.find(vm.cluster.provisioning, 'connectorType', vm.serviceType);
+      var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
       vm.softwareUpgrade = {
-        provisionedVersion: provisioning.provisionedVersion,
-        availableVersion: provisioning.availableVersion,
-        isUpgradeAvailable: provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
-        numberOfHosts: _.size(vm.clusterAggregates.hosts),
-        isUpgrading: vm.clusterAggregates.upgradeState === 'upgrading'
+        provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
+        availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
+        isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
+        numberOfHosts: _.size(vm.cluster.aggregates.hosts)
       };
 
-      if (vm.softwareUpgrade.isUpgrading) {
+      if (isUpgrading) {
         vm.fakeUpgrade = false;
-        var pendingHosts = _.chain(vm.clusterAggregates.hosts)
+        var pendingHosts = _.chain(vm.cluster.aggregates.hosts)
           .filter('upgradeState', 'pending')
           .value();
         vm.upgradeDetails = {
-          numberOfUpsmthngHosts: _.size(vm.clusterAggregates.hosts) - pendingHosts.length,
-          upgradingHostname: findUpgradingHostname(vm.clusterAggregates.hosts)
+          numberOfUpsmthngHosts: _.size(vm.cluster.aggregates.hosts) - pendingHosts.length,
+          upgradingHostname: findUpgradingHostname(vm.cluster.aggregates.hosts)
         };
       }
 
       // If the upgrade is finished, display the success status during 2s
-      vm.upgradeJustFinished = wasUpgrading && !vm.softwareUpgrade.isUpgrading;
+      vm.upgradeJustFinished = wasUpgrading && !isUpgrading;
       if (vm.upgradeJustFinished) {
         promise = $timeout(function () {
           vm.showUpgradeProgress = false;
         }, 2000);
       }
-      vm.showUpgradeProgress = vm.fakeUpgrade || vm.softwareUpgrade.isUpgrading || vm.upgradeJustFinished;
+      vm.showUpgradeProgress = vm.fakeUpgrade || isUpgrading || vm.upgradeJustFinished;
 
-      wasUpgrading = vm.softwareUpgrade.isUpgrading || vm.fakeUpgrade;
+      wasUpgrading = isUpgrading || vm.fakeUpgrade;
     }, true);
 
     vm.upgrade = function () {
@@ -81,12 +83,12 @@
     };
 
     function findUpgradingHostname(hostnames) {
-      var upgrading = _.chain(vm.clusterAggregates.hosts)
+      var upgrading = _.chain(vm.cluster.aggregates.hosts)
         .find('upgradeState', 'upgrading')
         .value();
-      // if we are in bad luck we may have none upgrading, just pending
+      // if we are unlucky we may have none upgrading, just pending
       if (!upgrading) {
-        upgrading = _.chain(vm.clusterAggregates.hosts)
+        upgrading = _.chain(vm.cluster.aggregates.hosts)
           .find('upgradeState', 'pending')
           .value();
       }
@@ -109,8 +111,4 @@
       $modalInstance.dismiss();
     };
   }
-
-  angular
-    .module('Hercules')
-    .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 }());

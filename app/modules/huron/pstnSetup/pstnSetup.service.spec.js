@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: PstnSetupService', function () {
-  var $httpBackend, HuronConfig, PstnSetupService;
+  var $httpBackend, HuronConfig, PstnSetupService, PstnSetup;
 
   var customerId = '744d58c5-9205-47d6-b7de-a176e3ca431f';
   var partnerId = '4e2befa3-9d82-4fdf-ad31-bb862133f078';
@@ -24,19 +24,8 @@ describe('Service: PstnSetupService', function () {
     lastName: "myLastName",
     email: "myEmail",
     pstnCarrierId: carrierId,
-    resellerId: partnerId,
-    billingAddress: {
-      "billingName": "Cisco Systems",
-      "billingStreetNumber": "2200",
-      "billingStreetDirectional": "E",
-      "billingStreetName": "President George Bush",
-      "billingStreetSuffix": "Hwy",
-      "billingAddressSub": "",
-      "billingCity": "Richardson",
-      "billingState": "TX",
-      "billingZip": "75082"
-    },
-    numbers: numbers
+    numbers: numbers,
+    trial: true
   };
 
   var updatePayload = {
@@ -62,10 +51,11 @@ describe('Service: PstnSetupService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_) {
+  beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_, _PstnSetup_) {
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     PstnSetupService = _PstnSetupService_;
+    PstnSetup = _PstnSetup_;
   }));
 
   afterEach(function () {
@@ -73,9 +63,7 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should create a customer', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
-
+  function createCustomer() {
     PstnSetupService.createCustomer(
       customerPayload.uuid,
       customerPayload.name,
@@ -86,6 +74,22 @@ describe('Service: PstnSetupService', function () {
       customerPayload.numbers
     );
     $httpBackend.flush();
+  }
+
+  it('should create a customer', function () {
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
+
+    createCustomer();
+  });
+
+  it('should create a customer with a reseller', function () {
+    PstnSetup.setResellerExists(true);
+    var customerResellerPayload = angular.copy(customerPayload);
+    customerResellerPayload.resellerId = partnerId;
+
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerResellerPayload).respond(201);
+
+    createCustomer();
   });
 
   it('should update a customer\'s carrier', function () {
@@ -147,6 +151,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should list pending orders', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
     var promise = PstnSetupService.listPendingOrders(customerId);
     promise.then(function (orderList) {
       expect(angular.equals(orderList, customerOrderList)).toEqual(true);
@@ -165,6 +170,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should list pending numbers', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PSTN').respond(customerOrderList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders?status=PENDING&type=PORT').respond([]);
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders/' + orderId).respond(customerOrder);
     var promise = PstnSetupService.listPendingNumbers(customerId, 'INTELEPEER');
     promise.then(function (numbers) {

@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DummyReportService, Authinfo) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -39,6 +39,7 @@
     vm.showMostActiveUsers = false;
     vm.activeUserDescription = "";
     vm.mostActiveDescription = "";
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
 
     vm.customerOptions = [];
     vm.customerSelected = null;
@@ -59,46 +60,6 @@
     var callMetrics = null;
     var mediaQuality = null;
 
-    function resizeCards() {
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 300);
-    }
-
-    function showHideCards(filter) {
-      var engagementElems = [activeUsers, regEndpoints, userPopulation];
-      var qualityElems = [callMetrics, mediaQuality];
-      if (filter === 'all') {
-        if (!vm.showEngagement) {
-          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
-          vm.showEngagement = true;
-        }
-        if (!vm.showQuality) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          vm.showQuility = true;
-        }
-      } else if (filter === 'engagement') {
-        if (vm.showQuality === true) {
-          $('.cs-card-layout').masonry('remove', qualityElems);
-          vm.showQuality = false;
-        }
-        if (vm.showEngagement === false) {
-          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          vm.showEngagement = true;
-        }
-      } else if (filter === 'quality') {
-        if (vm.showQuality === false) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          vm.showQuality = true;
-        }
-        if (vm.showEngagement === true) {
-          $('.cs-card-layout').masonry('remove', engagementElems);
-          vm.showEngagement = false;
-        }
-      }
-      resizeCards();
-    }
-
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week'),
@@ -114,29 +75,23 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    vm.openCloseMostActive = function () {
-      vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
-    };
-
-    vm.customersSet = function () {
-      return vm.customerSelected === null;
-    };
-
-    vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
-    };
-
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
-    };
-
+    // Graph data status checks
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
     };
 
     vm.isEmpty = function (tab) {
       return tab === EMPTY;
+    };
+
+    // Controls for Most Active Users Table
+    vm.openCloseMostActive = function () {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resizeCards();
+    };
+
+    vm.activePage = function (num) {
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.mostActiveSort = function (num) {
@@ -152,24 +107,24 @@
       }
     };
 
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
       }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
+      vm.activeUserCurrentPage = num;
+      resizeCards();
+    };
+
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
     };
 
     vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
-      }
-      if (vm.activeUserCurrentPage !== 1) {
+      if (vm.activeUserCurrentPage > 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
     };
@@ -229,9 +184,54 @@
       vm.endpointRefresh = EMPTY;
     }
 
+    function resizeCards() {
+      setTimeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 300);
+    }
+
+    function showHideCards(filter) {
+      var engagementElems = [activeUsers, regEndpoints, userPopulation];
+      var qualityElems = [callMetrics, mediaQuality];
+      if (filter === 'all') {
+        if (!vm.showEngagement) {
+          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          vm.showEngagement = true;
+        }
+        if (!vm.showQuality) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuility = true;
+        }
+      } else if (filter === 'engagement') {
+        if (vm.showQuality === true) {
+          $('.cs-card-layout').masonry('remove', qualityElems);
+          vm.showQuality = false;
+        }
+        if (vm.showEngagement === false) {
+          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          vm.showEngagement = true;
+        }
+      } else if (filter === 'quality') {
+        if (vm.showQuality === false) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuality = true;
+        }
+        if (vm.showEngagement === true) {
+          $('.cs-card-layout').masonry('remove', engagementElems);
+          vm.showEngagement = false;
+        }
+      }
+      resizeCards();
+    }
+
     function updateCustomerFilter(orgsData) {
       var customers = [];
       // add all customer names to the customerOptions list
+      customers.push({
+        value: Authinfo.getOrgId(),
+        label: Authinfo.getOrgName(),
+        isAllowedToManage: true
+      });
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
@@ -244,15 +244,7 @@
         return a.label.localeCompare(b.label);
       });
 
-      if (vm.customerOptions[0] !== null && vm.customerOptions[0] !== undefined) {
-        vm.customerSelected = vm.customerOptions[0];
-      } else {
-        vm.customerSelected = {
-          value: 0,
-          label: "",
-          isAllowedToManage: false
-        };
-      }
+      vm.customerSelected = vm.customerOptions[0];
       resizeCards();
     }
 
@@ -271,18 +263,19 @@
     }
 
     function setActiveUserGraph(data) {
-      if (activeUsersChart === null || activeUsersChart === undefined) {
-        activeUsersChart = GraphService.createActiveUsersGraph(data);
-      } else {
-        GraphService.updateActiveUsersGraph(data, activeUsersChart);
+      var tempActiveUsersChart = GraphService.getActiveUsersGraph(data, activeUsersChart);
+      if (angular.isDefined(tempActiveUsersChart) && tempActiveUsersChart) {
+        activeUsersChart = tempActiveUsersChart;
+        resizeCards();
       }
+      activeUsers = document.getElementById('activeUser');
     }
 
     function setActivePopulationGraph(data, overallPopulation) {
-      if (activeUserPopulationChart === null || activeUserPopulationChart === undefined) {
-        activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(data, overallPopulation);
-      } else {
-        GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+      var tempActivePopChart = GraphService.getActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
+      if (angular.isDefined(tempActivePopChart) && tempActivePopChart) {
+        activeUserPopulationChart = tempActivePopChart;
+        resizeCards();
       }
       userPopulation = document.getElementById('userPopulation');
     }
@@ -290,32 +283,17 @@
     function getActiveUserReports() {
       return PartnerReportService.getActiveUserData(vm.customerSelected, vm.timeSelected).then(function (response) {
         if (response.tableData !== ABORT && response.graphData !== ABORT) {
-          setActiveUserGraph(response.graphData);
-          setActivePopulationGraph(response.populationGraph, response.overallPopulation);
-
           vm.mostActiveUsers = [];
-          if (vm.customerSelected.isAllowedToManage && angular.isDefined(response.tableData)) {
-            vm.mostActiveUsers = response.tableData;
-          }
-
           vm.displayMostActive = false;
-          if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
-            vm.displayMostActive = true;
-          }
-
-          if (vm.mostActiveUsers !== undefined && vm.mostActiveUsers !== null) {
-            var totalUsers = vm.mostActiveUsers.length;
-            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
-          } else {
-            vm.activeUsersTotalPages = 0;
-          }
+          vm.activeUsersTotalPages = 0;
           vm.activeUserCurrentPage = 1;
           vm.activeButton = [1, 2, 3];
           vm.activeUserPredicate = activeUsersSort[4];
-
-          vm.activeUsersRefresh = SET;
-          if (response.graphData.length === 0) {
-            vm.activeUsersRefresh = EMPTY;
+          if (angular.isArray(response.tableData) && (response.tableData.length > 0)) {
+            vm.mostActiveUsers = response.tableData;
+            vm.displayMostActive = true;
+            var totalUsers = vm.mostActiveUsers.length;
+            vm.activeUsersTotalPages = Math.ceil(totalUsers / 5);
           }
 
           vm.mostActiveDescription = $translate.instant('activeUsers.mostActiveDescription', {
@@ -323,23 +301,27 @@
             customer: vm.customerSelected.label
           });
 
+          vm.activeUsersRefresh = EMPTY;
           vm.activeUserPopulationRefresh = EMPTY;
-          if (response.populationGraph.length !== 0) {
-            vm.activeUserPopulationRefresh = SET;
-            resizeCards();
+          if (response.graphData.length > 0) {
+            vm.activeUsersRefresh = SET;
+            setActiveUserGraph(response.graphData);
+            if (response.populationGraph.length > 0) {
+              setActivePopulationGraph(response.populationGraph, response.overallPopulation);
+              vm.activeUserPopulationRefresh = SET;
+            }
           }
         }
-        activeUsers = document.getElementById('activeUser');
         resizeCards();
         return;
       });
     }
 
     function setMediaQualityGraph(data) {
-      if (mediaQualityChart === null || mediaQualityChart === undefined) {
-        mediaQualityChart = GraphService.createMediaQualityGraph(data);
-      } else {
-        GraphService.updateMediaQualityGraph(data, mediaQualityChart);
+      var tempMediaChart = GraphService.getMediaQualityGraph(data, mediaQualityChart);
+      if (angular.isDefined(tempMediaChart) && tempMediaChart !== null) {
+        mediaQualityChart = tempMediaChart;
+        resizeCards();
       }
       mediaQuality = document.getElementById('mediaQuality');
     }
@@ -349,11 +331,9 @@
         if (response !== ABORT) {
           setMediaQualityGraph(response);
 
-          if (response.length === 0) {
-            vm.mediaQualityRefresh = EMPTY;
-          } else {
+          vm.mediaQualityRefresh = EMPTY;
+          if (response.length > 0) {
             vm.mediaQualityRefresh = SET;
-            resizeCards();
           }
         }
         return;
@@ -361,10 +341,10 @@
     }
 
     function setCallMetricsGraph(data) {
-      if (callMetricsDonutChart === null || callMetricsDonutChart === undefined) {
-        callMetricsDonutChart = DonutChartService.createCallMetricsDonutChart(data);
-      } else {
-        DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
+      var tempMetricsChart = GraphService.getCallMetricsDonutChart(data, callMetricsDonutChart);
+      if (angular.isDefined(tempMetricsChart) && tempMetricsChart !== null) {
+        callMetricsDonutChart = tempMetricsChart;
+        resizeCards();
       }
       callMetrics = document.getElementById('callMetrics');
     }
@@ -374,14 +354,12 @@
         if (response !== ABORT) {
           setCallMetricsGraph(response);
 
-          if (angular.isArray(response) && response.length === 0) {
-            vm.callMetricsRefresh = EMPTY;
-          } else {
+          vm.callMetricsRefresh = EMPTY;
+          if (angular.isArray(response.dataProvider) && response.dataProvider.length > 0) {
             vm.callMetricsRefresh = SET;
-            resizeCards();
           }
+          resizeCards();
         }
-        return;
       });
     }
 

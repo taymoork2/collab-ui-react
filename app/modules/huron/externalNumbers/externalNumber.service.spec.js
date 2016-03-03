@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: PstnSetupService', function () {
+describe('Service: ExternalNumberService', function () {
   var $rootScope, $q, ExternalNumberService, PstnSetupService, ExternalNumberPool, FeatureToggleService;
   var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers;
   var customerId, externalNumber;
@@ -64,7 +64,7 @@ describe('Service: PstnSetupService', function () {
   it('should only retrieve external numbers if feature is disabled', function () {
     FeatureToggleService.supportsPstnSetup.and.returnValue($q.when(false));
 
-    var promise = ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual(externalNumbers);
@@ -73,7 +73,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should refresh numbers', function () {
-    var promise = ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual(allNumbers);
@@ -81,9 +81,23 @@ describe('Service: PstnSetupService', function () {
     expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedNumbers);
   });
 
+  it('should get unassigned numbers that aren\'t pending', function () {
+    var unassignedAndPendingNumbers = unassignedNumbers.concat(pendingNumbers);
+    var externalNumbers = unassignedAndPendingNumbers.concat(assignedNumbers);
+    ExternalNumberPool.getAll.and.returnValue($q.when(externalNumbers));
+
+    ExternalNumberService.refreshNumbers();
+
+    $rootScope.$apply();
+    expect(ExternalNumberService.getAllNumbers()).toEqual(allNumbers);
+    expect(ExternalNumberService.getPendingNumbers()).toEqual(pendingNumbers);
+    expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedAndPendingNumbers);
+    expect(ExternalNumberService.getUnassignedNumbersWithoutPending()).toEqual(unassignedNumbers);
+  });
+
   it('should clear numbers on pending error', function () {
     PstnSetupService.listPendingNumbers.and.returnValue($q.reject({}));
-    var promise = ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual([]);
@@ -95,7 +109,7 @@ describe('Service: PstnSetupService', function () {
     PstnSetupService.listPendingNumbers.and.returnValue($q.reject({
       status: 404
     }));
-    var promise = ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual(externalNumbers);
@@ -105,7 +119,7 @@ describe('Service: PstnSetupService', function () {
 
   it('should clear numbers on external number error', function () {
     ExternalNumberPool.getAll.and.returnValue($q.reject({}));
-    var promise = ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual([]);

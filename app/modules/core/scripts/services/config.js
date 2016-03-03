@@ -1098,7 +1098,7 @@ angular.module('Core')
         Full_Admin: [
           'overview',
           'domainmanagement',
-          'drLoginForward',
+          'dr-login-forward',
           'users',
           'user-overview',
           'userprofile',
@@ -1111,7 +1111,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'cdrsupport',
+          'cdr-overview',
+          'cdrladderdiagram',
+          'activateProduct'
         ],
         Readonly_Admin: [
           'overview',
@@ -1126,10 +1130,11 @@ angular.module('Core')
           'customerprofile',
           'support',
           'editService',
-          'trialExtInterest'
+          'trialExtInterest',
+          'activateProduct'
         ],
-        Support: ['support', 'reports', 'billing', 'devReports'],
-        WX2_User: ['overview', 'reports', 'support', 'devReports'],
+        Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+        WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
         WX2_Support: ['overview', 'reports', 'support', 'devReports'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
@@ -1168,9 +1173,6 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport',
-          'cdr-overview',
-          'cdrladderdiagram',
           'devices',
           'device-overview',
           'devices-redux'
@@ -1230,9 +1232,7 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service',
-          'cdrsupport',
-          'cdr-overview'
+          'management-service'
         ]
       };
 

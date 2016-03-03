@@ -71,19 +71,6 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(controller.trialUsedPercentage).toEqual(56);
     });
 
-    describe('Multiple Subscriptions should be defined correctly', function () {
-
-      it('should define subscriptions correctly', function () {
-        expect(controller.multiSubscriptions.oneBilling).toEqual(false);
-        expect(controller.multiSubscriptions.options).toEqual(['SubRef101478', 'SubC2015100901', 'SubRef500522', '']);
-        expect(controller.multiSubscriptions.selected).toEqual('SubRef101478');
-      });
-
-      it('should verify there is a trial subscription', function () {
-        expect(controller.showMultiSubscriptions('', true)).toEqual(true);
-      });
-    });
-
   });
 
 });

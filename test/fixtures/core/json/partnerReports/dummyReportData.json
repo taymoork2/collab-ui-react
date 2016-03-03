@@ -142,11 +142,13 @@
   },
   "callMetrics": {
     "dataProvider": [{
-      "callCondition": "Fail",
-      "numCalls": "200"
+      "label": "callMetrics.callConditionFail",
+      "value": "200",
+      "color": "#ECECEC"
     }, {
-      "callCondition": "Successful",
-      "numCalls": "800"
+      "label": "callMetrics.callConditionSuccessful",
+      "value": "800",
+      "color": "#F3F3F3"
     }],
     "labelData": {
       "numTotalCalls": 1000,
@@ -355,7 +357,8 @@
     "percentage": 85,
     "colorOne": "#F3F3F3",
     "colorTwo": "#ECECEC",
-    "balloon": false
+    "balloon": false,
+    "labelColorField": "#ccc"
   }],
   "activeUser": {
     "one": [{

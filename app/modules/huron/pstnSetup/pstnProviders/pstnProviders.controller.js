@@ -46,30 +46,42 @@
       PstnSetup.setProvider(provider || {});
     }
 
+    function catchNotFound(response) {
+      if (_.get(response, 'status') !== 404) {
+        return $q.reject(response);
+      }
+    }
+
+    function initCustomer(customer) {
+      PstnSetup.setIsTrial(_.get(customer, 'trial', false));
+      PstnSetup.setCustomerExists(true);
+    }
+
     function initCarriers() {
       // lookup customer carriers
-      return PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
+      return PstnSetupService.getCustomer(PstnSetup.getCustomerId())
+        .then(initCustomer)
+        .then(_.partial(PstnSetupService.listCustomerCarriers, PstnSetup.getCustomerId()))
         .then(function (carriers) {
-          PstnSetup.setCustomerExists(true);
           if (_.isArray(carriers) && carriers.length > 0) {
             PstnSetup.setCarrierExists(true);
           }
           return carriers;
         })
-        // if no customer or reseller error, rethrow
-        .catch(function (response) {
-          if (response && response.status !== 404) {
-            return $q.reject(response);
-          }
-        })
+        .catch(catchNotFound)
         // if none, lookup reseller carriers
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
             return carriers;
           } else {
-            return PstnSetupService.listResellerCarriers();
+            return PstnSetupService.listResellerCarriers()
+              .then(function (carriers) {
+                PstnSetup.setResellerExists(true);
+                return carriers;
+              });
           }
         })
+        .catch(catchNotFound)
         // if none, lookup default carriers
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
@@ -79,12 +91,8 @@
           }
         })
         // process carriers
-        .then(function (carriers) {
-          _.forEach(carriers, initCarrier);
-        })
-        .catch(function (response) {
-          Notification.errorResponse(response, 'pstnSetup.carrierListError');
-        });
+        .then(_.partialRight(_.forEach, initCarrier))
+        .catch(_.partialRight(Notification.errorResponse, 'pstnSetup.carrierListError'));
     }
 
     function processSelectedProviders() {

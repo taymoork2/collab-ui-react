@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, Authinfo, Config, HuronConfig, Userservice, UserListService, UserServiceVoice;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, Config, HuronConfig, Userservice, UserListService, UserServiceVoice;
   var $rootScope, $scope, $translate;
 
   var aaModel = {
@@ -15,6 +15,14 @@ describe('Controller: AARouteToUserCtrl', function () {
       name: 'AA2'
     }
   };
+
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", Authinfo);
+  }));
 
   var completeUserCisResponse = {
     "userName": "dudette@gmail.com",
@@ -42,6 +50,7 @@ describe('Controller: AARouteToUserCtrl', function () {
 
   var cmiCompleteUserGet;
   var cmiNotSoCompleteUserGet;
+  var cmiExtensionInfoGet;
 
   var directoryCmiResponse = {
     "firstName": "firstName",
@@ -119,9 +128,9 @@ describe('Controller: AARouteToUserCtrl', function () {
     }]
   };
 
-  var userListCmiResponse = {
-    "totalResults": "2213",
-    "itemsPerPage": "10",
+  var userListCISResponse = {
+    "totalResults": "3",
+    "itemsPerPage": "2",
     "startIndex": "1",
     "schemas": [
       "urn:scim:schemas:core:1.0",
@@ -180,6 +189,60 @@ describe('Controller: AARouteToUserCtrl', function () {
       "avatarSyncEnabled": false
     }],
     "success": true
+  };
+
+  var userListCISResponse2 = {
+    "totalResults": "3",
+    "itemsPerPage": "1",
+    "startIndex": "3",
+    "schemas": [
+      "urn:scim:schemas:core:1.0",
+      "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+    ],
+    "Resources": [{
+      "userName": "dudette@gmail.com",
+      "name": {
+        "givenName": "some",
+        "familyName": "user"
+      },
+      "entitlements": [
+        "ciscouc",
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "id": "47026507-4F83-0B5B-9C1D-8DBA89F2E01C",
+      "meta": {
+        "created": "2015-11-16T16:40:54.084Z",
+        "lastModified": "2016-01-06T18:06:47.999Z",
+        "version": "19382735439",
+        "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
+        "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
+      },
+      "displayName": "Super Admin",
+      "active": true,
+      "licenseID": [
+        "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
+      ],
+      "avatarSyncEnabled": false
+    }],
+    "success": true
+  };
+
+  var userListEmptyCISResponse = {
+    "totalResults": "3",
+    "itemsPerPage": "0",
+    "startIndex": "4",
+    "schemas": [
+      "urn:scim:schemas:core:1.0",
+      "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+    ],
+    "Resources": [],
+    "success": true
+  };
+
+  var userListFailedCISResponse = {
+    "success": false
   };
 
   var listUsersProps = {
@@ -262,6 +325,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
+
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
@@ -271,7 +335,25 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&count=' + listUsersProps.count +
       '&sortBy=' + listUsersProps.sortBy +
       '&sortOrder=' + listUsersProps.sortOrder;
-    $httpBackend.whenGET(listUsersUrl).respond(200, userListCmiResponse);
+    $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
+
+    var listUsersUrl2 = Config.getScimUrl(Authinfo.getOrgId()) +
+      '?' + '&' + listUsersProps.attributes +
+      '&' + listUsersProps.filter +
+      '&startIndex=10' +
+      '&count=' + listUsersProps.count +
+      '&sortBy=' + listUsersProps.sortBy +
+      '&sortOrder=' + listUsersProps.sortOrder;
+    $httpBackend.whenGET(listUsersUrl2).respond(200, userListCISResponse2);
+
+    var listUsersUrl3 = Config.getScimUrl(Authinfo.getOrgId()) +
+      '?' + '&' + listUsersProps.attributes +
+      '&' + listUsersProps.filter +
+      '&startIndex=20' +
+      '&count=' + listUsersProps.count +
+      '&sortBy=' + listUsersProps.sortBy +
+      '&sortOrder=' + listUsersProps.sortOrder;
+    $httpBackend.whenGET(listUsersUrl3).respond(200, userListEmptyCISResponse);
 
     // user with all props including display name and extension
     var userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
@@ -285,17 +367,43 @@ describe('Controller: AARouteToUserCtrl', function () {
     cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
     cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);
 
+    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + "/voice/customers/directorynumbers?order=pattern-asc&pattern=2252";
+    var cmiExtensionInfo = [{
+      "pattern": "5801",
+      "description": "",
+      "voiceMailProfile": {
+        "uuid": "e733741a-a7e2-4ab5-894f-81df6feaa56c",
+        "name": "dec55d7a-9d08-4a12-a9a7-052939c29ae0_000001_VMProf"
+      }
+    }];
+    cmiExtensionInfoGet = $httpBackend.whenGET(cmiDirectoryNumberUrl);
+    cmiExtensionInfoGet.respond(200, cmiExtensionInfo);
+
   }));
 
   describe('AARouteToUser', function () {
 
-    it('should be able to create new user entry', function () {
+    it('should be able to create new route to user entry', function () {
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope
       });
 
       expect(controller).toBeDefined();
       expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToUser');
+      expect(controller.menuKeyEntry.actions[0].value).toEqual('');
+
+    });
+
+    it('should be able to create new route to voicemail entry', function () {
+
+      $scope.voicemail = true;
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller).toBeDefined();
+      expect(controller.menuKeyEntry.actions[0].name).toEqual('routeToVoiceMail');
       expect(controller.menuKeyEntry.actions[0].value).toEqual('');
 
     });
@@ -309,6 +417,8 @@ describe('Controller: AARouteToUserCtrl', function () {
       var nameNumber1 = users[0].displayName.concat(' (')
         .concat(users[0].extension).concat(')');
 
+      controller.sort.minOffered = 1;
+
       controller.getUsers();
 
       $httpBackend.flush();
@@ -321,16 +431,71 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
+    it('should keep querying CIS if minimum number of users are not available in a single query', function () {
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      // there are 3 users across the mocked CIS calls, but remember 1 user is a bad user
+      expect(controller.users.length).toEqual(2);
+
+    });
+
+    it('should filter voicemail users correctly in successful case', function () {
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      $scope.voicemail = true;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      // there are 3 users across the mocked CIS calls, but remember 1 user is a bad user
+      expect(controller.users.length).toEqual(2);
+
+    });
+
+    it('should filter voicemail users when voicemail profile query returns 404', function () {
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      $scope.voicemail = true;
+      cmiExtensionInfoGet.respond(404);
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      // the 404 should mean all users don't have a voicemail profile
+      expect(controller.users.length).toEqual(0);
+
+    });
+
     it('should format name with error on extension correctly', function () {
 
-      cmiCompleteUserGet.respond(404);
+      cmiCompleteUserGet.respond(500);
 
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope
       });
 
-      // just the display name when no extension found (404)
+      // just the display name when it's unclear if user has extension due to CMI error (non-404)
       var nameNumber = users[0].displayName;
+
+      controller.sort.minOffered = 1;
 
       controller.getUsers();
 
@@ -342,9 +507,54 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
+    it('should omit user with 404 on extension', function () {
+
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      controller.sort.minOffered = 0;
+
+      controller.getUsers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(controller.users.length).toEqual(0);
+
+    });
+
     describe('activate', function () {
-      it('should read and display an existing entry', function () {
+      it('should read and display an existing route to user entry', function () {
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', users[0].id);
+
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(actionEntry);
+        aaUiModel[schedule].entries[0].addEntry(menuEntry);
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        // user with both display name and extension should have both
+        var nameNumber1 = users[0].displayName.concat(' (')
+          .concat(users[0].extension).concat(')');
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.userSelected.id).toEqual(users[0].id);
+        expect(controller.userSelected.description).toEqual(nameNumber1);
+
+      });
+
+      it('should read and display an existing route to voicemail entry', function () {
+        var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('routeToVoiceMail', users[0].id);
+
+        $scope.voicemail = true;
 
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
@@ -393,8 +603,39 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    describe('saveUiModel', function () {
-      it('should write UI entry back into UI model', function () {
+    describe('populateUi', function () {
+
+      it('should write UI entry back into UI model via populateUiModel', function () {
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        controller.menuKeyEntry.actions[0].value = users[0].id;
+
+        controller.populateUiModel();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.userSelected.id).toEqual(users[0].id);
+
+      });
+
+    });
+    describe('fromRouteCall overwrite', function () {
+      beforeEach(function () {
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dummy', '');
+
+        aaUiModel[schedule].entries[0].addAction(action);
+
+      });
+
+      it('should overwrite user id from model via saveUiModel', function () {
+        $scope.fromRouteCall = true;
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope
@@ -404,12 +645,47 @@ describe('Controller: AARouteToUserCtrl', function () {
           name: users[0].displayName,
           id: users[0].id
         };
+
         controller.saveUiModel();
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(users[0].id);
+        expect(controller.menuEntry.actions[0].value).toEqual(users[0].id);
       });
+      it('should be able to create new User entry from Route Call', function () {
+        $scope.fromRouteCall = true;
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
+        expect(controller.menuEntry.actions[0].value).toEqual('');
+
+      });
+    });
+
+    describe('fromRouteCall', function () {
+      beforeEach(function () {
+        $scope.fromRouteCall = true;
+
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+        aaUiModel[schedule].entries[0].actions = [];
+
+      });
+
+      it('should be able to create new User entry from Route Call', function () {
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        expect(controller.menuEntry.actions[0].name).toEqual('routeToUser');
+        expect(controller.menuEntry.actions[0].value).toEqual('');
+
+      });
+
     });
 
   });

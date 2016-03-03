@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, $window, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService, TrialDeviceService, TrialPstnService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -27,6 +27,7 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.pstnTrial = vm.trialData.trials.pstnTrial;
 
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
@@ -54,11 +55,19 @@
       'name': 'trialEdit.addNumbers',
       'trials': [vm.callTrial],
       'enabled': true,
+    }, {
+      'name': 'trialEdit.pstn',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialEdit.emergAddress',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -131,7 +140,7 @@
         class: 'columns medium-12',
       },
       'hideExpression': function () {
-        return !vm.hasCallEntitlement();
+        return !vm.hasCallEntitlement;
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -210,7 +219,7 @@
       }
     }];
 
-    vm.hasCallEntitlement = Authinfo.isSquaredUC;
+    vm.hasCallEntitlement = Authinfo.isSquaredUC();
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
@@ -219,6 +228,7 @@
     vm.editTrial = editTrial;
     vm.isProceedDisabled = isProceedDisabled;
     vm.getDaysLeft = getDaysLeft;
+    vm.launchCustomerPortal = launchCustomerPortal;
     vm.showDefaultFinish = showDefaultFinish;
     vm._helpers = {
       hasEnabled: hasEnabled,
@@ -238,25 +248,24 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials)
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
         vm.meetingTrial.enabled = results[1] && vm.preset.meeting;
         vm.showMeeting = results[1];
         vm.supportsPstnSetup = results[2];
-        vm.callTrial.enabled = vm.hasCallEntitlement() && vm.preset.call;
+        vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
+        vm.supportsHuronCallTrials = results[4];
+        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
 
         vm.canSeeDevicePage = results[3];
 
         if (vm.showMeeting) {
           updateTrialService(_messageTemplateOptionId);
         }
-
-        setViewState('trialEdit.call', vm.canSeeDevicePage && results[1]);
-        setViewState('trialEdit.meeting', results[1]);
-        setViewState('trialEdit.addNumbers', !vm.supportsPstnSetup); //only show step if not supportsPstnSetup
       }).finally(function () {
         $scope.$watch(function () {
           return vm.trialData.trials;
@@ -308,12 +317,21 @@
         vm.canEditMeeting = true;
       }
 
+      if (!vm.callTrial.enabled) {
+        vm.pstnTrial.enabled = false;
+      }
+      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+        vm.pstnTrial.enabled = true;
+      }
+
       vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
       vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
 
-      setViewState('trialEdit.call', (hasEnabledRoomSystemTrial() || hasEnabledCallTrial() || canAddDevice()));
+      setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
       setViewState('trialEdit.meeting', hasEnabledMeetingTrial());
+      setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
+      setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
 
       addRemoveStates();
       _.forEach(vm.individualServices, function (service) {
@@ -368,15 +386,20 @@
       }
     }
 
+    /**
+     * Changed to chain and slice the navStates instead of navOrder
+     * so that if you choose to skip a step that you are on
+     * and that state gets removed from the order, the fucntion can
+     * still find the next state and index won't find -1
+     * when trying to find the next one
+     */
     function getNextState() {
-      return _.chain(vm.navStates)
+      return _.chain(vm.navOrder)
         .indexOf($state.current.name)
         .thru(function (index) {
-          return _.slice(vm.navStates, index + 1);
+          return _.slice(vm.navOrder, index + 1);
         })
-        .find(function (state) {
-          return !_.isUndefined(state);
-        })
+        .find(_.partial(_.includes, vm.navStates))
         .value();
     }
 
@@ -423,6 +446,10 @@
                 vm.loading = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
+              }).then(function () {
+                if (vm.pstnTrial.enabled) {
+                  return TrialPstnService.createPstnEntity(vm.customerOrgId);
+                }
               });
           }
         })
@@ -517,6 +544,15 @@
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset);
+    }
+
+    // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
+    function launchCustomerPortal() {
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.currentTrial.customerOrgId,
+        customerOrgName: vm.currentTrial.customerName
+      }));
+      $state.modal.close();
     }
 
     function showDefaultFinish() {

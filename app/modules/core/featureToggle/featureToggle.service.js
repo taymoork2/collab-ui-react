@@ -10,7 +10,7 @@
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
       pstnSetup: 'huron-pstn-setup',
-      csvUpload: 'csvUpload',
+      csvUpload: 'atlas-csv-upload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
@@ -54,6 +54,7 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
+      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCallsTab: 'ios-calls-tab',
@@ -128,21 +129,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
-    };
-
-    var service = {
-      getUrl: getUrl,
-      getFeatureForUser: getFeatureForUser,
-      getFeaturesForUser: getFeaturesForUser,
-      getFeatureForOrg: getFeatureForOrg,
-      getFeaturesForOrg: getFeaturesForOrg,
-      setFeatureToggles: setFeatureToggles,
-      generateFeatureToggleRule: generateFeatureToggleRule,
-      supports: supports,
-      supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload,
-      supportsDirSync: supportsDirSync,
-      features: features,
+      huronCallTrials: 'huron-call-trials'
     };
 
     var toggles = {};
@@ -168,6 +155,21 @@
         cache: true
       }
     });
+
+    var service = {
+      getUrl: getUrl,
+      getFeatureForUser: getFeatureForUser,
+      getFeaturesForUser: getFeaturesForUser,
+      getFeatureForOrg: getFeatureForOrg,
+      getFeaturesForOrg: getFeaturesForOrg,
+      setFeatureToggles: setFeatureToggles,
+      generateFeatureToggleRule: generateFeatureToggleRule,
+      supports: supports,
+      supportsPstnSetup: supportsPstnSetup,
+      supportsCsvUpload: supportsCsvUpload,
+      supportsDirSync: supportsDirSync,
+      features: features
+    };
 
     return service;
 
@@ -273,16 +275,8 @@
 
     function supports(feature) {
       return $q(function (resolve, reject) {
-        //TODO temporary hardcoded checks for huron
-        if (feature === features.csvUpload) {
-          if (Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76' ||
-            Authinfo.getOrgId() === '5c8a3a19-0999-4016-b8e5-d8eb3c12f1f1' ||
-            Authinfo.getOrgId() === '5254c34d-4010-44ce-b719-e45566c6ab1a' ||
-            Authinfo.getOrgId() === '0d45487b-039e-46b8-baf7-3ce9de07e803') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
+        if (feature === features.csvUpload && !Config.isProd()) {
+          resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
@@ -307,7 +301,6 @@
       });
     }
 
-    //TODO temporary
     function supportsPstnSetup() {
       return supports(features.pstnSetup);
     }

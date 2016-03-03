@@ -20,14 +20,14 @@
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
     "emailHeader": "Email",
-    "sipUri": "Cloud SIP URI",
+    "sipUri": "Spark SIP Address",
     "actionHeader": "Actions",
     "invite": "Send Invites",
     "addedHeader": "ADDED",
     "statusHeader": "STATUS/TOOLS",
     "modify": "Modify",
     "existingUsers": "Existing Users",
-    "userInput": "Enter email addresses or group mailers separated by commas.",
+    "userInput": "Enter email addresses separated by commas.",
     "userInputDescription": "For example: John Doe john.doe@example.com, Kate Williams kate.williams@example.com",
     "firstNamePlaceHolder": "First name",
     "lastNamePlaceHolder": "Last name",
@@ -74,7 +74,8 @@
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
-    "hybridServicesError": "{{email}} did not qualify for the selected services",
+    "hybridServicesError": "Unable to perform this operation for some users. Hybrid Services are available for licensed users. Please check the licensing for your users and then try again.",
+    "hybridServicesComboError": "You chose a combination of services (Call Service and Spark Call) that we don't support. Please remove one and try again.",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
@@ -94,7 +95,8 @@
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
-    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain."
+    "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -110,7 +112,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "addUserText": "Who would you like to add?",
-    "userInput": "Enter email addresses or group mailers separated by commas...",
+    "userInput": "Enter email addresses separated by commas.",
     "enableServiceText": "Enable Services",
     "enableCollab": "Enable collaboration services individually",
     "enableCollabGroup": "Enable collaboration services based on group membership",
@@ -150,7 +152,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room",
+    "cmr": "Collaboration Meeting Rooms",
     "result": {
       "200": "entitled successfully",
       "404": "does not exist",
@@ -174,7 +176,7 @@
     "fullAdmin": "Full Admin",
     "generateActivationCode": "Generate Activation Code",
     "generateActivationCodeText": "Generate an Activation Code to enable a new device for this user.",
-    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support.",
+    "generateActivationCodeDesc": "If you have lost your code, please generate a new Activation Code or contact customer support. ",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -364,13 +366,16 @@
     "saveAs": "Save As",
     "allCalls": "All Calls",
     "videoCalls": "Video Calls",
-    "audioCalls": "Audio Only Calls"
+    "audioCalls": "Audio Only Calls",
+    "customer": "Customer",
+    "customers": "Customers",
+    "customerSelect": "Select a customer"
   },
   "activeUsers": {
     "active": "Active",
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
-    "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "activeUserTableError": "There was an error while loading most active user data for the selected customer(s).",
     "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
@@ -385,7 +390,7 @@
     "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
-    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
   "avgRooms": {
@@ -414,7 +419,8 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.",
     "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that registered devices report during calls. Only calls lasting longer than 15 seconds in duration are measured.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "mediaQualityGraphError": "There was an error while loading call quality data for the selected customer(s).",
+    "packetLossDefinition": "When determining call quality, packet loss is calculated as the percentage of lost packets during the call. If the loss ratio is less than 1.5%, then the call is classified as 'Good'.  If the loss ratio is between 1.5% and 3%, then the call is classified as 'Fair'. All remaining calls, where the loss ratio is greater than 3%, are classified as 'Poor'.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
@@ -424,7 +430,7 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
+    "callMetricsChartError": "There was an error while loading call metrics data for the selected customer(s).",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
@@ -441,7 +447,7 @@
     "maxRegisteredDevices": "Devices {{time}} (Min/Max)",
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
-    "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
+    "registeredEndpointsError": "There was an error while loading registered endpoints for the selected customer(s).",
     "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
     "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
@@ -449,7 +455,7 @@
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
     "loadingCustomer": "Sample Customer Data"
@@ -478,7 +484,7 @@
   },
   "supportPage": {
     "title": "Support",
-    "subtitleLogs": "Search for logs",
+    "subtitleLogs": "Search support logs",
     "listlogsbtn": "Search",
     "noResults": "No Results.",
     "searching": "Searching...",
@@ -523,7 +529,7 @@
     "tx": "Tx",
     "errCallInfoQuery": "Failed to retrieve call info. Status: {{status}}",
     "subTitleCallFlow": "Call Flow",
-    "downloading": "This download might take up to 5 minutes. Please be patient...",
+    "downloading": "This download might take up to 5 minutes.",
     "operational": "All systems operational",
     "error": "Error in system",
     "supportResources": "Support Resources",
@@ -540,7 +546,6 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
-    "cdrLogs": "CDR Call Flow",
     "tabs": {
       "status": "Status",
       "logs": "Logs",
@@ -550,7 +555,15 @@
       "sparkStatus": "Spark Status",
       "helpDesk": "Help Desk Support",
       "supportResources": "Support Resources",
-      "tools": "Tools"
+      "tools": {
+        "tools": "Tools",
+        "helpdeskSupport": "Help Desk Support",
+        "viewHelpdeskSupport": "View Help Desk Support",
+        "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+        "cdrLogs": "CDR Call Flow",
+        "viewCdrCallFlow": "View CDR Call Flow",
+        "viewCdrCallFlowDesc": "Open the tool in a new tab"
+      }
     }
   },
   "cdrLogs": {
@@ -578,6 +591,7 @@
     "jsonSizeError": "File size is above the maximum of 10 MB.",
     "jsonTypeError": "Please upload a valid json file.",
     "jsonSyntaxError": "The file contains syntax errors; please fix the errors before resubmitting.",
+    "jsonAllowedFormatError": "The file either does not contain cdrs or is formatted incorrectly.  Please verify the file's contents before resubmitting.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
     "timeStamp": "Time Stamp",
     "callingDeviceName": "Calling Device Name",
@@ -595,6 +609,7 @@
     "cdr408Error": "Request timed out while waiting for a response from Elastic Search. Please try again at a later time.",
     "cdr409Error": "Request failed due to a processing conflict. Please verify the search data and try again.",
     "cdr500Error": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.  Lowering the hit size before retrying may prevent further errors.",
+    "cdr500ShortError": "Elastic Search encountered an internal error. CDR records may be be missing or incomplete as a result.",
     "cdr502And503Error": "Elastic Search is temporarily unavailable. Please try again at a later time.",
     "required": "This field is required.",
     "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
@@ -641,7 +656,12 @@
     "diagramRetrievalError": "Error encountered while retrieving Ladder Diagram from {{server}}.",
     "reload": "Reload",
     "reloadMessage": "Please try reloading the page",
-    "close": "Close"
+    "close": "Close",
+    "401And403Error": "User not authorized to create Ladder Diagram.",
+    "404Error": "Diagnostic Service unable to respond at this time. Please try again at a later time.",
+    "408Error": "Request timed out while waiting for a response from Diagnostic Service. Please try again at a later time.",
+    "500Error": "Diagnostic Service encountered an internal error.",
+    "502And503Error": "Diagnostic Service is temporarily unavailable. Please try again at a later time."
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -730,7 +750,8 @@
     "description": "Description",
     "user": "User",
     "ipAddress": "IP Address",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "postpone": "Postpone"
   },
   "notifications": {
     "success": "Success notifications",
@@ -789,7 +810,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's cloud SIP URI domain is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -1119,11 +1140,11 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
-      "squared-fusion-uc.full": "Call Service: Aware",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service: Connect",
+      "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
@@ -1147,7 +1168,7 @@
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-uc": "Share your desktop with Spark while you are on your work phone.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
       }
@@ -1219,7 +1240,12 @@
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
         "description": "Set the start time to begin upgrades on the connectors.",
-        "defaultWarning": "Confirm the default schedule"
+        "defaultWarning": "Confirm the default schedule",
+        "postponeLabel": "The next available upgrade is scheduled to begin:",
+        "postponeAction": "Postpone schedule",
+        "postponeModalTitle": "Postpone the upgrade",
+        "postponeModalText": "Are you sure you want to postpone the scheduled upgrade to begin:"
+
       }
     },
     "notifications": {
@@ -1242,7 +1268,7 @@
     "downloadError": "There is a problem downloading the file.",
     "downloadHeadersError": "There is a problem downloading the template headers.",
     "uploading": "Uploading...",
-    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "uploadPrompt": "Drag and drop a file or use the",
     "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
@@ -1286,7 +1312,7 @@
     "runDirSyncAgain": "Sync Again",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses.",
-    "uploadSub": "Best method for adding many users at the same time.",
+    "uploadSub": "Best method for adding up to {{maxUsers}} users at a time.",
     "downloadSub": "Download CSV template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
@@ -1316,17 +1342,17 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
-    "setSipUriDescPartOne": "This value creates a domain that is branded with a name of your choosing. It will also generate Spark SIP addresses that will be assigned to your users. These addresses can be used by external SIP capable devices to call your users.",
+    "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
     "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
-    "setSipUriDescPartThree": "We've provided a default value for you in the field.",
+    "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
-    "setSipUriDomainMsg": "Enter a SIP URI domain name",
-    "setSipUriDomainTitle": "Cloud SIP URI Domain",
-    "setSipUriDomainCompNames": "Company's Domain Names",
+    "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
+    "setSipUriDomainTitle": "SIP Domain",
+    "setSipUriDomainCompNames": "Your organization's SIP Domains:",
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "Not available. Please try another name",
-    "setSipUriDomainSuccessMessage": "The SIP URI Domain has been successfully saved",
+    "setSipUriDomainSuccessMessage": "The SIP Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
@@ -1482,21 +1508,32 @@
     "builderTitle": "Auto Attendant Builder",
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
-    "builderNewStepInfo": "You can add actions here to add to your Auto Attendant.  Create as many as you want, and link them all together.",
-    "builderNewStepChoiceHelp": "Say Message - Play an uninterruptible recording to the caller",
+    "builderNewStepHelp": "You can add as many steps to the call flow as you want.",
+    "builderNewStepInfo": "Add actions here for your Auto Attendant. Create as many as you want, and link them all together.",
     "builderNumbers": "Numbers",
     "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
+    "actionSayMessageHint": "Play an uninterruptable message.",
     "actionPhoneMenu": "Phone Menu",
-    "actionRouteCall": "Transfer Call",
+    "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
+    "actionRouteCall": "Route Call",
+    "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
+    "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
+    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
+    "scheduleMissing": "No hours defined. This Auto Attendant will use 24 hour schedule",
+    "scheduleOpenTime": "Open Time",
+    "scheduleClosedTime": "Closed Time",
+    "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
+    "scheduleAddAdditionalHours": "Add Additional Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
+    "routeCallMenuHelp": "Select the appropriate transfer end point",
     "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
@@ -1525,6 +1562,7 @@
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
+    "routeCallPopover": "Select how to route call.",
     "selectPlaceHolder": "Search or Select",
     "selectNumberPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
@@ -1611,7 +1649,12 @@
     "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}.",
-    "routeExtNumPlaceHolder": "Enter Number"
+    "routeExtNumPlaceHolder": "Enter Number",
+    "newAAText": "Create New Auto Attendant",
+    "AABasic": "Basic",
+    "AABasicDesc": "Simple played messages with custom phone menu.",
+    "AACustom": "Custom",
+    "AACustomDesc": "Record a custom message and build your own phone menus."
   },
   "callPark": {
     "code": "CP",
@@ -1746,8 +1789,9 @@
     "useGlobal": "Global Settings",
     "alwaysAllow": "Always Allow",
     "neverAllow": "Never Allow",
-    "on": "ON",
-    "off": "OFF"
+    "on": "On",
+    "off": "Off",
+    "getLicenseIsTrialError": "Failed to get trial state for COMMUNICATION license."
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1761,6 +1805,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "editNumbers": "Edit Phone Numbers",
+    "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
     "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
@@ -1783,6 +1828,10 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "newNumbersTab": "New Numbers",
+    "portNumbersTab": "Port Numbers",
+    "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
+    "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -1798,6 +1847,7 @@
     "numbersTitle": "Numbers",
     "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{{count}} New",
+    "portNumbers": "{{count}} Port",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
@@ -1955,6 +2005,43 @@
     "numbers": {
       "title": "Start New Trial - Add Numbers"
     },
+    "pstn": {
+      "title": "Trial Setup - Call",
+      "pstnProvider": "PSTN Provider",
+      "provider": "Provider",
+      "serviceProvider": "Select your service provider",
+      "phoneNumbers": "Phone Numbers",
+      "pleaseAdd": "Please add phone numbers for the customer",
+      "pleaseAdd10": "Please add up to 10 phone numbers for the customer",
+      "pleaseAdd5": "Please add up to 5 phone numbers for the customer",
+      "state": "State",
+      "areaCode": "Area Code",
+      "numbers": "Numbers",
+      "contract": "PSTN Contract Information",
+      "company": "Legal Company Name",
+      "firstName": "Signee's First Name",
+      "lastName": "Signee's Last Name",
+      "email": "Signee's Email Address",
+      "esa": "Emergency Service Address",
+      "esaDesc": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+      "address": "Address",
+      "unit": "Unit",
+      "city": "City",
+      "zip": "Zip",
+      "skip": "Skip and add numbers later",
+      "popover": "Please provide information on the legal contact who can sign the contract",
+      "addrRetry": "Use a different address",
+      "addrFound": "This is the address found in the system.",
+      "error": {
+        "areaCodes": "Failed to get area codes for selected state",
+        "numbers": "Failed to get numbers for selected area code",
+        "noAddress": "Address was not found",
+        "reserveFail": "Numbers were not reserved",
+        "customerFail": "Customer was not created",
+        "orderFail": "Numbers were not ordered",
+        "siteFail": "Site was not created"
+      }
+    },
     "trialSuccess": "Your trial is ready",
     "nextStepPrompt": "Do you want to setup the services for the customer?",
     "setupLater": "No, thanks",
@@ -1979,10 +2066,10 @@
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
     "expiredMsg": "Your trial has expired.",
     "requestPurchaseMsg": "Do you want to request purchase information?",
-    "requestConfirmMsg": "A purchase request message was sent to {{partnerName}}",
+    "requestConfirmMsg": "A purchase request message was sent to {{partnerAdminDisplayName}}",
     "requestPurchaseBtn": "Request Purchase",
     "requestAgainBtn": "Request Again",
-    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerName}} of your intent to purchase"
+    "requestConfirmNotifyMsg": "Notification has been sent to {{partnerAdminDisplayName}} of your intent to purchase"
   },
 
   "status": {
@@ -2084,8 +2171,7 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "getOrgAccountDetailsError": "Failed to get account details, unable to determine trial status."
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2093,6 +2179,14 @@
     "savePrompt": "Save this address?",
     "saveSuccess": "Emergency Service Address updated successfully.",
     "saveError": "Error occurred updating Emergency Service Address."
+  },
+  "settingsServiceNumber": {
+    "label": "Emergency Service Number",
+    "description": "Alternate emergency contact number that will be used in case the calling device is not assigned an individual's phone number.",
+    "savePrompt": "Save this number?",
+    "saveSuccess": "Emergency Service Number updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Number.",
+    "warning": "Please select a number assinged to a user or Spark Call feature"
   },
   "didManageModal": {
     "buttonText": "Add Numbers",
@@ -2154,8 +2248,8 @@
   "generateActivationCodeModal": {
     "title": "Activation Code",
     "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
-    "emailCode": "Email the code",
-    "copyToClipboard": "Copy to clipboard",
+    "emailCode": "Email",
+    "copyToClipboard": "Copy",
     "print": "Print",
     "send": "Send",
     "to": "To",
@@ -2294,7 +2388,7 @@
       "hosts": "Hosts"
     },
     "activateService": {
-      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "ingress": "Extend the Cloud to your On-Premise Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
     },
@@ -2334,7 +2428,16 @@
       "running": "Running",
       "needs_attention": "Needs attention",
       "alarm": "Alarm",
-      "Unknown": "Registering"
+      "Unknown": "Registering",
+      "nohosts": "No Hosts Registered"
+    },
+    "deleteGroup": {
+      "title": "Delete Cluster",
+      "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
+      "errorHeader": "Unexpected Error",
+      "errorMessage": "Unable delete {{groupName}}.",
+      "keep": "Keep",
+      "delete": "Delete"
     },
     "clusters": {
       "listing": {
@@ -2347,9 +2450,9 @@
       "deregisterHeader": "Confirm Deregistration",
       "deregisterErrorHeader": "Unexpected Error",
       "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
-      "deregisterCausesListItem1": "This system will no longer be accepting any calls.",
+      "deregisterCausesListItem1": "The system will no longer accept any calls.",
       "deregisterCausesListItem2": "The pre-existing calls will continue.",
-      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}.",
+      "defuseAreYouSure": "Are you sure you want to deregister media server {{clusterName}} from organization {{organizationName}}?",
       "defuseCausesListItem1": "The cluster {{groupName}} will be removed from system.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
@@ -2418,7 +2521,8 @@
     "noCluster": "No Media Service Clusters Connected to Spark",
     "close": "Close",
     "reassignCluster": "Reassign to Cluster",
-    "moveHost": "MOVE HOST"
+    "moveHost": "MOVE HOST",
+    "deleteCluster": "DELETE CLUSTER"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -2427,6 +2531,7 @@
     "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
+    "mustHaveAtLeastOneSessionTypeEnabled": "Select at least one session type under each WebEx center.",
     "reload": "Try Again",
     "cancel": "Go Back"
   },
@@ -2527,6 +2632,7 @@
     "defaultProcessError": "Unable to process request.",
     "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
+    "defaultDbMismatchError": "User account changes are being synchronized among the servers. This process may take a while.",
     "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
@@ -2572,7 +2678,7 @@
     "indexPageLabel_SiteInfo_site_info": "Site Information",
     "indexPageLabel_SiteInfo_site_features": "Site Features",
 
-    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Rooms (CMR)",
     "indexPageLabel_CommonSettings_mobile": "Mobile",
     "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
     "indexPageLabel_CommonSettings_scheduler": "Scheduler",
@@ -2784,7 +2890,7 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "Webex Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
+    "CMR": "WebEx Collaboration Meeting Rooms",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
@@ -3189,7 +3295,7 @@
       },
       "circular": {
         "name": "Circular",
-        "desc": "The system keeps a track of which member was sent the previous call. Circular first send tha call to next sequential idle (or available) member."
+        "desc": " Circular first sends the call to next sequential idle (or available) member. The system keeps track of which member was sent the previous call."
       },
       "topDown": {
         "name": "Top Down",
@@ -3460,8 +3566,6 @@
     "more": "More",
     "less": "Less",
     "usage": "{{usage}} of {{volume}} in use",
-    "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",

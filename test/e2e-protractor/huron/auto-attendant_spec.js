@@ -30,6 +30,9 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.featureTypeAA, 12000);
       utils.click(autoattendant.featureTypeAA);
 
+      utils.wait(autoattendant.basicAA, 12000);
+      utils.click(autoattendant.basicAA);
+
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
@@ -180,6 +183,163 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    //it('should add a 2nd Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+    // Bit of a kludge. We currently have 1 Say message & will add a second.
+    // If anybody adds more before this test case then things get dicey.
+    // Adding code to verify we start with 1 & end with 2. If another test adds more this test fails immediately
+    // and clearly, so fix this when/if that happens. Positive break is better than a silent problem...
+    //
+    // Also we are depending on menu order for this test, so if the Add New Step menu gets new steps or
+    // gets rearranged this will break - but again it will fail immediately so it should be clear what's going on.
+    //
+    // Verify we have 1 Say Message already:
+    //  utils.expectCount(autoattendant.sayMessageAll, 1);
+
+    // OK, now add another via Add New Step
+    //  utils.click(autoattendant.addStep);
+    //  utils.expectIsDisplayed(autoattendant.newStep);
+    //  utils.click(autoattendant.newStepMenu);
+
+    // first menu option is Add Say Message
+    //  utils.click(autoattendant.newStepSelectFirst);
+
+    // Since the AA already contained 1 Say Message, we should now have 2
+    //  utils.expectCount(autoattendant.sayMessageAll, 2);
+
+    // Add a message to the new (first) Say Message we just added
+    //  utils.click(autoattendant.sayMessageInputFirst);
+    //  utils.sendKeys(autoattendant.sayMessageInputFirst, "Added say message, you should hear this first before the other say message");
+
+    // save and assert successful update message
+    //  utils.expectIsEnabled(autoattendant.saveButton);
+    //  utils.click(autoattendant.saveButton);
+    //  utils.expectIsDisabled(autoattendant.saveButton);
+
+    //  autoattendant.assertUpdateSuccess();
+
+    //}, 60000);
+
+    //it('should add a 2nd Phone Menu via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+    // Bit of a kludge part 2. We currently have 1 Phone menu & will add a second.
+    // If anybody adds more before this test case then things get dicey.
+    // Adding code to verify we start with 1 & end with 2. If another test adds more this test fails immediately
+    // and clearly, so fix this when/if that happens. Positive break is better than a silent problem...
+    //
+    // Also we are depending on menu order for this test, so if the Add New Step menu gets new steps or
+    // gets rearranged this will break - but again it will fail immediately so it should be clear what's going on.
+    //
+    // Verify we have 1 Say Message already:
+    //utils.expectCount(autoattendant.phoneMenuAll, 1);
+
+    //utils.click(autoattendant.addStepLast);
+    //utils.expectIsDisplayed(autoattendant.newStep);
+    //utils.click(autoattendant.newStepMenu);
+
+    // middle/2nd menu option is Add Phone Menu
+    //utils.click(autoattendant.newStepSelectMiddle);
+
+    // Since the AA already contained 1 Phone Menu, we should now have 2
+    //utils.expectCount(autoattendant.phoneMenuAll, 2);
+
+    // Click on the language for the new (first) Phone Menu we just added
+    //utils.click(autoattendant.phoneSayMessageLanguageFirst);
+
+    // Set langauage to Galacian
+    //utils.click(autoattendant.phoneLanguageDropDownOptionsTenth);
+
+    // save and assert successful update message
+    //utils.expectIsEnabled(autoattendant.saveButton);
+    //utils.click(autoattendant.saveButton);
+    //utils.expectIsDisabled(autoattendant.saveButton);
+    //autoattendant.assertUpdateSuccess();
+
+    //}, 60000);
+
+    it('should add Route Call via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      // We are depending on menu order for this test, so if the Add New Step menu gets new steps or gets
+      // rearranged this will break - but again it will fail immediately so it should be clear what's going on.
+      //
+      // Verify we have 1 Say Message already:
+      utils.expectCount(autoattendant.phoneMenuAll, 1);
+      utils.click(autoattendant.addStep);
+      utils.expectIsDisplayed(autoattendant.newStep);
+      utils.click(autoattendant.newStepMenu);
+
+      // Last/3rd menu option is Route Call
+      utils.click(autoattendant.newStepSelectLast);
+      utils.expectIsDisplayed(autoattendant.routeCall);
+    }, 60000);
+
+    it('should Route Call to external number in the Route Call via New Step dialog in the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+      utils.click(autoattendant.routeCallChoose);
+      utils.click(autoattendant.routeExternal);
+      utils.expectIsDisplayed(autoattendant.routeExternalNumber);
+      utils.sendKeys(autoattendant.routeExternalNumber, '2062345678');
+      utils.click(autoattendant.routeCall);
+
+      // save and assert successful update message
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    //    it('should add Route (Transfer for now) Call via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    //
+    //      utils.click(autoattendant.addStep);
+    //      utils.expectIsDisplayed(autoattendant.newStep);
+    //      utils.click(autoattendant.newStepMenu);
+    //      utils.click(autoattendant.newStepSelectLast);
+    //      utils.expectIsDisplayed(autoattendant.transferCall);
+
+    // save and assert successful update message
+    //      utils.expectIsEnabled(autoattendant.saveButton);
+    //      utils.click(autoattendant.saveButton);
+    //      utils.expectIsDisabled(autoattendant.saveButton);
+    //      autoattendant.assertUpdateSuccess();
+
+    //    }, 60000);
+
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, 12000);
+      utils.click(autoattendant.addschedule);
+      utils.click(autoattendant.starttime);
+      utils.sendKeys(autoattendant.starttime, '01:00AM');
+      utils.click(autoattendant.endtime);
+      utils.sendKeys(autoattendant.endtime, '05:00PM');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.click(autoattendant.day1);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    it('should update a AA Schedule', function () {
+      utils.click(autoattendant.schedule);
+      utils.click(autoattendant.starttime);
+      utils.sendKeys(autoattendant.starttime, '2:30AM');
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess();
+    }, 60000);
+
+    it('should delete a AA Schedule', function () {
+      utils.click(autoattendant.schedule);
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.click(autoattendant.scheduletrash);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+
       autoattendant.assertUpdateSuccess();
 
     }, 60000);

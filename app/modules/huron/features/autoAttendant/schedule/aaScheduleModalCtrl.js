@@ -1,0 +1,216 @@
+(function () {
+  'use strict';
+
+  angular
+    .module('Huron')
+    .controller('AAScheduleModalCtrl', AAScheduleModalCtrl);
+
+  /* @ngInject */
+  function AAScheduleModalCtrl($modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService) {
+    /*jshint validthis: true */
+    var vm = this;
+
+    vm.calendar = null;
+
+    vm.save = save;
+    vm.isSavable = isSavable;
+    vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.addRange = addRange;
+    vm.deleteRange = deleteRange;
+    vm.isDeleted = false;
+
+    vm.openhours = [];
+    vm.getCalendar = getCalendar;
+
+    function addRange() {
+      vm.openhours.push(angular.copy(AAICalService.getDefaultRange()));
+    }
+
+    function deleteRange(index) {
+      vm.openhours.splice(index, 1);
+      vm.isDeleted = true;
+      vm.hoursForm.$setDirty();
+    }
+
+    function isOpenHoursAfterCloseHours(hours) {
+      if (hours.starttime && hours.endtime) {
+        if (hours.starttime <= hours.endtime) {
+          return false;
+        }
+        return true;
+      }
+    }
+
+    function isSavable() {
+      var flag = false;
+      _.each(vm.openhours, function (hours) {
+        flag = false; //Verify each OpenHour(time and days) is valid to enable save
+        if (isOpenHoursAfterCloseHours(hours)) {
+          return flag;
+        }
+        if (hours.starttime && hours.endtime) {
+          _.each(hours.days, function (day) {
+            if (day.active) {
+              //Verify at least a day has been set for each open hours in the schedule.
+              flag = true;
+            }
+          });
+        }
+      });
+      if (vm.isDeleted && !vm.openhours.length) {
+        //when all open hours removed, this check is
+        flag = true;
+      }
+      return flag;
+    }
+
+    function getCalendar() {
+      vm.calendar = AAICalService.createCalendar();
+      _.each(vm.openhours, function (hours) {
+        AAICalService.addHoursRange(vm.calendar, hours);
+      });
+      return vm.calendar.toString();
+    }
+
+    function save() {
+      if (vm.isSavable()) {
+        // create calendar
+        // even on update we are just re-creating the calendar, otherwise the events accumulate
+        vm.calendar = vm.getCalendar();
+
+        // save calendar to CES
+        var calName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
+        var savePromise;
+        var notifyName = vm.aaModel.aaRecord.callExperienceName;
+
+        if (vm.aaModel.aaRecord.scheduleId) {
+          if (vm.openhours.length > 0) {
+            savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);
+            notifyName = calName; // An update is updating only calendar, so notify indicates calender updated
+          } else if (vm.isDeleted) {
+            savePromise = deleteSchedule();
+          }
+        } else {
+          savePromise = createSchedule(calName);
+        }
+
+        savePromise.then(
+          function (response) {
+            if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
+              //To avoid notification when a CE update fails during calendar creation, 
+              //and the newly created orphaned calendar is deleted.
+              return;
+            }
+            Notification.success('autoAttendant.successUpdateCe', {
+              name: notifyName
+            });
+            vm.isDeleted = false;
+            $modalInstance.close(response);
+          },
+          function (response) {
+            // failure
+            if (vm.isDeleted && !vm.opehours.length) {
+              //Error deleting calendar or updating CE. Retain the scheduleId.
+              vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
+              vm.ui.isClosedHours = true;
+              vm.isDeleted = false;
+              Notification.error('autoAttendant.errorDeleteCe', {
+                name: calName,
+                statusText: response.statusText,
+                status: response.status
+              });
+            } else if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
+              //Calendar create failed
+              Notification.error('autoAttendant.errorCreateCe', {
+                name: calName,
+                statusText: response.statusText,
+                status: response.status
+              });
+            } else {
+              Notification.error('autoAttendant.errorUpdateCe', {
+                name: notifyName,
+                statusText: response.statusText,
+                status: response.status
+              });
+            }
+          });
+      }
+    }
+
+    function createSchedule(calName) {
+      var ceName = vm.aaModel.aaRecord.callExperienceName;
+      return AACalendarService.createCalendar(calName, vm.calendar).then(
+        function (response) {
+          // success
+          var scheduleId = AutoAttendantCeInfoModelService.extractUUID(response.scheduleUrl);
+          vm.ui.ceInfo.scheduleId = scheduleId;
+          return updateCE(vm.aaModel.aaRecord.callExperienceName);
+        });
+    }
+
+    function updateCE(ceName) {
+      var ceUrl;
+      if (vm.aaModel.aaRecordUUID.length > 0) {
+        _.each(vm.aaModel.aaRecords, function (aarecord) {
+          if (AutoAttendantCeInfoModelService.extractUUID(aarecord.callExperienceURL) === vm.aaModel.aaRecordUUID) {
+            ceUrl = aarecord.callExperienceURL;
+            return ceUrl;
+          }
+        });
+      }
+      return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
+        .then(function (response) {
+          vm.ui.isClosedHours = true;
+          vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
+        }, function (response) {
+          // failure in updating CE with schedue id, so clean up the possible orphaned schedule and theobjects
+          Notification.error('autoAttendant.errorUpdateCe', {
+            name: ceName,
+            statusText: response.statusText,
+            status: response.status
+          });
+          vm.ui.isClosedHours = false;
+          vm.aaModel.aaRecord.scheduleId = undefined;
+          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+        });
+    }
+
+    function deleteSchedule() {
+      var id = vm.aaModel.aaRecord.scheduleId;
+      var ceName = vm.aaModel.aaRecord.callExperienceName;
+      vm.aaModel.aaRecord.scheduleId = undefined;
+      var ceUrl;
+      if (vm.aaModel.aaRecordUUID.length > 0) {
+        _.each(vm.aaModel.aaRecords, function (aarecord) {
+          if (AutoAttendantCeInfoModelService.extractUUID(aarecord.callExperienceURL) === vm.aaModel.aaRecordUUID) {
+            ceUrl = aarecord.callExperienceURL;
+            return ceUrl;
+          }
+        });
+      }
+      return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
+        .then(function (response) {
+          // success removing ScheduleId from CE, delete the calendar 
+          vm.ui.isClosedHours = false;
+          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+        });
+    }
+
+    function populateUiModel() {
+      if (vm.aaModel.aaRecord.scheduleId) {
+        AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
+          vm.openhours = AAICalService.getHoursRanges(data);
+        });
+      }
+    }
+
+    function activate() {
+      vm.aaModel = AAModelService.getAAModel();
+      vm.ui = AAUiModelService.getUiModel();
+      populateUiModel();
+      vm.isDeleted = false;
+    }
+
+    activate();
+  }
+})();

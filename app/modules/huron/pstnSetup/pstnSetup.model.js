@@ -5,7 +5,7 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller, isTrial;
 
     init();
     var model = {
@@ -25,6 +25,8 @@
       getServiceAddress: getServiceAddress,
       setCustomerExists: setCustomerExists,
       isCustomerExists: isCustomerExists,
+      setResellerExists: setResellerExists,
+      isResellerExists: isResellerExists,
       setCarrierExists: setCarrierExists,
       isCarrierExists: isCarrierExists,
       setSiteExists: setSiteExists,
@@ -35,7 +37,9 @@
       setNumbers: setNumbers,
       getNumbers: getNumbers,
       isSingleCarrierReseller: isSingleCarrierReseller,
-      setSingleCarrierReseller: setSingleCarrierReseller
+      setSingleCarrierReseller: setSingleCarrierReseller,
+      setIsTrial: setIsTrial,
+      getIsTrial: getIsTrial
     };
 
     return model;
@@ -48,11 +52,13 @@
       customerEmail = '';
       serviceAddress = {};
       customerExists = false;
+      resellerExists = false;
       carrierExists = false;
       siteExists = false;
       provider = {};
       numbers = [];
       singleCarrierReseller = false;
+      isTrial = false;
     }
 
     function clearProviderSpecificData() {
@@ -118,6 +124,14 @@
       return customerExists;
     }
 
+    function setResellerExists(_resellerExists) {
+      resellerExists = _resellerExists;
+    }
+
+    function isResellerExists() {
+      return resellerExists;
+    }
+
     function setCarrierExists(_carrierExists) {
       carrierExists = _carrierExists;
     }
@@ -160,6 +174,14 @@
 
     function setSingleCarrierReseller(_singleCarrierReseller) {
       singleCarrierReseller = _singleCarrierReseller;
+    }
+
+    function setIsTrial(_isTrial) {
+      isTrial = _isTrial;
+    }
+
+    function getIsTrial() {
+      return isTrial;
     }
   }
 })();

@@ -74,7 +74,8 @@
         percentage: 85,
         colorOne: Config.chartColors.dummyGrayLight,
         colorTwo: Config.chartColors.dummyGray,
-        balloon: false
+        balloon: false,
+        labelColorField: Config.chartColors.grayLight
       }];
     }
 
@@ -135,11 +136,13 @@
     function dummyCallMetricsData() {
       return {
         dataProvider: [{
-          callCondition: "Fail",
-          numCalls: "200"
+          label: $translate.instant('callMetrics.callConditionFail'),
+          value: "200",
+          color: Config.chartColors.dummyGray
         }, {
-          callCondition: "Successful",
-          numCalls: "800"
+          label: $translate.instant('callMetrics.callConditionSuccessful'),
+          value: "800",
+          color: Config.chartColors.dummyGrayLight
         }],
         labelData: {
           numTotalCalls: 1000,

@@ -5,6 +5,7 @@ describe('Service: Partner Reports Service', function () {
   var managedOrgsUrl, activeUsersDetailedUrl, mostActiveUsersUrl, mediaQualityUrl, callMetricsUrl, registeredEndpointsUrl;
 
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
   var dayFormat = "MMM DD";
@@ -16,7 +17,7 @@ describe('Service: Partner Reports Service', function () {
   var updateDates = function (response) {
     var data = response.data[0].data;
     for (var i = data.length - 1; i >= 0; i--) {
-      data[i].date = moment().tz(timezone).subtract(data.length + 1 - i, 'day').format();
+      data[i].date = moment().tz(timezone).subtract(data.length - i, 'day').format();
     }
     response.data[0].data = data;
     return response;
@@ -34,9 +35,17 @@ describe('Service: Partner Reports Service', function () {
   var error = {
     message: 'error'
   };
-  var customer = {
+  var customer = [{
     value: customers[0].customerOrgId,
-    label: customers[0].customerName
+    label: customers[0].customerName,
+    isAllowedToManage: true
+  }];
+  var customerResponse = {
+    customerName: customers[0].customerName,
+    customerId: customers[0].customerOrgId,
+    percentage: 0,
+    balloon: true,
+    labelColorField: '#444'
   };
   var nullCustomer = {
     value: 0,
@@ -51,7 +60,9 @@ describe('Service: Partner Reports Service', function () {
   var customerPopulation = {
     customerName: 'Test Org One',
     customerId: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    percentage: 99
+    percentage: 99,
+    balloon: true,
+    labelColorField: '#444'
   };
   var zeroPopulation = {
     customerName: 'Test Org One',
@@ -59,21 +70,14 @@ describe('Service: Partner Reports Service', function () {
     percentage: 0
   };
   var customerTableDataPoint = {
-    details: {
-      numCalls: '5',
-      totalActivity: '14',
-      userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
-      userName: 'havard.nigardsoy@vijugroup.com'
-    },
     orgName: 'Test Org One',
     numCalls: 5,
     totalActivity: 14,
     sparkMessages: 9,
-    userId: '4a0a7af3-5924-420d-9ec0-dcfccbe607cf',
     userName: 'havard.nigardsoy@vijugroup.com'
   };
   var posEndpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    orgId: customers[0].customerOrgId,
     deviceRegistrationCountTrend: '4',
     yesterdaysDeviceRegistrationCount: '2',
     registeredDevicesTrend: '+5',
@@ -84,7 +88,7 @@ describe('Service: Partner Reports Service', function () {
     direction: 'positive'
   }];
   var negEndpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
+    orgId: customers[0].customerOrgId,
     deviceRegistrationCountTrend: '-4',
     yesterdaysDeviceRegistrationCount: '2',
     registeredDevicesTrend: '-5',
@@ -117,6 +121,11 @@ describe('Service: Partner Reports Service', function () {
       }]
     }],
     "date": "2015-04-20"
+  };
+
+  var emptyCallMetricsArray = {
+    dataProvider: [],
+    displayData: {}
   };
 
   var Authinfo = {
@@ -174,8 +183,7 @@ describe('Service: Partner Reports Service', function () {
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
       });
 
-      // TODO: Logic still needs to be refined.
-      xit('for an existing customer', function () {
+      it('for an existing customer', function () {
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(response.graphData[0].modifiedDate).toEqual(customerDatapoint.modifiedDate);
           expect(response.graphData[0].totalRegisteredUsers).toEqual(customerDatapoint.totalRegisteredUsers);
@@ -191,9 +199,7 @@ describe('Service: Partner Reports Service', function () {
     });
 
     describe('should notify an error for getActiveUserData', function () {
-
-      // TODO: Logic still needs to be refined.
-      xit('and return empty table data', function () {
+      it('and return empty table data', function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(500, error);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
 
@@ -220,7 +226,7 @@ describe('Service: Partner Reports Service', function () {
           expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
           expect(response.graphData).toEqual([]);
           expect(response.tableData[0]).toEqual(customerTableDataPoint);
-          expect(response.populationGraph[0]).toEqual(undefined);
+          expect(response.populationGraph[0]).toEqual(customerResponse);
           expect(response.overallPopulation).toEqual(0);
         });
         $httpBackend.flush();
@@ -297,7 +303,7 @@ describe('Service: Partner Reports Service', function () {
     it('should get empty array for GET failure', function () {
       $httpBackend.whenGET(callMetricsUrl + customers[0].customerOrgId).respond(500, error);
       PartnerReportService.getCallMetricsData(customer, timeFilter).then(function (data) {
-        expect(data).toEqual([]);
+        expect(data).toEqual(emptyCallMetricsArray);
       });
       $httpBackend.flush();
     });

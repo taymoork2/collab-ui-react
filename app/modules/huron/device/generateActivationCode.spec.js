@@ -1,32 +1,41 @@
 'use strict';
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
-  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, HttpUtils, OtpService, $q;
+  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, OtpService, $q;
   beforeEach(module('Huron'));
 
   var stateParams = {
     currentUser: {
-      userName: 'jeffisawesome@awesomedude.com'
+      userName: 'jeffisawesome@awesomedude.com',
+      id: '12345',
+      meta: {
+        customerID: '98765'
+      }
     },
     activationCode: 'new'
   };
+
+  var otp = getJSONFixture('huron/json/device/otps/0001000200030004.json');
 
   beforeEach(inject(function (Notification) {
     sinon.spy(Notification, "notify");
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _HttpUtils_, _OtpService_, _$q_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _OtpService_, _$q_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
-    HttpUtils = _HttpUtils_;
     OtpService = _OtpService_;
     $q = _$q_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+
+    spyOn($state, 'go').and.returnValue($q.when());
+    spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
+    spyOn(OtpService, 'generateOtp').and.returnValue($q.when(otp));
 
     controller = $controller('GenerateActivationCodeCtrl', {
       $scope: $scope,
@@ -34,11 +43,6 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
       $stateParams: stateParams
     });
     controller.showEmail = false;
-    spyOn($state, 'go').and.returnValue($q.when());
-    spyOn(HttpUtils, 'setTrackingID').and.returnValue('TrackingID is set');
-    spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
-    spyOn(OtpService, 'generateOtp').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/0001000200030004.json')));
-
     controller.otp = {
       code: 'old'
     };
@@ -87,7 +91,14 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
         });
 
         it('should send email and notify success', function () {
-          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/activationcode').respond(200);
+          $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/activationcode', {
+            email: stateParams.currentUser.userName,
+            firstName: stateParams.currentUser.userName,
+            userId: stateParams.currentUser.id,
+            customerId: stateParams.currentUser.meta.customerId,
+            oneTimePassword: otp.code,
+            expiresOn: moment(otp.expiresOn).tz(jstz.determine().name()).format('MMMM DD, YYYY h:mm A (z)')
+          }).respond(200);
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledWith(['generateActivationCodeModal.emailSuccess'], 'success')).toBe(true);
@@ -95,7 +106,7 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
         });
 
         it('should try to send email and notify error', function () {
-          $httpBackend.whenPOST(HuronConfig.getEmailUrl() + '/email/activationcode').respond(500);
+          $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/activationcode').respond(500);
           controller.sendActivationCodeEmail();
           $httpBackend.flush();
           expect(Notification.notify.calledOnce).toBe(true);
