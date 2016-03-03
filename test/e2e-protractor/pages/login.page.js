@@ -47,22 +47,9 @@ var LoginPage = function () {
     this.loginButton.click();
   };
 
-  function getLoginUrl(expectedUrl) {
-    var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'test-env-config=e2e-prod';
-    }
-    return url;
-  }
-
   this.login = function (username, expectedUrl) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
+    navigation.navigateTo(expectedUrl);
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -79,7 +66,7 @@ var LoginPage = function () {
 
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
+    navigation.navigateTo(expectedUrl);
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -95,7 +82,7 @@ var LoginPage = function () {
   };
 
   this.loginThroughGui = function (username, password, expectedUrl) {
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    navigation.navigateTo(expectedUrl || '#/login');
     utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
@@ -103,6 +90,7 @@ var LoginPage = function () {
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
   };
+
 };
 
 module.exports = LoginPage;
