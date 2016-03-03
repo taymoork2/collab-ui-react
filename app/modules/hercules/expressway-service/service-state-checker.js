@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .service('ServiceStateChecker', ServiceStateChecker);
+
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo) {
+  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService) {
 
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
@@ -11,6 +15,9 @@
         if (checkIfConnectorsConfigured(connectorType)) {
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
+          if (checkIfSomeConnectorsOk(connectorType)) {
+            checkScheduleUpgradeAcknowledged(connectorType, serviceId);
+          }
         }
       }
     }
@@ -127,13 +134,44 @@
         .value();
     }
 
+    function checkIfSomeConnectorsOk(connectorType) {
+      var clusters = ClusterService.getClustersByConnectorType(connectorType);
+      return _.chain(clusters)
+        .some(function (cluster) {
+          return _.chain(cluster.connectors)
+            .filter(function (connector) {
+              return connector.connectorType === connectorType;
+            })
+            .some(function (connector) {
+              return ClusterService.getRunningStateSeverity(connector.state).label === 'ok';
+            })
+            .value();
+        })
+        .value();
+    }
+
+    function checkScheduleUpgradeAcknowledged(connectorType, serviceId) {
+      ScheduleUpgradeService.get(Authinfo.getOrgId(), connectorType)
+        .then(function (data) {
+          if (!data.isAdminAcknowledged) {
+            NotificationService.addNotification(
+              NotificationService.types.TODO,
+              'acknowledgeScheduleUpgrade',
+              2,
+              'modules/hercules/notifications/schedule-upgrade.html', [serviceId],
+              null
+            );
+          }
+        });
+    }
+
+    // TODO: add an event listener to remove the schedule-upgrade notification
+    $rootScope.$on('ACK_SCHEDULE_UPGRADE', function () {
+      NotificationService.removeNotification('acknowledgeScheduleUpgrade');
+    });
+
     return {
       checkState: checkState
     };
   }
-
-  angular
-    .module('Hercules')
-    .service('ServiceStateChecker', ServiceStateChecker);
-
 }());
