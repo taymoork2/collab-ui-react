@@ -164,6 +164,9 @@
           enabled: true
         })
         .map(function (trial) {
+          if (trial.type === Config.offerTypes.pstn) {
+            return;
+          }
           var licenseCount = trial.type === Config.trials.roomSystems ?
             trial.details.quantity : data.details.licenseCount;
           return {
@@ -171,6 +174,7 @@
             'licenseCount': licenseCount,
           };
         })
+        .compact(data.trials)
         .value();
     }
 

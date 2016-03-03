@@ -75,7 +75,7 @@
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
     "hybridServicesError": "Unable to perform this operation for some users. Hybrid Services are available for licensed users. Please check the licensing for your users and then try again.",
-    "hybridServicesComboError": "You chose a combination of services (Call Service Connect and Spark Call) that we don't support. Please remove one and try again.",
+    "hybridServicesComboError": "You chose a combination of services (Call Service and Spark Call) that we don't support. Please remove one and try again.",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
@@ -1070,7 +1070,8 @@
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
-      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+      "add-resource-button-information": " to start the registration and configuration of your Expressways.",
+      "setupCloudSipUriHeader": "Define SIP Spark Address."
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1140,11 +1141,11 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
-      "squared-fusion-uc.full": "Call Service: Aware",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service: Connect",
+      "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
@@ -1249,6 +1250,19 @@
       }
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "callAware": {
+        "title": "Enable Call Service Aware for Users",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
+      },
+      "calendar": {
+        "title": "Enable Calendar Service for Users",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
+      },
+      "connect": {
+        "title": "Enable Call Service Connect for Users",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+      },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
@@ -1805,6 +1819,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "editNumbers": "Edit Phone Numbers",
+    "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
     "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
@@ -1827,6 +1842,10 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "newNumbersTab": "New Numbers",
+    "portNumbersTab": "Port Numbers",
+    "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
+    "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -1842,6 +1861,7 @@
     "numbersTitle": "Numbers",
     "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{{count}} New",
+    "portNumbers": "{{count}} Port",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
@@ -3112,7 +3132,7 @@
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "MissingEncryptionKey": {
-        "type": " Missing encryption option key",
+        "type": "Missing encryption option key",
         "message": "Please add an encryption option key"
       },
       "ConfiguredForTestAutomation": {
