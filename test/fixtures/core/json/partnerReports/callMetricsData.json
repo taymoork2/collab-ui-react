@@ -12,6 +12,24 @@
           "totalSuccessfulCalls": "22"
         }
       }]
+    }, {
+      "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+      "orgName": "Test Org Three"
+    }, {
+      "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+      "orgName": "Test Org Two",
+      "data": [{
+        "details": {
+          "totalAudioDuration": "79.8533",
+          "totalCalls": "33",
+          "totalFailedCalls": "5",
+          "totalQuestionableCalls": "0",
+          "totalSuccessfulCalls": "28"
+        }
+      }]
+    }, {
+      "orgId": "1",
+      "orgName": "Test Partner"
     }],
     "type": "callMetrics",
     "date": "2015-04-20",
@@ -23,16 +41,16 @@
   "callMetricsResponse": {
     "dataProvider": [{
       "label": "callMetrics.callConditionFail",
-      "value": 2,
+      "value": 7,
       "color": "#444"
     }, {
       "label": "callMetrics.callConditionSuccessful",
-      "value": 22,
+      "value": 50,
       "color": "#00c1aa"
     }],
     "labelData": {
-      "numTotalCalls": 25,
-      "numTotalMinutes": 76
+      "numTotalCalls": 58,
+      "numTotalMinutes": 156
     }
   },
   "emptyArray": {

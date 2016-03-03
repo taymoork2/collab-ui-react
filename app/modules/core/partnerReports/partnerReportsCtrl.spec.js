@@ -8,23 +8,12 @@ describe('Controller: Partner Reports', function () {
   var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
   var activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
   var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
-
-  var dummyMediaQualityGraphData = angular.copy(dummyData.mediaQuality.four);
+  var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+  var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
 
   var validateService = {
     invalidate: function () {}
   };
-  var endpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
-    deviceRegistrationCountTrend: '4',
-    yesterdaysDeviceRegistrationCount: '2',
-    registeredDevicesTrend: '+5',
-    yesterdaysRegisteredDevices: '2',
-    maxRegisteredDevices: '3',
-    minRegisteredDevices: '2',
-    customer: 'Test Org One',
-    direction: 'positive'
-  }];
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
@@ -51,11 +40,11 @@ describe('Controller: Partner Reports', function () {
         overallPopulation: 0
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(customerData.customerResponse));
-      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
+      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(mediaQualityData.mediaQualityResponse));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: callMetricsData.callMetricsResponse
       }));
-      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointResponse));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(registeredEndpointsData.registeredEndpointResponse));
 
       spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
         'dataProvider': activeUserData.detailedResponse,
@@ -63,7 +52,7 @@ describe('Controller: Partner Reports', function () {
       });
 
       spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
-        'dataProvider': dummyMediaQualityGraphData,
+        'dataProvider': mediaQualityData.mediaQualityResponse,
         invalidateSize: validateService.invalidate
       });
 
@@ -115,7 +104,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUsersRefresh).toEqual('set');
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(1);
+        expect(controller.activeUsersTotalPages).toEqual(2);
         expect(controller.activeUserCurrentPage).toEqual(1);
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
@@ -125,7 +114,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.customerSelected).toEqual(customerData.customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
 
-        expect(controller.registeredEndpoints).toEqual(endpointResponse);
+        expect(controller.registeredEndpoints).toEqual(registeredEndpointsData.registeredEndpointResponse);
       });
     });
 

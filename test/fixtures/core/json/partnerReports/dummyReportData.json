@@ -299,56 +299,6 @@
       "colorTwo": "#F3F3F3",
       "colorThree": "#FAFAFA",
       "balloon": false
-    }],
-    "four": [{
-      "modifiedDate": "Aug 01",
-      "totalDurationSum": 45,
-      "goodQualityDurationSum": 25,
-      "fairQualityDurationSum": 15,
-      "poorQualityDurationSum": 5,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 02",
-      "totalDurationSum": 75,
-      "goodQualityDurationSum": 40,
-      "fairQualityDurationSum": 25,
-      "poorQualityDurationSum": 10,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 03",
-      "totalDurationSum": 105,
-      "goodQualityDurationSum": 55,
-      "fairQualityDurationSum": 35,
-      "poorQualityDurationSum": 15,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 04",
-      "totalDurationSum": 135,
-      "goodQualityDurationSum": 70,
-      "fairQualityDurationSum": 45,
-      "poorQualityDurationSum": 20,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 05",
-      "totalDurationSum": 165,
-      "goodQualityDurationSum": 85,
-      "fairQualityDurationSum": 55,
-      "poorQualityDurationSum": 25,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 06",
-      "totalDurationSum": 195,
-      "goodQualityDurationSum": 100,
-      "fairQualityDurationSum": 65,
-      "poorQualityDurationSum": 30,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 07",
-      "totalDurationSum": 225,
-      "goodQualityDurationSum": 115,
-      "fairQualityDurationSum": 75,
-      "poorQualityDurationSum": 35,
-      "balloon": true
     }]
   },
   "activeUserPopulation": [{
