@@ -3,6 +3,7 @@
 angular.module('Core').service('SiteListService', [
   '$log',
   '$translate',
+  '$interval',
   'Authinfo',
   'Userservice',
   'Config',
@@ -12,6 +13,7 @@ angular.module('Core').service('SiteListService', [
   function (
     $log,
     $translate,
+    $interval,
     Authinfo,
     Userservice,
     Config,
@@ -20,6 +22,14 @@ angular.module('Core').service('SiteListService', [
   ) {
 
     var _this = this;
+
+    this.csvPoll = null;
+    this.getFakeCsvStatusCounter = 0;
+    this.fakeCsvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompleted'
+    ];
 
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
@@ -299,7 +309,22 @@ angular.module('Core').service('SiteListService', [
                   "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
                 $log.log(logMsg);
 
-                _this.updateCSVColumn(siteRow);
+                if (!siteRow.isCSVSupported) {
+                  // no further data to get
+                  siteRow.showCSVInfo = true;
+                } else {
+                  _this.updateCSVColumn(
+                    siteRow
+                  );
+
+                  siteRow.csvPollTimeout = $interval(
+                    function () {
+                      _this.updateCSVColumn(siteRow);
+                    },
+                    15000
+                  );
+                }
+
               }, // isSiteSupportsIframeSuccess()
 
               function isSiteSupportsIframeError(response) {
@@ -325,15 +350,23 @@ angular.module('Core').service('SiteListService', [
       } // updateGridColumns()
     }; // updateGrid()
 
-    this.updateCSVColumn = function (siteRow) {
-      if (!siteRow.isCSVSupported) {
-        // no further data to get
-        siteRow.showCSVInfo = true;
-        return;
-      }
+    this.updateCSVColumn = function (
+      siteRow
+    ) {
+
+      var funcName = "updateCSVColumn()";
+      var logMsg = "";
 
       var siteUrl = siteRow.license.siteUrl;
-      WebExApiGatewayService.csvStatus(siteUrl).then(
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+
+      WebExApiGatewayService.csvStatus(
+        siteUrl
+      ).then(
+
         function success(response) {
           var funcName = "WebExApiGatewayService.csvStatus.success()";
           var logMsg = "";
