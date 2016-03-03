@@ -1239,9 +1239,13 @@
 
     $scope.extensionEntitlements = [];
     $scope.updateExtensionEntitlements = function (entitlements) {
+      $scope.hybridCallServiceAware = _.some(entitlements, {
+        entitlementName: 'squaredFusionUC',
+        entitlementState: 'ACTIVE'
+      });
       $scope.extensionEntitlements = entitlements;
     };
-
+    
     function entitleUserCallback(data, status, method, headers) {
       $scope.results = {
         resultList: []
@@ -1414,15 +1418,6 @@
         }
       }
       return deferred.promise;
-    };
-
-    $scope.extensionEntitlements = [];
-    $scope.updateExtensionEntitlements = function (entitlements) {
-      $scope.hybridCallServiceAware = _.some(entitlements, {
-        entitlementName: 'squaredFusionUC',
-        entitlementState: 'ACTIVE'
-      });
-      $scope.extensionEntitlements = entitlements;
     };
 
     // Wizard hook for save button
