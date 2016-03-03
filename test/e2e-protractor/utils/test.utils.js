@@ -265,7 +265,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
-      log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
+      log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
       return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
       return false;
@@ -273,16 +273,15 @@ exports.expectTextToBeSet = function (elem, text, timeout) {
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
-exports.expectValueToBeSet = function (elem, value) {
-  this.wait(elem);
+exports.expectValueToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
-      log('Waiting for element to have value set: ' + elem.locator() + ' ' + value);
-      return result !== undefined && result !== null && result === value;
+      log('Waiting for element (' + elem.locator() + ') to have value "' + text + '" currently "' + result + '"');
+      return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToContain = function (elem, value) {
@@ -367,17 +366,6 @@ exports.isSelected = function (elem) {
   return this.wait(elem).then(function () {
     return elem.isSelected();
   });
-};
-
-exports.expectSelected = function (selected, state) {
-  if (state === undefined) {
-    state = true;
-  }
-  if (state) {
-    expect(selected).toBeTruthy();
-  } else {
-    expect(selected).toBeFalsy();
-  }
 };
 
 exports.clear = function (elem) {
@@ -475,7 +463,7 @@ exports.expectSwitchState = function (elem, value) {
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.tagName('input'));
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
     expect(input.isSelected()).toBe(value);
   });
 };
@@ -527,7 +515,11 @@ exports.search = function (query, _searchCount) {
   exports.clear(exports.searchField);
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
-    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+    exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);
+    for (var i = 0; i < 3; i++) {
+      // Spinner may bounce repeatedly
+      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+    }
   }
 
   if (searchCount > -1) {
