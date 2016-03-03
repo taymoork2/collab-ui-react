@@ -1,21 +1,42 @@
 {
-  "data": [{
-    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-    "orgName": "Test Org One",
+  "callMetricsAPI": {
     "data": [{
-      "details": {
-        "totalAudioDuration": "76.33207",
-        "totalCalls": "25",
-        "totalFailedCalls": "2",
-        "totalQuestionableCalls": "1",
-        "totalSuccessfulCalls": "22"
-      }
-    }]
-  }],
-  "type": "callMetrics",
-  "date": "2015-04-20",
-  "spanCount": 1,
-  "spanType": "week",
-  "intervalCount": 1,
-  "intervalType": "week"
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "orgName": "Test Org One",
+      "data": [{
+        "details": {
+          "totalAudioDuration": "76.33207",
+          "totalCalls": "25",
+          "totalFailedCalls": "2",
+          "totalQuestionableCalls": "1",
+          "totalSuccessfulCalls": "22"
+        }
+      }]
+    }],
+    "type": "callMetrics",
+    "date": "2015-04-20",
+    "spanCount": 1,
+    "spanType": "week",
+    "intervalCount": 1,
+    "intervalType": "week"
+  },
+  "callMetricsResponse": {
+    "dataProvider": [{
+      "label": "callMetrics.callConditionFail",
+      "value": 2,
+      "color": "#444"
+    }, {
+      "label": "callMetrics.callConditionSuccessful",
+      "value": 22,
+      "color": "#00c1aa"
+    }],
+    "labelData": {
+      "numTotalCalls": 25,
+      "numTotalMinutes": 76
+    }
+  },
+  "emptyArray": {
+    "dataProvider": [],
+    "displayData": {}
+  }
 }

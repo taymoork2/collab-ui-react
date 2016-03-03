@@ -1,29 +1,66 @@
 {
-  "data": [{
-    "details": {
+  "registeredEndpointsAPI": {
+    "positive": {
+      "data": [{
+        "details": {
+          "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+          "deviceRegistrationCountTrend": "4",
+          "yesterdaysDeviceRegistrationCount": "2",
+          "registeredDevicesTrend": "5",
+          "yesterdaysRegisteredDevices": "2",
+          "maxRegisteredDevices": "3",
+          "minRegisteredDevices": "2"
+        }
+      }],
+      "type": "registeredEndpoints",
+      "date": "2015-04-20",
+      "spanCount": 1,
+      "spanType": "day",
+      "intervalCount": 1,
+      "intervalType": "month"
+    },
+    "negative": {
+      "data": [{
+        "details": {
+          "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+          "deviceRegistrationCountTrend": "-4",
+          "yesterdaysDeviceRegistrationCount": "2",
+          "registeredDevicesTrend": "-5",
+          "yesterdaysRegisteredDevices": "2",
+          "maxRegisteredDevices": "3",
+          "minRegisteredDevices": "2"
+        }
+      }],
+      "type": "registeredEndpoints",
+      "date": "2015-04-20",
+      "spanCount": 1,
+      "spanType": "day",
+      "intervalCount": 1,
+      "intervalType": "month"
+    }
+  },
+  "registeredEndpointResponse": {
+    "positive": [{
       "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
       "deviceRegistrationCountTrend": "4",
       "yesterdaysDeviceRegistrationCount": "2",
-      "registeredDevicesTrend": "5",
+      "registeredDevicesTrend": "+5",
       "yesterdaysRegisteredDevices": "2",
       "maxRegisteredDevices": "3",
-      "minRegisteredDevices": "2"
-    }
-  }, {
-    "details": {
+      "minRegisteredDevices": "2",
+      "customer": "Test Org One",
+      "direction": "positive"
+    }],
+    "negative": [{
       "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
       "deviceRegistrationCountTrend": "-4",
       "yesterdaysDeviceRegistrationCount": "2",
       "registeredDevicesTrend": "-5",
       "yesterdaysRegisteredDevices": "2",
       "maxRegisteredDevices": "3",
-      "minRegisteredDevices": "2"
-    }
-  }],
-  "type": "registeredEndpoints",
-  "date": "2015-04-20",
-  "spanCount": 1,
-  "spanType": "day",
-  "intervalCount": 1,
-  "intervalType": "month"
+      "minRegisteredDevices": "2",
+      "customer": "Test Org One",
+      "direction": "negative"
+    }]
+  }
 }

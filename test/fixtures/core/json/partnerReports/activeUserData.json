@@ -1,0 +1,199 @@
+{
+  "detailedAPI": {
+    "data": [{
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "data": [{
+        "date": "2015-04-10T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "14",
+          "totalRegisteredUsers": "14"
+        }
+      }, {
+        "date": "2015-04-11T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "57",
+          "totalRegisteredUsers": "57"
+        }
+      }, {
+        "date": "2015-04-12T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "71",
+          "totalRegisteredUsers": "71"
+        }
+      }, {
+        "date": "2015-04-13T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "81",
+          "totalRegisteredUsers": "81"
+        }
+      }, {
+        "date": "2015-04-14T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "98",
+          "totalRegisteredUsers": "98"
+        }
+      }, {
+        "date": "2015-04-15T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "110",
+          "totalRegisteredUsers": "110"
+        }
+      }, {
+        "date": "2015-04-16T02:00:00.000-05:00",
+        "details": {
+          "activeUsers": "111",
+          "totalRegisteredUsers": "116"
+        }
+      }]
+    }],
+    "type": "activeUsers",
+    "date": "2015-04-20",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 1,
+    "intervalType": "week"
+  },
+  "mostActiveAPI": {
+    "data": [{
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "orgName": "Test Org One",
+      "data": [{
+        "details": {
+          "numCalls": "5",
+          "totalActivity": "14",
+          "userId": "4a0a7af3-5924-420d-9ec0-dcfccbe607cf",
+          "userName": "havard.nigardsoy@vijugroup.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "1",
+          "totalActivity": "13",
+          "userId": "f5c6e2ea-c556-4e9a-9b95-ba8791d7c4ff",
+          "userName": "RonnySagen.Talsaete@vijugroup.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "0",
+          "totalActivity": "117",
+          "userId": "2a276803-1953-43ef-999a-827c1159646d",
+          "userName": "Georg Thingbo"
+        }
+      }, {
+        "details": {
+          "numCalls": "0",
+          "totalActivity": "101",
+          "userId": "06e58d5f-62af-40bb-94c2-d49e26ec1635",
+          "userName": "Simon Watson"
+        }
+      }, {
+        "details": {
+          "numCalls": "0",
+          "totalActivity": "38",
+          "userId": "5f9a6028-35f3-4715-b065-14a32ac289d5",
+          "userName": "Stuart.Geoghegan@vijugroup.com"
+        }
+      }]
+    }],
+    "type": "activeUsers",
+    "date": "2015-04-20",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day"
+  },
+  "detailedResponse": [{
+    "modifiedDate": "Aug 01",
+    "totalRegisteredUsers": 14,
+    "activeUsers": 14,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 02",
+    "totalRegisteredUsers": 57,
+    "activeUsers": 57,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 03",
+    "totalRegisteredUsers": 71,
+    "activeUsers": 71,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 04",
+    "totalRegisteredUsers": 81,
+    "activeUsers": 81,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 05",
+    "totalRegisteredUsers": 98,
+    "activeUsers": 98,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 06",
+    "totalRegisteredUsers": 110,
+    "activeUsers": 110,
+    "percentage": 100,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }, {
+    "modifiedDate": "Aug 07",
+    "totalRegisteredUsers": 116,
+    "activeUsers": 111,
+    "percentage": 96,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true
+  }],
+  "mostActiveResponse": [{
+    "numCalls": 5,
+    "totalActivity": 14,
+    "sparkMessages": 9,
+    "userName": "havard.nigardsoy@vijugroup.com",
+    "orgName": "Test Org One"
+  }, {
+    "numCalls": 1,
+    "totalActivity": 13,
+    "sparkMessages": 12,
+    "userName": "RonnySagen.Talsaete@vijugroup.com",
+    "orgName": "Test Org One"
+  }, {
+    "numCalls": 0,
+    "totalActivity": 117,
+    "sparkMessages": 117,
+    "userName": "Georg Thingbo",
+    "orgName": "Test Org One"
+  }, {
+    "numCalls": 0,
+    "totalActivity": 101,
+    "sparkMessages": 101,
+    "userName": "Simon Watson",
+    "orgName": "Test Org One"
+  }, {
+    "numCalls": 0,
+    "totalActivity": 38,
+    "sparkMessages": 38,
+    "userName": "Stuart.Geoghegan@vijugroup.com",
+    "orgName": "Test Org One"
+  }],
+  "activePopResponse": [{
+    "customerName": "Test Org One",
+    "customerId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "percentage": 99,
+    "balloon": true,
+    "labelColorField": "#444"
+  }]
+}

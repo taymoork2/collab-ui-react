@@ -475,63 +475,6 @@
       "colorOne": "#F3F3F3",
       "colorTwo": "#ECECEC",
       "balloon": false
-    }],
-    "four": [{
-      "modifiedDate": "Aug 01",
-      "totalRegisteredUsers": 25,
-      "activeUsers": 0,
-      "percentage": 0,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 02",
-      "totalRegisteredUsers": 50,
-      "activeUsers": 25,
-      "percentage": 50,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 03",
-      "totalRegisteredUsers": 75,
-      "activeUsers": 50,
-      "percentage": 67,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 04",
-      "totalRegisteredUsers": 100,
-      "activeUsers": 75,
-      "percentage": 75,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 05",
-      "totalRegisteredUsers": 125,
-      "activeUsers": 100,
-      "percentage": 80,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 06",
-      "totalRegisteredUsers": 150,
-      "activeUsers": 125,
-      "percentage": 83,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 07",
-      "totalRegisteredUsers": 175,
-      "activeUsers": 150,
-      "percentage": 86,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
     }]
   },
   "filesShared": {
