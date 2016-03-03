@@ -69,24 +69,22 @@
         0);
       if (needsUserActivation) {
         switch (serviceId) {
-          case "squared-fusion-cal":
-            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
-            break;
-          case "squared-fusion-uc":
-            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-                if (!error) {
-                  if (enabled) {
-                    addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-                  }
-                  else {
-                    addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
-                  }
-                }
+        case "squared-fusion-cal":
+          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+          break;
+        case "squared-fusion-uc":
+          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+            if (!error) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
               }
-            );
-            break;
-          default:
-            break;
+            }
+          });
+          break;
+        default:
+          break;
         }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
@@ -114,15 +112,16 @@
                   'sipUriDomainEnterpriseNotConfigured',
                   5,
                   'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
-              }
-              else {
+              } else {
                 NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
               }
             });
           }
         })
-        .catch(function () {
-        });
+        .else(function () {
+          NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+        })
+        .catch(function () {});
     }
 
     function checkCallServiceConnect(serviceId) {
