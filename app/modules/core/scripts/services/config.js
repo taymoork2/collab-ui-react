@@ -4,7 +4,7 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter', 'Storage',
     function ($location, Utils, $filter, Storage) {
 
-      var PROD_BACKEND_FOR_E2E = 'prod-backend-for-e2e';
+      var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
       var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
       var getCurrentHostname = function () {
@@ -582,11 +582,11 @@ angular.module('Core')
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return !config.isProductionBackendForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+          return !config.isE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
         },
 
         isIntegration: function () {
-          return !config.isProductionBackendForE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
+          return !config.isE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
         isProd: function () {
@@ -594,7 +594,7 @@ angular.module('Core')
         },
 
         isCfe: function () {
-          return !config.isProductionBackendForE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+          return !config.isE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
         },
 
         getEnv: function () {
@@ -1081,15 +1081,14 @@ angular.module('Core')
         }
       };
 
-      config.setProductionBackendForE2E = function (backend) {
-        if (angular.isDefined(backend)) {
-          // Store in localStorage so new windows pick up the value, will be cleared on logout
-          Storage.put(PROD_BACKEND_FOR_E2E, backend);
+      config.setTestEnvConfig = function (testEnv) {
+        if (testEnv) {
+          Storage.put(TEST_ENV_CONFIG, testEnv); // Store in localStorage so new windows pick up the value, will be cleared on logout
         }
       };
 
-      config.isProductionBackendForE2E = function () {
-        return Storage.get(PROD_BACKEND_FOR_E2E) === 'true';
+      config.isE2E = function () {
+        return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
       };
 
       config.roleStates = {

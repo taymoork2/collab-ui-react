@@ -26,9 +26,9 @@
 
     Auth.setAuthorizationHeader();
 
-    Config.setProductionBackendForE2E($location.search()['prod-backend-for-e2e']);
+    Config.setTestEnvConfig($location.search()['test-env-config']);
 
-    if (Config.isProductionBackendForE2E()) {
+    if (Config.isE2E()) {
       $animate.enabled(false);
     }
 
