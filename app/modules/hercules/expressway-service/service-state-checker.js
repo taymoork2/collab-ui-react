@@ -2,7 +2,7 @@
   'use strict';
 
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo) {
+  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, FeatureToggleService) {
 
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
@@ -103,6 +103,28 @@
       }
     }
 
+    function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
+        .then(function (support) {
+          if (support) {
+            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
+              if (!org || !org.orgSettings || !org.orgSettings.sipCloudDomain) {
+                NotificationService.addNotification(
+                  NotificationService.types.TODO,
+                  'sipUriDomainEnterpriseNotConfigured',
+                  5,
+                  'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
+              }
+              else {
+                NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+              }
+            });
+          }
+        })
+        .catch(function () {
+        });
+    }
+
     function checkCallServiceConnect(serviceId) {
       if (serviceId !== 'squared-fusion-uc') {
         return;
@@ -113,6 +135,7 @@
             id: 'squared-fusion-ec'
           });
           if (callServiceConnect && callServiceConnect.enabled) {
+            handleAtlasSipUriDomainEnterpriseNotification(serviceId);
             USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
               if (!org || !org.sipDomain || org.sipDomain === '') {
                 NotificationService.addNotification(

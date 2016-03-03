@@ -1070,7 +1070,8 @@
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
-      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+      "add-resource-button-information": " to start the registration and configuration of your Expressways.",
+      "setupCloudSipUriHeader": "Define SIP Spark Address."
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",

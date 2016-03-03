@@ -14,12 +14,12 @@
     vm.showNotifications = false;
     vm.typeDisplayName = function (type) {
       switch (type) {
-      case NotificationService.types.ALERT:
-        return 'ALERT';
-      case NotificationService.types.NEW:
-        return 'NEW';
-      default:
-        return 'TO-DO';
+        case NotificationService.types.ALERT:
+          return 'ALERT';
+        case NotificationService.types.NEW:
+          return 'NEW';
+        default:
+          return 'TO-DO';
       }
     };
 
@@ -75,6 +75,12 @@
         controller: 'RedirectTargetController',
         controllerAs: 'redirectTarget',
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
+    };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
       });
     };
   }
