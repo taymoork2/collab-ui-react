@@ -22,11 +22,8 @@
         }
       });
     })
-    .factory('TerminusBlockOrderService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/block', {}, {});
-    })
-    .factory('TerminusNumberOrderService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/order', {}, {});
+    .factory('TerminusCustomerCarrierDidService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/:type', {}, {});
     })
     .factory('TerminusOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});

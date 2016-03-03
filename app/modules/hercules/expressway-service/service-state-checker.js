@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .service('ServiceStateChecker', ServiceStateChecker);
+
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo) {
+  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService) {
 
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
@@ -11,6 +15,9 @@
         if (checkIfConnectorsConfigured(connectorType)) {
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
+          if (checkIfSomeConnectorsOk(connectorType)) {
+            checkScheduleUpgradeAcknowledged(connectorType, serviceId);
+          }
         }
       }
     }
@@ -31,6 +38,7 @@
     }
 
     function checkIfConnectorsConfigured(connectorType) {
+
       var clusters = ClusterService.getClustersByConnectorType(connectorType);
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
@@ -48,6 +56,14 @@
       }
     }
 
+    function addNotification(noUsersActivatedId, serviceId, notification) {
+      NotificationService.addNotification(
+        NotificationService.types.TODO,
+        noUsersActivatedId,
+        4,
+        notification, [serviceId]);
+    }
+
     function checkUserStatuses(serviceId) {
       if (serviceId === 'squared-fusion-mgmt') {
         return;
@@ -59,11 +75,24 @@
       var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
         0);
       if (needsUserActivation) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          noUsersActivatedId,
-          4,
-          'modules/hercules/notifications/no_users_activated.html', [serviceId]);
+        switch (serviceId) {
+        case "squared-fusion-cal":
+          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+          break;
+        case "squared-fusion-uc":
+          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+            if (!error) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+              }
+            }
+          });
+          break;
+        default:
+          break;
+        }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
         var userErrorsId = serviceId + ':userErrors';
@@ -79,6 +108,27 @@
       }
     }
 
+    function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
+        .then(function (support) {
+          if (support) {
+            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
+              if (!org || !org.orgSettings || !org.orgSettings.sipCloudDomain) {
+                NotificationService.addNotification(
+                  NotificationService.types.TODO,
+                  'sipUriDomainEnterpriseNotConfigured',
+                  5,
+                  'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
+              } else {
+                NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+              }
+            });
+          } else {
+            NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+          }
+        });
+    }
+
     function checkCallServiceConnect(serviceId) {
       if (serviceId !== 'squared-fusion-uc') {
         return;
@@ -89,6 +139,7 @@
             id: 'squared-fusion-ec'
           });
           if (callServiceConnect && callServiceConnect.enabled) {
+            handleAtlasSipUriDomainEnterpriseNotification(serviceId);
             USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
               if (!org || !org.sipDomain || org.sipDomain === '') {
                 NotificationService.addNotification(
@@ -122,18 +173,51 @@
           return connector.connectorType === connectorType;
         })
         .all(function (connector) {
-          return connector.runningState !== 'not_configured';
+          return connector.state !== 'not_configured';
         })
         .value();
     }
+
+    function checkIfSomeConnectorsOk(connectorType) {
+      var clusters = ClusterService.getClustersByConnectorType(connectorType);
+      return _.chain(clusters)
+        .some(function (cluster) {
+          return _.chain(cluster.connectors)
+            .filter(function (connector) {
+              return connector.connectorType === connectorType;
+            })
+            .some(function (connector) {
+              return ClusterService.getRunningStateSeverity(connector.state).label === 'ok';
+            })
+            .value();
+        })
+        .value();
+    }
+
+    function checkScheduleUpgradeAcknowledged(connectorType, serviceId) {
+      ScheduleUpgradeService.get(Authinfo.getOrgId(), connectorType)
+        .then(function (data) {
+          if (!data.isAdminAcknowledged) {
+            NotificationService.addNotification(
+              NotificationService.types.TODO,
+              'acknowledgeScheduleUpgrade',
+              2,
+              'modules/hercules/notifications/schedule-upgrade.html', [serviceId],
+              null
+            );
+          } else {
+            NotificationService.removeNotification('acknowledgeScheduleUpgrade');
+          }
+        });
+    }
+
+    // TODO: add an event listener to remove the schedule-upgrade notification
+    $rootScope.$on('ACK_SCHEDULE_UPGRADE', function () {
+      NotificationService.removeNotification('acknowledgeScheduleUpgrade');
+    });
 
     return {
       checkState: checkState
     };
   }
-
-  angular
-    .module('Hercules')
-    .service('ServiceStateChecker', ServiceStateChecker);
-
 }());
