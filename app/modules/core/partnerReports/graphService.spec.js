@@ -2,18 +2,17 @@
 
 describe('Service: Graph Service', function () {
   var GraphService;
-  var activeUsersChart, mediaQualityChart, activeUserPopulationChart;
+  var activeUsersChart, mediaQualityChart, activeUserPopulationChart, donutChart;
   var validateService = {
-    validate: function () {}
+    validate: function () {},
+    validateNow: function (varOne, varTwo) {}
   };
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var dummyGraphData = angular.copy(dummyData.activeUser.four);
   var mediaQualityGraphData = angular.copy(dummyData.activeUser.four);
   var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
-  dummyPopulationData.colorOne = undefined;
-  dummyPopulationData.colorTwo = undefined;
-  dummyPopulationData.balloon = true;
+  var callMetricsData = angular.copy(dummyData.callMetrics);
 
   beforeEach(module('Core'));
 
@@ -21,6 +20,7 @@ describe('Service: Graph Service', function () {
     GraphService = _GraphService_;
 
     spyOn(validateService, 'validate');
+    spyOn(validateService, 'validateNow');
   }));
 
   it('should exist', function () {
@@ -33,34 +33,17 @@ describe('Service: Graph Service', function () {
         'dataProvider': dummyGraphData,
         validateData: validateService.validate
       });
-      activeUsersChart = GraphService.createActiveUsersGraph(dummyGraphData);
+      activeUsersChart = null;
+      activeUsersChart = GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
     });
 
-    it('should have created a graph', function () {
+    it('should have created a graph when getActiveUsersGraph is called the first time', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validate).not.toHaveBeenCalled();
     });
 
-    it('should update graph when updateActiveUsersGraph is called', function () {
-      GraphService.updateActiveUsersGraph(dummyGraphData, activeUsersChart);
-      expect(validateService.validate).toHaveBeenCalled();
-    });
-  });
-
-  describe('Media Quality graph services', function () {
-    beforeEach(function () {
-      spyOn(AmCharts, 'makeChart').and.returnValue({
-        'dataProvider': mediaQualityGraphData,
-        validateData: validateService.validate
-      });
-      mediaQualityChart = GraphService.createMediaQualityGraph(mediaQualityGraphData);
-    });
-
-    it('should have created a graph', function () {
-      expect(AmCharts.makeChart).toHaveBeenCalled();
-    });
-
-    it('should update graph when updateMediaQualityGraph is called', function () {
-      GraphService.updateMediaQualityGraph(mediaQualityGraphData, mediaQualityChart);
+    it('should update graph when getActiveUsersGraph is called a second time', function () {
+      GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
   });
@@ -71,16 +54,60 @@ describe('Service: Graph Service', function () {
         'dataProvider': dummyPopulationData,
         validateData: validateService.validate
       });
-      activeUserPopulationChart = GraphService.createActiveUserPopulationGraph(dummyPopulationData, 37);
+      activeUserPopulationChart = null;
+      activeUserPopulationChart = GraphService.getActiveUserPopulationGraph(dummyPopulationData, activeUserPopulationChart);
     });
 
-    it('should have created a graph', function () {
+    it('should have created a graph when getActiveUserPopulationGraph is called the first time', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validate).not.toHaveBeenCalled();
     });
 
-    it('should update graph when updateActiveUsersGraph is called', function () {
-      GraphService.updateActiveUserPopulationGraph(dummyPopulationData, activeUserPopulationChart, 15);
+    it('should update graph when getActiveUserPopulationGraph is called a second time', function () {
+      GraphService.getActiveUserPopulationGraph(dummyPopulationData, activeUserPopulationChart);
       expect(validateService.validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('Media Quality graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': mediaQualityGraphData,
+        validateData: validateService.validate
+      });
+      mediaQualityChart = null;
+      mediaQualityChart = GraphService.getMediaQualityGraph(mediaQualityGraphData, mediaQualityChart);
+    });
+
+    it('should have created a graph when getMediaQualityGraph is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validate).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when getMediaQualityGraph is called a second time', function () {
+      GraphService.getMediaQualityGraph(mediaQualityGraphData, mediaQualityChart);
+      expect(validateService.validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('Call Metrics graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': callMetricsData,
+        validateNow: validateService.validateNow
+      });
+      donutChart = null;
+      donutChart = GraphService.getCallMetricsDonutChart(callMetricsData, donutChart);
+    });
+
+    it('should have created a graph when getCallMetricsDonutChart is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+      expect(validateService.validateNow).not.toHaveBeenCalled();
+    });
+
+    it('should update graph when getCallMetricsDonutChart is called a second time', function () {
+      GraphService.getCallMetricsDonutChart(callMetricsData, donutChart);
+      expect(validateService.validateNow).toHaveBeenCalledWith(true, false);
     });
   });
 });

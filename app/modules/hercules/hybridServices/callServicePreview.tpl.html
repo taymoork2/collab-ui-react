@@ -23,6 +23,7 @@
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceAware.status && callServiceAware.entitled"
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
+              id="callServiceAwareStatus"
               translate="common.{{callServiceAware.entitled ? 'on' : 'off'}}"></span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
@@ -63,6 +64,7 @@
               translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceConnect.status && callServiceConnect.entitled"
               ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
+              id="callServiceConnectStatus"
               translate="common.{{callServiceConnect.entitled ? 'on' : 'off'}}"></span>
     </div>
     <div ng-if="callServiceConnect.enterpriseDn && callServiceConnect.entitled">
