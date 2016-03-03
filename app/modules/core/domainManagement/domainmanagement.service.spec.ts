@@ -114,7 +114,7 @@ describe('DomainManagementService', () => {
     let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
-      $httpBackend.expectPOST(url, data=> {
+    $httpBackend.expectPOST(url, data=> {
       return true;
     }).respond({token: token});
 
@@ -136,7 +136,7 @@ describe('DomainManagementService', () => {
     let domain = 'super.example.com';
     let token = 'mock-token';
     //noinspection TypeScriptUnresolvedVariable
-    DomainManagementService._domainList.push({text:domain,status:'pending',token:token});
+    DomainManagementService._domainList.push({text: domain, status: 'pending', token: token});
     $httpBackend.expectPOST(url, (data:any)=> {
       data = JSON.parse(data);
       expect(data.domain).toBe(domain);

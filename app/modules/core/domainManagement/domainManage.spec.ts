@@ -3,17 +3,15 @@ namespace domainManagement {
 
   describe('Constructor of', () => {
 
-    let Config, $q, $rootScope, DomainManagementService = {
-      addDomain: undefined,
-      domainList: [],
-      getVerifiedDomains: undefined,
-      states: {pending: 'pending'}
-    };
+    let Config, $q, $rootScope, DomainManagementService;
+
     beforeEach(angular.mock.module('Core'));
-    beforeEach(inject((_$q_, _$rootScope_, _Config_)=> {
+    beforeEach(angular.mock.module('Hercules'));
+    beforeEach(inject((_$q_, _$rootScope_, _Config_, _DomainManagementService_)=> {
       Config = _Config_;
       $q = _$q_;
       $rootScope = _$rootScope_;
+      DomainManagementService = _DomainManagementService_;
     }));
 
     describe('DomainManagementCtrl', ()=> {
@@ -25,7 +23,6 @@ namespace domainManagement {
           CiService: {
             getUser: sinon.stub().returns($q.resolve({userName: 'logged-on-user'}))
           },
-          DomainManagementService: DomainManagementService,
           FeatureToggleService: {
             supports: sinon.stub().returns($q.resolve(true)),
             features: {domainManagment: 'domainfeature'}
@@ -41,12 +38,10 @@ namespace domainManagement {
 
     describe('DomainManageInstructionsCtrl', ()=> {
       let ctrl;
-      beforeEach(inject(($controller, $translate)=> {
+      beforeEach(inject(($controller)=> {
         ctrl = $controller('DomainManageInstructionsCtrl', {
           $stateParams: {domain: 'test.example.com', loggedOnUser: {email: sinon.stub()}},
-          $previousState: {go: sinon.stub()},
-          DomainManagementService: DomainManagementService,
-          $translate: $translate
+          $previousState: {go: sinon.stub()}
         });
       }));
 
@@ -57,12 +52,10 @@ namespace domainManagement {
 
     describe('DomainManageClaimCtrl', ()=> {
       let ctrl;
-      beforeEach(inject(($controller, $translate)=> {
+      beforeEach(inject(($controller)=> {
         ctrl = $controller('DomainManageClaimCtrl', {
           $state: {params: {domain: {text: 'test.example.com'}, loggedOnUser: {email: sinon.stub()}}},
-          $previousState: {go: sinon.stub()},
-          DomainManagementService: DomainManagementService,
-          $translate: $translate
+          $previousState: {go: sinon.stub()}
         });
       }));
 

@@ -5,20 +5,22 @@ namespace domainManagement {
   describe('DomainManagementVerifyCtrl', ()=> {
       let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagmentVerifyCtrl, DomainManagementService, verifyDomainInvoked;
       beforeEach(angular.mock.module('Core'));
+      beforeEach(angular.mock.module('Hercules'));
 
-      beforeEach(inject((_$rootScope_, $injector, $controller, $translate, _$q_, _Config_)=> {
+      beforeEach(inject((_$rootScope_, $injector, $controller, $translate, _$q_, _Config_, _DomainManagementService_)=> {
         Config = _Config_;
         Translate = $translate;
         Controller = $controller;
         Injector = $injector;
         $q = _$q_;
         $rootScope = _$rootScope_;
-
-        DomainManagementService = new DomainManagementServiceMock($q);
+        DomainManagementService = _DomainManagementService_;
       }));
 
-      let domainManagmentVerifyCtrlFactory = (domainManageService, user, domain)=> {
+      let domainManagmentVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true)=> {
 
+        if (mockToken)
+          domainManageService.getToken = sinon.stub().returns($q.resolve());
         return Controller('DomainManageVerifyCtrl', {
           $state: {params: {domain: domain, loggedOnUser: user}},
           $previousState: null,
@@ -53,20 +55,20 @@ namespace domainManagement {
         let user = {isLoaded: true, domain: 'example.com'};
         let deferred = $q.defer();
 
-        let service = {
-          domainList: [{text: "superdomain.com", status: 'verified'}],
-          verifyDomain: sinon.stub().returns(deferred.promise),//$q.reject("error-in-verify")),
-          getToken: sinon.stub().returns($q.resolve('faketoken')),
-          states: DomainManagementService.states
-        };
 
+        //noinspection TypeScriptUnresolvedVariable
+        DomainManagementService._domainList = [{text: "superdomain.com", status: 'verified'}];
+        DomainManagementService.verifyDomain = sinon.stub().returns(deferred.promise);
+        DomainManagementService.getToken = sinon.stub().returns($q.resolve('faketoken'));
         ctrl = domainManagmentVerifyCtrlFactory(
-          service, user, domain
+          DomainManagementService, user, domain, false
         );
 
         ctrl.verify();
 
-        expect(service.verifyDomain.callCount).toBe(1);
+        expect(DomainManagementService.verifyDomain.callCount).toBe(1);
+        expect(DomainManagementService.getToken.callCount).toBe(1);
+
         deferred.reject("error-in-verify");
         ctrl.error = "not-the-error-we-expect";
 
@@ -95,9 +97,6 @@ namespace domainManagement {
 
 
       describe("with no previous domains verified", ()=> {
-        beforeEach(()=> {
-          DomainManagementService.domainList = [];
-        });
 
         it('should deny domains other than user domain', ()=> {
           let ctrl, domain = {text: 'anydomain.com'};
@@ -115,7 +114,7 @@ namespace domainManagement {
         });
 
         it('should allow verify of same domain as user if has token', ()=> {
-          let ctrl, domain = {text: 'example.com' , token: 'thetoken'};
+          let ctrl, domain = {text: 'example.com', token: 'thetoken'};
           ctrl = domainManagmentVerifyCtrlFactory(
             DomainManagementService,
             {
@@ -165,50 +164,17 @@ namespace domainManagement {
         });
 
         it('should invoke verifyDomain on service', () => {
+          DomainManagementService.verifyDomain = sinon.stub().returns($q.resolve({}));
+          ctrl.$previousState = {go: sinon.stub()};
 
           ctrl.verify();
-          expect(DomainManagementService.verifyDomainInvoked).not.toBeNull();
-          expect(DomainManagementService.verifyDomainInvoked.text).toBe(domain.text);
+          $rootScope.$digest();
+          expect(DomainManagementService.verifyDomain.callCount).toBe(1);
+          expect(DomainManagementService.getToken.callCount).toBe(0);
         });
       })
       ;
     }
   );
-
-  class DomainManagementServiceMock {
-    get domainList() {
-      return this._domainList;
-    }
-
-    set domainList(value) {
-      this._domainList = value;
-    }
-
-    get verifyDomainInvoked() {
-      return this._verifyDomainInvoked;
-    }
-
-    private _verifyDomainInvoked = {text: undefined};
-    private _domainList = [];
-    states = {
-      pending: 'pending',
-      verified: 'verified',
-      claimed: 'claimed'
-    };
-
-    constructor(private $q) {
-
-    }
-
-    verifyDomain(domain) {
-      this._verifyDomainInvoked.text = domain;
-      return this.$q.resolve();
-    }
-
-    getToken(domain) {
-      return this.$q.resolve();
-    }
-
-  }
 }
 
