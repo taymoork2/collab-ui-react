@@ -36,7 +36,6 @@
       removedtoken: manualRemovedToken,
     };
     vm.invalidCount = 0;
-    vm.areaCodeOptions = [];
 
     //PSTN Lookup Tokenfield
     vm.tokenFieldId = 'didAddField';
@@ -215,6 +214,7 @@
     }
 
     function getStateInventory() {
+      vm.areaCodeOptions = [];
       PstnSetupService.getCarrierInventory(vm.trialData.details.pstnProvider.uuid, vm.trialData.details.pstnNumberInfo.state.abbreviation)
         .then(function (response) {
           _.forEach(response.areaCodes, function (areaCode, index) {
