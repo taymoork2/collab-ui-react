@@ -83,10 +83,10 @@ describe('Configuring services per-user', function () {
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
     // Get into the call service settings, make sure EC is off!
-    /* $HSE
     utils.click(users.callServiceAware_link);
-    utils.expectCSToggle(users.callServiceAwareToggle, true);
-    utils.expectCSToggle(users.callServiceConnectToggle, false);
+    /* $HSE
+    utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
+    utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
     */
 
     utils.click(users.closeSidePanel);
@@ -230,7 +230,7 @@ describe('Configuring services per-user', function () {
     utils.click(users.paidMsgCheckbox);
 
     // Enable a hybrid service
-    utils.click(users.hybridServices_UC /*$HSE users.hybridServices_EC*/ );
+    utils.click(users.hybridServices_EC);
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
 
@@ -247,12 +247,11 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
       // Get into the call service settings
-      /* $HSE
       utils.click(users.callServiceAware_link);
-      utils.expectCSToggle(users.callServiceAwareToggle, true);
-      utils.expectCSToggle(users.callServiceConnectToggle, true);
+      /* $HSE
+      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
+      utils.expectTextToBeSet(users.callServiceConnectStatus, 'On');
       */
-
       utils.click(users.closeSidePanel);
 
       // Cleanup

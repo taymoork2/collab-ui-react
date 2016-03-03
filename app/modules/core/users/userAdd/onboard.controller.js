@@ -1261,7 +1261,10 @@ angular.module('Core')
 
       $scope.extensionEntitlements = [];
       $scope.updateExtensionEntitlements = function (entitlements) {
-        $scope.hybridCallServiceAware = _.some(entitlements, {entitlementName: 'squaredFusionUC', entitlementState: 'ACTIVE'});
+        $scope.hybridCallServiceAware = _.some(entitlements, {
+          entitlementName: 'squaredFusionUC',
+          entitlementState: 'ACTIVE'
+        });
         $scope.extensionEntitlements = entitlements;
       };
 
