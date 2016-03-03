@@ -1416,14 +1416,14 @@
       return deferred.promise;
     };
 
-      $scope.extensionEntitlements = [];
-      $scope.updateExtensionEntitlements = function (entitlements) {
-        $scope.hybridCallServiceAware = _.some(entitlements, {
-          entitlementName: 'squaredFusionUC',
-          entitlementState: 'ACTIVE'
-        });
-        $scope.extensionEntitlements = entitlements;
-      };
+    $scope.extensionEntitlements = [];
+    $scope.updateExtensionEntitlements = function (entitlements) {
+      $scope.hybridCallServiceAware = _.some(entitlements, {
+        entitlementName: 'squaredFusionUC',
+        entitlementState: 'ACTIVE'
+      });
+      $scope.extensionEntitlements = entitlements;
+    };
 
     // Wizard hook for save button
     $scope.assignServicesNext = function () {
