@@ -230,7 +230,7 @@ describe('Configuring services per-user', function () {
     utils.click(users.paidMsgCheckbox);
 
     // Enable a hybrid service
-    utils.click(users.hybridServices_EC);
+    utils.click(users.hybridServices_UC /* $HSE users.hybridServices_EC*/ );
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
 

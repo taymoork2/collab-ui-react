@@ -1245,7 +1245,7 @@
       });
       $scope.extensionEntitlements = entitlements;
     };
-    
+
     function entitleUserCallback(data, status, method, headers) {
       $scope.results = {
         resultList: []
