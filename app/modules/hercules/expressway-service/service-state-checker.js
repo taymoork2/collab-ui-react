@@ -161,6 +161,8 @@
               'modules/hercules/notifications/schedule-upgrade.html', [serviceId],
               null
             );
+          } else {
+            NotificationService.removeNotification('acknowledgeScheduleUpgrade');
           }
         });
     }
