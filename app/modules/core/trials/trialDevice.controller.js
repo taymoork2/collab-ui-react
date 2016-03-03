@@ -305,22 +305,22 @@
       type: 'input',
       className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.name'),
         type: 'text',
-      },
+      }
     }, {
       model: vm.shippingInfo,
       key: 'phoneNumber',
       type: 'input',
       className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.phone'),
         type: 'text'
-      },
+      }
     }, {
       model: vm.shippingInfo,
       key: 'country',
@@ -330,44 +330,44 @@
       }),
       className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-6',
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.country'),
         type: 'text',
         required: true,
         labelfield: 'country',
         labelProp: 'country',
-        valueProp: 'country',
+        valueProp: 'country'
       },
       expressionProperties: {
         'templateOptions.options': function () {
           return TrialDeviceService.getCountries();
-        },
-      },
+        }
+      }
     }, {
       model: vm.shippingInfo,
       key: 'addressLine1',
       type: 'input',
       className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-2',
-        inputClass: 'columns medium-10',
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.address'),
         type: 'text',
-        required: true,
-      },
+        required: true
+      }
     }, {
       model: vm.shippingInfo,
       key: 'city',
       type: 'input',
-      className: 'columns medium-4',
+      className: 'columns medium-12',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-9',
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-7',
         label: $translate.instant('trialModal.call.city'),
         type: 'text',
-        required: true,
-      },
+        required: true
+      }
     }, {
       model: vm.shippingInfo,
       key: 'state',
@@ -375,38 +375,36 @@
       defaultValue: _.find(TrialDeviceService.getStates(), {
         country: vm.shippingInfo.state
       }),
-      className: 'columns medium-4',
+      className: 'columns medium-5',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-9',
+        labelClass: 'columns medium-5 text-right',
+        inputClass: 'columns medium-6',
         label: $translate.instant('trialModal.call.state'),
-        type: 'text',
         required: true,
         labelfield: 'abbr',
         labelProp: 'abbr',
-        valueProp: 'state',
-        filter: true
+        valueProp: 'state'
       },
       expressionProperties: {
         'templateOptions.options': function () {
           return TrialDeviceService.getStates();
         }
-      },
+      }
     }, {
       model: vm.shippingInfo,
       key: 'postalCode',
       type: 'input',
-      className: 'columns medium-4',
+      className: 'columns medium-6',
       templateOptions: {
-        labelClass: 'columns medium-3',
-        inputClass: 'columns medium-9',
+        labelClass: 'columns medium-2 medium-offset-1 text-right',
+        inputClass: 'columns medium-5',
         label: $translate.instant('trialModal.call.zip'),
         type: 'text',
         max: 99999,
         min: 0,
         pattern: '\\d{5}',
-        required: true,
-      },
+        required: true
+      }
     }];
 
     init();

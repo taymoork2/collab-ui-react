@@ -2012,6 +2012,7 @@
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
+      "unit": "Unit",
       "city": "City",
       "state": "State",
       "zip": "Zip"
