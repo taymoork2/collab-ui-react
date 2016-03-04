@@ -1,15 +1,17 @@
 'use strict';
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $scope, $q, TrialPstnService, PstnSetupService;
+  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, PstnSetupService;
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _TrialPstnService_, _PstnSetupService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _PstnSetupService_) {
     $scope = $rootScope.$new();
 
+    $httpBackend = _$httpBackend_;
+    HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
     PstnSetupService = _PstnSetupService_;
     $q = _$q_;
@@ -51,6 +53,32 @@ describe('Controller: TrialPstnCtrl', function () {
       email: 'sample@snapple.com'
     };
 
+    var carrierId = '25452345-agag-ava-43523452';
+
+    var stateSearch = 'TX';
+
+    var areaCodeResponse = {
+      areaCodes: [{
+        code: '469',
+        count: 25
+      }, {
+        code: '817',
+        count: 25
+      }, {
+        code: '123',
+        count: 4
+      }],
+      count: 85
+    };
+
+    var newAreaCodes = [{
+      code: '469',
+      count: 25
+    }, {
+      code: '817',
+      count: 25
+    }];
+
     it('should set the carrier', function () {
       controller.trialData.details.pstnProvider = carrier;
       expect(trials.details.pstnProvider).toBe(carrier);
@@ -64,6 +92,17 @@ describe('Controller: TrialPstnCtrl', function () {
     it('should set number data', function () {
       controller.trialData.details.pstnNumberInfo = numberInfo;
       expect(trials.details.pstnNumberInfo).toBe(numberInfo);
+    });
+
+    it('should get area codes', function () {
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/inventory/carriers/' + carrierId + '/did/count?state=' + stateSearch).respond(areaCodeResponse);
+      controller.trialData.details.pstnProvider.uuid = carrierId;
+      controller.trialData.details.pstnNumberInfo.state.abbreviation = stateSearch;
+      controller.getStateInventory();
+
+      $httpBackend.flush();
+
+      expect(controller.areaCodeOptions).toEqual(newAreaCodes);
     });
 
   });
