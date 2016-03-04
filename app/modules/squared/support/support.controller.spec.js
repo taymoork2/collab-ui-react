@@ -71,8 +71,8 @@ describe('Controller: SupportCtrl', function () {
 
       Authinfo.isHelpDeskUser.returns(true);
       $scope.$digest();
-      view.find("toolsCardHelpdeskButton").click();
-      expect(helpdeskButtonClicked.calledOnce);
+      view.find("#toolsCardHelpdeskButton").click();
+      expect(helpdeskButtonClicked.calledOnce).toBeTruthy()
 
       helpdeskButtonClicked.reset();
 
@@ -83,9 +83,4 @@ describe('Controller: SupportCtrl', function () {
     });
   });
 
-  function mockAllHttpRequests() {
-    httpBackend.when('GET', function (url) {
-      return true; // all http GET requests
-    }).respond({});
-  }
 });
