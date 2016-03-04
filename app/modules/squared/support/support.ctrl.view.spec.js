@@ -33,20 +33,20 @@ describe('Controller: SupportCtrl', function () {
       view = $compile(angular.element(html))($scope);
     }));
 
-    fit('shows tools card if user has helpdesk role', function () {
+    it('shows tools card if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(true);
       $scope.$digest();
       var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeTruthy();
     });
 
-    fit('shows tools card if user has cisco dev role', function () {
-      sinon.stub(Authinfo, 'isCisco').returns(true);
-      sinon.stub(Userservice, 'getUser').yields({
+    it('shows tools card if user has cisco dev role', function () {
+      Authinfo.isCisco = sinon.stub().returns(true);
+      Authinfo.isHelpDeskUser = sinon.stub().returns(false);
+      Userservice.getUser = sinon.stub().yields({
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport']
       });
-      sinon.stub(Authinfo, 'isHelpDeskUser').returns(false);
 
       controller('SupportCtrl', {
         $scope: $scope,
@@ -59,18 +59,18 @@ describe('Controller: SupportCtrl', function () {
       expect(hasToolsCard).toBeTruthy();
     });
 
-    fit('does NOT show tools card if user doesnt have dev roles nor helpdesk role', function () {
-      sinon.stub(Userservice, 'getUser').yields({
+    it('does NOT show tools card if user doesnt have dev roles nor helpdesk role', function () {
+      Authinfo.isHelpDeskUser = sinon.stub().returns(false);
+      Userservice.getUser = sinon.stub().yields({
         success: true,
         roles: ['noDevRole']
       });
-      Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       $scope.$digest();
       var hasToolsCard = _.contains(view.html(), "supportPageToolsCard");
       expect(hasToolsCard).toBeFalsy();
     });
 
-    fit('has clickable helpdesk button if user has helpdesk role', function () {
+    it('has clickable helpdesk button if user has helpdesk role', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(true);
       $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
       $scope.$digest();
@@ -78,7 +78,7 @@ describe('Controller: SupportCtrl', function () {
       expect($scope.gotoHelpdesk.callCount).toBe(1);
     });
 
-    fit('has NO helpdesk button to click if user hasnt helpdesk role', function () {
+    it('has NO helpdesk button to click if user hasnt helpdesk role', function () {
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       $scope.gotoHelpdesk = sinon.spy($scope, 'gotoHelpdesk');
       $scope.$digest();
@@ -86,7 +86,7 @@ describe('Controller: SupportCtrl', function () {
       expect($scope.gotoHelpdesk.callCount).toBe(0);
     });
 
-    fit('has clickable call flow button if user has cisco dev role', function () {
+    it('has clickable call flow button if user has cisco dev role', function () {
       Authinfo.isCisco = sinon.stub().returns(true);
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
@@ -106,7 +106,7 @@ describe('Controller: SupportCtrl', function () {
       expect($scope.gotoCdrSupport.callCount).toBe(1);
     });
 
-    fit('has no call flow button to click if user hasnt cisco dev role', function () {
+    it('has no call flow button to click if user hasnt cisco dev role', function () {
       Authinfo.isCisco = sinon.stub().returns(true);
       Authinfo.isHelpDeskUser = sinon.stub().returns(false);
       Userservice.getUser = sinon.stub().yields({
