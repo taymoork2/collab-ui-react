@@ -25,7 +25,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     this.csvStatus = function (
       siteUrl,
-      testCsvStatusReq
+      checkCsvStatusReq
     ) {
 
       var funcName = 'csvStatus()';
@@ -33,7 +33,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl + "\n" +
-        "testCsvStatusReq=" + testCsvStatusReq;
+        "checkCsvStatusReq=" + checkCsvStatusReq;
       $log.log(logMsg);
 
       var completionInfo = null;
@@ -60,20 +60,20 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var logMsg = "";
 
           // return a mock/test csv status if requested
-          if (null != testCsvStatusReq) {
-            if ('exportInProgress' == testCsvStatusReq) {
+          if (null != checkCsvStatusReq) {
+            if ('exportInProgress' == checkCsvStatusReq) {
               successResult.status = "none";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('exportInProgress' == testCsvStatusReq) {
+            if ('exportInProgress' == checkCsvStatusReq) {
               successResult.status = "exportInProgress";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('exportCompleted' == testCsvStatusReq) {
+            if ('exportCompleted' == checkCsvStatusReq) {
               completionInfo = {};
 
               successResult.status = "exportCompleted";
@@ -82,13 +82,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('importInProgress' == testCsvStatusReq) {
+            if ('importInProgress' == checkCsvStatusReq) {
               successResult.status = "importInProgress";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('importCompleted' == testCsvStatusReq) {
+            if ('importCompleted' == checkCsvStatusReq) {
               completionInfo = {};
 
               successResult.status = "importCompleted";
