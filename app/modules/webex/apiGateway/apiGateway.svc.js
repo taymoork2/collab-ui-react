@@ -102,7 +102,31 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
           // TODO: update successResult appropriately
           deferredCsvStatus.resolve(successResult);
-        },
+          /*
+          return WebExRestApiFact.csvStatusReq(
+            siteUrl
+          ).then(
+            function success(response) {
+              var funcName = "WebExRestApiFact.csvStatusReq.success()";
+              var logMsg = "";
+
+              logMsg = funcName + "\n" +
+                "siteUrl=" + siteUrl + "\n" +
+                "response=" + JSON.stringify(response);
+              $log.log(logMsg);
+
+              $q.resolve(result);
+            } // csvStatusReqSuccess()
+          ).catch(
+            function errorCatch(result) {
+              var funcName = "WebExRestApiFact.csvStatusReq.errorCatch()";
+              var logMsg = "";
+
+              $q.reject(result);
+            } // restApiReqCatch()
+          ); // return WebExRestApiFact.csvStatusReq()
+          */
+          },
 
         function error(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.error()";
