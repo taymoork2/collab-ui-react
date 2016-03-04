@@ -395,8 +395,6 @@
 
       vm.ui = AAUiModelService.getUiModel();
 
-      loadNums();
-
       vm.aaModel.possibleNumberDiscrepancy = false;
       warnOnAssignedNumberDiscrepancies();
 
