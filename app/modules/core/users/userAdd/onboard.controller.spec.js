@@ -14,6 +14,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var sites;
   var fusionServices;
   var headers;
+  var getMessageServices;
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var $controller;
@@ -61,6 +62,7 @@ describe('OnboardCtrl: Ctrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
+    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -420,7 +422,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('With Assigning Users', function () {
+  describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {
       $scope.allLicenses = [{
@@ -453,6 +455,44 @@ describe('OnboardCtrl: Ctrl', function () {
       $scope.populateConf();
       expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
       expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
+    });
+  });
+
+  describe('With assigning message licenses', function () {
+    beforeEach(initController);
+    beforeEach(function () {
+      spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+      spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices);
+      $scope.messageFeatures = [{
+        ServiceFeature: [{
+          licenseID: "SD_ipja8y10-01fb-9ae8-1342-lk24781ca2r"
+        }],
+        licenses: [{
+          licenseId: "MS_fcfa8f18-59fb-4ad7-9328-aa39861ca9c5",
+          offerName: "MS",
+          licenseType: "MESSAGING",
+          billingServiceId: "int-dlos-322",
+          features: ["squared-room-moderation"],
+          volume: 78,
+          isTrial: false,
+          status: "PENDING"
+        }, {
+          licenseId: "MS_c6bf3e38-f1f7-457d-8d4e-e24429c49c9f",
+          offerName: "MS",
+          licenseType: "MESSAGING",
+          billingServiceId: "int-dlos-2",
+          features: ["squared-room-moderation"],
+          volume: 105,
+          isTrial: false,
+          status: "ACTIVE"
+        }]
+      }];
+    });
+
+    it('should be added to licenseList', function () {
+      var userLicenseIds = 'MS_fcfa8f18-59fb-4ad7-9328-aa39861ca9c5';
+      expect($scope.messageFeatures[0].licenses[0].model).not.toBeDefined();
+      expect($scope.radioStates.msgRadio).toEqual(false);
     });
   });
 

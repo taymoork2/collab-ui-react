@@ -382,9 +382,7 @@
 
     $scope.radioStates = {
       commRadio: false,
-      confRadio: false,
-      msgRadio: false,
-      subLicense: {}
+      msgRadio: false
     };
 
     if (userEnts) {
@@ -526,6 +524,12 @@
       if (services.message) {
         services.message = mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
+        _.forEach($scope.messageFeatures[1].licenses, function (license) {
+          license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
+        });
+        if ($scope.messageFeatures[1].licenses.length > 1) {
+          $scope.radioStates.msgRadio = true;
+        }
       }
       if (services.conference) {
         $scope.cmrFeatures = Authinfo.getCmrServices();
@@ -758,17 +762,18 @@
     var getAccountLicenses = function (action) {
       var licenseList = [];
       if (Authinfo.hasAccount()) {
-        // Messaging: prefer selected subscription, if specified
-        if ('licenseId' in $scope.radioStates.subLicense) {
-          licenseList.push(new LicenseFeature($scope.radioStates.subLicense.licenseId, true));
+        var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
+        var selMsgService = $scope.messageFeatures[msgIndex];
+        var licenses = selMsgService.license || selMsgService.licenses;
+        // Messaging: prefer selected subscription, if specified  
+        if (_.isArray(licenses)) {
+          _.forEach(licenses, function (license) {
+            licenseList.push(new LicenseFeature(license.licenseId, license.model));
+          });
         } else {
-          var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
-          var selMsgService = $scope.messageFeatures[msgIndex];
-          // TODO (tohagema): clean up messageFeatures license(s) model :/
-          var license = selMsgService.license || selMsgService.licenses[0];
-          if ('licenseId' in license) {
+          if ('licenseId' in licenses) {
             // Add new licenses
-            licenseList.push(new LicenseFeature(license.licenseId, true));
+            licenseList.push(new LicenseFeature(licenses.licenseId, true));
           } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
             // Remove existing license
             licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
@@ -1054,7 +1059,6 @@
 
     $scope.clearPanel = function () {
       resetUsersfield();
-      $scope.radioStates.subLicense = {};
       $scope.results = null;
     };
 
