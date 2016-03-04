@@ -22,6 +22,11 @@
               </button>
               <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
                 <li>
+                  <a ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})"
+                     ng-show="domain.status==='pending'"
+                     translate="domainManagement.actions.instructions"></a>
+                </li>
+                <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
                      ng-if="domain.status==='verified'" translate="domainManagement.actions.unverify"></a>
                 </li>
@@ -34,18 +39,13 @@
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
                      ng-if="domain.status==='pending'" translate="domainManagement.actions.delete"></a>
                 </li>
-                <li>
-                  <a ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-show="domain.status==='pending' && domain.token"
-                     translate="domainManagement.actions.instructions"></a>
-                </li>
               </ul>
             </span>
           </td>
           <td>
             <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                    ng-if="domain.status==='pending' && domain.token"
-                    class="btn--cta verify-btn" translate="domainManagement.verifyDomain"></button>
+                    ng-if="domain.status==='pending'"
+                    class="btn--primary verify-btn" translate="domainManagement.verifyDomain"></button>
           </td>
         </tr>
       </table>

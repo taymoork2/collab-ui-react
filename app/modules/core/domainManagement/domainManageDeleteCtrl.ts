@@ -10,14 +10,14 @@ namespace domainManagement {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
 
-      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)) {
+      if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && DomainManagementService.enforceUsersInVerifiedAndClaimedDomains && this._loggedOnUser.domain == this._domainToDelete.text)) {
         this._error = $translate.instant('domainManagement.delete.preventLockoutError');
       }
     }
 
     public deleteDomain() {
       let start = moment();
-      if (this._domainToDelete.status === this.DomainManagementService.states.verified) {
+      if (this._domainToDelete.status === this.DomainManagementService.states.verified || this._domainToDelete.status === this.DomainManagementService.states.pending) {
         this.DomainManagementService.unverifyDomain(this._domainToDelete.text).then(
           () => {
             this.recordMetrics({
@@ -73,8 +73,9 @@ namespace domainManagement {
       return this._domainToDelete && this._domainToDelete.text;
     }
 
-    get domainIsPending() {
-      return this._domainToDelete && this._domainToDelete.status == this.DomainManagementService.states.pending;
+    get showWarning() {
+      return this._domainToDelete && this.DomainManagementService.enforceUsersInVerifiedAndClaimedDomains &&
+        this._domainToDelete.status != this.DomainManagementService.states.pending;
     }
 
     get error() {
