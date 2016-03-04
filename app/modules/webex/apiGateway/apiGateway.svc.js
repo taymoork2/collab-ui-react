@@ -126,7 +126,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             } // restApiReqCatch()
           ); // return WebExRestApiFact.csvStatusReq()
           */
-          },
+        },
 
         function error(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.error()";
