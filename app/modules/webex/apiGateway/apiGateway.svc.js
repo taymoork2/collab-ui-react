@@ -23,6 +23,15 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
+    this.csvStatusTypes = [
+      null,
+      'none',
+      'exportInProgress',
+      'exportCompleted',
+      'importInProgress',
+      'importCompleted'
+    ];
+
     this.csvStatus = function (
       siteUrl,
       checkCsvStatusReq

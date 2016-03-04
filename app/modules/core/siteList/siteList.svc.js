@@ -23,18 +23,6 @@ angular.module('Core').service('SiteListService', [
 
     var _this = this;
 
-    this.checkCsvStatusTypes = [
-      null,
-      'none',
-      'exportInProgress',
-      'exportCompleted',
-      'importInProgress',
-      'importCompleted'
-    ];
-    this.checkCsvStatusStart = 1;
-    this.checkCsvStatusEnd = 3;
-    this.checkCsvStatusIndex = this.checkCsvStatusStart;
-
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
       var logMsg = "";
@@ -321,7 +309,7 @@ angular.module('Core').service('SiteListService', [
                     siteRow
                   );
 
-                  siteRow.csvPollTimeout = $interval(
+                  siteRow.csvPollIntervalObj = $interval(
                     function () {
                       _this.updateCSVColumn(siteRow);
                     },
@@ -362,10 +350,10 @@ angular.module('Core').service('SiteListService', [
 
       var siteUrl = siteRow.license.siteUrl;
 
-      var checkCsvStatusReq = _this.checkCsvStatusTypes[_this.checkCsvStatusIndex];
-      ++_this.checkCsvStatusIndex;
-      if (_this.checkCsvStatusEnd < _this.checkCsvStatusIndex) {
-        _this.checkCsvStatusIndex = _this.checkCsvStatusStart;
+      var checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.checkCsvStatusIndex];
+      ++siteRow.checkCsvStatusIndex;
+      if (siteRow.checkCsvStatusEnd < siteRow.checkCsvStatusIndex) {
+        siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
       }
 
       logMsg = funcName + "\n" +

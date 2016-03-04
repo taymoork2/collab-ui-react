@@ -74,7 +74,11 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
 
-          conferenceService.csvPollTimeout = null;
+          conferenceService.csvPollIntervalObj = null;
+
+          conferenceService.checkCsvStatusStart = 1;
+          conferenceService.checkCsvStatusEnd = 3;
+          conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
 
           vm.gridData.push(conferenceService);
         }
@@ -179,12 +183,12 @@ angular.module('Core').controller('SiteListCtrl', [
           var funcName = "cancelCsvPollInterval()";
           var logMsg = "";
 
-          if (null != siteRow.csvPollTimeout) {
+          if (null != siteRow.csvPollIntervalObj) {
             logMsg = funcName + "\n" +
               "siteUrl=" + siteRow.license.siteUrl;
             $log.log(logMsg);
 
-            $interval.cancel(siteRow.csvPollTimeout);
+            $interval.cancel(siteRow.csvPollIntervalObj);
           }
         } // cancelCsvPollInterval()
       ); // vm.gridData.forEach()
