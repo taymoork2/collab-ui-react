@@ -52,6 +52,9 @@
     $scope.dirsyncEnabled = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
+    $scope.USER_EXPORT_THRESHOLD = 10000;
+    $scope.totalUsers = 0;
+    $scope.obtainedTotalUserCount = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -161,6 +164,10 @@
               // data.resources = getUserStatus(data.Resources);
 
               $scope.placeholder.count = data.totalResults;
+              if ($scope.searchStr === '') {
+                $scope.totalUsers = data.totalResults;
+                $scope.obtainedTotalUserCount = true;
+              }
               if (startIndex === 0) {
                 $scope.userList.allUsers = data.Resources;
               } else {
@@ -198,6 +205,16 @@
               Log.debug('Query existing users failed. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.userListError')], 'error');
             }
+          }
+
+          if (!$scope.obtainedTotalUserCount) {
+            UserListService.getUserCount().then(function (count) {
+              if (count === -1) {
+                count = $scope.USER_EXPORT_THRESHOLD + 1;
+              }
+              $scope.totalUsers = count;
+              $scope.obtainedTotalUserCount = true;
+            });
           }
         }, $scope.searchStr);
     }
