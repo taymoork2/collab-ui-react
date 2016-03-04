@@ -23,10 +23,9 @@
     vm.model = {
       state: '',
       areaCode: '',
-      quantity: '',
+      quantity: 1,
       consecutive: false
     };
-    vm.areaCodeOptions = [];
     vm.orderNumbersTotal = 0;
 
     vm.removeOrder = removeOrder;
@@ -87,9 +86,9 @@
             $scope.$watchCollection(function () {
               return vm.areaCodeOptions;
             }, function (newAreaCodes) {
-              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
-                count: (newAreaCodes && newAreaCodes.length) ? _.sum(newAreaCodes, 'count') : 0
-              }, 'messageformat');
+              $scope.to.helpText = vm.model.state ? $translate.instant('pstnSetup.numbers', {
+                count: _.isArray(newAreaCodes) ? _.sum(newAreaCodes, 'count') : 0
+              }, 'messageformat') : undefined;
             });
           }
         }, {
@@ -116,9 +115,9 @@
             $scope.$watch(function () {
               return vm.model.areaCode;
             }, function (newAreaCode) {
-              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
+              $scope.to.helpText = vm.model.areaCode ? $translate.instant('pstnSetup.numbers', {
                 count: (newAreaCode && newAreaCode.count) ? newAreaCode.count : 0
-              }, 'messageformat');
+              }, 'messageformat') : undefined;
             });
           }
         }, {
