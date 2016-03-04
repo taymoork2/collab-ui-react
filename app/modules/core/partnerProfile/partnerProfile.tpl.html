@@ -97,8 +97,8 @@
             <div class="small-12 columns">
               <div class="row collapse" ng-if="isPartner">
                 <div class="small-12 columns">
+                  <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
                   <label class="cs-checkbox" for="allowCustomerLogo">
-                    <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
                     <span translate="partnerProfile.allowCustomerLogo"></span>
                   </label>
                 </div>

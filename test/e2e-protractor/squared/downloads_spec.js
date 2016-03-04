@@ -11,7 +11,7 @@ describe('Downloads page', function () {
 
   describe('with email parameter and reset/admin email params', function () {
     it('should display email account', function () {
-      browser.get('#/downloads?email=' + encodeURIComponent(testuser) + emailParams);
+      navigation.navigateTo('#/downloads?email=' + encodeURIComponent(testuser) + emailParams);
       utils.expectText(download.account, testuser);
     });
 
@@ -28,7 +28,7 @@ describe('Downloads page', function () {
 
   describe('with email parameter only', function () {
     it('should display email account', function () {
-      browser.get('#/downloads?email=' + encodeURIComponent(testuser));
+      navigation.navigateTo('#/downloads?email=' + encodeURIComponent(testuser));
       utils.expectText(download.account, testuser);
     });
   });

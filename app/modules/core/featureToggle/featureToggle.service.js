@@ -10,7 +10,7 @@
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
       pstnSetup: 'huron-pstn-setup',
-      csvUpload: 'csvUpload',
+      csvUpload: 'atlas-csv-upload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
@@ -54,6 +54,7 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
+      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCallsTab: 'ios-calls-tab',

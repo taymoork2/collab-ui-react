@@ -34,15 +34,20 @@
       });
     }
 
-    vm.storeEc = function () {
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
-        function (err) {
-          // TODO: fix this callback crap!
-          if (err) {
-            XhrNotificationService.notify("Failed to enable Aware");
+    vm.storeEc = function (onlyDisable) {
+      if ((onlyDisable && !vm.squaredFusionEc) || !onlyDisable) {
+        // Only store when disabling. The enabling is done in the Save button handler
+        // need this hack because the switch call backs twice, every time the user clicks it:
+        // one time with the old value, one time with the new value
+        ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+          function (err) {
+            // TODO: fix this callback crap!
+            if (err) {
+              XhrNotificationService.notify("Failed to enable Aware");
+            }
           }
-        }
-      );
+        );
+      }
       if (vm.squaredFusionEc) {
         readCerts();
       }
@@ -61,6 +66,7 @@
       vm.savingSip = true;
 
       USSService2.updateOrg(vm.org).then(function (res) {
+        vm.storeEc(false);
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;

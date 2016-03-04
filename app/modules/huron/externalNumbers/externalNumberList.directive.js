@@ -12,7 +12,9 @@
       scope: {
         numbers: '=',
         countTranslateKey: '@',
-        externalNumbers: '='
+        externalNumbers: '=',
+        tooltipText: '@',
+        tooltipClass: '@'
       }
     };
 

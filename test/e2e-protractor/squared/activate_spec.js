@@ -20,7 +20,7 @@ describe('Self Registration Activation Page', function () {
 
     describe('Desktop activation for iOS device', function () {
       it('should display without admin controls on navigation bar', function () {
-        browser.get('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
+        navigation.navigateTo('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
         navigation.expectAdminSettingsNotDisplayed();
       });
 
@@ -34,13 +34,13 @@ describe('Self Registration Activation Page', function () {
     describe('Desktop activation after code is invalidated', function () {
 
       it('should display without admin controls on navigation bar', function () {
-        browser.get('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
+        navigation.navigateTo('#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam));
         navigation.expectAdminSettingsNotDisplayed();
       });
 
       it('should display without admin controls on navigation bar', function () {
         var url = '#/activate?eqp=' + encodeURIComponent(iosData.encryptedQueryParam);
-        browser.get(url);
+        navigation.navigateTo(url);
         navigation.expectCurrentUrl(url);
         navigation.expectAdminSettingsNotDisplayed();
       });
@@ -73,7 +73,7 @@ describe('Self Registration Activation Page', function () {
 
     describe('Desktop activation for android device', function () {
       it('should display without admin controls on navigation bar', function () {
-        browser.get('#/activate?eqp=' + encodeURIComponent(androidData.encryptedQueryParam));
+        navigation.navigateTo('#/activate?eqp=' + encodeURIComponent(androidData.encryptedQueryParam));
         navigation.expectAdminSettingsNotDisplayed();
       });
 

@@ -23,6 +23,7 @@
 
 angular.module('Core', [
   'core.trial',
+  'core.onboard',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',
@@ -69,7 +70,7 @@ angular.module('Huron', [
   'ngIcal'
 ]);
 
-angular.module('Hercules', ['Core', 'ngTagsInput']);
+angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
 
 angular.module('Mediafusion', ['Core']);
 

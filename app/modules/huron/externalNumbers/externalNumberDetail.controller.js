@@ -90,7 +90,7 @@
     function getNumbers() {
       vm.allNumbers = ExternalNumberService.getAllNumbers();
       vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
-      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbers();
+      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
   }

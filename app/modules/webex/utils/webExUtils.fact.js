@@ -231,7 +231,7 @@
 
             logMsg = funcName + ": " + "\n" +
               "licenses=" + JSON.stringify(licenses);
-            // $log.log(logMsg);
+            $log.log(logMsg);
 
             var allSitesLicenseInfo = [];
 
@@ -239,7 +239,7 @@
               function checkLicense(license) {
                 logMsg = funcName + ": " + "\n" +
                   "license=" + JSON.stringify(license);
-                // $log.log(logMsg);
+                $log.log(logMsg);
 
                 if (
                   ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {

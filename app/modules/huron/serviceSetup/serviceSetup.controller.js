@@ -978,8 +978,6 @@
         if (errors.length > 0) {
           Notification.notify(errors, 'error');
           return $q.reject('Site/extension create failed.');
-        } else {
-          Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
         }
       }
 

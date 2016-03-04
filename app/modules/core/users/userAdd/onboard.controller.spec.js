@@ -18,6 +18,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getLicensesUsageSpy;
   var $controller;
   beforeEach(module('Core'));
+  beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Partner Reports', function () {
-  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService, DummyReportService;
+  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DummyReportService;
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
@@ -57,13 +57,12 @@ describe('Controller: Partner Reports', function () {
   beforeEach(module('Huron'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_, _DummyReportService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DummyReportService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
-      DonutChartService = _DonutChartService_;
       DummyReportService = _DummyReportService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
@@ -80,25 +79,21 @@ describe('Controller: Partner Reports', function () {
       }));
       spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointResponse));
 
-      spyOn(GraphService, 'updateActiveUsersGraph');
-      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
+      spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
         'dataProvider': dummyGraphData,
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
+      spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
         'dataProvider': dummyMediaQualityGraphData,
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(GraphService, 'updateActiveUserPopulationGraph');
-      spyOn(GraphService, 'createActiveUserPopulationGraph').and.returnValue({
+      spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(DonutChartService, 'updateCallMetricsDonutChart');
-      spyOn(DonutChartService, 'createCallMetricsDonutChart').and.returnValue({
+      spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
         'dataProvider': dummyPopulationData,
         invalidateSize: validateService.invalidate
       });
@@ -115,7 +110,6 @@ describe('Controller: Partner Reports', function () {
         $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
-        DonutChartService: DonutChartService,
         DummyReportService: DummyReportService,
         Authinfo: Authinfo
       });
@@ -132,10 +126,10 @@ describe('Controller: Partner Reports', function () {
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
         expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
 
-        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
-        expect(GraphService.createActiveUserPopulationGraph).toHaveBeenCalled();
-        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
+        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables', function () {
@@ -261,11 +255,14 @@ describe('Controller: Partner Reports', function () {
     });
 
     describe('updateReports', function () {
-      it('should call updateActiveUsersGraph when updateReports is called', function () {
+      it('should update all graphs when updateReports is called', function () {
         controller.updateReports();
         $scope.$apply();
 
-        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
       });
     });
   });

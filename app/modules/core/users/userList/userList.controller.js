@@ -65,6 +65,7 @@
     $scope.showUserDetails = showUserDetails;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
+    $scope.isValidThumbnail = isValidThumbnail;
 
     init();
 
@@ -100,6 +101,8 @@
 
       //list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
+        $scope.currentDataPosition = 0;
+        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
     }
@@ -338,8 +341,8 @@
 
     function configureGrid() {
 
-      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!row.entity.photos" class="user-img">' +
+      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
+        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
 
@@ -443,6 +446,17 @@
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     function firstOfType(row) {
       return row.entity.id === $scope.gridData[0].id;
+    }
+
+    function isValidThumbnail(user) {
+      var photos = _.get(user, 'photos', []);
+      var thumbs = _.filter(photos, {
+        type: 'thumbnail'
+      });
+      var validThumbs = _.filter(thumbs, function (thumb) {
+        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
+      });
+      return !_.isEmpty(validThumbs);
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

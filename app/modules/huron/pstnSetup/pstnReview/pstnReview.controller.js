@@ -12,7 +12,8 @@
     vm.placeOrder = placeOrder;
 
     vm.provider = PstnSetup.getProvider();
-    vm.numbers = initNumbers();
+
+    initNumbers();
 
     ////////////////////////
 
@@ -44,7 +45,7 @@
         PstnSetup.getCustomerLastName(),
         PstnSetup.getCustomerEmail(),
         PstnSetup.getProviderId(),
-        vm.numbers
+        vm.newNumbers
       ).then(function () {
         PstnSetup.setCustomerExists(true);
       }).catch(function (response) {
@@ -76,35 +77,68 @@
       }
     }
 
-    function initNumbers() {
-      var numbers = _.flatten(PstnSetup.getNumbers());
+    function getFlattenedNumbers(phoneNumbers) {
+      return _.chain(phoneNumbers)
+        .flatten()
+        .map(function (phoneNumber) {
+          if (_.isObject(phoneNumber)) {
+            return phoneNumber.value;
+          } else {
+            return phoneNumber;
+          }
+        })
+        .value();
+    }
 
-      if (vm.provider.apiExists) {
-        return numbers;
-      } else {
-        return _.map(numbers, 'value');
-      }
+    function initNumbers() {
+      var numberPartition = _.partition(PstnSetup.getNumbers(), {
+        type: PstnSetupService.PORT
+      });
+
+      vm.portNumbers = getFlattenedNumbers(numberPartition[0]);
+      vm.newNumbers = getFlattenedNumbers(numberPartition[1]);
     }
 
     function createNumbers() {
       var promises = [];
       var errors = [];
+      var promise;
 
-      var promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.numbers)
-        .catch(function (response) {
-          errors.push(Notification.processErrorResponse(response, 'pstnSetup.orderNumbersError'));
-        });
-      promises.push(promise);
+      function pushErrorArray(response) {
+        errors.push(Notification.processErrorResponse(response));
+      }
+
+      if (vm.newNumbers.length) {
+        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.newNumbers)
+          .catch(pushErrorArray);
+        promises.push(promise);
+      }
+
+      if (vm.portNumbers.length) {
+        promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.portNumbers)
+          .catch(pushErrorArray);
+        promises.push(promise);
+      }
+
       return $q.all(promises).then(function () {
         if (errors.length > 0) {
+          errors.splice(0, 0, $translate.instant('pstnSetup.orderNumbersError'));
           Notification.notify(errors, 'error');
         }
       });
     }
 
+    function startPlaceOrderLoad() {
+      vm.placeOrderLoad = true;
+    }
+
+    function stopPlaceOrderLoad() {
+      vm.placeOrderLoad = false;
+    }
+
     function placeOrder() {
       var promise = $q.when();
-      vm.placeOrderLoad = true;
+      startPlaceOrderLoad();
       if (!PstnSetup.isCustomerExists()) {
         promise = promise.then(createCustomer);
       } else if (!PstnSetup.isCarrierExists()) {
@@ -114,9 +148,7 @@
         .then(createSite)
         .then(createNumbers)
         .then(goToNextSteps)
-        .finally(function () {
-          vm.placeOrderLoad = false;
-        });
+        .finally(stopPlaceOrderLoad);
     }
   }
 })();
