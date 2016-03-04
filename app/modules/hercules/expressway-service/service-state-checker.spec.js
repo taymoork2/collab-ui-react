@@ -3,7 +3,7 @@
 describe('ServiceStateChecker', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2;
+  var $q, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -35,7 +35,11 @@ describe('ServiceStateChecker', function () {
 
   beforeEach(module(function ($provide) {
     ClusterService = {
-      getClustersByConnectorType: sinon.stub()
+      getClustersByConnectorType: sinon.stub(),
+      getRunningStateSeverity: sinon.stub().returns({
+        label: 'ok',
+        value: 0
+      })
     };
     AuthInfo = {
       getOrgId: sinon.stub()
@@ -44,19 +48,27 @@ describe('ServiceStateChecker', function () {
       getStatusesSummary: sinon.stub(),
       getOrg: sinon.stub()
     };
+    ScheduleUpgradeService = {
+      get: sinon.stub()
+    };
     AuthInfo.getOrgId.returns('orgId');
     $provide.value('ClusterService', ClusterService);
     $provide.value('Authinfo', AuthInfo);
     $provide.value('USSService2', USSService2);
+    $provide.value('ScheduleUpgradeService', ScheduleUpgradeService);
   }));
 
-  beforeEach(inject(function ($injector, _ServiceStateChecker_, _NotificationService_) {
+  beforeEach(inject(function (_$q_, _ServiceStateChecker_, _NotificationService_) {
+    $q = _$q_;
     ServiceStateChecker = _ServiceStateChecker_;
     NotificationService = _NotificationService_;
   }));
 
   it('should raise the "fuseNotPerformed" message if there are no connectors', function () {
     ClusterService.getClustersByConnectorType.returns([]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
@@ -64,6 +76,9 @@ describe('ServiceStateChecker', function () {
 
   it('should raise the "fuseNotPerformed" message if all connectors are not configured ', function () {
     ClusterService.getClustersByConnectorType.returns([notConfiguredClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
@@ -71,6 +86,9 @@ describe('ServiceStateChecker', function () {
 
   it('should clear the "fuseNotPerformed" message when fusing a cluster ', function () {
     ClusterService.getClustersByConnectorType.returns([]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
@@ -88,6 +106,9 @@ describe('ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
@@ -107,6 +128,9 @@ describe('ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');

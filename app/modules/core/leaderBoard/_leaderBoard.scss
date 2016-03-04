@@ -8,11 +8,9 @@
 
 .leader-board {
   padding: 30px, 0px, 30px, 0px;
-
   .total-count {
     color: $gray-dark;
   }
-
   .text-center {
     font-size: 12px;
   }
@@ -77,6 +75,11 @@
 .leader-board .cs-card .header-section {
   padding-top: 12px;
   padding-bottom: 20px;
+  &.cta-card {
+      &:after {
+        border-top: 5px solid $color-cta-base;
+      }
+  }
 }
 
 .bucket-header {
@@ -186,18 +189,14 @@
 // override needed for 'cs-header-push-container' directive in 'main.tpl.html'
 .license-usage {
   .push-down-container-inner {
-    padding-top: 0;  // lose 20px
+    padding-top: 0; // lose 20px
   }
-
   .leader-board {
-    margin-top: 20px;  // gain 20px
-
+    margin-top: 20px; // gain 20px
     // except customer admins with 'atlas-trial-conversion' feature-toggle enabled
     &.is-customer-admin.ft-atlas-trial-conversion {
-      margin-top: 12px;  // we only need 12px
-
+      margin-top: 12px; // we only need 12px
     }
-
     &.has-active-trial {
       .subscription:first-of-type {
         .subscriptionId.has-active-trial {

@@ -2,8 +2,7 @@
 
 describe('Digital River Forward with Login to CI', function () {
   it('should redirect to digitalriver', function () {
-
-    browser.get('#/dr-login-forward');
+    navigation.navigateToUsingIntegrationForTesting('#/dr-login-forward');
 
     utils.sendKeys(login.emailField, 'sqtest-admin@squared.example.com');
     login.clickLoginButton();
