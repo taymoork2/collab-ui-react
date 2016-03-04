@@ -25,6 +25,13 @@ angular.module('Core').service('SiteListService', [
 
     this.csvPoll = null;
 
+    this.testCsvStatusIndex = 0;
+    this.testCsvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompleted'
+    ];
+
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
       var logMsg = "";
@@ -353,12 +360,20 @@ angular.module('Core').service('SiteListService', [
 
       var siteUrl = siteRow.license.siteUrl;
 
+      if (2 < _this.testCsvStatusIndex) {
+        _this.testCsvStatusIndex = 0;
+      }
+      var reqTestCsvStatus = _this.testCsvStatusTypes[_this.testCsvStatusIndex];
+      ++_this.testCsvStatusIndex;
+
       logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+        "siteUrl=" + siteUrl + "\n" +
+        "reqTestCsvStatus=" + reqTestCsvStatus;
       $log.log(logMsg);
 
       WebExApiGatewayService.csvStatus(
-        siteUrl
+        siteUrl,
+        reqTestCsvStatus // change this to null to get real status
       ).then(
 
         function success(response) {
