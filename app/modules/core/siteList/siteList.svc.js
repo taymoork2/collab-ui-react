@@ -24,13 +24,18 @@ angular.module('Core').service('SiteListService', [
     var _this = this;
 
     this.csvPoll = null;
+    this.csvPollFrequency = 15000;
 
-    this.testCsvStatusIndex = 0;
     this.testCsvStatusTypes = [
       'none',
       'exportInProgress',
-      'exportCompleted'
+      'exportCompleted',
+      'importInProgress',
+      'importCompleted'
     ];
+    this.testCsvStatusStart = 0;
+    this.testCsvStatusEnd = 2;
+    this.testCsvStatusIndex = this.testCsvStatusStart;
 
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
@@ -322,7 +327,7 @@ angular.module('Core').service('SiteListService', [
                     function () {
                       _this.updateCSVColumn(siteRow);
                     },
-                    15000
+                    _this.csvPollFrequency
                   );
                 }
 
@@ -360,20 +365,20 @@ angular.module('Core').service('SiteListService', [
 
       var siteUrl = siteRow.license.siteUrl;
 
-      if (2 < _this.testCsvStatusIndex) {
-        _this.testCsvStatusIndex = 0;
-      }
-      var reqTestCsvStatus = _this.testCsvStatusTypes[_this.testCsvStatusIndex];
+      var testCsvStatusReq = _this.testCsvStatusTypes[_this.testCsvStatusIndex];
       ++_this.testCsvStatusIndex;
+      if (_this.testCsvStatusEnd < _this.testCsvStatusIndex) {
+        _this.testCsvStatusIndex = _this.testCsvStatusStart;
+      }
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl + "\n" +
-        "reqTestCsvStatus=" + reqTestCsvStatus;
+        "testCsvStatusReq=" + testCsvStatusReq;
       $log.log(logMsg);
 
       WebExApiGatewayService.csvStatus(
         siteUrl,
-        reqTestCsvStatus // change this to null to get real status
+        testCsvStatusReq // change this to null to get real status
       ).then(
 
         function success(response) {

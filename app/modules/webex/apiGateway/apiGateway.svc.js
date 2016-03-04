@@ -25,7 +25,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     this.csvStatus = function (
       siteUrl,
-      reqTestCsvStatus
+      testCsvStatusReq
     ) {
 
       var funcName = 'csvStatus()';
@@ -33,7 +33,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl + "\n" +
-        "reqTestCsvStatus=" + reqTestCsvStatus;
+        "testCsvStatusReq=" + testCsvStatusReq;
       $log.log(logMsg);
 
       var completionInfo = null;
@@ -60,20 +60,20 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var logMsg = "";
 
           // return mock/test status if requested
-          if (null != reqTestCsvStatus) {
-            if ('exportInProgress' == reqTestCsvStatus) {
+          if (null != testCsvStatusReq) {
+            if ('exportInProgress' == testCsvStatusReq) {
               successResult.status = "none";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('exportInProgress' == reqTestCsvStatus) {
+            if ('exportInProgress' == testCsvStatusReq) {
               successResult.status = "exportInProgress";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('exportCompleted' == reqTestCsvStatus) {
+            if ('exportCompleted' == testCsvStatusReq) {
               completionInfo = {};
 
               successResult.status = "exportCompleted";
@@ -82,13 +82,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('importInProgress' == reqTestCsvStatus) {
+            if ('importInProgress' == testCsvStatusReq) {
               successResult.status = "importInProgress";
 
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('importCompleted' == reqTestCsvStatus) {
+            if ('importCompleted' == testCsvStatusReq) {
               completionInfo = {};
 
               successResult.status = "importCompleted";
