@@ -168,7 +168,7 @@
           return connector.connectorType === connectorType;
         })
         .all(function (connector) {
-          return connector.state !== 'not_configured';
+          return connector.state !== 'not_configured' && connector.state !== 'not_installed';
         })
         .value();
     }
