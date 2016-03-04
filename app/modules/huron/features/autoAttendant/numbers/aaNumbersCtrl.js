@@ -278,7 +278,7 @@
 
       vm.availablePhoneNums = [];
 
-      getExternalNumbers(pattern).then(function () {
+      getExternalNumbers().then(function () {
         getInternalNumbers(pattern);
       });
 
@@ -315,33 +315,40 @@
       });
     }
 
-    function getExternalNumbers(pattern) {
+    function getExternalNumbers() {
 
-      return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (extPool) {
-        for (var i = 0; i < extPool.length; i++) {
+      vm.externalNumberList = [];
 
-          var dn = {
-            id: extPool[i].uuid,
-            number: extPool[i].pattern
-          };
+      return ExternalNumberPoolService.query({
+          customerId: Authinfo.getOrgId(),
+          directorynumber: '',
+          order: 'pattern'
+        }).$promise
+        .then(function (extPool) {
+          for (var i = 0; i < extPool.length; i++) {
 
-          // the externalNumberList will contain the info as it came from CMI
-          vm.externalNumberList.push(dn);
+            var dn = {
+              id: extPool[i].uuid,
+              number: extPool[i].pattern
+            };
 
-          var number = extPool[i].pattern.replace(/\D/g, '');
+            // the externalNumberList will contain the info as it came from CMI
+            vm.externalNumberList.push(dn);
 
-          vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+            var number = extPool[i].pattern.replace(/\D/g, '');
 
-          // Add to the available phone number list if not already used
-          if (!getDupeNumberAnyAA(number)) {
-            // For the option list, format the number for the label,
-            // and return the value as just the number
-            addToAvailableNumberList(telephoneNumberFilter(number), number);
+            vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+
+            // Add to the available phone number list if not already used
+            if (!getDupeNumberAnyAA(number)) {
+              // For the option list, format the number for the label,
+              // and return the value as just the number
+              addToAvailableNumberList(telephoneNumberFilter(number), number);
+
+            }
 
           }
-
-        }
-      });
+        });
     }
 
     // Warn the user when discrepancies are found between CMI and CES number assignment
