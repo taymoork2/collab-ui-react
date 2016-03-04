@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService) {
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -274,9 +274,12 @@
       vm.availablePhoneNums.push(opt);
     }
 
-    function loadNums() {
-      getExternalNumbers().then(function () {
-        getInternalNumbers();
+    function loadNums(pattern) {
+
+      vm.availablePhoneNums = [];
+
+      getExternalNumbers(pattern).then(function () {
+        getInternalNumbers(pattern);
       });
 
       /* make sure the mapping exists for already existing resource numbers, so it sorts correctly */
@@ -292,12 +295,9 @@
       }
     }
 
-    function getInternalNumbers() {
-      return InternalNumberPoolService.query({
-        customerId: Authinfo.getOrgId(),
-        directorynumber: '',
-        order: 'pattern'
-      }).$promise.then(function (intPool) {
+    function getInternalNumbers(pattern) {
+
+      return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
 
         for (var i = 0; i < intPool.length; i++) {
 
@@ -315,38 +315,33 @@
       });
     }
 
-    function getExternalNumbers() {
+    function getExternalNumbers(pattern) {
 
-      return ExternalNumberPoolService.query({
-          customerId: Authinfo.getOrgId(),
-          directorynumber: '',
-          order: 'pattern'
-        }).$promise
-        .then(function (extPool) {
-          for (var i = 0; i < extPool.length; i++) {
+      return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (extPool) {
+        for (var i = 0; i < extPool.length; i++) {
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern
-            };
+          var dn = {
+            id: extPool[i].uuid,
+            number: extPool[i].pattern
+          };
 
-            // the externalNumberList will contain the info as it came from CMI
-            vm.externalNumberList.push(dn);
+          // the externalNumberList will contain the info as it came from CMI
+          vm.externalNumberList.push(dn);
 
-            var number = extPool[i].pattern.replace(/\D/g, '');
+          var number = extPool[i].pattern.replace(/\D/g, '');
 
-            vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+          vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
-            // Add to the available phone number list if not already used
-            if (!getDupeNumberAnyAA(number)) {
-              // For the option list, format the number for the label,
-              // and return the value as just the number
-              addToAvailableNumberList(telephoneNumberFilter(number), number);
-
-            }
+          // Add to the available phone number list if not already used
+          if (!getDupeNumberAnyAA(number)) {
+            // For the option list, format the number for the label,
+            // and return the value as just the number
+            addToAvailableNumberList(telephoneNumberFilter(number), number);
 
           }
-        });
+
+        }
+      });
     }
 
     // Warn the user when discrepancies are found between CMI and CES number assignment
