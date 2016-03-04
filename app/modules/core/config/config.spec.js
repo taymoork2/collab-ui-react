@@ -4,9 +4,10 @@ describe('Config', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Config, $location;
-  beforeEach(inject(function (_$location_, _Config_) {
+  var Config, $location, tabConfig;
+  beforeEach(inject(function (_$location_, _Config_, _tabConfig_) {
     Config = _Config_;
+    tabConfig = _tabConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
@@ -22,10 +23,6 @@ describe('Config', function () {
 
   it('should exist', function () {
     expect(Config).toBeDefined();
-  });
-
-  it('should have tabs', function () {
-    expect(Config.tabs).toBeDefined();
   });
 
   it('should have roleStates', function () {
@@ -45,8 +42,8 @@ describe('Config', function () {
   it('should not have development states assigned to Full_Admin role', function () {
     function getDevelopmentStates() {
       var devStates = [];
-      for (var i = 0; i < Config.tabs.length; i++) {
-        var tab = Config.tabs[i];
+      for (var i = 0; i < tabConfig.length; i++) {
+        var tab = tabConfig[i];
         if (tab && tab.tab === 'developmentTab') {
           var subPages = tab.subPages;
           for (var j = 0; j < subPages.length; j++) {
