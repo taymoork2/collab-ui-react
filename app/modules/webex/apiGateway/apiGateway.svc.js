@@ -59,7 +59,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          // return mock/test status if requested
+          // return a mock/test csv status if requested
           if (null != testCsvStatusReq) {
             if ('exportInProgress' == testCsvStatusReq) {
               successResult.status = "none";
