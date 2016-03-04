@@ -329,26 +329,140 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
     spyOn(Notification, 'notify');
   }));
 
-  it('Does not allow PMR + CMR without callInTeleconf', inject(function (WebExUserSettingsFact) {
+  it('Does not allow PMR + CMR without callInTeleconf for non-T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
     WebExUserSettingsFact.updateUserSettings2();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
   }));
 
-  it('Allows PMR + CMR with callInTeleconf', inject(function (WebExUserSettingsFact) {
+  it('Allows PMR + CMR with callInTeleconf for non-T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
 
     WebExUserSettingsFact.updateUserSettings2();
     expect(Notification.notify).not.toHaveBeenCalled();
   }));
 
-  it('Does not allow PMR + CMR with WebexAudio but without hybridAudio', inject(function (WebExUserSettingsFact) {
+  it('Does not allow PMR + CMR without callInTeleconf and without integrated voip for T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Allows PMR + CMR with callInTeleconf for T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+    WebexUserSettingsSvc.isT31Site = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).not.toHaveBeenCalled();
+  }));
+
+  it('Allows PMR + CMR with integrated voip for T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).not.toHaveBeenCalled();
+  }));
+
+  it('Does not allow PMR + CMR with integrated voip for non-T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Allows PMR + CMR with integrated voip and callInTeleconf for T31 non-WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).not.toHaveBeenCalled();
+  }));
+
+  //-----
+
+  it('Does not allow PMR + CMR without hybridAudio for T30 with WebexAudio', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
 
     WebExUserSettingsFact.updateUserSettings2();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
   }));
 
-  it('Allows PMR + CMR with WebexAudio and hybridAudio', inject(function (WebExUserSettingsFact) {
+  it('Does not allow PMR + CMR without hybridAudio for T31 with WebexAudio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  //-----
+
+  it('Does not allow PMR + CMR with callInTeleconf without hybridAudio for non-T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Does not allow PMR + CMR with callInTeleconf without hybridAudio for T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+    WebexUserSettingsSvc.isT31Site = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Does not allow PMR + CMR with integrated voip wihtout hybridAudio for T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Does not allow PMR + CMR with integrated voip wihtout hybridAudio for non-T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Does not allow PMR + CMR with with callInTeleconf with integrated voip for non-T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Does not allow PMR + CMR with with callInTeleconf with integrated voip for T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+  }));
+
+  it('Allows PMR + CMR with integrated voip with callInTeleconf with hybrid audio for T31 WebEx audio', inject(function (WebExUserSettingsFact) {
+    WebexUserSettingsSvc.isT31Site = true;
+    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
+    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+
+    WebExUserSettingsFact.updateUserSettings2();
+    expect(Notification.notify).not.toHaveBeenCalled();
+  }));
+
+  ///------
+
+  it('Allows PMR + CMR with WebexAudio and hybridAudio for T30', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
     WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
     WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = true;
@@ -357,43 +471,23 @@ describe('WebExUserSettingsFact pmr/cmr tests', function () {
     expect(Notification.notify).not.toHaveBeenCalled();
   }));
 
-  it('Does not allow PMR + CMR with WebexAudio but without hybridAudio and without integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
-    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+  it('Allows PMR + CMR with WebexAudio and hybridAudio for T31', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.isT31Site = true;
-    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true; //no hybrid audio or integrated VOIP
-
-    WebExUserSettingsFact.updateUserSettings2();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
-  }));
-
-  it('Does not allow PMR + CMR with WebexAudio but with hybridAudio without integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
-    WebexUserSettingsSvc.isT31Site = true;
     WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
     WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = true;
 
     WebExUserSettingsFact.updateUserSettings2();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
+    expect(Notification.notify).not.toHaveBeenCalled();
   }));
 
-  it('Allowa PMR + CMR with WebexAudio but with hybridAudio and integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
-    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
+  //----
+  it('Allows PMR + CMR with WebexAudio but with hybridAudio and integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
     WebexUserSettingsSvc.isT31Site = true;
     WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
     WebexUserSettingsSvc.telephonyPriviledge.hybridAudio.isSiteEnabled = true;
     WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
 
-    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true; //hybrid audio and integrated voip
     expect(Notification.notify).not.toHaveBeenCalled();
-  }));
-
-  it('Allowa PMR + CMR with WebexAudio but without hybridAudio and with integratedVoIP for T31', inject(function (WebExUserSettingsFact) {
-    WebexUserSettingsSvc.telephonyPriviledge.callInTeleconf.value = true;
-    WebexUserSettingsSvc.isT31Site = true;
-    WebexUserSettingsSvc.telephonyPriviledge.telephonyType.isWebExAudio = true;
-
-    WebexUserSettingsSvc.telephonyPriviledge.integratedVoIP.value = true;
-    WebExUserSettingsFact.updateUserSettings2();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), "error");
   }));
 }); // describe()
