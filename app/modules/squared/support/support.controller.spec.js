@@ -2,20 +2,17 @@
 describe('Controller: SupportCtrl', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var httpBackend, $compile, controller, Authinfo, Userservice, currentUser, Config, $scope, $templateCache;
+  var controller, Authinfo, Userservice, currentUser, Config, $scope;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
   var user = {
     'success': true,
     'roles': roles
   };
 
-  beforeEach(inject(function ($httpBackend, _$templateCache_, _$compile_, $rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     Config = _Config_;
-    $templateCache = _$templateCache_;
-    $compile = _$compile_;
-    httpBackend = $httpBackend;
 
     currentUser = {
       success: true,
