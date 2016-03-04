@@ -23,17 +23,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
-    this.getCsvStates = function () {
-      return _this.csvStates;
-    }; // getCsvStates()
-
     this.csvStatus = function (siteUrl) {
       var funcName = 'csvStatus()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
-      // $log.log(logMsg);
+      $log.log(logMsg);
 
       var errorResult = {
         'siteUrl': siteUrl,
