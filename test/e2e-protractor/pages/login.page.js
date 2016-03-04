@@ -89,7 +89,7 @@ var LoginPage = function () {
   };
 
   this.loginThroughGui = function (username, password, expectedUrl) {
-    navigation.navigateTo(expectedUrl || '#/login');
+    navigation.navigateToUsingIntegrationForTesting(expectedUrl || '#/login');
     utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
