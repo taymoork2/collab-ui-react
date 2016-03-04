@@ -142,13 +142,4 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
     $rootScope.$digest();
     expect(ScheduleUpgradeService.patch.calledOnce).toBe(true);
   });
-
-  it('should have called NotificationService.removeNotification when patch got called', function () {
-    var data = angular.copy(UIDataFixture);
-    vm.acknowledge(data);
-    $rootScope.$digest();
-    // patch has been trigerred
-    expect(NotificationService.removeNotification.calledOnce).toBe(true);
-    expect(NotificationService.removeNotification.calledWith('acknowledgeScheduleUpgrade')).toBe(true);
-  });
 });

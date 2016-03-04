@@ -5,7 +5,7 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller, isTrial;
 
     init();
     var model = {
@@ -37,7 +37,9 @@
       setNumbers: setNumbers,
       getNumbers: getNumbers,
       isSingleCarrierReseller: isSingleCarrierReseller,
-      setSingleCarrierReseller: setSingleCarrierReseller
+      setSingleCarrierReseller: setSingleCarrierReseller,
+      setIsTrial: setIsTrial,
+      getIsTrial: getIsTrial
     };
 
     return model;
@@ -56,6 +58,7 @@
       provider = {};
       numbers = [];
       singleCarrierReseller = false;
+      isTrial = false;
     }
 
     function clearProviderSpecificData() {
@@ -171,6 +174,14 @@
 
     function setSingleCarrierReseller(_singleCarrierReseller) {
       singleCarrierReseller = _singleCarrierReseller;
+    }
+
+    function setIsTrial(_isTrial) {
+      isTrial = _isTrial;
+    }
+
+    function getIsTrial() {
+      return isTrial;
     }
   }
 })();

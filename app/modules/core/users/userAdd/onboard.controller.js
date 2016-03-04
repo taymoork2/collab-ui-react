@@ -411,6 +411,14 @@
       };
     }
 
+    $scope.checkCMR = function (confModel, cmrLics) {
+      if (!confModel) {
+        angular.forEach(cmrLics, function (cmrLic) {
+          cmrLic.cmrModel = confModel;
+        });
+      }
+    };
+
     var generateConfChk = function (confs, cmrs) {
       $scope.confChk = [];
       $scope.allLicenses = [];

@@ -77,6 +77,12 @@
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
     };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
+    };
   }
 
   function herculesNotificationsDirective() {

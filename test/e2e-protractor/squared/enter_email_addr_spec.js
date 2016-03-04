@@ -5,7 +5,7 @@
 
 describe('Test the enterEmailAddr page', function () {
 
-  browser.get('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
+  navigation.navigateToUsingIntegrationForTesting('#/enter-email-addr?referrer=' + enterEmailAddrPage.drReferrer);
 
   it('should have the right title', function () {
     utils.expectAttribute(enterEmailAddrPage.h2, 'innerHTML', 'Enter eMail Addr');
@@ -37,7 +37,7 @@ describe('Test the enterEmailAddr page', function () {
 
   // TODO: Delete this test after the go-live.
   it('should not have content when the referrer is not digital river', function () {
-    browser.get('#/enter-email-addr');
+    navigation.navigateToUsingIntegrationForTesting('#/enter-email-addr');
     utils.expectIsNotDisplayed(enterEmailAddrPage.email);
   });
 
