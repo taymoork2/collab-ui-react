@@ -39,8 +39,8 @@
         <div ng-show="showCdrCallFlowLink">
           <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
           <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>
-          <a target="_blank" ui-sref="cdrsupport">
-            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
+          <a target="_blank">
+            <button id="toolsCardCdrCallFlowButton" ng-click="gotoCdrSupport()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
           </a>
         </div>
       </section>

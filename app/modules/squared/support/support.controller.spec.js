@@ -72,14 +72,14 @@ describe('Controller: SupportCtrl', function () {
       Authinfo.isHelpDeskUser.returns(true);
       $scope.$digest();
       view.find("#toolsCardHelpdeskButton").click();
-      expect(helpdeskButtonClicked.calledOnce).toBeTruthy()
+      expect(helpdeskButtonClicked.callCount).toBe(1);
 
       helpdeskButtonClicked.reset();
 
       Authinfo.isHelpDeskUser.returns(false);
       $scope.$digest();
       view.find("toolsCardHelpdeskButton").click();
-      expect(helpdeskButtonClicked.called).toBeFalsy();
+      expect(helpdeskButtonClicked.callCount).toBe(0);
     });
   });
 

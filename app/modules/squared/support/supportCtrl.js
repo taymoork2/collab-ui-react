@@ -21,9 +21,14 @@ angular.module('Squared')
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
       $scope.gotoHelpdesk = gotoHelpdesk;
+      $scope.gotoCdrSupport = gotoCdrSupport;
 
       function gotoHelpdesk() {
         $state.go("helpdesk.search");
+      }
+
+      function gotoCdrSupport() {
+        $state.go("cdrsupport");
       }
 
       function initializeShowCdrCallFlowLink() {
