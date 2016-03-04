@@ -47,9 +47,10 @@ var LoginPage = function () {
     this.loginButton.click();
   };
 
-  this.login = function (username, expectedUrl) {
+  this.login = function (username, expectedUrl, opts) {
     var bearer;
-    navigation.navigateTo(expectedUrl);
+    var method = opts && opts.navigateToUsingIntegrationForTesting ? 'navigateToUsingIntegrationForTesting' : 'navigateTo';
+    navigation[method](expectedUrl);
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -62,6 +63,12 @@ var LoginPage = function () {
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
+  };
+
+  this.loginUsingIntegrationForTesting = function (username, expectedUrl) {
+    return this.login(username, expectedUrl, {
+      navigateToUsingIntegrationForTesting: true
+    });
   };
 
   this.loginUnauthorized = function (username, expectedUrl) {
