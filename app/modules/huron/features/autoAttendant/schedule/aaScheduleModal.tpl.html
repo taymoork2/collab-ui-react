@@ -7,8 +7,8 @@
     translate="autoAttendant.schedule"></p>
   </div>
   <div class="modal-body">
-    <p class="aa-schedule-subtitle"
-    translate="autoAttendant.scheduleOpenClosed"></p>
+    <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleOpenClosed' | translate}}<i ng-click="aaScheduleModalCtrl.openCollapse = !aaScheduleModalCtrl.openCollapse" class="icon icon-right-arrow pull-right"></i></p>
+      <div collapse="aaScheduleModalCtrl.openCollapse">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
        <div ng-repeat="hours in aaScheduleModalCtrl.openhours">
    
@@ -43,12 +43,17 @@
             <a class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.deleteRange($index);"><span class="sr-only ng-scope" translate="huronHuntGroup.deleteAction">Delete</span></a>
           </div>
         </div>
-      </form>
+      
     </div>
+    </form>
     <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
       <p translate="autoAttendant.scheduleMissing"></p>
     </div>
     <a id="addHours" ng-click="aaScheduleModalCtrl.addRange();" translate="autoAttendant.scheduleAddHours"></a>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="aa-schedule-subtitle">Holidays <i class="icon icon-chevron-right pull-right"></i></p>
   </div>
   <div class="modal-footer">
     <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
