@@ -18,8 +18,7 @@ xdescribe('Controller: SiteListCtrl', function () {
 
   var SiteListCtrl, scope, Authinfo;
   var deferredSessionTicket;
-  var deferredSVCToggle;
-  var deferredSVCStatus;
+  var deferredCSVToggle;
 
   // Initialize the controller and mock scope
   beforeEach(inject(function (
@@ -100,8 +99,7 @@ xdescribe('Controller: SiteListCtrl', function () {
     };
 
     deferredSessionTicket = $q.defer();
-    deferredSVCToggle = $q.defer();
-    deferredSVCStatus = $q.defer();
+    deferredCSVToggle = $q.defer();
 
     spyOn(_WebExXmlApiFact_, "getSessionTicket").and.returnValue(deferredSessionTicket.promise);
 
@@ -147,7 +145,7 @@ xdescribe('Controller: SiteListCtrl', function () {
       }
     });
 
-    spyOn(_FeatureToggleService_, "supports").and.returnValue(deferredSVCToggle.promise);
+    spyOn(_FeatureToggleService_, "supports").and.returnValue(deferredCSVToggle.promise);
 
     SiteListCtrl = $controller('SiteListCtrl', {
       $q: $q,
@@ -165,12 +163,9 @@ xdescribe('Controller: SiteListCtrl', function () {
     });
   }));
 
-  xit('should assign is not iFrame supported and is not report supported to site', function () {
+  it('should assign is not iFrame supported and is not report supported to site', function () {
     deferredSessionTicket.resolve("ticket");
-    deferredSVCToggle.resolve(true);
-    deferredSVCStatus.resolve({
-      status: "success"
-    });
+    deferredCSVToggle.resolve(true);
 
     scope.$apply();
 
@@ -190,11 +185,7 @@ xdescribe('Controller: SiteListCtrl', function () {
 
   it('should assign is iFrame supported and is report supported to site', function () {
     deferredSessionTicket.resolve("ticket");
-    deferredSVCToggle.resolve(true);
-    deferredSVCStatus.resolve({
-      status: "success"
-    });
-
+    deferredCSVToggle.resolve(true);
     scope.$apply();
 
     expect(SiteListCtrl).toBeDefined();
@@ -213,11 +204,7 @@ xdescribe('Controller: SiteListCtrl', function () {
 
   it('should assign is iFrame supported and is not reported supported to site', function () {
     deferredSessionTicket.resolve("ticket");
-    deferredSVCToggle.resolve(true);
-    deferredSVCStatus.resolve({
-      status: "success"
-    });
-
+    deferredCSVToggle.resolve(true);
     scope.$apply();
 
     expect(SiteListCtrl).toBeDefined();
