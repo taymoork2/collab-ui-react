@@ -132,7 +132,6 @@ describe('Site List Service', function () {
 
     //Create spies
     spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
-    //spyOn(SiteListService, "updateLicenseTypesColumn");
 
   }));
 
