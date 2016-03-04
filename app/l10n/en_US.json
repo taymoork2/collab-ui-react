@@ -2933,7 +2933,7 @@
     "webexVersionUseLatestUpdateFailed": "Could not update",
     "selectAWbxClientVersion": "Select a Webex client version",
     "WbxClientVersionOnlyOnNewSites": "Only available for new WebEx sites.",
-    "webexClientVersion": "Webex Client Version"
+    "webexClientVersion": "Cisco WebEx Client Version"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService', 'WebexClientVersion',
-    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion) {
+  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService', 'WebexClientVersion', 'FeatureToggleService',
+    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion, FeatureToggleService) {
       var orgId = Authinfo.getOrgId();
 
       // toggles api calls, show/hides divs based on customer or partner profile
@@ -144,20 +144,23 @@ angular.module('Core')
       };
 
       $scope.initWbxClientVersions = function () {
+
         //wbxclientversionselected
         //$scope.wbxclientversions = "";
         var succ = function (data) {
           $scope.wbxclientversions = data;
-          //$scope.wbxclientversionselected = data[0];
         };
+
         //nothing to do on error.
         WebexClientVersion.getWbxClientVersions().then(succ);
         //will need to do more stuff here. Init selected version as well. 
         //disable drop down ... but maybe not. 
 
         var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          $scope.tyu();
           return resp.data.partnerId; //this is the pid
         }).then(function (pid) {
+          $scope.tyu2();
           return WebexClientVersion.getTemplate(pid);
         });
 
@@ -165,14 +168,28 @@ angular.module('Core')
 
         p.then(function (json) {
           var clientVersion = json.data.clientVersion;
-          if (clientVersion === "") {
+          if (clientVersion === 'latest') {
+            clientVersion = '';
+          }
+          if (clientVersion === '') {
             $scope.wbxNoClientSelected = true;
             $scope.wbxclientversionselected = $scope.wbxclientversionplaceholder;
           } else {
             $scope.wbxNoClientSelected = false;
             $scope.wbxclientversionselected = clientVersion;
+            $scope.test2();
           }
+          $scope.test1();
 
+          $scope.useLatestWbxVersion = json.data.useLatest;
+
+        });
+
+        FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
+          $scope.showClientVersions = toggle;
+          if (Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com') {
+            $scope.showClientVersions = true;
+          }
         });
 
       };
@@ -275,14 +292,15 @@ angular.module('Core')
         //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
       }
 
-      function wbxclientversionselectchanged() {
+      function wbxclientversionselectchanged(wbxclientversionselected) {
         Log.info("Webex selected version changed");
+        $scope.wbxclientversionselected = wbxclientversionselected;
         var versionSelected = $scope.wbxclientversionselected;
 
         var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
           return resp.data.partnerId; //this is the pid
         }).then(function (pid) {
-          return WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+          return WebexClientVersion.postOrPutTemplate(pid, versionSelected, $scope.useLatestWbxVersion);
         });
 
         //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);

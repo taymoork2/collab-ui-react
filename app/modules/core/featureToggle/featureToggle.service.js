@@ -128,6 +128,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
+      webexClientLockdown: 'webexClientLockdown',
       huronCallTrials: 'huron-call-trials'
     };
 

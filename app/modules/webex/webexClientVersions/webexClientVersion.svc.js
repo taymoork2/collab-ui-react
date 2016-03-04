@@ -130,7 +130,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
         return resp;
       };
       var j = self.getVersionJson(partnerTemplate, orgId, selectedVersion, useLatest);
-      return self.put('postTemplate', j, partnerTemplate);
+      return self.put('putTemplate', j, partnerTemplate);
     };
 
     this.postOrPutTemplate = function (orgId, selectedVersion, useLatest) {
@@ -178,7 +178,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
     };
 
     this.put = function (name, json, orgId) {
-      var url = self.getTotalUrl(name, orgId);
+      var url = self.getTotalUrl(name, orgId, json.partnerTemplateId);
       return $http.put(url, json).then(function (response) {
         return response;
       }).catch(function (error) {
