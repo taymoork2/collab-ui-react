@@ -23,18 +23,16 @@ angular.module('Core').service('SiteListService', [
 
     var _this = this;
 
-    this.csvPoll = null;
-    this.csvPollFrequency = 15000;
-
     this.testCsvStatusTypes = [
+      null,
       'none',
       'exportInProgress',
       'exportCompleted',
       'importInProgress',
       'importCompleted'
     ];
-    this.testCsvStatusStart = 0;
-    this.testCsvStatusEnd = 2;
+    this.testCsvStatusStart = 1;
+    this.testCsvStatusEnd = 3;
     this.testCsvStatusIndex = this.testCsvStatusStart;
 
     this.updateLicenseTypesColumn = function (siteListGridData) {
@@ -327,10 +325,9 @@ angular.module('Core').service('SiteListService', [
                     function () {
                       _this.updateCSVColumn(siteRow);
                     },
-                    _this.csvPollFrequency
+                    15000
                   );
                 }
-
               }, // isSiteSupportsIframeSuccess()
 
               function isSiteSupportsIframeError(response) {
