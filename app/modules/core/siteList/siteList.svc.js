@@ -24,12 +24,6 @@ angular.module('Core').service('SiteListService', [
     var _this = this;
 
     this.csvPoll = null;
-    this.getFakeCsvStatusCounter = 0;
-    this.fakeCsvStatusTypes = [
-      'none',
-      'exportInProgress',
-      'exportCompleted'
-    ];
 
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
