@@ -13,7 +13,7 @@
           <i class="icon icon-close" ng-click="aa.removeNumber(phoneNum.getNumber())"></i>
         </div>
         <form>
-          <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" labelfield="label" valuefield="value" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" filter="true" on-change-fn="aa.addNumber(value.value)" icon="icon-chevron-down">
+          <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" refresh-data-fn="aa.loadNums(filter)" labelfield="label" valuefield="value" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" filter="true" on-change-fn="aa.addNumber(value.value)" icon="icon-chevron-down" filter="true">
           </cs-select>
         </form>
       </div>
