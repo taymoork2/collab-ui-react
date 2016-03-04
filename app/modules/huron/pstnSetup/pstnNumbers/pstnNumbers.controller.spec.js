@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $controller, $scope, $state, $q, PstnSetupService, PstnSetup, Notification, FeatureToggleService;
+  var controller, $compile, $controller, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, FeatureToggleService, TerminusStateService;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -13,33 +13,145 @@ describe('Controller: PstnNumbersCtrl', function () {
   var portOrder = angular.copy(consecutiveOrder);
   portOrder.type = 'port';
 
+  var states = [{
+    name: 'Texas',
+    abbreviation: 'TX'
+  }];
+
+  var areaCodes = [{
+    code: '123',
+    count: 15
+  }, {
+    code: '456',
+    count: 30
+  }];
+
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$state_, _$q_, _PstnSetupService_, _PstnSetup_, _Notification_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _FeatureToggleService_, _TerminusStateService_) {
     $scope = $rootScope.$new();
+    $compile = _$compile_;
     $controller = _$controller_;
     $state = _$state_;
     $q = _$q_;
+    $translate = _$translate_;
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
     Notification = _Notification_;
     FeatureToggleService = _FeatureToggleService_;
+    TerminusStateService = _TerminusStateService_;
 
     PstnSetup.setCustomerId(customer.uuid);
     PstnSetup.setCustomerName(customer.name);
     PstnSetup.setProvider(customerCarrierList[0]);
 
-    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($.when());
+    spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
     spyOn(Notification, 'error');
     spyOn($state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(TerminusStateService, 'query').and.returnValue({
+      '$promise': $q.when(states)
+    });
+    spyOn($translate, 'instant').and.callThrough();
 
-    controller = $controller('PstnNumbersCtrl', {
-      $scope: $scope
+    controller = compileTemplate();
+  }));
+
+  function compileTemplate() {
+    var template = '<div><div ng-controller="PstnNumbersCtrl as pstnNumbers" ng-include="\'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html\'"></div></div>';
+    var el = $compile(template)($scope);
+    $scope.$apply();
+    $translate.instant.calls.reset();
+    return _.get(el.scope(), '$$childTail.pstnNumbers');
+  }
+
+  function getFieldTemplateOptions(key) {
+    return _.chain(controller.fields)
+      .get('[0].templateOptions.fields')
+      .find({
+        key: key
+      })
+      .get('templateOptions')
+      .value();
+  }
+
+  describe('initial/default data', function () {
+    it('should not have an areaCodeOptions array', function () {
+      expect(controller.areaCodeOptions).toBeUndefined();
     });
 
-    $scope.$apply();
-  }));
+    it('should have 1 quantity', function () {
+      expect(controller.model.quantity).toEqual(1);
+    });
+  });
+
+  describe('State helpText', function () {
+    var stateTemplateOptions;
+    beforeEach(function () {
+      stateTemplateOptions = getFieldTemplateOptions('state');
+    });
+
+    it('should not have initial helpText', function () {
+      expect(stateTemplateOptions.helpText).toBeUndefined();
+    });
+
+    it('should not set helpText if state model is not set', function () {
+      controller.areaCodeOptions = areaCodes;
+      $scope.$apply();
+
+      expect(stateTemplateOptions.helpText).toBeUndefined();
+    });
+
+    it('should sum the area code counts when areaCodeOptions changes', function () {
+      controller.model.state = {}; // dummy selection
+      controller.areaCodeOptions = areaCodes;
+      $scope.$apply();
+
+      expect(stateTemplateOptions.helpText).toEqual('pstnSetup.numbers');
+      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
+        count: 45
+      }, 'messageformat');
+    });
+  });
+
+  describe('Area Code helpText', function () {
+    var areaCodeTemplateOptions;
+    beforeEach(function () {
+      areaCodeTemplateOptions = getFieldTemplateOptions('areaCode');
+    });
+
+    it('should not have initial helpText', function () {
+      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
+    });
+
+    it('should not have initial options', function () {
+      expect(areaCodeTemplateOptions.options).toEqual([]);
+    });
+
+    it('should update field options with areaCodeOptions', function () {
+      controller.areaCodeOptions = areaCodes;
+      $scope.$apply();
+
+      expect(areaCodeTemplateOptions.options).toEqual(areaCodes);
+    });
+
+    it('should not set helpText if area code model is not set', function () {
+      controller.model.areaCode = undefined;
+      $scope.$apply();
+
+      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
+    });
+
+    it('should set the count of selected area code', function () {
+      controller.model.areaCode = areaCodes[0];
+      $scope.$apply();
+
+      expect(areaCodeTemplateOptions.helpText).toEqual('pstnSetup.numbers');
+      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
+        count: 15
+      }, 'messageformat');
+    });
+  });
 
   describe('orderNumbers', function () {
     it('should default to no orders', function () {

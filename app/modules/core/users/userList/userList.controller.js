@@ -462,7 +462,7 @@
 
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     function firstOfType(row) {
-      return row.entity.id === $scope.gridData[0].id;
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id'));
     }
 
     function isValidThumbnail(user) {

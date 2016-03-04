@@ -42,8 +42,10 @@
     function formatServiceAddress(_address) {
       // copy address for manipulation
       var address = angular.copy(_address);
+      // create a parseable address
+      var parseableAddress = _.chain([address.streetAddress, address.unit, address.city, address.state, address.zip]).compact().join(', ').value();
       // merge in parsed street address values
-      _.merge(address, parseAddress.parseLocation(address.streetAddress));
+      _.merge(address, parseAddress.parseAddress(parseableAddress));
       // transform a return object based on our mapping structure
       var serviceAddress = _.transform(serviceAddressMapping, function (result, val, key) {
         // Set mapped value, default to empty string if not found
