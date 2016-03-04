@@ -122,12 +122,13 @@
             });
           }
         }, {
-          type: 'input',
+          type: 'cs-input',
           key: 'quantity',
           id: 'quantity',
           templateOptions: {
             required: true,
             label: $translate.instant('pstnSetup.quantity'),
+            groupSize: 'small-12',
             type: 'number',
             max: 100
           },
