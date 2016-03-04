@@ -9,12 +9,6 @@ describe('Controller: SupportCtrl', function () {
     'roles': roles
   };
 
-  function stubAllHttpGetRequests() {
-    httpBackend.when('GET', function (url) {
-      return true; // all http GET requests
-    }).respond({});
-  }
-
   beforeEach(inject(function ($httpBackend, _$templateCache_, _$compile_, $rootScope, $controller, _Userservice_, _Authinfo_, _Config_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
@@ -27,8 +21,6 @@ describe('Controller: SupportCtrl', function () {
       success: true,
       roles: ['ciscouc.devops', 'ciscouc.devsupport']
     };
-
-    stubAllHttpGetRequests();
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
@@ -58,29 +50,6 @@ describe('Controller: SupportCtrl', function () {
   it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
     var isSupportRole = $scope.isCiscoDevRole(roles);
     expect(isSupportRole).toBe(true);
-  });
-
-  describe('ToolsCard', function () {
-    it('has helpdesk button only if user has helpdesk role', function () {
-
-      var html = $templateCache.get("modules/squared/support/support-status.html");
-      var view = $compile(angular.element(html))($scope);
-
-      sinon.stub(Authinfo, 'isHelpDeskUser');
-      var helpdeskButtonClicked = sinon.spy($scope, 'gotoHelpdesk');
-
-      Authinfo.isHelpDeskUser.returns(true);
-      $scope.$digest();
-      view.find("#toolsCardHelpdeskButton").click();
-      expect(helpdeskButtonClicked.callCount).toBe(1);
-
-      helpdeskButtonClicked.reset();
-
-      Authinfo.isHelpDeskUser.returns(false);
-      $scope.$digest();
-      view.find("toolsCardHelpdeskButton").click();
-      expect(helpdeskButtonClicked.callCount).toBe(0);
-    });
   });
 
 });
