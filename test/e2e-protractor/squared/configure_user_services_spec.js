@@ -33,6 +33,10 @@ describe('Configuring services per-user', function () {
     utils.dumpConsoleErrors();
   });
 
+  function deleteTestUser() {
+    deleteUtils.deleteUser(testUser);
+  }
+
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users');
   });
@@ -46,218 +50,234 @@ describe('Configuring services per-user', function () {
     // $HSE navigation.ensureCallServiceAware();
   });
 
-  it('should add a user and select hybrid services', function () {
-    navigation.clickUsers();
-    users.createUser(testUser);
+  describe('User with hybrid services', function () {
+    it('should add a user and select hybrid services', function () {
+      navigation.clickUsers();
+      users.createUser(testUser);
 
-    // Must select license for HS to work
-    utils.click(users.paidMtgCheckbox);
+      // Must select license for HS to work
+      utils.click(users.paidMtgCheckbox);
 
-    // Select hybrid services
-    utils.click(users.hybridServices_Cal);
+      // Select hybrid services
+      utils.click(users.hybridServices_Cal);
 
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, testUser);
+      activate.setup(null, testUser);
 
-    utils.searchAndClick(testUser);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
-    utils.click(users.closeSidePanel);
-  });
+      utils.searchAndClick(testUser);
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+      utils.click(users.closeSidePanel);
+    });
 
-  it('should confirm hybrid services ADDITIVE case', function () {
-    users.createUser(testUser);
+    it('should confirm hybrid services ADDITIVE case', function () {
+      users.createUser(testUser);
 
-    // Select hybrid services
-    utils.click(users.hybridServices_UC);
+      // Select hybrid services
+      utils.click(users.hybridServices_UC);
 
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-
-    // Get into the call service settings, make sure EC is off!
-    utils.click(users.callServiceAware_link);
-    /* $HSE
-    utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-    utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
-    */
-
-    utils.click(users.closeSidePanel);
-  });
-
-  it('should add standard team rooms service', function () {
-    utils.searchAndClick(testUser);
-    utils.click(users.servicesActionButton);
-    utils.click(users.editServicesButton);
-    utils.waitForModal().then(function () {
-      utils.expectIsDisplayed(users.editServicesModal);
-      utils.click(users.standardTeamRooms);
-      utils.expectCheckbox(users.standardTeamRooms, true);
-      utils.click(users.saveButton);
-
-      // Confirm these retain their previous settings
+      utils.searchAndClick(testUser);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
-      notifications.assertSuccess('entitled successfully');
+      // Get into the call service settings, make sure EC is off!
+      utils.click(users.callServiceAware_link);
+      /* $HSE
+      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
+      utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
+      */
+
+      utils.click(users.closeSidePanel);
     });
-  });
 
-  it('should disable the Messenger interop entitlement', function () {
-    utils.clickUser(testUser);
-    utils.click(users.messagingService);
-    utils.expectCheckbox(users.messengerInteropCheckbox, true);
-    utils.click(users.messengerInteropCheckbox);
-    utils.expectCheckbox(users.messengerInteropCheckbox, false);
-    utils.click(users.saveButton);
-    notifications.assertSuccess(testUser, 'entitlements were updated successfully');
-    utils.click(users.closeSidePanel);
-  });
+    it('should add standard team rooms service', function () {
+      utils.searchAndClick(testUser);
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(users.editServicesModal);
+        utils.click(users.standardTeamRooms);
+        utils.expectCheckbox(users.standardTeamRooms, true);
+        utils.click(users.saveButton);
 
-  it('should re-enable the Messenger interop entitlement', function () {
-    utils.clickUser(testUser);
-    utils.click(users.messagingService);
-    utils.expectCheckbox(users.messengerInteropCheckbox, false);
-    utils.click(users.messengerInteropCheckbox);
-    utils.expectCheckbox(users.messengerInteropCheckbox, true);
-    utils.click(users.saveButton);
-    notifications.assertSuccess(testUser, 'entitlements were updated successfully');
-    utils.click(users.closeSidePanel);
-  });
+        // Confirm these retain their previous settings
+        utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+        utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
-  it('should verify that the Messenger interop entitlement was re-enabled', function () {
-    utils.clickUser(testUser);
-    utils.click(users.messagingService);
-    utils.expectCheckbox(users.messengerInteropCheckbox, true);
-    utils.click(users.closeSidePanel);
-    utils.deleteUser(testUser);
+        notifications.assertSuccess('entitled successfully');
+      });
+    });
+
+    it('should disable the Messenger interop entitlement', function () {
+      // Don't need to click user - already reopened from edit service
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.click(users.messengerInteropCheckbox);
+      utils.expectCheckbox(users.messengerInteropCheckbox, false);
+      utils.click(users.saveButton);
+      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+      utils.click(users.closeSidePanel);
+    });
+
+    it('should re-enable the Messenger interop entitlement', function () {
+      utils.clickUser(testUser);
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, false);
+      utils.click(users.messengerInteropCheckbox);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.click(users.saveButton);
+      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+      utils.click(users.closeSidePanel);
+    });
+
+    it('should verify that the Messenger interop entitlement was re-enabled', function () {
+      utils.clickUser(testUser);
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.click(users.closeSidePanel);
+    });
+
+    afterAll(deleteTestUser);
   });
 
   //////////////////////////////////////
   // 25 party messaging tests
   //
-  it('should add a user with 25 party meetings checked', function () {
-    users.createUser(testUser);
-    utils.click(users.paidMtgCheckbox);
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
+  describe('User with 25 party meetings', function () {
+    it('should add a user with 25 party meetings checked', function () {
+      users.createUser(testUser);
+      utils.click(users.paidMtgCheckbox);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, testUser);
+      activate.setup(null, testUser);
 
-    utils.clickUser(testUser);
-    utils.expectIsDisplayed(users.meetingService);
-    utils.click(users.closeSidePanel);
-    utils.deleteUser(testUser);
+      utils.clickUser(testUser);
+      utils.expectIsDisplayed(users.meetingService);
+      utils.click(users.closeSidePanel);
+    });
+
+    afterAll(deleteTestUser);
   });
 
   //////////////////////////////////////
   // NO hybrid services
   //
-  it('should add user with NO license for hybrid services', function () {
-    users.createUser(testUser);
+  describe('User with no hybrid services', function () {
+    it('should add user with NO license for hybrid services', function () {
+      users.createUser(testUser);
 
-    // we do not check anything during onboarding so no license for this user
+      // we do not check anything during onboarding so no license for this user
 
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, testUser);
+      activate.setup(null, testUser);
 
-    utils.searchAndClick(testUser);
-    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
-    utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
-    utils.click(users.closeSidePanel);
-    utils.deleteUser(testUser);
+      utils.searchAndClick(testUser);
+      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
+      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
+      utils.click(users.closeSidePanel);
+    });
+
+    afterAll(deleteTestUser);
   });
 
   ///////////////////////////////////////////
   // ALL hybrid services
   //
-  it('should add user with ALL hybrid services selected', function () {
-    users.createUser(testUser);
+  describe('User with all hybrid services', function () {
+    it('should add user with ALL hybrid services selected', function () {
+      users.createUser(testUser);
 
-    // Need a license for valid HS services
-    utils.click(users.paidMsgCheckbox);
+      // Need a license for valid HS services
+      utils.click(users.paidMsgCheckbox);
 
-    // Select hybrid services
-    utils.click(users.hybridServices_Cal);
-    utils.click(users.hybridServices_UC);
+      // Select hybrid services
+      utils.click(users.hybridServices_Cal);
+      utils.click(users.hybridServices_UC);
 
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
 
-    activate.setup(null, testUser);
+      activate.setup(null, testUser);
 
-    utils.searchAndClick(testUser);
-    utils.expectIsDisplayed(users.messageService);
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-    utils.click(users.closeSidePanel);
-    utils.deleteUser(testUser);
+      utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.messageService);
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+      utils.click(users.closeSidePanel);
+    });
+
+    afterAll(deleteTestUser);
   });
 
   ////////////////////////////////////////////////////////////
   // Manual Invite with Hybrid Services
   //
-  it('should Manually Add user, set some licenses, set some HS entitlements, onboard the user, verify the user, click the user, check that the licenses and entitlments have been set, close the sidebar, delete the user.', function () {
-    // Select Invite from setup menu
-    utils.click(landing.serviceSetup);
-    utils.click(navigation.addUsers);
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
+  describe('User with manual invite of hybrid services', function () {
+    it('should Manually Add user, set some licenses, set some HS entitlements, onboard the user, verify the user, click the user, check that the licenses and entitlments have been set, close the sidebar, delete the user.', function () {
+      // Select Invite from setup menu
+      utils.click(landing.serviceSetup);
+      utils.click(navigation.addUsers);
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
 
-    // Manual import
-    utils.click(inviteusers.manualUpload);
-    utils.click(inviteusers.nextButton);
+      // Manual import
+      utils.click(inviteusers.manualUpload);
+      utils.click(inviteusers.nextButton);
 
-    // Enter test email into edit box
-    // Note, this should NOT be changed to first/last/email so that we can test both cases
-    utils.click(users.emailAddressRadio);
-    utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(inviteusers.nextButton);
+      // Enter test email into edit box
+      // Note, this should NOT be changed to first/last/email so that we can test both cases
+      utils.click(users.emailAddressRadio);
+      utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2);
+      utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+      utils.click(inviteusers.nextButton);
 
-    // Need a license for valid HS services
-    utils.click(users.paidMsgCheckbox);
+      // Need a license for valid HS services
+      utils.click(users.paidMsgCheckbox);
 
-    // Enable a hybrid service
-    // $HSE users.hybridServices_EC
-    utils.click(users.hybridServices_UC);
-    utils.click(inviteusers.nextButton);
-    notifications.assertSuccess('onboarded successfully');
+      // Enable a hybrid service
+      // $HSE users.hybridServices_EC
+      utils.click(users.hybridServices_UC);
+      utils.click(inviteusers.nextButton);
+      notifications.assertSuccess('onboarded successfully');
 
-    activate.setup(null, testUser);
-    activate.setup(null, testUser2);
-  });
+      activate.setup(null, testUser);
+      activate.setup(null, testUser2);
+    });
 
-  it('should check Manually Added User(s) have licenses and entitlments properly set, then delete users.', function () {
-    var arUsers = [testUser, testUser2];
-    for (var i = 0; i < arUsers.length; i++) {
-      utils.searchAndClick(arUsers[i]);
-      utils.expectIsDisplayed(users.messageService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+    it('should check Manually Added User(s) have licenses and entitlments properly set, then delete users.', function () {
+      var arUsers = [testUser, testUser2];
+      for (var i = 0; i < arUsers.length; i++) {
+        utils.searchAndClick(arUsers[i]);
+        utils.expectIsDisplayed(users.messageService);
+        utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+        utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
-      // Get into the call service settings
-      utils.click(users.callServiceAware_link);
-      /* $HSE
-      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-      utils.expectTextToBeSet(users.callServiceConnectStatus, 'On');
-      */
-      utils.click(users.closeSidePanel);
+        // Get into the call service settings
+        utils.click(users.callServiceAware_link);
+        /* $HSE
+        utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
+        utils.expectTextToBeSet(users.callServiceConnectStatus, 'On');
+        */
+        utils.click(users.closeSidePanel);
+      }
+    });
 
-      // Cleanup
-      utils.deleteUser(arUsers[i]);
-    }
+    afterAll(function () {
+      deleteUtils.deleteUser(testUser);
+      deleteUtils.deleteUser(testUser2);
+    });
   });
 
   ///////////////////////////////////////////////////////////////

@@ -39,6 +39,7 @@
     "duplicateDnFound": "Duplicate Internal Extension entered.",
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
+    "userGettingCount": "Counting user in progress",
     "csvBtnTitle": "Export to CSV",
     "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
@@ -2012,6 +2013,7 @@
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
+      "unit": "Unit",
       "city": "City",
       "state": "State",
       "zip": "Zip"

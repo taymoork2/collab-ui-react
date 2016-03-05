@@ -137,6 +137,25 @@ describe('User List Service', function () {
     $httpBackend.flush();
   });
 
+  it('should successfully return user count 2 from calling getUserCount', function () {
+    var userCountUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+    $httpBackend.whenGET(userCountUrl).respond(200, {
+      data: [{
+        data: [{
+          details: {
+            totalRegisteredUsers: 2
+          }
+        }]
+      }]
+    });
+
+    UserListService.getUserCount().then(function (count) {
+      expect(count).toEqual(2);
+    });
+
+    $httpBackend.flush();
+  });
+
   it('should successfully return an array of 2 partners from calling listPartners', function () {
     var orgId = Authinfo.getOrgId();
     var adminUrl = Config.getAdminServiceUrl() +

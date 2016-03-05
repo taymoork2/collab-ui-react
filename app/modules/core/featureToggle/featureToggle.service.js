@@ -20,8 +20,6 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasReportTrials: 'atlas-report-trials',
       atlasTrialConversion: 'atlas-trial-conversion',
-      huronHuntGroup: 'huronHuntGroup',
-      huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
