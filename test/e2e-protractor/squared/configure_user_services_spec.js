@@ -87,10 +87,10 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
-    // Get into the call service settings, make sure EC is off!
-    utils.click(users.callServiceAware_link);
-    utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-    utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
+      // Get into the call service settings, make sure EC is off!
+      utils.click(users.callServiceAware_link);
+      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
+      utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
 
       utils.click(users.closeSidePanel);
     });
@@ -244,10 +244,10 @@ describe('Configuring services per-user', function () {
       // Need a license for valid HS services
       utils.click(users.paidMsgCheckbox);
 
-    // Enable a hybrid service
-    utils.click(users.hybridServices_EC);
-    utils.click(inviteusers.nextButton);
-    notifications.assertSuccess('onboarded successfully');
+      // Enable a hybrid service
+      utils.click(users.hybridServices_EC);
+      utils.click(inviteusers.nextButton);
+      notifications.assertSuccess('onboarded successfully');
 
       activate.setup(null, testUser);
       activate.setup(null, testUser2);
