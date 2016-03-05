@@ -39,7 +39,8 @@ angular.module('Core')
       $scope.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
       this.wbxclientversionplaceholder = 'Select webex client version';
       //For now restrict to one user (who is a partner)
-      $scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
+      //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
+      $scope.showClientVersions = false;
 
       $scope.sendFeedback = function () {
         var appType = 'Atlas_' + $window.navigator.userAgent;
@@ -157,10 +158,8 @@ angular.module('Core')
         //disable drop down ... but maybe not. 
 
         var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
-          $scope.tyu();
           return resp.data.partnerId; //this is the pid
         }).then(function (pid) {
-          $scope.tyu2();
           return WebexClientVersion.getTemplate(pid);
         });
 
@@ -177,20 +176,17 @@ angular.module('Core')
           } else {
             $scope.wbxNoClientSelected = false;
             $scope.wbxclientversionselected = clientVersion;
-            $scope.test2();
           }
-          $scope.test1();
 
           $scope.useLatestWbxVersion = json.data.useLatest;
 
         });
 
+        /**
         FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
           $scope.showClientVersions = toggle;
-          if (Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com') {
-            $scope.showClientVersions = true;
-          }
         });
+**/
 
       };
 
