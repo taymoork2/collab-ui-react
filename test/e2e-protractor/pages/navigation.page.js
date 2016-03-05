@@ -38,6 +38,7 @@ var Navigation = function () {
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
   this.ecToggler = element(by.id('squaredFusionEc-toggler'));
   this.ecTogglerSwitch = element(by.css('label[for="squaredFusionEc-toggler"]'));
+  this.updateSipDomain = element(by.id('updateSipDomain'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -269,6 +270,7 @@ var Navigation = function () {
     this.ecToggler.isSelected().then(function (selected) {
       if (!selected) {
         utils.click(navigation.ecTogglerSwitch);
+        utils.click(navigation.updateSipDomain);
       }
     });
   };
