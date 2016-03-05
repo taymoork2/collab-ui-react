@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService) {
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -274,9 +274,12 @@
       vm.availablePhoneNums.push(opt);
     }
 
-    function loadNums() {
+    function loadNums(pattern) {
+
+      vm.availablePhoneNums = [];
+
       getExternalNumbers().then(function () {
-        getInternalNumbers();
+        getInternalNumbers(pattern);
       });
 
       /* make sure the mapping exists for already existing resource numbers, so it sorts correctly */
@@ -292,12 +295,9 @@
       }
     }
 
-    function getInternalNumbers() {
-      return InternalNumberPoolService.query({
-        customerId: Authinfo.getOrgId(),
-        directorynumber: '',
-        order: 'pattern'
-      }).$promise.then(function (intPool) {
+    function getInternalNumbers(pattern) {
+
+      return TelephonyInfoService.loadInternalNumberPool(pattern).then(function (intPool) {
 
         for (var i = 0; i < intPool.length; i++) {
 
@@ -316,6 +316,8 @@
     }
 
     function getExternalNumbers() {
+
+      vm.externalNumberList = [];
 
       return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
@@ -392,8 +394,6 @@
       vm.aaModel = AAModelService.getAAModel();
 
       vm.ui = AAUiModelService.getUiModel();
-
-      loadNums();
 
       vm.aaModel.possibleNumberDiscrepancy = false;
       warnOnAssignedNumberDiscrepancies();
