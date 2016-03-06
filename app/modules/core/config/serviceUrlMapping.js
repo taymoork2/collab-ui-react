@@ -2,26 +2,32 @@
   'use strict';
 
   var serviceUrlMapping = {
-    adminClientUrl: {
+    adminPortalUrl: {
       dev: 'http://127.0.0.1:8000',
       cfe: 'https://cfe-admin.ciscospark.com',
       integration: 'https://int-admin.ciscospark.com/',
       prod: 'https://admin.ciscospark.com/'
     },
     adminServiceUrl: {
-      dev: 'http://localhost:8080/atlas-server/admin/api/v1/',
+      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
     },
     locusServiceUrl: {
-      dev: 'http://localhost:8080/locus-mount',
-      cfe: 'https://locus-e.wbx2.com',
+      dev: 'https://admin-portal-test-public.wbx2.com/locus',
+      cfe: 'https://admin-portal-test-public.wbx2.com/locus',
       integration: 'https://admin-portal-test-public.wbx2.com/locus',
+      prod: 'https://admin-portal-test-public.wbx2.com/locus'
+    },
+    featureToggleUrl: {
+      dev: 'https://locus-a.wbx2.com',
+      cfe: 'https://locus-e.wbx2.com',
+      integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com'
     },
     enrollmentServiceUrl: {
-      dev: 'http://localhost:8080/locus-mount/locus/api/v1',
+      dev: 'https://locus-integration.wbx2.com/locus/api/v1',
       cfe: 'https://locus-e.wbx2.com/locus/api/v1',
       integration: 'https://locus-integration.wbx2.com/locus/api/v1',
       prod: 'https://locus-a.wbx2.com/locus/api/v1'
@@ -44,7 +50,19 @@
       integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
       prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
     },
+    eventServiceUrl: {
+      dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+      cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+      integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+      prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
+    },
     thresholdServiceUrl: {
+      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
+    },
+    faultServiceUrl: {
       dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
       cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
       integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
@@ -57,13 +75,13 @@
       prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     },
     csdmServiceUrl: {
-      dev: 'http://localhost:8080/csdm-server/csdm/api/v1',
+      dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
       cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
       integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
       prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
     },
     messengerServiceUrl: {
-      dev: 'http://localhost:8080/admin-service/messenger/admin/api/v1',
+      dev: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
       prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1'
@@ -110,7 +128,7 @@
       integration: '.wbx2.com',
       prod: '.ciscospark.com'
     },
-    healthCheckUrl: {
+    healthCheckServiceUrl: {
       dev: 'https://ciscospark.statuspage.io/index.json',
       cfe: 'https://ciscospark.statuspage.io/index.json',
       integration: 'https://ciscospark.statuspage.io/index.json',
@@ -143,8 +161,8 @@
     wdmUrl: {
       dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
       cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
-      integration: 'http://wdm.integration.wbx2.com/wdm/api/v1',
-      prod: 'http://wdm.cfa.wbx2.com/wdm/api/v1',
+      integration: 'https://wdm-a.wbx2.com/wdm/api/v1',
+      prod: 'https://wdm-a.wbx2.com/wdm/api/v1',
     },
     sunlightConfigServiceUrl: {
       dev: 'https://config.rciad.ciscoccservice.com/config/v1',
