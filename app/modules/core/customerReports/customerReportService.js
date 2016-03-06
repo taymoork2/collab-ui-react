@@ -5,7 +5,7 @@
     .service('CustomerReportService', CustomerReportService);
 
   /* @ngInject */
-  function CustomerReportService($http, $translate, $q, Config, Authinfo, Notification, Log) {
+  function CustomerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, chartColors) {
     var urlBase = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
     var topn = 'topn';
@@ -112,8 +112,8 @@
         totalRegisteredUsers: 0,
         activeUsers: 0,
         percentage: 0,
-        colorOne: Config.chartColors.brandSuccessLight,
-        colorTwo: Config.chartColors.brandSuccessDark,
+        colorOne: chartColors.brandSuccessLight,
+        colorTwo: chartColors.brandSuccessDark,
         balloon: true
       };
       var dayOffset = parseInt(moment.tz(activeData[(activeData.length - 1)].date, timezone).format('e'));
@@ -133,7 +133,7 @@
         var activeUsers = parseInt(item.details.activeUsers);
         var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
 
-        // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+        // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number
         if (totalRegisteredUsers <= 0) {
           var previousTotal = 0;
           var nextTotal = 0;
@@ -393,7 +393,7 @@
         balloon: true,
         contentShared: 0,
         contentShareSizes: 0,
-        color: Config.chartColors.brandSuccess
+        color: chartColors.brandSuccess
       };
 
       var dayOffset = 0;
@@ -476,12 +476,12 @@
               "callCondition": $translate.instant('callMetrics.audioCalls'),
               "numCalls": parseInt(details.sparkUcAudioCalls),
               "percentage": Math.round((parseInt(details.sparkUcAudioCalls) / parseInt(details.totalSuccessfulCalls)) * 100),
-              "color": Config.chartColors.colorAttentionBase
+              "color": chartColors.colorAttentionBase
             }, {
               "callCondition": $translate.instant('callMetrics.videoCalls'),
               "numCalls": parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls),
               "percentage": Math.round(((parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls)) / parseInt(details.totalSuccessfulCalls)) * 100),
-              "color": Config.chartColors.primaryColorBase
+              "color": chartColors.primaryColorBase
             }];
 
             returnArray.displayData.totalCalls = totalCalls;

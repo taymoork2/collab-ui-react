@@ -15,7 +15,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   var timeChartUrl;
 
   var logInfoBaseUrl = 'reports/tables/calls/';
-  var healthUrl = Config.getHealthCheckUrlServiceUrl();
+  var healthUrl = Config.getHealthCheckServiceUrl();
   var averageCallCount = 'reports/counts/avgCallsPerUser';
   var entitlementCount = 'reports/counts/entitlements';
   var contentSharedCount = 'reports/counts/contentShared';
