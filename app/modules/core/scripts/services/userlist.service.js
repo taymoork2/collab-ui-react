@@ -6,10 +6,10 @@
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako, UrlConfig) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
-    var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
+    var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
     var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
     var service = {
@@ -46,19 +46,19 @@
         if (typeof entitlement !== 'undefined' && entitlement !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
           //It seems CI does not support 'ANDing' filters in this situation.
           filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
-          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
           searchStr = searchStr;
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
-          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
           listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
 
         } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
           filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
-          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          scimSearchUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           listUrl = scimSearchUrl;
         }
       }
@@ -101,7 +101,7 @@
 
     // Call user reports REST api to request a user report be generated.
     function generateUserReports(sortBy, callback) {
-      var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
+      var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         "sortedBy": [sortBy],
         "attributes": ["name", "userName", "entitlements", "roles", "active"]
@@ -129,7 +129,7 @@
     // Call user reports rest api to get the user report data based on the report id from the
     // generate user report request.
     function getUserReports(userReportsID, callback) {
-      var userReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId()) + '/' + userReportsID;
+      var userReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/' + userReportsID;
 
       $http.get(userReportsUrl)
         .success(function (data, status) {
@@ -256,7 +256,7 @@
     // TODO: rm this after replacing all instances of usage to listPartnersAsPromise
     function listPartners(orgId, callback) {
 
-      var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       $http.get(adminUrl)
         .success(function (data, status) {
@@ -281,7 +281,7 @@
     // - simply unpacking the 'data' property on success
     function listPartnersAsPromise(orgId) {
 
-      var adminUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/users/partneradmins';
 
       return $http.get(adminUrl)
         .catch(function (data, status) {

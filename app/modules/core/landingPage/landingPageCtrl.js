@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state', 'chartColors',
-    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state, chartColors) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state', 'chartColors', 'UrlConfig',
+    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state, chartColors, UrlConfig) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
 
       $scope.counts = {};
       $scope.refreshTime = null;
-      $scope.statusPageUrl = Config.getStatusPageUrl();
+      $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
 
       $scope.reportStatus = {
         calls: 'refresh',

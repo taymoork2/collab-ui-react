@@ -5,7 +5,7 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig) {
+function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
 
   return {
     logout: logout,
@@ -35,7 +35,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function getAccount(org) {
-    var url = Config.getAdminServiceUrl() + 'organization/' + org + '/accounts';
+    var url = UrlConfig.getAdminServiceUrl() + 'organization/' + org + '/accounts';
     return httpGET(url);
   }
 
@@ -87,7 +87,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
         Storage.clear();
-        $window.location.href = Config.getLogoutUrl();
+        $window.location.href = OAuthConfig.getLogoutUrl();
       });
   }
 
@@ -107,7 +107,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   // authorize helpers
 
   function getAuthorizationUrl() {
-    var url = Config.getAdminServiceUrl();
+    var url = UrlConfig.getAdminServiceUrl();
 
     var customerOrgId = SessionStorage.get('customerOrgId');
     if (customerOrgId) {
@@ -123,7 +123,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function injectMessengerService(authData) {
-    var url = Config.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
+    var url = UrlConfig.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
     return httpGET(url)
       .then(function (res) {
         var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
@@ -147,7 +147,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function replaceServices(authData) {
-    var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
+    var servicesUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
     return httpGET(servicesUrl).then(function (res) {
       authData.services = res.data.entitlements;
       return authData;

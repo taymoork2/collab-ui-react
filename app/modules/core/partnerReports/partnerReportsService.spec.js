@@ -136,17 +136,16 @@ describe('Service: Partner Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _PartnerReportService_, _Config_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _PartnerReportService_, UrlConfig, _Notification_) {
     $httpBackend = _$httpBackend_;
     PartnerReportService = _PartnerReportService_;
-    Config = _Config_;
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');
 
-    managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+    managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
-    var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+    var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     activeUsersDetailedUrl = baseUrl + 'detailed/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mostActiveUsersUrl = baseUrl + 'topn/managedOrgs/activeUsers?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue + '&orgId=';
     mediaQualityUrl = baseUrl + 'detailed/managedOrgs/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + '&orgId=';
