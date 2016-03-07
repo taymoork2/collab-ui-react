@@ -25,12 +25,12 @@ angular.module('Squared')
 
       function gotoHelpdesk() {
         var url = $state.href('helpdesk.search');
-        window.open(url,'_blank');
+        window.open(url, '_blank');
       }
 
       function gotoCdrSupport() {
         var url = $state.href('cdrsupport');
-        window.open(url,'_blank');
+        window.open(url, '_blank');
       }
 
       function initializeShowCdrCallFlowLink() {
