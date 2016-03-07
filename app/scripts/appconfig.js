@@ -830,8 +830,9 @@ angular
         })
         .state('reports', {
           url: '/reports',
-          templateUrl: 'modules/squared/views/reports.html',
-          controller: 'ReportsCtrl',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
           parent: 'main',
           params: {
             tab: null,
@@ -840,8 +841,9 @@ angular
         })
         .state('webex-reports', {
           url: '/reports/webex',
-          templateUrl: 'modules/squared/views/reports.html',
-          controller: 'ReportsCtrl',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
           parent: 'main',
           params: {
             tab: 'webex',
@@ -1001,18 +1003,6 @@ angular
         /*
           end: devices redux prototypes
         */
-
-      .state('devReports', {
-          url: '/devReports',
-          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-          controller: 'CustomerReportsCtrl',
-          controllerAs: 'nav',
-          parent: 'main',
-          params: {
-            tab: null,
-            siteUrl: null
-          }
-        })
         .state('partneroverview', {
           parent: 'partner',
           url: '/overview',

@@ -594,13 +594,17 @@
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
         return returnItem;
-      } else if (error.status !== 0) {
-        Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([message], 'error');
-        return returnItem;
-      } else if (error.config.timeout.$$state.status === 0) {
-        Log.debug(debug + '  Status: ' + error.status);
-        Notification.notify([message], 'error');
+      } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
+        if (error.status !== 0) {
+          Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
+        } else {
+          Log.debug(debug + '  Status: ' + error.status);
+        }
+        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
+        } else {
+          Notification.notify([message], 'error');
+        }
         return returnItem;
       } else {
         return ABORT;

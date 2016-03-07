@@ -86,11 +86,8 @@
     vm.metrics = {};
 
     vm.headerTabs = [{
-      title: $translate.instant('reportsPage.engagement'),
-      state: 'reports'
-    }, {
       title: $translate.instant('reportsPage.sparkReports'),
-      state: 'devReports'
+      state: 'reports'
     }];
 
     vm.timeOptions = [{
