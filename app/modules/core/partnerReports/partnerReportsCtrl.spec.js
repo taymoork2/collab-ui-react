@@ -5,52 +5,19 @@ describe('Controller: Partner Reports', function () {
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
-  var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
-  var dummyGraphData = angular.copy(dummyData.activeUser.four);
-  var dummyMediaQualityGraphData = angular.copy(dummyData.mediaQuality.four);
-  var dummycallMetricsData = angular.copy(dummyData.callMetrics);
-  dummycallMetricsData.dummy = undefined;
-  var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
-  dummyPopulationData.colorOne = undefined;
-  dummyPopulationData.colorTwo = undefined;
-  dummyPopulationData.balloon = true;
+  var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
+  var activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
+  var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
+  var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+  var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
 
   var validateService = {
     invalidate: function () {}
   };
-  var customerOptions = [{
-    value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    label: 'Test Org One',
-    isAllowedToManage: true
-  }, {
-    value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
-    label: 'Test Org Three',
-    isAllowedToManage: true
-  }, {
-    value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
-    label: 'Test Org Two',
-    isAllowedToManage: true
-  }, {
-    value: '1',
-    label: 'Test Partner',
-    isAllowedToManage: true
-  }];
-  var endpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
-    deviceRegistrationCountTrend: '4',
-    yesterdaysDeviceRegistrationCount: '2',
-    registeredDevicesTrend: '+5',
-    yesterdaysRegisteredDevices: '2',
-    maxRegisteredDevices: '3',
-    minRegisteredDevices: '2',
-    customer: 'Test Org One',
-    direction: 'positive'
-  }];
 
   var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('Test Partner')
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
   };
 
   beforeEach(module('Core'));
@@ -67,34 +34,35 @@ describe('Controller: Partner Reports', function () {
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
       spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
-        graphData: dummyGraphData,
-        tableData: dummyTableData,
-        populationGraph: dummyPopulationData,
+        graphData: activeUserData.detailedResponse,
+        tableData: activeUserData.mostActiveResponse,
+        populationGraph: activeUserData.activePopResponse,
         overallPopulation: 0
       }));
-      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
-      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
+      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(customerData.customerResponse));
+      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(mediaQualityData.mediaQualityResponse));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: dummycallMetricsData
+        data: callMetricsData.callMetricsResponse
       }));
-      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointResponse));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(registeredEndpointsData.registeredEndpointResponse));
 
       spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
-        'dataProvider': dummyGraphData,
+        'dataProvider': activeUserData.detailedResponse,
         invalidateSize: validateService.invalidate
       });
 
       spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
-        'dataProvider': dummyMediaQualityGraphData,
+        'dataProvider': mediaQualityData.mediaQualityResponse,
         invalidateSize: validateService.invalidate
       });
 
       spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+        'dataProvider': activeUserData.activePopResponse,
         invalidateSize: validateService.invalidate
       });
 
       spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
-        'dataProvider': dummyPopulationData,
+        'dataProvider': callMetricsData.callMetricsResponse,
         invalidateSize: validateService.invalidate
       });
 
@@ -136,17 +104,17 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeUsersRefresh).toEqual('set');
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(1);
+        expect(controller.activeUsersTotalPages).toEqual(2);
         expect(controller.activeUserCurrentPage).toEqual(1);
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
-        expect(controller.mostActiveUsers).toEqual(dummyTableData);
+        expect(controller.mostActiveUsers).toEqual(activeUserData.mostActiveResponse);
 
-        expect(controller.customerOptions).toEqual(customerOptions);
-        expect(controller.customerSelected).toEqual(customerOptions[0]);
+        expect(controller.customerOptions).toEqual(customerData.customerOptions);
+        expect(controller.customerSelected).toEqual(customerData.customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
 
-        expect(controller.registeredEndpoints).toEqual(endpointResponse);
+        expect(controller.registeredEndpoints).toEqual(registeredEndpointsData.registeredEndpointResponse);
       });
     });
 

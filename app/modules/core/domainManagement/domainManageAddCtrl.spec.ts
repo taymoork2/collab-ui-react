@@ -4,15 +4,14 @@ namespace domainManagement {
 
   describe('DomainManagementAddCtrl', () => {
 
-    let Config, $q, $rootScope, DomainManagmentAddCtrl, DomainManagementService = {
-      addDomain: undefined,
-      domainList: []
-    };
+    let Config, $q, $rootScope, DomainManagmentAddCtrl, DomainManagementService;
     beforeEach(angular.mock.module('Core'));
-    beforeEach(inject(($injector, _$q_, _$rootScope_, $controller, $translate, _Config_)=> {
+    beforeEach(angular.mock.module('Hercules'));
+    beforeEach(inject(($injector, _$q_, _$rootScope_, $controller, $translate, _Config_, _DomainManagementService_)=> {
       Config = _Config_;
       $q = _$q_;
       $rootScope = _$rootScope_;
+      DomainManagementService = _DomainManagementService_;
       DomainManagmentAddCtrl = $controller('DomainManageAddCtrl', {
         $stateParams: {loggedOnUser: ''},
         $previousState: {go: sinon.stub()},
@@ -56,7 +55,8 @@ namespace domainManagement {
 
     it('should dissalow adding an existing domain', ()=> {
       let domain = 'alreadyadded.com';
-      DomainManagementService.domainList = [{text: domain}];
+      //noinspection TypeScriptUnresolvedVariable
+      DomainManagementService._domainList = [{text: domain}];
 
       //type domain name.
       DomainManagmentAddCtrl.domain = domain;
@@ -67,7 +67,8 @@ namespace domainManagement {
     it('should dissalow adding an existing IDN', ()=> {
       let domain = 'Домены.бел';
       let encoded = 'xn--d1acufc5f.xn--90ais';
-      DomainManagementService.domainList = [{text: encoded}];
+      //noinspection TypeScriptUnresolvedVariable
+      DomainManagementService._domainList = [{text: encoded}];
       DomainManagmentAddCtrl.domain = domain;
       expect(DomainManagmentAddCtrl.isValid).toBeFalsy();
       expect(DomainManagmentAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');

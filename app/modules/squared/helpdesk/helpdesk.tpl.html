@@ -5,9 +5,8 @@
     <cs-header-right>
       <div cs-dropdown class="sparkstatus-info dropdown">
         <button cs-dropdown-toggle class="btn-sparkstatus dropdown-toggle" tabindex="0">
-          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
-            <span class="icon icon-circle"></span>
-          </div>
+          <span class="fa fa-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
+          </span>
         </button>
         <div cs-dropdown-menu class="helpdesk-spark-status-dropdown-menu" role="menu">
           <div class="header" >

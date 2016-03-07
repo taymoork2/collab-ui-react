@@ -55,30 +55,70 @@ describe('Controller: TrialDeviceController', function () {
       var devices1 = [{
         model: 'CISCO_SX10',
         enabled: true,
-        quantity: 2
+        quantity: 2,
+        readonly: false
       }, {
         model: 'CISCO_8865',
         enabled: false,
-        quantity: 2
+        quantity: 2,
+        readonly: false
+
       }];
       var devices2 = [{
         model: 'CISCO_SX10',
         enabled: true,
-        quantity: 5
+        quantity: 5,
+        readonly: false
+
       }];
       var devices3 = [{
         model: 'CISCO_SX10',
         enabled: false,
-        quantity: 2
+        quantity: 2,
+        readonly: false
+
       }, {
         model: 'CISCO_8865',
         enabled: false,
-        quantity: 2
+        quantity: 2,
+        readonly: false
+
       }];
 
       expect(controller.calcQuantity(devices1)).toEqual(2);
       expect(controller.calcQuantity(devices1, devices2)).toEqual(7);
       expect(controller.calcQuantity(devices3)).toEqual(0);
+    });
+
+    it('should set quantity to current value', function () {
+      var deviceModel = {
+        enabled: true,
+        quantity: 3,
+        readonly: false
+
+      };
+
+      controller.setQuantity(deviceModel);
+
+      expect(deviceModel.quantity).toBe(3);
+      expect(deviceModel.enabled).toBe(true);
+      expect(deviceModel.readonly).toBe(false);
+    });
+
+    it('should set quantity to $paramValue value', function () {
+      var deviceModel = {
+        enabled: false,
+        quantity: 0,
+        readonly: false
+
+      };
+      spyOn(controller, 'getQuantity').and.returnValue(2);
+
+      controller.setQuantity(deviceModel);
+
+      expect(deviceModel.quantity).toBe(2);
+      expect(deviceModel.enabled).toBe(true);
+      expect(deviceModel.readonly).toBe(true);
     });
   });
 
@@ -133,7 +173,7 @@ describe('Controller: TrialDeviceController', function () {
     };
 
     it('should validate when quantity is between 2 and 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(7, 2);
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 2, 0, 7);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
       var valid2 = controller.validateTotalQuantity(null, null, model);
@@ -143,7 +183,7 @@ describe('Controller: TrialDeviceController', function () {
     });
 
     it('should not validate when quantity is less than 2 or greater than 7', function () {
-      spyOn(controller, 'calcQuantity').and.returnValues(8, 1);
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 1);
 
       var valid1 = controller.validateTotalQuantity(null, null, model);
       var valid2 = controller.validateTotalQuantity(null, null, model);

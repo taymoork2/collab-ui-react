@@ -272,6 +272,28 @@ var Navigation = function () {
       }
     });
   };
+
+  this.navigateTo = function (url) {
+    return browser.get(getUrl(url));
+  };
+
+  this.navigateToUsingIntegrationForTesting = function (url) {
+    return browser.get(url);
+  };
+
+  function getUrl(url) {
+    var url = url || '#/login';
+    if (isProductionBackend) {
+      if (url.indexOf('?') > -1) {
+        url += '&';
+      } else {
+        url += '?';
+      }
+      url += 'test-env-config=e2e-prod';
+    }
+    return url;
+  }
+
 };
 
 module.exports = Navigation;

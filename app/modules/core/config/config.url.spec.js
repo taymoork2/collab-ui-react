@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Config', function () {
+describe('Config - URL', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
@@ -47,115 +47,6 @@ describe('Config', function () {
       }
     };
   };
-
-  it('should exist', function () {
-    expect(Config).toBeDefined();
-  });
-
-  it('should have tabs', function () {
-    expect(Config.tabs).toBeDefined();
-  });
-
-  it('should have roleStates', function () {
-    expect(Config.roleStates).toBeDefined();
-  });
-
-  it('partner_sales_admin should have correct roleStates', function () {
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('customer-overview');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnercustomers');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
-    expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
-  });
-
-  it('should not have development states assigned to Full_Admin role', function () {
-    function getDevelopmentStates() {
-      var devStates = [];
-      for (var i = 0; i < Config.tabs.length; i++) {
-        var tab = Config.tabs[i];
-        if (tab && tab.tab === 'developmentTab') {
-          var subPages = tab.subPages;
-          for (var j = 0; j < subPages.length; j++) {
-            var devTab = subPages[j];
-            if (devTab && devTab.state) {
-              devStates.push(devTab.state);
-            }
-          }
-        }
-      }
-      return devStates;
-    }
-    var adminStates = Config.roleStates.Full_Admin || [];
-    var developmentStates = getDevelopmentStates();
-    for (var i = 0; i < adminStates.length; i++) {
-      expect(developmentStates).not.toContain(adminStates[i]);
-    }
-  });
-
-  it('should detect dev environment', function () {
-    $location.host.and.returnValue('wbx2.com/bla');
-    expect(Config.isDev()).toBe(false);
-
-    $location.host.and.returnValue('127.0.0.1');
-    expect(Config.isDev()).toBe(true);
-
-    $location.host.and.returnValue('0.0.0.0');
-    expect(Config.isDev()).toBe(true);
-
-    $location.host.and.returnValue('localhost');
-    expect(Config.isDev()).toBe(true);
-
-    $location.host.and.returnValue('10.12.32.12');
-    expect(Config.isDev()).toBe(false);
-  });
-
-  it('should detect load test environment', function () {
-    $location.host.and.returnValue(cfeHost);
-    expect(Config.isCfe()).toBe(true);
-
-    $location.host.and.returnValue(prodHost);
-    expect(Config.isCfe()).toBe(false);
-  });
-
-  it('should detect integration environment', function () {
-    $location.host.and.returnValue(intHost);
-    expect(Config.isIntegration()).toBe(true);
-
-    $location.host.and.returnValue(devHost);
-    expect(Config.isIntegration()).toBe(false);
-  });
-
-  it('should detect prod environment', function () {
-    $location.host.and.returnValue(intHost);
-    expect(Config.isProd()).toBe(false);
-
-    $location.host.and.returnValue(prodHost);
-    expect(Config.isProd()).toBe(true);
-  });
-
-  it('should return env', function () {
-    $location.host.and.returnValue(devHost);
-    expect(Config.getEnv()).toBe('dev');
-
-    $location.host.and.returnValue(cfeHost);
-    expect(Config.getEnv()).toBe('cfe');
-
-    $location.host.and.returnValue(intHost);
-    expect(Config.getEnv()).toBe('integration');
-
-    $location.host.and.returnValue(prodHost);
-    expect(Config.getEnv()).toBe('prod');
-
-    $location.host.and.returnValue('random-host-is-prod');
-    expect(Config.getEnv()).toBe('prod');
-  });
-
-  it('should return the correct oauth credentials', function () {
-    var creds = Config.getOAuthClientRegistrationCredentials();
-    expect(creds).toBe('QzgwZmI5YzcwOTZiZDg0NzQ2MjczMTdlZTFkN2E4MTdlZmYzNzJjYTljOWNlZTNjZTQzYzNlYTNlOGQxNTExZWM6YzEwYzM3MWI0NjQxMDEwYTc1MDA3M2IzYzhlNjVhN2ZmZjA1Njc0MDBkMzE2MDU1ODI4ZDNjNzQ5MjViMDg1Nw==');
-  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({
@@ -235,42 +126,6 @@ describe('Config', function () {
       cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
-    });
-  });
-
-  it('should return correct oauth login url', function () {
-    whenCalling('getOauthLoginUrl', 'a@a.com').expectUrlToBe({
-      dev: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark&email=a%40a.com',
-      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03&scope=' + scope + '&redirect_uri=https%3A%2F%2Fcfe-admin.ciscospark.com&state=random-string&service=spark&email=a%40a.com',
-      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&service=spark&email=a%40a.com',
-      prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark&email=a%40a.com'
-    });
-  });
-
-  it('should return correct redir url', function () {
-    whenCalling('getRedirectUrl').expectUrlToBe({
-      dev: 'redirect_uri=http%3A%2F%2F127.0.0.1%3A8000',
-      cfe: 'redirect_uri=https%3A%2F%2Fcfe-admin.ciscospark.com',
-      integration: 'redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F',
-      prod: 'redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F'
-    });
-  });
-
-  it('should return correct oauth code url', function () {
-    whenCalling('getOauthCodeUrl', 'foo').expectUrlToBe({
-      dev: 'grant_type=authorization_code&code=foo&scope=',
-      cfe: 'grant_type=authorization_code&code=foo&scope=',
-      integration: 'grant_type=authorization_code&code=foo&scope=',
-      prod: 'grant_type=authorization_code&code=foo&scope='
-    });
-  });
-
-  it('should return correct access code url', function () {
-    whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
-      dev: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      cfe: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      integration: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      prod: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope
     });
   });
 
@@ -463,15 +318,4 @@ describe('Config', function () {
     });
   });
 
-  describe('service states', function () {
-
-    it('squared-fusion-mgmt should contain fusion states', function () {
-      // Preliminary removed until new fusion menues are in place in both integration and production
-      //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
-    });
-
-    it('spark-room-system should contain devices state', function () {
-      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
-    });
-  });
 });
