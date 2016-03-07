@@ -45,7 +45,7 @@
 
     // public
 
-    function getLogoutUrl () {
+    function getLogoutUrl() {
       var acu = UrlConfig.getAdminPortalUrl();
       return config.logoutUrl + encodeURIComponent(acu);
     }
