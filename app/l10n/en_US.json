@@ -3627,7 +3627,7 @@
     },
     "delete": {
       "header": "Remove domain",
-      "remove":"Remove",
+      "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
