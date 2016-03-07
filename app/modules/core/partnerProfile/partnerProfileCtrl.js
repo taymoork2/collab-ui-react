@@ -182,11 +182,9 @@ angular.module('Core')
 
         });
 
-        /**
         FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
           $scope.showClientVersions = toggle;
         });
-**/
 
       };
 
