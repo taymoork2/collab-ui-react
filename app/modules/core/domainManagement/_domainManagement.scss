@@ -16,11 +16,18 @@
         border: none;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
+        min-height: 0 !important;
+
         td {
           padding-left: 0;
           color: $gray-dark-2;
           padding-top: 0 !important;
           padding-bottom: 0 !important;
+
+          span{
+            display: block;
+            max-height: 40px !important;
+          }
 
           .icon {
             margin-right: 0.5rem;
@@ -53,6 +60,10 @@
             min-width: 50px !important;
             padding: 0 !important;
             padding-top: 2px !important;
+          }
+
+          .verify-btn{
+            top:-0.27rem;
           }
 
           .dropdown-toggle {
