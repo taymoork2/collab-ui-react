@@ -205,6 +205,14 @@
       if (_.has(vm.trialData, 'details.pstnNumberInfo.state.abbreviation')) {
         getStateInventory();
       }
+      
+      if (_.has($scope.trial.details,'customerName') && vm.trialData.details.pstnContractInfo.companyName === '') {
+          vm.trialData.details.pstnContractInfo.companyName = $scope.trial.details.customerName;
+      }
+      
+      if (_.has($scope.trial.details,'customerEmail') && vm.trialData.details.pstnContractInfo.email === '') {
+          vm.trialData.details.pstnContractInfo.email = $scope.trial.details.customerEmail;
+      }
     }
 
     function skip(skipped) {
