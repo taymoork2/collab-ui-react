@@ -100,7 +100,7 @@
           }
 
           // fix for when totalRegisteredUsers equals 0 due to errors recording the number 
-          if (totalRegisteredUsers === 0) {
+          if (totalRegisteredUsers <= 0) {
             var previousTotal = 0;
             var nextTotal = 0;
             if (index !== 0) {

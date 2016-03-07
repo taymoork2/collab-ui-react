@@ -1,0 +1,109 @@
+{
+  "mediaQualityAPI": {
+    "data": [{
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "orgName": "Test Org One",
+      "data": [{
+        "date": "2015-04-20",
+        "details": {
+          "totalCount": "200",
+          "totalDurationSum": "3605",
+          "totalDurationAvg": "1",
+          "goodQualityCount": "194",
+          "goodQualityDurationSum": "3585",
+          "goodQualityDurationAvg": "18.479381",
+          "fairQualityCount": "5",
+          "fairQualityDurationSum": "10",
+          "fairQualityDurationAvg": "2",
+          "poorQualityCount": "1",
+          "poorQualityDurationSum": "10",
+          "poorQualityDurationAvg": "10"
+        }
+      }]
+    }, {
+      "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+      "orgName": "Test Org Three"
+    }, {
+      "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+      "orgName": "Test Org Two",
+      "data": [{
+        "date": "2015-04-20",
+        "details": {
+          "totalCount": "200",
+          "totalDurationSum": "3605",
+          "totalDurationAvg": "1",
+          "goodQualityCount": "194",
+          "goodQualityDurationSum": "3585",
+          "goodQualityDurationAvg": "18.479381",
+          "fairQualityCount": "5",
+          "fairQualityDurationSum": "10",
+          "fairQualityDurationAvg": "2",
+          "poorQualityCount": "1",
+          "poorQualityDurationSum": "10",
+          "poorQualityDurationAvg": "10"
+        }
+      }]
+    }, {
+      "orgId": "1",
+      "orgName": "Test Partner"
+    }],
+    "date": "2015-04-20"
+  },
+  "mediaQualityResponse": [{
+    "totalDurationSum": 0,
+    "goodQualityDurationSum": 0,
+    "fairQualityDurationSum": 0,
+    "poorQualityDurationSum": 0,
+    "partialSum": 0,
+    "balloon": true,
+    "modifiedDate": "Feb 25"
+  }, {
+    "totalDurationSum": 0,
+    "goodQualityDurationSum": 0,
+    "fairQualityDurationSum": 0,
+    "poorQualityDurationSum": 0,
+    "partialSum": 0,
+    "balloon": true,
+    "modifiedDate": "Feb 26"
+  }, {
+    "totalDurationSum": 0,
+    "goodQualityDurationSum": 0,
+    "fairQualityDurationSum": 0,
+    "poorQualityDurationSum": 0,
+    "partialSum": 0,
+    "balloon": true,
+    "modifiedDate": "Feb 27"
+  }, {
+    "totalDurationSum": 0,
+    "goodQualityDurationSum": 0,
+    "fairQualityDurationSum": 0,
+    "poorQualityDurationSum": 0,
+    "partialSum": 0,
+    "balloon": true,
+    "modifiedDate": "Feb 28"
+  }, {
+    "totalDurationSum": 3605,
+    "goodQualityDurationSum": 3585,
+    "fairQualityDurationSum": 10,
+    "poorQualityDurationSum": 10,
+    "partialSum": 20,
+    "balloon": true,
+    "modifiedDate": "Feb 29"
+  }, {
+    "totalDurationSum": 0,
+    "goodQualityDurationSum": 0,
+    "fairQualityDurationSum": 0,
+    "poorQualityDurationSum": 0,
+    "partialSum": 0,
+    "balloon": true,
+    "modifiedDate": "Mar 01"
+  }, {
+    "totalDurationSum": 3605,
+    "goodQualityDurationSum": 3585,
+    "fairQualityDurationSum": 10,
+    "poorQualityDurationSum": 10,
+    "partialSum": 20,
+    "balloon": true,
+    "modifiedDate": "Mar 02"
+  }]
+}

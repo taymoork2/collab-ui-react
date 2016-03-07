@@ -130,20 +130,27 @@
     margin-top: rem-calc(15);
   }
 
-  .form-inline.formly-field-select {
-    flex: 1;
-  }
-
   .formly-field-inline {
     align-items: flex-start;
   }
 
-  .form-inline .form-control {
-    width: 100%;
+  .form-inline {
+    &.formly-field-select {
+      flex: 2;
+    }
+    &.formly-field-cs-input, &.formly-field-input {
+      flex: 1;
+    }
+    .form-control {
+      width: 100%;
+    }
+    .control-label {
+      @extend label;
+    }
   }
 
   .search-button {
-    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base}) / 2);
+    margin-top: calc(#{$form-label-line-height}em + 10px - (50px - #{$input-height-base}) / 2);
   }
 }
 
