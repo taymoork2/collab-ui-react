@@ -24,11 +24,13 @@ angular.module('Squared')
       $scope.gotoCdrSupport = gotoCdrSupport;
 
       function gotoHelpdesk() {
-        $state.go("helpdesk.search");
+        var url = $state.href('helpdesk.search');
+        window.open(url, '_blank');
       }
 
       function gotoCdrSupport() {
-        $state.go("cdrsupport");
+        var url = $state.href('cdrsupport');
+        window.open(url, '_blank');
       }
 
       function initializeShowCdrCallFlowLink() {
@@ -66,6 +68,11 @@ angular.module('Squared')
       };
 
       $scope.showToolsCard = function () {
+        // Preliminary hack to fix rendering problem for small width screens.
+        // Without it, small screens may initially render card(s) partly on top of each other
+        setTimeout(function () {
+          $('.cs-card-layout').masonry('layout');
+        }, 200);
         return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
       };
 
