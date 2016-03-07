@@ -24,11 +24,13 @@ angular.module('Squared')
       $scope.gotoCdrSupport = gotoCdrSupport;
 
       function gotoHelpdesk() {
-        $state.go("helpdesk.search");
+        var url = $state.href('helpdesk.search');
+        window.open(url, '_blank');
       }
 
       function gotoCdrSupport() {
-        $state.go("cdrsupport");
+        var url = $state.href('cdrsupport');
+        window.open(url, '_blank');
       }
 
       function initializeShowCdrCallFlowLink() {
