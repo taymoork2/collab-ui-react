@@ -19,18 +19,18 @@
     </article>
   </cs-card>
 
-  <cs-card class="medium" ng-show="showToolsCard()">
+  <cs-card id="supportPageToolsCard" class="medium" ng-if="showToolsCard()">
     <article>
       <header>
         <h4 translate="supportPage.cards.tools.tools"></h4>
       </header>
       <section class="indent">
 
-        <div ng-show="showHelpdeskCard">
+        <div ng-if="showHelpdeskLink()">
           <h5 translate="supportPage.cards.tools.helpdeskSupport"></h5>
           <p class="content" translate="supportPage.cards.tools.launchHelpdeskDesc"></p>
-          <a target="_blank" ui-sref="helpdesk.search">
-            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
+          <a target="_blank">
+            <button id="toolsCardHelpdeskButton" ng-click="gotoHelpdesk()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewHelpdeskSupport"></button>
           </a>
         </div>
 
@@ -39,8 +39,8 @@
         <div ng-show="showCdrCallFlowLink">
           <h5 translate="supportPage.cards.tools.cdrLogs"></h5>
           <p class="content" translate="supportPage.cards.tools.viewCdrCallFlowDesc"></p>
-          <a target="_blank" ui-sref="cdrsupport">
-            <button class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
+          <a target="_blank">
+            <button id="toolsCardCdrCallFlowButton" ng-click="gotoCdrSupport()" class="btn btn--people btn--medium" style="margin-top: 20px;" translate="supportPage.cards.tools.viewCdrCallFlow"></button>
           </a>
         </div>
       </section>
