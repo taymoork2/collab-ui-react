@@ -1,7 +1,6 @@
 'use strict';
 
-// TODO: Turn on tests when feature toggle is removed
-xdescribe('Customer Reports', function () {
+describe('Customer Reports', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
