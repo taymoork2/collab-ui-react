@@ -32,6 +32,8 @@
     };
     vm.menuKeyEntry = {};
 
+    vm.uniqueCtrlIdentifer = $scope.schedule + "-" + $scope.index + ($scope.keyIndex ? ("-" + $scope.keyIndex) : "");
+
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
@@ -80,13 +82,13 @@
     );
 
     $scope.$watch('countrySelectForm.$invalid', function (invalid) {
-      AACommonService.setIsValid($scope.schedule + "-" + $scope.index + "-" + $scope.keyIndex, !invalid);
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, !invalid);
     });
 
     $scope.$on(
       "$destroy",
       function (event) {
-        AACommonService.setIsValid($scope.schedule + "-" + $scope.index + "-" + $scope.keyIndex, true);
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
     );
 
