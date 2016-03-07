@@ -5,7 +5,7 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage) {
+function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig) {
 
   return {
     logout: logout,
@@ -40,9 +40,9 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function getNewAccessToken(code) {
-    var url = getAccessTokenUrl();
-    var token = Config.getOAuthClientRegistrationCredentials();
-    var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getNewAccessTokenPostData(code);
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
     return httpPOST(url, data, token)
       .then(updateAccessToken)
@@ -50,24 +50,15 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function refreshAccessToken() {
-    var url = getAccessTokenUrl();
     var refreshToken = Storage.get('refreshToken');
-    var data = Config.getOauthAccessCodeUrl(refreshToken);
-    var token = Config.getOAuthClientRegistrationCredentials();
+
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
     return httpPOST(url, data, token)
       .then(updateAccessToken)
       .catch(handleError('Failed to refresh access token'));
-  }
-
-  function setAccessToken() {
-    var url = getAccessTokenUrl();
-    var token = Config.getOAuthClientRegistrationCredentials();
-    var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
-
-    return httpPOST(url, data, token)
-      .then(updateAccessToken)
-      .catch(handleError('Failed to obtain oauth access_token'));
   }
 
   function refreshAccessTokenAndResendRequest(response) {
@@ -78,10 +69,20 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       });
   }
 
+  function setAccessToken() {
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getAccessTokenPostData();
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
+
+    return httpPOST(url, data, token)
+      .then(updateAccessToken)
+      .catch(handleError('Failed to obtain oauth access_token'));
+  }
+
   function logout() {
-    var url = Config.getOauthDeleteTokenUrl();
+    var url = OAuthConfig.getOauthDeleteTokenUrl();
     var data = 'token=' + Storage.get('accessToken');
-    var token = Config.getOAuthClientRegistrationCredentials();
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
     return httpPOST(url, data, token)
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
@@ -96,7 +97,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function redirectToLogin(email) {
     if (email) {
-      $window.location.href = Config.getOauthLoginUrl(email);
+      $window.location.href = OAuthConfig.getOauthLoginUrl(email);
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
@@ -201,10 +202,6 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   // helpers
-
-  function getAccessTokenUrl() {
-    return Config.getOauth2Url() + 'access_token';
-  }
 
   function httpGET(url) {
     var $http = $injector.get('$http');

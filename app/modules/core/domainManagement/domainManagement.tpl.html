@@ -12,8 +12,8 @@
           <th translate="domainManagement.list.actionsHeader"></th>
         </tr>
         <tr ng-repeat="domain in dv.domains">
-          <td>{{domain.text}}</td>
-          <td class="domain-status"><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</td>
+          <td><span>{{domain.text}}</span></td>
+          <td class="domain-status"><span><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</span></td>
 
           <td id="domainMenu">
             <span cs-dropdown class="actions-menu dropdown pull-right">
@@ -43,9 +43,11 @@
             </span>
           </td>
           <td>
-            <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                    ng-if="domain.status==='pending'"
-                    class="btn--primary verify-btn" translate="domainManagement.verifyDomain"></button>
+            <span>
+              <button ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
+                      ng-if="domain.status==='pending'"
+                      class="btn--primary verify-btn" translate="domainManagement.verifyDomain"></button>
+            </span>
           </td>
         </tr>
       </table>
