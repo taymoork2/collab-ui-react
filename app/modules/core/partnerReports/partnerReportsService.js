@@ -5,8 +5,8 @@
     .service('PartnerReportService', PartnerReportService);
 
   /* @ngInject */
-  function PartnerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, PartnerService, chartColors) {
-    var urlBase = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+  function PartnerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, PartnerService, chartColors, UrlConfig) {
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
     var topn = 'topn';
     var activeUserUrl = '/managedOrgs/activeUsers';

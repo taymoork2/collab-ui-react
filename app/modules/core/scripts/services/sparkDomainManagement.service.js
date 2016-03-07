@@ -5,8 +5,8 @@
     .service('SparkDomainManagementService', sparkDomainManagementService);
 
   /* @ngInject */
-  function sparkDomainManagementService($http, $q, Config, Authinfo) {
-    var sparksUrl = Config.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
+  function sparkDomainManagementService($http, $q, Config, Authinfo, UrlConfig) {
+    var sparksUrl = UrlConfig.getSparkDomainManagementUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings/domain';
     var service = {
       checkDomainAvailability: checkDomainAvailability,
       addSipUriDomain: addSipUriDomain
@@ -19,7 +19,7 @@
         return $q.reject('A SIP URI Domain input value must be entered');
       }
 
-      var domainName = domain + Config.getSparkDomainCheckUrl();
+      var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
         'name': domainName,
         'isVerifyDomainOnly': true
@@ -35,7 +35,7 @@
         return $q.reject('A SIP URI Domain input value must be entered');
       }
 
-      var domainName = domain + Config.getSparkDomainCheckUrl();
+      var domainName = domain + UrlConfig.getSparkDomainCheckUrl();
       var payload = {
         'name': domainName,
         'isVerifyDomainOnly': false

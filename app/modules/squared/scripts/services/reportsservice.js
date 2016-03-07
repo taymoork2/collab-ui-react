@@ -4,8 +4,8 @@ angular.module('Squared')
   .service('ReportsService', ReportsService);
 
 /* @ngInject */
-function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
-  var apiUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
+function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, Authinfo, Auth, UrlConfig) {
+  var apiUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
   var callMetricsUrl = 'reports/stats/callUsage';
   var activeUsersUrl = 'reports/counts/activeUsers';
@@ -15,7 +15,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   var timeChartUrl;
 
   var logInfoBaseUrl = 'reports/tables/calls/';
-  var healthUrl = Config.getHealthCheckServiceUrl();
+  var healthUrl = UrlConfig.getHealthCheckServiceUrl();
   var averageCallCount = 'reports/counts/avgCallsPerUser';
   var entitlementCount = 'reports/counts/entitlements';
   var contentSharedCount = 'reports/counts/contentShared';
@@ -149,13 +149,13 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
         if (!orgId) { // count for all managed customers
           timeChartUrl = apiUrl + urls[metricType];
         } else { // count for specific managed customer
-          timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + urls[metricType];
+          timeChartUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/' + urls[metricType];
         }
       } else { // timechart metric type
         if (!orgId) { // timechart for all managed customers
           timeChartUrl = apiUrl + 'reports/timeCharts/managedOrgs/' + metricType;
         } else { // timechart for specific managed customer
-          timeChartUrl = Config.getAdminServiceUrl() + 'organization/' + orgId + '/' + 'reports/timeCharts/' + metricType;
+          timeChartUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + orgId + '/' + 'reports/timeCharts/' + metricType;
         }
       }
     } else { // customer reports

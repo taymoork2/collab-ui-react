@@ -6,8 +6,8 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService) {
-    var userUrl = Config.getAdminServiceUrl();
+  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService, UrlConfig) {
+    var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
       updateUsers: updateUsers,
@@ -123,10 +123,9 @@
     }
 
     function getUser(userid, callback) {
-      var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
-      var userUrl = scimUrl;
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
-      $http.get(userUrl, {
+      $http.get(scimUrl, {
           cache: true
         })
         .success(function (data, status) {
@@ -143,7 +142,7 @@
     }
 
     function updateUserProfile(userid, userData, callback) {
-      var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       if (userData) {
 

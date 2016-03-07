@@ -5,7 +5,7 @@
     .module('Core')
     .factory('OAuthConfig', OAuthConfig);
 
-  function OAuthConfig(Utils, Config) {
+  function OAuthConfig(Utils, Config, UrlConfig) {
 
     var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
@@ -28,10 +28,12 @@
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
-      }
+      },
+      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
     };
 
     return {
+      getLogoutUrl: getLogoutUrl,
       getOauthLoginUrl: getOauthLoginUrl,
       getAccessTokenUrl: getAccessTokenUrl,
       getOauthAccessCodeUrl: getOauthAccessCodeUrl,
@@ -42,6 +44,11 @@
     };
 
     // public
+
+    function getLogoutUrl () {
+      var acu = UrlConfig.getAdminPortalUrl();
+      return config.logoutUrl + encodeURIComponent(acu);
+    }
 
     function getAccessTokenUrl() {
       return getOauth2Url() + 'access_token';
@@ -56,7 +63,7 @@
     }
 
     function getOauthLoginUrl(email) {
-      var acu = Config.getAdminPortalUrl();
+      var acu = UrlConfig.getAdminPortalUrl();
       var params = [
         getOauth2Url(),
         getClientId(),
@@ -88,7 +95,7 @@
     // private
 
     function getRedirectUrl() {
-      var acu = Config.getAdminPortalUrl();
+      var acu = UrlConfig.getAdminPortalUrl();
       var params = [encodeURIComponent(acu)];
       return Utils.sprintf(config.oauthUrl.ciRedirectUrl, params);
     }

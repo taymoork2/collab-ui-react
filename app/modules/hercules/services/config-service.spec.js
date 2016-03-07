@@ -18,9 +18,9 @@ describe('ConfigService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _ConfigService_, Config) {
+  beforeEach(inject(function ($injector, _ConfigService_, UrlConfig) {
     Service = _ConfigService_;
-    rootPath = Config.getHerculesUrl();
+    rootPath = UrlConfig.getHerculesUrl();
   }));
 
   it('should return the correct url', function () {

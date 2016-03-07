@@ -3,7 +3,7 @@
 angular.module('Hercules').service('UserDetails',
 
   /* @ngInject  */
-  function (Utils, Config, Authinfo, $http, Log) {
+  function (Utils, Config, Authinfo, $http, Log, UrlConfig) {
 
     var multipleUserFilter = function (userIds) {
       var filter = "";
@@ -15,7 +15,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var userUrl = function (userIds, orgId) {
-      return Config.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
+      return UrlConfig.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
     };
 
     var getCSVColumnHeaders = function () {

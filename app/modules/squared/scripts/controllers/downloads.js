@@ -1,22 +1,22 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('DownloadsCtrl', ['$scope', '$location', '$http', 'Config', 'Userservice',
-    function ($scope, $location, $http, Config, Userservice) {
+  .controller('DownloadsCtrl', ['$scope', '$location', '$http', 'UrlConfig', 'Userservice',
+    function ($scope, $location, $http, UrlConfig, Userservice) {
 
       $scope.email = $location.search().email;
       $scope.tlData = {
         email: $scope.email
       };
 
-      $scope.webClientURL = Config.getWebClientUrl();
-      $scope.iPhoneURL = Config.getItunesStoreUrl();
-      $scope.androidURL = Config.getAndroidStoreUrl();
+      $scope.webClientURL = UrlConfig.getWebClientUrl();
+      $scope.iPhoneURL = UrlConfig.getItunesStoreUrl();
+      $scope.androidURL = UrlConfig.getAndroidStoreUrl();
 
       var hasJustResetPassword = $location.search().pwdResetSuccess;
 
       if (hasJustResetPassword) {
-        // call backend to send 
+        // call backend to send
 
         var callback = function (data, status) {
           if (data.success) {

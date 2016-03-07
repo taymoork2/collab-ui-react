@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage, serviceUrlMapping) {
+  function Config($location, Utils, $filter, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -20,32 +20,7 @@
 
       consumerOrgId: 'consumer',
 
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
-
-      ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-
-      ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-
-      statusPageUrl: 'http://status.ciscospark.com/',
-
-      logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-
-      callflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
-
       feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
-
-      appinfo: {
-        webClientURL: 'https://web.ciscospark.com/',
-        iPhoneURL: 'http://cs.co/sqios',
-        androidURL: 'http://cs.co/sqandroid',
-        androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-        appURL: 'squared://'
-      },
-
-      webexUrl: {
-        siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
-        siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
-      },
 
       scimSchemas: [
         'urn:scim:schemas:core:1.0',
@@ -205,68 +180,10 @@
         }
       },
 
-      getProdAdminServiceUrl: function () {
-        return serviceUrlMapping.adminServiceUrl.prod;
-      },
-
-      getLogoutUrl: function () {
-        var acu = this.getAdminPortalUrl();
-        return this.logoutUrl + encodeURIComponent(acu);
-      },
-
-      getSSOSetupUrl: function () {
-        return this.ssoSetupUrl;
-      },
-
-      getSSOTestUrl: function () {
-        return this.ssoTestUrl;
-      },
-
-      getLogMetricsUrl: function () {
-        return this.logMetricUrl;
-      },
-
-      getCallflowServiceUrl: function () {
-        return this.callflowServiceUrl;
-      },
-
-      getStatusPageUrl: function () {
-        return this.statusPageUrl;
-      },
-
-      getSquaredAppUrl: function () {
-        return this.appinfo.appURL;
-      },
-
-      getItunesStoreUrl: function () {
-        return this.appinfo.iPhoneURL;
-      },
-
-      getAndroidStoreUrl: function () {
-        return this.appinfo.androidURL;
-      },
-
-      getAndroidAppIntent: function () {
-        return this.appinfo.androidAppIntent;
-      },
-
-      getWebClientUrl: function () {
-        return this.appinfo.webClientURL;
-      },
-
       getDefaultEntitlements: function () {
         return this.defaultEntitlements;
       },
 
-      getWebexAdvancedHomeUrl: function (siteURL) {
-        var params = [siteURL];
-        return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
-      },
-
-      getWebexAdvancedEditUrl: function (siteURL) {
-        var params = [siteURL];
-        return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
-      },
     };
 
     config.setTestEnvConfig = function (testEnv) {
@@ -426,51 +343,6 @@
     config.publicStates = ['unauthorized', '404', 'csadmin'];
 
     config.ciscoOnly = ['billing'];
-
-    var urlsToExpose = [
-      'adminPortalUrl',
-      'scimUrl',
-      'userReportsUrl',
-      'scomUrl',
-      'domainManagementUrl',
-      'adminServiceUrl',
-      'sparkDomainManagementUrl',
-      'sparkDomainCheckUrl',
-      'meetingServiceUrl',
-      'meetingInfoServiceUrl',
-      'metricsServiceUrl',
-      'thresholdServiceUrl',
-      'alarmServiceUrl',
-      'eventServiceUrl',
-      'faultServiceUrl',
-      'healthCheckServiceUrl',
-      'herculesUrl',
-      'herculesUrlV2',
-      'ussUrl',
-      'calliopeUrl',
-      'certsUrl',
-      'utilizationServiceUrl',
-      'sunlightConfigServiceUrl',
-      'cdrUrl',
-      'csdmServiceUrl',
-      'messengerServiceUrl',
-      'locusServiceUrl',
-      'featureToggleUrl',
-      'enrollmentServiceUrl',
-      'wdmUrl'
-    ];
-
-    function upperFirst(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    _.each(urlsToExpose, function (url) {
-      config['get' + upperFirst(url)] = function () {
-        var env = config.getEnv();
-        var args = _.toArray(arguments);
-        return Utils.sprintf(serviceUrlMapping[url][env], args);
-      };
-    });
 
     return config;
   }

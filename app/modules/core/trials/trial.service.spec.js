@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
+/* globals $httpBackend, $q, $rootScope, UrlConfig, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -7,8 +7,7 @@ describe('Service: Trial Service:', function () {
   beforeEach(module('Huron'));
 
   beforeEach(function () {
-    bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService');
+    bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService', 'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService', 'UrlConfig');
   });
 
   beforeEach(function () {
@@ -52,7 +51,7 @@ describe('Service: Trial Service:', function () {
     });
 
     it('should start a new trial', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
       TrialService.startTrial().then(function (response) {
         expect(response.data).toEqual(trialAddResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
@@ -63,7 +62,7 @@ describe('Service: Trial Service:', function () {
     it('should edit a trial', function () {
       var customerOrgId = 123;
       var trialId = 444;
-      $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
+      $httpBackend.whenPATCH(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
       TrialService.editTrial(customerOrgId, trialId).then(function (response) {
         expect(response.data).toEqual(trialEditResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
@@ -92,7 +91,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have offers list', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
           var offers = angular.fromJson(data).offers;
           return _.every(offerList, function (offer) {
@@ -108,7 +107,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have meeting settings', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var details = angular.fromJson(data).details;
           return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
         }).respond(200);
@@ -119,7 +118,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have device details', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var deviceList = [{
             model: 'CISCO_SX10',
             quantity: 2
@@ -137,7 +136,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should not have shipping details if none were provided', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           return _.isUndefined(data.shippingInfo);
         }).respond(200);
 
@@ -149,7 +148,7 @@ describe('Service: Trial Service:', function () {
 
     describe('start trial with disabled trials', function () {
       it('should have blank offers list', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           return angular.fromJson(data).offers.length === 0;
         }).respond(200);
 
@@ -159,7 +158,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have blank details', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var details = angular.fromJson(data).details;
           return _.isEmpty(details.devices) && _.isEmpty(details.offers);
         }).respond(200);
@@ -179,7 +178,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should not have devices if call trial order page was skipped', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var devices = angular.fromJson(data).details.devices;
           return _.isEmpty(devices);
         }).respond(200);

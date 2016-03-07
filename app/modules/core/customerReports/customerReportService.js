@@ -5,8 +5,8 @@
     .service('CustomerReportService', CustomerReportService);
 
   /* @ngInject */
-  function CustomerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, chartColors) {
-    var urlBase = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+  function CustomerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, chartColors, UrlConfig) {
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
     var topn = 'topn';
     var timechart = 'timeCharts';

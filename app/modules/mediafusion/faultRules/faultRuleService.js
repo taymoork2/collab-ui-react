@@ -2,11 +2,11 @@
 
 //Defining a FaultRuleService.
 angular.module('Mediafusion')
-  .service('FaultRuleService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('FaultRuleService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
       //Fetching the Base url form config.js file.
-      var baseUrl = Config.getFaultServiceUrl();
+      var baseUrl = UrlConfig.getFaultServiceUrl();
 
       var listFaultServices = {
 

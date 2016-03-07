@@ -1,12 +1,12 @@
 'use strict';
 
-fdescribe('Config - URL', function () {
+describe('UrlConfigSpec', function () {
 
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Config, $location;
-  beforeEach(inject(function (_$location_, _Config_) {
-    Config = _Config_;
+  var UrlConfig, $location;
+  beforeEach(inject(function (_$location_, _UrlConfig_) {
+    UrlConfig = _UrlConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
@@ -34,11 +34,11 @@ fdescribe('Config - URL', function () {
           if (!host) {
             throw new Error("Unknown environment " + env);
           }
-          if (!Config[fn]) {
+          if (!UrlConfig[fn]) {
             throw new Error("Unknown method " + fn);
           }
           $location.host.and.returnValue(host);
-          var actual = Config[fn](arg);
+          var actual = UrlConfig[fn](arg);
 
           if (expected != actual) {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
@@ -138,24 +138,6 @@ fdescribe('Config - URL', function () {
     });
   });
 
-  it('should return correct event service url', function () {
-    whenCalling('getEventServiceUrl').expectUrlToBe({
-      dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
-      prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
-    });
-  });
-
-  it('should return correct threshold service url', function () {
-    whenCalling('getThresholdServiceUrl').expectUrlToBe({
-      dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
-      prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-    });
-  });
-
   it('should return correct fault service url', function () {
     whenCalling('getFaultServiceUrl').expectUrlToBe({
       dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
@@ -201,7 +183,6 @@ fdescribe('Config - URL', function () {
     });
   });
 
-
   it('should return correct meeting service url', function () {
     whenCalling('getMeetingServiceUrl').expectUrlToBe({
       dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
@@ -217,15 +198,6 @@ fdescribe('Config - URL', function () {
       cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
-    });
-  });
-
-  it('should return correct logout url', function () {
-    whenCalling('getLogoutUrl').expectUrlToBe({
-      dev: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=http%3A%2F%2F127.0.0.1%3A8000',
-      cfe: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fcfe-admin.ciscospark.com',
-      integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fint-admin.ciscospark.com%2F',
-      prod: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.ciscospark.com%2F'
     });
   });
 
@@ -307,15 +279,6 @@ fdescribe('Config - URL', function () {
       cfe: 'http://cs.co/sqandroid',
       integration: 'http://cs.co/sqandroid',
       prod: 'http://cs.co/sqandroid'
-    });
-  });
-
-  it('should return correct android app intent url', function () {
-    whenCalling('getAndroidAppIntent').expectUrlToBe({
-      dev: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-      cfe: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-      integration: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-      prod: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;'
     });
   });
 
@@ -424,6 +387,42 @@ fdescribe('Config - URL', function () {
       cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
       integration: 'https://config.rciad.ciscoccservice.com/config/v1',
       prod: 'https://config.rciad.ciscoccservice.com/config/v1'
+    });
+  });
+
+  it('should return correct prod admin url', function () {
+    whenCalling('getProdAdminServiceUrl').expectUrlToBe({
+      dev: 'https://atlas-a.wbx2.com/admin/api/v1/',
+      cfe: 'https://atlas-a.wbx2.com/admin/api/v1/',
+      integration: 'https://atlas-a.wbx2.com/admin/api/v1/',
+      prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
+    });
+  });
+
+  it('should return correct webexAdvancedEditUrl url', function () {
+    whenCalling('getWebexAdvancedEditUrl', 'foo').expectUrlToBe({
+      dev: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      cfe: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      integration: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+    });
+  });
+
+  it('should return correct webexAdvancedHomeUrl url', function () {
+    whenCalling('getWebexAdvancedHomeUrl', 'foo').expectUrlToBe({
+      dev: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      cfe: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      integration: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      prod: 'https://foo/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage'
+    });
+  });
+
+  it('should return correct web client url', function () {
+    whenCalling('getWebClientUrl', 'foo').expectUrlToBe({
+      dev: 'https://web.ciscospark.com/',
+      cfe: 'https://web.ciscospark.com/',
+      integration: 'https://web.ciscospark.com/',
+      prod: 'https://web.ciscospark.com/'
     });
   });
 
