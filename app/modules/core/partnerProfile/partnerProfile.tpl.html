@@ -146,10 +146,11 @@ ng-model="sel.selected"
          <div class="small-12 columns">
            <div class="row collapse" ng-if="isPartner">
              <div class="small-12 columns">
-               <label class="cs-checkbox" for="useLatestWbxVersion">
-                 <input type="checkbox" id="useLatestWbxVersion" ng-model="useLatestWbxVersion" 
+               
+               <input type="checkbox" id="useLatestWbxVersion" ng-model="useLatestWbxVersion" 
                  ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)">
-                <span class="client-version-checkbox-label" translate="partnerProfile.alwaysProvisionWithLatest"></span>
+                 <label class="cs-checkbox" for="useLatestWbxVersion">
+                    <span class="client-version-checkbox-label" translate="partnerProfile.alwaysProvisionWithLatest"></span>
                </label>
                <p>
                <span class="client-version-indent" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></span>
