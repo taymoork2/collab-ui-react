@@ -39,6 +39,7 @@
     "duplicateDnFound": "Duplicate Internal Extension entered.",
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
+    "userGettingCount": "Counting user in progress",
     "csvBtnTitle": "Export to CSV",
     "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
@@ -1668,7 +1669,7 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Record a custom message and build your own phone menus."
+    "AACustomDesc": "Create a custom Auto Attendant."
   },
   "callPark": {
     "code": "CP",
@@ -2012,6 +2013,7 @@
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
+      "unit": "Unit",
       "city": "City",
       "state": "State",
       "zip": "Zip"

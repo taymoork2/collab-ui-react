@@ -8,6 +8,9 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '../',
 
+    // increase inactivity timeout
+    browserNoActivityTimeout: 30000,
+
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine', 'sinon'],
 
