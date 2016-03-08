@@ -27,9 +27,11 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       null,
       'none',
       'exportInProgress',
-      'exportCompleted',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
       'importInProgress',
-      'importCompleted'
+      'importCompletedNoErr',
+      'importCompletedWithErr'
     ];
 
     this.csvStatus = function (
@@ -82,10 +84,19 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('exportCompleted' == checkCsvStatusReq) {
+            if ('exportCompletedNoErr' == checkCsvStatusReq) {
               completionInfo = {};
 
-              successResult.status = "exportCompleted";
+              successResult.status = "exportCompletedNoErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportCompletedWithErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "exportCompletedWithErr";
               successResult.completionInfo = completionInfo;
 
               deferredCsvStatus.resolve(successResult);
@@ -97,10 +108,19 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
               deferredCsvStatus.resolve(successResult);
             }
 
-            if ('importCompleted' == checkCsvStatusReq) {
+            if ('importCompletedNoErr' == checkCsvStatusReq) {
               completionInfo = {};
 
-              successResult.status = "importCompleted";
+              successResult.status = "importCompletedNoErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importCompletedWithErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "importCompletedWithErr";
               successResult.completionInfo = completionInfo;
 
               deferredCsvStatus.resolve(successResult);
