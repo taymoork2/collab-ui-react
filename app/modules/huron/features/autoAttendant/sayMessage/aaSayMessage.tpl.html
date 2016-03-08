@@ -18,9 +18,17 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="small-12 columns">
-        <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
+    <div ng-if="aaSay.isFromDialBy()" class="aa-saymessage-timeout-invalid">
+      <div class="panel">
+        <aa-timeout-invalid aa-schedule="{{schedule}}" aa-from-new-step-dial-by="true" aa-index="index"></aa-timeout-invalid>
+      </div>
+    </div>
+
+    <div ng-if="!aaSay.isFromDialBy()">
+      <div class="row">
+        <div class="small-12 columns">
+          <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
+        </div>
       </div>
     </div>
 </div>

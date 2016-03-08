@@ -25,6 +25,12 @@
       help: $translate.instant('autoAttendant.phoneMenuHelp'),
       actions: ['runActionsOnInput']
     }, {
+      title: $translate.instant('autoAttendant.phoneMenuDialExt'),
+      url: 'modules/huron/features/autoAttendant/routeDialByExt/aaRouteDialByExtMenu.tpl.html',
+      help: $translate.instant('autoAttendant.routeDialByExtMenuHelp'),
+      type: 2, // to flag that this is not phonemenu, see setOption
+      actions: ['runActionsOnInput']
+    }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
       controller: 'AARouteCallMenuCtrl as aaRouteCallMenu',
       url: 'modules/huron/features/autoAttendant/routeCall/aaRouteCallMenu.tpl.html',
@@ -89,7 +95,8 @@
         } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           for (var i = 0; i < vm.options.length; i++) {
             var isMatch = vm.options[i].actions.some(function (action) {
-              return menuEntry.actions[0].getName() === action;
+              return menuEntry.actions[0].getName() === action &&
+                menuEntry.actions[0].inputType === vm.options[i].type;
             });
             if (isMatch) {
               vm.option = vm.options[i];

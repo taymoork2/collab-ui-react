@@ -19,7 +19,8 @@
     var sayMessageType = {
       ACTION: 1,
       MENUHEADER: 2,
-      MENUKEY: 3
+      MENUKEY: 3,
+      RUNACTIONONINPUT: 4
     };
 
     var messageInput = '';
@@ -54,6 +55,9 @@
     vm.getFooter = getFooter;
     vm.getMessageLabel = getMessageLabel;
     vm.isMessageInputOnly = isMessageInputOnly;
+    vm.isFromDialBy = isFromDialBy;
+
+    var runActionsOnInput = 'runActionsOnInput';
 
     /////////////////////
 
@@ -83,10 +87,15 @@
       }
     }
 
+    function isFromDialBy() {
+      return vm.sayMessageType === sayMessageType.RUNACTIONONINPUT;
+    }
+
     function isMessageInputOnly() {
       switch (vm.sayMessageType) {
       case sayMessageType.MENUKEY:
         return true;
+      case sayMessageType.RUNACTIONONINPUT:
       case sayMessageType.ACTION:
       case sayMessageType.MENUHEADER:
         return false;
@@ -121,6 +130,12 @@
       AACommonService.setSayMessageStatus(true);
 
       switch (vm.sayMessageType) {
+      case sayMessageType.RUNACTIONONINPUT:
+        {
+          vm.menuEntry.actions[0].voice = vm.voiceOption.value;
+          vm.menuEntry.actions[0].language = vm.languageOption.value;
+          return;
+        }
       case sayMessageType.MENUHEADER:
         {
           // set values to be used for service invalid/timeout messages
@@ -191,11 +206,27 @@
     }
 
     function setActionEntry() {
+      var action;
+
       switch (vm.sayMessageType) {
+      case sayMessageType.RUNACTIONONINPUT:
+        {
+          if (vm.menuEntry.actions.length === 0) {
+            action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionsOnInput, '');
+            action.inputType = 2;
+            vm.menuEntry.addAction(action);
+            vm.menuEntry.attempts = 4; // default 3 times
+
+          } // else existing Dial By Extension
+
+          vm.actionEntry = vm.menuEntry.actions[0];
+
+          return;
+        }
       case sayMessageType.MENUHEADER:
         {
           var actionHeader = getSayActionHeader(vm.menuEntry);
-          var action = getSayAction(actionHeader);
+          action = getSayAction(actionHeader);
           if (action) {
             // existing say action from the existing header
             vm.actionEntry = action;
@@ -252,10 +283,14 @@
       var uiMenu = ui[$scope.schedule];
       vm.menuEntry = uiMenu.entries[$scope.index];
 
-      if ($scope.isMenuHeader) {
-        vm.sayMessageType = sayMessageType.MENUHEADER;
-      } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
-        vm.sayMessageType = sayMessageType.MENUKEY;
+      if ($scope.fromNewStepDialBy) {
+        vm.sayMessageType = sayMessageType.RUNACTIONONINPUT;
+      } else {
+        if ($scope.isMenuHeader) {
+          vm.sayMessageType = sayMessageType.MENUHEADER;
+        } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
+          vm.sayMessageType = sayMessageType.MENUKEY;
+        }
       }
 
       setActionEntry();

@@ -2,20 +2,19 @@
 
 angular
   .module('uc.autoattendant')
-  .directive('aaSayMessage', [
+  .directive('aaTimeoutInvalid', [
     function () {
       return {
         restrict: 'E',
         scope: {
           schedule: '@aaSchedule',
           index: '=aaIndex',
-          isMenuHeader: '=aaHeader',
-          menuKeyIndex: '@aaKeyIndex',
+          keyIndex: '@aaKeyIndex',
           fromNewStepDialBy: '@aaFromNewStepDialBy'
         },
-        controller: 'AASayMessageCtrl',
-        controllerAs: 'aaSay',
-        templateUrl: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html'
+        controller: 'AATimeoutInvalidCtrl',
+        controllerAs: 'aaTimeoutInvalidCtrl',
+        templateUrl: 'modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html'
       };
     }
   ]);
