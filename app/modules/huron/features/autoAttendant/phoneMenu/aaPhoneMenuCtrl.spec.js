@@ -152,16 +152,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   });
 
   describe('createOptionMenu', function () {
-    it('should initialize CeMenu Timeout/Invalid input with Repeat-Menu-3-Tmes', function () {
-      controller.createOptionMenu();
-
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
-
-      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
-    });
-
     it('should intialize CeMenu first entry with first available key', function () {
       controller.createOptionMenu();
 
@@ -171,57 +161,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
   });
-
-  describe('populateOptionMenu', function () {
-
-    it('should read the CeMenu with attempts 1 and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
-      controller.menuEntry = angular.copy(data.ceMenuAttempt);
-      controller.selectedTimeout = [];
-      controller.populateOptionMenu();
-
-      var expectedActions = angular.copy(controller.timeoutActions[0]);
-
-      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
-    });
-
-    it('should read the CeMenu without attempts and set UI to Repeat-Menu-3-Times (Timeout/Invalid)', function () {
-      controller.menuEntry = angular.copy(data.ceMenuNoAttempt);
-      controller.selectedTimeout = [];
-      controller.populateOptionMenu();
-
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
-
-      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
-    });
-
-    it('should read the CeMenu with attempts 2 and set UI to Repeat-Menu-Once (Timeout/Invalid)', function () {
-      controller.menuEntry = angular.copy(data.ceMenuAttempt);
-      controller.menuEntry.attempts = 2;
-      controller.selectedTimeout = [];
-      controller.populateOptionMenu();
-
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[0]);
-
-      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
-    });
-
-    it('should read the CeMenu with attempts 6 and set UI to Repeat-Menu-Five (Timeout/Invalid)', function () {
-      controller.menuEntry = angular.copy(data.ceMenuAttempt);
-      controller.menuEntry.attempts = 6;
-      controller.selectedTimeout = [];
-      controller.populateOptionMenu();
-
-      var expectedActions = angular.copy(controller.timeoutActions[1]);
-      expectedActions.childOptions = angular.copy(controller.repeatOptions);
-      expectedActions.selectedChild = angular.copy(controller.repeatOptions[4]);
-
-      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
-    });
-
+  describe('populateUiMenu', function () {
     it('should read the CeMenu and populate the Option menu', function () {
       controller.menuEntry = angular.copy(data.ceMenu);
       controller.selectedActions = [];
@@ -229,66 +169,25 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       var expectedActions = [];
       expectedActions.push(data.selectedActionsRepeatMenu[0]);
       expectedActions.push(data.selectedActionsDialExt[0]);
+
       expect(angular.equals(expectedActions, controller.selectedActions)).toEqual(true);
+
     });
+
   });
 
-  describe('timeoutInvalidChanged', function () {
+  describe('populateUiMenu', function () {
+    it('should read the CeMenu and populate the Option menu with blank values', function () {
+      controller.menuEntry = angular.copy(data.ceMenu);
+      controller.menuEntry.entries[0].actions[0].name = "";
 
-    it('should write Continue-To-Next-Step (Timeout/Invalid action) to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
-      // phone menu at entry 0
-      controller.uiMenu = {};
-      controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": []
-      }];
-      $scope.index = 0;
-      controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[0]);
-      controller.timeoutInvalidChanged();
-      expect(controller.uiMenu.entries[0].attempts).toEqual(1);
+      controller.selectedActions = [];
+
+      controller.populateOptionMenu();
+
+      expect(angular.equals(controller.selectedActions[0].action.name, "")).toEqual(true);
+
     });
-
-    it('should write Repeat-Menu-Once (Timeout/Invalid action) to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
-      // phone menu at entry 0
-      controller.uiMenu = {};
-      controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": []
-      }];
-      $scope.index = 0;
-      controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
-      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
-      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[0]);
-
-      controller.timeoutInvalidChanged();
-      expect(controller.uiMenu.entries[0].attempts).toEqual(2);
-    });
-
-    it('should write Repeat-Menu-Five-Times (Timeout/Invalid action) to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
-      // phone menu at entry 0
-      controller.uiMenu = {};
-      controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": []
-      }];
-      $scope.index = 0;
-      controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
-      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
-      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[4]);
-
-      controller.timeoutInvalidChanged();
-      expect(controller.uiMenu.entries[0].attempts).toEqual(6);
-    });
-
   });
 
 });

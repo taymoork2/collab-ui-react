@@ -406,10 +406,15 @@
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+              action.voice = inAction.runActionsOnInput.voice;
+              menuEntry.voice = inAction.runActionsOnInput.voice;
+              menuEntry.language = inAction.runActionsOnInput.language;
+              menuEntry.attempts = inAction.runActionsOnInput.attempts;
+              menuEntry.addAction(action);
+
             }
           }
         }
-        menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.goto)) {
         action = new Action('goto', inAction.goto.ceid);
         if (angular.isDefined(inAction.goto.description)) {
@@ -448,21 +453,36 @@
         return undefined;
       }
       var ceActionArray = actionSet.actions;
+      var menuEntry;
 
       var menu = new CeMenu();
       menu.setType('MENU_WELCOME');
 
       for (var i = 0; i < ceActionArray.length; i++) {
+        // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
+        // if inputType is 2 then dial by extension, else make an option menu.
+
         if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
-          var menuEntry = new CeMenuEntry();
+
+          menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
           if (menuEntry.actions.length > 0) {
             menu.addEntry(menuEntry);
           }
         } else {
-          var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
-          if (angular.isDefined(optionMenu)) {
-            menu.addEntry(optionMenu);
+          // check for dial by extension - inputType is only 2 for now.
+          if (_.has(ceActionArray[i], 'runActionsOnInput.inputType') &&
+            ceActionArray[i].runActionsOnInput.inputType === 2) {
+            menuEntry = new CeMenuEntry();
+            parseAction(menuEntry, ceActionArray[i]);
+            if (menuEntry.actions.length > 0) {
+              menu.addEntry(menuEntry);
+            }
+          } else {
+            var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
+            if (angular.isDefined(optionMenu)) {
+              menu.addEntry(optionMenu);
+            }
           }
         }
       }
@@ -788,7 +808,15 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'runActionsOnInput') {
+              if (menuEntry.actions[0].inputType === 2) {
+                newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
+                newActionArray[i][actionName].attempts = menuEntry.attempts;
+                newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+                newActionArray[i][actionName].language = menuEntry.actions[0].language;
+              }
             }
+
           }
         }
       }
