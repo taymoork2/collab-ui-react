@@ -315,6 +315,8 @@
     "onehundredeightyDays": "180",
     "numberOfLicenses": "Number of Licenses",
     "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "isEFT": "isEFT Enabled",
+    "eftError": "Can not reach EFT Service",
     "organizationInformation": "Organization Information",
     "createOrganization": "Create Organization",
     "cancel": "Cancel",

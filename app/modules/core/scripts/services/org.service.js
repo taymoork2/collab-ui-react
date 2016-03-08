@@ -20,7 +20,9 @@
       'listOrgs': listOrgs,
       'getOrgCacheOption': getOrgCacheOption,
       'getHybridServiceAcknowledged': getHybridServiceAcknowledged,
-      'setHybridServiceAcknowledged': setHybridServiceAcknowledged
+      'setHybridServiceAcknowledged': setHybridServiceAcknowledged,
+      'getEftSetting': getEftSetting,
+      'setEftSetting': setEftSetting
     };
 
     return service;
@@ -294,6 +296,34 @@
         }
       }).error(function () {
         Log.error("Error in PATCH acknowledge status to " + serviceUrl);
+      });
+    }
+
+    function getEftSetting(currentOrgId) {
+      if (!currentOrgId) {
+        return $q.reject('An organization ID is required.');
+      }
+      var serviceUrl = Config.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'GET',
+        url: serviceUrl
+      });
+    }
+
+    function setEftSetting(setting, currentOrgId) {
+      if (!setting || typeof setting !== 'boolean' || !currentOrgId) {
+        return $q.reject('A proper EFT setting and organization ID is required.');
+      }
+
+      var serviceUrl = Config.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'PUT',
+        url: serviceUrl,
+        data: {
+          eft: setting
+        }
       });
     }
   }
