@@ -8,8 +8,11 @@
 
 <div ng-if="row.entity.showCSVInfo">
   <div ng-if="!row.entity.isCSVSupported">
-    <p class="ui-grid-cell-contents" translate>
-      siteList.siteCSVNotAvailable
+    <p class="ui-grid-cell-contents">
+    	<span
+    	id="{{row.entity.license.siteUrl}}_NA"
+      	translate="siteList.siteCSVNotAvailable">
+      	</span>
     </p>
   </div>
   
@@ -17,7 +20,7 @@
     <p class="ui-grid-cell-contents">
       <a>
         <span
-          id="{{row.entity.license.siteUrl}}_exoirt" 
+          id="{{row.entity.license.siteUrl}}_export" 
           translate="siteList.siteCsvExportLinkLabel">
         </span>
       </a>
