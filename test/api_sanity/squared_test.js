@@ -4,24 +4,22 @@ var request = require('request');
 var helper = require('./test_helper');
 
 var refuteError = function (err) {
-  return assert(!err, JSON.stringify(err));
+  assert(!err, JSON.stringify(err));
 };
 
 var assertStatusCode = function (status, res) {
-  return assert.equal(status, res.statusCode, "Expected status " + status + " but was " + res.statusCode + ". Response: " + res.body);
+  assert.equal(status, res.statusCode, "Expected status " + status + " but was " + res.statusCode + ". Response: " + res.body);
 };
 
 var twoMinutes = 1000 * 60 * 2;
 
 describe('atlas api -', function () {
-  return describe('as customer-support-admin', function () {
+  describe('as customer-support-admin', function () {
     before(function (done) {
-      return helper.getBearerToken('customer-support-admin', (function (_this) {
-        return function (bearer) {
-          _this.bearer = bearer;
-          return done();
-        };
-      })(this));
+      helper.getBearerToken('customer-support-admin', function (bearer) {
+        this.bearer = bearer;
+        done();
+      }.bind(this));
     });
     it('should read user auth info', function (done) {
       var opts;
@@ -31,16 +29,15 @@ describe('atlas api -', function () {
           bearer: this.bearer
         }
       };
-      return request.get(opts, function (err, res, body) {
-        var data;
+      request.get(opts, function (err, res, body) {
         refuteError(err);
         assertStatusCode(200, res);
-        data = helper.parseJSON(body);
+        var data = helper.parseJSON(body);
         assert(_.isObject(data));
-        return done();
+        done();
       });
     });
-    return it('should list managed orgs', function (done) {
+    it('should list managed orgs', function (done) {
       var opts;
       this.timeout(twoMinutes);
       opts = {
@@ -49,13 +46,12 @@ describe('atlas api -', function () {
           bearer: this.bearer
         }
       };
-      return request.get(opts, function (err, res, body) {
-        var data;
+      request.get(opts, function (err, res, body) {
         refuteError(err);
         assertStatusCode(200, res);
-        data = helper.parseJSON(body);
+        var data = helper.parseJSON(body);
         assert(_.isObject(data));
-        return done();
+        done();
       });
     });
   });

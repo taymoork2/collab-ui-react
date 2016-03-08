@@ -115,12 +115,10 @@ var auth = {
 };
 
 var clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec';
-
 var clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857';
 
 var getSSOToken = function (req, jar, creds, cb) {
-  var opts;
-  opts = {
+  var opts = {
     url: 'https://idbroker.webex.com/idb/UI/Login?org=' + creds.org,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -130,32 +128,30 @@ var getSSOToken = function (req, jar, creds, cb) {
       IDToken2: creds.pass
     }
   };
-  return req.post(opts, function (err, res, body) {
-    var cookie, token;
+  req.post(opts, function (err, res, body) {
     if (err) {
       console.error(err, body);
       throw new Error('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    cookie = _.find(res.headers['set-cookie'], function (c) {
+    var cookie = _.find(res.headers['set-cookie'], function (c) {
       return c.indexOf('cisPRODAMAuthCookie') !== -1;
     });
     if (!cookie) {
       throw new Error('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
+    var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
     jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
-    return cb();
+    cb();
   });
 };
 
 var getAuthCode = function (req, creds, cb) {
-  var opts, rand_str;
-  rand_str = "";
+  var rand_str = '';
   while (rand_str.length < 40) {
     rand_str += Math.random().toString(36).substr(2);
   }
   rand_str.substr(0, 40);
-  opts = {
+  var opts = {
     url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -169,24 +165,23 @@ var getAuthCode = function (req, creds, cb) {
       state: rand_str
     }
   };
-  return req.post(opts, function (err, res, body) {
-    var code, ref;
+  req.post(opts, function (err, res, body) {
+    var ref;
     if (err) {
       console.error(err, body);
       throw new Error('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
+    var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
     if (!code) {
       console.error(body);
       throw new Error('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    return cb(code);
+    cb(code);
   });
 };
 
 var getAccessToken = function (req, code, cb) {
-  var opts;
-  opts = {
+  var opts = {
     url: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -201,13 +196,13 @@ var getAccessToken = function (req, code, cb) {
       pass: clientSecret
     }
   };
-  return req.post(opts, function (err, res, body) {
-    var e, obj;
+  req.post(opts, function (err, res, body) {
+    var e;
     if (err) {
       console.error(err, body);
       throw new Error('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    obj = (function () {
+    var obj = (function () {
       try {
         return JSON.parse(body);
       } catch (_error) {
@@ -220,19 +215,18 @@ var getAccessToken = function (req, code, cb) {
       console.error(body);
       throw new Error('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : void 0));
     }
-    return cb(obj.access_token);
+    cb(obj.access_token);
   });
 };
 
 module.exports = {
   getBearerToken: function (user, callback) {
-    var creds, jar, req;
-    creds = auth[user];
+    var creds = auth[user];
     if (!creds) {
       throw new Error('Credentials for ' + user + ' not found');
     }
-    jar = request.jar();
-    req = request.defaults({
+    var jar = request.jar();
+    var req = request.defaults({
       jar: jar
     });
     return getSSOToken(req, jar, creds, function () {
