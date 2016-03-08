@@ -89,7 +89,7 @@ auth =
 
   'customer-regular-user':
     user: 'regUser2@csreptestdom.collaborate.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'multiple-subscription-user':
