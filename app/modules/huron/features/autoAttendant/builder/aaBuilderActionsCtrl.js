@@ -46,6 +46,7 @@
 
     vm.getOptionController = getOptionController;
     vm.selectOption = selectOption;
+    vm.setOption = setOption;
     vm.getSelectHint = getSelectHint;
     vm.removeAction = removeAction;
 

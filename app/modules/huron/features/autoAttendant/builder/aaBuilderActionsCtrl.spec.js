@@ -34,6 +34,27 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
     $scope.$apply();
   }));
+  describe('setOption for Dial By Extension', function () {
+    it('option for Dial By Extension is selected', function () {
+ 
+      $scope.index = 0;
+ 
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.inputType = 2;
+
+      aaUiModel['openHours'].entries[0].addAction(action);
+
+      controller.setOption();
+
+      expect(controller.option.title).toEqual('autoAttendant.phoneMenuDialExt');
+
+    });
+  });
+
 
   describe('selectOption', function () {
     it('enables save when a option is selected', function () {

@@ -107,14 +107,13 @@
         setDefaultTimeoutOption();
 
         // which is 3, aka 4
-        vm.menuEntry.attempts = 6;
+        vm.menuEntry.attempts = 4;
 
       }
 
     }
 
     function createOptionMenu() {
-
       vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
       vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
       vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
