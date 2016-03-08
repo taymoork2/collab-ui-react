@@ -260,7 +260,7 @@
         if (angular.isDefined(activeUserCustomerGraphs[org.value])) {
           var orgData = activeUserCustomerGraphs[org.value].graphData;
           dataSet.push(orgData);
-          if (angular.isArray(orgData) && (angular.isUndefined(date) || orgData[(orgData.length - 1)].date > date)) {
+          if (angular.isArray(orgData) && (orgData.length > 0) && (angular.isUndefined(date) || orgData[(orgData.length - 1)].date > date)) {
             date = orgData[(orgData.length - 1)].date;
           }
         }
@@ -278,8 +278,10 @@
       var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
       var emptyGraph = true;
       angular.forEach(dataSet, function (item, index, array) {
-        baseGraph = combineMatchingDates(baseGraph, item);
-        emptyGraph = false;
+        if (angular.isArray(item) && (item.length > 0)) {
+          baseGraph = combineMatchingDates(baseGraph, item);
+          emptyGraph = false;
+        }
       });
 
       if (!emptyGraph) {

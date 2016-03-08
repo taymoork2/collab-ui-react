@@ -75,6 +75,7 @@
       label: $translate.instant('registeredEndpoints.allDevices')
     };
     vm.deviceStatus = REFRESH;
+    vm.isDevicesEmpty = true;
     vm.deviceDescription = '';
     vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
     vm.selectedDevice = vm.deviceFilter[0];
@@ -170,15 +171,41 @@
         setFilterBasedText();
         $timeout(function () {
           setDummyData();
-
-          setActiveUserData();
-          setAvgRoomData();
-          setFilesSharedData();
-          setMediaData();
-          setCallMetricsData();
-          setDeviceData();
+          setAllGraphs();
         }, 30);
       }
+    }
+
+    function timeUpdate() {
+      vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
+      vm.avgRoomStatus = REFRESH;
+      vm.filesSharedStatus = REFRESH;
+      vm.mediaQualityStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
+      vm.metricStatus = REFRESH;
+      vm.metrics = {};
+      vm.mediaSelected = vm.mediaOptions[0];
+
+      setFilterBasedText();
+      setDummyData();
+      setAllGraphs();
+    }
+
+    function mediaUpdate() {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+    }
+
+    function setAllGraphs() {
+      setActiveUserData();
+      setAvgRoomData();
+      setFilesSharedData();
+      setMediaData();
+      setCallMetricsData();
+      setDeviceData();
     }
 
     function resizeCards() {
@@ -257,73 +284,22 @@
     }
 
     function setDummyData() {
-      var activeUserData = DummyCustomerReportService.dummyActiveUserData(vm.timeSelected);
-      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(activeUserData, activeUsersChart);
-      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
-        activeUsersChart = tempActiveUserChart;
-      }
-
-      var avgRoomData = DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected);
-      var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(avgRoomData, avgRoomsChart);
-      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
-        avgRoomsChart = tempAvgRoomsChart;
-      }
-
-      var filesSharedData = DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected);
-      var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(filesSharedData, filesSharedChart);
-      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
-        filesSharedChart = tempFilesSharedChart;
-      }
-
-      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected));
+      setAverageGraph(DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected));
+      setFilesGraph(DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected));
+      setMetricGraph(DummyCustomerReportService.dummyMetricsData());
+      setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
+      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected), {
         value: 0
       });
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
-      }
-
-      var metricsData = DummyCustomerReportService.dummyMetricsData();
-      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
-      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
-        metricsChart = tempMetricsChart;
-      }
-
-      var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
-      var tempDevicesChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
-      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-        deviceChart = tempDevicesChart;
-      }
 
       resizeCards();
     }
 
-    function timeUpdate() {
-      vm.activeUserStatus = REFRESH;
-      vm.mostActiveUserStatus = REFRESH;
-      vm.avgRoomStatus = REFRESH;
-      vm.filesSharedStatus = REFRESH;
-      vm.mediaQualityStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
-      vm.metricStatus = REFRESH;
-      vm.metrics = {};
-      vm.mediaSelected = vm.mediaOptions[0];
-
-      setFilterBasedText();
-      setDummyData();
-
-      setActiveUserData();
-      setAvgRoomData();
-      setFilesSharedData();
-      setMediaData();
-      setCallMetricsData();
-      setDeviceData();
-    }
-
-    function mediaUpdate() {
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
+    function setActiveGraph(data) {
+      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
+        activeUsersChart = tempActiveUserChart;
       }
     }
 
@@ -339,10 +315,7 @@
         } else if (response.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
-          if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
-            activeUsersChart = tempActiveUserChart;
-          }
+          setActiveGraph(response);
           vm.activeUserStatus = SET;
           CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
             if (response === ABORT) {
@@ -384,6 +357,13 @@
       return returnArray;
     }
 
+    function setAverageGraph(data) {
+      var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(data, avgRoomsChart);
+      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
+        avgRoomsChart = tempAvgRoomsChart;
+      }
+    }
+
     function setAvgRoomData() {
       CustomerReportService.getAvgRoomData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
@@ -391,14 +371,18 @@
         } else if (response.length === 0) {
           vm.avgRoomStatus = EMPTY;
         } else {
-          var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(response, avgRoomsChart);
-          if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
-            avgRoomsChart = tempAvgRoomsChart;
-          }
+          setAverageGraph(response);
           vm.avgRoomStatus = SET;
         }
         avgRoomsCard = document.getElementById('avg-room-card');
       });
+    }
+
+    function setFilesGraph(data) {
+      var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(data, filesSharedChart);
+      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
+        filesSharedChart = tempFilesSharedChart;
+      }
     }
 
     function setFilesSharedData() {
@@ -408,14 +392,18 @@
         } else if (response.length === 0) {
           vm.filesSharedStatus = EMPTY;
         } else {
-          var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(response, filesSharedChart);
-          if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
-            filesSharedChart = tempFilesSharedChart;
-          }
+          setFilesGraph(response);
           vm.filesSharedStatus = SET;
         }
         filesSharedCard = document.getElementById('files-shared-card');
       });
+    }
+
+    function setMediaGraph(data, mediaFilter) {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, mediaFilter);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
     }
 
     function setMediaData() {
@@ -426,15 +414,18 @@
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          mediaData = response;
-          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
-          if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-            mediaChart = tempMediaChart;
-          }
+          setMediaGraph(response, vm.mediaSelected);
           vm.mediaQualityStatus = SET;
         }
         mediaCard = document.getElementById('media-quality-card');
       });
+    }
+
+    function setMetricGraph(data) {
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(data, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
     }
 
     function setCallMetricsData() {
@@ -444,10 +435,7 @@
         } else if (response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
-          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
-          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
-            metricsChart = tempMetricsChart;
-          }
+          setMetricGraph(response);
           vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
@@ -455,10 +443,18 @@
       });
     }
 
+    function setDeviceGraph(data, deviceFilter) {
+      var tempDevicesChart = CustomerGraphService.setDeviceGraph(data, deviceChart, deviceFilter);
+      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+        deviceChart = tempDevicesChart;
+      }
+    }
+
     function setDeviceData() {
       vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
       vm.selectedDevice = vm.deviceFilter[0];
       currentDeviceGraphs = [];
+      vm.isDevicesEmpty = true;
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
@@ -472,11 +468,9 @@
           currentDeviceGraphs = response.graphData;
 
           if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
-            var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
-            if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
-              deviceChart = tempDevicesChart;
-            }
+            setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
             vm.deviceStatus = SET;
+            vm.isDevicesEmpty = false;
           } else {
             vm.deviceStatus = EMPTY;
           }
@@ -493,8 +487,7 @@
         }
         vm.deviceStatus = SET;
       } else {
-        var deviceData = DummyCustomerReportService.dummyDeviceData(vm.timeSelected);
-        var tempDeviceChart = CustomerGraphService.setDeviceGraph(deviceData, deviceChart);
+        var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
         if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           deviceChart = tempDeviceChart;
         }

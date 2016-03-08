@@ -151,7 +151,7 @@
           }
         }
 
-        if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
+        if (activeUsers > 0 || totalRegisteredUsers > 0) {
           for (var i = 0; i < returnGraph.length; i++) {
             if (returnGraph[i].modifiedDate === date) {
               returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
