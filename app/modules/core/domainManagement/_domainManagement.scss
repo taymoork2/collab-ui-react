@@ -27,6 +27,8 @@
           span{
             display: block;
             max-height: 40px !important;
+            height: 40px;
+            min-height: 40px;
           }
 
           .icon {
@@ -63,7 +65,7 @@
           }
 
           .verify-btn{
-            top:-0.27rem;
+            top:-0.85rem;
           }
 
           .dropdown-toggle {
@@ -142,7 +144,6 @@
     background-color: $color-attention-base;
     margin-top: -1rem;
     overflow: hidden;
-    padding-bottom: 0;
     p {
       width: 93%;
     }
