@@ -6,23 +6,19 @@ angular.module('Core').controller('SiteListCtrl', [
   '$scope',
   '$interval',
   'Authinfo',
-  'FeatureToggleService',
   'Userservice',
-  'WebExApiGatewayService',
-  'WebExUtilsFact',
   'SiteListService',
+
   function (
     $translate,
     $log,
     $scope,
     $interval,
     Authinfo,
-    FeatureToggleService,
     Userservice,
-    WebExApiGatewayService,
-    WebExUtilsFact,
     SiteListService
   ) {
+
     var funcName = "siteListCtrl()";
     var logMsg = "";
 
@@ -74,7 +70,11 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
 
-          conferenceService.csvPollTimeout = null;
+          conferenceService.csvPollIntervalObj = null;
+
+          conferenceService.checkCsvStatusStart = 1;
+          conferenceService.checkCsvStatusEnd = 4;
+          conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
 
           vm.gridData.push(conferenceService);
         }
@@ -126,65 +126,34 @@ angular.module('Core').controller('SiteListCtrl', [
       sortable: false
     });
 
-    // TODO - uncomment the following line when feature toggle is no longer used
-    // SiteListService.updateGrid(vm);
-
-    // TODO - delete the following lines when feature toggle is no longer used
-    // start of delete
-    checkCSVToggle();
-
-    // remove the CSV column if admin user doesn't have CSV toggle enabled
-    function checkCSVToggle() {
-      var funcName = "checkCSVToggle()";
-      var logMsg = "";
-
-      $log.log(funcName);
-
-      FeatureToggleService.supports(FeatureToggleService.features.webexCSV).then(
-        function getSupportsCSVSuccess(adminUserSupportCSV) {
-          var funcName = "getSupportsCSVSuccess()";
-          var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "adminUserSupportCSV=" + adminUserSupportCSV;
-          $log.log(logMsg);
-
-          // don't show the CSV column if admin user does not have feature toggle
-          if (!adminUserSupportCSV) {
-            vm.gridOptions.columnDefs.splice(2, 1);
-          }
-
+    // make sure that we have the signed in admin user email before we update the columns
+    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
+      SiteListService.updateGrid(vm);
+    } else {
+      Userservice.getUser('me', function (data, status) {
+        if (
+          (data.success) &&
+          (data.emails)
+        ) {
+          Authinfo.setEmails(data.emails);
           SiteListService.updateGrid(vm);
-        }, // getSupportsCSVSuccess()
+        }
+      });
+    }
 
-        function getSupportsCSVError(result) {
-          var funcName = "getSupportsCSVError()";
-          var logMsg = "";
-
-          logMsg = funcName + ": " +
-            "result=" + JSON.stringify(result);
-          $log.log(logMsg);
-
-          // don't show the CSV column if unable to access feature toggle
-          vm.gridOptions.columnDefs.splice(2, 1);
-          SiteListService.updateGrid(vm);
-        } // getSupportsCSVError()
-      ); // FeatureToggleService.supports().then()
-    } // checkCSVToggle()
-    // end of delete
-
+    // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
       vm.gridData.forEach(
         function cancelCsvPollInterval(siteRow) {
           var funcName = "cancelCsvPollInterval()";
           var logMsg = "";
 
-          if (null != siteRow.csvPollTimeout) {
+          if (null != siteRow.csvPollIntervalObj) {
             logMsg = funcName + "\n" +
               "siteUrl=" + siteRow.license.siteUrl;
             $log.log(logMsg);
 
-            $interval.cancel(siteRow.csvPollTimeout);
+            $interval.cancel(siteRow.csvPollIntervalObj);
           }
         } // cancelCsvPollInterval()
       ); // vm.gridData.forEach()
