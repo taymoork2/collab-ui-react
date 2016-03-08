@@ -15,15 +15,13 @@
       label: 'huronHuntGroup.modalTitle',
       description: 'huronHuntGroup.modalDescription',
       toggle: 'huronHuntGroup'
-    }];
-
-    vm.autoAttendant = {
+    }, {
       cssClass: 'AA',
       code: 'autoAttendant.code',
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
       toggle: 'huronAutoAttendant'
-    };
+    }];
 
     vm.ok = ok;
     vm.cancel = cancel;
@@ -32,17 +30,7 @@
     init();
 
     function init() {
-
-      vm.loading = true;
-
-      var aaToggle = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
-
-      $q.all([aaToggle]).then(function (toggle) {
-        if (toggle[0]) {
-          vm.features.push(vm.autoAttendant);
-        }
-        vm.loading = false;
-      });
+      vm.loading = false;
     }
 
     function ok(featureCode) {

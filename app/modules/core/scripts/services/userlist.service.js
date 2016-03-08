@@ -6,11 +6,12 @@
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako, $resource) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
-    var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
+    // Get last 7 day user counts
+    var userCountResource = $resource(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day');
 
     var service = {
       listUsers: listUsers,
@@ -19,7 +20,8 @@
       extractUsers: extractUsers,
       exportCSV: exportCSV,
       listPartners: listPartners,
-      listPartnersAsPromise: listPartnersAsPromise
+      listPartnersAsPromise: listPartnersAsPromise,
+      getUserCount: getUserCount
     };
 
     return service;
@@ -250,6 +252,27 @@
         }
       });
 
+      return deferred.promise;
+    }
+
+    function getUserCount() {
+      var deferred = $q.defer();
+      userCountResource.get().$promise.then(function (response) {
+        var count = -1;
+        if (_.isArray(response.data[0].data)) {
+          count = _.chain(response.data[0].data)
+            .dropRightWhile(function (d) { // skip '0' count
+              return d.details.totalRegisteredUsers === '0';
+            })
+            .last()
+            .get('details.totalRegisteredUsers')
+            .parseInt()
+            .value();
+        }
+        deferred.resolve(count);
+      }).catch(function () {
+        deferred.reject();
+      });
       return deferred.promise;
     }
 

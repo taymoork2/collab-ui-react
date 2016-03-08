@@ -20,8 +20,6 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasReportTrials: 'atlas-report-trials',
       atlasTrialConversion: 'atlas-trial-conversion',
-      huronHuntGroup: 'huronHuntGroup',
-      huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
@@ -129,6 +127,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
+      webexClientLockdown: 'atlas-webex-clientlockdown',
       huronCallTrials: 'huron-call-trials'
     };
 

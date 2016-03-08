@@ -8,35 +8,11 @@
   function Config($location, Utils, $filter, Storage, serviceUrlMapping) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
-    var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
-
     var getCurrentHostname = function () {
       return $location.host() || '';
     };
 
     var config = {
-      oauthClientRegistration: {
-        atlas: {
-          id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
-          secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
-          scope: oauth2Scope
-        },
-        cfe: {
-          id: 'C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03',
-          secret: 'b485aae87723fc2c355547dce67bbe2635ff8052232ad812a689f2f9b9efa048',
-          scope: oauth2Scope
-        }
-      },
-
-      oauthUrl: {
-        ciRedirectUrl: 'redirect_uri=%s',
-        oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
-        oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s&email=%s',
-        oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
-        oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
-        oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
-      },
 
       feedbackNavConfig: {
         mailto: 'sq-admin-support@cisco.com',
@@ -50,8 +26,6 @@
       consumerOrgId: 'consumer',
 
       logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
-
-      oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
 
       ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
 
@@ -104,164 +78,6 @@
         refreshTimer: 39600000, // 11 hours
         refreshDelay: 900000 // 15 mins
       },
-
-      tabs: [{
-        tab: 'overviewTab',
-        icon: 'icon-home',
-        title: 'tabs.overviewTab',
-        state: 'overview',
-        link: '/overview'
-      }, {
-        tab: 'overviewTab',
-        icon: 'icon-home',
-        title: 'tabs.overviewTab',
-        state: 'partneroverview',
-        link: '/partner/overview'
-      }, {
-        tab: 'customerTab',
-        icon: 'icon-user',
-        title: 'tabs.customerTab',
-        state: 'partnercustomers',
-        link: '/partner/customers'
-      }, {
-        tab: 'userTab',
-        icon: 'icon-user',
-        title: 'tabs.userTab',
-        state: 'users',
-        link: '/users'
-      }, {
-        tab: 'servicesTab',
-        icon: 'icon-cloud',
-        title: 'tabs.servicesTab',
-        subPages: [{
-          title: 'tabs.conferencing',
-          desc: 'tabs.conferencingDesc',
-          state: 'site-list',
-          link: '#site-list'
-        }, {
-          title: 'tabs.huronLineDetailsTab',
-          desc: 'tabs.huronLineDetailsTabDesc',
-          state: 'huronsettings',
-          link: '#hurondetails/settings'
-        }, {
-          title: 'tabs.fusionDetailsTab',
-          desc: 'tabs.fusionDetailsTabDesc',
-          state: 'fusion',
-          link: '#fusion'
-        }, {
-          title: 'tabs.expresswayManagementServiceTab',
-          desc: 'tabs.expresswayManagementServiceTabDesc',
-          state: 'management-service',
-          link: '#services/expressway-management'
-        }, {
-          title: 'tabs.calendarServiceTab',
-          desc: 'tabs.calendarServiceTabDesc',
-          state: 'calendar-service',
-          link: '#services/calendar'
-        }, {
-          title: 'tabs.callServiceTab',
-          desc: 'tabs.callServiceTabDesc',
-          state: 'call-service',
-          link: '#services/call'
-        }, {
-          title: 'tabs.MediafusionDetailsTab',
-          desc: 'tabs.MediafusionDetailsTabDesc',
-          //state: 'mediafusionconnector',
-          //link: '#mediafusionconnector'
-          state: 'media-service',
-          link: '#mediaservice'
-        }, {
-          title: 'tabs.messengerTab',
-          desc: 'tabs.messengerTabDesc',
-          state: 'messenger',
-          link: '#messenger'
-        }]
-      }, {
-        tab: 'deviceTab',
-        icon: 'icon-devices',
-        title: 'tabs.deviceTab',
-        state: 'devices',
-        link: '/devices'
-      }, {
-        tab: 'reportTab',
-        icon: 'icon-bars',
-        title: 'tabs.reportTab',
-        state: 'reports',
-        link: '/reports'
-      }, {
-        tab: 'reportTab',
-        icon: 'icon-bars',
-        title: 'tabs.reportTab',
-        state: 'partnerreports',
-        link: '/partner/reports'
-      }, {
-        tab: 'supportTab',
-        icon: 'icon-support',
-        title: 'tabs.supportTab',
-        link: '/support/status',
-        state: 'support.status'
-      }, {
-        tab: 'accountTab',
-        icon: 'icon-sliders',
-        title: 'tabs.accountTab',
-        state: 'profile',
-        link: '/profile'
-      }, {
-        tab: 'developmentTab',
-        icon: 'icon-tools',
-        title: 'tabs.developmentTab',
-        subPages: [{
-          title: 'tabs.organizationTab',
-          desc: 'tabs.organizationTabDesc',
-          state: 'organizations',
-          link: '#organizations'
-        }, {
-          title: 'tabs.callRoutingTab',
-          desc: 'tabs.callRoutingTabDesc',
-          state: 'callrouting',
-          link: '#callrouting'
-        }, {
-          title: 'tabs.mediaOnHoldTab',
-          desc: 'tabs.mediaOnHoldTabDesc',
-          state: 'mediaonhold',
-          link: '#mediaonhold'
-        }, {
-          title: 'tabs.metricsDetailsTab',
-          desc: 'tabs.metricsDetailsTabDesc',
-          state: 'metrics',
-          link: '#metrics'
-        }, {
-          title: 'tabs.thresholdDetailsTab',
-          desc: 'tabs.thresholdDetailsTabDesc',
-          state: 'threshold',
-          link: '#threshold'
-        }, {
-          title: 'tabs.meetingDetailsTab',
-          desc: 'tabs.meetingDetailsTabDesc',
-          state: 'meetings',
-          link: '#meetings'
-        }, {
-          title: 'tabs.vtsDetailsTab',
-          desc: 'tabs.vtsDetailsTabDesc',
-          state: 'vts',
-          link: '#vts'
-        }, {
-          title: 'tabs.entResUtilizationTab',
-          desc: 'tabs.entResUtilizationTabDesc',
-          state: 'utilization',
-          link: '#utilization'
-        }, {
-          title: 'tabs.alarmsTab',
-          desc: 'tabs.alarmsTabDesc',
-          state: 'alarms',
-          link: '#alarms'
-        }, {
-          title: 'tabs.eventsTab',
-          desc: 'tabs.eventsTabDesc',
-          state: 'events',
-          link: '#events'
-        }]
-      }],
 
       entitlements: {
         huron: 'ciscouc',
@@ -638,87 +454,9 @@
         return faultServiceUrl[this.getEnv()];
       },
 
-      getClientSecret: function () {
-        var clientSecret = {
-          'dev': this.oauthClientRegistration.atlas.secret,
-          'cfe': this.oauthClientRegistration.cfe.secret,
-          'integration': this.oauthClientRegistration.atlas.secret,
-          'prod': this.oauthClientRegistration.atlas.secret
-        };
-
-        return clientSecret[this.getEnv()];
-      },
-
-      getClientId: function () {
-        var clientId = {
-          'dev': this.oauthClientRegistration.atlas.id,
-          'cfe': this.oauthClientRegistration.cfe.id,
-          'integration': this.oauthClientRegistration.atlas.id,
-          'prod': this.oauthClientRegistration.atlas.id
-        };
-
-        return clientId[this.getEnv()];
-      },
-
-      getOauth2Url: function () {
-        var oAuth2Url = {
-          'dev': this.oauthUrl.oauth2UrlAtlas,
-          'cfe': this.oauthUrl.oauth2UrlCfe,
-          'integration': this.oauthUrl.oauth2UrlAtlas,
-          'prod': this.oauthUrl.oauth2UrlAtlas
-        };
-
-        return oAuth2Url[this.getEnv()];
-      },
-
-      /**
-       * Method to get Oauth Login Url with email specified
-       * @param {string} email
-       */
-      getOauthLoginUrl: function (email) {
-        var acu = serviceUrlMapping.adminClientUrl[this.getEnv()];
-        var params = [
-          this.getOauth2Url(),
-          this.getClientId(),
-          this.oauthClientRegistration.atlas.scope,
-          encodeURIComponent(acu),
-          this.getOauthServiceType(),
-          encodeURIComponent(email)
-        ];
-
-        return Utils.sprintf(this.oauthUrl.oauth2LoginUrlPattern, params);
-      },
-
-      getRedirectUrl: function () {
-        var acu = serviceUrlMapping.adminClientUrl[this.getEnv()];
-        var params = [encodeURIComponent(acu)];
-        return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
-      },
-
-      getOauthCodeUrl: function (code) {
-        var params = [code];
-        return Utils.sprintf(this.oauthUrl.oauth2CodeUrlPattern, params);
-      },
-
-      getOauthAccessCodeUrl: function (refresh_token) {
-        var params = [
-          refresh_token,
-          this.oauthClientRegistration.atlas.scope
-        ];
-        return Utils.sprintf(this.oauthUrl.oauth2AccessCodeUrlPattern, params);
-      },
-
-      getOauthServiceType: function () {
-        return 'spark';
-      },
-
       getLogoutUrl: function () {
-        var acu = serviceUrlMapping.adminClientUrl[this.getEnv()];
+        var acu = this.getAdminPortalUrl();
         return this.logoutUrl + encodeURIComponent(acu);
-      },
-
-      getOauthDeleteTokenUrl: function () {
-        return this.oauthDeleteTokenUrl;
       },
 
       getAdminPortalUrl: function () {
@@ -865,10 +603,6 @@
       getWebexAdvancedEditUrl: function (siteURL) {
         var params = [siteURL];
         return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
-      },
-
-      getOAuthClientRegistrationCredentials: function () {
-        return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
       },
 
       getSunlightConfigServiceUrl: function () {
