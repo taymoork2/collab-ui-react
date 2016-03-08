@@ -63,9 +63,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var deferredCsvStatus = $q.defer();
 
-      WebExRestApiFact.csvStatusReq(
-        siteUrl
-      ).then(
+      WebExRestApiFact.csvStatusReq(siteUrl).then(
         function success(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
@@ -175,14 +173,45 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       $log.log(logMsg);
+
+      var successResult = {
+        'siteUrl': siteUrl,
+        'status': 'success'
+      };
+
+      var errorResult = {
+        'siteUrl': siteUrl,
+        'status:': "error",
+        'errorCode': null,
+        'errorText': null
+      };
+
+      var deferredCsvExport = $q.defer();
+
+      WebExRestApiFact.csvExportReq(siteUrl).then(
+        function csvExportReqSuccess(response) {
+          deferredCsvExport.resolve(successResult);
+        }, // csvExportReqSuccess()
+
+        function csvExportReqError(response) {
+          deferredCsvExport.reject(errorResult);
+        } // csvExportReqError()
+      );
+
+      return deferredCsvExport.promise;
     }; // csvExport()
 
-    this.csvImport = function (siteUrl) {
+    this.csvImport = function (
+      siteUrl,
+      importFile
+    ) {
+
       var funcName = 'csvImport()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
+        'siteUrl=' + siteUrl + '\n' +
+        'importFile=' + importFile;
       $log.log(logMsg);
     }; // csvImport()
 
