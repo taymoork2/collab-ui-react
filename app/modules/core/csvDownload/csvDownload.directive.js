@@ -56,15 +56,16 @@
         var anchor = angular.element('#download-csv-' + scope.csvDownload.type);
         changeAnchorAttrToDownload(url);
 
-        // put the click event into $timeout to avoid digest check
         $timeout(function () {
           anchor[0].click();
+        });
+        $timeout(function () {
           // Remove the object URL if not template
           if (scope.csvDownload.type !== CsvDownloadService.typeTemplate) {
             CsvDownloadService.revokeObjectUrl();
             changeAnchorAttrToOriginalState();
           }
-        });
+        }, 500);
       });
 
       // set the icon
