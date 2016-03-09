@@ -9,13 +9,13 @@ angular.module('Squared').controller('ReportsCtrl', [
   'WebexReportService',
   'Log',
   'Authinfo',
-  'Config',
   '$translate',
   'CannedDataService',
   'Userservice',
   'WebExApiGatewayService',
   'Storage',
   'FeatureToggleService',
+  'chartColors',
   function (
     $scope,
     $stateParams,
@@ -25,13 +25,13 @@ angular.module('Squared').controller('ReportsCtrl', [
     WebexReportService,
     Log,
     Authinfo,
-    Config,
     $translate,
     CannedDataService,
     Userservice,
     WebExApiGatewayService,
     Storage,
-    FeatureToggleService
+    FeatureToggleService,
+    chartColors
   ) {
 
     $scope.webexReportsObject = {};
@@ -288,60 +288,60 @@ angular.module('Squared').controller('ReportsCtrl', [
     var label = '';
     $scope.$on('entitlementsLoaded', function (event, response) {
       label = $translate.instant('reports.UsersOnboarded');
-      getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', label, Config.chartColors.blue, 'sum');
+      getCharts(response, 'entitlements', 'avgEntitlementsdiv', 'avg-entitlements-refresh', 'showAvgEntitlementsRefresh', label, chartColors.blue, 'sum');
     });
 
     $scope.$on('avgCallsPerUserLoaded', function (event, response) {
       label = $translate.instant('reports.AvgCallsPerUser');
-      getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', label, Config.chartColors.blue, 'average');
+      getCharts(response, 'avgCalls', 'avgCallsdiv', 'avg-calls-refresh', 'showAvgCallsRefresh', label, chartColors.blue, 'average');
     });
 
     $scope.$on('avgConversationsLoaded', function (event, response) {
       label = $translate.instant('reports.AvgRoomsPerUser');
       var axis = $translate.instant('reports.numberOfRoomsAxis');
-      getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, Config.chartColors.blue, 'average', axis);
+      getCharts(response, 'avgConversations', 'avgConversationsdiv', 'avg-conversations-refresh', 'showAvgConversationsRefresh', label, chartColors.blue, 'average', axis);
     });
 
     $scope.$on('activeUsersLoaded', function (event, response) {
       label = $translate.instant('reports.ActiveUsers');
       var axis = $translate.instant('reports.numberActiveAxis');
-      getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, Config.chartColors.blue, 'average', axis);
+      getCharts(response, 'activeUsers', 'activeUsersdiv', 'active-users-refresh', 'showActiveUsersRefresh', label, chartColors.blue, 'average', axis);
     });
 
     $scope.$on('convOneOnOneLoaded', function (event, response) {
       label = $translate.instant('reports.OneOnOneRooms');
       var axis = $translate.instant('reports.oneRoomAxis');
-      getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', label, Config.chartColors.blue, 'sum', axis);
+      getCharts(response, 'convOneOnOne', 'convOneOnOnediv', 'conv-one-on-one-refresh', 'showConvOneOnOneRefresh', label, chartColors.blue, 'sum', axis);
     });
 
     $scope.$on('convGroupLoaded', function (event, response) {
       label = $translate.instant('reports.GroupRooms');
       var axis = $translate.instant('reports.groupRoomsAxis');
-      getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, Config.chartColors.blue, 'sum', axis);
+      getCharts(response, 'convGroup', 'convGroupdiv', 'conv-group-refresh', 'showConvGroupRefresh', label, chartColors.blue, 'sum', axis);
     });
 
     $scope.$on('callsLoaded', function (event, response) {
       label = $translate.instant('reports.VideoCalls');
       var axis = $translate.instant('reports.videoCallsAxis');
-      getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, Config.chartColors.blue, 'sum', axis);
+      getCharts(response, 'calls', 'callsdiv', 'calls-refresh', 'showCallsRefresh', label, chartColors.blue, 'sum', axis);
     });
 
     $scope.$on('callsAvgDurationLoaded', function (event, response) {
       label = $translate.instant('reports.AvgDurationofCalls');
       var axis = $translate.instant('reports.avgCallsAxis');
-      getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, Config.chartColors.blue, 'average', axis);
+      getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', 'calls-avg-duration-refresh', 'showCallsAvgDurationRefresh', label, chartColors.blue, 'average', axis);
     });
 
     $scope.$on('contentSharedLoaded', function (event, response) {
       label = $translate.instant('reports.ContentShared');
       var axis = $translate.instant('reports.filesSharedAxis');
-      getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', label, Config.chartColors.blue, 'sum', axis);
+      getCharts(response, 'contentShared', 'contentShareddiv', 'content-shared-refresh', 'showContentSharedRefresh', label, chartColors.blue, 'sum', axis);
     });
 
     $scope.$on('contentShareSizesLoaded', function (event, response) {
       label = $translate.instant('reports.AmountofContentShared');
       var axis = $translate.instant('reports.gbSharedAxis');
-      getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, Config.chartColors.blue, 'sum', axis);
+      getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', 'content-share-sizes-refresh', 'showContentShareSizesRefresh', label, chartColors.blue, 'sum', axis);
     });
 
     $scope.$on('onboardingFunnelLoaded', function (event, response) {
@@ -474,7 +474,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         'backgroundColor': '#ffffff',
         'backgroundAlpha': 1,
         'dataProvider': sdata,
-        'colors': [Config.chartColors.yellow, '#FFA500', Config.chartColors.red],
+        'colors': [chartColors.yellow, '#FFA500', chartColors.red],
         'titleField': 'title',
         'plotAreaBorderAlpha': 0,
         'plotAreaBorderColor': '#DDDDDD',
@@ -526,7 +526,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         'type': 'serial',
         'theme': 'none',
         'fontFamily': 'CiscoSansTT Thin',
-        'colors': [Config.chartColors.blue],
+        'colors': [chartColors.blue],
         'backgroundColor': '#ffffff',
         'backgroundAlpha': 1,
         'legend': {
@@ -557,7 +557,7 @@ angular.module('Squared').controller('ReportsCtrl', [
         'graphs': [{
           'type': 'line',
           'bullet': 'round',
-          'lineColor': Config.chartColors.blue,
+          'lineColor': chartColors.blue,
           'fillAlphas': 0,
           'lineAlpha': 1,
           'lineThickness': 3,

@@ -6,17 +6,17 @@
     .factory('TrialResource', TrialResource);
 
   /* @ngInject */
-  function TrialResource($resource, Config, Authinfo) {
-    return $resource(Config.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId', {
+  function TrialResource($resource, UrlConfig, Authinfo) {
+    return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId', {
       orgId: Authinfo.getOrgId(),
       trialId: '@trialId'
     }, {});
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
+  function TrialService($http, $q, Config, UrlConfig, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
     var _trialData;
-    var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
+    var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
     var service = {
       getTrial: getTrial,

@@ -79,7 +79,9 @@ fi
 # Phase 3: Build
 gulp clean || exit $?
 gulp jsb:verify || exit $?
-gulp e2e --sauce --production-backend --nolint | tee ./.cache/e2e-sauce-logs || exit $?
+gulp e2e --sauce --production-backend --nolint | tee ./.cache/e2e-sauce-logs
+e2e_exit_code="${PIPESTATUS[0]}"
+test $e2e_exit_code -eq 0 || exit $e2e_exit_code
 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers

@@ -2,11 +2,11 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('utilizationService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('utilizationService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
       //Fetching the Base url form config.js file.
-      var baseUrl = Config.getUtilizationServiceUrl();
+      var baseUrl = UrlConfig.getUtilizationServiceUrl();
 
       var utilizationservice = {
 

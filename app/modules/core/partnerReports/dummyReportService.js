@@ -5,7 +5,7 @@
     .service('DummyReportService', DummyReportService);
 
   /* @ngInject */
-  function DummyReportService($translate, Config) {
+  function DummyReportService($translate, chartColors) {
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
     var dummyPopulation = null;
@@ -31,8 +31,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.dummyGrayLight,
-            colorTwo: Config.chartColors.dummyGray,
+            colorOne: chartColors.dummyGrayLight,
+            colorTwo: chartColors.dummyGray,
             balloon: false
           });
         }
@@ -44,8 +44,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.dummyGrayLight,
-            colorTwo: Config.chartColors.dummyGray,
+            colorOne: chartColors.dummyGrayLight,
+            colorTwo: chartColors.dummyGray,
             balloon: false
           });
         }
@@ -57,8 +57,8 @@
             totalRegisteredUsers: 25 + (25 * abs),
             activeUsers: 25 * abs,
             percentage: Math.round(((25 * abs) / (25 + (25 * abs))) * 100),
-            colorOne: Config.chartColors.dummyGrayLight,
-            colorTwo: Config.chartColors.dummyGray,
+            colorOne: chartColors.dummyGrayLight,
+            colorTwo: chartColors.dummyGray,
             balloon: false
           });
         }
@@ -72,10 +72,10 @@
         customerName: customer.label,
         customerId: customer.value,
         percentage: 85,
-        colorOne: Config.chartColors.dummyGrayLight,
-        colorTwo: Config.chartColors.dummyGray,
+        colorOne: chartColors.dummyGrayLight,
+        colorTwo: chartColors.dummyGray,
         balloon: false,
-        labelColorField: Config.chartColors.grayLight
+        labelColorField: chartColors.grayLight
       }];
     }
 
@@ -92,9 +92,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.dummyGray,
-            colorTwo: Config.chartColors.dummyGrayLight,
-            colorThree: Config.chartColors.dummyGrayLighter,
+            colorOne: chartColors.dummyGray,
+            colorTwo: chartColors.dummyGrayLight,
+            colorThree: chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -107,9 +107,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.dummyGray,
-            colorTwo: Config.chartColors.dummyGrayLight,
-            colorThree: Config.chartColors.dummyGrayLighter,
+            colorOne: chartColors.dummyGray,
+            colorTwo: chartColors.dummyGrayLight,
+            colorThree: chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -122,9 +122,9 @@
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),
             poorQualityDurationSum: 5 + (5 * abs),
-            colorOne: Config.chartColors.dummyGray,
-            colorTwo: Config.chartColors.dummyGrayLight,
-            colorThree: Config.chartColors.dummyGrayLighter,
+            colorOne: chartColors.dummyGray,
+            colorTwo: chartColors.dummyGrayLight,
+            colorThree: chartColors.dummyGrayLighter,
             balloon: false
           });
         }
@@ -138,11 +138,11 @@
         dataProvider: [{
           label: $translate.instant('callMetrics.callConditionFail'),
           value: "200",
-          color: Config.chartColors.dummyGray
+          color: chartColors.dummyGray
         }, {
           label: $translate.instant('callMetrics.callConditionSuccessful'),
           value: "800",
-          color: Config.chartColors.dummyGrayLight
+          color: chartColors.dummyGrayLight
         }],
         labelData: {
           numTotalCalls: 1000,

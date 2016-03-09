@@ -4,8 +4,8 @@ angular.module('Squared')
   .service('SpacesService', SpacesService);
 
 /* @ngInject */
-function SpacesService($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
-  var deviceUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
+function SpacesService($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
+  var deviceUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/devices';
 
   var service = {
     deviceUrl: deviceUrl,
