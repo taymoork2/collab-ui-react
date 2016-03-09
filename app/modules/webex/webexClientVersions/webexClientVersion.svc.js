@@ -6,7 +6,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
   '$filter',
   '$http',
   'Authinfo',
-  'Config',
+  'UrlConfig',
   'Notification',
   function (
     $q,
@@ -14,7 +14,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
     $filter,
     $http,
     Authinfo,
-    Config,
+    UrlConfig,
     Notification
   ) {
 
@@ -48,7 +48,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
     };
 
     /**
-        Note, partnerid is different than org id. Must look up 
+        Note, partnerid is different than org id. Must look up
         partnerid using the orgid.
     */
     this.getPartnerIdGivenOrgId = function (orgId) {
@@ -75,7 +75,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
       "T30LSP3"
     ]
    }
-       Here we will simply return a list of strings that corresponds to the client versions. 
+       Here we will simply return a list of strings that corresponds to the client versions.
     */
     this.getWbxClientVersions = function () {
       //http://atlas-integration.wbx2.com/admin/api/v1/partnertemplate/clientversions
@@ -107,7 +107,7 @@ angular.module('WebExApp').service('WebexClientVersion', [
     };
 
     this.getAdminServiceUrl = function () {
-      return Config.getAdminServiceUrl();
+      return UrlConfig.getAdminServiceUrl();
     };
 
     this.getTemplate = function (orgId) {

@@ -139,7 +139,7 @@ describe('User List Service', function () {
   });
 
   it('should successfully return user count 2 from calling getUserCount', function () {
-    var userCountUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+    var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
     $httpBackend.whenGET(userCountUrl).respond(200, {
       data: [{
         data: [{
