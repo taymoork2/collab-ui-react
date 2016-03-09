@@ -299,7 +299,7 @@ var Navigation = function () {
   this.launchSupportPage = function () {
     browser.getAllWindowHandles().then(function (handles) {
       browser.switchTo().window(handles[1]).then(function () {
-        expect(browser.getCurrentUrl()).toEqual(navigation.partnerSupportUrl);
+        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
       });
       browser.close();
       // switch back to the main window
