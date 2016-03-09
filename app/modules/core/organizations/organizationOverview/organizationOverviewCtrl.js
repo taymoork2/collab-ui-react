@@ -5,7 +5,7 @@
     .controller('OrganizationOverviewCtrl', OrganizationOverviewCtrl);
 
   /*ngInject*/
-  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, $location, $dialogs, Storage, Log, $filter, Orgservice, Authinfo, Notification) {
+  function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, Log, $filter, Orgservice, Notification) {
     $scope.currentOrganization = $stateParams.currentOrganization;
     var currentOrgId = $scope.currentOrganization.id;
     $scope.setEftToggle = setEftToggle;
@@ -34,23 +34,24 @@
     }
 
     function updateEftToggle() {
-      Orgservice.getEftSetting(currentOrgId)
+      return Orgservice.getEftSetting(currentOrgId)
         .then(function (response) {
-          $scope.eftToggleLoading = false;
           _.set($scope, 'currentOrganization.isEFT', response.data.eft);
           $scope.currentEftSetting = response.data.eft;
         })
         .catch(function (response) {
           Notification.error('organizationsPage.eftError');
+        })
+        .finally(function (response) {
+          $scope.eftToggleLoading = false;
         });
     }
 
     function setEftToggle(eft) {
       if ($scope.currentEftSetting !== $scope.currentOrganization.isEFT) {
+        $scope.eftToggleLoading = true;
         Orgservice.setEftSetting(eft, currentOrgId)
-          .then(function (response) {
-            updateEftToggle();
-          })
+          .then(updateEftToggle)
           .catch(function (response) {
             _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
             Notification.error('organizationsPage.eftError');

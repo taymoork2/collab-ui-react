@@ -74,21 +74,15 @@ angular.module('Core')
       }];
 
       $scope.isDirSyncEnabled = false;
-      $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
-      $scope.addEnterpriseSipUrl = false;
 
       if (Authinfo.isCustomerAdmin()) {
         $q.all([FeatureToggleService.supportsDirSync(),
-            FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
-            FeatureToggleService.supportsCsvUpload(),
-            FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
+            FeatureToggleService.supportsCsvUpload()
           ])
           .then(function (results) {
             $scope.isDirSyncEnabled = results[0];
-            $scope.addClaimSipUrl = results[1];
-            $scope.csvUploadSupport = results[2];
-            $scope.addEnterpriseSipUrl = results[3];
+            $scope.csvUploadSupport = results[1];
           }).finally(function () {
             init();
           });
@@ -135,41 +129,11 @@ angular.module('Core')
           template: 'modules/core/setupWizard/sipUriSettings/enterprise.setSipUri.tpl.html',
         };
 
-        if ($scope.addEnterpriseSipUrl) {
-          var enterpriseSettingsTab = _.find($scope.tabs, {
-            name: 'enterpriseSettings',
-          });
-          if (angular.isDefined(enterpriseSettingsTab)) {
-            enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
-          }
-        }
-
-        var claimSipUrlStep = {
-          name: 'claimSipUrl',
-          template: 'modules/core/setupWizard/sipUriSettings/claimSipUrl.tpl.html',
-        };
-
-        if ($scope.addClaimSipUrl) {
-          if (Authinfo.isSquaredUC()) {
-            var communicationsTab = _.find($scope.tabs, {
-              name: 'serviceSetup',
-            });
-            if (angular.isDefined(communicationsTab)) {
-              communicationsTab.steps.splice(0, 0, claimSipUrlStep);
-            }
-          } else {
-            var communicationsStep = {
-              name: 'communications',
-              label: 'firstTimeWizard.call',
-              description: 'firstTimeWizard.communicationsSub',
-              icon: 'icon-phone',
-              title: 'firstTimeWizard.claimSipUrl',
-              controller: 'CommunicationsCtrl as communicationsCtrl',
-              steps: [claimSipUrlStep]
-            };
-
-            $scope.tabs.splice(2, 0, communicationsStep);
-          }
+        var enterpriseSettingsTab = _.find($scope.tabs, {
+          name: 'enterpriseSettings',
+        });
+        if (angular.isDefined(enterpriseSettingsTab)) {
+          enterpriseSettingsTab.steps.splice(0, 0, enterpriseSipUrlStep);
         }
 
         // if we have any step thats is empty, we remove the tab

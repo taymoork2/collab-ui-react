@@ -19,7 +19,7 @@
       <span ng-if="eftToggleLoading">
         <i class="icon icon-spinner"></i>
       </span>
-      <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="currentOrganization.isEFT" toggle-id="eftToggle" name="{{svc.name}}" size="small" ng-click="setEftToggle(currentOrganization.isEFT)"></cs-toggle-switch>
+      <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="currentOrganization.isEFT" toggle-id="eftToggle" size="small" ng-click="setEftToggle(currentOrganization.isEFT)"></cs-toggle-switch>
     </div>
   </div>
   </cs-sp-section>
@@ -29,7 +29,7 @@
         <div class="form-group profile-text-input">
           <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.services"></label>
           <div class="profile-input org-overview-list">
-            <ul ng-repeat="svc in currentOrganization.services">
+            <ul ng-repeat="svc in currentOrganization.selfSubscribeServices">
               <li>{{svc}}</li>
             </ul>
           </div>

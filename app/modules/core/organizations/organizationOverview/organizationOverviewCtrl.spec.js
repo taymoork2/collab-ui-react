@@ -61,9 +61,12 @@ describe('Controller: organizationOverviewCtrl', function () {
 
     it('should check if updateEftToggle in success state sets isEFT to true', function () {
       _.set($scope, 'currentOrganization.isEFT', false);
-      $scope.updateEftToggle();
-      $scope.$apply();
-      expect($scope.currentOrganization.isEFT).toEqual(true);
+      $scope.updateEftToggle().then(function () {
+          expect($scope.currentOrganization.isEFT).toEqual(true);
+        })
+        .finally(function () {
+          expect($scope.eftToggleLoading).toEqual(false);
+        });
     });
   });
 
@@ -74,9 +77,12 @@ describe('Controller: organizationOverviewCtrl', function () {
     });
 
     it('should gracefully error', function () {
-      $scope.updateEftToggle();
-      $scope.$apply();
-      expect(Notification.error).toHaveBeenCalled();
+      $scope.updateEftToggle().then(function () {
+          expect(Notification.error).toHaveBeenCalled();
+        })
+        .finally(function () {
+          expect($scope.eftToggleLoading).toEqual(false);
+        });
     });
   });
 

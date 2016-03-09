@@ -300,7 +300,7 @@
     }
 
     function getEftSetting(currentOrgId) {
-      if (!currentOrgId) {
+      if (_.isUndefined(currentOrgId)) {
         return $q.reject('An organization ID is required.');
       }
       var serviceUrl = Config.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
@@ -312,7 +312,7 @@
     }
 
     function setEftSetting(setting, currentOrgId) {
-      if (!setting || typeof setting !== 'boolean' || !currentOrgId) {
+      if (!_.isBoolean(setting) || _.isUndefined(currentOrgId)) {
         return $q.reject('A proper EFT setting and organization ID is required.');
       }
 
