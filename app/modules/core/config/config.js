@@ -206,7 +206,6 @@
         'user-overview',
         'userprofile',
         'reports',
-        'devReports',
         'setupwizardmodal',
         'firsttimewizard',
         'groups',
@@ -236,9 +235,9 @@
         'trialExtInterest',
         'activateProduct'
       ],
-      Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
-      WX2_Support: ['overview', 'reports', 'support', 'devReports'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
       PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
@@ -326,7 +325,6 @@
       'partner': [
         'overview',
         'reports',
-        'devReports',
         'devices',
         'fusion',
         //'mediafusionconnector',
