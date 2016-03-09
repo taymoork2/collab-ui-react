@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('BillingService', BillingService);
 
 /* @ngInject */
-function BillingService($http, Config, Log, Auth, $log) {
+function BillingService($http, UrlConfig, Log, Auth, $log) {
   var service = {
     getOrderStatus: getOrderStatus,
     resendCustomerEmail: resendCustomerEmail,
@@ -14,7 +14,7 @@ function BillingService($http, Config, Log, Auth, $log) {
   return service;
 
   function getOrderStatus(enc, callback) {
-    var orderStatusUrl = Config.getAdminServiceUrl() + 'orders?enc=' + window.encodeURIComponent(enc);
+    var orderStatusUrl = UrlConfig.getAdminServiceUrl() + 'orders?enc=' + window.encodeURIComponent(enc);
 
     $http.get(orderStatusUrl)
       .success(function (data, status) {
@@ -29,7 +29,7 @@ function BillingService($http, Config, Log, Auth, $log) {
   }
 
   function resendCustomerEmail(orderId, callback) {
-    var resendCustomerEmailUrl = Config.getAdminServiceUrl() + 'orders/' + orderId + '/customerAdminEmail';
+    var resendCustomerEmailUrl = UrlConfig.getAdminServiceUrl() + 'orders/' + orderId + '/customerAdminEmail';
 
     $http.post(resendCustomerEmailUrl)
       .success(function (data, status) {
@@ -42,7 +42,7 @@ function BillingService($http, Config, Log, Auth, $log) {
   }
 
   function resendPartnerEmail(orderId, callback) {
-    var resendPartnerEmailUrl = Config.getAdminServiceUrl() + 'orders/' + orderId + '/partnerAdminEmail';
+    var resendPartnerEmailUrl = UrlConfig.getAdminServiceUrl() + 'orders/' + orderId + '/partnerAdminEmail';
 
     $http.post(resendPartnerEmailUrl)
       .success(function (data, status) {

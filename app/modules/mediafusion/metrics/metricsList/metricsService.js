@@ -2,12 +2,12 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('MetricsService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('MetricsService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
-      var baseUrl = Config.getMetricsServiceUrl();
+      var baseUrl = UrlConfig.getMetricsServiceUrl();
 
       var metricsService = {
 

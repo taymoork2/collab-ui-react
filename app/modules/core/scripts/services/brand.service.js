@@ -6,7 +6,7 @@
     .factory('BrandService', BrandService);
 
   /* @ngInject */
-  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload) {
+  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload, UrlConfig) {
 
     var service = {
       'getSettings': getSettings,
@@ -45,7 +45,7 @@
     }
 
     function getLogoUrl(orgId) {
-      var downloadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/downloadUrl';
+      var downloadUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/downloadUrl';
 
       return $http.get(downloadUrl).then(function (response) {
         return response.data.tempURL;
@@ -85,13 +85,13 @@
     }
 
     function resetCdnLogo(orgId) {
-      var purgeCDNUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
+      var purgeCDNUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
 
       return $http.post(purgeCDNUrl);
     }
 
     function upload(orgId, file) {
-      var uploadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
+      var uploadUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
 
       return $http.get(uploadUrl).then(function (response) {
         return Upload.http({

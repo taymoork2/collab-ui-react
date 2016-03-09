@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PartnerHomeCtrl', function () {
-  var $scope, controller, $httpBackend, Config;
+  var $scope, controller, $httpBackend, UrlConfig;
 
   var Orgservice;
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -21,11 +21,11 @@ describe('Controller: PartnerHomeCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _UrlConfig_, _Orgservice_) {
     $scope = $rootScope.$new();
     $rootScope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
+    UrlConfig = _UrlConfig_;
     Orgservice = _Orgservice_;
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
@@ -46,13 +46,13 @@ describe('Controller: PartnerHomeCtrl', function () {
   }));
 
   beforeEach(function () {
-    $httpBackend.whenGET(Config.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials').respond(function () {
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials').respond(function () {
       var data = getJSONFixture('core/json/partner/trialsResponse.json');
       return [200, {
         trials: data
       }, {}];
     });
-    $httpBackend.whenGET(Config.getAdminServiceUrl() + 'organizations/5632f806-ad09-4a26-a0c0-a49a13f38873/managedOrgs').respond(function () {
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organizations/5632f806-ad09-4a26-a0c0-a49a13f38873/managedOrgs').respond(function () {
       var data = getJSONFixture('core/json/partner/trialsResponse.json');
       return [200, {
         organizations: data

@@ -8,6 +8,7 @@ angular.module('Core').service('SiteListService', [
   'Config',
   'WebExApiGatewayService',
   'WebExUtilsFact',
+  'UrlConfig',
   'WebExUtilsService',
   'FeatureToggleService',
 
@@ -19,6 +20,7 @@ angular.module('Core').service('SiteListService', [
     Config,
     WebExApiGatewayService,
     WebExUtilsFact,
+    UrlConfig,
     WebExUtilsService,
     FeatureToggleService
   ) {
@@ -293,8 +295,8 @@ angular.module('Core').service('SiteListService', [
 
             siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
             siteRow.userEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
+            siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteUrl);
+            siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteUrl);
 
             WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {

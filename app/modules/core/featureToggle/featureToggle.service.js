@@ -7,7 +7,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
+  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService, UrlConfig) {
     var features = {
       pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
@@ -133,7 +133,7 @@
 
     var toggles = {};
 
-    var orgResource = $resource(Config.getWdmUrl() + '/features/rules/:id', {
+    var orgResource = $resource(UrlConfig.getWdmUrl() + '/features/rules/:id', {
       id: '@id'
     }, {
       get: {
@@ -146,7 +146,7 @@
       }
     });
 
-    var userResource = $resource(Config.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+    var userResource = $resource(UrlConfig.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
       id: '@id'
     }, {
       get: {

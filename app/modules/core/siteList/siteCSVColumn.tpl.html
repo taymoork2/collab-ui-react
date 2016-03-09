@@ -50,7 +50,8 @@
             <a ng-if="row.entity.showExportResultsLink"> 
                 <span
                 id="{{row.entity.license.siteUrl}}_export"
-                translate="siteList.siteCsvExportResultsLinkLabel">
+                translate="siteList.siteCsvExportResultsLinkLabel"
+                ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);">
                 </span>
                 
                 <!-- Three word spaces -->
@@ -62,7 +63,8 @@
             <!-- Export -->
             <a ng-if="row.entity.showExportLink"> 
                 <span id="{{row.entity.license.siteUrl}}_export"
-                translate="siteList.siteCsvExportLinkLabel"> 
+                translate="siteList.siteCsvExportLinkLabel"
+                ng-click="grid.appScope.csvExport(row.entity.license.siteUrl); "> 
                 </span>
             </a>
 
@@ -89,7 +91,8 @@
             <!-- Import -->
             <a ng-if="row.entity.showImportLink"> <span
                 id="{{row.entity.license.siteUrl}}_import"
-                translate="siteList.siteCsvImportLinkLabel"> </span>
+                translate="siteList.siteCsvImportLinkLabel"
+                ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); "> </span>
             </a>
             
             
@@ -112,7 +115,8 @@
             <span
                 id="{{row.entity.license.siteUrl}}_import"
                 class="csv-import-results"
-                translate="siteList.siteCsvImportResultsLinkLabel"> </span>
+                translate="siteList.siteCsvImportResultsLinkLabel"
+                ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"> </span>
             </a>
 
             <!-- Import In Progress -->
