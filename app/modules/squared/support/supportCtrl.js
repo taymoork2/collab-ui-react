@@ -3,7 +3,6 @@
 angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService) {
-      $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -21,7 +20,18 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
-      $scope.showToolsCard = false;
+      $scope.gotoHelpdesk = gotoHelpdesk;
+      $scope.gotoCdrSupport = gotoCdrSupport;
+
+      function gotoHelpdesk() {
+        var url = $state.href('helpdesk.search');
+        window.open(url, '_blank');
+      }
+
+      function gotoCdrSupport() {
+        var url = $state.href('cdrsupport');
+        window.open(url, '_blank');
+      }
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
@@ -53,8 +63,17 @@ angular.module('Squared')
         return false;
       }
 
+      $scope.showHelpdeskLink = function () {
+        return Authinfo.isHelpDeskUser();
+      };
+
       $scope.showToolsCard = function () {
-        return $scope.showCdrCallFlowLink || $scope.showHelpdeskCard;
+        // Preliminary hack to fix rendering problem for small width screens.
+        // Without it, small screens may initially render card(s) partly on top of each other
+        setTimeout(function () {
+          $('.cs-card-layout').masonry('layout');
+        }, 200);
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
       };
 
       $scope.tabs = [{
@@ -62,6 +81,13 @@ angular.module('Squared')
         state: "support.status"
       }];
 
+      //TODO remove test
+      /*$scope.tabs.push({
+        title: $translate.instant('supportPage.tabs.logs'),
+        state: "support.logs"
+      });*/
+
+      //ADD BACK
       if (Authinfo.isInDelegatedAdministrationOrg()) {
         $scope.tabs.push({
           title: $translate.instant('supportPage.tabs.logs'),
@@ -142,7 +168,7 @@ angular.module('Squared')
           $scope.gridRefresh = false;
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
-          //Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
+          Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
           $scope.logSearchBtnLoad = false;
         }
       };
@@ -241,11 +267,12 @@ angular.module('Squared')
         });
       };
 
+      //TODO: Fix $(...).typeahead is not a function console error
       //initializeTypeahead();
 
       $scope.$on('AuthinfoUpdated', function () {
         //Initializing typeahead engine when authinfo is ready
-        initializeTypeahead();
+        //initializeTypeahead();
       });
 
       var validateLocusId = function (locusId) {
@@ -599,19 +626,24 @@ angular.module('Squared')
           displayName: $filter('translate')('supportPage.callflowAction'),
           sortable: false,
           cellTemplate: callFlowTemplate,
-          visible: Authinfo.isCisco(),
-          cellClass: 'call-flow'
+          cellClass: 'call-flow',
+          headerCellClass: 'header-call-flow',
+          visible: Authinfo.isCisco()
         }, {
           field: 'callInfo',
           displayName: $filter('translate')('supportPage.callAction'),
           sortable: false,
           cellTemplate: callInfoTemplate,
+          cellClass: 'call-info',
+          headerCellClass: 'header-call-info',
           visible: Authinfo.isCisco()
         }, {
           field: 'callSummary',
           displayName: $filter('translate')('supportPage.callSummaryAction'),
           sortable: false,
           cellTemplate: callSummaryTemplate,
+          cellClass: 'call-summary',
+          headerCellClass: 'header-call-summary',
           visible: Authinfo.isCisco()
         }]
       };

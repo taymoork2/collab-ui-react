@@ -39,6 +39,7 @@
     "duplicateDnFound": "Duplicate Internal Extension entered.",
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
+    "userGettingCount": "Counting user in progress",
     "csvBtnTitle": "Export to CSV",
     "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
@@ -74,7 +75,8 @@
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
-    "hybridServicesError": "{{email}} did not qualify for the selected services",
+    "hybridServicesError": "Unable to perform this operation for some users. Hybrid Services are available for licensed users. Please check the licensing for your users and then try again.",
+    "hybridServicesComboError": "You chose a combination of services (Call Service and Spark Call) that we don't support. Please remove one and try again.",
     "searchUser": "Search for a user",
     "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
@@ -1071,7 +1073,8 @@
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
-      "add-resource-button-information": " to start the registration and configuration of your Expressways."
+      "add-resource-button-information": " to start the registration and configuration of your Expressways.",
+      "setupCloudSipUriHeader": "Define SIP Spark Address."
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1141,11 +1144,11 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
-      "squared-fusion-uc.full": "Call Service: Aware",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service: Connect",
+      "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
@@ -1169,9 +1172,9 @@
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Share your desktop with Spark while you are on your work phone.",
+        "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
-        "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
+        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       }
     },
     "alarms": {
@@ -1212,13 +1215,13 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Share your desktop with Spark while you are on your work phone.",
+        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
         "connectHeading": "Connect",
-        "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
-        "aware": "Share your desktop with Spark while you are on your work phone.",
+        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
@@ -1250,6 +1253,19 @@
       }
     },
     "notifications": {
+      "documentationHelpLinkHybridServicesCall": "See <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Help Central</a> for guidance.",
+      "callAware": {
+        "title": "Enable Call Service Aware for Users",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Aware for your users."
+      },
+      "calendar": {
+        "title": "Enable Calendar Service for Users",
+        "navigateToUsers": "Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Calendar Service for your users."
+      },
+      "connect": {
+        "title": "Enable Call Service Connect for Users",
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+      },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
@@ -1313,7 +1329,7 @@
     "runDirSyncAgain": "Sync Again",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses.",
-    "uploadSub": "Best method for adding many users at the same time.",
+    "uploadSub": "Best method for adding up to {{maxUsers}} users at a time.",
     "downloadSub": "Download CSV template",
     "advancedSub": "Synchronize users from Active Directory.",
     "needHelp": "Need help - ",
@@ -1523,9 +1539,15 @@
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
+    "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
+    "scheduleMissing": "No hours defined. This Auto Attendant will use 24 hour schedule",
+    "scheduleOpenTime": "Open Time",
+    "scheduleClosedTime": "Closed Time",
+    "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
+    "scheduleAddAdditionalHours": "Add Additional Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
@@ -1649,7 +1671,7 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Record a custom message and build your own phone menus."
+    "AACustomDesc": "Create a custom Auto Attendant."
   },
   "callPark": {
     "code": "CP",
@@ -1800,6 +1822,7 @@
   "externalNumberPanel": {
     "phoneNumbers": "Phone Numbers",
     "editNumbers": "Edit Phone Numbers",
+    "pendingNumbersTooltip": "Numbers can be in pending status for various reasons. Thank you for your patience during normal processing time. If it is taking longer than expected, please contact your provider.",
     "listError": "Failed to load phone number list.",
     "deleteNumber": "Delete Number",
     "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
@@ -1822,6 +1845,10 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "newNumbersTab": "New Numbers",
+    "portNumbersTab": "Port Numbers",
+    "portNumbersPrompt": "Copy and paste customer's numbers that need to be ported.",
+    "portNumbersLabel": "Porting Numbers",
     "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
@@ -1837,6 +1864,7 @@
     "numbersTitle": "Numbers",
     "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{{count}} New",
+    "portNumbers": "{{count}} Port",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
@@ -1987,6 +2015,7 @@
       "phone": "Phone",
       "country": "Country",
       "address": "Address",
+      "unit": "Unit",
       "city": "City",
       "state": "State",
       "zip": "Zip"
@@ -2926,7 +2955,16 @@
     "orgSettingsSuccess": "orgSettings updated successfully for organization",
     "orgSettingsError": "update orgSettings failed for organization",
     "orgSettingsForPartnerSuccess": "orgSettings updated successfully for partner and his managedOrgs",
-    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs"
+    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs",
+    "alwaysProvisionWithLatest": "Provision new WebEx Sites with the latest client version",
+    "webexClientVersionUpdated": "Webex client version updated",
+    "webexClientVersionUpdatedFailed": "Webex client version update failed",
+    "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
+    "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
+    "webexVersionUseLatestUpdateFailed": "Could not update",
+    "selectAWbxClientVersion": "Select a Webex client version",
+    "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
+    "webexClientVersion": "Cisco WebEx Application Version"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
@@ -3107,7 +3145,7 @@
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "MissingEncryptionKey": {
-        "type": " Missing encryption option key",
+        "type": "Missing encryption option key",
         "message": "Please add an encryption option key"
       },
       "ConfiguredForTestAutomation": {
@@ -3581,7 +3619,7 @@
   },
   "domainManagement": {
     "title": "Domains",
-    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service Connect. Verify all your domains at the same time to avoid blocking user access. Verify your own domain first to avoid admin lockout.",
+    "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
     "addDomain": "Add domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
@@ -3591,29 +3629,19 @@
       "actionsHeader": "Actions"
     },
     "add": {
-      "header": "Add domains",
-      "description": "Add domains in your organization to be verified. If you have users in multiple domains, repeat this step until you have added all of them. You will be required to verify your own domain before any others.",
+      "header": "Add domain",
+      "description": "Add your organization's domain. If you have multiple domains, repeat this step.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
       "encodedIDN": "This is a IDN and will be encoded as this: {{domain}}",
-      "invalidDomainAdded": "This domain name is already added."
-
+      "invalidDomainAdded": "This domain was already added."
     },
     "delete": {
       "header": "Remove domain",
+      "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
-      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You also will not be able the add any new users that belong to this domain."
-    },
-    "email": {
-      "header": "Send email",
-      "description": "Enter email addresses to receive an email with the DNS verification token and instructions for {{domain}}.",
-      "exampleEmail": "Enter email addresses separated by commas.",
-      "invalidEmail": "This is not a valid email address.",
-      "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank'>Learn more</a> about how to enter the DNS verification token.",
-      "beforeVerify": "Before you verify",
-      "sendEmail": "Send instructions"
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
     },
     "verify": {
       "header": "Verify domain",
@@ -3621,8 +3649,7 @@
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
-      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
-      "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
+      "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
       "header": "Claim domain",
@@ -3631,19 +3658,17 @@
       "claim": "Claim"
     },
     "actions": {
-      "instructions": "View token and instructions",
-      "mail": "Mail token and instructions",
+      "instructions": "Retrieve verification token",
       "unverify": "Remove domain",
       "unclaim": "Release domain",
-      "delete": "Remove"
+      "delete": "Remove domain"
     },
     "instructions": {
       "title": "Token and instructions",
-      "done": "Done",
+      "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
-      "beforeVerify": "Before you verify",
-      "sendEmail": "Send instructions"
+      "beforeVerify": "Before you verify"
     }
   }
 }

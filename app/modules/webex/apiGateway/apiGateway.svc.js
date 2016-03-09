@@ -23,17 +23,37 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
-    this.getCsvStates = function () {
-      return _this.csvStates;
-    }; // getCsvStates()
+    this.csvStatusTypes = [
+      null,
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ];
 
-    this.csvStatus = function (siteUrl) {
+    this.csvStatus = function (
+      siteUrl,
+      checkCsvStatusReq
+    ) {
+
       var funcName = 'csvStatus()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
-      // $log.log(logMsg);
+        'siteUrl=' + siteUrl + "\n" +
+        "checkCsvStatusReq=" + checkCsvStatusReq;
+      $log.log(logMsg);
+
+      var completionInfo = null;
+
+      var successResult = {
+        'siteUrl': siteUrl,
+        'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
+        'completionInfo': null, // not null only if status is expCompleted or impCompleted
+      };
 
       var errorResult = {
         'siteUrl': siteUrl,
@@ -41,21 +61,73 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         'errorDesc': null
       };
 
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
-        'completionInfo': null // not null only if status is expCompleted or impCompleted
-      };
-
       var deferredCsvStatus = $q.defer();
 
-      WebExRestApiFact.csvStatusReq(
-        siteUrl
-      ).then(
+      WebExRestApiFact.csvStatusReq(siteUrl).then(
         function success(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
+          // return a mock/test csv status if requested
+          if (null != checkCsvStatusReq) {
+            if ('exportInProgress' == checkCsvStatusReq) {
+              successResult.status = "none";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportInProgress' == checkCsvStatusReq) {
+              successResult.status = "exportInProgress";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportCompletedNoErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "exportCompletedNoErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportCompletedWithErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "exportCompletedWithErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importInProgress' == checkCsvStatusReq) {
+              successResult.status = "importInProgress";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importCompletedNoErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "importCompletedNoErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importCompletedWithErr' == checkCsvStatusReq) {
+              completionInfo = {};
+
+              successResult.status = "importCompletedWithErr";
+              successResult.completionInfo = completionInfo;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+          }
+
+          // TODO: if error response then return reject
+
+          // TODO: update successResult appropriately
           deferredCsvStatus.resolve(successResult);
         },
 
@@ -101,14 +173,45 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       $log.log(logMsg);
+
+      var successResult = {
+        'siteUrl': siteUrl,
+        'status': 'success'
+      };
+
+      var errorResult = {
+        'siteUrl': siteUrl,
+        'status:': "error",
+        'errorCode': null,
+        'errorText': null
+      };
+
+      var deferredCsvExport = $q.defer();
+
+      WebExRestApiFact.csvExportReq(siteUrl).then(
+        function csvExportReqSuccess(response) {
+          deferredCsvExport.resolve(successResult);
+        }, // csvExportReqSuccess()
+
+        function csvExportReqError(response) {
+          deferredCsvExport.reject(errorResult);
+        } // csvExportReqError()
+      );
+
+      return deferredCsvExport.promise;
     }; // csvExport()
 
-    this.csvImport = function (siteUrl) {
+    this.csvImport = function (
+      siteUrl,
+      importFile
+    ) {
+
       var funcName = 'csvImport()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
+        'siteUrl=' + siteUrl + '\n' +
+        'importFile=' + importFile;
       $log.log(logMsg);
     }; // csvImport()
 

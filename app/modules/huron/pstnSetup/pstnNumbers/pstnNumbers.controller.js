@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($scope, $q, $translate, $state, $timeout, PstnSetup, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService) {
+  function PstnNumbersCtrl($scope, $q, $translate, $state, $timeout, PstnSetup, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService, DidService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -23,10 +23,9 @@
     vm.model = {
       state: '',
       areaCode: '',
-      quantity: '',
+      quantity: 1,
       consecutive: false
     };
-    vm.areaCodeOptions = [];
     vm.orderNumbersTotal = 0;
 
     vm.removeOrder = removeOrder;
@@ -34,8 +33,8 @@
     vm.hasBackButton = hasBackButton;
     vm.goBack = goBack;
 
-    vm.isConsecutiveArray = isConsecutiveArray;
     vm.formatTelephoneNumber = formatTelephoneNumber;
+    vm.showOrderQuantity = showOrderQuantity;
     vm.searchResults = [];
 
     vm.searchResultsModel = {};
@@ -56,7 +55,6 @@
       }
     };
     vm.addToOrder = addToOrder;
-    vm.isArray = angular.isArray;
 
     $scope.$watchCollection(function () {
       return vm.orderCart;
@@ -88,9 +86,9 @@
             $scope.$watchCollection(function () {
               return vm.areaCodeOptions;
             }, function (newAreaCodes) {
-              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
-                count: (newAreaCodes && newAreaCodes.length) ? _.sum(newAreaCodes, 'count') : 0
-              }, 'messageformat');
+              $scope.to.helpText = vm.model.state ? $translate.instant('pstnSetup.numbers', {
+                count: _.isArray(newAreaCodes) ? _.sum(newAreaCodes, 'count') : 0
+              }, 'messageformat') : undefined;
             });
           }
         }, {
@@ -117,18 +115,19 @@
             $scope.$watch(function () {
               return vm.model.areaCode;
             }, function (newAreaCode) {
-              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
+              $scope.to.helpText = vm.model.areaCode ? $translate.instant('pstnSetup.numbers', {
                 count: (newAreaCode && newAreaCode.count) ? newAreaCode.count : 0
-              }, 'messageformat');
+              }, 'messageformat') : undefined;
             });
           }
         }, {
-          type: 'input',
+          type: 'cs-input',
           key: 'quantity',
           id: 'quantity',
           templateOptions: {
             required: true,
             label: $translate.instant('pstnSetup.quantity'),
+            groupSize: 'small-12',
             type: 'number',
             max: 100
           },
@@ -145,7 +144,7 @@
           key: 'searchBtn',
           className: 'search-button',
           templateOptions: {
-            btnClass: 'circle-small primary',
+            btnClass: 'btn btn--circle primary',
             spanClass: 'icon icon-search',
             onClick: searchCarrierInventory
           },
@@ -175,11 +174,17 @@
 
     ////////////////////////
 
+    function removeOrderFromCart(order) {
+      _.pull(vm.orderCart, order);
+    }
+
     function removeOrder(order) {
-      PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order, PstnSetup.isCustomerExists())
-        .then(function () {
-          _.pull(vm.orderCart, order);
-        });
+      if (isPortOrder(order)) {
+        removeOrderFromCart(order);
+      } else {
+        PstnSetupService.releaseCarrierInventory(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order, PstnSetup.isCustomerExists())
+          .then(_.partial(removeOrderFromCart, order));
+      }
     }
 
     function getStateInventory() {
@@ -245,6 +250,9 @@
         return TelephoneNumberService.getDIDLabel(telephoneNumber);
         // else if a range of numbers
       } else if (angular.isArray(telephoneNumber)) {
+        if (telephoneNumber.type === PstnSetupService.PORT) {
+          return PORTING_NUMBERS;
+        }
         var firstNumber = TelephoneNumberService.getDIDLabel(_.first(telephoneNumber));
         var lastNumber = TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
         if (isConsecutiveArray(telephoneNumber)) {
@@ -342,6 +350,112 @@
         PstnSetup.setNumbers(getOrderNumbers());
         $state.go('pstnSetup.review');
       }
+    }
+
+    function showOrderQuantity(order) {
+      return (_.isArray(order) && !isConsecutiveArray(order)) || isPortOrder(order);
+    }
+
+    // Port Numbers
+    var PORTING_NUMBERS = $translate.instant('pstnSetup.portNumbersLabel');
+    vm.addPortNumbersToOrder = addPortNumbersToOrder;
+    vm.showPortNumbers = false;
+    vm.unsavedTokens = [];
+    vm.validCount = 0;
+    vm.tokenfieldId = 'pstn-port-numbers';
+
+    vm.tokenoptions = {
+      delimiter: [',', ';'],
+      createTokensOnBlur: true,
+      limit: 50,
+      tokens: [],
+      minLength: 9,
+      beautify: false
+    };
+    vm.tokenmethods = {
+      createtoken: createToken,
+      createdtoken: createdToken,
+      removedtoken: removedToken,
+      edittoken: editToken
+    };
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
+      .then(function (isSupported) {
+        vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
+      });
+
+    function createToken(e) {
+      var tokenNumber = e.attrs.label;
+      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
+      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+    }
+
+    function createdToken(e) {
+      if (isTokenInvalid(e.attrs.value)) {
+        angular.element(e.relatedTarget).addClass('invalid');
+        e.attrs.invalid = true;
+      } else {
+        vm.validCount++;
+      }
+      // add to service after validation/duplicate checks
+      DidService.addDid(e.attrs.value);
+    }
+
+    function isTokenInvalid(value) {
+      return !TelephoneNumberService.validateDID(value) || _.includes(DidService.getDidList(), value);
+    }
+
+    function removedToken(e) {
+      DidService.removeDid(e.attrs.value);
+
+      $timeout(initTokens);
+    }
+
+    function editToken(e) {
+      DidService.removeDid(e.attrs.value);
+      if (!angular.element(e.relatedTarget).hasClass('invalid')) {
+        vm.validCount--;
+      }
+    }
+
+    function initTokens(didList) {
+      var tmpDids = didList || DidService.getDidList();
+      // reset valid and list before setTokens
+      vm.validCount = 0;
+      DidService.clearDidList();
+      angular.element('#' + vm.tokenfieldId).tokenfield('setTokens', tmpDids);
+    }
+
+    function getTokens() {
+      return angular.element('#' + vm.tokenfieldId).tokenfield('getTokens');
+    }
+
+    function isPortOrder(order) {
+      return _.get(order, 'type') === PstnSetupService.PORT;
+    }
+
+    function addPortNumbersToOrder() {
+      var portNumbersPartition = _.partition(getTokens(), 'invalid');
+      var invalidPortNumbers = _.map(portNumbersPartition[0], 'value');
+      var portNumbers = _.map(portNumbersPartition[1], 'value');
+      var existingPortNumbers = _.find(vm.orderCart, {
+        type: PstnSetupService.PORT
+      });
+      if (existingPortNumbers) {
+        var newPortNumbers = _.difference(portNumbers, existingPortNumbers);
+        Array.prototype.push.apply(existingPortNumbers, newPortNumbers);
+      } else {
+        portNumbers.type = PstnSetupService.PORT;
+        vm.orderCart.push(portNumbers);
+      }
+
+      // leave the invalid tokens
+      initTokens(invalidPortNumbers);
+    }
+
+    // We want to capture the modal close event and clear didList from service.
+    if ($state.modal) {
+      $state.modal.result.finally(DidService.clearDidList);
     }
   }
 })();

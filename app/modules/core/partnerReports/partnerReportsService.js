@@ -25,20 +25,6 @@
     var timeFilter = null;
     var activeUserCustomerGraphs = {};
 
-    var callMetricsData = {
-      dataProvider: [{
-        "callCondition": $translate.instant('callMetrics.callConditionFail'),
-        "numCalls": 0
-      }, {
-        "callCondition": $translate.instant('callMetrics.callConditionSuccessful'),
-        "numCalls": 0
-      }],
-      labelData: {
-        "numTotalCalls": 0,
-        "numTotalMinutes": 0
-      }
-    };
-
     var POSITIVE = 'positive';
     var NEGATIVE = 'negative';
 
@@ -72,86 +58,21 @@
       activeUserCancelPromise = $q.defer();
 
       activeUserDetailedPromise = getService(detailed + activeUserUrl + getQuery(filter), activeUserCancelPromise).then(function (response) {
-        if (response.data !== null && response.data !== undefined && angular.isArray(response.data.data)) {
+        if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
           var overallActive = 0;
           var overallRegistered = 0;
 
           angular.forEach(response.data.data, function (customer) {
-            // compile the information for both active user bar graphs.
-            var graphData = [];
-            var populationData = {};
-            var totalActive = 0;
-            var totalRegistered = 0;
-
-            if (angular.isArray(customer.data)) {
-              angular.forEach(customer.data, function (item, index, array) {
-                var activeUsers = parseInt(item.details.activeUsers);
-                var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
-
-                // temporary fix for when totalRegisteredUsers equals 0 due to errors recording the number 
-                if (totalRegisteredUsers <= 0) {
-                  var previousTotal = 0;
-                  var nextTotal = 0;
-                  if (index !== 0) {
-                    previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
-                  }
-                  if (index < (array.length - 1)) {
-                    nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
-                  }
-
-                  if (previousTotal < activeUsers && nextTotal < activeUsers) {
-                    totalRegisteredUsers = activeUsers;
-                  } else if (previousTotal > nextTotal) {
-                    totalRegisteredUsers = previousTotal;
-                  } else {
-                    totalRegisteredUsers = nextTotal;
-                  }
-                }
-
-                if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
-                  if (filter.value === 0 || filter.value === 1) {
-                    modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
-                  }
-
-                  graphData.push({
-                    activeUsers: activeUsers,
-                    totalRegisteredUsers: totalRegisteredUsers,
-                    percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
-                    modifiedDate: modifiedDate,
-                    date: item.date
-                  });
-
-                  totalActive += activeUsers;
-                  totalRegistered += totalRegisteredUsers;
-                }
-              });
-            }
-
-            if (!isNaN(Math.round((totalActive / totalRegistered) * 100)) && Math.round((totalActive / totalRegistered) * 100) >= 0) {
-              populationData = {
-                customerId: customer.orgId,
-                percentage: Math.round((totalActive / totalRegistered) * 100),
-                balloon: true,
-                labelColorField: Config.chartColors.grayDarkest
-              };
-            }
-
-            // save data to be retrieved on a per customer basis
-            activeUserCustomerGraphs[customer.orgId] = {
-              'graphData': graphData,
-              'populationData': populationData
-            };
-
-            overallActive += totalActive;
-            overallRegistered += totalRegistered;
+            var customerData = formatActiveUserOrgData(customer, filter);
+            activeUserCustomerGraphs[customer.orgId] = customerData;
+            overallActive += customerData.totalActive;
+            overallRegistered += customerData.totalRegistered;
           });
 
           // compute overall population percentage for all customers with active users
           overallPopulation = Math.round((overallActive / overallRegistered) * 100);
-          return;
         }
-        overallPopulation = 0;
+        return;
       }, function (error) {
         if (error.status !== 0 || error.config.timeout.$$state.status === 0) {
           timeFilter = null;
@@ -161,6 +82,70 @@
       });
 
       return activeUserDetailedPromise;
+    }
+
+    function formatActiveUserOrgData(org, filter) {
+      var graphData = [];
+      var populationData = {};
+      var totalActive = 0;
+      var totalRegistered = 0;
+
+      if (angular.isArray(org.data)) {
+        angular.forEach(org.data, function (item, index, array) {
+          var activeUsers = parseInt(item.details.activeUsers);
+          var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+          var modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
+          if (filter.value > 1) {
+            modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
+          }
+
+          // fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+          if (totalRegisteredUsers <= 0) {
+            var previousTotal = 0;
+            var nextTotal = 0;
+            if (index !== 0) {
+              previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
+            }
+            if (index < (array.length - 1)) {
+              nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
+            }
+            if (previousTotal < activeUsers && nextTotal < activeUsers) {
+              totalRegisteredUsers = activeUsers;
+            } else if (previousTotal > nextTotal) {
+              totalRegisteredUsers = previousTotal;
+            } else {
+              totalRegisteredUsers = nextTotal;
+            }
+          }
+
+          if (activeUsers > 0 || totalRegisteredUsers > 0) {
+            graphData.push({
+              activeUsers: activeUsers,
+              totalRegisteredUsers: totalRegisteredUsers,
+              percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
+              modifiedDate: modifiedDate,
+              date: item.date
+            });
+
+            totalActive += activeUsers;
+            totalRegistered += totalRegisteredUsers;
+          }
+        });
+      }
+
+      if (!isNaN(Math.round((totalActive / totalRegistered) * 100)) && Math.round((totalActive / totalRegistered) * 100) >= 0) {
+        populationData.customerId = org.orgId;
+        populationData.percentage = Math.round((totalActive / totalRegistered) * 100);
+        populationData.balloon = true;
+        populationData.labelColorField = Config.chartColors.grayDarkest;
+      }
+
+      return {
+        'graphData': graphData,
+        'populationData': populationData,
+        'totalActive': totalActive,
+        'totalRegistered': totalRegistered
+      };
     }
 
     function getActiveUserData(customer, filter) {
@@ -456,11 +441,30 @@
         callMetricsCancelPromise.resolve(ABORT);
       }
       callMetricsCancelPromise = $q.defer();
+      var returnArray = {
+        dataProvider: [],
+        displayData: {}
+      };
 
       return getService(detailed + callMetricsUrl + getQueryForOnePeriod(time) + getCustomerUuids(customer), callMetricsCancelPromise).then(function (response) {
         if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
-          var transformData = angular.copy(callMetricsData);
           var transformDataSet = false;
+          var transformData = {
+            dataProvider: [{
+              "label": $translate.instant('callMetrics.callConditionFail'),
+              "value": 0,
+              "color": Config.chartColors.grayDarkest
+            }, {
+              "label": $translate.instant('callMetrics.callConditionSuccessful'),
+              "value": 0,
+              "color": Config.chartColors.brandInfo
+            }],
+            labelData: {
+              "numTotalCalls": 0,
+              "numTotalMinutes": 0
+            }
+          };
+
           angular.forEach(response.data.data, function (item, index, array) {
             if (angular.isDefined(item.data) && angular.isArray(item.data) && angular.isDefined(item.data[0].details) && (item.data[0].details !== null)) {
               var details = item.data[0].details;
@@ -469,8 +473,8 @@
               if (totalCalls > 0) {
                 transformData.labelData.numTotalCalls += totalCalls;
                 transformData.labelData.numTotalMinutes += Math.round(parseFloat(details.totalAudioDuration));
-                transformData.dataProvider[0].numCalls += parseInt(details.totalFailedCalls);
-                transformData.dataProvider[1].numCalls += parseInt(details.totalSuccessfulCalls);
+                transformData.dataProvider[0].value += parseInt(details.totalFailedCalls);
+                transformData.dataProvider[1].value += parseInt(details.totalSuccessfulCalls);
                 transformDataSet = true;
               }
             }
@@ -479,9 +483,9 @@
             return transformData;
           }
         }
-        return [];
+        return returnArray;
       }, function (error) {
-        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), []);
+        return returnErrorCheck(error, 'Loading call metrics data for selected customers failed.', $translate.instant('callMetrics.callMetricsChartError'), returnArray);
       });
     }
 

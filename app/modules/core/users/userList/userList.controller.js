@@ -52,6 +52,9 @@
     $scope.dirsyncEnabled = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
+    $scope.USER_EXPORT_THRESHOLD = 10000;
+    $scope.totalUsers = 0;
+    $scope.obtainedTotalUserCount = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -65,6 +68,7 @@
     $scope.showUserDetails = showUserDetails;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
+    $scope.isValidThumbnail = isValidThumbnail;
 
     init();
 
@@ -160,6 +164,10 @@
               // data.resources = getUserStatus(data.Resources);
 
               $scope.placeholder.count = data.totalResults;
+              if ($scope.searchStr === '') {
+                $scope.totalUsers = data.totalResults;
+                $scope.obtainedTotalUserCount = true;
+              }
               if (startIndex === 0) {
                 $scope.userList.allUsers = data.Resources;
               } else {
@@ -197,6 +205,16 @@
               Log.debug('Query existing users failed. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.userListError')], 'error');
             }
+          }
+
+          if (!$scope.obtainedTotalUserCount) {
+            UserListService.getUserCount().then(function (count) {
+              if (count === -1) {
+                count = $scope.USER_EXPORT_THRESHOLD + 1;
+              }
+              $scope.totalUsers = count;
+              $scope.obtainedTotalUserCount = true;
+            });
           }
         }, $scope.searchStr);
     }
@@ -340,8 +358,8 @@
 
     function configureGrid() {
 
-      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!row.entity.photos" class="user-img">' +
+      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
+        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
 
@@ -444,7 +462,18 @@
 
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     function firstOfType(row) {
-      return row.entity.id === $scope.gridData[0].id;
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id'));
+    }
+
+    function isValidThumbnail(user) {
+      var photos = _.get(user, 'photos', []);
+      var thumbs = _.filter(photos, {
+        type: 'thumbnail'
+      });
+      var validThumbs = _.filter(thumbs, function (thumb) {
+        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
+      });
+      return !_.isEmpty(validThumbs);
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

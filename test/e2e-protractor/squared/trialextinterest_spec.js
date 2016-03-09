@@ -11,13 +11,12 @@ describe('Trial Ext Interest Flow', function () {
   });
 
   describe('Trial ext interest page with validEncryptedQueryParam', function () {
-
     it('should login as squared team member admin user', function () {
       login.login('pbr-admin');
     });
 
     it('should display a success message with validEncryptedQueryParam', function () {
-      browser.get(trialExtInterestUrl + validEncryptedQueryParam);
+      navigation.navigateTo(trialExtInterestUrl + validEncryptedQueryParam);
       utils.expectIsDisplayed(trialextinterest.notifyPartnerSuccess);
     });
 
@@ -27,13 +26,12 @@ describe('Trial Ext Interest Flow', function () {
   });
 
   describe('Trial ext interest page with invalidQueryParam', function () {
-
     it('should login as squared team member admin user', function () {
       login.login('pbr-admin');
     });
 
     it('should display an error message with invalidQueryParam', function () {
-      browser.get(trialExtInterestUrl + invalidQueryParam);
+      navigation.navigateTo(trialExtInterestUrl + invalidQueryParam);
       utils.expectIsDisplayed(trialextinterest.notifyPartnerBadLink);
     });
   });

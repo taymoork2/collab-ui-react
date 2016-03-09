@@ -6,7 +6,7 @@
     .controller('ScheduleUpgradeConfigurationCtrl', ScheduleUpgradeConfigurationCtrl);
 
   /* @ngInject */
-  function ScheduleUpgradeConfigurationCtrl($scope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService, TimezoneService) {
+  function ScheduleUpgradeConfigurationCtrl($rootScope, $scope, $translate, $modal, Authinfo, ScheduleUpgradeService, NotificationService, TimezoneService) {
     var vm = this;
     vm.state = 'syncing'; // 'error' | 'idle'
     vm.data = {}; // UI data
@@ -141,8 +141,8 @@
           scheduleDay: data.scheduleDay.value
         })
         .then(function (data) {
-          NotificationService.removeNotification('acknowledgeScheduleUpgrade');
-          vm.isAdminAcknowledged = data.isAdminAcknowledged;
+          $rootScope.$broadcast('ACK_SCHEDULE_UPGRADE');
+          vm.isAdminAcknowledged = true;
           vm.postponed = data.postponed;
           vm.errorMessage = '';
           vm.state = 'idle';

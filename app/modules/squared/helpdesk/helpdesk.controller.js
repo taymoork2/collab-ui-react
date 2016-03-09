@@ -23,7 +23,6 @@
     vm.showDeviceResultPane = showDeviceResultPane;
     vm.showUsersResultPane = showUsersResultPane;
     vm.showOrgsResultPane = showOrgsResultPane;
-    vm.overallSparkStatus = "unknown";
     vm.setCurrentSearch = setCurrentSearch;
     vm.showSearchHelp = showSearchHelp;
 

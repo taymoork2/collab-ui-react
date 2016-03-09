@@ -1,0 +1,29 @@
+<div ng-if="!row.entity.showCSVInfo">
+  <p class="ui-grid-cell-contents">
+    <i 
+      class="icon-spinner icon">
+    </i>
+  </p>
+</div>
+
+<div ng-if="row.entity.showCSVInfo">
+  <div ng-if="!row.entity.isCSVSupported">
+    <p class="ui-grid-cell-contents" translate>
+      siteList.siteCSVNotAvailable
+    </p>
+  </div>
+  
+  <div ng-if="row.entity.isCSVSupported">
+    <p class="ui-grid-cell-contents">
+      <a id="{{row.entity.license.siteUrl}}_export" 
+         translate="siteList.siteCsvExportLinkLabel">
+      </a>
+                
+      &nbsp;|&nbsp;
+              
+      <a id="{{row.entity.license.siteUrl}}_import" 
+         translate="siteList.siteCsvImportLinkLabel">
+      </a>
+    </p>
+  </div>
+</div>

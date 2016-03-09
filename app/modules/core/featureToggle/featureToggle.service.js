@@ -10,7 +10,7 @@
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
       pstnSetup: 'huron-pstn-setup',
-      csvUpload: 'csvUpload',
+      csvUpload: 'atlas-csv-upload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
@@ -20,8 +20,6 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasReportTrials: 'atlas-report-trials',
       atlasTrialConversion: 'atlas-trial-conversion',
-      huronHuntGroup: 'huronHuntGroup',
-      huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
@@ -54,6 +52,7 @@
       filterBadges: 'filter-badges',
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
+      huronPstnPort: 'huron-pstn-port',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCallsTab: 'ios-calls-tab',
@@ -128,6 +127,7 @@
       locationSharing: 'location-sharing',
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
+      webexClientLockdown: 'atlas-webex-clientlockdown',
       huronCallTrials: 'huron-call-trials'
     };
 

@@ -37,6 +37,7 @@
           phoneNumber: '',
           country: '',
           addressLine1: '',
+          unit: '',
           city: '',
           state: '',
           postalCode: ''

@@ -3,20 +3,24 @@
 angular.module('Core').service('SiteListService', [
   '$log',
   '$translate',
+  '$interval',
   'Authinfo',
-  'Userservice',
   'Config',
   'WebExApiGatewayService',
   'WebExUtilsFact',
+  'WebExUtilsService',
+  'FeatureToggleService',
 
   function (
     $log,
     $translate,
+    $interval,
     Authinfo,
-    Userservice,
     Config,
     WebExApiGatewayService,
-    WebExUtilsFact
+    WebExUtilsFact,
+    WebExUtilsService,
+    FeatureToggleService
   ) {
 
     var _this = this;
@@ -240,20 +244,36 @@ angular.module('Core').service('SiteListService', [
 
       // $log.log(funcName);
 
-      // make sure that we have the signed in admin user email before we update the columns
-      if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        updateGridColumns();
-      } else {
-        Userservice.getUser('me', function (data, status) {
-          if (
-            (data.success) &&
-            (data.emails)
-          ) {
-            Authinfo.setEmails(data.emails);
-            _this.updateGridColumns();
+      // remove grid column(s) based on feature toggles
+      WebExUtilsService.checkWebExFeaturToggle(FeatureToggleService.features.webexCSV).then(
+        function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
+          var funcName = "checkWebExFeaturToggleSuccess()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "adminUserSupportCSV=" + adminUserSupportCSV;
+          $log.log(logMsg);
+
+          // don't show the CSV column if admin user does not have feature toggle
+          if (!adminUserSupportCSV) {
+            vm.gridOptions.columnDefs.splice(2, 1);
           }
-        });
-      }
+
+          updateGridColumns();
+        }, // checkWebExFeaturToggleSuccess()
+
+        function checkWebExFeaturToggleError(response) {
+          var funcName = "checkWebExFeaturToggleError()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
+          // don't show the CSV column
+          vm.gridOptions.columnDefs.splice(2, 1);
+
+          updateGridColumns();
+        } // checkWebExFeaturToggleError()
+      ); // WebExUtilsService.checkWebExFeaturToggle().then()
 
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
@@ -299,7 +319,21 @@ angular.module('Core').service('SiteListService', [
                   "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
                 $log.log(logMsg);
 
-                _this.updateCSVColumn(siteRow);
+                if (!siteRow.isCSVSupported) {
+                  // no further data to get
+                  siteRow.showCSVInfo = true;
+                } else {
+                  _this.updateCSVColumn(
+                    siteRow
+                  );
+
+                  siteRow.csvPollIntervalObj = $interval(
+                    function () {
+                      _this.updateCSVColumn(siteRow);
+                    },
+                    15000
+                  );
+                }
               }, // isSiteSupportsIframeSuccess()
 
               function isSiteSupportsIframeError(response) {
@@ -325,16 +359,31 @@ angular.module('Core').service('SiteListService', [
       } // updateGridColumns()
     }; // updateGrid()
 
-    this.updateCSVColumn = function (siteRow) {
-      if (!siteRow.isCSVSupported) {
-        // no further data to get
-        siteRow.showCSVInfo = true;
-        return;
+    this.updateCSVColumn = function (
+      siteRow
+    ) {
+
+      var funcName = "updateCSVColumn()";
+      var logMsg = "";
+
+      var siteUrl = siteRow.license.siteUrl;
+
+      var checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.checkCsvStatusIndex];
+      ++siteRow.checkCsvStatusIndex;
+      if (siteRow.checkCsvStatusEnd < siteRow.checkCsvStatusIndex) {
+        siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
       }
 
-      // TODO
-      var siteUrl = siteRow.license.siteUrl;
-      WebExApiGatewayService.csvStatus(siteUrl).then(
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl + "\n" +
+        "checkCsvStatusReq=" + checkCsvStatusReq;
+      $log.log(logMsg);
+
+      WebExApiGatewayService.csvStatus(
+        siteUrl,
+        checkCsvStatusReq // set this to null to get real status
+      ).then(
+
         function success(response) {
           var funcName = "WebExApiGatewayService.csvStatus.success()";
           var logMsg = "";
@@ -343,6 +392,8 @@ angular.module('Core').service('SiteListService', [
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
+
+          // TODO: parse response and update the row column accordingly
 
           siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()

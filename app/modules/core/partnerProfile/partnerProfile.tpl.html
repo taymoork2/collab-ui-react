@@ -97,8 +97,8 @@
             <div class="small-12 columns">
               <div class="row collapse" ng-if="isPartner">
                 <div class="small-12 columns">
+                  <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
                   <label class="cs-checkbox" for="allowCustomerLogo">
-                    <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
                     <span translate="partnerProfile.allowCustomerLogo"></span>
                   </label>
                 </div>
@@ -106,6 +106,65 @@
             </div>
           </div>
         </div>
+
+      <div>
+
+
+        <!-- Drop down from : http://collab-ui.cisco.com/#/select -->
+
+        <!--
+ng-model="sel.selected"
+               options="sel.options"
+               placeholder="sel.selectPlaceholder"
+      -->
+
+<!-- <div ng-controller="SelectWbxClientVersion as sel"> -->
+   
+   <!-- <form id="myForm"> -->
+    <div ng-if="showClientVersions">    
+      <div class="row form-spacing">
+        <div class="small-12 columns">
+          <div class="row collapse" ng-if="isPartner">
+           <p><h4 translate="partnerProfile.webexClientVersion"></h4>  
+              <span class="badge"></span>
+            </p>
+            <cs-select
+               ng-model="wbxclientversionselected"
+               options="wbxclientversions"
+               placeholder="wbxclientversionplaceholder"
+               on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
+               is-disabled="useLatestWbxVersion">
+            </cs-select>
+          </div>
+        </div>
+      </div>
+   <!-- </form> -->
+<!-- </div> -->
+
+
+        <div class="row form-spacing">
+         <div class="small-12 columns">
+           <div class="row collapse" ng-if="isPartner">
+             <div class="small-12 columns">
+               
+               <input type="checkbox" id="useLatestWbxVersion" ng-model="useLatestWbxVersion" 
+                 ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)">
+                 <label class="cs-checkbox" for="useLatestWbxVersion">
+                    <span class="client-version-checkbox-label" translate="partnerProfile.alwaysProvisionWithLatest"></span>
+               </label>
+               <p>
+               <span class="client-version-indent" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></span>
+           </div>
+          </div>
+         </div>
+       </div>
+     </div>  
+
+
+
+
+      </div>
+
       </div>
       <div class="partner-profile columns small-12 large-6 xlarge-5 end">
         <!-- support title / description -->
