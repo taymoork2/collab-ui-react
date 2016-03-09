@@ -97,7 +97,7 @@ var AutoAttendantPage = function () {
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
-  this.schedule = element(by.css('.aa-schedule-container'));
+  this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Additional Hours'));
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
