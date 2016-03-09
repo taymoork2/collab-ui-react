@@ -20,7 +20,7 @@
           <div ><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
                 {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
           <div class="card-icons">
-            <a class="icon icon-information" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature))"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>
+            <a class="icon icon-link" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature))"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>
             <a class="icon icon-edit" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.editAction"></span></a>
             <a class="icon icon-trash" ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))"><span class="sr-only" translate="huronHuntGroup.deleteAction"></span></a>
           </div>
