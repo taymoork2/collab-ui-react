@@ -1,9 +1,7 @@
 var SiteListPage = function () {
   this.t31CSVToggleUser = {
-    // siteUrl: 't30citestprov6.webex.com',
-    // testAdminUsername: 't31r1-csvtoggle-adm@mailinator.com',
-    siteUrl: 'sjsite14.webex.com',
-    testAdminUsername: 'sjsite14-lhsieh@mailinator.com',
+    siteUrl: 't30citestprov6.webex.com',
+    testAdminUsername: 't31r1-csvtoggle-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
@@ -13,9 +11,6 @@ var SiteListPage = function () {
 
   this.csvExportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_export"));
   this.csvImportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_import"));
-
-  this.xLaunchExportUsersT31CSV = element(by.id(this.t31CSVToggleUser.siteUrl + "_xlaunch-export-users"));
-  this.xLaunchImportUsersT31CSV = element(by.id(this.t31CSVToggleUser.siteUrl + "_xlaunch-import-users"));
 
   //check T30citestprov9.webex.com 'Not Available'
   this.t30csvNotAvail = element(by.id("t30citestprov9.webex.com" + "_NA"));

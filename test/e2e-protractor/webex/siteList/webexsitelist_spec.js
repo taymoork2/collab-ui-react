@@ -27,21 +27,13 @@ describe('WebEx site list', function () {
     utils.wait(sitelist.csvExportId);
   });
 
-  xit('should detect the Export link', function () {
-    utils.wait(sitelist.xLaunchExportUsersT31CSV);
-  });
-
-  xit('should detect the Import link', function () {
-    utils.wait(sitelist.xLaunchImportUsersT31CSV);
-  });
-
-  //check T30 site where CSV = Not Available
-  it('T30 site should display Not Available', function () {
+  //check T30 site where CSV = Not Available.   Enable later after setup new profile with CSV enabled by feature toggle
+  xit('T30 site should display Not Available', function () {
     utils.wait(sitelist.t30csvNotAvail);
   });
 
-  //check T31 site where CSV = Not Available
-  it('T31 site but user not yet configured to be admin of this site should display Not Available', function () {
+  //check T31 site where CSV = Not Availabl.  Enable later after setup new profile with CSV enabled by feature toggle
+  xit('T31 site but user not yet configured to be admin of this site should display Not Available', function () {
     utils.wait(sitelist.t31csvNotAvail);
   });
 
