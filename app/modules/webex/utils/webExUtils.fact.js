@@ -28,32 +28,31 @@
         var funcName = "getSiteName()";
         var logMsg = "";
 
-        var siteUrlElements = siteUrl.split(".");
-        
-        var siteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
-        /*
-        var siteNameConstructed = false;
-        var siteName = "";
+        var freeSiteSuffixList = [
+          ".my",
+          ".mydmz",
+          ".mybts",
+          ".mydev"
+        ];
 
-        siteUrlElements.forEach(
-          function checkSiteUrlElement(siteUrlElement) {
-            if (!siteNameConstructed) {
-              if ("webex" == siteUrlElement) {
-                siteNameConstructed = true;
-              } else {
-                if ("" != siteName) {
-                  siteName = siteName + ".";
-                }
+        var dotIndex = siteUrl.indexOf(".");
+        var siteName = siteUrl.slice(0, dotIndex);
+        var restOfSiteUrl = siteUrl.slice(dotIndex);
 
-                siteName = siteName + siteUrlElement;
-              }
+        freeSiteSuffixList.forEach(
+          function checkFreeSiteSuffix(freeSiteSuffix) {
+            var tempSuffix = freeSiteSuffix + ".";
+
+            if (restOfSiteUrl.indexOf(tempSuffix) == 0) {
+              siteName = siteName + freeSiteSuffix;
             }
-          }
+          } // checkFreeSiteSuffix()
         );
-        */
 
         logMsg = funcName + "\n" +
           "siteUrl=" + siteUrl + "\n" +
+          "dotIndex=" + dotIndex + "\n" +
+          "restOfSiteUrl=" + restOfSiteUrl + "\n" +
           "siteName=" + siteName;
         $log.log(logMsg);
 
