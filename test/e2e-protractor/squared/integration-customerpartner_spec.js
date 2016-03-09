@@ -49,7 +49,7 @@ xdescribe('CS Admin flow', function () {
 
 });
 
-describe('CS User flow', function () {
+xdescribe('CS User flow', function () {
 
   it('should just login', function () {
     login.login('customer-support-user', '#/partner/customers');
