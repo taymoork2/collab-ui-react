@@ -4,11 +4,11 @@ describe('DirSyncService', function () {
   beforeEach(module('Core'));
   describe('getDirSyncStatus', function () {
 
-    var $httpBackend, DirSyncService, Config, Authinfo, Log;
+    var $httpBackend, DirSyncService, UrlConfig, Authinfo, Log;
 
     beforeEach(function () {
       module(function ($provide) {
-        Config = {
+        UrlConfig = {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
@@ -23,7 +23,7 @@ describe('DirSyncService', function () {
           debug: sinon.stub()
         };
         $provide.value('Log', Log);
-        $provide.value('Config', Config);
+        $provide.value('UrlConfig', UrlConfig);
         $provide.value('Authinfo', Authinfo);
       });
     });

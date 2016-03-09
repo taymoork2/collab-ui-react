@@ -3,17 +3,18 @@
 describe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q, OAuthConfig;
+  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q, OAuthConfig, UrlConfig;
 
   beforeEach(module(function ($provide) {
     $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_, _OAuthConfig_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
     Auth = _Auth_;
     Config = _Config_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
@@ -40,7 +41,7 @@ describe('Auth Service', function () {
   });
 
   it('should get account info using correct API', function (done) {
-    Config.getAdminServiceUrl = sinon.stub().returns('foo/');
+    UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
     $httpBackend
       .expectGET('foo/organization/bar/accounts')
@@ -150,7 +151,7 @@ describe('Auth Service', function () {
     var loggedOut = sinon.stub();
     $window.location = {};
     Storage.clear = sinon.stub();
-    Config.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
     Storage.get = sinon.stub().returns('accessToken');
     OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
@@ -172,7 +173,7 @@ describe('Auth Service', function () {
 
     beforeEach(function () {
       SessionStorage.get = sinon.stub();
-      Config.getAdminServiceUrl = sinon.stub().returns('path/');
+      UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
     });
 
     it('should use correct URL if customer org', function (done) {
@@ -216,7 +217,7 @@ describe('Auth Service', function () {
     describe('given user is full admin', function () {
 
       beforeEach(function () {
-        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -263,7 +264,7 @@ describe('Auth Service', function () {
     describe('given user is not admin', function () {
 
       beforeEach(function () {
-        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -329,7 +330,7 @@ describe('Auth Service', function () {
 
     it('will add some webex stuff given some condition', function (done) {
       Authinfo.initialize = sinon.stub();
-      Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')
