@@ -141,46 +141,41 @@ angular.module('Core').controller('SiteListCtrl', [
       });
     }
 
-    function csvExport(siteUrl) {
+    $scope.csvExport = function (siteUrl) {
       var funcName = "csvExport()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-    } // csvExport()
+    }; // csvExport()
 
-    function csvExportResult(siteUrl) {
+    $scope.csvExportResult = function (siteUrl) {
       var funcName = "csvExportResult()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-    } // csvExportResult()
+    }; // csvExportResult()
 
-    function csvImport(siteUrl) {
+    $scope.csvImport = function (siteUrl) {
       var funcName = "csvImport()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-    } // csvImport()
+    }; // csvImport()
 
-    function csvImportResult(siteUrl) {
+    $scope.csvImportResult = function (siteUrl) {
       var funcName = "csvImportResult()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       $log.log(logMsg);
-    } // csvImportResult()
-
-    $scope.csvExport = csvExport;
-    $scope.csvExportResult = csvExportResult;
-    $scope.csvImport = csvImport;
-    $scope.csvImportResult = csvImportResult;
+    }; // csvImportResult()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
