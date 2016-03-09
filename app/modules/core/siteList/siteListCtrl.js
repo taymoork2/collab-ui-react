@@ -141,26 +141,26 @@ angular.module('Core').controller('SiteListCtrl', [
       });
     }
 
-    function exportClick(siteUrl) {
+    function csvExport(siteUrl) {
       $log.log("EXPORT!!!!!  " + siteUrl);
-    } // exportClick()
+    } // csvExport()
 
-    function exportResultClick(siteUrl) {
+    function csvExportResult(siteUrl) {
       $log.log("EXPORT RESULT!!!!!  " + siteUrl);
-    } // exportResultClick()
+    } // csvExportResult()
 
-    function importClick(siteUrl) {
+    function csvImport(siteUrl) {
       $log.log("IMPORT!!!!!  " + siteUrl);
-    } // importClick()
+    } // csvImport()
 
-    function importResultClick(siteUrl) {
+    function csvImportResult(siteUrl) {
       $log.log("IMPORT RESULT!!!!!  " + siteUrl);
-    } // importResultClick()
+    } // csvImportResult()
     
-    $scope.exportClick = exportClick;
-    $scope.exportResultClick = exportResultClick;
-    $scope.importClick = importClick;
-    $scope.importResultClick = importResultClick;
+    $scope.csvExport = csvExport;
+    $scope.csvExportResult = csvExportResult;
+    $scope.csvImport = csvImport;
+    $scope.csvImportResult = csvImportResult;
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
