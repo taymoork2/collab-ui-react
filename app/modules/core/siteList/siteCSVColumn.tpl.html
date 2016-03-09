@@ -1,31 +1,141 @@
+<style>
+.csv-text:hover {
+    color: #D03D35;
+}
+
+.csv-export-results:hover {
+    background-color: white
+}
+</style>
+
 <div ng-if="!row.entity.showCSVInfo">
-  <p class="ui-grid-cell-contents">
-    <i 
-      class="icon-spinner icon">
-    </i>
-  </p>
+    <p class="ui-grid-cell-contents">
+        <i class="icon-spinner icon"> </i>
+    </p>
 </div>
 
 <div ng-if="row.entity.showCSVInfo">
-  <div ng-if="!row.entity.isCSVSupported">
-    <p class="ui-grid-cell-contents" translate>
-      siteList.siteCSVNotAvailable
-    </p>
-  </div>
-  
-  <div ng-if="row.entity.isCSVSupported">
-    <p class="ui-grid-cell-contents">
-      <a id="{{row.entity.license.siteUrl}}_export" 
-         translate="siteList.siteCsvExportLinkLabel"
-         ng-click="grid.appScope.csvExport(row.entity.license.siteUrl); ">
-      </a>
+    <div ng-if="!row.entity.isCSVSupported">
+        <p class="ui-grid-cell-contents">
+            <span id="{{row.entity.license.siteUrl}}_notAvailable"
+                translate="siteList.siteCSVNotAvailable">
+            </span> 
+            
+            <span
+                id="{{row.entity.license.siteUrl}}_infoIcon"> <i
+                class="icon icon-information icon-lg ng-scope"
+                tooltip-append-to-body="true" tooltip-animation="false"
+                tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
+                tooltip-placement="top"></i>
+            </span>
+        </p>
+
+    </div>
+
+    <div ng-if="row.entity.isCSVSupported">
+        <p class="ui-grid-cell-contents">
+        
+            <!-- Export Results -->
+            <span class="csv-export-results">
+            <!-- Warning icon-->
+            <span id="{{row.entity.license.siteUrl}}_exportResultIcon"
+                  ng-if="row.entity.exportFinishedWithErrors">
+                <i class="icon-warning icon webex-attention-text"
+                tooltip-append-to-body="true" tooltip-animation="false"
+                tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
+                tooltip-placement="top">
+                </i>
+            </span>
+            
+            <a ng-if="row.entity.showExportResultsLink"> 
+                <span
+                id="{{row.entity.license.siteUrl}}_export"
+                translate="siteList.siteCsvExportResultsLinkLabel"
+                ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);">
+                </span>
                 
-      &nbsp;|&nbsp;
-              
-      <a id="{{row.entity.license.siteUrl}}_import" 
-         translate="siteList.siteCsvImportLinkLabel"
-         ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); ">
-      </a>
-    </p>
-  </div>
+                <!-- Three word spaces -->
+                &nbsp; &nbsp; &nbsp;
+            </a>
+            </span> 
+            
+
+            <!-- Export -->
+            <a ng-if="row.entity.showExportLink"> 
+                <span id="{{row.entity.license.siteUrl}}_export"
+                translate="siteList.siteCsvExportLinkLabel"
+                ng-click="grid.appScope.csvExport(row.entity.license.siteUrl); "> 
+                </span>
+            </a>
+
+            <!-- Export In Progress -->
+            <span class="csv-text" style="font-weight: bold;"
+                ng-if="row.entity.showExportInProgressLink"
+                id="{{row.entity.license.siteUrl}}_export"
+                translate="siteList.siteCsvExportInProgressLinkLabel"
+                tooltip-placement="top"
+                tooltip="{{::'siteList.exportInProgressTooltip' | translate}}"
+                tooltip-animation="false" tooltip-append-to-body="true"> </span>
+
+            <!-- Grayed Export -->
+            <span style="color: #AEAEAF" ng-if="row.entity.grayedExportLink"
+                id="{{row.entity.license.siteUrl}}_export"
+                translate="siteList.siteCsvExportLinkLabel" tooltip-placement="top"
+                tooltip="{{::'siteList.exportBlockedTooltip' | translate}}"
+                tooltip-animation="false" tooltip-append-to-body="true"> 
+                </span>
+                
+                <!-- pipe separator -->
+                 |
+            
+            <!-- Import -->
+            <a ng-if="row.entity.showImportLink"> <span
+                id="{{row.entity.license.siteUrl}}_import"
+                translate="siteList.siteCsvImportLinkLabel"
+                ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); "> </span>
+            </a>
+            
+            
+            <!-- Import Results -->
+            <a ng-if="row.entity.showImportResultsLink">
+            
+            <!-- Three word spaces -->
+             &nbsp; &nbsp; &nbsp;
+             
+            <!-- Warning icon-->
+            <span id="{{row.entity.license.siteUrl}}_importResultIcon"
+                  ng-if="row.entity.importFinishedWithErrors">
+                <i class="icon-warning icon webex-attention-text"
+                tooltip-append-to-body="true" tooltip-animation="false"
+                tooltip="{{::'siteList.importFinishedWithErrorsTooltip' | translate}}"
+                tooltip-placement="top">
+                </i>
+            </span>
+             
+            <span
+                id="{{row.entity.license.siteUrl}}_import"
+                class="csv-import-results"
+                translate="siteList.siteCsvImportResultsLinkLabel"
+                ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"> </span>
+            </a>
+
+            <!-- Import In Progress -->
+            <span class="csv-text" style="font-weight: bold;"
+                ng-if="row.entity.showImportInProgressLink"
+                id="{{row.entity.license.siteUrl}}_import"
+                translate="siteList.siteCsvImportInProgressLinkLabel"
+                tooltip-placement="top"
+                tooltip="{{::'siteList.importInProgressTooltip' | translate}}"
+                tooltip-animation="false" tooltip-append-to-body="true"> </span>
+
+            <!-- Grayed Import -->
+            <span style="color: #AEAEAF" ng-if="row.entity.grayedImportLink"
+                id="{{row.entity.license.siteUrl}}_import"
+                translate="siteList.siteCsvImportLinkLabel" tooltip-placement="top"
+                tooltip="{{::'siteList.importBlockedTooltip' | translate}}"
+                tooltip-animation="false" tooltip-append-to-body="true"> </span>
+
+
+        </p>
+    </div>
 </div>
