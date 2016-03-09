@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Hercules')
-  .controller('CallServicePreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout', 'ServiceDescriptor',
-    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor) {
+  .controller('CallServicePreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout', 'ServiceDescriptor', 'FeatureToggleService', 'UriVerificationService',
+    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, FeatureToggleService, UriVerificationService) {
       $scope.currentUser = $stateParams.currentUser;
       var isEntitled = function (ent) {
         return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
@@ -167,6 +167,42 @@ angular.module('Hercules')
             });
           }
         });
+      };
+
+      var domainVerificationEnabled = null;
+      FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
+        .then(function (support) {
+          domainVerificationEnabled = support;
+        })
+        .catch(function () {
+          domainVerificationEnabled = false;
+        })
+        .finally(function () {
+          if ($scope.callServiceAware.entitled) {
+            $scope.callServiceAwareToggled(true);
+          }
+        });
+
+      $scope.domainVerificationError = false; // need to be to be backwards compatible.
+      $scope.callServiceAwareToggled = function (awareEntitled) {
+        if (awareEntitled) {
+          if (domainVerificationEnabled) {
+            if (!sipUri) {
+              // Hmm.. I dont think it make sense to show the DV error when the Dir SIP URI is not defined...
+              //$scope.domainVerificationError = true;
+            } else {
+              if (!UriVerificationService.isDomainVerified(sipUri)) {
+                $scope.domainVerificationError = true;
+              }
+            }
+          }
+        } else {
+          $scope.domainVerificationError = false;
+        }
+      };
+
+      $scope.navigateToCallSettings = function () {
+        $state.go('call-service.settings');
       };
     }
   ]);

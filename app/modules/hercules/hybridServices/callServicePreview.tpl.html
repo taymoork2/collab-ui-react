@@ -10,7 +10,7 @@
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
       <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle" ng-model="callServiceAware.entitled"
-                        size="small"></cs-toggle-switch>
+                        size="small" ng-click="callServiceAwareToggled(callServiceAware.entitled)"></cs-toggle-switch>
     </div>
     <div>
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' |
@@ -35,6 +35,16 @@
       <div ng-if="callServiceAware.sipUri && callServiceAware.entitled">
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
         <span class="cloud-extension-label status-notActivated">{{callServiceAware.sipUri}}</span>
+      </div>
+      <div ng-if="domainVerificationError" class="dv-error">
+        <table>
+          <tr>
+            <td><span class="icon icon-error" style="color:red;"></span></td>
+            <td><span class="extension-description" style="color:red" translate="hercules.domain-verification.domain-not-verified"/>
+              <span class="extension-description" style="color:red" translate="hercules.domain-verification.navigateToCallSettings"
+                    translate-value-onclick="navigateToCallSettings()" translate-compile></span></td>
+          </tr>
+        </table>
       </div>
       <span
         ng-if="callServiceAware.entitled

@@ -1040,6 +1040,10 @@
   },
   "hercules": {
     "page_title": "Connector Management",
+    "domain-verification": {
+      "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
+      "navigateToCallSettings": "Verify the domain in  <a ng-click=\"{{onclick}}\">Call Service Settings</a>."
+    },
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
