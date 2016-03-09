@@ -1,6 +1,6 @@
 'use strict';
 
-describe('CS Admin flow', function () {
+fdescribe('CS Admin flow', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
