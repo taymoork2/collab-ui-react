@@ -2953,7 +2953,16 @@
     "orgSettingsSuccess": "orgSettings updated successfully for organization",
     "orgSettingsError": "update orgSettings failed for organization",
     "orgSettingsForPartnerSuccess": "orgSettings updated successfully for partner and his managedOrgs",
-    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs"
+    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs",
+    "alwaysProvisionWithLatest": "Provision new WebEx Sites with the latest client version",
+    "webexClientVersionUpdated": "Webex client version updated",
+    "webexClientVersionUpdatedFailed": "Webex client version update failed",
+    "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
+    "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
+    "webexVersionUseLatestUpdateFailed": "Could not update",
+    "selectAWbxClientVersion": "Select a Webex client version",
+    "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
+    "webexClientVersion": "Cisco WebEx Application Version"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
