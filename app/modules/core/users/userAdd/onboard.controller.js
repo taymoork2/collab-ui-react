@@ -333,6 +333,7 @@
     $scope.communicationFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.getAccountLicenses = getAccountLicenses;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -759,7 +760,7 @@
      *
      * @param {null|Object[]} action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
      */
-    var getAccountLicenses = function (action) {
+    function getAccountLicenses(action) {
       var licenseList = [];
       if (Authinfo.hasAccount()) {
         var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
@@ -803,7 +804,7 @@
       }
 
       return licenseList.length === 0 ? null : licenseList;
-    };
+    }
 
     var getEntitlements = function (action) {
       var entitleList = [];

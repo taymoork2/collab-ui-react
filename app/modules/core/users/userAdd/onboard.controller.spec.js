@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo, CsvDownloadService;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo, CsvDownloadService, $stateParams;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -23,12 +23,13 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_, _CsvDownloadService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_, _CsvDownloadService_, _$stateParams_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
+    $stateParams = _$stateParams_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     DialPlanService = _DialPlanService_;
@@ -459,40 +460,24 @@ describe('OnboardCtrl: Ctrl', function () {
   });
 
   describe('With assigning message licenses', function () {
-    beforeEach(initController);
     beforeEach(function () {
       spyOn(Authinfo, 'isInitialized').and.returnValue(true);
       spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices);
-      $scope.messageFeatures = [{
-        ServiceFeature: [{
-          licenseID: "SD_ipja8y10-01fb-9ae8-1342-lk24781ca2r"
-        }],
-        licenses: [{
-          licenseId: "MS_fcfa8f18-59fb-4ad7-9328-aa39861ca9c5",
-          offerName: "MS",
-          licenseType: "MESSAGING",
-          billingServiceId: "int-dlos-322",
-          features: ["squared-room-moderation"],
-          volume: 78,
-          isTrial: false,
-          status: "PENDING"
-        }, {
-          licenseId: "MS_c6bf3e38-f1f7-457d-8d4e-e24429c49c9f",
-          offerName: "MS",
-          licenseType: "MESSAGING",
-          billingServiceId: "int-dlos-2",
-          features: ["squared-room-moderation"],
-          volume: 105,
-          isTrial: false,
-          status: "ACTIVE"
-        }]
-      }];
+      $stateParams.currentUser = {
+        licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+      };
+      initController();
     });
 
-    it('should be added to licenseList', function () {
-      var userLicenseIds = 'MS_fcfa8f18-59fb-4ad7-9328-aa39861ca9c5';
-      expect($scope.messageFeatures[0].licenses[0].model).not.toBeDefined();
-      expect($scope.radioStates.msgRadio).toEqual(false);
+    it('should define licenses model', function () {
+      expect($scope.messageFeatures[1].licenses[0].model).toBeTruthy();
+      expect($scope.radioStates.msgRadio).toEqual(true);
+    });
+
+    it('should call getAccountLicenses correctly', function () {
+      $scope.getAccountLicenses();
+      expect($scope.messageFeatures[1].licenses[0].model).toEqual(true);
+      expect($scope.radioStates.msgRadio).toEqual(true);
     });
   });
 
