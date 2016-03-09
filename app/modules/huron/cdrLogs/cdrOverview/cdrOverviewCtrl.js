@@ -6,7 +6,7 @@
     .controller('CdrOverviewCtrl', CdrOverviewCtrl);
 
   /* @ngInject */
-  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, Config, CdrService) {
+  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, CdrService, chartColors) {
     var vm = this;
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
@@ -31,7 +31,7 @@
     });
 
     vm.tableOptions = {
-      cursorcolor: Config.chartColors.gray,
+      cursorcolor: chartColors.gray,
       cursorborder: "0px",
       cursorwidth: "7px",
       railpadding: {

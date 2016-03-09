@@ -532,8 +532,8 @@ angular
             }
           },
           resolve: {
-            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
-              var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
+            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
+              var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
 
               return $http.get(userUrl)
                 .then(function (response) {

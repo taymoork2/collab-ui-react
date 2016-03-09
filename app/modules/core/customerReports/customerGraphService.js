@@ -5,7 +5,7 @@
     .service('CustomerGraphService', CustomerGraphService);
 
   /* @ngInject */
-  function CustomerGraphService($translate, Config, CommonGraphService) {
+  function CustomerGraphService($translate, CommonGraphService, chartColors) {
     // Keys for base variables in CommonGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -144,7 +144,7 @@
       catAxis.gridPosition = 'start';
 
       var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
-      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].totalColor = chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
@@ -163,7 +163,7 @@
     function avgRoomsGraphs(data) {
       var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
       var values = ['totalRooms', 'oneToOneRooms'];
-      var colors = [Config.chartColors.primaryColorLight, Config.chartColors.primaryColorDarker];
+      var colors = [chartColors.primaryColorLight, chartColors.primaryColorDarker];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorOne, data[0].colorTwo];
       }
@@ -189,7 +189,7 @@
         return;
       } else if (filesSharedChart !== null && angular.isDefined(filesSharedChart)) {
         var startDuration = 1;
-        if (data[0].color === Config.chartColors.dummyGray) {
+        if (data[0].color === chartColors.dummyGray) {
           startDuration = 0;
         }
 
@@ -212,12 +212,12 @@
       catAxis.gridPosition = 'start';
 
       var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
-      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].totalColor = chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
       var startDuration = 1;
-      if (data[0].color === Config.chartColors.dummyGray) {
+      if (data[0].color === chartColors.dummyGray) {
         startDuration = 0;
       }
 
@@ -295,7 +295,7 @@
       }
 
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-      var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
+      var colors = [chartColors.blue, chartColors.brandWarning, chartColors.brandDanger];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
       }
@@ -369,9 +369,9 @@
     }
 
     function deviceGraphs(data, filter) {
-      var color = Config.chartColors.colorPeopleBase;
+      var color = chartColors.colorPeopleBase;
       if (!data[0].balloon) {
-        color = Config.chartColors.grayLighter;
+        color = chartColors.grayLighter;
       }
 
       var graphNumber = 0;

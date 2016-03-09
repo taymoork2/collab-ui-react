@@ -69,4 +69,9 @@ describe('OAuthConfig', function () {
     expect(creds).toBe('QzgwZmI5YzcwOTZiZDg0NzQ2MjczMTdlZTFkN2E4MTdlZmYzNzJjYTljOWNlZTNjZTQzYzNlYTNlOGQxNTExZWM6YzEwYzM3MWI0NjQxMDEwYTc1MDA3M2IzYzhlNjVhN2ZmZjA1Njc0MDBkMzE2MDU1ODI4ZDNjNzQ5MjViMDg1Nw==');
   });
 
+  it('should return correct logout url', function () {
+    var url = OAuthConfig.getLogoutUrl();
+    expect(url).toBe('https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.ciscospark.com%2F');
+  });
+
 });

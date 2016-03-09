@@ -5,8 +5,8 @@
     .service('PartnerReportService', PartnerReportService);
 
   /* @ngInject */
-  function PartnerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, PartnerService) {
-    var urlBase = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+  function PartnerReportService($http, $translate, $q, Config, Authinfo, Notification, Log, PartnerService, chartColors, UrlConfig) {
+    var urlBase = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var detailed = 'detailed';
     var topn = 'topn';
     var activeUserUrl = '/managedOrgs/activeUsers';
@@ -99,7 +99,7 @@
             modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
           }
 
-          // fix for when totalRegisteredUsers equals 0 due to errors recording the number 
+          // fix for when totalRegisteredUsers equals 0 due to errors recording the number
           if (totalRegisteredUsers <= 0) {
             var previousTotal = 0;
             var nextTotal = 0;
@@ -137,7 +137,7 @@
         populationData.customerId = org.orgId;
         populationData.percentage = Math.round((totalActive / totalRegistered) * 100);
         populationData.balloon = true;
-        populationData.labelColorField = Config.chartColors.grayDarkest;
+        populationData.labelColorField = chartColors.grayDarkest;
       }
 
       return {
@@ -234,7 +234,7 @@
             customerId: org.value,
             percentage: 0,
             balloon: true,
-            labelColorField: Config.chartColors.grayDarkest
+            labelColorField: chartColors.grayDarkest
           });
         }
       });
@@ -250,8 +250,8 @@
         totalRegisteredUsers: 0,
         activeUsers: 0,
         percentage: 0,
-        colorOne: Config.chartColors.brandSuccessLight,
-        colorTwo: Config.chartColors.brandSuccessDark,
+        colorOne: chartColors.brandSuccessLight,
+        colorTwo: chartColors.brandSuccessDark,
         balloon: true
       };
       var date = undefined;
@@ -455,11 +455,11 @@
             dataProvider: [{
               "label": $translate.instant('callMetrics.callConditionFail'),
               "value": 0,
-              "color": Config.chartColors.grayDarkest
+              "color": chartColors.grayDarkest
             }, {
               "label": $translate.instant('callMetrics.callConditionSuccessful'),
               "value": 0,
-              "color": Config.chartColors.brandInfo
+              "color": chartColors.brandInfo
             }],
             labelData: {
               "numTotalCalls": 0,

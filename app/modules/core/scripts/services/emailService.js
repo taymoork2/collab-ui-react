@@ -5,7 +5,7 @@
     .factory('EmailService', EmailService);
 
   /* @ngInject */
-  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService) {
+  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService, UrlConfig) {
 
     var _types = {
       CUSTOMER_TRIAL: '1',
@@ -15,7 +15,7 @@
       mkTrialPayload: mkTrialPayload,
       mkTrialConversionReqPayload: mkTrialConversionReqPayload
     };
-    var emailUrl = Config.getAdminServiceUrl() + 'email';
+    var emailUrl = UrlConfig.getAdminServiceUrl() + 'email';
 
     var factory = {
       emailNotifyTrialCustomer: emailNotifyTrialCustomer,

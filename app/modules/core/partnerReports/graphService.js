@@ -5,7 +5,7 @@
     .service('GraphService', GraphService);
 
   /* @ngInject */
-  function GraphService($translate, Config, CommonGraphService) {
+  function GraphService($translate, CommonGraphService, chartColors) {
     // Keys for base variables in CommonGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -136,7 +136,7 @@
       catAxis.gridPosition = 'start';
 
       var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
-      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].totalColor = chartColors.brandWhite;
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
       valueAxes[0].title = $translate.instant('mediaQuality.minutes');
@@ -158,7 +158,7 @@
       var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
       var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-      var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
+      var colors = [chartColors.blue, chartColors.brandWarning, chartColors.brandDanger];
       if (!data[0].balloon) {
         colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
       }
@@ -270,7 +270,7 @@
         'valueField': 'overallPopulation',
         'lineThickness': 2,
         'lineColor': data[0].colorTwo,
-        'balloonColor': Config.chartColors.grayLight,
+        'balloonColor': chartColors.grayLight,
         'balloonText': popBalloonTextTwo,
         'showBalloon': data[0].balloon,
         "animationPlayed": true
@@ -287,20 +287,20 @@
           item.overallPopulation = overallPopulation;
           if (item.colorOne === null || item.colorOne === undefined) {
             if (comparison >= 0) {
-              item.colorOne = Config.chartColors.brandInfo;
+              item.colorOne = chartColors.brandInfo;
             } else {
-              item.colorOne = Config.chartColors.brandDanger;
+              item.colorOne = chartColors.brandDanger;
             }
-            item.colorTwo = Config.chartColors.blue;
+            item.colorTwo = chartColors.blue;
           }
         });
 
         if (data.length === 1) {
           var dummy = {
-            colorOne: Config.chartColors.brandWhite,
+            colorOne: chartColors.brandWhite,
             colorTwo: data[0].colorTwo,
             balloon: data[0].balloon,
-            labelColorField: Config.chartColors.brandWhite,
+            labelColorField: chartColors.brandWhite,
             overallPopulation: overallPopulation
           };
           data.unshift(angular.copy(dummy));
@@ -316,11 +316,11 @@
         if (!angular.isArray(data) && data.length !== 0) {
           var balloonText = callMetricsBalloonText;
           var labelsEnabled = true;
-          var textColor = Config.chartColors.grayDarkest;
+          var textColor = chartColors.grayDarkest;
           if (data.dummy) {
             balloonText = "";
             labelsEnabled = false;
-            textColor = Config.chartColors.brandWhite;
+            textColor = chartColors.brandWhite;
           }
 
           chart.dataProvider = data.dataProvider;
@@ -344,11 +344,11 @@
 
       var balloonText = callMetricsBalloonText;
       var labelsEnabled = true;
-      var textColor = Config.chartColors.grayDarkest;
+      var textColor = chartColors.grayDarkest;
       if (data.dummy) {
         balloonText = "";
         labelsEnabled = false;
-        textColor = Config.chartColors.brandWhite;
+        textColor = chartColors.brandWhite;
       }
 
       var chartData = CommonGraphService.getBasePieChart(data.dataProvider, balloonText, "75%", "30%", callMetricsLabelText, labelsEnabled, "label", "value", "color", textColor);
