@@ -5,8 +5,8 @@
     .service('CdrLadderDiagramService', CdrLadderDiagramService);
 
   /* @ngInject */
-  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log) {
-    var callflowDiagramUrl = Config.getAdminServiceUrl() + 'callflow/ladderdiagram';
+  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
+    var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
     var TIMEOUT_IN_MILI = 8000;
     var NOT_FOUND = 'Not Found';
     var serviceName = "Diagnostics Server";
@@ -122,7 +122,7 @@
       var defer = $q.defer();
       $http({
         method: "POST",
-        url: Config.getCdrUrl(),
+        url: UrlConfig.getCdrUrl(),
         data: esQuery,
         timeout: TIMEOUT_IN_MILI
       }).success(function (response) {
@@ -132,7 +132,7 @@
         if (status === 500 && response === retryError) {
           $http({
             method: "POST",
-            url: Config.getCdrUrl(),
+            url: UrlConfig.getCdrUrl(),
             data: esQuery,
             timeout: TIMEOUT_IN_MILI
           }).success(function (secondaryResponse) {

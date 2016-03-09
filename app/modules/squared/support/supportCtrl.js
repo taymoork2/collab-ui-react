@@ -1,9 +1,8 @@
 'use strict';
 /* global Bloodhound */
 angular.module('Squared')
-  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService',
-    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService) {
-      $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
+  .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice', 'Userservice', '$modal', '$state', 'ModalService', 'UrlConfig',
+    function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $modal, $state, ModalService, UrlConfig) {
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -12,7 +11,7 @@ angular.module('Squared')
       $scope.helpUrl = Config.helpUrl;
       $scope.ssoUrl = Config.ssoUrl;
       $scope.rolesUrl = Config.rolesUrl;
-      $scope.statusPageUrl = Config.getStatusPageUrl();
+      $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
@@ -21,7 +20,18 @@ angular.module('Squared')
       $scope.initializeShowCdrCallFlowLink = initializeShowCdrCallFlowLink;
       $scope.placeholder = $translate.instant('supportPage.inputPlaceholder');
       $scope.gridRefresh = false;
-      $scope.showToolsCard = false;
+      $scope.gotoHelpdesk = gotoHelpdesk;
+      $scope.gotoCdrSupport = gotoCdrSupport;
+
+      function gotoHelpdesk() {
+        var url = $state.href('helpdesk.search');
+        window.open(url, '_blank');
+      }
+
+      function gotoCdrSupport() {
+        var url = $state.href('cdrsupport');
+        window.open(url, '_blank');
+      }
 
       function initializeShowCdrCallFlowLink() {
         Userservice.getUser('me', function (user, status) {
@@ -53,8 +63,17 @@ angular.module('Squared')
         return false;
       }
 
+      $scope.showHelpdeskLink = function () {
+        return Authinfo.isHelpDeskUser();
+      };
+
       $scope.showToolsCard = function () {
-        return $scope.showCdrCallFlowLink || $scope.showHelpdeskCard;
+        // Preliminary hack to fix rendering problem for small width screens.
+        // Without it, small screens may initially render card(s) partly on top of each other
+        setTimeout(function () {
+          $('.cs-card-layout').masonry('layout');
+        }, 200);
+        return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
       };
 
       $scope.tabs = [{
@@ -213,7 +232,7 @@ angular.module('Squared')
       }
 
       var initializeTypeahead = function () {
-        var suggestUsersUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
+        var suggestUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
         var engine = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -377,7 +396,7 @@ angular.module('Squared')
                 var component, errMessage;
                 var errorCode = 0;
                 var starttime = moment(data.callRecords[index].locusCallStartTime);
-                var graphUrl = Config.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
+                var graphUrl = UrlConfig.getLocusServiceUrl() + '/locus/api/v1/callflows?start=' + starttime + '&format=svg';
                 var graphUserIdUrl = graphUrl + '&uid=' + data.callRecords[index].userId;
                 var graphLocusIdUrl = graphUrl + '&lid=' + data.callRecords[index].locusId;
                 var graphTrackingIdUrl = graphUrl + '&tid=' + data.callRecords[index].trackingId;

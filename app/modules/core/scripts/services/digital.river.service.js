@@ -6,7 +6,7 @@
     .service('DigitalRiverService', DigitalRiverService);
 
   /* @ngInject */
-  function DigitalRiverService($http, Config, Auth, $q) {
+  function DigitalRiverService($http, Config, Auth, $q, UrlConfig) {
 
     var service = {
       getUserFromEmail: getUserFromEmail,
@@ -21,19 +21,19 @@
 
     function getUserFromEmail(email) {
       return Auth.setAccessToken().then(function () {
-        return $http.get(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/' + email + '/exists');
+        return $http.get(UrlConfig.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/' + email + '/exists');
       });
     }
 
     function addDrUser(emailPassword) {
       return Auth.setAccessToken().then(function () {
-        return $http.post(Config.getAdminServiceUrl() + 'ordertranslator/digitalriver/user', emailPassword);
+        return $http.post(UrlConfig.getAdminServiceUrl() + 'ordertranslator/digitalriver/user', emailPassword);
       });
     }
 
     function getUserAuthToken(userid) {
       return Auth.setAccessToken().then(function () {
-        return $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid);
+        return $http.get(UrlConfig.getAdminServiceUrl() + "ordertranslator/digitalriver/authtoken/" + userid);
       });
     }
 
@@ -42,7 +42,7 @@
         return $q.reject('blank uuid');
       }
       return Auth.setAccessToken().then(function () {
-        return $http.patch(Config.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
+        return $http.patch(UrlConfig.getAdminServiceUrl() + 'ordertranslator/online/accountstatus/' + uuid + '?accountStatus=active');
       });
     }
 
@@ -51,7 +51,7 @@
         return $q.reject('blank oid');
       }
       return Auth.setAccessToken().then(function () {
-        return $http.post(Config.getAdminServiceUrl() + 'ordertranslator/api/digitalriver/activate/' + oid);
+        return $http.post(UrlConfig.getAdminServiceUrl() + 'ordertranslator/api/digitalriver/activate/' + oid);
       });
     }
 

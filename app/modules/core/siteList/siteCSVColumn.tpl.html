@@ -15,20 +15,16 @@
   
   <div ng-if="row.entity.isCSVSupported">
     <p class="ui-grid-cell-contents">
-      <a>
-        <span
-          id="{{row.entity.license.siteUrl}}_exoirt" 
-          translate="siteList.siteCsvExportLinkLabel">
-        </span>
+      <a id="{{row.entity.license.siteUrl}}_export" 
+         translate="siteList.siteCsvExportLinkLabel"
+         ng-click="grid.appScope.csvExport(row.entity.license.siteUrl); ">
       </a>
                 
       &nbsp;|&nbsp;
               
-      <a>
-        <span
-          id="{{row.entity.license.siteUrl}}_import" 
-           translate="siteList.siteCsvImportLinkLabel">
-        </span>
+      <a id="{{row.entity.license.siteUrl}}_import" 
+         translate="siteList.siteCsvImportLinkLabel"
+         ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); ">
       </a>
     </p>
   </div>

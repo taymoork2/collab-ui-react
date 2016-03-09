@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ConfigService', ['$window', 'Config',
-    function ConfigService($window, Config) {
+  .service('ConfigService', ['$window', 'UrlConfig',
+    function ConfigService($window, UrlConfig) {
 
-      var baseHerculesUrl = Config.getHerculesUrl();
-      var baseHerculesUrlV2 = Config.getHerculesUrlV2();
-      var baseUssUrl = Config.getUssUrl();
-      var baseCertsUrl = Config.getCertsUrl();
+      var baseHerculesUrl = UrlConfig.getHerculesUrl();
+      var baseHerculesUrlV2 = UrlConfig.getHerculesUrlV2();
+      var baseUssUrl = UrlConfig.getUssUrl();
+      var baseCertsUrl = UrlConfig.getCertsUrl();
 
       var getUrl = function () {
         return baseHerculesUrl;

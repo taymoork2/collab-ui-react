@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerReportsCtrl', ['$scope', '$window', 'Config', 'ReportsService', '$log', 'Authinfo', 'PartnerService', '$translate', 'CannedDataService',
-    function ($scope, $window, Config, ReportsService, $log, Authinfo, PartnerService, $translate, CannedDataService) {
+  .controller('PartnerReportsCtrl', ['$scope', '$window', 'ReportsService', '$log', 'Authinfo', 'PartnerService', '$translate', 'CannedDataService', 'chartColors',
+    function ($scope, $window, ReportsService, $log, Authinfo, PartnerService, $translate, CannedDataService, chartColors) {
       var activeUsersChart, avgCallsChart, contentSharedChart, entitlementsChart, avgConvChart,
         convOneOnOneChart, convGroupChart, callsLoadedChart, callsAvgDurationChart, contentSharedSizeChart;
 
@@ -378,61 +378,61 @@ angular.module('Core')
       $scope.$on('entitlementsLoaded', function (event, response) {
         label = $translate.instant('reports.UsersOnboarded');
         var axis = $translate.instant('reports.numberUsersAxis');
-        entitlementsChart = getCharts(response, 'entitlements', 'avgEntitlementsdiv', label, Config.chartColors.blue, 'sum', axis, 'avg-entitlements-refresh');
+        entitlementsChart = getCharts(response, 'entitlements', 'avgEntitlementsdiv', label, chartColors.blue, 'sum', axis, 'avg-entitlements-refresh');
       });
 
       $scope.$on('avgCallsPerUserLoaded', function (event, response) {
         label = $translate.instant('reports.AvgCallsPerUser');
         var axis = $translate.instant('reports.numberCallsAxis');
-        avgCallsChart = getCharts(response, 'avgCalls', 'avgCallsdiv', label, Config.chartColors.blue, 'average', axis, 'avg-calls-refresh');
+        avgCallsChart = getCharts(response, 'avgCalls', 'avgCallsdiv', label, chartColors.blue, 'average', axis, 'avg-calls-refresh');
       });
 
       $scope.$on('avgConversationsLoaded', function (event, response) {
         label = $translate.instant('reports.AvgRoomsPerUser');
         var axis = $translate.instant('reports.numberOfRoomsAxis');
-        avgConvChart = getCharts(response, 'avgConversations', 'avgConversationsdiv', label, Config.chartColors.blue, 'average', axis, 'avg-conversations-refresh');
+        avgConvChart = getCharts(response, 'avgConversations', 'avgConversationsdiv', label, chartColors.blue, 'average', axis, 'avg-conversations-refresh');
       });
 
       $scope.$on('activeUsersLoaded', function (event, response) {
         label = $translate.instant('reports.ActiveUsers');
         var axis = $translate.instant('reports.numberActiveAxis');
-        activeUsersChart = getCharts(response, 'activeUsers', 'activeUsersdiv', label, Config.chartColors.blue, 'average', axis, 'active-users-refresh');
+        activeUsersChart = getCharts(response, 'activeUsers', 'activeUsersdiv', label, chartColors.blue, 'average', axis, 'active-users-refresh');
       });
 
       $scope.$on('convOneOnOneLoaded', function (event, response) {
         label = $translate.instant('reports.OneOnOneRooms');
         var axis = $translate.instant('reports.oneRoomAxis');
-        convOneOnOneChart = getCharts(response, 'convOneOnOne', 'convOneOnOnediv', label, Config.chartColors.blue, 'sum', axis, 'conv-one-on-one-refresh');
+        convOneOnOneChart = getCharts(response, 'convOneOnOne', 'convOneOnOnediv', label, chartColors.blue, 'sum', axis, 'conv-one-on-one-refresh');
       });
 
       $scope.$on('convGroupLoaded', function (event, response) {
         label = $translate.instant('reports.GroupRooms');
         var axis = $translate.instant('reports.groupRoomsAxis');
-        convGroupChart = getCharts(response, 'convGroup', 'convGroupdiv', label, Config.chartColors.blue, 'sum', axis, 'conv-group-refresh');
+        convGroupChart = getCharts(response, 'convGroup', 'convGroupdiv', label, chartColors.blue, 'sum', axis, 'conv-group-refresh');
       });
 
       $scope.$on('callsLoaded', function (event, response) {
         label = $translate.instant('reports.VideoCalls');
         var axis = $translate.instant('reports.videoCallsAxis');
-        callsLoadedChart = getCharts(response, 'calls', 'callsdiv', label, Config.chartColors.blue, 'sum', axis, 'calls-refresh');
+        callsLoadedChart = getCharts(response, 'calls', 'callsdiv', label, chartColors.blue, 'sum', axis, 'calls-refresh');
       });
 
       $scope.$on('callsAvgDurationLoaded', function (event, response) {
         label = $translate.instant('reports.AvgDurationofCalls');
         var axis = $translate.instant('reports.avgCallsAxis');
-        callsAvgDurationChart = getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', label, Config.chartColors.blue, 'average', axis, 'calls-avg-duration-refresh');
+        callsAvgDurationChart = getCharts(response, 'callsAvgDuration', 'callsAvgDurationdiv', label, chartColors.blue, 'average', axis, 'calls-avg-duration-refresh');
       });
 
       $scope.$on('contentSharedLoaded', function (event, response) {
         label = $translate.instant('reports.ContentShared');
         var axis = $translate.instant('reports.filesSharedAxis');
-        contentSharedChart = getCharts(response, 'contentShared', 'contentShareddiv', label, Config.chartColors.blue, 'sum', axis, 'content-shared-refresh');
+        contentSharedChart = getCharts(response, 'contentShared', 'contentShareddiv', label, chartColors.blue, 'sum', axis, 'content-shared-refresh');
       });
 
       $scope.$on('contentShareSizesLoaded', function (event, response) {
         label = $translate.instant('reports.AmountofContentShared');
         var axis = $translate.instant('reports.gbSharedAxis');
-        contentSharedSizeChart = getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', label, Config.chartColors.blue, 'sum', axis, 'content-share-sizes-refresh');
+        contentSharedSizeChart = getCharts(response, 'contentShareSizes', 'contentShareSizesdiv', label, chartColors.blue, 'sum', axis, 'content-share-sizes-refresh');
       });
 
       $scope.$on('activeUserCountLoaded', loadActiveUserCount);
