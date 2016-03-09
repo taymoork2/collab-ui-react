@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -49,6 +49,12 @@
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
+
+    if (Authinfo.isPartner()) {
+      vm.helpUrl = Config.partnerSupportUrl;
+    } else {
+      vm.helpUrl = Config.supportUrl;
+    }
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;

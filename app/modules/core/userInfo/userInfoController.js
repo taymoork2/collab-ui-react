@@ -92,6 +92,10 @@ angular.module('Core')
         }
       });
 
-      $scope.supportUrl = Config.supportUrl;
+      if (Authinfo.isPartner()) {
+        $scope.supportUrl = Config.partnerSupportUrl;
+      } else {
+        $scope.supportUrl = Config.supportUrl;
+      }
     }
   ]);
