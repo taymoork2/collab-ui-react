@@ -4,7 +4,7 @@
   describe('Controller: createAccountController', function () {
     var controller, DigitalRiverService;
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
 
     beforeEach(inject(function (_$controller_, _$location_, _$window_, _$cookies_, _$translate_, _DigitalRiverService_, $q) {
       DigitalRiverService = _DigitalRiverService_;

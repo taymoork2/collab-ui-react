@@ -4,7 +4,7 @@
   describe('Controller: enterEmailAddrController', function () {
     var controller, DigitalRiverService, $window, $controller, $rootScope, $q;
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
 
     beforeEach(inject(function (_$rootScope_, _$controller_, _DigitalRiverService_, _$q_) {
       $rootScope = _$rootScope_;
