@@ -31,6 +31,7 @@
       ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
       rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
       supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
+      partnerSupportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners',
 
       usersperpage: 100,
       orgsPerPage: 100,
