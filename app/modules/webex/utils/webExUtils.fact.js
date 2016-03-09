@@ -29,6 +29,9 @@
         var logMsg = "";
 
         var siteUrlElements = siteUrl.split(".");
+        
+        var siteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
+        /*
         var siteNameConstructed = false;
         var siteName = "";
 
@@ -47,7 +50,7 @@
             }
           }
         );
-        // var siteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
+        */
 
         logMsg = funcName + "\n" +
           "siteUrl=" + siteUrl + "\n" +
