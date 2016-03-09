@@ -7,6 +7,7 @@ angular.module('WebExApp').service('WebexReportService', [
   '$filter',
   'Authinfo',
   'WebExUtilsFact',
+  'WebExUtilsService',
   'WebExXmlApiFact',
   'WebExXmlApiInfoSvc',
   'Notification',
@@ -17,6 +18,7 @@ angular.module('WebExApp').service('WebexReportService', [
     $filter,
     Authinfo,
     WebExUtilsFact,
+    WebExUtilsService,
     WebExXmlApiFact,
     webExXmlApiInfoObj,
     Notification
@@ -350,7 +352,7 @@ angular.module('WebExApp').service('WebexReportService', [
       var _this = this;
       var displayLabel = null;
       var siteUrl = requestedSiteUrl || '';
-      var siteName = WebExUtilsFact.getSiteName(siteUrl);
+      var siteName = WebExUtilsService.getSiteName(siteUrl);
 
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
@@ -380,7 +382,7 @@ angular.module('WebExApp').service('WebexReportService', [
         infoCardObj: infoCardObj
       };
 
-      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+      WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(sessionTicket) {
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";

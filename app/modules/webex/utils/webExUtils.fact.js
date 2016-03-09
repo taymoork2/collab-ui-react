@@ -25,8 +25,34 @@
       var obj = {};
 
       obj.getSiteName = function (siteUrl) {
-        var index = siteUrl.indexOf(".");
-        var siteName = siteUrl.slice(0, index);
+        var funcName = "getSiteName()";
+        var logMsg = "";
+
+        var siteUrlElements = siteUrl.split(".");
+        var siteNameConstructed = false;
+        var siteName = "";
+
+        siteUrlElements.forEach(
+          function checkSiteUrlElement(siteUrlElement) {
+            if (!siteNameConstructed) {
+              if ("webex" == siteUrlElement) {
+                siteNameConstructed = true;
+              } else {
+                if ("" != siteName) {
+                  siteName = siteName + ".";
+                }
+
+                siteName = siteName + siteUrlElement;
+              }
+            }
+          }
+        );
+        // var siteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
+
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "siteName=" + siteName;
+        $log.log(logMsg);
 
         return siteName;
       }; // getSiteName()
