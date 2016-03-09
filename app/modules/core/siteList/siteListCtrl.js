@@ -141,6 +141,27 @@ angular.module('Core').controller('SiteListCtrl', [
       });
     }
 
+    function exportClick(siteUrl) {
+      $log.log("EXPORT!!!!!  " + siteUrl);
+    } // exportClick()
+
+    function exportResultClick(siteUrl) {
+      $log.log("EXPORT RESULT!!!!!  " + siteUrl);
+    } // exportResultClick()
+
+    function importClick(siteUrl) {
+      $log.log("IMPORT!!!!!  " + siteUrl);
+    } // importClick()
+
+    function importResultClick(siteUrl) {
+      $log.log("IMPORT RESULT!!!!!  " + siteUrl);
+    } // importResultClick()
+    
+    $scope.exportClick = exportClick;
+    $scope.exportResultClick = exportResultClick;
+    $scope.importClick = importClick;
+    $scope.importResultClick = importResultClick;
+
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
       vm.gridData.forEach(
