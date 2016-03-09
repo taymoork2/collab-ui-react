@@ -15,7 +15,7 @@
         </a>
       </div>
       <div>
-        <button class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
+        <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
       </div>
       <div class="export-users" cr-feature-toggle feature-show="atlas-csv-upload">
         <csv-download ng-if="obtainedTotalUserCount && totalUsers <= USER_EXPORT_THRESHOLD" type="user" filename="{{::'usersPage.csvFilename' | translate}}" icon="icon-content-share"></csv-download>

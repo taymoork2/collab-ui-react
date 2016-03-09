@@ -10,7 +10,6 @@
     /*jshint validthis: true */
     var vm = this;
     vm.downloadCsv = downloadCsv;
-    // vm.type = $scope.type; // used to prevent type clash when both user list and wizard are open at the same time
     vm.downloading = false;
 
     function downloadCsv() {
