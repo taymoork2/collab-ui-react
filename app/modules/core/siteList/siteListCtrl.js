@@ -142,21 +142,41 @@ angular.module('Core').controller('SiteListCtrl', [
     }
 
     function csvExport(siteUrl) {
-      $log.log("EXPORT!!!!!  " + siteUrl);
+      var funcName = "csvExport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
     } // csvExport()
 
     function csvExportResult(siteUrl) {
-      $log.log("EXPORT RESULT!!!!!  " + siteUrl);
+      var funcName = "csvExportResult()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
     } // csvExportResult()
 
     function csvImport(siteUrl) {
-      $log.log("IMPORT!!!!!  " + siteUrl);
+      var funcName = "csvImport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
     } // csvImport()
 
     function csvImportResult(siteUrl) {
-      $log.log("IMPORT RESULT!!!!!  " + siteUrl);
+      var funcName = "csvImportResult()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
     } // csvImportResult()
-    
+
     $scope.csvExport = csvExport;
     $scope.csvExportResult = csvExportResult;
     $scope.csvImport = csvImport;
