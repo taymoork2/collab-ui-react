@@ -19,7 +19,7 @@ fi
 
 usr_label=${1}
 if [ $# -lt 1 ]; then
-  echo "usage: `basename $0` <usr_label>  # see: 'test_helper.coffee'"
+  echo "usage: `basename $0` <usr_label>  # see: 'test_helper.js'"
   echo ""
   echo "ex."
   echo "  `basename $0` partner-admin"
