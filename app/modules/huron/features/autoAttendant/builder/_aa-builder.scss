@@ -22,8 +22,8 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-nowrap {
   white-space: nowrap;
-  @vr-spacing(m, 0);
-  @vr-spacing(p, 0);
+  @include vr-spacing(m, 0);
+  @include vr-spacing(p, 0);
   color: $aa-builder-text-color;
 }
 
