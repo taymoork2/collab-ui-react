@@ -24,7 +24,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     var _this = this;
 
     this.csvStatusTypes = [
-      null,
       'none',
       'exportInProgress',
       'exportCompletedNoErr',
@@ -51,8 +50,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var successResult = {
         'siteUrl': siteUrl,
-        'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
-        'completionInfo': null, // not null only if status is expCompleted or impCompleted
+        'status': 'none', // can be any one of this.csvStatusTypes
+        'completionDetails': null, // null unless status is exportCompleted or importCompleted
       };
 
       var errorResult = {

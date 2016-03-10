@@ -72,9 +72,23 @@ angular.module('Core').controller('SiteListCtrl', [
 
           conferenceService.csvPollIntervalObj = null;
 
-          conferenceService.checkCsvStatusStart = 1;
-          conferenceService.checkCsvStatusEnd = 4;
+          conferenceService.checkCsvStatusStart = 0;
+          conferenceService.checkCsvStatusEnd = 6;
           conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
+
+          conferenceService.showExportLink = false;
+          conferenceService.showExportInProgressLink = false;
+          conferenceService.grayedExportLink = false;
+          conferenceService.showExportResultsLink = false;
+          conferenceService.exportFinishedWithErrors = false;
+          conferenceService.exportFailed = false;
+
+          conferenceService.showImportLink = false;
+          conferenceService.showImportInProgressLink = false;
+          conferenceService.grayedImportLink = false;
+          conferenceService.showImportResultsLink = false;
+          conferenceService.importFinishedWithErrors = false;
+          conferenceService.importFailed = false;
 
           vm.gridData.push(conferenceService);
         }
