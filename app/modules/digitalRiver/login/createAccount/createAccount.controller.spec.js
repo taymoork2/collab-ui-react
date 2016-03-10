@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  fdescribe('Controller: createAccountController', function () {
+  describe('Controller: createAccountController', function () {
     var controller, $controller, DigitalRiverService, cookies, $q, $window;
     var $rootScope;
     var email = 'magic@email.com';
@@ -28,10 +28,10 @@
       spyOn(DigitalRiverService, 'addDrUser').and.returnValue($q.when({
         data: {}
       }));
-      spyOn($location,'search').and.returnValue({
-            referrer: DigitalRiverService.getDrReferrer(),
-            email: email
-          });
+      spyOn($location, 'search').and.returnValue({
+        referrer: DigitalRiverService.getDrReferrer(),
+        email: email
+      });
     }));
 
     function initController() {
