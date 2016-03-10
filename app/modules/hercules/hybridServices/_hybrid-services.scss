@@ -45,7 +45,6 @@
     line-height: inherit;
     padding-bottom: 10px;
   }
-
   .row-hybrid {
     background: $gray-lightest;
     display: inline-flex;
@@ -93,3 +92,15 @@
   font-family: $brand-font-light;
 }
 
+.dv-error {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}

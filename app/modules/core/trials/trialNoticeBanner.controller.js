@@ -38,6 +38,10 @@
             daysLeft = results[1],
             partnerInfo = results[2];
           ft.atlasTrialConversion = enabled;
+
+          // TODO: override globally to true for now, remove this and respective feature-toggle logic after 2016-04-09
+          ft.atlasTrialConversion = true;
+
           vm.daysLeft = daysLeft;
 
           vm.partnerAdminEmail = _.get(partnerInfo, 'data.partners[0].userName');
