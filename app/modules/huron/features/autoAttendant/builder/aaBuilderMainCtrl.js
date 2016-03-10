@@ -421,7 +421,7 @@
     }
 
     function activate() {
-
+      vm.loading = true;
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -438,7 +438,9 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
+        vm.loading = false;
       });
+
     }
 
     activate();
