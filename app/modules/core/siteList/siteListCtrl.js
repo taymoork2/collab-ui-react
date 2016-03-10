@@ -94,14 +94,16 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridOptions.columnDefs.push({
       field: 'license.siteUrl',
       displayName: $translate.instant('siteList.siteName'),
-      sortable: false
+      sortable: false,
+      width: '30%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteConfLicenses',
       displayName: $translate.instant('siteList.licenseTypes'),
       cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '20%'
     });
 
     vm.gridOptions.columnDefs.push({
@@ -109,21 +111,24 @@ angular.module('Core').controller('SiteListCtrl', [
       displayName: $translate.instant('siteList.siteCsvColumnHeader'),
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
       headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '30%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
       displayName: $translate.instant('siteList.siteSettings'),
       cellTemplate: 'modules/core/siteList/siteListConfigColumn.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '10%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteReports',
       displayName: $translate.instant('siteList.siteReports'),
       cellTemplate: 'modules/core/siteList/siteListReportsColumn.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '10%'
     });
 
     // make sure that we have the signed in admin user email before we update the columns
@@ -140,6 +145,42 @@ angular.module('Core').controller('SiteListCtrl', [
         }
       });
     }
+
+    $scope.csvExport = function (siteUrl) {
+      var funcName = "csvExport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvExport()
+
+    $scope.csvExportResult = function (siteUrl) {
+      var funcName = "csvExportResult()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvExportResult()
+
+    $scope.csvImport = function (siteUrl) {
+      var funcName = "csvImport()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvImport()
+
+    $scope.csvImportResult = function (siteUrl) {
+      var funcName = "csvImportResult()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      $log.log(logMsg);
+    }; // csvImportResult()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {

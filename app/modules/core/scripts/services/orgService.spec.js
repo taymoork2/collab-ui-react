@@ -5,7 +5,7 @@ describe('orgService', function () {
 
   var q, deferred;
 
-  var httpBackend, Orgservice, Auth, Authinfo, Config, Log;
+  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
 
   beforeEach(function () {
     module(function ($provide) {
@@ -17,7 +17,7 @@ describe('orgService', function () {
           return 'bar';
         }
       };
-      Config = {
+      UrlConfig = {
         getAdminServiceUrl: function () {
           return '/adminService/';
         },
@@ -26,7 +26,9 @@ describe('orgService', function () {
         },
         getHerculesUrl: function () {
           return '/hercules';
-        },
+        }
+      };
+      Config = {
         entitlements: {
           huron: 'ciscouc',
           squared: 'webex-squared',
@@ -44,6 +46,7 @@ describe('orgService', function () {
       $provide.value('Auth', Auth);
       $provide.value('Authinfo', Authinfo);
       $provide.value('Config', Config);
+      $provide.value('UrlConfig', UrlConfig);
       $provide.value('Log', Log);
     });
   });
@@ -62,7 +65,7 @@ describe('orgService', function () {
   it('should successfully get an organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(200, {});
     Orgservice.getOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -72,7 +75,7 @@ describe('orgService', function () {
   it('should fail to get an organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(500, {});
     Orgservice.getOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -82,7 +85,7 @@ describe('orgService', function () {
   it('should get an organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(200, {});
     Orgservice.getOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -92,7 +95,7 @@ describe('orgService', function () {
   it('should fail to get an organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(500, {});
     Orgservice.getOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -102,7 +105,7 @@ describe('orgService', function () {
   it('should successfully get an admin organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -112,7 +115,7 @@ describe('orgService', function () {
   it('should fail to get an admin organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -122,7 +125,7 @@ describe('orgService', function () {
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -132,7 +135,7 @@ describe('orgService', function () {
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -142,7 +145,7 @@ describe('orgService', function () {
   it('should successfully get unlicensed users for random orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -152,7 +155,7 @@ describe('orgService', function () {
   it('should fail to get unlicensed users for random orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -162,7 +165,7 @@ describe('orgService', function () {
   it('should successfully get unlicensed users for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(200, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -172,7 +175,7 @@ describe('orgService', function () {
   it('should fail to get unlicensed users for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers').respond(500, {});
     Orgservice.getUnlicensedUsers(callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -180,7 +183,7 @@ describe('orgService', function () {
   });
 
   it('should set setup done', function () {
-    httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup').respond(200, {});
+    httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup').respond(200, {});
     var response = Orgservice.setSetupDone();
     httpBackend.flush();
     expect(response).not.toBe(true);
@@ -196,8 +199,8 @@ describe('orgService', function () {
       isCiscoHelp: true,
       isCiscoSupport: false
     };
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
-    httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
+    httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
     Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -214,8 +217,8 @@ describe('orgService', function () {
       isCiscoHelp: true,
       isCiscoSupport: false
     };
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
-    httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
+    httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
     Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -231,10 +234,10 @@ describe('orgService', function () {
     var settings = {
       'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com'
     };
-    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, currentSettings);
+    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, currentSettings);
 
     // Assert PATCH data overwrites current reporting url with new reporting url
-    httpBackend.expect('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', {
+    httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', {
       'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
       'isCiscoSupport': true
     }).respond(200, {});
@@ -266,7 +269,7 @@ describe('orgService', function () {
       "enabled": true,
       "acknowledged": true
     }];
-    httpBackend.when('GET', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
+    httpBackend.when('GET', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
     var response = Orgservice.getHybridServiceAcknowledged();
     httpBackend.flush();
     angular.forEach(response.items, function (items) {
@@ -284,7 +287,7 @@ describe('orgService', function () {
     var data = {
       "acknowledged": true
     };
-    httpBackend.when('PATCH', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
+    httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
     expect(httpBackend.flush).not.toThrow();
   });

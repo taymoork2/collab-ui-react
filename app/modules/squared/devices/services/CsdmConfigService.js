@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('Squared')
-  .service('CsdmConfigService', ['Config',
-    function ConfigService(Config) {
+  .service('CsdmConfigService', ['UrlConfig',
+    function ConfigService(UrlConfig) {
 
       var getUrl = function () {
-        return Config.getCsdmServiceUrl();
+        return UrlConfig.getCsdmServiceUrl();
       };
 
       var getEnrollmentServiceUrl = function () {
-        return Config.getEnrollmentServiceUrl();
+        return UrlConfig.getEnrollmentServiceUrl();
       };
 
       return {

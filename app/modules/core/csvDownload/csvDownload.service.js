@@ -5,15 +5,15 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, Config, $http) {
+  function CsvDownloadService(Authinfo, Config, $http, UrlConfig) {
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
     var typeUser = 'user';
     var typeHeaders = 'headers';
-    var csvTemplateUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/template';
-    var csvUserDataUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/export';
-    var csvHeadersUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/headers';
+    var csvTemplateUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/template';
+    var csvUserDataUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/export';
+    var csvHeadersUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/headers';
 
     var service = {
       typeTemplate: typeTemplate,

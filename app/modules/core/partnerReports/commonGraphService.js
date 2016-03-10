@@ -5,26 +5,26 @@
     .service('CommonGraphService', CommonGraphService);
 
   /* @ngInject */
-  function CommonGraphService($translate, Config) {
+  function CommonGraphService($translate, chartColors) {
     // Base variables for building grids and charts
     var baseVariables = [];
     baseVariables['column'] = {
       'type': 'column',
       'fillAlphas': 1,
       'lineAlpha': 0,
-      'balloonColor': Config.chartColors.grayLight,
+      'balloonColor': chartColors.grayLight,
       'columnWidth': 0.6
     };
     baseVariables['axis'] = {
-      'axisColor': Config.chartColors.grayLight,
-      'gridColor': Config.chartColors.grayLight,
-      'color': Config.chartColors.grayDarkest,
+      'axisColor': chartColors.grayLight,
+      'gridColor': chartColors.grayLight,
+      'color': chartColors.grayDarkest,
       'gridAlpha': 0,
       'axisAlpha': 1,
       'tickLength': 0
     };
     baseVariables['legend'] = {
-      'color': Config.chartColors.grayDarkest,
+      'color': chartColors.grayDarkest,
       'align': 'center',
       'autoMargins': false,
       'switchable': false,
@@ -48,7 +48,7 @@
       'adjustBorderColor': true,
       'borderThickness': 1,
       'fillAlpha': 1,
-      'fillColor': Config.chartColors.brandWhite,
+      'fillColor': chartColors.brandWhite,
       'fixedPosition': true,
       'shadowAlpha': 0
     };
@@ -102,7 +102,7 @@
         'startEffect': 'easeOutSine',
         'addClassNames': true,
         'fontFamily': 'Arial',
-        'backgroundColor': Config.chartColors.brandWhite,
+        'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],
         'autoMargins': false,
