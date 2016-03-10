@@ -525,9 +525,12 @@
       if (services.message) {
         services.message = mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
-        _.forEach($scope.messageFeatures[1].licenses, function (license) {
-          license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
-        });
+        if (userLicenseIds) {
+          _.forEach($scope.messageFeatures[1].licenses, function (license) {
+            license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
+          });
+        }
+
         if ($scope.messageFeatures[1].licenses.length > 1) {
           $scope.radioStates.msgRadio = true;
         }

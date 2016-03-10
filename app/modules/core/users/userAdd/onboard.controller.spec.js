@@ -479,6 +479,7 @@ describe('OnboardCtrl: Ctrl', function () {
     describe('Check if multiple licenses get assigned correctly', function () {
       beforeEach(function () {
         spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
         spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.multipleLicenses);
         $stateParams.currentUser = {
           licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
@@ -487,7 +488,9 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should call getAccountLicenses correctly', function () {
-        $scope.getAccountLicenses();
+        var licenseFeatures = $scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
+        expect(licenseFeatures[0].idOperation).toEqual('ADD');
         expect($scope.messageFeatures[1].licenses[0].model).toEqual(true);
         expect($scope.radioStates.msgRadio).toEqual(true);
       });
