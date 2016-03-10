@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, Authinfo, Config, Notification, WebexOrderStatusResource, WebexTrialService */
+/* globals $httpBackend, $q, Authinfo, UrlConfig, Config, Notification, WebexOrderStatusResource, WebexTrialService */
 'use strict';
 
 describe('Service: Webex Trial Service', function () {
@@ -7,7 +7,7 @@ describe('Service: Webex Trial Service', function () {
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$httpBackend', '$q', 'Authinfo', 'Config', 'Notification', 'WebexOrderStatusResource');
+    bard.inject(this, '$httpBackend', '$q', 'Authinfo', 'Config', 'Notification', 'WebexOrderStatusResource', 'UrlConfig');
 
     bard.mockService(Authinfo, {
       getOrgId: 'org-abc-123'
@@ -41,7 +41,7 @@ describe('Service: Webex Trial Service', function () {
 
   describe('validate site url', function () {
     it('should successfully validate a valid site url', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: true,
           errorCode: '0'
@@ -54,7 +54,7 @@ describe('Service: Webex Trial Service', function () {
     });
 
     it('should fail to validate an invalid site url', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: false,
           errorCode: '434057'
@@ -67,7 +67,7 @@ describe('Service: Webex Trial Service', function () {
     });
 
     it('should fail to validate a valid site url when errorCode is unknown', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: true,
           errorCode: '2'
@@ -80,7 +80,7 @@ describe('Service: Webex Trial Service', function () {
     });
 
     it('should reutrn default errorCode when errorCode is unknown', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
           isValid: false,
           errorCode: '1337'

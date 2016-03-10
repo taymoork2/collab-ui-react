@@ -24,6 +24,9 @@
       var warning = _.find(healthStatuses, function (data) {
         return data.status === 'warning';
       });
+      var major_outage = _.find(healthStatuses, function (data) {
+        return data.status === 'major_outage';
+      });
       var partialOutage = _.find(healthStatuses, function (data) {
         return data.status === 'partial_outage';
       });
@@ -34,7 +37,7 @@
         return data.status === 'degraded_performance';
       });
 
-      var highestSeverity = error || warning || partialOutage || degraded_performance || operational;
+      var highestSeverity = error || major_outage || warning || partialOutage || degraded_performance || operational;
       if (highestSeverity) {
         overallSparkStatus = highestSeverity.status;
       }

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService',
-    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService) {
+  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService', 'WebexClientVersion', 'FeatureToggleService',
+    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion, FeatureToggleService) {
       var orgId = Authinfo.getOrgId();
 
       // toggles api calls, show/hides divs based on customer or partner profile
@@ -31,6 +31,16 @@ angular.module('Core')
           min: '100'
         }
       };
+
+      $scope.useLatestWbxVersion = false;
+      $scope.wbxclientversionselected = '';
+      $scope.wbxclientversions = ['testversion1.0', 'testversion2.0'];
+      $scope.wbxNoClientSelected = true;
+      $scope.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
+      this.wbxclientversionplaceholder = 'Select webex client version';
+      //For now restrict to one user (who is a partner)
+      //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
+      $scope.showClientVersions = false;
 
       $scope.sendFeedback = function () {
         var appType = 'Atlas_' + $window.navigator.userAgent;
@@ -130,6 +140,53 @@ angular.module('Core')
         BrandService.getLogoUrl(orgId).then(function (logoUrl) {
           $scope.tempLogoUrl = logoUrl;
         });
+
+        $scope.initWbxClientVersions();
+      };
+
+      $scope.initWbxClientVersions = function () {
+
+        //wbxclientversionselected
+        //$scope.wbxclientversions = "";
+        var succ = function (data) {
+          $scope.wbxclientversions = data;
+        };
+
+        //nothing to do on error.
+        WebexClientVersion.getWbxClientVersions().then(succ);
+        //will need to do more stuff here. Init selected version as well. 
+        //disable drop down ... but maybe not. 
+
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.getTemplate(pid);
+        });
+
+        //var p = WebexClientVersion.getTemplate(orgId)
+
+        p.then(function (json) {
+          var clientVersion = json.data.clientVersion;
+          if (clientVersion === 'latest') {
+            clientVersion = '';
+          }
+          if (clientVersion === '') {
+            $scope.wbxNoClientSelected = true;
+            $scope.wbxclientversionselected = $scope.wbxclientversionplaceholder;
+          } else {
+            $scope.wbxNoClientSelected = false;
+            $scope.wbxclientversionselected = clientVersion;
+          }
+
+          $scope.useLatestWbxVersion = json.data.useLatest;
+
+        });
+
+        FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
+          $scope.showClientVersions = toggle;
+          //$scope.showClientVersions = true;
+        });
+
       };
 
       $scope.init();
@@ -200,6 +257,78 @@ angular.module('Core')
           }
         });
       }
+
+      function toggleWebexSelectLatestVersionAlways(useLatest) {
+        Log.info("webex use latest version toggle");
+        var selected = $scope.wbxclientversionselected;
+        $scope.useLatestWbxVersion = useLatest;
+        var alwaysSelectLatest = $scope.useLatestWbxVersion;
+        //WebexClientVersion.toggleWebexSelectLatestVersionAlways(orgId, $scope.allowCustomerWbxClientVersions);
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.postOrPutTemplate(pid, selected, $scope.useLatestWbxVersion);
+        });
+        //var p = WebexClientVersion.postOrPutTemplate(orgId, selected, $scope.useLatestWbxVersion);
+        var successMessage = "";
+        if (alwaysSelectLatest) {
+          successMessage = $translate.instant('partnerProfile.webexVersionUseLatestTrue');
+        } else {
+          successMessage = $translate.instant('partnerProfile.webexVersionUseLatestFalse');
+        }
+        var failureMessage = $translate.instant('partnerProfile.webexVersionUseLatestUpdateFailed');
+        p.then(function (s) {
+          Notification.notify([successMessage], 'success');
+        }).catch(function (e) {
+          Notification.notify([failureMessage], 'success');
+        });
+
+        //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
+        //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+      }
+
+      function wbxclientversionselectchanged(wbxclientversionselected) {
+        Log.info("Webex selected version changed");
+        $scope.wbxclientversionselected = wbxclientversionselected;
+        var versionSelected = $scope.wbxclientversionselected;
+
+        var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
+          return resp.data.partnerId; //this is the pid
+        }).then(function (pid) {
+          return WebexClientVersion.postOrPutTemplate(pid, versionSelected, $scope.useLatestWbxVersion);
+        });
+
+        //var p = WebexClientVersion.postOrPutTemplate(orgId, versionSelected, $scope.useLatestWbxVersion);
+
+        Log.info("New version selected is " + versionSelected);
+        var successMessage = $translate.instant('partnerProfile.webexClientVersionUpdated');
+        var failureMessage = $translate.instant('partnerProfile.webexClientVersionUpdatedFailed');
+
+        p.then(function (s) {
+          Notification.notify([successMessage], 'success');
+        }).catch(function (e) {
+          Notification.notify([failureMessage], 'success');
+        });
+
+        //Notification.notify([$translate.instant('partnerProfile.webexVersion')], 'success');
+        //Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+      }
+
+      this.wbxclientversionselectchanged = wbxclientversionselectchanged;
+
+      $scope.wbxclientversionselectchanged = _.debounce(
+        wbxclientversionselectchanged,
+        2000, {
+          'leading': true,
+          'trailing': false
+        });
+
+      $scope.toggleWebexSelectLatestVersionAlways = _.debounce(
+        toggleWebexSelectLatestVersionAlways,
+        100, {
+          'leading': true,
+          'trailing': false
+        });
 
       $scope.toggleLogo = _.debounce(function (value) {
         if (value) {

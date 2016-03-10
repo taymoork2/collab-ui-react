@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -119,7 +119,7 @@
     }
 
     function getCurrentUser() {
-      var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
+      var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
 
       $http.get(userUrl)
         .then(function (response) {

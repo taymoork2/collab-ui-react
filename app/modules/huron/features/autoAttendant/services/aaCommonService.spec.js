@@ -41,6 +41,37 @@
         expect(AACommonService.isFormDirty()).toBeFalsy();
       });
 
+      it('all is valid by default', function () {
+        expect(AACommonService.isValid()).toBeTruthy();
+      });
+
+      it('is valid or invalid as set with one item', function () {
+        AACommonService.setIsValid("1", false);
+        expect(AACommonService.isValid()).toBeFalsy();
+
+        AACommonService.setIsValid("1", true);
+        expect(AACommonService.isValid()).toBeTruthy();
+      });
+
+      it('is valid or invalid as set for multiple items', function () {
+        AACommonService.setIsValid("1", false);
+        expect(AACommonService.isValid()).toBeFalsy();
+
+        AACommonService.setIsValid("1", true);
+        expect(AACommonService.isValid()).toBeTruthy();
+
+        AACommonService.setIsValid("1", false);
+        AACommonService.setIsValid("2", false);
+        expect(AACommonService.isValid()).toBeFalsy();
+
+        AACommonService.setIsValid("1", true);
+        expect(AACommonService.isValid()).toBeFalsy();
+
+        AACommonService.setIsValid("2", true);
+        expect(AACommonService.isValid()).toBeTruthy();
+
+      });
+
     });
 
   });

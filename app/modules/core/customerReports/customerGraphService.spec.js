@@ -8,7 +8,7 @@ describe('Service: Customer Graph Service', function () {
   };
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var dummyActiveUserData = angular.copy(dummyData.activeUser.four);
+  var dummyActiveUserData = angular.copy(dummyData.activeUser.one);
   var dummyAvgRoomsData = angular.copy(dummyData.avgRooms.one);
   var dummyFilesSharedData = angular.copy(dummyData.filesShared.one);
   var dummyMediaData = angular.copy(dummyData.mediaQuality.one);

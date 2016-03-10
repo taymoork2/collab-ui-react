@@ -370,7 +370,8 @@
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer"
+    "customerSelect": "Select a customer",
+    "trackingId": "Tracking ID: "
   },
   "activeUsers": {
     "active": "Active",
@@ -1050,7 +1051,6 @@
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms",
-      "serial": "Serial",
       "hosts": "Hosts",
       "goToHost": "Go to Host",
       "remove": "Remove"
@@ -1170,9 +1170,9 @@
         "squared-fusion-ec": "Connect"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Share your desktop with Spark while you are on your work phone.",
+        "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
-        "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
+        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too."
       }
     },
     "alarms": {
@@ -1213,15 +1213,11 @@
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
-        "aware": "Share your desktop with Spark while you are on your work phone.",
+        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
         "connectHeading": "Connect",
-        "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
-        "aware": "Share your desktop with Spark while you are on your work phone.",
-        "on": "On by default",
-        "connectHeading": "Connect",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
@@ -1562,7 +1558,6 @@
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
     "phoneMenuRouteAA": "Route to Auto Attendant",
-    "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
     "phoneMenuRepeatTwice": "Twice",
@@ -2103,7 +2098,6 @@
     "meeting": "Meeting",
     "notes": "Notes",
     "active": "Active",
-    "trial": "Trial",
     "free": "Free",
     "daysRemaining": "{{count}} days remaining",
     "expiringToday": "Expiring today",
@@ -2154,7 +2148,6 @@
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
     "meetingParty": "Meeting 25 Party",
-    "call": "Call",
     "roomSystem": "Spark Room System",
     "branding": "Customer Branding",
     "MS": "Message",
@@ -2377,7 +2370,6 @@
     "takeOffline": "Take offline",
     "bringOnline": "Bring online",
     "actionsHeader": "Actions",
-    "deleteResource": "Decomission Resource",
     "deleteResourceConfText1": "Are you sure you want to decomission this resource?",
     "deleteResourceConfText2": "It will be disconnected from the cloud and taken offline.",
     "cancel": "Cancel",
@@ -2591,7 +2583,6 @@
     "030035": "030035",
     "030036": "User account does not support toll free call-in teleconferencing.",
     "030037": "The user or site does not support One-Click.",
-    "030039": "030039",
     "030039": "030039",
     "030040": "030040",
     "030041": "030041",
@@ -2953,7 +2944,16 @@
     "orgSettingsSuccess": "orgSettings updated successfully for organization",
     "orgSettingsError": "update orgSettings failed for organization",
     "orgSettingsForPartnerSuccess": "orgSettings updated successfully for partner and his managedOrgs",
-    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs"
+    "orgSettingsForPartnerError": "update orgSettings failed for partner and his managedOrgs",
+    "alwaysProvisionWithLatest": "Provision new WebEx Sites with the latest client version",
+    "webexClientVersionUpdated": "Webex client version updated",
+    "webexClientVersionUpdatedFailed": "Webex client version update failed",
+    "webexVersionUseLatestTrue": "Latest version of Webex client will be used",
+    "webexVersionUseLatestFalse": "Selected version of Webex client will be used",
+    "webexVersionUseLatestUpdateFailed": "Could not update",
+    "selectAWbxClientVersion": "Select a Webex client version",
+    "WbxClientVersionOnlyOnNewSites": "This setting only applies to sites that are setup from now on. Existing sites are not impacted.",
+    "webexClientVersion": "Cisco WebEx Application Version"
   },
   "customerProfile": {
     "supportContacts": "Support Contacts",
@@ -3016,7 +3016,6 @@
     "japanese": "Japanese",
     "korean": "Korean",
     "norwegian": "Norwegian",
-    "dutch": "Dutch",
     "polish": "Polish",
     "portugueseBrazillian": "Portuguese (Brazillian)",
     "russian": "Russian",
@@ -3047,9 +3046,11 @@
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Export in progress...",
+    "siteCsvExportResultsLinkLabel": "Export results",
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Import in progress...",
     "siteCsvDownloadLinkLabel": "Download file",
+    "siteCsvImportResultsLinkLabel": "Import results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3060,6 +3061,7 @@
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
     "siteCSVNotAvailable": "Not available",
+    "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
     "systemError": "Unable to communicate with this WebEx site. Contact support.",
     "multipleLicenses": "Multiple..."
@@ -3198,7 +3200,8 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "aaDependsTitle": "{{featureName}} Auto Attendant Dependents",
+    "aaDependsTitle": "Auto Attendant Dependents",
+    "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
@@ -3627,6 +3630,7 @@
     },
     "delete": {
       "header": "Remove domain",
+      "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
