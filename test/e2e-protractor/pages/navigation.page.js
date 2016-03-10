@@ -272,6 +272,10 @@ var Navigation = function () {
       if (!selected) {
         utils.click(navigation.ecTogglerSwitch);
       }
+      utils.waitUntilEnabled(navigation.inputSipDomain);
+      utils.clear(navigation.inputSipDomain);
+      utils.sendKeys(navigation.inputSipDomain, '127.0.0.1:8081');
+      utils.click(navigation.updateSipDomain);
     });
   };
 
