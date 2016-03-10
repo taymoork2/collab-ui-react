@@ -169,37 +169,34 @@ angular.module('Hercules')
         });
       };
 
-      var domainVerificationEnabled = null;
-      FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
-        .then(function (support) {
-          domainVerificationEnabled = support;
-        })
-        .catch(function () {
-          domainVerificationEnabled = false;
-        })
-        .finally(function () {
-          if ($scope.callServiceAware.entitled) {
-            $scope.callServiceAwareToggled(true);
-          }
-        });
 
       $scope.domainVerificationError = false; // need to be to be backwards compatible.
-      $scope.callServiceAwareToggled = function (awareEntitled) {
+      $scope.checkIfDomainIsVerified = function (awareEntitled) {
         if (awareEntitled) {
-          if (domainVerificationEnabled) {
-            if (!sipUri) {
-              // Hmm.. I dont think it make sense to show the DV error when the Dir SIP URI is not defined...
-              //$scope.domainVerificationError = true;
-            } else {
-              if (!UriVerificationService.isDomainVerified(sipUri)) {
-                $scope.domainVerificationError = true;
+          FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
+            .then(function (support) {
+              if (support) {
+                if (!sipUri) {
+                  // Hmm.. I dont think it make sense to show the DV error when the Dir SIP URI is not defined...
+                  //$scope.domainVerificationError = true;
+                } else {
+                  if (!UriVerificationService.isDomainVerified(sipUri)) {
+                    $scope.domainVerificationError = true;
+                  }
+                }
               }
-            }
-          }
+            })
+            .catch(function () {
+              // something went wrong, checking if domainManagement is toggled on: do not show error
+              $scope.domainVerificationError = false;
+            });
         } else {
           $scope.domainVerificationError = false;
         }
       };
+
+      // Do this at construct time
+      $scope.checkIfDomainIsVerified($scope.callServiceAware.entitled);
 
       $scope.navigateToCallSettings = function () {
         $state.go('call-service.settings');
