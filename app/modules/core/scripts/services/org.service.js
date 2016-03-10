@@ -303,7 +303,7 @@
       if (_.isUndefined(currentOrgId)) {
         return $q.reject('An organization ID is required.');
       }
-      var serviceUrl = Config.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
 
       return $http({
         method: 'GET',
@@ -316,7 +316,7 @@
         return $q.reject('A proper EFT setting and organization ID is required.');
       }
 
-      var serviceUrl = Config.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
 
       return $http({
         method: 'PUT',
