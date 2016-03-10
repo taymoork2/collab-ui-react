@@ -440,10 +440,15 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
-        vm.loading = false;
       });
 
     }
+
+    $scope.$on("$includeContentLoaded", function(event, templateName) {
+      if(templateName.includes("aaSchedule.tpl.html")){
+        vm.loading = false;
+      }
+    });
 
     activate();
 
