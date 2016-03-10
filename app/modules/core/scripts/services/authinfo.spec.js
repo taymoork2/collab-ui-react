@@ -269,6 +269,95 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('initializeTabs', function () {
+    var tabConfig;
+    beforeEach(function () {
+      tabConfig = [{
+        tab: 'tab1',
+        icon: 'tab1.icon',
+        title: 'tab1.title',
+        state: 'tab1',
+        link: '/tab1'
+      }, {
+        tab: 'tabMenu',
+        icon: 'tabMenu.icon',
+        title: 'tabMenu.title',
+        subPages: [{
+          tab: 'subTab1',
+          icon: 'subTab1.icon',
+          title: 'subTab1.title',
+          desc: 'subTab1.desc',
+          state: 'subTab1',
+          link: '/subTab1'
+        }, {
+          tab: 'subTab2',
+          icon: 'subTab2.icon',
+          title: 'subTab2.title',
+          desc: 'subTab2.desc',
+          state: 'subTab2',
+          link: '/subTab2'
+        }]
+      }];
+      provide.value('tabConfig', tabConfig);
+    });
+
+    it('should remove all tabs not allowed', function () {
+      var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      expect(Authinfo.getTabs()).toEqual([]);
+    });
+
+    it('should remove a single tab that is not allowed', function () {
+      setupConfig({
+        publicStates: ['subTab1', 'subTab2']
+      });
+      var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      _.remove(tabConfig, {
+        state: 'tab1'
+      });
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+
+    it('should remove a single subPage that is not allowed', function () {
+      setupConfig({
+        publicStates: ['tab1', 'subTab2']
+      });
+      var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      _.remove(tabConfig[1].subPages, {
+        state: 'subTab1'
+      });
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+
+    it('should remove a subPage parent if all subPages are not allowed', function () {
+      setupConfig({
+        publicStates: ['tab1']
+      });
+      var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      _.remove(tabConfig, {
+        tab: 'tabMenu'
+      });
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+
+    it('should keep tab structure if all pages are allowed', function () {
+      setupConfig({
+        publicStates: ['tab1', 'subTab1', 'subTab2']
+      });
+      var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+  });
+
   function setupConfig(override) {
     override = override || {};
     var configMock = angular.extend({}, defaultConfig, override);

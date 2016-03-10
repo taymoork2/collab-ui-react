@@ -56,9 +56,14 @@
             }
           });
         }
+        if (!flag) {
+          // Disable save if any of the open hours schedule has none of the days selected.
+          return flag;
+        }
       });
-      if (vm.isDeleted && !vm.openhours.length) {
-        //when all open hours removed, this check is
+      if (vm.isDeleted && !vm.openhours.length && vm.aaModel.aaRecord.scheduleId) {
+        //when all open hours deleted, enable save
+        //when all open hours deleted before the calendar is created, disable save
         flag = true;
       }
       return flag;
@@ -143,6 +148,7 @@
         function (response) {
           // success
           var scheduleId = AutoAttendantCeInfoModelService.extractUUID(response.scheduleUrl);
+          vm.aaModel.aaRecord.scheduleId = scheduleId;
           vm.ui.ceInfo.scheduleId = scheduleId;
           return updateCE(vm.aaModel.aaRecord.callExperienceName);
         });

@@ -53,7 +53,7 @@
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
         vmCluster: undefined,
-        emergencyCallBackNumber: {},
+        emergencyCallBackNumber: undefined,
         uuid: undefined
       },
       //var to hold ranges in sync with DB
@@ -73,7 +73,7 @@
       internationalDialingEnabled: false,
       internationalDialingUuid: null,
       showServiceAddress: false,
-      serviceNumber: {},
+      serviceNumber: undefined,
       serviceNumberWarning: false
     };
 
@@ -456,6 +456,7 @@
           vm.assignedNumbers = _.map(response.numbers, 'number');
           $scope.to.options = _.map(response.numbers, function (number) {
             number.label = TelephoneNumberService.getDIDLabel(number.number);
+            number.pattern = number.number;
             return number;
           });
         });
@@ -578,8 +579,10 @@
           controller: function ($scope) {
             $scope.$watchCollection(function () {
               return vm.externalNumberPoolBeautified;
-            }, function (newExternalNumbers) {
-              $scope.to.options = newExternalNumbers;
+            }, function (externalNumbers) {
+              $scope.to.options = _.remove(externalNumbers, function (number) {
+                return number.label === _.get(vm, 'model.serviceNumber.label');
+              });
             });
             $scope.$watch(function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
@@ -774,11 +777,12 @@
       }
 
       function saveServiceNumber() {
-        if (vm.model.serviceNumber !== '') {
+        if (vm.model.serviceNumber && (_.get(vm, 'model.serviceNumber.pattern') !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern'))) {
           var site = {};
           site.emergencyCallBackNumber = {
-            pattern: vm.model.serviceNumber.number
+            pattern: vm.model.serviceNumber.pattern
           };
+
           return ServiceSetup.updateSite(vm.model.uuid, site)
             .catch(function (response) {
               errors.push(Notification.processErrorResponse(response, 'settingsServiceNumber.saveError'));

@@ -208,7 +208,7 @@ gulp.task('test:api', function () {
   };
 
   return gulp
-    .src(['test/api_sanity/**/*_test.coffee'], {
+    .src(['test/api_sanity/squared_test.js'], {
       read: false
     })
     .pipe($.mocha(opts));
@@ -270,4 +270,3 @@ function sourceProduction() {
     file: './test/env/production.json'
   });
 }
-
