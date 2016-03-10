@@ -60,9 +60,7 @@
       }
       activePromse = $q.defer();
 
-      var query = getQuery(filter);
-      var activeUrl = urlBase + detailed + activeUserUrl + query;
-      return getService(activeUrl, activePromse).then(function (response) {
+      return getService(urlBase + detailed + activeUserUrl + getQuery(filter), activePromse).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
           return adjustActiveUserData(response.data.data[0].data, filter);
         } else {
@@ -86,8 +84,8 @@
       } else if (filter.value === 2) {
         query = "?type=threeMonthUsage&cache=";
       }
-      var url = urlBase + mostActiveUrl + query + cacheValue;
-      return getService(url, mostActivePromise).then(function (response) {
+
+      return getService(urlBase + mostActiveUrl + query + cacheValue, mostActivePromise).then(function (response) {
         var data = [];
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data)) {
           angular.forEach(response.data.data, function (item, index, array) {
@@ -153,7 +151,7 @@
           }
         }
 
-        if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
+        if (activeUsers > 0 || totalRegisteredUsers > 0) {
           for (var i = 0; i < returnGraph.length; i++) {
             if (returnGraph[i].modifiedDate === date) {
               returnGraph[i].totalRegisteredUsers = totalRegisteredUsers;
@@ -190,12 +188,9 @@
 
       var promises = [];
       var query = getQuery(filter);
-      var groupRoomsUrl = urlBase + timechart + groupUrl + query + customerView;
-      var oneToOneRoomsUrl = urlBase + timechart + oneToOneUrl + query + customerView;
-      var avgRoomsUrl = urlBase + timechart + avgUrl + query + customerView;
 
       var groupData = [];
-      var groupPromise = getService(groupRoomsUrl, groupCancelPromise).success(function (response, status) {
+      var groupPromise = getService(urlBase + timechart + groupUrl + query + customerView, groupCancelPromise).success(function (response, status) {
         groupData = response.data;
         return;
       }).error(function (response, status) {
@@ -205,7 +200,7 @@
       promises.push(groupPromise);
 
       var oneToOneData = [];
-      var oneToOnePromise = getService(oneToOneRoomsUrl, oneToOneCancelPromise).success(function (response, status) {
+      var oneToOnePromise = getService(urlBase + timechart + oneToOneUrl + query + customerView, oneToOneCancelPromise).success(function (response, status) {
         oneToOneData = response.data;
         return;
       }).error(function (response, status) {
@@ -215,7 +210,7 @@
       promises.push(oneToOnePromise);
 
       var avgData = [];
-      var avgPromise = getService(avgRoomsUrl, avgCancelPromise).success(function (response, status) {
+      var avgPromise = getService(urlBase + timechart + avgUrl + query + customerView, avgCancelPromise).success(function (response, status) {
         avgData = response.data;
         return;
       }).error(function (response, status) {
@@ -349,11 +344,9 @@
 
       var promises = [];
       var query = getQuery(filter);
-      var contentSharedUrl = urlBase + timechart + contentShared + query + customerView;
-      var contentShareSizesUrl = urlBase + timechart + contentShareSizes + query + customerView;
 
       var contentSharedData = [];
-      var contentSharedPromise = getService(contentSharedUrl, contentSharedCancelPromise).success(function (response, status) {
+      var contentSharedPromise = getService(urlBase + timechart + contentShared + query + customerView, contentSharedCancelPromise).success(function (response, status) {
         contentSharedData = response.data;
         return;
       }).error(function (response, status) {
@@ -363,7 +356,7 @@
       promises.push(contentSharedPromise);
 
       var contentShareSizesData = [];
-      var contentShareSizesPromise = getService(contentShareSizesUrl, contentShareSizesCancelPromise).success(function (response, status) {
+      var contentShareSizesPromise = getService(urlBase + timechart + contentShareSizes + query + customerView, contentShareSizesCancelPromise).success(function (response, status) {
         contentShareSizesData = response.data;
         return;
       }).error(function (response, status) {
@@ -461,13 +454,12 @@
         metricsCancelPromise.resolve(ABORT);
       }
       metricsCancelPromise = $q.defer();
-      var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
       var returnArray = {
         dataProvider: [],
         displayData: {}
       };
 
-      return getService(callMetricsUrl, metricsCancelPromise).then(function (response, status) {
+      return getService(urlBase + detailed + callMetrics + getAltQuery(filter), metricsCancelPromise).then(function (response, status) {
         if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
           var details = response.data.data[0].data[0].details;
           var totalCalls = parseInt(details.totalCalls);
@@ -501,9 +493,8 @@
         metricsCancelPromise.resolve(ABORT);
       }
       mediaCancelPromise = $q.defer();
-      var mediaUrl = urlBase + detailed + mediaQuality + getQuery(filter);
 
-      return getService(mediaUrl, mediaCancelPromise).then(function (response, status) {
+      return getService(urlBase + detailed + mediaQuality + getQuery(filter), mediaCancelPromise).then(function (response, status) {
         var emptyGraph = true;
         if (response !== null && angular.isDefined(response)) {
           var data = response.data.data[0].data;
@@ -600,9 +591,8 @@
         deviceCancelPromise.resolve(ABORT);
       }
       deviceCancelPromise = $q.defer();
-      var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
 
-      return getService(deviceUrl, deviceCancelPromise).then(function (response) {
+      return getService(urlBase + registeredEndpoints + getQuery(filter, false), deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
         return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {
@@ -689,23 +679,29 @@
       return deviceArray;
     }
 
-    function getQuery(filter) {
+    function getQuery(filter, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
       }
     }
 
-    function getAltQuery(filter) {
+    function getAltQuery(filter, cacheOption) {
+      if (angular.isUndefined(cacheOption) || cacheOption === null) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=93&intervalType=day&spanCount=93&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=93&intervalType=day&spanCount=93&spanType=day&cache=' + cacheOption;
       }
     }
 
@@ -750,13 +746,17 @@
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
         return returnItem;
-      } else if (error.status !== 0) {
-        Log.debug(debugMessage + '  Status: ' + error.status + ' Response: ' + error.message);
-        Notification.notify([message], 'error');
-        return returnItem;
-      } else if (error.config.timeout.$$state.status === 0) {
-        Log.debug(debugMessage + '  Status: ' + error.status);
-        Notification.notify([message], 'error');
+      } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
+        if (error.status !== 0) {
+          Log.debug(debugMessage + '  Status: ' + error.status + ' Response: ' + error.message);
+        } else {
+          Log.debug(debugMessage + '  Status: ' + error.status);
+        }
+        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+          Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
+        } else {
+          Notification.notify([message], 'error');
+        }
         return returnItem;
       } else {
         return ABORT;

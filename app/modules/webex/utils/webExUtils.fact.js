@@ -25,8 +25,36 @@
       var obj = {};
 
       obj.getSiteName = function (siteUrl) {
-        var index = siteUrl.indexOf(".");
-        var siteName = siteUrl.slice(0, index);
+        var funcName = "getSiteName()";
+        var logMsg = "";
+
+        var freeSiteSuffixList = [
+          ".my",
+          ".mydmz",
+          ".mybts",
+          ".mydev"
+        ];
+
+        var dotIndex = siteUrl.indexOf(".");
+        var siteName = siteUrl.slice(0, dotIndex);
+        var restOfSiteUrl = siteUrl.slice(dotIndex);
+
+        freeSiteSuffixList.forEach(
+          function checkFreeSiteSuffix(freeSiteSuffix) {
+            var tempSuffix = freeSiteSuffix + ".";
+
+            if (restOfSiteUrl.indexOf(tempSuffix) == 0) {
+              siteName = siteName + freeSiteSuffix;
+            }
+          } // checkFreeSiteSuffix()
+        );
+
+        logMsg = funcName + "\n" +
+          "siteUrl=" + siteUrl + "\n" +
+          "dotIndex=" + dotIndex + "\n" +
+          "restOfSiteUrl=" + restOfSiteUrl + "\n" +
+          "siteName=" + siteName;
+        $log.log(logMsg);
 
         return siteName;
       }; // getSiteName()

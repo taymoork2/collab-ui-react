@@ -1,7 +1,6 @@
 'use strict';
 
-// TODO: Turn on tests when feature toggle is removed
-xdescribe('Customer Reports', function () {
+describe('Customer Reports', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -49,7 +48,6 @@ xdescribe('Customer Reports', function () {
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);
-      utils.expectIsNotDisplayed(reports.mostActiveDescription);
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
@@ -109,12 +107,10 @@ xdescribe('Customer Reports', function () {
 
       // quality graphs
       utils.expectIsNotDisplayed(reports.mediaHeader);
-      utils.expectIsNotDisplayed(reports.customerMediaDescription);
       utils.expectIsNotDisplayed(reports.mediaFilter);
       utils.expectIsNotDisplayed(reports.mediaQualityDiv);
 
       utils.expectIsNotDisplayed(reports.metricsHeader);
-      utils.expectIsNotDisplayed(reports.customerMetricsDescription);
       utils.expectIsNotDisplayed(reports.metricsGraphDiv);
       reports.metricsDataPresent(false);
     });
@@ -124,19 +120,15 @@ xdescribe('Customer Reports', function () {
 
       // engagement graphs
       utils.expectIsNotDisplayed(reports.totalRoomsHeader);
-      utils.expectIsNotDisplayed(reports.totalRoomsDescription);
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
 
       utils.expectIsNotDisplayed(reports.activeHeader);
-      utils.expectIsNotDisplayed(reports.activeCustomerDescription);
       utils.expectIsNotDisplayed(reports.activeUsers);
 
       utils.expectIsNotDisplayed(reports.filesSharedHeader);
-      utils.expectIsNotDisplayed(reports.filesSharedDescription);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
 
       utils.expectIsNotDisplayed(reports.endpointsHeader);
-      utils.expectIsNotDisplayed(reports.customerEndpointsDescription);
       utils.expectIsNotDisplayed(reports.endpointFilter);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
@@ -169,7 +161,6 @@ xdescribe('Customer Reports', function () {
 
       // Most Active Users
       utils.expectIsNotDisplayed(reports.mostActiveHeader);
-      utils.expectIsNotDisplayed(reports.mostActiveDescription);
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
