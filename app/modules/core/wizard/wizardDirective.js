@@ -49,12 +49,7 @@
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
-
-    if (Authinfo.isPartner()) {
-      vm.helpUrl = Config.partnerSupportUrl;
-    } else {
-      vm.helpUrl = Config.supportUrl;
-    }
+    vm.helpUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
