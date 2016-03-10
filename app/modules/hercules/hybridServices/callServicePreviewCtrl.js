@@ -169,7 +169,6 @@ angular.module('Hercules')
         });
       };
 
-
       $scope.domainVerificationError = false; // need to be to be backwards compatible.
       $scope.checkIfDomainIsVerified = function (awareEntitled) {
         if (awareEntitled) {
