@@ -58,6 +58,8 @@ var Navigation = function () {
   this.userInfo = element(by.css('.user-info'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
+  this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
+
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
   };
@@ -294,6 +296,16 @@ var Navigation = function () {
     return url;
   }
 
+  this.launchSupportPage = function () {
+    browser.getAllWindowHandles().then(function (handles) {
+      browser.switchTo().window(handles[1]).then(function () {
+        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
+      });
+      browser.close();
+      // switch back to the main window
+      browser.switchTo().window(handles[0]);
+    });
+  };
 };
 
 module.exports = Navigation;

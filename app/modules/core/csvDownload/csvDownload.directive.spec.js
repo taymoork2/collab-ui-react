@@ -21,20 +21,22 @@ describe('Directive: csvDownload', function () {
 });
 
 describe('Controller: csvDownloadCtrl', function () {
-  var controller, $scope, CsvDownloadService, rootScope, $q;
+  var controller, $scope, CsvDownloadService, rootScope, $q, Notification;
 
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _CsvDownloadService_, _$q_) {
+  beforeEach(inject(function ($rootScope, $controller, _CsvDownloadService_, _$q_, _Notification_) {
     rootScope = $rootScope;
     $scope = rootScope.$new();
     CsvDownloadService = _CsvDownloadService_;
     $q = _$q_;
+    Notification = _Notification_;
 
     spyOn(CsvDownloadService, 'getCsv').and.returnValue($q.when({}));
     spyOn(CsvDownloadService, 'createObjectUrl').and.returnValue('SomeURL');
     spyOn(rootScope, '$broadcast').and.callThrough();
     spyOn($scope, '$emit').and.callThrough();
+    spyOn(Notification, 'errorResponse');
 
     controller = $controller('csvDownloadCtrl', {
       $rootScope: rootScope,
@@ -50,12 +52,22 @@ describe('Controller: csvDownloadCtrl', function () {
     });
 
     it('should emit download-start and downloaded', function () {
-      $scope.type = 'template';
+      controller.type = 'template';
       controller.downloadCsv();
       $scope.$apply();
 
       expect($scope.$emit).toHaveBeenCalledWith("download-start");
       expect($scope.$emit).toHaveBeenCalledWith("downloaded", "SomeURL");
+    });
+
+    it('should error if download fails', function () {
+      CsvDownloadService.getCsv.and.returnValue($q.reject());
+      controller.type = 'template';
+      controller.downloadCsv();
+      $scope.$apply();
+
+      expect($scope.$emit).toHaveBeenCalledWith("download-start");
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 

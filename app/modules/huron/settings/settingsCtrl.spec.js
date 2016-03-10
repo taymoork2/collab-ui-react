@@ -150,6 +150,61 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
+  it('should save the emergency callback number', function () {
+    controller.model.serviceNumber = {
+      label: "(972) 555-1000",
+      pattern: "+19725551000"
+    };
+
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should save the emergency callback number if its changing', function () {
+    controller.model.serviceNumber = {
+      label: "(972) 555-1000",
+      pattern: "+19725551000"
+    };
+
+    controller.model.site.emergencyCallBackNumber = {
+      pattern: "+19725552000"
+    };
+
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should not save the emergency callback number if it is NOT set', function () {
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should not save the emergency callback number if it is NOT changing', function () {
+    controller.model.serviceNumber = {
+      label: "(972) 555-1000",
+      pattern: "+19725551000"
+    };
+
+    controller.model.site.emergencyCallBackNumber = {
+      pattern: "+19725551000"
+    };
+
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
   it('should update the company pilot number if not already set', function () {
     controller.externalNumberPool = [{
       uuid: '1234',

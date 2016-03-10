@@ -1,71 +1,43 @@
-.customer-reports {
-  @extend %content-subheader;
-  @extend %page-content-padding;
+.amcharts-export-menu .export-main > a, .amcharts-export-menu .export-delayed-capturing > a {
+  background-size: 1.25rem;
+  border:none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiLz48L3N2Zz4=');
 }
 
-.all-reports {
-  margin-bottom: 50px;
-  border: 1px; }
+.amcharts-export-menu .export-main:hover > a {
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiIGZpbGw9IiMwMzg3QjgiIGZpbGwtb3BhY2l0eT0iMSIgLz48L3N2Zz4=');
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border:none;
+}
 
-.onboarding-row {
-  margin: 5px;
-  margin-bottom: 30px; }
+.amcharts-export-menu li:hover > a{
+  background-color: #EBEBEC;
+  color: #4F5051;
+}
 
-.metrics-refresh {
-  position: relative;
-  top: -255px;
-  text-align: center; }
+.amcharts-export-menu > ul > li:hover > a{
+  background-color: transparent;
+}
+.amcharts-export-menu > ul ul {
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+}
+.amcharts-export-menu .export-main > a {
+  margin: 0;
+  @include vr-spacing(p,1);
+}
 
-.timechartDiv {
-  width: 100%;
-  height: 450px;
-  font-size: 11px; }
+.amcharts-export-menu-top-right > ul > li > ul:after,.amcharts-export-menu-top-right > ul > li > ul > li:first-child > a:after{
+  display:none;
+  border:none;
+}
 
-  .amcharts-export-menu .export-main > a, .amcharts-export-menu .export-delayed-capturing > a {
-    background-size: 1.25rem;
-    border:none;
-    -webkit-box-shadow: none;
-   -moz-box-shadow: none;
-    box-shadow: none;
-    background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiLz48L3N2Zz4=');
-  }
-
-  .amcharts-export-menu .export-main:hover > a {
-    background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyBoZWlnaHQ9IjEwMDAiIHdpZHRoPSIxMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjYuNyA1MDBjMCA0Ni0zNy4zIDgzLjMtODMuNCA4My4zUzAgNTQ2IDAgNTAwczM3LjMtODMuMyA4My4zLTgzLjMgODMuNCAzNy4zIDgzLjQgODMuM3ptNDE2LjYgMGMwIDQ2LTM3LjMgODMuMy04My4zIDgzLjNTNDE2LjcgNTQ2IDQxNi43IDUwMHMzNy4zLTgzLjMgODMuMy04My4zIDgzLjMgMzcuMyA4My4zIDgzLjN6bTQxNi43IDBjMCA0Ni0zNy4zIDgzLjMtODMuMyA4My4zUzgzMy4zIDU0NiA4MzMuMyA1MDBzMzcuMy04My4zIDgzLjQtODMuM1MxMDAwIDQ1NCAxMDAwIDUwMHoiIGZpbGw9IiMwMzg3QjgiIGZpbGwtb3BhY2l0eT0iMSIgLz48L3N2Zz4=');
-    -webkit-box-shadow: none;
-   -moz-box-shadow: none;
-         box-shadow: none;
-    border:none;
-  }
-
-  .amcharts-export-menu li:hover > a{
-    background-color: #EBEBEC;
-    color: #4F5051;
-
-  }
-
-  .amcharts-export-menu > ul > li:hover > a{
-    background-color: transparent;
-    
-  }
-  .amcharts-export-menu > ul  ul {
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.18);
-    border-radius: 2px;
-
-  }
-  .amcharts-export-menu .export-main > a {
-    margin: 0;
-    @include vr-spacing(p,1);
-  }
-
-  .amcharts-export-menu-top-right > ul > li > ul:after,.amcharts-export-menu-top-right > ul > li > ul > li:first-child > a:after{
-    display:none;
-    border:none;
-  }
-
-  .amcharts-export-menu li > a{
+.amcharts-export-menu li > a {
   border: none;
   @include vr-spacing(pv,0.25);
 }
-
-

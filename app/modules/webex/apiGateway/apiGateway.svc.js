@@ -226,8 +226,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     this.isSiteSupportsIframe = function (siteUrl) {
       var deferredIsSiteSupportsIframe = $q.defer();
+      var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
-      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+      WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(response) {
           $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
