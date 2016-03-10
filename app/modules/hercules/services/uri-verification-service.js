@@ -20,9 +20,9 @@ angular.module('Hercules')
           uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
 
           return _.some(DomainManagementService.domainList, function (domain) {
-            return domain.status && domain.name &&
+            return domain.status && domain.text &&
               (domain.status === DomainManagementService.states.verified || domain.status === DomainManagementService.states.claimed) &&
-              (uriDomain === domain.name || uriDomain.indexOf('.' + domain.name, uriDomain.length - domain.name.length - 1) !== -1);
+              (uriDomain === domain.text || uriDomain.indexOf('.' + domain.text, uriDomain.length - domain.text.length - 1) !== -1);
           });
         }
       };
