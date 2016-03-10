@@ -273,8 +273,9 @@
                   ("CONFERENCING" == license.licenseType) || ("CMR" == license.licenseType)) {
 
                   var licenseFields = license.licenseId.split("_");
-                  var siteUrl = licenseFields[3];
+                  var siteUrl = licenseFields[licenseFields.length - 1];
                   var serviceType = licenseFields[0];
+                  var capacity = license.capacity;
 
                   var licenseInfo = null;
 
@@ -287,45 +288,45 @@
 
                   if ("MC" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasMCLicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasMCLicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   } else if ("EC" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasECLicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasECLicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   } else if ("SC" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasSCLicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasSCLicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   } else if ("TC" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasTCLicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasTCLicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   } else if ("CMR" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasCMRLicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasCMRLicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   } else if ("EE" == serviceType) {
                     licenseInfo = {
-                      webexSite: siteUrl,
-                      siteHasEELicense: true,
-                      offerCode: serviceType,
-                      capacity: licenseFields[2]
+                      'webexSite': siteUrl,
+                      'siteHasEELicense': true,
+                      'offerCode': serviceType,
+                      'capacity': capacity
                     };
                   }
 
