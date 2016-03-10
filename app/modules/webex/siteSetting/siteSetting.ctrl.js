@@ -15,6 +15,8 @@
     'Authinfo',
     'Config',
     'Storage',
+    'WebExUtilsFact',
+
     function webexSiteSettingCtrl(
       $scope,
       $rootScope,
@@ -28,7 +30,8 @@
       $window,
       Authinfo,
       Config,
-      Storage
+      Storage,
+      WebExUtilsFact
     ) {
 
       var _this = this;
@@ -77,8 +80,7 @@
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = Storage.get('accessToken');
       $scope.siteName = $stateParams.siteUrl;
-      var index = $stateParams.siteUrl.indexOf(".");
-      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
       $scope.fullSparkDNS = window.location.origin;
 
       $scope.locale = (

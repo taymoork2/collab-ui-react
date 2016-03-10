@@ -5,7 +5,7 @@
     .module('Core')
     .factory('Config', Config);
 
-  function Config($location, Utils, $filter, Storage, serviceUrlMapping) {
+  function Config($location, Utils, $filter, Storage) {
     var TEST_ENV_CONFIG = 'TEST_ENV_CONFIG';
 
     var getCurrentHostname = function () {
@@ -14,43 +14,13 @@
 
     var config = {
 
-      feedbackNavConfig: {
-        mailto: 'sq-admin-support@cisco.com',
-        subject: 'Squared%20Admin%20Feedback'
-      },
-
       ciscoOrgId: '1eb65fdf-9643-417f-9974-ad72cae0e10f',
 
       ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
       consumerOrgId: 'consumer',
 
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
-
-      ssoSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-
-      ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-
-      statusPageUrl: 'http://status.ciscospark.com/',
-
-      logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-
-      callflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
-
       feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
-
-      appinfo: {
-        webClientURL: 'https://web.ciscospark.com/',
-        iPhoneURL: 'http://cs.co/sqios',
-        androidURL: 'http://cs.co/sqandroid',
-        androidAppIntent: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-        appURL: 'squared://'
-      },
-
-      webexUrl: {
-        siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
-        siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
-      },
 
       scimSchemas: [
         'urn:scim:schemas:core:1.0',
@@ -61,6 +31,7 @@
       ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
       rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
       supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
+      partnerSupportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners',
 
       usersperpage: 100,
       orgsPerPage: 100,
@@ -144,34 +115,6 @@
         inactive: 'INACTIVE'
       },
 
-      chartColors: {
-        blue: '#3ca8e8',
-        red: '#F46315',
-        yellow: '#EBC31C',
-        green: '#50D71D',
-        brandSuccessDark: '#6ab140',
-        brandSuccess: "#7cc153",
-        brandSuccessLight: '#99cf78',
-        brandWhite: '#fff',
-        grayDarkest: '#444',
-        grayDarker: '#666',
-        grayDark: '#999',
-        gray: '#aaa',
-        grayLight: '#ccc',
-        grayLighter: '#ddd',
-        brandInfo: '#00c1aa',
-        brandDanger: '#f05d3b',
-        brandWarning: '#f7c100',
-        dummyGray: '#ECECEC',
-        primaryColorLight: '#66C5E8',
-        primaryColorBase: '#049FD9',
-        primaryColorDarker: '#0387B8',
-        dummyGrayLight: '#F3F3F3',
-        dummyGrayLighter: '#FAFAFA',
-        colorAttentionBase: '#F5A623',
-        colorPeopleBase: '#14A792'
-      },
-
       confMap: {
         MS: 'onboardModal.paidMsg',
         CF: 'onboardModal.paidConf',
@@ -238,394 +181,10 @@
         }
       },
 
-      getScimUrl: function (orgId) {
-        var params = [orgId];
-        var scimUrl = {
-          'dev': Utils.sprintf(serviceUrlMapping.scimUrl.dev, params),
-          'cfe': Utils.sprintf(serviceUrlMapping.scimUrl.cfe, params),
-          'integration': Utils.sprintf(serviceUrlMapping.scimUrl.integration, params),
-          'prod': Utils.sprintf(serviceUrlMapping.scimUrl.prod, params)
-        };
-
-        return scimUrl[this.getEnv()];
-      },
-
-      getUserReportsUrl: function (orgId) {
-        var params = [orgId];
-        var userReportsUrl = {
-          'dev': Utils.sprintf(serviceUrlMapping.userReportsUrl.dev, params),
-          'cfe': Utils.sprintf(serviceUrlMapping.userReportsUrl.cfe, params),
-          'integration': Utils.sprintf(serviceUrlMapping.userReportsUrl.integration, params),
-          'prod': Utils.sprintf(serviceUrlMapping.userReportsUrl.prod, params)
-        };
-
-        return userReportsUrl[this.getEnv()];
-      },
-
-      getScomUrl: function () {
-        var scomUrl = {
-          'dev': serviceUrlMapping.scomUrl.dev,
-          'cfe': serviceUrlMapping.scomUrl.cfe,
-          'integration': serviceUrlMapping.scomUrl.integration,
-          'prod': serviceUrlMapping.scomUrl.prod
-        };
-
-        return scomUrl[this.getEnv()];
-      },
-
-      getDomainManagementUrl: function (orgId) {
-        var params = [orgId];
-        var domainManagementUrl = {
-          'dev': Utils.sprintf(serviceUrlMapping.domainManagementUrl.dev, params),
-          'cfe': Utils.sprintf(serviceUrlMapping.domainManagementUrl.cfe, params),
-          'integration': Utils.sprintf(serviceUrlMapping.domainManagementUrl.integration, params),
-          'prod': Utils.sprintf(serviceUrlMapping.domainManagementUrl.prod, params)
-        };
-
-        return domainManagementUrl[this.getEnv()];
-      },
-
-      getAdminServiceUrl: function () {
-        var adminServiceUrl = {
-          'dev': serviceUrlMapping.adminServiceUrl.integration,
-          'cfe': serviceUrlMapping.adminServiceUrl.cfe,
-          'integration': serviceUrlMapping.adminServiceUrl.integration,
-          'prod': serviceUrlMapping.adminServiceUrl.prod
-        };
-
-        return adminServiceUrl[this.getEnv()];
-      },
-
-      getSparkDomainManagementUrl: function () {
-        var sparkDomainManagementUrl = {
-          'dev': serviceUrlMapping.sparkDomainManagementUrl.dev,
-          'cfe': serviceUrlMapping.sparkDomainManagementUrl.cfe,
-          'integration': serviceUrlMapping.sparkDomainManagementUrl.integration,
-          'prod': serviceUrlMapping.sparkDomainManagementUrl.prod
-        };
-
-        return sparkDomainManagementUrl[this.getEnv()];
-      },
-
-      getSparkDomainCheckUrl: function () {
-        var sparkDomainCheckUrl = {
-          'dev': serviceUrlMapping.sparkDomainCheckUrl.dev,
-          'cfe': serviceUrlMapping.sparkDomainCheckUrl.cfe,
-          'integration': serviceUrlMapping.sparkDomainCheckUrl.integration,
-          'prod': serviceUrlMapping.sparkDomainCheckUrl.prod
-        };
-
-        return sparkDomainCheckUrl[this.getEnv()];
-      },
-
-      getProdAdminServiceUrl: function () {
-        return serviceUrlMapping.adminServiceUrl.prod;
-      },
-
-      getCsdmServiceUrl: function () {
-        var csdmServiceUrl = {
-          'dev': serviceUrlMapping.csdmServiceUrl.integration,
-          'cfe': serviceUrlMapping.csdmServiceUrl.cfe,
-          'integration': serviceUrlMapping.csdmServiceUrl.integration,
-          'prod': serviceUrlMapping.csdmServiceUrl.prod
-        };
-
-        return csdmServiceUrl[this.getEnv()];
-      },
-
-      getMessengerServiceUrl: function () {
-        var msgrServiceUrl = {
-          'dev': serviceUrlMapping.messengerServiceUrl.integration,
-          'cfe': serviceUrlMapping.messengerServiceUrl.cfe,
-          'integration': serviceUrlMapping.messengerServiceUrl.integration,
-          'prod': serviceUrlMapping.messengerServiceUrl.prod
-        };
-
-        return msgrServiceUrl[this.getEnv()];
-      },
-
-      getLocusServiceUrl: function () {
-        var locusServiceUrl = {
-          'dev': serviceUrlMapping.locusServiceUrl.integration,
-          'cfe': serviceUrlMapping.locusServiceUrl.integration,
-          'integration': serviceUrlMapping.locusServiceUrl.integration,
-          'prod': serviceUrlMapping.locusServiceUrl.integration
-        };
-
-        return locusServiceUrl[this.getEnv()];
-      },
-
-      getFeatureToggleUrl: function () {
-        var locusServiceUrl = {
-          'dev': serviceUrlMapping.locusServiceUrl.prod,
-          'cfe': serviceUrlMapping.locusServiceUrl.cfe,
-          'integration': serviceUrlMapping.locusServiceUrl.prod,
-          'prod': serviceUrlMapping.locusServiceUrl.prod
-        };
-
-        return locusServiceUrl[this.getEnv()];
-      },
-
-      getEnrollmentServiceUrl: function () {
-        var enrollmentServiceUrl = {
-          'dev': serviceUrlMapping.enrollmentServiceUrl.integration,
-          'cfe': serviceUrlMapping.enrollmentServiceUrl.cfe,
-          'integration': serviceUrlMapping.enrollmentServiceUrl.integration,
-          'prod': serviceUrlMapping.enrollmentServiceUrl.prod
-        };
-
-        return enrollmentServiceUrl[this.getEnv()];
-      },
-
-      getMeetingServiceUrl: function () {
-        var meetingServiceUrl = {
-          'dev': serviceUrlMapping.meetingServiceUrl.dev,
-          'cfe': serviceUrlMapping.meetingServiceUrl.cfe,
-          'integration': serviceUrlMapping.meetingServiceUrl.integration,
-          'prod': serviceUrlMapping.meetingServiceUrl.prod
-        };
-
-        return meetingServiceUrl[this.getEnv()];
-      },
-
-      getMeetingInfoServiceUrl: function () {
-        var meetingInfoServiceUrl = {
-          'dev': serviceUrlMapping.meetingInfoServiceUrl.dev,
-          'cfe': serviceUrlMapping.meetingInfoServiceUrl.cfe,
-          'integration': serviceUrlMapping.meetingInfoServiceUrl.integration,
-          'prod': serviceUrlMapping.meetingInfoServiceUrl.prod
-        };
-
-        return meetingInfoServiceUrl[this.getEnv()];
-      },
-
-      getMetricsServiceUrl: function () {
-        var metricsServiceUrl = {
-          'dev': serviceUrlMapping.metricsServiceUrl.dev,
-          'cfe': serviceUrlMapping.metricsServiceUrl.cfe,
-          'integration': serviceUrlMapping.metricsServiceUrl.integration,
-          'prod': serviceUrlMapping.metricsServiceUrl.prod
-        };
-
-        return metricsServiceUrl[this.getEnv()];
-      },
-
-      getThresholdServiceUrl: function () {
-        var thresholdServiceUrl = {
-          'dev': serviceUrlMapping.thresholdServiceUrl.dev,
-          'cfe': serviceUrlMapping.thresholdServiceUrl.cfe,
-          'integration': serviceUrlMapping.thresholdServiceUrl.integration,
-          'prod': serviceUrlMapping.thresholdServiceUrl.prod
-        };
-
-        return thresholdServiceUrl[this.getEnv()];
-      },
-
-      getAlarmServiceUrl: function () {
-        var alarmServiceUrl = {
-          'dev': serviceUrlMapping.alarmServiceUrl.dev,
-          'cfe': serviceUrlMapping.alarmServiceUrl.cfe,
-          'integration': serviceUrlMapping.alarmServiceUrl.integration,
-          'prod': serviceUrlMapping.alarmServiceUrl.prod
-        };
-
-        return alarmServiceUrl[this.getEnv()];
-      },
-
-      getEventServiceUrl: function () {
-        var eventServiceUrl = {
-          'dev': serviceUrlMapping.alarmServiceUrl.dev,
-          'cfe': serviceUrlMapping.alarmServiceUrl.cfe,
-          'integration': serviceUrlMapping.alarmServiceUrl.integration,
-          'prod': serviceUrlMapping.alarmServiceUrl.prod
-        };
-
-        return eventServiceUrl[this.getEnv()];
-      },
-
-      getFaultServiceUrl: function () {
-        var faultServiceUrl = {
-          'dev': serviceUrlMapping.thresholdServiceUrl.dev,
-          'cfe': serviceUrlMapping.thresholdServiceUrl.cfe,
-          'integration': serviceUrlMapping.thresholdServiceUrl.integration,
-          'prod': serviceUrlMapping.thresholdServiceUrl.prod
-        };
-
-        return faultServiceUrl[this.getEnv()];
-      },
-
-      getLogoutUrl: function () {
-        var acu = this.getAdminPortalUrl();
-        return this.logoutUrl + encodeURIComponent(acu);
-      },
-
-      getAdminPortalUrl: function () {
-        return serviceUrlMapping.adminClientUrl[this.getEnv()];
-      },
-
-      getSSOSetupUrl: function () {
-        return this.ssoSetupUrl;
-      },
-
-      getSSOTestUrl: function () {
-        return this.ssoTestUrl;
-      },
-
-      getHealthCheckUrlServiceUrl: function () {
-        var healthCheckServiceUrl = {
-          'dev': serviceUrlMapping.healthCheckUrl.dev,
-          'cfe': serviceUrlMapping.healthCheckUrl.cfe,
-          'integration': serviceUrlMapping.healthCheckUrl.integration,
-          'prod': serviceUrlMapping.healthCheckUrl.prod
-        };
-
-        return healthCheckServiceUrl[this.getEnv()];
-      },
-
-      getLogMetricsUrl: function () {
-        return this.logMetricUrl;
-      },
-
-      getCallflowServiceUrl: function () {
-        return this.callflowServiceUrl;
-      },
-
-      getStatusPageUrl: function () {
-        return this.statusPageUrl;
-      },
-
-      getSquaredAppUrl: function () {
-        return this.appinfo.appURL;
-      },
-
-      getItunesStoreUrl: function () {
-        return this.appinfo.iPhoneURL;
-      },
-
-      getAndroidStoreUrl: function () {
-        return this.appinfo.androidURL;
-      },
-
-      getAndroidAppIntent: function () {
-        return this.appinfo.androidAppIntent;
-      },
-
-      getWebClientUrl: function () {
-        return this.appinfo.webClientURL;
-      },
-
-      getHerculesUrl: function () {
-        var herculesUrl = {
-          'dev': serviceUrlMapping.herculesUrl.dev,
-          'cfe': serviceUrlMapping.herculesUrl.cfe,
-          'integration': serviceUrlMapping.herculesUrl.integration,
-          'prod': serviceUrlMapping.herculesUrl.prod
-        };
-
-        return herculesUrl[this.getEnv()];
-      },
-
-      getHerculesUrlV2: function () {
-        var herculesUrl = {
-          'dev': serviceUrlMapping.herculesUrlV2.dev,
-          'cfe': serviceUrlMapping.herculesUrlV2.cfe,
-          'integration': serviceUrlMapping.herculesUrlV2.integration,
-          'prod': serviceUrlMapping.herculesUrlV2.prod
-        };
-
-        return herculesUrl[this.getEnv()];
-      },
-
-      getUssUrl: function () {
-        var ussUrl = {
-          'dev': serviceUrlMapping.ussUrl.dev,
-          'cfe': serviceUrlMapping.ussUrl.cfe,
-          'integration': serviceUrlMapping.ussUrl.integration,
-          'prod': serviceUrlMapping.ussUrl.prod
-        };
-
-        return ussUrl[this.getEnv()];
-      },
-
-      getCalliopeUrl: function () {
-        var calliopeUrl = {
-          'dev': serviceUrlMapping.calliopeUrl.dev,
-          'cfe': serviceUrlMapping.calliopeUrl.cfe,
-          'integration': serviceUrlMapping.calliopeUrl.integration,
-          'prod': serviceUrlMapping.calliopeUrl.prod
-        };
-
-        return calliopeUrl[this.getEnv()];
-      },
-
-      getCertsUrl: function () {
-        var certsUrl = {
-          'dev': serviceUrlMapping.certsUrl.dev,
-          'cfe': serviceUrlMapping.certsUrl.cfe,
-          'integration': serviceUrlMapping.certsUrl.integration,
-          'prod': serviceUrlMapping.certsUrl.prod
-        };
-
-        return certsUrl[this.getEnv()];
-      },
-
-      getWdmUrl: function () {
-        var wdmUrl = {
-          'dev': serviceUrlMapping.wdmUrl.dev,
-          'cfe': serviceUrlMapping.wdmUrl.cfe,
-          'integration': serviceUrlMapping.wdmUrl.dev,
-          'prod': serviceUrlMapping.wdmUrl.dev
-        };
-
-        return wdmUrl[this.getEnv()];
-      },
-
       getDefaultEntitlements: function () {
         return this.defaultEntitlements;
       },
 
-      getUtilizationServiceUrl: function () {
-        var utilizationServiceUrl = {
-          'dev': serviceUrlMapping.utilizationServiceUrl.dev,
-          'cfe': serviceUrlMapping.utilizationServiceUrl.cfe,
-          'integration': serviceUrlMapping.utilizationServiceUrl.integration,
-          'prod': serviceUrlMapping.utilizationServiceUrl.prod
-        };
-
-        return utilizationServiceUrl[this.getEnv()];
-      },
-
-      getWebexAdvancedHomeUrl: function (siteURL) {
-        var params = [siteURL];
-        return Utils.sprintf(this.webexUrl.siteAdminHomeUrl, params);
-      },
-
-      getWebexAdvancedEditUrl: function (siteURL) {
-        var params = [siteURL];
-        return Utils.sprintf(this.webexUrl.siteAdminDeepUrl, params);
-      },
-
-      getSunlightConfigServiceUrl: function () {
-        var sunlightConfigServiceUrl = {
-          'dev': serviceUrlMapping.sunlightConfigServiceUrl.dev,
-          'cfe': serviceUrlMapping.sunlightConfigServiceUrl.cfe,
-          'integration': serviceUrlMapping.sunlightConfigServiceUrl.integration,
-          'prod': serviceUrlMapping.sunlightConfigServiceUrl.prod
-        };
-
-        return sunlightConfigServiceUrl[this.getEnv()];
-      },
-
-      getCdrUrl: function () {
-        var cdrConfigServiceUrl = {
-          'dev': serviceUrlMapping.cdrUrl.dev,
-          'cfe': serviceUrlMapping.cdrUrl.cfe,
-          'integration': serviceUrlMapping.cdrUrl.integration,
-          'prod': serviceUrlMapping.cdrUrl.prod
-        };
-
-        return cdrConfigServiceUrl[this.getEnv()];
-      }
     };
 
     config.setTestEnvConfig = function (testEnv) {
@@ -648,7 +207,6 @@
         'user-overview',
         'userprofile',
         'reports',
-        'devReports',
         'setupwizardmodal',
         'firsttimewizard',
         'groups',
@@ -678,9 +236,9 @@
         'trialExtInterest',
         'activateProduct'
       ],
-      Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
-      WX2_Support: ['overview', 'reports', 'support', 'devReports'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
       PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
@@ -768,7 +326,6 @@
       'partner': [
         'overview',
         'reports',
-        'devReports',
         'devices',
         'fusion',
         //'mediafusionconnector',

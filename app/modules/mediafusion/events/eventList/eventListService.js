@@ -2,12 +2,12 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('EventListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('EventListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
       // console.log("EventListService");
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
-      var baseUrl = Config.getAlarmServiceUrl();
+      var baseUrl = UrlConfig.getAlarmServiceUrl();
 
       var eventListService = {
 

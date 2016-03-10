@@ -8,6 +8,7 @@ angular.module('Core').service('SiteListService', [
   'Config',
   'WebExApiGatewayService',
   'WebExUtilsFact',
+  'UrlConfig',
   'WebExUtilsService',
   'FeatureToggleService',
 
@@ -19,6 +20,7 @@ angular.module('Core').service('SiteListService', [
     Config,
     WebExApiGatewayService,
     WebExUtilsFact,
+    UrlConfig,
     WebExUtilsService,
     FeatureToggleService
   ) {
@@ -293,8 +295,8 @@ angular.module('Core').service('SiteListService', [
 
             siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
             siteRow.userEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
+            siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteUrl);
+            siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteUrl);
 
             WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {
@@ -393,7 +395,27 @@ angular.module('Core').service('SiteListService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
+          //Define the states
+          siteRow.showExportLink = false;
+          siteRow.showExportInProgressLink = false;
+          siteRow.grayedExportLink = false;
+          siteRow.showExportResultsLink = false;
+          siteRow.exportFinishedWithErrors = false;
+          siteRow.exportFailed = false;
+
+          siteRow.showImportLink = false;
+          siteRow.showImportInProgressLink = false;
+          siteRow.grayedImportLink = false;
+          siteRow.showImportResultsLink = false;
+          siteRow.importFinishedWithErrors = false;
+          siteRow.importFailed = false;
+
           // TODO: parse response and update the row column accordingly
+          //Fake: Export in progress, import disabled
+          siteRow.showExportLink = true;
+          siteRow.showImportLink = true;
+          siteRow.showExportResultsLink = true;
+          siteRow.exportFinishedWithErrors = true;
 
           siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()

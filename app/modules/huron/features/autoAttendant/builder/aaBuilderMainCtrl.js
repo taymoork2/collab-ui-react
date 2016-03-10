@@ -179,6 +179,7 @@
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
           AACommonService.resetFormStatus();
+          vm.canSave = false;
 
           Notification.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
@@ -214,6 +215,7 @@
           vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
 
           AACommonService.resetFormStatus();
+          vm.canSave = false;
 
           Notification.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName

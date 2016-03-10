@@ -6,9 +6,9 @@
     .factory('TrialExtInterestService', TrialExtInterestService);
 
   /* @ngInject */
-  function TrialExtInterestService($http, Config) {
+  function TrialExtInterestService($http, UrlConfig) {
 
-    var trialExtInterestUrl = Config.getAdminServiceUrl() + 'email';
+    var trialExtInterestUrl = UrlConfig.getAdminServiceUrl() + 'email';
 
     return {
       notifyPartnerAdmin: function (encryptedParam) {

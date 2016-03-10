@@ -6,7 +6,7 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyConfig, CdrService, Notification) {
+  function CdrLogsCtrl($scope, $state, $translate, $timeout, formlyConfig, CdrService, Notification, chartColors) {
     var vm = this;
     var ABORT = 'ABORT';
     vm.SEARCH = 1;
@@ -304,7 +304,7 @@
           }
 
           $('#cdrtable' + index).niceScroll({
-            cursorcolor: Config.chartColors.gray,
+            cursorcolor: chartColors.gray,
             cursorborder: "0px",
             cursorwidth: "7px",
             railpadding: {

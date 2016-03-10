@@ -7,15 +7,15 @@ describe('WebexClientVersion Test', function () {
   //beforeEach(module('wx2AdminWebClientApp'));
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var WebexClientVersion, httpBackend, $translate, Config;
+  var WebexClientVersion, httpBackend, $translate, UrlConfig;
   var clientVersions1;
 
-  beforeEach(inject(function ($injector, _$httpBackend_, _Config_, _WebexClientVersion_) {
+  beforeEach(inject(function ($injector, _$httpBackend_, _UrlConfig_, _WebexClientVersion_) {
 
     httpBackend = _$httpBackend_;
 
     WebexClientVersion = _WebexClientVersion_;
-    Config = _Config_;
+    UrlConfig = _UrlConfig_;
 
     clientVersions1 = {
       "clientVersions": ["c1", "c2", "c3"]
@@ -34,7 +34,7 @@ describe('WebexClientVersion Test', function () {
   });
 
   it("shoud get admin service url", function () {
-    expect(Config.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
+    expect(UrlConfig.getAdminServiceUrl()).toBe('https://atlas-integration.wbx2.com/admin/api/v1/');
   });
 
   it("shoud get admin service url", function () {
@@ -47,7 +47,7 @@ describe('WebexClientVersion Test', function () {
 
   it('should get client versions', function () {
 
-    var url = Config.getAdminServiceUrl() + 'clientversions';
+    var url = UrlConfig.getAdminServiceUrl() + 'clientversions';
 
     //httpBackend.resetExpectations();
 

@@ -9,8 +9,8 @@
     .service('SunlightConfigService', sunlightConfigService);
 
   /* @ngInject */
-  function sunlightConfigService($http, $rootScope, $q, Log, Config) {
-    var sunlightUserConfigUrl = Config.getSunlightConfigServiceUrl() + "/user/";
+  function sunlightConfigService($http, $rootScope, $q, Log, UrlConfig) {
+    var sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/user/";
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo
