@@ -16,6 +16,8 @@
     'Notification',
     'Config',
     'Storage',
+    'WebExUtilsFact',
+
     function reportsIframeCtrl(
       $scope,
       $rootScope,
@@ -30,7 +32,8 @@
       Authinfo,
       Notification,
       Config,
-      Storage
+      Storage,
+      WebExUtilsFact
     ) {
 
       var _this = this;
@@ -54,8 +57,7 @@
       $scope.authToken = Storage.get('accessToken');
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
-      var index = $stateParams.siteUrl.indexOf(".");
-      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
       $scope.fullSparkDNS = window.location.origin;
 
       _this.logMsg = _this.funcName + ": " + "\n" +

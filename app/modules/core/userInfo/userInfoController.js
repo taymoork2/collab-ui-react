@@ -92,10 +92,6 @@ angular.module('Core')
         }
       });
 
-      if (Authinfo.isPartner()) {
-        $scope.supportUrl = Config.partnerSupportUrl;
-      } else {
-        $scope.supportUrl = Config.supportUrl;
-      }
+      $scope.supportUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
     }
   ]);
