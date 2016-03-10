@@ -27,8 +27,8 @@ describe('hybridServicesPanel', function () {
         isEntitled: sinon.stub()
       };
 
-      authinfo.getOrgId.returns("12345");
-      authinfo.getUserId.returns("collabctg+test@gmail.com");
+      authinfo.getOrgId.returns('12345');
+      authinfo.getUserId.returns('collabctg+test@gmail.com');
       authinfo.isEntitled.withArgs(ENT.cal).returns(true);
       authinfo.isEntitled.withArgs(ENT.uc).returns(true);
       authinfo.isEntitled.withArgs(ENT.ec).returns(true);
