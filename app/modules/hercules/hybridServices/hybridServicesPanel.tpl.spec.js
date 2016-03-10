@@ -1,6 +1,6 @@
 'use strict';
 
-describe('HybridServicesPanel', function () {
+describe('hybridServicesPanel', function () {
   var view, ctrl, $scope, $httpBackend, authinfo, Service;
   var ENT = {
     uc: 'squared-fusion-uc',
@@ -12,7 +12,7 @@ describe('HybridServicesPanel', function () {
   };
 
   var expectCB = function (name, state) {
-    return expect(_.find(view.scope().HybridServicesPanelCtrl.extensions, {
+    return expect(_.find(view.scope().hybridServicesPanelCtrl.extensions, {
       id: name
     }).entitlementState === 'ACTIVE').toBe(state);
   };
@@ -78,16 +78,14 @@ describe('HybridServicesPanel', function () {
       expect(extensions[2].enabled).toEqual(true);
     });
 
-    ctrl = $controller('HybridServicesPanelCtrl', {
+    ctrl = $controller('hybridServicesPanelCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
       $modalInstance: {}
     });
 
-    $scope.HybridServicesPanelCtrl = ctrl;
-
+    $scope.hybridServicesPanelCtrl = ctrl;
     $httpBackend.flush();
-    $scope.$digest();
 
     var html = $templateCache.get("modules/hercules/hybridServices/hybridServicesPanel.tpl.html");
     view = $compile(angular.element('<div>').append(html))($scope);

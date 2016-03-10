@@ -4,10 +4,10 @@
   angular
     .module('Hercules')
     .directive('hybridServicesPanel', hybridServicesPanel)
-    .controller('HybridServicesPanelCtrl', HybridServicesPanelCtrl);
+    .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function HybridServicesPanelCtrl(HybridService, OnboardService) {
+  function hybridServicesPanelCtrl(HybridService, OnboardService) {
     var vm = this;
 
     vm.isEnabled = false;
@@ -92,8 +92,8 @@
         'updateEntitlements': '&bindEntitlements'
       },
       bindToController: true,
-      controllerAs: 'HybridServicesPanelCtrl',
-      controller: 'HybridServicesPanelCtrl',
+      controllerAs: 'hybridServicesPanelCtrl',
+      controller: 'hybridServicesPanelCtrl',
       templateUrl: 'modules/hercules/hybridServices/hybridServicesPanel.tpl.html'
     };
 
