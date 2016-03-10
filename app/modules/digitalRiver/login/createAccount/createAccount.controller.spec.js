@@ -1,9 +1,11 @@
 (function () {
   'use strict';
 
-  describe('Controller: createAccountController', function () {
-    var controller, $controller, DigitalRiverService, location, cookies, $q, $window;
+  fdescribe('Controller: createAccountController', function () {
+    var controller, $controller, DigitalRiverService, cookies, $q, $window;
     var $rootScope;
+    var email = 'magic@email.com';
+    var $location;
 
     beforeEach(module('DigitalRiver'));
     beforeEach(module(function ($provide) {
@@ -18,21 +20,24 @@
     beforeEach(inject(function (_$rootScope_, _$controller_, _$location_, _$cookies_, _DigitalRiverService_, _$q_) {
       $rootScope = _$rootScope_;
       DigitalRiverService = _DigitalRiverService_;
+      $location = _$location_;
       $controller = _$controller_;
-      location = _$location_;
       cookies = _$cookies_;
 
       $q = _$q_;
       spyOn(DigitalRiverService, 'addDrUser').and.returnValue($q.when({
         data: {}
       }));
+      spyOn($location,'search').and.returnValue({
+            referrer: DigitalRiverService.getDrReferrer(),
+            email: email
+          });
     }));
 
     function initController() {
       controller = $controller('createAccountController');
 
-      controller.email1 = 'foo@bar.com';
-      controller.email2 = 'foo@bar.com';
+      controller.email2 = email;
       controller.password1 = 'pwd';
       controller.password2 = 'pwd';
     }
@@ -119,5 +124,18 @@
       });
     });
 
+    describe('loading info from url path', function () {
+      beforeEach(function () {
+        initController();
+      });
+
+      it('should properly load the referrer', function () {
+        expect(controller.drReferrer).toBeTruthy();
+      });
+
+      it('should properly fetch the email from the url', function () {
+        expect(controller.email1).toBe(email);
+      });
+    });
   });
 })();
