@@ -1,11 +1,18 @@
 'use strict';
 
-fdescribe('servicesPanelsView', function () {
-  var view, ctrl, $scope, $httpBackend, authinfo, Service;
+fdescribe('HybridServicesPanel', function () {
+  var view, $scope, $httpBackend, authinfo, Service;
   var ENT = {
     uc: 'squared-fusion-uc',
     ec: 'squared-fusion-ec',
-    cal: 'squared-fusion-cal'
+    cal: 'squared-fusion-cal',
+    id_uc: '#squared-fusion-uc',
+    id_ec: '#squared-fusion-ec',
+    id_cal: '#squared-fusion-cal'
+  };
+
+  var expectCB = function (name, state) {
+      return expect(_.find(view.scope().HybridServicesPanelCtrl.extensions, {id: name}).entitlementState === 'ACTIVE').toBe(state);
   };
 
   beforeEach(module('wx2AdminWebClientApp'));
@@ -68,19 +75,20 @@ fdescribe('servicesPanelsView', function () {
       expect(extensions[2].enabled).toEqual(true);
     });
 
-    ctrl = $controller('HybridServicesPanelCtrl', {
+    var myCtrl = $controller('HybridServicesPanelCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
       $modalInstance: {}
     });
 
-    $scope.HybridServicesPanelCtrl = ctrl;
+    $scope.HybridServicesPanelCtrl = myCtrl;
 
     $httpBackend.flush();
     $scope.$digest();
 
     var html = $templateCache.get("modules/hercules/hybridServices/hybridServicesPanel.tpl.html");
-    view = $compile(angular.element(html))($scope);
+    view = $compile(angular.element('<div>').append(html))($scope);
+    $scope.$apply();
   }));
 
   afterEach(function () {
@@ -88,10 +96,51 @@ fdescribe('servicesPanelsView', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should confirm checkbox UX logic', function () {
-    console.log('ctrl is ' + ctrl );
-    console.log('html is ' + view.html() );
-    console.log('ent.uc is ' + ENT.uc + ' val ' + view.find(ENT.uc).checked );
-    expect(view.find(ENT.uc).checked).toBe(false);
+  it('should confirm all checkboxes unchecked', function () {
+    // All checkboxes default to unchecked
+    expectCB(ENT.uc, false);
+    expectCB(ENT.ec, false);
+    expectCB(ENT.cal, false);
+  });
+
+  it('should confirm checking Call Service Aware only affects Call Service Aware', function() {
+    var ctrl = view.scope().HybridServicesPanelCtrl;
+
+    // Click UC
+    view.find(ENT.id_uc).click();
+    expectCB(ENT.uc, true);
+    expectCB(ENT.ec, false);
+    view.find(ENT.id_uc).click();
+  });
+
+  it('should confirm checking Call Service Connect also checks Call Service Connect', function() {
+    var ctrl = view.scope().HybridServicesPanelCtrl;
+
+    // Click EC
+    view.find(ENT.id_ec).click();
+    expectCB(ENT.uc, true);
+    expectCB(ENT.ec, true);
+
+    // Unclick EC
+    view.find(ENT.id_ec).click();
+    expectCB(ENT.uc, true);
+    expectCB(ENT.ec, false);
+
+    // Unclick UC
+    view.find(ENT.id_uc).click();
+  });
+
+  it('should confirm unchecking Call Service Connect also unchecks Call Service Connect', function() {
+    var ctrl = view.scope().HybridServicesPanelCtrl;
+
+    // Click EC
+    view.find(ENT.id_ec).click();
+    expectCB(ENT.uc, true);
+    expectCB(ENT.ec, true);
+
+    // Unclick UC
+    view.find(ENT.id_uc).click();
+    expectCB(ENT.uc, false);
+    expectCB(ENT.ec, false);
   });
 });
