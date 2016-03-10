@@ -288,56 +288,58 @@
 
                   if ("MC" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasMCLicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasMCLicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   } else if ("EC" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasECLicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasECLicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   } else if ("SC" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasSCLicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasSCLicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   } else if ("TC" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasTCLicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasTCLicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   } else if ("CMR" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasCMRLicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasCMRLicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   } else if ("EE" == serviceType) {
                     licenseInfo = {
-                      'webexSite': siteUrl,
-                      'siteHasEELicense': true,
-                      'offerCode': serviceType,
-                      'capacity': capacity
+                      webexSite: siteUrl,
+                      siteHasEELicense: true,
+                      offerCode: serviceType,
+                      capacity: capacity
                     };
                   }
 
                   allSitesLicenseInfo.push(licenseInfo);
-
-                  deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
                 }
               } // checkLicense()
             ); // licenses.forEach()
 
-            deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
+            if (0 < allSitesLicenseInfo.length) {
+              deferredGetWebexLicenseInfo.resolve(allSitesLicenseInfo);
+            } else {
+              deferredGetWebexLicenseInfo.reject(allSitesLicenseInfo);
+            }
           }, // getValidLicensesSuccess()
 
           function getValidLicensesError(info) {
