@@ -28,7 +28,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.clickUser(testUser);
       utils.expectIsDisplayed(users.meetingService);
       utils.click(users.closeSidePanel);

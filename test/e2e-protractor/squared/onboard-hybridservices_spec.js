@@ -12,7 +12,7 @@ describe('Configuring services per-user', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
-  
+
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users');
   });
@@ -45,7 +45,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
@@ -89,7 +89,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
@@ -117,7 +117,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.messageService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
@@ -152,7 +152,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectIsDisplayed(users.messageService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');

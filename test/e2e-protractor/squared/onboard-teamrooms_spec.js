@@ -37,7 +37,7 @@ describe('Configuring services per-user', function () {
       activate.setup(null, testUser);
     });
 
-    it('should confirm user added and entitled', function() {
+    it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
@@ -58,9 +58,9 @@ describe('Configuring services per-user', function () {
       });
     });
 
-    it('should confirm hybrid service entitlements retain previous settings', function() {
-        utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-        utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    it('should confirm hybrid service entitlements retain previous settings', function () {
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     });
 
     it('should disable the Messenger interop entitlement', function () {
