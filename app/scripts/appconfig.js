@@ -430,6 +430,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
             }
           },
@@ -437,8 +438,6 @@ angular
             deleteUserOrgId: null,
             deleteUserUuId: null,
             deleteUsername: null,
-            deleteUserfamilyName: null,
-            Username: null
           }
         })
         .state('users.deleteSelf', {
@@ -446,6 +445,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
             }
           },
