@@ -72,8 +72,8 @@ angular.module('Core').controller('SiteListCtrl', [
 
           conferenceService.csvPollIntervalObj = null;
 
-          conferenceService.checkCsvStatusStart = 1;
-          conferenceService.checkCsvStatusEnd = 4;
+          conferenceService.checkCsvStatusStart = 0;
+          conferenceService.checkCsvStatusEnd = WebExApiGatewayService.csvStatusTypes.length - 1;
           conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
 
           vm.gridData.push(conferenceService);
