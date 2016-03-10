@@ -1,0 +1,103 @@
+.aa-holidays {
+	background: $gray-light-4;
+	margin-left: 30px;
+	margin-right: 30px;
+	.aa-schedule-subtitle {
+		padding: 20px;
+	}
+	.aa-hour-right {
+		padding-top: 28px;
+		.cs-input-group {
+			margin-bottom: 1.5rem;
+		}
+	}
+}
+.left-margin-20 {
+	margin-left: 20px;
+	margin-bottom: .5rem;
+}
+#addHoliday {
+	padding-bottom: 10px;
+	padding-left: 10px;
+  display: block;
+  i {
+  	padding: 10px;
+  }
+}
+.simple-accordion {
+	font-size: 14px;
+	.icon-trash {
+		cursor: pointer;
+		color: $gray;
+		&:hover {
+			color: $gray-dark-1
+		}
+	}
+	.collapse {
+		margin-top: -1.5rem;
+	}
+	.accordion {
+		border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+		.accordion--navigation {
+			a {
+				background: transparent;
+				border: none;
+				border-top: 1px solid $gray;
+				border-radius: 0;
+				margin-top: 0;
+				color: $gray;
+				padding: 0;
+				> .row {
+					padding: 1rem;
+					div {
+						width: 30%;
+						float: left;
+						padding-left: .5rem;
+					}
+					div:last-child {
+						width: 70%;
+					}
+				}
+				&:before {
+					content: initial;
+				}
+				&.active {
+					display: none;
+				}
+				&:hover {
+					background: transparent;
+				}
+				&:focus {
+					box-shadow: none;
+				}
+			}
+			.content {
+				margin-top: 0;
+				border-radius: 0;
+				background: transparent;
+				border: none;
+				border-top: 1px solid $gray;
+				padding-bottom: 1.5rem
+			}
+			&:first-child {
+				a {
+					border-top: none;
+				}
+				.content {
+					border-top: none;
+				}
+			}
+		}
+	}
+}
+
+/* Should go in toolkit for timepicker error state */
+
+.error .cs-datapicker-normal {
+	border-color: #F96452;
+	background-color: #FEDCD7;
+	input[type="text"][readonly].cs-datepicker-input {
+		background-color: #FEDCD7;
+	}
+}

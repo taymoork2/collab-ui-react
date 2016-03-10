@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: AAScheduleModalCtrl', function () {
+fdescribe('Controller: AAScheduleModalCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService;
   var $rootScope, $scope, $translate, $q, $modalInstance;
@@ -204,6 +204,13 @@ describe('Controller: AAScheduleModalCtrl', function () {
       var flag = controller.isSavable();
       expect(flag).toBeFalsy();
     });
+  });
+
+  it('should toggle the sections(open/close and holidays)', function () {
+    controller.toggleSection('holiday');
+    $scope.$apply();
+    expect(controller.toggleHours).toBeTruthy();
+    expect(controller.toggleHolidays).toBeTruthy();
   });
 
 });
