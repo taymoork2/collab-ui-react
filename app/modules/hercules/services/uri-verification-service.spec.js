@@ -11,16 +11,16 @@ describe('URI Verification Service', function () {
         return null;
       },
       domainList: [{
-        name: 'pendingdomain.com',
+        text: 'pendingdomain.com',
         status: 'pending'
       }, {
-        name: 'validdomain.com',
+        text: 'validdomain.com',
         status: 'verified'
       }, {
-        name: 'validsubdomain.unverified.com',
+        text: 'validsubdomain.unverified.com',
         status: 'verified'
       }, {
-        name: 'claimeddomain.com',
+        text: 'claimeddomain.com',
         status: 'claimed'
       }],
       states: {
