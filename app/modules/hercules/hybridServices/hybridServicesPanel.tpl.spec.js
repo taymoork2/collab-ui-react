@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('HybridServicesPanel', function () {
+describe('HybridServicesPanel', function () {
   var view, $scope, $httpBackend, authinfo, Service;
   var ENT = {
     uc: 'squared-fusion-uc',
@@ -12,10 +12,12 @@ fdescribe('HybridServicesPanel', function () {
   };
 
   var expectCB = function (name, state) {
-      return expect(_.find(view.scope().HybridServicesPanelCtrl.extensions, {id: name}).entitlementState === 'ACTIVE').toBe(state);
+    return expect(_.find(view.scope().HybridServicesPanelCtrl.extensions, {
+      id: name
+    }).entitlementState === 'ACTIVE').toBe(state);
   };
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   beforeEach(function () {
     module(function ($provide) {
@@ -44,6 +46,7 @@ fdescribe('HybridServicesPanel', function () {
       .when('GET', 'l10n/en_US.json')
       .respond({});
 
+    // Return such that org has all three Hybrid Services enabled...
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
@@ -58,7 +61,7 @@ fdescribe('HybridServicesPanel', function () {
         }, {
           id: ENT.ec,
           enabled: true,
-          acknowledged: false        
+          acknowledged: false
         }]
       });
 
@@ -103,7 +106,7 @@ fdescribe('HybridServicesPanel', function () {
     expectCB(ENT.cal, false);
   });
 
-  it('should confirm checking Call Service Aware only affects Call Service Aware', function() {
+  it('should confirm checking Call Service Aware only affects Call Service Aware', function () {
     var ctrl = view.scope().HybridServicesPanelCtrl;
 
     // Click UC
@@ -113,7 +116,7 @@ fdescribe('HybridServicesPanel', function () {
     view.find(ENT.id_uc).click();
   });
 
-  it('should confirm checking Call Service Connect also checks Call Service Connect', function() {
+  it('should confirm checking Call Service Connect also checks Call Service Connect', function () {
     var ctrl = view.scope().HybridServicesPanelCtrl;
 
     // Click EC
@@ -130,7 +133,7 @@ fdescribe('HybridServicesPanel', function () {
     view.find(ENT.id_uc).click();
   });
 
-  it('should confirm unchecking Call Service Connect also unchecks Call Service Connect', function() {
+  it('should confirm unchecking Call Service Connect also unchecks Call Service Connect', function () {
     var ctrl = view.scope().HybridServicesPanelCtrl;
 
     // Click EC
@@ -140,6 +143,16 @@ fdescribe('HybridServicesPanel', function () {
 
     // Unclick UC
     view.find(ENT.id_uc).click();
+    expectCB(ENT.uc, false);
+    expectCB(ENT.ec, false);
+  });
+
+  it('should confirm checking Calendar Service does affect Call Services', function () {
+    var ctrl = view.scope().HybridServicesPanelCtrl;
+
+    // Click Cal
+    view.find(ENT.id_cal).click();
+    expectCB(ENT.cal, true);
     expectCB(ENT.uc, false);
     expectCB(ENT.ec, false);
   });
