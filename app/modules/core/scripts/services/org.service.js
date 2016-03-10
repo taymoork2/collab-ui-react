@@ -8,21 +8,21 @@
   /* @ngInject */
   function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
     var service = {
-      'getOrg': getOrg,
-      'getAdminOrg': getAdminOrg,
-      'getAdminOrgUsage': getAdminOrgUsage,
-      'getValidLicenses': getValidLicenses,
-      'getLicensesUsage': getLicensesUsage,
-      'getUnlicensedUsers': getUnlicensedUsers,
-      'setSetupDone': setSetupDone,
-      'setOrgSettings': setOrgSettings,
-      'createOrg': createOrg,
-      'listOrgs': listOrgs,
-      'getOrgCacheOption': getOrgCacheOption,
-      'getHybridServiceAcknowledged': getHybridServiceAcknowledged,
-      'setHybridServiceAcknowledged': setHybridServiceAcknowledged,
-      'getEftSetting': getEftSetting,
-      'setEftSetting': setEftSetting
+      getOrg: getOrg,
+      getAdminOrg: getAdminOrg,
+      getAdminOrgUsage: getAdminOrgUsage,
+      getValidLicenses: getValidLicenses,
+      getLicensesUsage: getLicensesUsage,
+      getUnlicensedUsers: getUnlicensedUsers,
+      setSetupDone: setSetupDone,
+      setOrgSettings: setOrgSettings,
+      createOrg: createOrg,
+      listOrgs: listOrgs,
+      getOrgCacheOption: getOrgCacheOption,
+      getHybridServiceAcknowledged: getHybridServiceAcknowledged,
+      setHybridServiceAcknowledged: setHybridServiceAcknowledged,
+      getEftSetting: getEftSetting,
+      setEftSetting: setEftSetting
     };
 
     return service;

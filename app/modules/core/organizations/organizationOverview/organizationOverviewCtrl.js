@@ -6,13 +6,15 @@
 
   /*ngInject*/
   function OrganizationOverviewCtrl($stateParams, $rootScope, $scope, $state, Log, $filter, Orgservice, Notification) {
+    var currentOrgId = $stateParams.currentOrganization.id;
+
     $scope.currentOrganization = $stateParams.currentOrganization;
-    var currentOrgId = $scope.currentOrganization.id;
     $scope.setEftToggle = setEftToggle;
     $scope.eftToggleLoading = true;
     $scope.updateEftToggle = updateEftToggle;
     $scope.currentOrganization.isEFT = false;
     $scope.currentEftSetting = false;
+
     init();
 
     function init() {
@@ -55,6 +57,9 @@
           .catch(function (response) {
             _.set($scope, 'currentOrganization.isEFT', $scope.currentEftSetting);
             Notification.error('organizationsPage.eftError');
+          })
+          .finally(function (response) {
+            $scope.eftToggleLoading = false;
           });
       }
     }
