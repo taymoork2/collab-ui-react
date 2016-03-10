@@ -8,19 +8,21 @@
   /* @ngInject */
   function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
     var service = {
-      'getOrg': getOrg,
-      'getAdminOrg': getAdminOrg,
-      'getAdminOrgUsage': getAdminOrgUsage,
-      'getValidLicenses': getValidLicenses,
-      'getLicensesUsage': getLicensesUsage,
-      'getUnlicensedUsers': getUnlicensedUsers,
-      'setSetupDone': setSetupDone,
-      'setOrgSettings': setOrgSettings,
-      'createOrg': createOrg,
-      'listOrgs': listOrgs,
-      'getOrgCacheOption': getOrgCacheOption,
-      'getHybridServiceAcknowledged': getHybridServiceAcknowledged,
-      'setHybridServiceAcknowledged': setHybridServiceAcknowledged
+      getOrg: getOrg,
+      getAdminOrg: getAdminOrg,
+      getAdminOrgUsage: getAdminOrgUsage,
+      getValidLicenses: getValidLicenses,
+      getLicensesUsage: getLicensesUsage,
+      getUnlicensedUsers: getUnlicensedUsers,
+      setSetupDone: setSetupDone,
+      setOrgSettings: setOrgSettings,
+      createOrg: createOrg,
+      listOrgs: listOrgs,
+      getOrgCacheOption: getOrgCacheOption,
+      getHybridServiceAcknowledged: getHybridServiceAcknowledged,
+      setHybridServiceAcknowledged: setHybridServiceAcknowledged,
+      getEftSetting: getEftSetting,
+      setEftSetting: setEftSetting
     };
 
     return service;
@@ -294,6 +296,34 @@
         }
       }).error(function () {
         Log.error("Error in PATCH acknowledge status to " + serviceUrl);
+      });
+    }
+
+    function getEftSetting(currentOrgId) {
+      if (_.isUndefined(currentOrgId)) {
+        return $q.reject('An organization ID is required.');
+      }
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'GET',
+        url: serviceUrl
+      });
+    }
+
+    function setEftSetting(setting, currentOrgId) {
+      if (!_.isBoolean(setting) || _.isUndefined(currentOrgId)) {
+        return $q.reject('A proper EFT setting and organization ID is required.');
+      }
+
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'PUT',
+        url: serviceUrl,
+        data: {
+          eft: setting
+        }
       });
     }
   }
