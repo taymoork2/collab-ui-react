@@ -1,7 +1,7 @@
 'use strict';
 
 describe('HybridServicesPanel', function () {
-  var view, $scope, $httpBackend, authinfo, Service;
+  var view, ctrl, $scope, $httpBackend, authinfo, Service;
   var ENT = {
     uc: 'squared-fusion-uc',
     ec: 'squared-fusion-ec',
@@ -78,13 +78,13 @@ describe('HybridServicesPanel', function () {
       expect(extensions[2].enabled).toEqual(true);
     });
 
-    var myCtrl = $controller('HybridServicesPanelCtrl', {
+    ctrl = $controller('HybridServicesPanelCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
       $modalInstance: {}
     });
 
-    $scope.HybridServicesPanelCtrl = myCtrl;
+    $scope.HybridServicesPanelCtrl = ctrl;
 
     $httpBackend.flush();
     $scope.$digest();
@@ -107,8 +107,6 @@ describe('HybridServicesPanel', function () {
   });
 
   it('should confirm checking Call Service Aware only affects Call Service Aware', function () {
-    var ctrl = view.scope().HybridServicesPanelCtrl;
-
     // Click UC
     view.find(ENT.id_uc).click();
     expectCB(ENT.uc, true);
@@ -117,8 +115,6 @@ describe('HybridServicesPanel', function () {
   });
 
   it('should confirm checking Call Service Connect also checks Call Service Connect', function () {
-    var ctrl = view.scope().HybridServicesPanelCtrl;
-
     // Click EC
     view.find(ENT.id_ec).click();
     expectCB(ENT.uc, true);
@@ -134,8 +130,6 @@ describe('HybridServicesPanel', function () {
   });
 
   it('should confirm unchecking Call Service Connect also unchecks Call Service Connect', function () {
-    var ctrl = view.scope().HybridServicesPanelCtrl;
-
     // Click EC
     view.find(ENT.id_ec).click();
     expectCB(ENT.uc, true);
@@ -148,8 +142,6 @@ describe('HybridServicesPanel', function () {
   });
 
   it('should confirm checking Calendar Service does affect Call Services', function () {
-    var ctrl = view.scope().HybridServicesPanelCtrl;
-
     // Click Cal
     view.find(ENT.id_cal).click();
     expectCB(ENT.cal, true);
