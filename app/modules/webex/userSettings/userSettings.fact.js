@@ -590,7 +590,7 @@
                     ("CMR" == userLicenseType)
                   ) {
 
-                    var userLicenseSiteUrl = userLicenseItems[3];
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
                     logMsg = funcName + "\n" +
                       "currSite=" + currSite + "\n" +

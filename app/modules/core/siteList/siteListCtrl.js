@@ -116,7 +116,7 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
       displayName: $translate.instant('siteList.siteSettings'),
-      cellTemplate: 'modules/core/siteList/siteListConfigColumn.tpl.html',
+      cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
       sortable: false,
       width: '10%'
     });
@@ -124,7 +124,7 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridOptions.columnDefs.push({
       field: 'siteReports',
       displayName: $translate.instant('siteList.siteReports'),
-      cellTemplate: 'modules/core/siteList/siteListReportsColumn.tpl.html',
+      cellTemplate: 'modules/core/siteList/siteReportsColumn.tpl.html',
       sortable: false,
       width: '10%'
     });
