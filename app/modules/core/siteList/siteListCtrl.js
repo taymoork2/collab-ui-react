@@ -94,16 +94,14 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridOptions.columnDefs.push({
       field: 'license.siteUrl',
       displayName: $translate.instant('siteList.siteName'),
-      sortable: false,
-      width: '30%'
+      sortable: false
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteConfLicenses',
       displayName: $translate.instant('siteList.licenseTypes'),
       cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
-      sortable: false,
-      width: '20%'
+      sortable: false
     });
 
     vm.gridOptions.columnDefs.push({
