@@ -71,16 +71,16 @@ describe('Onboard Users using CSV File', function () {
     utils.click(inviteusers.finishButton);
   }, LONG_TIMEOUT);
 
-  it('should confirm first user onboarded', function() {
+  it('should confirm first user onboarded', function () {
     confirmUserOnboarded(userList[0]);
   });
 
-  it('should confirm middle user onboarded', function() {
+  it('should confirm middle user onboarded', function () {
     confirmUserOnboarded(userList[(userList.length > 2) ? Math.round(userList.length / 2) : 1]);
   });
 
-  it('should confirm last user onboarded', function() {
-    confirmUserOnboarded(userList[userList.length -1]);
+  it('should confirm last user onboarded', function () {
+    confirmUserOnboarded(userList[userList.length - 1]);
   });
 
   afterAll(function () {

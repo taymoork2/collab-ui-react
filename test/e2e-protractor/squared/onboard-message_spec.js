@@ -32,7 +32,7 @@ describe('Onboard users with Message Service', function () {
       utils.click(users.nextButton);
 
       // Click message license
-      utils.click(users.paidMsgCheckbox);   
+      utils.click(users.paidMsgCheckbox);
 
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
@@ -104,7 +104,7 @@ describe('Onboard users with Message Service', function () {
         utils.expectIsNotDisplayed(users.manageDialog);
         utils.click(users.closeSidePanel);
       });
-    });  
+    });
   });
 
   afterAll(function () {
