@@ -1177,8 +1177,9 @@ angular
         })
         .state('trialExtInterest', {
           url: '/trialExtInterest?eqp',
-          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          templateUrl: 'modules/core/trialExtInterest/trialExtInterest.tpl.html',
           controller: 'TrialExtInterestCtrl',
+          controllerAs: 'extInterest',
           parent: 'main'
         })
         .state('helpdesk-main', {
