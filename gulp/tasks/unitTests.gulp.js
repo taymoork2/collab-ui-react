@@ -114,6 +114,11 @@ gulp.task('karma-core', function (done) {
   runSeq('karma-config','karma', done);
 });
 
+gulp.task('karma-digitalRiver', function (done) {
+  args.specs = 'digitalRiver';
+  runSeq('karma-config','karma', done);
+});
+
 gulp.task('karma-hercules', function (done) {
   args.specs = 'hercules';
   runSeq('karma-config','karma', done);
@@ -157,6 +162,7 @@ gulp.task('karma-custom', function (done) {
 gulp.task('karma-all', function (done) {
   runSeq(
     'karma-core',
+    'karma-digitalRiver',
     'karma-hercules',
     'karma-huron',
     'karma-mediafusion',

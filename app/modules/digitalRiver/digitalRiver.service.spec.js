@@ -4,7 +4,7 @@
   describe('Service: DigitalRiver', function () {
     var DigitalRiverService, httpBackend, UrlConfig, $q;
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
 
     beforeEach(
       inject(function (_DigitalRiverService_, _$httpBackend_, _UrlConfig_, _$q_) {

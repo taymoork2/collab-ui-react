@@ -7,7 +7,7 @@
     var getUserMe = getJSONFixture('core/json/users/meDR.json');
     var getUserAuthTokenJson = getJSONFixture('core/json/users/authtoken.json');
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
     beforeEach(module('Huron'));
 
     beforeEach(inject(function (_$controller_, _$translate_, _$cookies_, $rootScope, _Userservice_, _DigitalRiverService_, _$q_) {

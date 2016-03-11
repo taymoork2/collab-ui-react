@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  angular.module('DigitalRiver')
     .controller('drLoginForwardController', drLoginForwardController);
 
   /* @ngInject */
