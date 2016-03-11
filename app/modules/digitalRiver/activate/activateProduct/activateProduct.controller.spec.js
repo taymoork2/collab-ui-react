@@ -5,7 +5,7 @@
     var controller, DigitalRiverService, $location, $log, $q, $state, $scope;
     var TEST_ORG_ID_FOR_DR = '0b17b44a-4fea-48d4-9660-3da55df5d782';
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
     beforeEach(inject(function (_$controller_, _$location_, _$state_, _DigitalRiverService_, _$log_, _$q_, _$rootScope_) {
       DigitalRiverService = _DigitalRiverService_;
       $state = _$state_;

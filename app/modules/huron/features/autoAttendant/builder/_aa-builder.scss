@@ -1,14 +1,11 @@
-.aa-nowrap {
-  white-space: nowrap;
-  margin: 0;
-  padding: 0;
-}
-
 $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light-1;
 $aa-builder-border-size: 1px;
-$aa-builder-icon-color: $gray-base;
-$aa-builder-icon-color-light: $gray-light-1;
+$aa-builder-icon-color: $gray-light-1;
+$aa-builder-icon-hover-color: $gray-base;
+$aa-builder-icon-click-color: $color-primary-base;
+
+$aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
@@ -21,6 +18,13 @@ $aa-builder-icon-color-light: $gray-light-1;
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
 
   height: calc(100vh - #{$aa-builder-offset});
+}
+
+.aa-nowrap {
+  white-space: nowrap;
+  @include vr-spacing(m, 0);
+  @include vr-spacing(p, 0);
+  color: $aa-builder-text-color;
 }
 
 .aa-builder-frame {
@@ -56,11 +60,6 @@ $aa-builder-icon-color-light: $gray-light-1;
   flex-direction: row;
   margin-left: 10px;
   margin-right: 10px;
-
-  & .popover {
-    width: 50%;
-  }
-
 }
 
 .aa-flex-row.centered {
@@ -151,7 +150,7 @@ $aa-builder-icon-color-light: $gray-light-1;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -161,13 +160,13 @@ $aa-builder-icon-color-light: $gray-light-1;
   @extend .icon-trash;
 
   font-size: 1.25rem;
-  color: $aa-builder-icon-color-light;
+  color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -179,6 +178,7 @@ $aa-builder-icon-color-light: $gray-light-1;
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
   padding: .25rem;
+
 }
 
 .aa-help-icon {
@@ -187,13 +187,18 @@ $aa-builder-icon-color-light: $gray-light-1;
   @extend .icon-help;
 
   font-size: 1rem;
-  color: $aa-builder-icon-color-light;
+  color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
 
   &:hover {
-    cursor: pointer;
-    color: $aa-builder-icon-color;
+    color: $aa-builder-icon-hover-color;
+  }
+}
+
+.aa-help-wrapper {
+    & .popover {
+    width: 60%;
   }
 }
 
@@ -211,13 +216,21 @@ $aa-builder-icon-color-light: $gray-light-1;
   vertical-align: top;
   transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: $gray-light-1;
+  .phone-number {
+    position: absolute;
+    padding-top: .25rem
   }
 
-  .icon {
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+
+  & .icon {
     float: right;
     font-size: 1rem;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
@@ -261,6 +274,7 @@ $aa-builder-icon-color-light: $gray-light-1;
 
   min-width: 1rem;
   white-space: nowrap;
+  color: $aa-builder-text-color;
 
   &:focus {
     outline-style: solid;
@@ -271,6 +285,7 @@ $aa-builder-icon-color-light: $gray-light-1;
 
 .aa-and-more {
   margin-left: 1rem;
+  color: $aa-builder-text-color;
 }
 
 .aa-selected-phones {
@@ -307,10 +322,13 @@ $aa-builder-icon-color-light: $gray-light-1;
 .aa-panel {
   @extend .panel;
 
+  @extend .aa-transition;
+
   display: inline-block;
   margin: 0;
-  padding-left: 1rem;
-  padding-right: 1rem;
+
+  @include vr-spacing(pl, .5);
+  @include vr-spacing(pr, .5);
   box-shadow: none;
   line-height: .5rem;
 
@@ -323,7 +341,7 @@ $aa-builder-icon-color-light: $gray-light-1;
     @extend .panel-body;
 
     margin: 0;
-    padding: 1.5rem;
+    @include vr-spacing(p, 1.25);
     background-color: $color-white;
     border: $aa-builder-border-size solid $aa-builder-border-color;
     border-radius: .25rem;
@@ -379,17 +397,17 @@ $aa-builder-icon-color-light: $gray-light-1;
   }
 }
 
-.aa-panel.ng-enter, .aa-panel.ng-leave {
-  transition: 0.5s ease-in-out all;
+.aa-transition.ng-enter, .aa-transition.ng-leave {
+  transition: .5s ease all;
 }
 
-.aa-panel.ng-enter,
-.aa-panel.ng-leave.ng-leave-active {
+.aa-transition.ng-enter,
+.aa-transition.ng-leave.ng-leave-active {
   opacity:0;
 }
 
-.aa-panel.ng-leave,
-.aa-panel.ng-enter.ng-enter-active {
+.aa-transition.ng-leave,
+.aa-transition.ng-enter.ng-enter-active {
   opacity:1;
 }
 
@@ -404,7 +422,7 @@ $aa-builder-icon-color-light: $gray-light-1;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -421,7 +439,7 @@ $aa-builder-icon-color-light: $gray-light-1;
 
     &:hover {
       cursor: pointer;
-      color: $color-primary-base;
+      color: $aa-builder-icon-click-color;
     }
   }
 }
@@ -474,10 +492,9 @@ $aa-builder-icon-color-light: $gray-light-1;
 .aa-endcall-icon {
   @extend .icon;
 
-  @extend .icon-phone;
+  @extend .icon-end-call;
 
   font-size: 2.25rem;
-  transform: rotate(125deg);
   color: $aa-builder-icon-color;
 }
 

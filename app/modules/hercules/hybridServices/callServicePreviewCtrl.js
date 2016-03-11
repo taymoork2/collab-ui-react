@@ -11,6 +11,9 @@ angular.module('Hercules')
       var sipUri = _.find($scope.currentUser.sipAddresses, {
         type: "enterprise"
       });
+
+      //sipUri = {"type": "enterprise", "value":"sqintegration1234@gmail.com"};
+
       var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {
         type: "work"
       });
@@ -179,7 +182,7 @@ angular.module('Hercules')
                   // Hmm.. I dont think it make sense to show the DV error when the Dir SIP URI is not defined...
                   //$scope.domainVerificationError = true;
                 } else {
-                  if (!UriVerificationService.isDomainVerified(sipUri)) {
+                  if (!UriVerificationService.isDomainVerified(sipUri.value)) {
                     $scope.domainVerificationError = true;
                   }
                 }

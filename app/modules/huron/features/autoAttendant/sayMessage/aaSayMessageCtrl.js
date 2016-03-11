@@ -74,13 +74,7 @@
     }
 
     function getMessageLabel() {
-      switch (vm.sayMessageType) {
-      case sayMessageType.ACTION:
-        return 'autoAttendant.actionSayMessage';
-      case sayMessageType.MENUKEY:
-      case sayMessageType.MENUHEADER:
-        return 'autoAttendant.sayMessage';
-      }
+      return 'autoAttendant.sayMessage';
     }
 
     function isMessageInputOnly() {

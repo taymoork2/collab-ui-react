@@ -6,6 +6,7 @@ describe('orgService', function () {
   var q, deferred;
 
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
+  var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
     module(function ($provide) {
@@ -290,6 +291,62 @@ describe('orgService', function () {
     httpBackend.when('PATCH', UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
     expect(httpBackend.flush).not.toThrow();
+  });
+
+  it('should verify that a proper setting is passed to setEftSetting call', function () {
+    Orgservice.setEftSetting().catch(function (response) {
+      expect(response).toBe('A proper EFT setting and organization ID is required.');
+    });
+
+    Orgservice.setEftSetting('false').catch(function (response) {
+      expect(response).toBe('A proper EFT setting and organization ID is required.');
+    });
+
+    Orgservice.getEftSetting().catch(function (response) {
+      expect(response).toBe('An organization ID is required.');
+    });
+  });
+
+  xit('should get the EFT setting for the org', function () {
+    var currentOrgId = '555';
+    httpBackend.whenGET(eftSettingRegex).respond([200, {
+      data: {
+        isEFT: false
+      }
+    }]);
+    Orgservice.getEftSetting(currentOrgId).then(function (response) {
+      expect(response.data.isEFT).toBe(false);
+    });
+    httpBackend.flush();
+  });
+
+  it('should fail to get the EFT setting for the org', function () {
+    var currentOrgId = '555';
+    httpBackend.whenGET(eftSettingRegex).respond([404, {}]);
+    Orgservice.getEftSetting(currentOrgId).catch(function (response) {
+      expect(response.status).toBe(404);
+    });
+    httpBackend.flush();
+  });
+
+  it('should successfully set the EFT setting for the org', function () {
+    var currentOrgId = '555';
+    var isEFT = true;
+    httpBackend.whenPUT(eftSettingRegex).respond([200, {}]);
+    Orgservice.setEftSetting(isEFT, currentOrgId).then(function (response) {
+      expect(response.status).toBe(200);
+    });
+    httpBackend.flush();
+  });
+
+  it('should fail to set the EFT setting for the org', function () {
+    var currentOrgId = '555';
+    var isEFT = true;
+    httpBackend.whenPUT(eftSettingRegex).respond([404, {}]);
+    Orgservice.setEftSetting(isEFT, currentOrgId).catch(function (response) {
+      expect(response.status).toBe(404);
+    });
+    httpBackend.flush();
   });
 
 });

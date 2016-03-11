@@ -32,7 +32,7 @@ angular
           url: '/enter-email-addr',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
               controller: 'enterEmailAddrController',
               controllerAs: 'enterEmailAddrController'
             }
@@ -43,7 +43,7 @@ angular
           url: '/dr-login-forward',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/drLoginForward/drLoginForward.tpl.html',
               controller: 'drLoginForwardController',
               controllerAs: 'drLoginForwardController'
             }
@@ -53,7 +53,7 @@ angular
           url: '/create-account',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/createAccount/createAccount.tpl.html',
               controller: 'createAccountController',
               controllerAs: 'createAccountController'
             }

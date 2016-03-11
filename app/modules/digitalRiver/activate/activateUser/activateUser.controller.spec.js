@@ -4,7 +4,7 @@
   describe('Controller: ActivateUserController', function () {
     var controller, DigitalRiverService, $state, $scope;
 
-    beforeEach(module('Core'));
+    beforeEach(module('DigitalRiver'));
 
     beforeEach(inject(function (_$controller_, _$location_, _$state_, _$log_, _DigitalRiverService_, $q, _$rootScope_) {
       DigitalRiverService = _DigitalRiverService_;
