@@ -70,12 +70,6 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
 
-          conferenceService.csvPollIntervalObj = null;
-
-          conferenceService.checkCsvStatusStart = 0;
-          conferenceService.checkCsvStatusEnd = WebExApiGatewayService.csvStatusTypes.length - 1;
-          conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
-
           vm.gridData.push(conferenceService);
         }
       }
