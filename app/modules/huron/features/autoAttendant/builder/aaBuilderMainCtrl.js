@@ -28,6 +28,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
+    vm.setLoadingDone = setLoadingDone;
 
     vm.templateDefinitions = [{
       tname: "template1",
@@ -423,7 +424,7 @@
     }
 
     function activate() {
-      vm.loading = true;
+      setLoadingStarted();
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -444,11 +445,13 @@
 
     }
 
-    $scope.$on("$includeContentLoaded", function(event, templateName) {
-      if(templateName.includes("aaSchedule.tpl.html") || templateName.includes("aaName.tpl.html")){
-        vm.loading = false;
-      }
-    });
+    function setLoadingStarted(){
+      vm.loading = true;
+    }
+
+    function setLoadingDone(){
+      vm.loading = false;
+    }
 
     activate();
 
