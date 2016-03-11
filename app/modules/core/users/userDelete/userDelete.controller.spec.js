@@ -2,7 +2,7 @@
 
 describe('Controller: UserDeleteCtrl', function () {
   var $rootScope, $scope, $q, $controller, $timeout, $translate, controller;
-  var Userservice, HuronUser, SyncService, Notification, Authinfo;
+  var Userservice, HuronUser, SyncService, Notification;
   var stateParams = {
     deleteUserOrgId: '123',
     deleteUserUuiD: '456',
@@ -17,7 +17,7 @@ describe('Controller: UserDeleteCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _SyncService_, _Notification_, _Authinfo_) {
+  function dependencies(_$rootScope_, _$q_, _$controller_, _$timeout_, _$translate_, _Userservice_, _HuronUser_, _SyncService_, _Notification_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -28,7 +28,6 @@ describe('Controller: UserDeleteCtrl', function () {
     HuronUser = _HuronUser_;
     SyncService = _SyncService_;
     Notification = _Notification_;
-    Authinfo = _Authinfo_;
   }
 
   function initSpies() {
@@ -38,7 +37,6 @@ describe('Controller: UserDeleteCtrl', function () {
     $scope.$close = jasmine.createSpy('$close');
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
-    spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
     spyOn(SyncService, 'isMessengerSyncEnabled').and.returnValue($q.when(false));
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($translate, 'instant').and.returnValue('YES');

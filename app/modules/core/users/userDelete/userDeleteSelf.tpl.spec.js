@@ -4,6 +4,7 @@ describe('Template: userDeleteSelf', function () {
   var $compile, $scope, $templateCache, $controller, $translate, controller;
   var view;
   var DELETE_BUTTON = '#deleteUserButton';
+  var CONFIRMATION_INPUT = '#inputYes';
   var DISABLED = 'disabled';
   var YES = 'YES';
 
@@ -45,8 +46,7 @@ describe('Template: userDeleteSelf', function () {
   });
 
   it('typing confirmation should enable delete button', function () {
-    controller.confirmation = YES;
-    $scope.$apply();
+    view.find(CONFIRMATION_INPUT).val(YES).change();
     expect(view.find(DELETE_BUTTON).attr(DISABLED)).toBeUndefined();
   });
 
