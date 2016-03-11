@@ -85,8 +85,8 @@
         })
         .catch(function (response) {
           if (response.status === 400) {
-              sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessageInvalidDomain');
-              sipField.isError = true;
+            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessageInvalidDomain');
+            sipField.isError = true;
           } else {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
           }
