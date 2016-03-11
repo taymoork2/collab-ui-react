@@ -15,7 +15,7 @@ describe('Manual invite of multiple users', function () {
     login.login('account-admin', '#/users');
   });
 
-  it('should Manually Invite multiple users by email address, .', function () {
+  it('should Manually Invite multiple users by email address (Message On).', function () {
     // Select Invite from setup menu
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
@@ -45,7 +45,10 @@ describe('Manual invite of multiple users', function () {
     var arUsers = [testUser, testUser2];
     for (var i = 0; i < arUsers.length; i++) {
       utils.searchAndClick(arUsers[i]);
+      utils.expectIsDisplayed(users.servicesPanel);
+
       utils.expectIsDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.meetingService);
     }
   });
 

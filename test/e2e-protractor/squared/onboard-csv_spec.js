@@ -9,7 +9,7 @@ describe('Onboard Users using CSV File', function () {
   var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
 
   var i;
-  var bImportUsers = false;
+  var importUsers = false;
 
   // User array
   var userList = [];
@@ -46,7 +46,7 @@ describe('Onboard Users using CSV File', function () {
   it('should land to the upload csv section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
-    bImportUsers = true; // Optimize whether we clean these users up
+    importUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
     utils.click(inviteusers.nextButton);
   });
@@ -78,9 +78,13 @@ describe('Onboard Users using CSV File', function () {
       activate.setup(null, userList[nInd]);
 
       utils.searchAndClick(userList[nInd]);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+
       utils.click(users.closeSidePanel);
     }
   }, LONG_TIMEOUT);
@@ -90,7 +94,7 @@ describe('Onboard Users using CSV File', function () {
     utils.deleteFile(absolutePath);
 
     // Delete users if they were successfully imported
-    if (bImportUsers) {
+    if (importUsers) {
       for (i = 0; i < userList.length; i++) {
         deleteUtils.deleteUser(userList[i]);
       }

@@ -5,10 +5,6 @@
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('hybridservices');
 
-  function deleteTestUser() {
-    deleteUtils.deleteUser(testUser);
-  }
-
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -28,14 +24,11 @@ describe('Configuring services per-user', function () {
 
   ///////////////////////////////////////////////////////////////////////////////
   describe('Add user with Calendar service', function () {
-    it('should add a user and select hybrid services', function () {
+    it('should add a user (Meeting On, Calendar On)', function () {
       navigation.clickUsers();
       users.createUser(testUser);
 
-      // Must select license for HS to work
       utils.click(users.paidMtgCheckbox);
-
-      // Select hybrid services
       utils.click(users.hybridServices_Cal);
 
       utils.click(users.onboardButton);
@@ -47,6 +40,10 @@ describe('Configuring services per-user', function () {
 
     it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
+      utils.expectIsDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
       utils.click(users.closeSidePanel);
@@ -63,6 +60,10 @@ describe('Configuring services per-user', function () {
       utils.expectIsNotDisplayed(users.manageDialog);
 
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
+      utils.expectIsDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
@@ -72,9 +73,8 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
 
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
-
-    afterAll(deleteTestUser);
   });
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -91,23 +91,24 @@ describe('Configuring services per-user', function () {
 
     it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.meetingService);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
       utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
-      utils.click(users.closeSidePanel);
-    });
 
-    afterAll(deleteTestUser);
+      utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
+    });
   });
 
   ///////////////////////////////////////////////////////////////////////////////
   describe('User with SOME hybrid services', function () {
-    it('should add user (Calender off, Aware on)', function () {
+    it('should add user (Message On, Aware on)', function () {
       users.createUser(testUser);
 
-      // Need a license for valid HS services
       utils.click(users.paidMsgCheckbox);
-
-      // Select hybrid services
       utils.click(users.hybridServices_UC);
 
       utils.click(users.onboardButton);
@@ -119,7 +120,10 @@ describe('Configuring services per-user', function () {
 
     it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
       utils.expectIsDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
@@ -128,9 +132,8 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
 
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
-
-    afterAll(deleteTestUser);
   });
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -138,10 +141,7 @@ describe('Configuring services per-user', function () {
     it('should add user (Calendar, Aware, and Connect all on)', function () {
       users.createUser(testUser);
 
-      // Need a license for valid HS services
       utils.click(users.paidMsgCheckbox);
-
-      // Select hybrid services
       utils.click(users.hybridServices_Cal);
       utils.click(users.hybridServices_EC);
 
@@ -154,7 +154,10 @@ describe('Configuring services per-user', function () {
 
     it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
       utils.expectIsDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.meetingService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
 
@@ -163,8 +166,11 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.callServiceConnectStatus, 'On');
 
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
+  });
 
-    afterAll(deleteTestUser);
+  afterAll(function () {
+    deleteUtils.deleteUser(testUser);
   });
 });

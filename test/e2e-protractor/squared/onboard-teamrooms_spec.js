@@ -5,10 +5,6 @@
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('teamrooms');
 
-  function deleteTestUser() {
-    deleteUtils.deleteUser(testUser);
-  }
-
   beforeEach(function () {
     log.verbose = true;
   });
@@ -39,8 +35,13 @@ describe('Configuring services per-user', function () {
 
     it('should confirm user added and entitled', function () {
       utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsDisplayed(users.meetingService);
+      utils.expectIsNotDisplayed(users.messageService);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+
       utils.click(users.closeSidePanel);
     });
 
@@ -93,8 +94,11 @@ describe('Configuring services per-user', function () {
       utils.click(users.messagingService);
       utils.expectCheckbox(users.messengerInteropCheckbox, true);
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
+  });
 
-    afterAll(deleteTestUser);
+  afterAll(function () {
+    deleteUtils.deleteUser(testUser);
   });
 });

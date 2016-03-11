@@ -5,10 +5,6 @@
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('meetings');
 
-  function deleteTestUser() {
-    deleteUtils.deleteUser(testUser);
-  }
-
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -18,7 +14,7 @@ describe('Configuring services per-user', function () {
   });
 
   describe('User with 25 party meetings', function () {
-    it('should add a user', function () {
+    it('should add a user (Meeting On)', function () {
       users.createUser(testUser);
       utils.click(users.paidMtgCheckbox);
       utils.click(users.onboardButton);
@@ -29,11 +25,17 @@ describe('Configuring services per-user', function () {
     });
 
     it('should confirm user added and entitled', function () {
-      utils.clickUser(testUser);
+      utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
+  });
 
-    afterAll(deleteTestUser);
+  afterAll(function () {
+    deleteUtils.deleteUser(testUser);
   });
 });
