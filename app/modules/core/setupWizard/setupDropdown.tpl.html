@@ -1,0 +1,13 @@
+<div cs-dropdown class="settings-menu dropdown">
+  <button cs-dropdown-toggle ng-show="tabs && tabs.length > 0" class="btn btn--header dropdown-toggle">
+    <div>
+      <i class="icon-settings icon"></i>
+      <span class="header-label">{{::'settings.title' | translate}}</span>
+    </div>
+  </button>
+  <ul cs-dropdown-menu class="dropdown-menu" role="menu" id="wizard-menu">
+    <li ng-repeat="item in tabs">
+      <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
+    </li>
+  </ul>
+</div>

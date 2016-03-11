@@ -38,6 +38,8 @@ var Navigation = function () {
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
   this.ecToggler = element(by.id('squaredFusionEc-toggler'));
   this.ecTogglerSwitch = element(by.css('label[for="squaredFusionEc-toggler"]'));
+  this.updateSipDomain = element(by.id('updateSipDomain'));
+  this.inputSipDomain = element(by.id('sipDomain'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -268,11 +270,16 @@ var Navigation = function () {
   }
 
   this.ensureCallServiceAware = function () {
+    /* disabled temporarily as the HS page changes the state of the toggle during loading which throws this off
     this.ecToggler.isSelected().then(function (selected) {
       if (!selected) {
         utils.click(navigation.ecTogglerSwitch);
       }
-    });
+      utils.waitUntilEnabled(navigation.inputSipDomain);
+      utils.clear(navigation.inputSipDomain);
+      utils.sendKeys(navigation.inputSipDomain, '127.0.0.1:8081');
+      utils.click(navigation.updateSipDomain);
+    });*/
   };
 
   this.navigateTo = function (url) {

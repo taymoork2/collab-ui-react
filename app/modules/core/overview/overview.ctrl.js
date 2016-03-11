@@ -78,6 +78,7 @@
 
     function setSipUriNotification() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
+        result = true;
         if (result) {
           vm.isSipToggleEnabled = true;
           Orgservice.getOrg(function (data, status) {

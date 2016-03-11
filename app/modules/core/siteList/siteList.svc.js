@@ -325,10 +325,15 @@ angular.module('Core').service('SiteListService', [
                   // no further data to get
                   siteRow.showCSVInfo = true;
                 } else {
+                  siteRow.checkCsvStatusStart = 0;
+                  siteRow.checkCsvStatusEnd = WebExApiGatewayService.csvStatusTypes.length - 1;
+                  siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
+
                   _this.updateCSVColumn(
                     siteRow
                   );
 
+                  // start CSV status poll
                   siteRow.csvPollIntervalObj = $interval(
                     function () {
                       _this.updateCSVColumn(siteRow);
@@ -369,11 +374,23 @@ angular.module('Core').service('SiteListService', [
       var logMsg = "";
 
       var siteUrl = siteRow.license.siteUrl;
+      var checkCsvStatusReq = null;
 
-      var checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.checkCsvStatusIndex];
-      ++siteRow.checkCsvStatusIndex;
-      if (siteRow.checkCsvStatusEnd < siteRow.checkCsvStatusIndex) {
-        siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
+      if (
+        (0 <= siteRow.checkCsvStatusIndex) &&
+        (WebExApiGatewayService.csvStatusTypes.length > siteRow.checkCsvStatusIndex)
+      ) {
+        checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.checkCsvStatusIndex];
+
+        ++siteRow.checkCsvStatusIndex;
+
+        if (
+          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.checkCsvStatusIndex) ||
+          (siteRow.checkCsvStatusEnd < siteRow.checkCsvStatusIndex)
+        ) {
+
+          siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
+        }
       }
 
       logMsg = funcName + "\n" +
@@ -395,7 +412,7 @@ angular.module('Core').service('SiteListService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
-          //Define the states
+          // initialize display control flags
           siteRow.showExportLink = false;
           siteRow.showExportInProgressLink = false;
           siteRow.grayedExportLink = false;
@@ -410,12 +427,55 @@ angular.module('Core').service('SiteListService', [
           siteRow.importFinishedWithErrors = false;
           siteRow.importFailed = false;
 
-          // TODO: parse response and update the row column accordingly
-          //Fake: Export in progress, import disabled
-          siteRow.showExportLink = true;
-          siteRow.showImportLink = true;
-          siteRow.showExportResultsLink = true;
-          siteRow.exportFinishedWithErrors = true;
+          if (response.status == "none") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "exportInProgress") {
+
+            siteRow.showExportInProgressLink = true;
+
+            siteRow.grayedImportLink = true;
+
+          } else if (response.status == "exportCompletedNoErr") {
+
+            siteRow.showExportLink = true;
+            siteRow.showExportResultsLink = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "exportCompletedWithErr") {
+
+            siteRow.showExportLink = true;
+            siteRow.showExportResultsLink = true;
+            siteRow.exportFinishedWithErrors = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "importInProgress") {
+
+            siteRow.grayedExportLink = true;
+
+            siteRow.showImportInProgressLink = true;
+
+          } else if (response.status == "importCompletedNoErr") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+            siteRow.showImportResultsLink = true;
+
+          } else if (response.status == "importCompletedWithErr") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+            siteRow.showImportResultsLink = true;
+            siteRow.importFinishedWithErrors = true;
+
+          }
 
           siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()

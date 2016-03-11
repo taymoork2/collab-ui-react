@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('DigitalRiver')
     .service('DigitalRiverService', DigitalRiverService);
 
   /* @ngInject */

@@ -32,10 +32,36 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start multi center license tests
-  describe(': License Types : ', function () {
+  describe(': License Types - Single : ', function () {
 
-    it('should allow login as admin user ' + sitelist.multiCenterLicenseUser.testAdminUsername, function () {
-      login.loginThroughGui(sitelist.multiCenterLicenseUser.testAdminUsername, sitelist.multiCenterLicenseUser.testAdminPassword);
+    it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
+      login.loginThroughGui(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
+    });
+
+    it('should navigate to webex site list page', function () {
+      navigation.clickServicesTab();
+      utils.click(sitelist.conferencingLink);
+      utils.wait(sitelist.siteListPageId);
+    });
+
+    it('should detect the license types column', function () {
+      utils.wait(sitelist.licenseTypesColumnId);
+    });
+
+    it('should detect text MC 100', function () {
+      var mc100 = "Meeting Center 100";
+      utils.expectText(sitelist.singleLicenseSiteId, mc100);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+  describe(': License Types - Multiple : ', function () {
+
+    it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
+      login.loginThroughGui(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
     });
 
     it('should navigate to webex site list page', function () {
