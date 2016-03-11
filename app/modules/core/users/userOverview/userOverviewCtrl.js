@@ -98,7 +98,6 @@
 
     function getDisplayableServices(serviceName) {
       var displayableServices = Authinfo.getServices();
-      window.console.log(displayableServices);
       if (Authinfo.hasAccount()) {
         displayableServices = displayableServices.filter(function (service) {
           return service.isConfigurable && service.licenseType === serviceName;
