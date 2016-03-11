@@ -270,6 +270,7 @@ var Navigation = function () {
   }
 
   this.ensureCallServiceAware = function () {
+    /* disabled temporarily as the HS page changes the state of the toggle during loading which throws this off
     this.ecToggler.isSelected().then(function (selected) {
       if (!selected) {
         utils.click(navigation.ecTogglerSwitch);
@@ -278,7 +279,7 @@ var Navigation = function () {
       utils.clear(navigation.inputSipDomain);
       utils.sendKeys(navigation.inputSipDomain, '127.0.0.1:8081');
       utils.click(navigation.updateSipDomain);
-    });
+    });*/
   };
 
   this.navigateTo = function (url) {
