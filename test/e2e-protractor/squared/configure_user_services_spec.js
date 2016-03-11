@@ -25,7 +25,7 @@ describe('Configuring services per-user', function () {
   utils.writeFile(absolutePath, fileText);
 
   beforeEach(function () {
-    //log.verbose = true;
+    log.verbose = true;
   });
 
   afterEach(function () {
