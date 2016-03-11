@@ -98,6 +98,7 @@ module.exports = function() {
         all: app + '/**/*.spec.js',
         ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
+        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',

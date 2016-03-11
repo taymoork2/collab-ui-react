@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('DigitalRiver')
     .controller('ActivateUserController', ActivateUserController);
 
   /* @ngInject */
