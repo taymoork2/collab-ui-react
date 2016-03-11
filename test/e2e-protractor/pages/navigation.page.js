@@ -38,6 +38,8 @@ var Navigation = function () {
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
   this.ecToggler = element(by.id('squaredFusionEc-toggler'));
   this.ecTogglerSwitch = element(by.css('label[for="squaredFusionEc-toggler"]'));
+  this.updateSipDomain = element(by.id('updateSipDomain'));
+  this.inputSipDomain = element(by.id('sipDomain'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
