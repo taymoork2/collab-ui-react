@@ -20,6 +20,7 @@ describe('Auth Service', function () {
     SessionStorage = _SessionStorage_;
     $state = _$state_;
     $q = _$q_;
+    $rootScope = _$rootScope_;
     spyOn($state, 'go').and.returnValue($q.when());
   }));
 
@@ -61,6 +62,7 @@ describe('Auth Service', function () {
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
     OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    spyOn(Auth, 'verifyOauthState').and.returnValue(true);
 
     $httpBackend
       .expectPOST('url', 'data', assertCredentials)
@@ -68,13 +70,25 @@ describe('Auth Service', function () {
         access_token: 'accessTokenFromAPI'
       });
 
-    Auth.getNewAccessToken('argToGetNewAccessToken').then(function (accessToken) {
+    Auth.getNewAccessToken({code: 'argToGetNewAccessToken', state: '123-abc-456'}).then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
       _.defer(done);
     });
 
     $httpBackend.flush();
+  });
+
+  it('should not get new access token', function () {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    spyOn(Auth, 'verifyOauthState').and.returnValue(false);
+
+    Auth.getNewAccessToken({code: 'argToGetNewAccessToken', state: '123-abc-456'}).catch(function (error) {
+      expect(error).toBeUndefined();
+    });
+    $rootScope.$apply();
   });
 
   it('should refresh access token', function (done) {
