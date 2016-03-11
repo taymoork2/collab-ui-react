@@ -53,7 +53,9 @@
             sipField.isDisabled = true;
             sipField.isButtonDisabled = true;
           } else if (data.verifiedDomains) {
-            displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
+            if (_.isArray(data.verifiedDomains)) {
+              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
+            }
           } else if (data.displayName) {
             displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
           }
