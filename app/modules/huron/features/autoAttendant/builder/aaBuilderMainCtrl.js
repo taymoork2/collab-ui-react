@@ -40,7 +40,17 @@
 
     $scope.saveAARecords = saveAARecords;
 
+    setLoadingStarted();
+
     /////////////////////
+
+    function setLoadingStarted(){
+      vm.loading = true;
+    }
+
+    function setLoadingDone(){
+      vm.loading = false;
+    }
 
     function setAANameFocus() {
       vm.aaNameFocus = true;
@@ -424,7 +434,6 @@
     }
 
     function activate() {
-      setLoadingStarted();
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
