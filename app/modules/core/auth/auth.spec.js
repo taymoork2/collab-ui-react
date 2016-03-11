@@ -3,13 +3,13 @@
 describe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q, OAuthConfig, UrlConfig;
+  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig;
 
   beforeEach(module(function ($provide) {
     $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
     Auth = _Auth_;
     Config = _Config_;
     Storage = _Storage_;
@@ -70,7 +70,10 @@ describe('Auth Service', function () {
         access_token: 'accessTokenFromAPI'
       });
 
-    Auth.getNewAccessToken({code: 'argToGetNewAccessToken', state: '123-abc-456'}).then(function (accessToken) {
+    Auth.getNewAccessToken({
+      code: 'argToGetNewAccessToken',
+      state: '123-abc-456'
+    }).then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
       _.defer(done);
@@ -85,7 +88,10 @@ describe('Auth Service', function () {
     OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
     spyOn(Auth, 'verifyOauthState').and.returnValue(false);
 
-    Auth.getNewAccessToken({code: 'argToGetNewAccessToken', state: '123-abc-456'}).catch(function (error) {
+    Auth.getNewAccessToken({
+      code: 'argToGetNewAccessToken',
+      state: '123-abc-456'
+    }).catch(function (error) {
       expect(error).toBeUndefined();
     });
     $rootScope.$apply();

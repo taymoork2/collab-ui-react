@@ -81,6 +81,7 @@
     "request": "~2.54.0",
     "require-dir": "^0.3.0",
     "requirejs": "~2.1.16",
+    "retire": "^1.1.4",
     "run-sequence": "^1.1.0",
     "sinon": "^1.14.1",
     "sprintf-js": "^1.0.3",
