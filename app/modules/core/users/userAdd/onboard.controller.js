@@ -770,14 +770,18 @@
         var selMsgService = $scope.messageFeatures[msgIndex];
         var licenses = selMsgService.license || selMsgService.licenses;
         // Messaging: prefer selected subscription, if specified  
-        if (_.isArray(licenses) && licenses.length > 1) {
-          _.forEach(licenses, function (license) {
-            licenseList.push(new LicenseFeature(license.licenseId, license.model));
-          });
-        } else {
-          if ('licenseId' in licenses[0]) {
-            // Add new licenses
+        if (_.isArray(licenses)) {
+          if (licenses.length > 1) {
+            _.forEach(licenses, function (license) {
+              licenseList.push(new LicenseFeature(license.licenseId, license.model));
+            });
+          } else {
             licenseList.push(new LicenseFeature(licenses[0].licenseId, true));
+          }
+        } else {
+          if ('licenseId' in licenses) {
+            // Add new licenses
+            licenseList.push(new LicenseFeature(licenses.licenseId, true));
           } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
             // Remove existing license
             licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
