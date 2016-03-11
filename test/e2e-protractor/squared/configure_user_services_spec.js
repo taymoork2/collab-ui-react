@@ -25,7 +25,7 @@ describe('Configuring services per-user', function () {
   utils.writeFile(absolutePath, fileText);
 
   beforeEach(function () {
-    log.verbose = true;
+    //log.verbose = true;
   });
 
   afterEach(function () {
@@ -215,6 +215,7 @@ describe('Configuring services per-user', function () {
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
     });
 
     afterAll(deleteTestUser);
