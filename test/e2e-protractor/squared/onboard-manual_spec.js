@@ -26,7 +26,6 @@ describe('Onboard users through Manual Invite', function () {
     utils.click(inviteusers.nextButton);
 
     // Enter test email into edit box
-    // Note, this should NOT be changed to first/last/email so that we can test both cases
     utils.click(users.emailAddressRadio);
     utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);

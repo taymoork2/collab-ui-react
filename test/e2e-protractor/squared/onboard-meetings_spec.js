@@ -30,7 +30,39 @@ describe('Onboard users with Meeting Service', function () {
 
       utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
-      utils.click(users.closeSidePanel);
+    });
+
+    it('should check (Message On, Meeting On) then uncheck them', function () {
+      utils.clickUser(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+      utils.waitForModal().then(function () {
+        utils.expectCheckbox(users.paidMsgCheckbox, false);
+        utils.expectCheckbox(users.paidMtgCheckbox, true);
+
+        // Uncheck licenses...
+        utils.click(users.paidMtgCheckbox);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
+        utils.click(users.closeSidePanel);
+      });
+    });
+
+    it('should check (Message Off, Meeting Off)', function () {
+      utils.clickUser(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+
+      utils.waitForModal().then(function () {
+        utils.expectCheckbox(users.paidMsgCheckbox, false);
+        utils.expectCheckbox(users.paidMtgCheckbox, false);
+        utils.click(users.cancelButton);
+        utils.expectIsNotDisplayed(users.manageDialog);
+        utils.click(users.closeSidePanel);
+      });
     });
   });
 

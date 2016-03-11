@@ -15,39 +15,13 @@ describe('Onboard users with Message Service', function () {
 
   describe('Onboard user', function () {
     it('should add a user (Message On)', function () {
-      utils.click(users.addUsers);
-      utils.expectIsDisplayed(users.manageDialog);
-      utils.expectIsDisplayed(users.nextButton);
-      utils.expectIsNotDisplayed(users.onboardButton);
-      utils.expectIsNotDisplayed(users.entitleButton);
-      utils.expectIsNotDisplayed(users.addButton);
-
-      utils.click(users.clearButton);
-
-      utils.click(users.nameAndEmailRadio);
-      utils.sendKeys(users.firstName, 'first');
-      utils.sendKeys(users.lastName, 'last');
-      utils.sendKeys(users.emailAddress, testUser);
-      utils.click(users.plusIcon);
-      utils.click(users.nextButton);
-
-      // Click message license
+      users.createUser(testUser);
       utils.click(users.paidMsgCheckbox);
-
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
       utils.expectIsNotDisplayed(users.manageDialog);
 
       activate.setup(null, testUser);
-    });
-
-    it('should automatically close wizard', function () {
-      utils.expectIsNotDisplayed(wizard.wizard);
-    });
-
-    it('should show invite pending status on new user', function () {
-      utils.search(testUser);
-      utils.expectTextToBeSet(users.userListStatus, 'Invite Pending');
     });
 
     it('should confirm user added (Message On, Meeting Off)', function () {
@@ -65,8 +39,39 @@ describe('Onboard users with Message Service', function () {
         utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
         notifications.assertSuccess('entitled successfully');
-        utils.click(users.closeSidePanel);
       });
+    });
+
+    it('should disable the Messenger interop entitlement', function () {
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+
+      utils.click(users.messengerInteropCheckbox);
+      utils.expectCheckbox(users.messengerInteropCheckbox, false);
+
+      utils.click(users.saveButton);
+      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+      utils.click(users.closeSidePanel);
+    });
+
+    it('should re-enable the Messenger interop entitlement', function () {
+      utils.clickUser(testUser);
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, false);
+
+      utils.click(users.messengerInteropCheckbox);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+
+      utils.click(users.saveButton);
+      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+      utils.click(users.closeSidePanel);
+    });
+
+    it('should verify that the Messenger interop entitlement was re-enabled', function () {
+      utils.clickUser(testUser);
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.click(users.closeSidePanel);
     });
 
     it('should check (Message On, Meeting On) then uncheck them', function () {

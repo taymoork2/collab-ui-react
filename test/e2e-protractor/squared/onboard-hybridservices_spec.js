@@ -23,7 +23,32 @@ describe('Onboard users with Hybrid Services', function () {
   });
 
   ///////////////////////////////////////////////////////////////////////////////
-  describe('User with SOME and then MORE hybrid services', function () {
+  describe('Onboard user with no hybrid services', function () {
+    it('should add user', function () {
+      users.createUser(testUser);
+
+      utils.click(users.onboardButton);
+      notifications.assertSuccess('onboarded successfully');
+      utils.expectIsNotDisplayed(users.manageDialog);
+
+      activate.setup(null, testUser);
+    });
+
+    it('should confirm user added and entitled', function () {
+      utils.searchAndClick(testUser);
+      utils.expectIsDisplayed(users.servicesPanel);
+
+      utils.expectIsNotDisplayed(users.messageService);
+      utils.expectIsNotDisplayed(users.meetingService);
+      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
+      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
+
+      utils.click(users.closeSidePanel);
+      utils.deleteUser(testUser);
+    });
+  });
+
+  describe('Onboard and test HS additive case', function () {
     it('should add a user (Meeting On, Calendar On)', function () {
       navigation.clickUsers();
       users.createUser(testUser);
@@ -77,34 +102,7 @@ describe('Onboard users with Hybrid Services', function () {
     });
   });
 
-  ///////////////////////////////////////////////////////////////////////////////
-  describe('User with NO hybrid services', function () {
-    it('should add user', function () {
-      users.createUser(testUser);
-
-      utils.click(users.onboardButton);
-      notifications.assertSuccess('onboarded successfully');
-      utils.expectIsNotDisplayed(users.manageDialog);
-
-      activate.setup(null, testUser);
-    });
-
-    it('should confirm user added and entitled', function () {
-      utils.searchAndClick(testUser);
-      utils.expectIsDisplayed(users.servicesPanel);
-
-      utils.expectIsNotDisplayed(users.messageService);
-      utils.expectIsNotDisplayed(users.meetingService);
-      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_Calendar);
-      utils.expectIsNotDisplayed(users.hybridServices_sidePanel_UC);
-
-      utils.click(users.closeSidePanel);
-      utils.deleteUser(testUser);
-    });
-  });
-
-  ///////////////////////////////////////////////////////////////////////////////
-  describe('User with SOME hybrid services', function () {
+  describe('Onboard user with Call Service Aware', function () {
     it('should add user (Message On, Aware on)', function () {
       users.createUser(testUser);
 
@@ -136,13 +134,11 @@ describe('Onboard users with Hybrid Services', function () {
     });
   });
 
-  /////////////////////////////////////////////////////////////////////////////////
-  describe('User with ALL hybrid services', function () {
+  describe('Onboard user with Call Service Connect', function () {
     it('should add user (Calendar, Aware, and Connect all on)', function () {
       users.createUser(testUser);
 
       utils.click(users.paidMsgCheckbox);
-      utils.click(users.hybridServices_Cal);
       utils.click(users.hybridServices_EC);
 
       utils.click(users.onboardButton);

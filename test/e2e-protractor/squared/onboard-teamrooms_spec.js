@@ -19,7 +19,6 @@ describe('Onboard users with Message service', function () {
       users.createUser(testUser);
 
       utils.click(users.paidMtgCheckbox);
-      utils.click(users.hybridServices_Cal);
 
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
@@ -34,8 +33,6 @@ describe('Onboard users with Message service', function () {
 
       utils.expectIsDisplayed(users.meetingService);
       utils.expectIsNotDisplayed(users.messageService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
 
       utils.click(users.closeSidePanel);
     });
@@ -59,38 +56,7 @@ describe('Onboard users with Message service', function () {
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     });
 
-    it('should disable the Messenger interop entitlement', function () {
-      utils.click(users.messagingService);
-      utils.expectCheckbox(users.messengerInteropCheckbox, true);
 
-      utils.click(users.messengerInteropCheckbox);
-      utils.expectCheckbox(users.messengerInteropCheckbox, false);
-
-      utils.click(users.saveButton);
-      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
-      utils.click(users.closeSidePanel);
-    });
-
-    it('should re-enable the Messenger interop entitlement', function () {
-      utils.clickUser(testUser);
-      utils.click(users.messagingService);
-      utils.expectCheckbox(users.messengerInteropCheckbox, false);
-
-      utils.click(users.messengerInteropCheckbox);
-      utils.expectCheckbox(users.messengerInteropCheckbox, true);
-
-      utils.click(users.saveButton);
-      notifications.assertSuccess(testUser, 'entitlements were updated successfully');
-      utils.click(users.closeSidePanel);
-    });
-
-    it('should verify that the Messenger interop entitlement was re-enabled', function () {
-      utils.clickUser(testUser);
-      utils.click(users.messagingService);
-      utils.expectCheckbox(users.messengerInteropCheckbox, true);
-      utils.click(users.closeSidePanel);
-      utils.deleteUser(testUser);
-    });
   });
 
   afterAll(function () {
