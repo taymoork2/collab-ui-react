@@ -3,7 +3,7 @@
 /* global inviteusers */
 /* global LONG_TIMEOUT */
 
-describe('Manual invite of multiple users', function () {
+describe('Onboard users through Manual Invite', function () {
   var testUser = utils.randomTestGmailwithSalt('manual');
   var testUser2 = utils.randomTestGmailwithSalt('manual');
 

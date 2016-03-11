@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Configuring services per-user', function () {
+describe('Onboard users with Meeting Service', function () {
   var testUser = utils.randomTestGmailwithSalt('meetings');
 
   afterEach(function () {
@@ -13,7 +13,7 @@ describe('Configuring services per-user', function () {
     login.login('account-admin', '#/users');
   });
 
-  describe('User with 25 party meetings', function () {
+  describe('Onboard user', function () {
     it('should add a user (Meeting On)', function () {
       users.createUser(testUser);
       utils.click(users.paidMtgCheckbox);
@@ -31,7 +31,6 @@ describe('Configuring services per-user', function () {
       utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
       utils.click(users.closeSidePanel);
-      utils.deleteUser(testUser);
     });
   });
 

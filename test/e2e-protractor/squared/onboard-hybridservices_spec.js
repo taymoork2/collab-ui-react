@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Configuring services per-user', function () {
+describe('Onboard users with Hybrid Services', function () {
   var testUser = utils.randomTestGmailwithSalt('hybridservices');
 
   afterEach(function () {
@@ -23,7 +23,7 @@ describe('Configuring services per-user', function () {
   });
 
   ///////////////////////////////////////////////////////////////////////////////
-  describe('Add user with Calendar service', function () {
+  describe('User with SOME and then MORE hybrid services', function () {
     it('should add a user (Meeting On, Calendar On)', function () {
       navigation.clickUsers();
       users.createUser(testUser);

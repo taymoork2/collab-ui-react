@@ -4,23 +4,35 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard Users using CSV File', function () {
-  var file = './../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv';
-  var absolutePath = utils.resolvePath(file);
-  var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
 
-  var i;
-  var importUsers = false;
+  var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
+  var userList = createCsvAndReturnUsers(CSV_FILE_PATH);
 
-  // User array
-  var userList = [];
-  var numUsers = 25; // batch size is 10
-  for (i = 0; i < numUsers; i++) {
-    userList[i] = utils.randomTestGmailwithSalt('CSV');
-    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',f,t,t,f\r\n';
+  function createCsvAndReturnUsers(path) {
+    var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
+    var userList = [];
+    for (var i = 0; i < 25; i++) {
+      userList[i] = utils.randomTestGmailwithSalt('config_user');
+      fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',f,t,t,f\r\n';
+    }
+    utils.writeFile(path, fileText);
+    return userList;
   }
 
-  // Make file for import CSV testing
-  utils.writeFile(absolutePath, fileText);
+  // Given an email alias, activate the user and confirm entitlements set
+  function confirmUserOnboarded(email) {
+    activate.setup(null, email);
+
+    utils.searchAndClick(email);
+    utils.expectIsDisplayed(users.servicesPanel);
+
+    utils.expectIsNotDisplayed(users.messageService);
+    utils.expectIsDisplayed(users.meetingService);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+
+    utils.click(users.closeSidePanel);
+  }
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -45,8 +57,7 @@ describe('Onboard Users using CSV File', function () {
 
   it('should land to the upload csv section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
-    utils.fileSendKeys(inviteusers.fileElem, absolutePath);
-    importUsers = true; // Optimize whether we clean these users up
+    utils.fileSendKeys(inviteusers.fileElem, CSV_FILE_PATH);
     utils.expectTextToBeSet(inviteusers.progress, '100%');
     utils.click(inviteusers.nextButton);
   });
@@ -60,44 +71,24 @@ describe('Onboard Users using CSV File', function () {
     utils.click(inviteusers.finishButton);
   }, LONG_TIMEOUT);
 
-  it('should find some of the ' + userList.length + ' users created', function () {
-    var nInd;
-    for (i = 0; i < 3; i++) {
-      switch (i) {
-      case 0:
-        nInd = 0; // first
-        break;
-      case 1:
-        nInd = (userList.length > 2) ? Math.round(userList.length / 2) : 1; // middle
-        break;
-      case 2:
-        nInd = userList.length - 1; // last
-        break;
-      }
+  it('should confirm first user onboarded', function() {
+    confirmUserOnboarded(userList[0]);
+  });
 
-      activate.setup(null, userList[nInd]);
+  it('should confirm middle user onboarded', function() {
+    confirmUserOnboarded(userList[(userList.length > 2) ? Math.round(userList.length / 2) : 1]);
+  });
 
-      utils.searchAndClick(userList[nInd]);
-      utils.expectIsDisplayed(users.servicesPanel);
-
-      utils.expectIsNotDisplayed(users.messageService);
-      utils.expectIsDisplayed(users.meetingService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-
-      utils.click(users.closeSidePanel);
-    }
-  }, LONG_TIMEOUT);
+  it('should confirm last user onboarded', function() {
+    confirmUserOnboarded(userList[userList.length -1]);
+  });
 
   afterAll(function () {
-    // Delete file
-    utils.deleteFile(absolutePath);
-
-    // Delete users if they were successfully imported
-    if (importUsers) {
-      for (i = 0; i < userList.length; i++) {
-        deleteUtils.deleteUser(userList[i]);
-      }
+    // delete file
+    utils.deleteFile(CSV_FILE_PATH);
+    // delete users
+    for (var i = 0; i < userList.length; i++) {
+      deleteUtils.deleteUser(userList[i], true);
     }
   }, 60000 * 4);
 });

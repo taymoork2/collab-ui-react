@@ -2,15 +2,10 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Configuring services per-user', function () {
+describe('Onboard users with Message service', function () {
   var testUser = utils.randomTestGmailwithSalt('teamrooms');
 
-  beforeEach(function () {
-    log.verbose = true;
-  });
-
   afterEach(function () {
-    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 
@@ -18,7 +13,7 @@ describe('Configuring services per-user', function () {
     login.login('account-admin', '#/users');
   });
 
-  describe('Onboard user and added services to it', function () {
+  describe('Onboard user', function () {
     it('should add a user (Meeting On, Calendar On)', function () {
       navigation.clickUsers();
       users.createUser(testUser);
