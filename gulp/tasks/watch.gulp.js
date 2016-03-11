@@ -3,16 +3,19 @@
  */
 'use strict';
 
-var gulp = require('gulp');
-var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({lazy: true});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var messageLogger = require('../utils/messageLogger.gulp')();
-var changedFiles = [];
-var testFiles = [];
+var config = require('../gulp.config')();
+var gulp = require('gulp');
+var karma = require('karma').server;
 var log = $.util.log;
+var messageLogger = require('../utils/messageLogger.gulp')();
+var path = require('path');
+var reload = browserSync.reload;
+
+var changedFiles;
+var testFiles;
 
 gulp.task('watch', [
   'watch:scss',
@@ -22,7 +25,6 @@ gulp.task('watch', [
   'watch:templates',
   'watch:lang'
 ]);
-
 
 gulp.task('watch:js', function () {
   if (!args.dist) {
@@ -110,6 +112,13 @@ gulp.task('watch:vendorjs', function () {
   }
 });
 
+gulp.task('karma-watch',['karma-config-watch'], function (done) {
+  karma.start({
+    configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
+    singleRun: true
+  }, done);
+});
+
 // Compile the karma template so that changes
 // with the test files of the changed directory
 gulp.task('karma-config-watch', function () {
@@ -156,6 +165,7 @@ gulp.task('copy:changed-files', function () {
 gulp.task('ts:changed-spec-files', function () {
   return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.tsTestOutputFolder);
 });
+
 gulp.task('ts:changed-files', function () {
   return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
 });
@@ -185,7 +195,6 @@ function compileTs(files, output) {
     }));
 }
 
-//////////
 function logWatch(event) {
   messageLogger('*** File ' + event.path + ' was ' + event.type + ', running tasks...');
   var path = event.path;
