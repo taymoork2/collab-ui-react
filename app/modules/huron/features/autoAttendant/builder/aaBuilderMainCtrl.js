@@ -445,7 +445,7 @@
     }
 
     $scope.$on("$includeContentLoaded", function(event, templateName) {
-      if(templateName.includes("aaSchedule.tpl.html")){
+      if(templateName.includes("aaSchedule.tpl.html") || templateName.includes("aaName.tpl.html")){
         vm.loading = false;
       }
     });
