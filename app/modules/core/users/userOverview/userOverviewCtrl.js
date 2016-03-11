@@ -97,13 +97,14 @@
     };
 
     function getDisplayableServices(serviceName) {
-      var messageServices = Authinfo.getServices();
+      var displayableServices = Authinfo.getServices();
+      window.console.log(displayableServices);
       if (Authinfo.hasAccount()) {
-        messageServices = messageServices.filter(function (service) {
+        displayableServices = displayableServices.filter(function (service) {
           return service.isConfigurable && service.licenseType === serviceName;
         });
       }
-      return messageServices.length > 0;
+      return angular.isArray(displayableServices) && (displayableServices.length > 0);
     }
 
     function hasEntitlement(entitlement) {
