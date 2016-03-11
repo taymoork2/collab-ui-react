@@ -16,7 +16,6 @@
       });
     }));
 
-
     beforeEach(inject(function (_$rootScope_, _$controller_, _$location_, _$cookies_, _DigitalRiverService_, _$q_) {
       $rootScope = _$rootScope_;
       DigitalRiverService = _DigitalRiverService_;
