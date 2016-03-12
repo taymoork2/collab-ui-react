@@ -20,9 +20,9 @@ function logWatch(event) {
       'app/**/' + parentDirectory + '/**.spec.js'
     ],
     changedFiles: path
-  }
+  };
 }
 
-module.exports = function() {
+module.exports = function () {
   return logWatch;
 };

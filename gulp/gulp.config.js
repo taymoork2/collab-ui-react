@@ -3,7 +3,7 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
@@ -33,6 +33,8 @@ module.exports = function() {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
+
+    gulpFiles: 'gulp/**/*.js',
 
     appFiles: {
       js: [

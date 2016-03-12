@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var messageLogger = require('../utils/messageLogger.gulp')();
@@ -26,9 +28,8 @@ gulp.task('serve', function (done) {
   );
 });
 
-
-gulp.task('watch-serve', function(done){
-  runSeq('watch','browser-sync',done);
+gulp.task('watch-serve', function (done) {
+  runSeq('watch', 'browser-sync', done);
 });
 
 // BrowserSync

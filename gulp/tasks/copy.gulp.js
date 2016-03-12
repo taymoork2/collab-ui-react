@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -150,4 +152,3 @@ gulp.task('copy:dist-vendor-fonts', function () {
     .pipe($.if(args.verbose, $.print()))
     .pipe(gulp.dest(config.dist + '/' + config.fonts));
 });
-

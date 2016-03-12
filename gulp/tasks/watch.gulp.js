@@ -3,7 +3,9 @@
  */
 'use strict';
 
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var config = require('../gulp.config')();
@@ -62,10 +64,10 @@ gulp.task('watch:ts', function () {
         ])
         .on('change', karmaModifiedFiles);
       gulp.watch(
-        [
-          '!' + config.appFiles.ts,
-          config.testFiles.spec.ts],
-        ['ts:changed-spec-files', 'index:build'])
+          [
+            '!' + config.appFiles.ts,
+            config.testFiles.spec.ts
+          ], ['ts:changed-spec-files', 'index:build'])
         .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
@@ -78,13 +80,14 @@ gulp.task('watch:ts', function () {
         ])
         .on('change', karmaModifiedFiles);
       gulp.watch(
-        [
-          '!' + config.appFiles.ts,
-          config.testFiles.spec.ts],
-        [
-          'karma-watch',
-          'ts:changed-spec-files',
-          'index:build'])
+          [
+            '!' + config.appFiles.ts,
+            config.testFiles.spec.ts
+          ], [
+            'karma-watch',
+            'ts:changed-spec-files',
+            'index:build'
+          ])
         .on('change', karmaModifiedFiles);
     }
   }
@@ -113,7 +116,7 @@ gulp.task('watch:vendorjs', function () {
   }
 });
 
-gulp.task('karma-watch',['karma-config-watch'], function (done) {
+gulp.task('karma-watch', ['karma-config-watch'], function (done) {
   karma.start({
     configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
     singleRun: true

@@ -9,22 +9,22 @@ var args = require('yargs').argv;
 var jsbeautifier = require('gulp-jsbeautifier');
 var messageLogger = require('../utils/messageLogger.gulp')();
 
+var beautifyFiles = [
+  config.app + '/**/*.js',
+  config.app + '/**/*.json',
+  config.test + '/**/*.js',
+  config.test + '/**/*.json',
+  '!test/karma-unit.js',
+  '!karma.conf.js',
+  config.gulpFiles
+];
 // Ensure code styles are up to par and there
 // are no obvious mistakes
 gulp.task('jsBeautifier:verify', function () {
-  var files = [
-    config.app + '/**/*.js',
-    config.app + '/**/*.json',
-    config.test + '/**/*.js',
-    config.test + '/**/*.json',
-    '!test/karma-unit.js',
-    '!karma.conf.js',
-    'gulpfile.js'
-  ];
   var logSuccess = args.verbose ? true : false;
-  messageLogger('Verifying JS files formatting', files);
+  messageLogger('Verifying JS files formatting', beautifyFiles);
   return gulp
-    .src(files)
+    .src(beautifyFiles)
     .pipe(jsbeautifier({
       config: '.jsbeautifyrc',
       mode: 'VERIFY_ONLY',
@@ -33,19 +33,10 @@ gulp.task('jsBeautifier:verify', function () {
 });
 
 gulp.task('jsBeautifier:beautify', function () {
-  var files = [
-    config.app + '/**/*.js',
-    config.app + '/**/*.json',
-    config.test + '/**/*.js',
-    config.test + '/**/*.json',
-    '!test/karma-unit.js',
-    '!karma.conf.js',
-    'gulpfile.js'
-  ];
   var logSuccess = args.verbose ? true : false;
-  messageLogger('Formatting JS files', files);
+  messageLogger('Formatting JS files', beautifyFiles);
   return gulp
-    .src(files, {
+    .src(beautifyFiles, {
       base: './'
     })
     .pipe(jsbeautifier({
