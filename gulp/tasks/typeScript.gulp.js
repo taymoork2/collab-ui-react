@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({ lazy: true });
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -35,7 +37,7 @@ gulp.task('ts:build-test', function () {
 });
 
 gulp.task('ts:build-app', function () {
-  var files =  [].concat(
+  var files = [].concat(
     config.appFiles.ts,
     '!' + config.testFiles.spec.ts
   );
@@ -44,7 +46,7 @@ gulp.task('ts:build-app', function () {
   return buildts(files, config.build);
 });
 
-function buildts(files, dest){
+function buildts(files, dest) {
   var reporter = $.typescript.reporter.defaultReporter();
 
   return gulp
@@ -67,4 +69,3 @@ function buildts(files, dest){
       stream: true
     }));
 }
-

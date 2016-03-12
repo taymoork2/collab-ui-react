@@ -1369,6 +1369,7 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "Not available. Please try another name",
+    "setSipUriErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipUriDomainSuccessMessage": "The SIP Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
@@ -3425,7 +3426,7 @@
       "hybrid": {
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More.",
+        "notEnabledActionText": "Learn More",
         "serviceHeader": "On Premise Status",
         "services": {
           "squared-fusion-cal": "Calendar",

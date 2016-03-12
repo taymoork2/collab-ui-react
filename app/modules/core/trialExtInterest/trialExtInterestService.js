@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-    .module('Squared')
-    .factory('TrialExtInterestService', TrialExtInterestService);
+    .module('Core')
+    .service('TrialExtInterestService', TrialExtInterestService);
 
   /* @ngInject */
   function TrialExtInterestService($http, UrlConfig) {

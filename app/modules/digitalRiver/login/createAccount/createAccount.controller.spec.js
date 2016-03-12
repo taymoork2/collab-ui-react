@@ -2,33 +2,55 @@
   'use strict';
 
   describe('Controller: createAccountController', function () {
-    var controller, DigitalRiverService;
+    var controller, $controller, DigitalRiverService, cookies, $q, $window;
+    var $rootScope;
+    var email = 'magic@email.com';
+    var $location;
 
     beforeEach(module('DigitalRiver'));
-
-    beforeEach(inject(function (_$controller_, _$location_, _$window_, _$cookies_, _$translate_, _DigitalRiverService_, $q) {
-      DigitalRiverService = _DigitalRiverService_;
-      controller = _$controller_('createAccountController', {
-        $location: _$location_,
-        $window: _$window_,
-        $cookies: _$cookies_,
-        $translate: _$translate_,
-        DigitalRiverService: DigitalRiverService
+    beforeEach(module(function ($provide) {
+      $provide.value('$window', $window = {
+        location: {
+          href: ''
+        }
       });
-      controller.email1 = 'foo@bar.com';
-      controller.email2 = 'foo@bar.com';
-      controller.password1 = 'pwd';
-      controller.password2 = 'pwd';
-      spyOn(DigitalRiverService, "addDrUser").and.returnValue($q.when());
     }));
 
+    beforeEach(inject(function (_$rootScope_, _$controller_, _$location_, _$cookies_, _DigitalRiverService_, _$q_) {
+      $rootScope = _$rootScope_;
+      DigitalRiverService = _DigitalRiverService_;
+      $location = _$location_;
+      $controller = _$controller_;
+      cookies = _$cookies_;
+
+      $q = _$q_;
+      spyOn(DigitalRiverService, 'addDrUser').and.returnValue($q.when({
+        data: {}
+      }));
+      spyOn($location, 'search').and.returnValue({
+        referrer: DigitalRiverService.getDrReferrer(),
+        email: email
+      });
+    }));
+
+    function initController() {
+      controller = $controller('createAccountController');
+
+      controller.email2 = email;
+      controller.password1 = 'pwd';
+      controller.password2 = 'pwd';
+    }
+
     describe('confirmPlaceholder', function () {
+      beforeEach(initController);
+
       it('should return the correct value', function () {
         expect(controller.confirmPlaceholder()).toEqual('digitalRiver.createAccount.confirmPlaceholder');
       });
     });
 
     describe('handleCreateAccount', function () {
+      beforeEach(initController);
 
       it('should validate an empty email', function () {
         controller.email1 = '';
@@ -56,13 +78,63 @@
         expect(controller.error).toEqual('digitalRiver.createAccount.validation.passwordsDontMatch');
       });
 
-      it('should pass happy path', function () {
-        controller.handleCreateAccount();
-        expect(controller.error).not.toBeDefined();
-        expect(DigitalRiverService.addDrUser).toHaveBeenCalled();
+      it('should pass happy path', function (done) {
+        controller.handleCreateAccount().then(function () {
+          expect(DigitalRiverService.addDrUser).toHaveBeenCalled();
+          done();
+        });
+        $rootScope.$apply();
       });
-
     });
 
+    describe('addDrUser rejected results', function () {
+      beforeEach(function () {
+        DigitalRiverService.addDrUser.and.returnValue($q.reject());
+        initController();
+        controller.handleCreateAccount();
+        $rootScope.$apply();
+      });
+
+      it('should error on bad promise', function () {
+        expect(DigitalRiverService.addDrUser).toHaveBeenCalled();
+        expect(controller.error).toEqual('digitalRiver.validation.unexpectedError');
+      });
+    });
+
+    describe('addDrUser success results', function () {
+      beforeEach(function () {
+        DigitalRiverService.addDrUser.and.returnValue($q.when({
+          data: {
+            success: true
+          }
+        }));
+        initController();
+      });
+
+      it('should successfully set window and cookie', function (done) {
+        controller.handleCreateAccount().then(function () {
+          expect(DigitalRiverService.addDrUser).toHaveBeenCalled();
+          expect(controller.error).not.toBeDefined();
+          expect(cookies.atlasDrCookie).toEqual('error');
+          expect($window.location.href).toEqual('https://www.digitalriver.com/');
+          done();
+        });
+        $rootScope.$apply();
+      });
+    });
+
+    describe('loading info from url path', function () {
+      beforeEach(function () {
+        initController();
+      });
+
+      it('should properly load the referrer', function () {
+        expect(controller.drReferrer).toBeTruthy();
+      });
+
+      it('should properly fetch the email from the url', function () {
+        expect(controller.email1).toBe(email);
+      });
+    });
   });
 })();
