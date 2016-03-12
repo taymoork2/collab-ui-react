@@ -53,7 +53,9 @@
             sipField.isDisabled = true;
             sipField.isButtonDisabled = true;
           } else if (data.verifiedDomains) {
-            displayName = data.verifiedDomains[0];
+            if (_.isArray(data.verifiedDomains)) {
+              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
+            }
           } else if (data.displayName) {
             displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
           }
@@ -85,10 +87,8 @@
         })
         .catch(function (response) {
           if (response.status === 400) {
-            if (response.data.message) {
-              sipField.errorMsg = response.data.message;
-              sipField.isError = true;
-            }
+            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessageInvalidDomain');
+            sipField.isError = true;
           } else {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
           }
