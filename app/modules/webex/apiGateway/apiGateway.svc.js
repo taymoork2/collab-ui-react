@@ -389,7 +389,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           "siteUrl=" + siteUrl + "\n" +
           "trainReleaseOrder=" + trainReleaseOrder + "\n" +
           "isT31IframeSupported=" + isT31IframeSupported;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         return isT31IframeSupported;
       } // isT31IframeSupportedCheck()

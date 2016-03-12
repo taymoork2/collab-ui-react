@@ -249,13 +249,13 @@ angular.module('Core').service('SiteListService', [
           var funcName = "processSiteRow()";
           var logMsg = "";
 
-          _this.updateOtherColumnsInRow(siteRow);
+          _this.updateWebExColumnsInRow(siteRow);
         } // processSiteRow()
       ); // gridData.forEach()
     }; // updateWebExDataColumns()
 
-    this.updateOtherColumnsInRow = function (siteRow) {
-      var funcName = "updateOtherColumnsInRow()";
+    this.updateWebExColumnsInRow = function (siteRow) {
+      var funcName = "updateWebExColumnsInRow()";
       var logMsg = "";
 
       var siteUrl = siteRow.license.siteUrl;
@@ -286,7 +286,7 @@ angular.module('Core').service('SiteListService', [
             "siteRow.isIframeSupported=" + siteRow.isIframeSupported + "\n" +
             "siteRow.isAdminReportEnabled=" + siteRow.isAdminReportEnabled + "\n" +
             "siteRow.showSiteLinks=" + siteRow.showSiteLinks;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           if (!siteRow.isCSVSupported) {
             // no further data to get
@@ -323,31 +323,30 @@ angular.module('Core').service('SiteListService', [
           $log.log(logMsg);
         } // isSiteSupportsIframeError()
       ); // WebExApiGatewayService.isSiteSupportsIframe().then
-    }; // updateOtherColumnsInRow()
+    }; // updateWebExColumnsInRow()
 
     this.updateCSVColumnInRow = function (siteRow) {
-
       var funcName = "updateCSVColumnInRow()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteRow=" + "\n" + JSON.stringify(siteRow);
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var siteUrl = siteRow.license.siteUrl;
       var checkCsvStatusReq = null;
 
       if (siteRow.csvStatusCheckMode.isOn) {
-    	if (null == siteRow.csvStatusCheckMode.checkIndex) {
-    		siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
-    	}
-    	
+        if (null == siteRow.csvStatusCheckMode.checkIndex) {
+          siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
+        }
+
         checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.csvStatusCheckMode.checkIndex];
 
         logMsg = funcName + "\n" +
           "checkIndex=" + siteRow.csvStatusCheckMode.checkIndex + "\n" +
           "checkCsvStatusReq=" + checkCsvStatusReq;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         ++siteRow.csvStatusCheckMode.checkIndex;
 
@@ -359,11 +358,6 @@ angular.module('Core').service('SiteListService', [
           siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
         }
       }
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl + "\n" +
-        "checkCsvStatusReq=" + checkCsvStatusReq;
-      $log.log(logMsg);
 
       WebExApiGatewayService.csvStatus(
         siteUrl,
@@ -477,7 +471,7 @@ angular.module('Core').service('SiteListService', [
 
           logMsg = funcName + "\n" +
             "adminUserSupportCSV=" + adminUserSupportCSV;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           // don't show the CSV column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {

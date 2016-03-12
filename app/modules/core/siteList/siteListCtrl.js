@@ -55,7 +55,7 @@ angular.module('Core').controller('SiteListCtrl', [
         if (isNewSiteUrl) {
           logMsg = funcName + "\n" +
             "conferenceService=" + JSON.stringify(conferenceService);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
