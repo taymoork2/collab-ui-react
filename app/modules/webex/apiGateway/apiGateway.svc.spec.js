@@ -28,13 +28,14 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
 
   it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       'none'
     ).then(
       function csvStatusReqSuccess(response) {
-        expect(response != null);
-        expect(response.status != null);
-        expect(response.status === 'none');
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('none');
+        expect(response.completionDetails).toEqual(null);
       }, // csvStatusReqSuccess()
 
       function csvStatusReqError(response) {
@@ -48,13 +49,14 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
 
   it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       'exportInProgress'
     ).then(
       function csvStatusReqSuccess(response) {
-        expect(response != null);
-        expect(response.status != null);
-        expect(response.status === 'exportInProgress');
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportInProgress');
+        expect(response.completionDetails).toEqual(null);
       }, // csvStatusReqSuccess()
 
       function csvStatusReqError(response) {
@@ -66,17 +68,37 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     $rootScope.$apply();
   }));
 
-  it('can return mock CSV status to be "exportCompleted"', inject(function (WebExApiGatewayService) {
+  it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
-      'exportCompleted'
+      'test.site.com',
+      'exportCompletedNoErr'
     ).then(
       function csvStatusReqSuccess(response) {
-        expect(response != null);
-        expect(response.status != null);
-        expect(response.status === 'exportCompleted');
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportCompletedNoErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
 
-        expect(response.completionInfo != null);
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      'test.site.com',
+      'exportCompletedWithErr'
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportCompletedWithErr');
+        expect(response.completionDetails).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
       function csvStatusReqError(response) {
@@ -90,13 +112,14 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
 
   it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
+      'test.site.com',
       'importInProgress'
     ).then(
       function csvStatusReqSuccess(response) {
-        expect(response != null);
-        expect(response.status != null);
-        expect(response.status === 'importInProgress');
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importInProgress');
+        expect(response.completionDetails).toEqual(null);
       }, // csvStatusReqSuccess()
 
       function csvStatusReqError(response) {
@@ -108,17 +131,37 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     $rootScope.$apply();
   }));
 
-  it('can return mock CSV status to be "importCompleted"', inject(function (WebExApiGatewayService) {
+  it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
-      "test.site.com",
-      'importCompleted'
+      'test.site.com',
+      'importCompletedNoErr'
     ).then(
       function csvStatusReqSuccess(response) {
-        expect(response != null);
-        expect(response.status != null);
-        expect(response.status === 'importCompleted');
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importCompletedNoErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
 
-        expect(response.completionInfo != null);
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      'test.site.com',
+      'importCompletedWithErr'
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importCompletedWithErr');
+        expect(response.completionDetails).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
       function csvStatusReqError(response) {
@@ -179,7 +222,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   );
 
   it('can check if site iframe supported (release order >= 400)', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -208,7 +251,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is iframe supported (release order < 400; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -238,7 +281,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is iframe supported (release order = null; enableT30UnifiedAdmin = true', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(true);
@@ -268,7 +311,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is not iframe supported (release order < 400; and enableT30UnifiedAdmin = false', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(false);
@@ -298,7 +341,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is not iframe supported (release order < 400; and enableT30UnifiedAdmin = null', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(false);
@@ -328,7 +371,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site is not iframe supported (release order = null; and enableT30UnifiedAdmin = null)', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isIframeSupported = response.isIframeSupported;
         expect(isIframeSupported).toBe(false);
@@ -358,7 +401,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site report is enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(true);
@@ -387,7 +430,7 @@ describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   }));
 
   it('can check if site report is not enabled', inject(function (WebExApiGatewayService) {
-    WebExApiGatewayService.isSiteSupportsIframe("test.site.com").then(
+    WebExApiGatewayService.isSiteSupportsIframe('test.site.com').then(
       function isSiteSupportsIframeSuccess(response) {
         var isAdminReportEnabled = response.isAdminReportEnabled;
         expect(isAdminReportEnabled).toBe(false);

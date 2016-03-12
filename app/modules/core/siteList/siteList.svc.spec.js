@@ -1,7 +1,314 @@
 'use strict';
 
-describe('Site List Service', function () {
+describe('SiteListService: csv status tests', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
 
+  var $q;
+  var $rootScope;
+
+  var deferredCsvStatusReq;
+
+  var SiteListService;
+  var WebExRestApiFact;
+  var WebExApiGatewayService;
+
+  var fakeSiteRow = null;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExRestApiFact_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    WebExRestApiFact = _WebExRestApiFact_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredCsvStatusReq = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      showCSVInfo: false,
+
+      checkCsvStatusStart: false,
+      checkCsvStatusEnd: false,
+      checkCsvStatusIndex: false,
+
+      csvStatusObj: null,
+
+      showExportLink: false,
+      showExportInProgressLink: false,
+      grayedExportLink: false,
+      showExportResultsLink: false,
+      exportFinishedWithErrors: false,
+
+      showImportLink: false,
+      showImportInProgressLink: false,
+      grayedImportLink: false,
+      showImportResultsLink: false,
+      importFinishedWithErrors: false,
+    };
+
+    WebExApiGatewayService.csvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ];
+
+    spyOn(WebExRestApiFact, 'csvStatusReq').and.returnValue(deferredCsvStatusReq.promise);
+    /*
+    spyOn(WebExApiGatewayService, 'csvStatusTypes').and.returnValue([
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ]);
+    */
+  })); // beforeEach(inject())
+
+  it('can process csvStatus="none"', function () {
+    fakeSiteRow.checkCsvStatusStart = 0;
+    fakeSiteRow.checkCsvStatusEnd = 0;
+    fakeSiteRow.checkCsvStatusIndex = 0;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("none");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportInProgress"', function () {
+    fakeSiteRow.checkCsvStatusStart = 1;
+    fakeSiteRow.checkCsvStatusEnd = 1;
+    fakeSiteRow.checkCsvStatusIndex = 1;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportInProgress");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedNoErr"', function () {
+    fakeSiteRow.checkCsvStatusStart = 2;
+    fakeSiteRow.checkCsvStatusEnd = 2;
+    fakeSiteRow.checkCsvStatusIndex = 2;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportCompletedNoErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedWithErr"', function () {
+    fakeSiteRow.checkCsvStatusStart = 3;
+    fakeSiteRow.checkCsvStatusEnd = 3;
+    fakeSiteRow.checkCsvStatusIndex = 3;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportCompletedWithErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importInProgress"', function () {
+    fakeSiteRow.checkCsvStatusStart = 4;
+    fakeSiteRow.checkCsvStatusEnd = 4;
+    fakeSiteRow.checkCsvStatusIndex = 4;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importInProgress");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedNoErr"', function () {
+    fakeSiteRow.checkCsvStatusStart = 5;
+    fakeSiteRow.checkCsvStatusEnd = 5;
+    fakeSiteRow.checkCsvStatusIndex = 5;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importCompletedNoErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedWithErr"', function () {
+    fakeSiteRow.checkCsvStatusStart = 6;
+    fakeSiteRow.checkCsvStatusEnd = 6;
+    fakeSiteRow.checkCsvStatusIndex = 6;
+
+    SiteListService.updateCSVColumnInRow(
+      fakeSiteRow,
+      true
+    );
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importCompletedWithErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+}); // describe()
+
+describe('SiteListService: license types tests', function () {
   //Load the required dependent modules
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -168,5 +475,4 @@ describe('Site List Service', function () {
     expect(fake_gridData[2].licenseTooltipDisplay).toBe(null);
 
   });
-
 }); //END describe
