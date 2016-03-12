@@ -282,6 +282,20 @@ var UsersPage = function () {
       utils.click(users.closeSidePanel);
     });
   };
+
+  this.createCsvAndReturnUsers = function (path) {
+    var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
+    var userList = _.chain(0)
+      .range(25)
+      .map(function (n) {
+        var randomAddress = utils.randomTestGmailwithSalt('CSV');
+        fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
+        return randomAddress;
+      })
+      .value();
+    utils.writeFile(path, fileText);
+    return userList;
+  }
 };
 
 module.exports = UsersPage;

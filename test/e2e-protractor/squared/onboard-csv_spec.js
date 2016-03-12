@@ -5,21 +5,7 @@
 
 describe('Onboard Users using CSV File', function () {
   var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
-  var userList = createCsvAndReturnUsers(CSV_FILE_PATH);
-
-  function createCsvAndReturnUsers(path) {
-    var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
-    var userList = _.chain(0)
-      .range(25)
-      .map(function (n) {
-        var randomAddress = utils.randomTestGmailwithSalt('CSV');
-        fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
-        return randomAddress;
-      })
-      .value();
-    utils.writeFile(path, fileText);
-    return userList;
-  }
+  var userList = users.createCsvAndReturnUsers(CSV_FILE_PATH);
 
   // Given an email alias, activate the user and confirm entitlements set
   function confirmUserOnboarded(email) {
