@@ -37,8 +37,7 @@ module.exports = function() {
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],

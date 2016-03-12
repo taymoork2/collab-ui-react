@@ -3,16 +3,20 @@
  */
 'use strict';
 
-var gulp = require('gulp');
-var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({lazy: true});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var messageLogger = require('../utils/messageLogger.gulp')();
-var changedFiles = [];
-var testFiles = [];
+var config = require('../gulp.config')();
+var gulp = require('gulp');
+var karma = require('karma').server;
 var log = $.util.log;
+var messageLogger = require('../utils/messageLogger.gulp')();
+var logWatch = require('../utils/logWatch.gulp')();
+var path = require('path');
+var reload = browserSync.reload;
+
+var changedFiles;
+var testFiles;
 
 gulp.task('watch', [
   'watch:scss',
@@ -22,7 +26,6 @@ gulp.task('watch', [
   'watch:templates',
   'watch:lang'
 ]);
-
 
 gulp.task('watch:js', function () {
   if (!args.dist) {
@@ -42,7 +45,7 @@ gulp.task('watch:js', function () {
           'copy:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     }
   }
 });
@@ -57,13 +60,13 @@ gulp.task('watch:ts', function () {
           'ts:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
       gulp.watch(
         [
           '!' + config.appFiles.ts,
           config.testFiles.spec.ts],
         ['ts:changed-spec-files', 'index:build'])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
           config.appFiles.ts,
@@ -73,7 +76,7 @@ gulp.task('watch:ts', function () {
           'ts:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
       gulp.watch(
         [
           '!' + config.appFiles.ts,
@@ -82,7 +85,7 @@ gulp.task('watch:ts', function () {
           'karma-watch',
           'ts:changed-spec-files',
           'index:build'])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     }
   }
 });
@@ -94,7 +97,7 @@ gulp.task('watch:lang', function () {
       ], [
         'copy:changed-files'
       ])
-      .on('change', logWatch);
+      .on('change', karmaModifiedFiles);
   }
 });
 
@@ -106,8 +109,15 @@ gulp.task('watch:vendorjs', function () {
         'copy:build-vendor-js',
         'index:build'
       ])
-      .on('change', logWatch);
+      .on('change', karmaModifiedFiles);
   }
+});
+
+gulp.task('karma-watch',['karma-config-watch'], function (done) {
+  karma.start({
+    configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
+    singleRun: true
+  }, done);
 });
 
 // Compile the karma template so that changes
@@ -156,6 +166,7 @@ gulp.task('copy:changed-files', function () {
 gulp.task('ts:changed-spec-files', function () {
   return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.tsTestOutputFolder);
 });
+
 gulp.task('ts:changed-files', function () {
   return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
 });
@@ -185,14 +196,8 @@ function compileTs(files, output) {
     }));
 }
 
-//////////
-function logWatch(event) {
-  messageLogger('*** File ' + event.path + ' was ' + event.type + ', running tasks...');
-  var path = event.path;
-  var pathArray = path.split('/');
-  var appIndex = pathArray.indexOf('modules') + 1;
-  var parentIndex = pathArray.length - 1;
-  var parentDirectory = pathArray.slice(appIndex, parentIndex).join('/');
-  testFiles = ['test/' + parentDirectory + '/**.spec.js', 'app/**/' + parentDirectory + '/**.spec.js'];
-  changedFiles = path;
+function karmaModifiedFiles(event) {
+  var files = logWatch(event);
+  changedFiles = files.changedFiles;
+  testFiles = files.testFiles;
 }

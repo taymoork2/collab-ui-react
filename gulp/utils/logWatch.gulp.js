@@ -14,8 +14,13 @@ function logWatch(event) {
   var appIndex = pathArray.indexOf('modules') + 1;
   var parentIndex = pathArray.length - 1;
   var parentDirectory = pathArray.slice(appIndex, parentIndex).join('/');
-  testFiles = ['test/' + parentDirectory + '/**.spec.js', 'app/**/' + parentDirectory + '/**.spec.js'];
-  changedFiles = path;
+  return {
+    testFiles: [
+      'test/' + parentDirectory + '/**.spec.js',
+      'app/**/' + parentDirectory + '/**.spec.js'
+    ],
+    changedFiles: path
+  }
 }
 
 module.exports = function() {

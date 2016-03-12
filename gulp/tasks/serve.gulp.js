@@ -26,6 +26,11 @@ gulp.task('serve', function (done) {
   );
 });
 
+
+gulp.task('watch-serve', function(done){
+  runSeq('watch','browser-sync',done);
+});
+
 // BrowserSync
 gulp.task('browser-sync', function () {
   if (browserSync.active) {
