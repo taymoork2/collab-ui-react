@@ -97,12 +97,12 @@ gulp.task('karma-config-parallel', karmaConfigParallelArray());
  */
 gulp.task('karma-sync-seg', function (done) {
   var threads = args.threads || os.cpus().length;
-  messageLogger('Using '+threads+' cpus');
+  messageLogger('Running on ' + threads + ' threads');
   var karmaArgs = ['karma-config-parallel'];
   var newArr = [];
-  _.forEach(modules, function (module,index) {
+  _.forEach(modules, function (module, index) {
     if (module !== 'all') {
-      if(index % threads === 0){
+      if (index % threads === 0) {
         karmaArgs.push(newArr);
         newArr = [];
       }
