@@ -4,9 +4,11 @@
 'use strict';
 
 /* global __dirname */
+var os = require('os');
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var fileListParser = require('../utils/fileListParser.gulp');
+var messageLogger = require('../utils/messageLogger.gulp')();
 var $ = require('gulp-load-plugins')({
   lazy: true
 });
@@ -33,9 +35,9 @@ var modules = _.map(config.testFiles.spec, function (val, key) {
  *   `gulp karma`                 ->  [karma-all]
  *
  *   `gulp karma-config-parallel` ->  runs every karma-config-{module} in parallel
- *   `gulp karma-sync-seg`         ->  [karma-config-parallel] then groups run-karma-{module}
+ *   `gulp karma-sync-seg`        ->  [karma-config-parallel] then groups run-karma-{module}
  *                                    into segments and runs a few at a time
- *   `gulp karma-each`             ->  runs each karma-{module} one after another
+ *   `gulp karma-each`            ->  runs each karma-{module} one after another
  *
  *   NOTE: modules are pulled from gulp.config.js -> config.testFiles.spec
  *   NOTE: `karma-watch` tasks are in watch.gulp.js
@@ -84,38 +86,42 @@ gulp.task('karma-config', function (done) {
   runSeq('karma-config-all', done);
 });
 
-// TODO:....? What is this doing here?
-
-// this works just fine
+// Quickly create each karma-config-{module} file
 gulp.task('karma-config-parallel', karmaConfigParallelArray());
 
-// work in progress
+/**
+ * Runs [threads] run-karma-{module} at once, defaults
+ * to the number of available cores on the machine
+ *
+ * Usage: `gulp karma-sync-seg [--threads=#]`
+ */
 gulp.task('karma-sync-seg', function (done) {
-  var threads = 4;
-  var args = ['karma-config-parallel'];
-  for (var i = 0; i < threads; i++) {
-    var arr = peelArray(modules, threads, i);
-    var newarr = [];
-    _.forEach(arr, function (input) {
-      if (input !== 'all') {
-        newarr.push('run-karma-' + input);
+  var threads = args.threads || os.cpus().length;
+  messageLogger('Using '+threads+' cpus');
+  var karmaArgs = ['karma-config-parallel'];
+  var newArr = [];
+  _.forEach(modules, function (module,index) {
+    if (module !== 'all') {
+      if(index % threads === 0){
+        karmaArgs.push(newArr);
+        newArr = [];
       }
-    });
-    args.push(newarr);
-  }
-  args.push(done);
-  runSeq.apply(this, args);
+      newArr.push('run-karma-' + module);
+    }
+  });
+  karmaArgs.push(done);
+  runSeq.apply(this, karmaArgs);
 });
 
 gulp.task('karma-each', function (done) {
-  var args = [];
+  var karmaArgs = [];
   _.forEach(modules, function (module) {
     if (module !== 'all') {
-      args.push('karma-' + module);
+      karmaArgs.push('karma-' + module);
     }
   });
-  args.push(done);
-  runSeq.apply(this, args);
+  karmaArgs.push(done);
+  runSeq.apply(this, karmaArgs);
 });
 
 function createGulpKarmaConfigModule(module) {
@@ -213,14 +219,4 @@ function karmaConfigParallelArray() {
     }
   });
   return karmaTasks;
-}
-
-function peelArray(array, modulator, peel) {
-  var peeled = [];
-  _.forEach(array, function (val, index, all) {
-    if (index % modulator === peel) {
-      peeled.push(val);
-    }
-  });
-  return peeled;
 }
