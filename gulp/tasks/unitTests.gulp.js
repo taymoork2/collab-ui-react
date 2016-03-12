@@ -31,7 +31,7 @@ var modules = _.map(config.testFiles.spec,function(val,key){
 *   `gulp karma`                 ->  [karma-all]
 *
 *   `gulp karma-config-parallel` ->  runs every karma-config-{module} in parallel
-*   `gulp karma-syn-seg`         ->  [karma-config-parallel] then groups run-karma-{module}
+*   `gulp karma-sync-seg`         ->  [karma-config-parallel] then groups run-karma-{module}
 *                                    into segments and runs a few at a time
 *   `gulp karma-each`             ->  runs each karma-{module} one after another
 *

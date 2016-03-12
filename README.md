@@ -222,7 +222,7 @@ angular.module('HelloWorld', [/* module dependencies array*/]);
 * find the proper permissions level / role (who can see this controller) adding a tab to `config.js` -> tabs array under: [app/modules/core/config/config.js]
 
 ```js
-// use the 'state' key from apconfig
+// use the 'state' key from appconfig
 User: ['say-hello',..]
 ```
 
@@ -243,7 +243,7 @@ User: ['say-hello',..]
 
 * write unit tests and place them side by side the corresponding code under test
   * All unit tests are named the same as the corresponding code file, but append .spec.js
-  * `'app/modules/helloWorld/sayWello/sayHello.controller.spec.js'`
+  * `'app/modules/helloWorld/sayHello/sayHello.controller.spec.js'`
 
 * ***if your code is a core journey***
   * add a functional test folder for your module

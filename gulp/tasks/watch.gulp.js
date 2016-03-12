@@ -11,6 +11,7 @@ var gulp = require('gulp');
 var karma = require('karma').server;
 var log = $.util.log;
 var messageLogger = require('../utils/messageLogger.gulp')();
+var logWatch = require('../utils/logWatch.gulp')();
 var path = require('path');
 var reload = browserSync.reload;
 
@@ -44,7 +45,7 @@ gulp.task('watch:js', function () {
           'copy:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     }
   }
 });
@@ -59,13 +60,13 @@ gulp.task('watch:ts', function () {
           'ts:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
       gulp.watch(
         [
           '!' + config.appFiles.ts,
           config.testFiles.spec.ts],
         ['ts:changed-spec-files', 'index:build'])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
           config.appFiles.ts,
@@ -75,7 +76,7 @@ gulp.task('watch:ts', function () {
           'ts:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
       gulp.watch(
         [
           '!' + config.appFiles.ts,
@@ -84,7 +85,7 @@ gulp.task('watch:ts', function () {
           'karma-watch',
           'ts:changed-spec-files',
           'index:build'])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     }
   }
 });
@@ -96,7 +97,7 @@ gulp.task('watch:lang', function () {
       ], [
         'copy:changed-files'
       ])
-      .on('change', logWatch);
+      .on('change', karmaModifiedFiles);
   }
 });
 
@@ -108,7 +109,7 @@ gulp.task('watch:vendorjs', function () {
         'copy:build-vendor-js',
         'index:build'
       ])
-      .on('change', logWatch);
+      .on('change', karmaModifiedFiles);
   }
 });
 
@@ -195,13 +196,8 @@ function compileTs(files, output) {
     }));
 }
 
-function logWatch(event) {
-  messageLogger('*** File ' + event.path + ' was ' + event.type + ', running tasks...');
-  var path = event.path;
-  var pathArray = path.split('/');
-  var appIndex = pathArray.indexOf('modules') + 1;
-  var parentIndex = pathArray.length - 1;
-  var parentDirectory = pathArray.slice(appIndex, parentIndex).join('/');
-  testFiles = ['test/' + parentDirectory + '/**.spec.js', 'app/**/' + parentDirectory + '/**.spec.js'];
-  changedFiles = path;
+function karmaModifiedFiles(event) {
+  var files = logWatch(event);
+  changedFiles = files.changedFiles;
+  testFiles = files.testFiles;
 }
