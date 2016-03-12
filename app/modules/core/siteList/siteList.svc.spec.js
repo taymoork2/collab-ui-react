@@ -40,9 +40,11 @@ describe('SiteListService: csv status tests', function () {
 
       showCSVInfo: false,
 
-      checkCsvStatusStart: false,
-      checkCsvStatusEnd: false,
-      checkCsvStatusIndex: false,
+      checkStart: false,
+      checkEnd: false,
+      checkIndex: false,
+
+      csvStatusCheckMode: null,
 
       csvStatusObj: null,
 
@@ -84,14 +86,14 @@ describe('SiteListService: csv status tests', function () {
   })); // beforeEach(inject())
 
   it('can process csvStatus="none"', function () {
-    fakeSiteRow.checkCsvStatusStart = 0;
-    fakeSiteRow.checkCsvStatusEnd = 0;
-    fakeSiteRow.checkCsvStatusIndex = 0;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 0,
+      checkEnd: 0,
+      checkIndex: 0
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -116,14 +118,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportInProgress"', function () {
-    fakeSiteRow.checkCsvStatusStart = 1;
-    fakeSiteRow.checkCsvStatusEnd = 1;
-    fakeSiteRow.checkCsvStatusIndex = 1;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 1,
+      checkEnd: 1,
+      checkIndex: 1
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -148,14 +150,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedNoErr"', function () {
-    fakeSiteRow.checkCsvStatusStart = 2;
-    fakeSiteRow.checkCsvStatusEnd = 2;
-    fakeSiteRow.checkCsvStatusIndex = 2;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 2,
+      checkEnd: 2,
+      checkIndex: 2
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -180,14 +182,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedWithErr"', function () {
-    fakeSiteRow.checkCsvStatusStart = 3;
-    fakeSiteRow.checkCsvStatusEnd = 3;
-    fakeSiteRow.checkCsvStatusIndex = 3;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 3,
+      checkEnd: 3,
+      checkIndex: 3
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -212,14 +214,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importInProgress"', function () {
-    fakeSiteRow.checkCsvStatusStart = 4;
-    fakeSiteRow.checkCsvStatusEnd = 4;
-    fakeSiteRow.checkCsvStatusIndex = 4;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 4,
+      checkEnd: 4,
+      checkIndex: 4
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -244,14 +246,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedNoErr"', function () {
-    fakeSiteRow.checkCsvStatusStart = 5;
-    fakeSiteRow.checkCsvStatusEnd = 5;
-    fakeSiteRow.checkCsvStatusIndex = 5;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 5,
+      checkEnd: 5,
+      checkIndex: 5
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();
@@ -276,14 +278,14 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedWithErr"', function () {
-    fakeSiteRow.checkCsvStatusStart = 6;
-    fakeSiteRow.checkCsvStatusEnd = 6;
-    fakeSiteRow.checkCsvStatusIndex = 6;
+    fakeSiteRow.csvCheckMode = {
+      isOn: true,
+      checkStart: 6,
+      checkEnd: 6,
+      checkIndex: 6
+    };
 
-    SiteListService.updateCSVColumnInRow(
-      fakeSiteRow,
-      true
-    );
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
     deferredCsvStatusReq.resolve({});
     $rootScope.$apply();

@@ -8,6 +8,7 @@ angular.module('Core').controller('SiteListCtrl', [
   'Authinfo',
   'Userservice',
   'SiteListService',
+  'WebExApiGatewayService',
 
   function (
     $translate,
@@ -16,7 +17,8 @@ angular.module('Core').controller('SiteListCtrl', [
     $interval,
     Authinfo,
     Userservice,
-    SiteListService
+    SiteListService,
+    WebExApiGatewayService
   ) {
 
     var funcName = "siteListCtrl()";
@@ -69,6 +71,20 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.advancedSettings = null;
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
+
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isCSVSupported = false;
+
+          // define the range of csv states to check
+          conferenceService.csvStatusCheckMode = {
+            isOn: true, // set this to false to turn off check
+            checkStart: 0,
+            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
+            checkIndex: null
+          };
+
+          conferenceService.csvStatusObj = null;
 
           vm.gridData.push(conferenceService);
         }

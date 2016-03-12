@@ -43,21 +43,24 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl + "\n" +
-        "checkCsvStatusReq=" + checkCsvStatusReq;
+        'checkCsvStatusReq=' + checkCsvStatusReq;
       $log.log(logMsg);
 
-      var completionInfo = null;
+      var completionDetails = null;
 
       var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'none', // can be any one of this.csvStatusTypes
-        'completionDetails': null, // null unless status is exportCompleted or importCompleted
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'none', // can be any one of this.csvStatusTypes
+        completionDetails: null, // null unless status is exportCompleted or importCompleted
       };
 
       var errorResult = {
-        'siteUrl': siteUrl,
-        'errorId:': null,
-        'errorDesc': null
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'error',
+        errorId: null,
+        errorDesc: null
       };
 
       var deferredCsvStatus = $q.defer();
@@ -67,9 +70,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          // return a mock/test csv status if requested
-          if (null != checkCsvStatusReq) {
-            if ('exportInProgress' == checkCsvStatusReq) {
+          if (null != checkCsvStatusReq) { // return a mock/test csv status if requested
+            successResult.isTestResult = true;
+
+            if ('none' == checkCsvStatusReq) {
               successResult.status = "none";
 
               deferredCsvStatus.resolve(successResult);
@@ -82,19 +86,19 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             }
 
             if ('exportCompletedNoErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "exportCompletedNoErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
 
             if ('exportCompletedWithErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "exportCompletedWithErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
@@ -106,23 +110,23 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             }
 
             if ('importCompletedNoErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "importCompletedNoErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
 
             if ('importCompletedWithErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "importCompletedWithErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
-          }
+          } // return a mock/test csv status if requested
 
           // TODO: if error response then return reject
 
