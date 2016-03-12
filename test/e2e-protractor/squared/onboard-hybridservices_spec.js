@@ -5,6 +5,18 @@
 describe('Onboard users with Hybrid Services', function () {
   var testUser = utils.randomTestGmailwithSalt('hybridservices');
 
+  function expectHybridServices(calendar, callAware, callConnect) {
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, calendar);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, callAware);
+
+    // Get into the call service settings, make sure EC is off!
+    if (callAware === 'On') {
+      utils.click(users.callServiceAware_link);
+      utils.expectTextToBeSet(users.callServiceAwareStatus, callAware);
+      utils.expectTextToBeSet(users.callServiceConnectStatus, callConnect);
+    }
+  }
+
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -13,24 +25,19 @@ describe('Onboard users with Hybrid Services', function () {
     login.login('account-admin', '#/users');
   });
 
-  it('should ensure calendar service enabled', function () {
+  it('should ensure services enabled', function () {
     navigation.ensureHybridService(navigation.calendarServicePage);
-  });
-
-  it('should ensure call service enabled', function () {
     navigation.ensureHybridService(navigation.callServicePage);
     navigation.ensureCallServiceAware();
   });
 
-  ///////////////////////////////////////////////////////////////////////////////
   describe('Onboard user with no hybrid services', function () {
     it('should add user', function () {
+      navigation.clickUsers();
       users.createUser(testUser);
-
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
       utils.expectIsNotDisplayed(users.manageDialog);
-
       activate.setup(null, testUser);
     });
 
@@ -50,7 +57,6 @@ describe('Onboard users with Hybrid Services', function () {
 
   describe('Onboard and test HS additive case', function () {
     it('should add a user (Meeting On, Calendar On)', function () {
-      navigation.clickUsers();
       users.createUser(testUser);
 
       utils.click(users.paidMtgCheckbox);
@@ -69,8 +75,8 @@ describe('Onboard users with Hybrid Services', function () {
 
       utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+      expectHybridServices('On', 'Off', 'Off');
+
       utils.click(users.closeSidePanel);
     });
 
@@ -89,13 +95,7 @@ describe('Onboard users with Hybrid Services', function () {
 
       utils.expectIsNotDisplayed(users.messageService);
       utils.expectIsDisplayed(users.meetingService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-
-      // Get into the call service settings, make sure EC is off!
-      utils.click(users.callServiceAware_link);
-      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-      utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
+      expectHybridServices('On', 'On', 'Off');
 
       utils.click(users.closeSidePanel);
       utils.deleteUser(testUser);
@@ -122,12 +122,7 @@ describe('Onboard users with Hybrid Services', function () {
 
       utils.expectIsDisplayed(users.messageService);
       utils.expectIsNotDisplayed(users.meetingService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-
-      utils.click(users.callServiceAware_link);
-      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-      utils.expectTextToBeSet(users.callServiceConnectStatus, 'Off');
+      expectHybridServices('Off', 'On', 'Off');
 
       utils.click(users.closeSidePanel);
       utils.deleteUser(testUser);
@@ -139,6 +134,7 @@ describe('Onboard users with Hybrid Services', function () {
       users.createUser(testUser);
 
       utils.click(users.paidMsgCheckbox);
+      utils.click(users.hybridServices_Cal);
       utils.click(users.hybridServices_EC);
 
       utils.click(users.onboardButton);
@@ -154,15 +150,9 @@ describe('Onboard users with Hybrid Services', function () {
 
       utils.expectIsDisplayed(users.messageService);
       utils.expectIsNotDisplayed(users.meetingService);
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
-
-      utils.click(users.callServiceAware_link);
-      utils.expectTextToBeSet(users.callServiceAwareStatus, 'On');
-      utils.expectTextToBeSet(users.callServiceConnectStatus, 'On');
+      expectHybridServices('On', 'On', 'On');
 
       utils.click(users.closeSidePanel);
-      utils.deleteUser(testUser);
     });
   });
 

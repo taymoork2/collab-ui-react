@@ -4,17 +4,19 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard Users using CSV File', function () {
-
   var CSV_FILE_PATH = utils.resolvePath('./../data/DELETE_DO_NOT_CHECKIN_onboard_csv_test_file.csv');
   var userList = createCsvAndReturnUsers(CSV_FILE_PATH);
 
   function createCsvAndReturnUsers(path) {
     var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
-    var userList = [];
-    for (var i = 0; i < 25; i++) {
-      userList[i] = utils.randomTestGmailwithSalt('config_user');
-      fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',f,t,t,f\r\n';
-    }
+    var userList = _.chain(0)
+      .range(25)
+      .map(function (n) {
+        var randomAddress = utils.randomTestGmailwithSalt('CSV');
+        fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
+        return randomAddress;
+      })
+      .value();
     utils.writeFile(path, fileText);
     return userList;
   }
@@ -84,11 +86,7 @@ describe('Onboard Users using CSV File', function () {
   });
 
   afterAll(function () {
-    // delete file
     utils.deleteFile(CSV_FILE_PATH);
-    // delete users
-    for (var i = 0; i < userList.length; i++) {
-      deleteUtils.deleteUser(userList[i], true);
-    }
+    _.each(userList, deleteUtils.deleteUser);
   }, 60000 * 4);
 });

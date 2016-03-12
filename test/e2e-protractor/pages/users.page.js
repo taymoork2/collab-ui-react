@@ -242,6 +242,46 @@ var UsersPage = function () {
     utils.click(this.plusIcon);
     utils.click(this.nextButton);
   };
+
+  this.createUserWithLicense = function (alias, checkbox) {
+    users.createUser(alias);
+    utils.click(checkbox);
+    utils.click(users.onboardButton);
+    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
+
+    activate.setup(null, alias);
+    utils.search(alias);
+  }
+
+  this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
+    function expectDisplayed(elem, state) {
+      if (state) {
+        utils.expectIsDisplayed(elem);
+      } else {
+        utils.expectIsNotDisplayed(elem);
+      }
+    }
+
+    utils.clickUser(alias);
+    expectDisplayed(users.servicesPanel, true);
+    expectDisplayed(users.messageService, expectedMsgState);
+    expectDisplayed(users.meetingService, expectedMtgState);
+
+    utils.click(users.servicesActionButton);
+    utils.click(users.editServicesButton);
+
+    utils.waitForModal().then(function () {
+      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+
+      // Uncheck license...
+      utils.click(clickService);
+      utils.click(users.saveButton);
+      notifications.assertSuccess('entitled successfully');
+      utils.click(users.closeSidePanel);
+    });
+  };
 };
 
 module.exports = UsersPage;

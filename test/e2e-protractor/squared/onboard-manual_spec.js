@@ -4,8 +4,7 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard users through Manual Invite', function () {
-  var testUser = utils.randomTestGmailwithSalt('manual');
-  var testUser2 = utils.randomTestGmailwithSalt('manual');
+  var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -27,7 +26,7 @@ describe('Onboard users through Manual Invite', function () {
 
     // Enter test email into edit box
     utils.click(users.emailAddressRadio);
-    utils.sendKeys(users.addUsersField, testUser + ', ' + testUser2);
+    utils.sendKeys(users.addUsersField, userList[0] + ', ' + userList[1]);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
 
@@ -36,23 +35,23 @@ describe('Onboard users through Manual Invite', function () {
     utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
 
-    activate.setup(null, testUser);
-    activate.setup(null, testUser2);
+    _.each(userList, function (alias) {
+      activate.setup(null, alias);
+    });
   });
 
   it('should confirm invited users exist and have licenses/entitlements set.', function () {
-    var arUsers = [testUser, testUser2];
-    for (var i = 0; i < arUsers.length; i++) {
-      utils.searchAndClick(arUsers[i]);
+    _.each(userList, function (alias) {
+      utils.searchAndClick(alias);
       utils.expectIsDisplayed(users.servicesPanel);
 
       utils.expectIsDisplayed(users.messageService);
       utils.expectIsNotDisplayed(users.meetingService);
-    }
+      utils.click(users.closeSidePanel);
+    });
   });
 
   afterAll(function () {
-    deleteUtils.deleteUser(testUser);
-    deleteUtils.deleteUser(testUser2);
+    _.each(userList, deleteUtils.deleteUser);
   });
 });
