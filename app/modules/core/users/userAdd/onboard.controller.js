@@ -1825,8 +1825,8 @@
       if (enabled) {
         $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
         $scope.maxUsers = 1100;
-        return CsvDownloadService.getCsv('headers').then(function (response) {
-          orgHeaders = angular.copy(response.data.columns || []);
+        return CsvDownloadService.getCsv('headers').then(function (csvData) {
+          orgHeaders = angular.copy(csvData.columns || []);
         }).catch(function (response) {
           Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
         });
