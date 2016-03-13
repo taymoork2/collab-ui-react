@@ -50,20 +50,18 @@ describe('Controller: UserDeleteCtrl', function () {
     $scope.$apply();
   }
 
-  function setupNonHuronUser() {
+  function setupUser() {
+    var entitlements = Array.prototype.slice.apply(arguments);
     Userservice.getUser.and.callFake(function (uuid, callback) {
       callback({
-        entitlements: []
+        entitlements: entitlements
       });
     });
   }
 
   function setupHuronUser() {
-    Userservice.getUser.and.callFake(function (uuid, callback) {
-      callback({
-        entitlements: ['ciscouc']
-      });
-    });
+    debugger;
+    setupUser('ciscouc');
   }
 
   function deactivateUser() {
@@ -92,7 +90,7 @@ describe('Controller: UserDeleteCtrl', function () {
   });
 
   describe('User without huron', function () {
-    beforeEach(setupNonHuronUser);
+    beforeEach(setupUser);
 
     describe('successful delete', function () {
       beforeEach(deactivateUser);
