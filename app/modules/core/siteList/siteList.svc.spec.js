@@ -8,18 +8,65 @@ describe('SiteListService: csv status tests', function () {
   var $q;
   var $rootScope;
 
-  var deferredCsvStatusReq;
+  var deferredCsvStatus;
 
   var SiteListService;
-  var WebExRestApiFact;
   var WebExApiGatewayService;
 
   var fakeSiteRow = null;
 
+  var fakeCsvStatusNone = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'none',
+    completionDetails: null,
+  };
+
+  var fakeCsvStatusExportInProgress = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'exportInProgress',
+    completionDetails: null,
+  };
+
+  var fakeCsvStatusExportCompletedNoErr = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'exportCompletedNoErr',
+    completionDetails: {},
+  };
+
+  var fakeCsvStatusExportCompletedWithErr = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'exportCompletedWithErr',
+    completionDetails: {},
+  };
+
+  var fakeCsvStatusImportInProgress = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'importInProgress',
+    completionDetails: null,
+  };
+
+  var fakeCsvStatusImportCompletedNoErr = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'importCompletedNoErr',
+    completionDetails: {},
+  };
+
+  var fakeCsvStatusImportCompletedWithErr = {
+    siteUrl: 'fake.webex.com',
+    isTestResult: true,
+    status: 'importCompletedWithErr',
+    completionDetails: {},
+  };
+
   beforeEach(inject(function (
     _$q_,
     _$rootScope_,
-    _WebExRestApiFact_,
     _WebExApiGatewayService_,
     _SiteListService_
   ) {
@@ -27,11 +74,10 @@ describe('SiteListService: csv status tests', function () {
     $q = _$q_;
     $rootScope = _$rootScope_;
 
-    WebExRestApiFact = _WebExRestApiFact_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     SiteListService = _SiteListService_;
 
-    deferredCsvStatusReq = $q.defer();
+    deferredCsvStatus = $q.defer();
 
     fakeSiteRow = {
       license: {
@@ -71,22 +117,11 @@ describe('SiteListService: csv status tests', function () {
       'importCompletedWithErr'
     ];
 
-    spyOn(WebExRestApiFact, 'csvStatusReq').and.returnValue(deferredCsvStatusReq.promise);
-    /*
-    spyOn(WebExApiGatewayService, 'csvStatusTypes').and.returnValue([
-      'none',
-      'exportInProgress',
-      'exportCompletedNoErr',
-      'exportCompletedWithErr',
-      'importInProgress',
-      'importCompletedNoErr',
-      'importCompletedWithErr'
-    ]);
-    */
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
   })); // beforeEach(inject())
 
   it('can process csvStatus="none"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 0,
       checkEnd: 0,
@@ -95,7 +130,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusNone);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -118,7 +153,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportInProgress"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 1,
       checkEnd: 1,
@@ -127,7 +162,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusExportInProgress);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -150,7 +185,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedNoErr"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 2,
       checkEnd: 2,
@@ -159,7 +194,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusExportCompletedNoErr);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -182,7 +217,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="exportCompletedWithErr"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 3,
       checkEnd: 3,
@@ -191,7 +226,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusExportCompletedWithErr);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -214,7 +249,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importInProgress"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 4,
       checkEnd: 4,
@@ -223,7 +258,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusImportInProgress);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -246,7 +281,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedNoErr"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 5,
       checkEnd: 5,
@@ -255,7 +290,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusImportCompletedNoErr);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
@@ -278,7 +313,7 @@ describe('SiteListService: csv status tests', function () {
   });
 
   it('can process csvStatus="importCompletedWithErr"', function () {
-    fakeSiteRow.csvCheckMode = {
+    fakeSiteRow.csvStatusCheckMode = {
       isOn: true,
       checkStart: 6,
       checkEnd: 6,
@@ -287,7 +322,7 @@ describe('SiteListService: csv status tests', function () {
 
     SiteListService.updateCSVColumnInRow(fakeSiteRow);
 
-    deferredCsvStatusReq.resolve({});
+    deferredCsvStatus.resolve(fakeCsvStatusImportCompletedWithErr);
     $rootScope.$apply();
 
     expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
