@@ -270,7 +270,7 @@ angular.module('Core').service('SiteListService', [
 
           logMsg = funcName + ": " + "\n" +
             "result=" + JSON.stringify(result);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           siteRow.isIframeSupported = result.isIframeSupported;
           siteRow.isAdminReportEnabled = result.isAdminReportEnabled;
@@ -318,7 +318,7 @@ angular.module('Core').service('SiteListService', [
 
           logMsg = funcName + ": " + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
         } // isSiteSupportsIframeError()
       ); // WebExApiGatewayService.isSiteSupportsIframe().then
     }; // updateWebExColumnsInRow()
