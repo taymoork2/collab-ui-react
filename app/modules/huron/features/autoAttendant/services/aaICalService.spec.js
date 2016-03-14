@@ -36,7 +36,7 @@ describe('Service: AACalendarService', function () {
     AAICalService = _AAICalService_;
     ical = _ical_;
     var date = new Date();
-    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '8', 0, 0);
+    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '9', 0, 0);
     endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
 
   }));
