@@ -29,16 +29,6 @@ describe('Service: AACalendarService', function () {
     }]
   };
 
-  var stdTimezoneOffset = function (d) {
-    var jan = new Date(d.getFullYear(), 0, 1);
-    var jul = new Date(d.getFullYear(), 6, 1);
-    return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
-  };
-
-  var dst = function (d) {
-    return d.getTimezoneOffset() < stdTimezoneOffset(d);
-  };
-
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -46,7 +36,7 @@ describe('Service: AACalendarService', function () {
     AAICalService = _AAICalService_;
     ical = _ical_;
     var date = new Date();
-    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), dst(date) ? '9' : '8', 0, 0);
+    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '8', 0, 0);
     endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
 
   }));

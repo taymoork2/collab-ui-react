@@ -17,7 +17,7 @@ describe('invite spec', function () {
       invite.expectWebClient();
     });
 
-    it('should forward to squared app with page param', function () {
+    xit('should forward to squared app with page param', function () {
       navigation.navigateTo('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
       invite.expectWebClient();
     });
