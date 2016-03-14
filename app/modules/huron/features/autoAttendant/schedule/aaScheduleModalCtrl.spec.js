@@ -138,11 +138,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
         $invalid: false,
         holidayStart: {
           $viewValue: undefined,
-          $setPristine: function() { }
+          $setPristine: function () {}
         },
         holidayEnd: {
           $viewValue: undefined,
-          $setPristine: function() { }
+          $setPristine: function () {}
         }
       };
       spyOn(controller.holidaysForm.holidayStart, '$setPristine').and.returnValue(true);
@@ -242,11 +242,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.holidaysForm.holidayEnd.$setPristine).toHaveBeenCalled();
     });
 
-    it('isDisabled should return false', function() {
+    it('isDisabled should return false', function () {
       expect(controller.isDisabled()).toBeFalsy();
     });
 
-    it('addHoliday should add a holiday', function() {
+    it('addHoliday should add a holiday', function () {
       controller.addHoliday();
       $scope.$apply();
       expect(controller.holidays.length).toEqual(1);
@@ -255,7 +255,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.holidays.length).toEqual(2);
     });
 
-    it('removeHoliday should remove a holiday', function() {
+    it('removeHoliday should remove a holiday', function () {
       controller.addHoliday();
       controller.removeHoliday();
       $scope.$apply();

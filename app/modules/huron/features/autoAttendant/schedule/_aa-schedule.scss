@@ -1,20 +1,18 @@
 .aa-holidays {
 	background: $gray-light-4;
-	margin-left: 30px;
-	margin-right: 30px;
+	@include vr-spacing(mh, 1.875);
 	.aa-schedule-subtitle {
-		padding: 20px;
+		@include vr-spacing(p, 1.25);
 	}
 	.aa-hour-right {
-		padding-top: 28px;
+		@include vr-spacing(pt, 1.75);
 		.cs-input-group {
-			margin-bottom: 1.5rem;
+			@include vr-spacing(mb, 1.5);
 		}
 	}
 }
 .left-margin-20 {
-	margin-left: 20px;
-	margin-bottom: .5rem;
+	@include vr-spacing(ml, 1.25);
 }
 #addHoliday {
 	padding-bottom: 10px;
@@ -34,7 +32,7 @@
 		}
 	}
 	.collapse {
-		margin-top: -1.5rem;
+		@include vr-spacing(mt, -1.5);
 	}
 	.accordion {
 		border-top: 1px solid $gray;
@@ -53,7 +51,7 @@
 					div {
 						width: 30%;
 						float: left;
-						padding-left: .5rem;
+						@include vr-spacing(pl, .5);
 					}
 					div:last-child {
 						width: 70%;
@@ -78,7 +76,7 @@
 				background: transparent;
 				border: none;
 				border-top: 1px solid $gray;
-				padding-bottom: 1.5rem
+				@include vr-spacing(pb, 1.5);
 			}
 			&:first-child {
 				a {
@@ -90,7 +88,7 @@
 			}
 		}
 		.cs-checkbox {
-			margin-bottom: 28px;
+			@include vr-spacing(mb, 1.75);
 		}
 	}
 }
@@ -98,9 +96,9 @@
 /* Should go in toolkit for timepicker error state */
 
 .error .cs-datapicker-normal {
-	border-color: #F96452;
-	background-color: #FEDCD7;
+	border-color: $color-alerts-base;
+	background-color: $color-alerts-lighter;
 	input[type="text"][readonly].cs-datepicker-input {
-		background-color: #FEDCD7;
+		background-color: $color-alerts-lighter;
 	}
 }

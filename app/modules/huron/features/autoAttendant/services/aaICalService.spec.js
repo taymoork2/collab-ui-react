@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: AACalendarService', function () {
+describe('Service: AACalendarService', function () {
   var AAICalService, ical;
   // require('jasmine-collection-matchers');
   var starttime, endtime;

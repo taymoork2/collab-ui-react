@@ -61,7 +61,10 @@
         canAdd = true;
       }
       if (canAdd) {
-        vm.holidays.push({isOpen: true, allDay: true});
+        vm.holidays.push({
+          isOpen: true,
+          allDay: true
+        });
       } else {
         forceCheckHoliday();
       }
@@ -84,7 +87,7 @@
       return vm.holidaysForm.$invalid;
     }
 
-    vm.openSection = function() {
+    vm.openSection = function () {
       forceCheckHoliday();
     };
 
@@ -97,7 +100,7 @@
       }
     }
 
-    function  isSavable() {
+    function isSavable() {
       if (isHoursSavable()) {
         return vm.holidaysForm.$valid;
       } else if (!vm.openhours.length) {
@@ -170,8 +173,7 @@
         var notifyName = vm.aaModel.aaRecord.callExperienceName;
 
         if (vm.aaModel.aaRecord.scheduleId) {
-          if ((vm.openhours.length > 0) || (vm.holidays.length > 0 )) {
-          // if ((vm.openhours.length > 0)) {
+          if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);
             notifyName = calName; // An update is updating only calendar, so notify indicates calender updated
           } else if (vm.isDeleted) {

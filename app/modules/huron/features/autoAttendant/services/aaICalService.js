@@ -52,7 +52,7 @@
       } else {
         return [];
       }
-      
+
     }
 
     function addHoursRange(type, calendar, hoursRange) {
