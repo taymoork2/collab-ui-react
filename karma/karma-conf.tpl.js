@@ -60,15 +60,15 @@ module.exports = function (config) {
     // - Firefox
     // - Opera
     // - Safari (only Mac)
-    // - PhantomJS2
+    // - PhantomJS
     // - IE (only Windows)
-    browsers: [process.env.atlas_karma_browser || 'PhantomJS2'],
+    browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
      //browsers: ['Chrome'],
 
     // Which plugins to enable
     plugins: [
       'karma-coverage',
-      'karma-phantomjs2-launcher',
+      'karma-phantomjs-launcher',
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-sinon',
