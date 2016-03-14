@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var messageLogger = require('../utils/messageLogger.gulp')();
 
 gulp.task('image-min', function (done) {

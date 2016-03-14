@@ -12,6 +12,7 @@ var Navigation = function () {
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
+  this.callSettings = element(by.css('a[href="#/hurondetails/settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
@@ -121,8 +122,9 @@ var Navigation = function () {
   };
 
   this.clickAutoAttendant = function () {
-    this.clickDevelopmentTab();
-    utils.click(this.callRoutingTab);
+    this.clickServicesTab();
+    utils.click(this.callSettings);
+    this.expectCurrentUrl('/hurondetails/settings');
     utils.click(this.autoAttendantPage);
     this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);

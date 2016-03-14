@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var args = require('yargs').argv;
 var del = require('del');
 var fs = require('fs');
@@ -43,7 +45,7 @@ gulp.task('e2e', function (done) {
       'protractor',
       'protractor:clean',
       done
-      );
+    );
   } else {
     runSeq(
       'e2e:setup',
@@ -51,7 +53,7 @@ gulp.task('e2e', function (done) {
       'protractor',
       'protractor:clean',
       done
-      );
+    );
   }
 });
 
@@ -117,7 +119,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.sunlight,
       config.testFiles.e2e.webex,
       config.testFiles.e2e.mediafusion
-      );
+    );
     messageLogger('Running End 2 End tests from all modules.');
   }
 
@@ -219,13 +221,13 @@ gulp.task('e2e:setup', function (done) {
   var buildTask = args.build ? 'build' : 'dist';
   if (!args.nosetup) {
     runSeq(
-    // TODO: make mocha not exit on errors
-    // 'test:api',
+      // TODO: make mocha not exit on errors
+      // 'test:api',
       buildTask,
       'eslint:e2e',
       'connect',
       done
-      );
+    );
   } else {
     log($.util.colors.red('--nosetup **Skipping E2E Setup Tasks.'));
     return done();
