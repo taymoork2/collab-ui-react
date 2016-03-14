@@ -454,14 +454,6 @@
 
     }
 
-    function setLoadingStarted(){
-      vm.loading = true;
-    }
-
-    function setLoadingDone(){
-      vm.loading = false;
-    }
-
     activate();
 
   }
