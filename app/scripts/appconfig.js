@@ -333,6 +333,20 @@ angular
             loggedOnUser: null
           }
         })
+        .state('domainmanagement.unclaim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
+          }
+        })
         .state('domainmanagement.claim', {
           parent: 'modal',
           views: {

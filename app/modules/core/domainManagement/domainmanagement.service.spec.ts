@@ -212,6 +212,8 @@ describe('DomainManagementService', () => {
     //when('POST', url).respond({});
     let domain = 'super-domain.com';
     //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
+    //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({text: domain, status: 'pending'});
     DomainManagementService.unverifyDomain(domain).then(res=> {
       expect(res).toBeUndefined();
@@ -221,6 +223,8 @@ describe('DomainManagementService', () => {
     $httpBackend.flush();
     //$rootScope.$digest();
 
+    //noinspection TypeScriptUnresolvedVariable
+    expect(DomainManagementService._enforceUsersInVerifiedAndClaimedDomains).toBe(true); //It should not flip this when deleting a pending domain!
   });
 
   it('when delete empty domain, service should immediately reject', ()=> {
@@ -284,6 +288,9 @@ describe('DomainManagementService', () => {
     let domain = 'super-domain.com';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({text: domain, status: 'verified'});
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
+
     DomainManagementService.unverifyDomain(domain).then(res=> {
       expect(res).toBeUndefined();
     }, err=> {
@@ -292,5 +299,9 @@ describe('DomainManagementService', () => {
     $httpBackend.flush();
     //$rootScope.$digest();
 
+    expect(DomainManagementService.domainList.length).toBe(0);
+
+    //noinspection TypeScriptUnresolvedVariable
+    expect(DomainManagementService._enforceUsersInVerifiedAndClaimedDomains).toBe(false);
   });
 });
