@@ -60,7 +60,6 @@ describe('Controller: UserDeleteCtrl', function () {
   }
 
   function setupHuronUser() {
-    debugger;
     setupUser('ciscouc');
   }
 
