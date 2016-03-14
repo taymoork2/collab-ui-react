@@ -414,7 +414,8 @@
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          setMediaGraph(response, vm.mediaSelected);
+          mediaData = response;
+          setMediaGraph(mediaData, vm.mediaSelected);
           vm.mediaQualityStatus = SET;
         }
         mediaCard = document.getElementById('media-quality-card');

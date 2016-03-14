@@ -29,8 +29,8 @@
     @include vr-spacing(m, 0);
 
     @include vr-spacing(pt, 1);
-    @include vr-spacing(pl, .5);
-    @include vr-spacing(pr, .5);
+    @include vr-spacing(pl, .25);
+    @include vr-spacing(pr, .25);
     @include vr-spacing(pb, 0);
 
     background-color: $gray-light-3;
@@ -50,12 +50,6 @@
     }
   }
 
-  & .country-list {
-    .dropdown-menu {
-      width: inherit;
-    }
-  }
-
   & .select-toggle {
     width: auto;
 
@@ -71,7 +65,7 @@
   & .aa-trash-icon {
     padding-left: 0;
     padding-top: 0;
-    top: 0.25rem;
+    top: 0.5rem;
   }
 
   & .aa-key-action {
@@ -81,6 +75,7 @@
 
     & textarea {
       line-height: 1.25rem;
+      width: 100%;
       @include vr-spacing(pt, .50);
       @include vr-spacing(pb, .50);
       @include vr-spacing(pl, .75);
@@ -94,10 +89,13 @@
       @include vr-spacing(mb, 0);
     }
 
-    & .country-list {
-      @include vr-spacing(mt, 1);
-    }
+    & form {
+      @include vr-spacing(mb, 0);
 
+      & .form-group {
+        @include vr-spacing(mb, .25);
+      }
+    }
   }
 
   .aa-pm-timeout {
@@ -126,6 +124,7 @@
   .aa-pm-key-select {
     & .select-toggle {
       @include vr-spacing(pl, 1.25);
+      @include vr-spacing(pt, .5);
     }
 
     // selected option
@@ -198,6 +197,8 @@
         @extend %aa-pm-vertical-line;
       }
     }
+
+
   }
 
   .control-label {

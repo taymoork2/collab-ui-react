@@ -5,7 +5,9 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 var messageLogger = require('../utils/messageLogger.gulp')();
 var pkg = require('../../package.json');
 var runSeq = require('run-sequence');
@@ -86,4 +88,3 @@ gulp.task('optimize:unsupported', function () {
     .pipe($.sourcemaps.write('./'))
     .pipe(gulp.dest(config.dist));
 });
-

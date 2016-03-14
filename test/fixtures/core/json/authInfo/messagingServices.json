@@ -1,20 +1,61 @@
-[{
-  "isCustomerPartner": false,
-  "label": "Standard Team Rooms",
-  "license": {
-    "features": [
-      "webex-squared",
-      "squared-call-initiation",
-      "messenger-interop",
-      "webex-messenger",
-      "squared-room-moderation"
-    ],
-    "isTrial": true,
-    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
-    "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
-    "licenseType": "MESSAGING",
-    "offerName": "MS",
-    "status": "ACTIVE",
-    "volume": 100
-  }
-}]
+{
+  "singleLicense": [{
+    "isCustomerPartner": false,
+    "label": "Standard Team Rooms",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "messenger-interop",
+        "webex-messenger",
+        "squared-room-moderation"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+      "licenseType": "MESSAGING",
+      "offerName": "MS",
+      "status": "ACTIVE",
+      "volume": 100
+    }
+  }],
+  "multipleLicenses": [{
+    "isCustomerPartner": false,
+    "label": "Standard Team Rooms",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "messenger-interop",
+        "webex-messenger",
+        "squared-room-moderation"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+      "licenseType": "MESSAGING",
+      "offerName": "MS",
+      "status": "ACTIVE",
+      "volume": 100
+    }
+  }, {
+    "isCustomerPartner": false,
+    "label": "Standard Team Rooms",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "messenger-interop",
+        "webex-messenger",
+        "squared-room-moderation"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+      "licenseType": "MESSAGING",
+      "offerName": "MS",
+      "status": "ACTIVE",
+      "volume": 100
+    }
+  }]
+}
