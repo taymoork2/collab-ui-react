@@ -14,7 +14,9 @@ describe('SiteListService: iframeable site test', function () {
   var SiteListService;
 
   var fakeSiteRow;
+
   var deferredIsSiteSupportsIframe;
+  var deferredCsvStatus;
 
   beforeEach(inject(function (
     _$q_,
@@ -34,18 +36,44 @@ describe('SiteListService: iframeable site test', function () {
     SiteListService = _SiteListService_;
 
     deferredIsSiteSupportsIframe = $q.defer();
+    deferredCsvStatus = $q.defer();
 
     fakeSiteRow = {
       license: {
         siteUrl: "fake.webex.com"
-      }
+      },
+
+      csvStatusCheckMode: {
+        isOn: true,
+        checkStart: 0,
+        checkEnd: 0,
+        checkIndex: 0
+      },
+
+      csvPollIntervalObj: null
     };
 
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
     spyOn(UrlConfig, 'getWebexAdvancedEditUrl').and.returnValue("fake.admin.webex.com");
     spyOn(UrlConfig, 'getWebexAdvancedHomeUrl').and.returnValue("fake.webex.com");
     spyOn(WebExApiGatewayService, 'isSiteSupportsIframe').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
   })); // beforeEach(inject())
+
+  it('can set up csv status polling', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: true
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvPollIntervalObj).not.toEqual(null);
+  });
 
   it('can process isIframeSupported=false and isAdminReportEnabled=false', function () {
     SiteListService.updateWebExColumnsInRow(fakeSiteRow);
