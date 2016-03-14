@@ -133,7 +133,20 @@ fdescribe('Controller: AAScheduleModalCtrl', function () {
 
   describe('saveSchedule', function () {
     beforeEach(function () {
-      controller.holidaysForm = {};
+      controller.holidaysForm = {
+        $valid: true,
+        $invalid: false,
+        holidayStart: {
+          $viewValue: undefined,
+          $setPristine: function() { }
+        },
+        holidayEnd: {
+          $viewValue: undefined,
+          $setPristine: function() { }
+        }
+      };
+      spyOn(controller.holidaysForm.holidayStart, '$setPristine').and.returnValue(true);
+      spyOn(controller.holidaysForm.holidayEnd, '$setPristine').and.returnValue(true);
       controller.holidaysForm.$valid = true;
       controller.calendar = calendar;
       var ceInfo = ce2CeInfo(rawCeInfo);
@@ -221,6 +234,16 @@ fdescribe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(controller.toggleHours).toBeTruthy();
       expect(controller.toggleHolidays).toBeTruthy();
+    });
+
+    it('changeAllDay should make form pristine if values are not in the input fields for startdate and enddate', function () {
+      controller.changeAllDay(controller.holidaysForm);
+      expect(controller.holidaysForm.holidayStart.$setPristine).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayEnd.$setPristine).toHaveBeenCalled();
+    });
+
+    it('isDisabled should return false', function() {
+      expect(controller.isDisabled()).toBeFalsy();
     });
   });
 });

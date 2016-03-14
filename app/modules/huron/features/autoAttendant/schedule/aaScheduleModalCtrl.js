@@ -46,7 +46,7 @@
       vm.hoursForm.$setDirty();
     }
 
-    function changeAllDay(form, holiday) {
+    function changeAllDay(form) {
       if (!form.holidayStart.$viewValue || !form.holidayEnd.$viewValue) {
         form.holidayStart.$setPristine();
         form.holidayEnd.$setPristine();
@@ -150,10 +150,10 @@
     function getCalendar() {
       vm.calendar = AAICalService.createCalendar();
       _.each(vm.openhours, function (hours) {
-        AAICalService.addHoursRange(vm.calendar, hours);
+        AAICalService.addHoursRange('open', vm.calendar, hours);
       });
       _.each(vm.holidays, function (holiday) {
-        AAICalService.addHoursRange(vm.calendar, holiday);
+        AAICalService.addHoursRange('holiday', vm.calendar, holiday);
       });
       return vm.calendar.toString();
     }

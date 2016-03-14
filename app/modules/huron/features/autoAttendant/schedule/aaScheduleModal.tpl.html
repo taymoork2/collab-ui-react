@@ -109,7 +109,7 @@
                       id="checkbox{{$index}}"
                       name="checkbox{{$index}}"
                       cs-input-label="{{'autoAttendant.allDay' | translate}}"
-                      ng-change="aaScheduleModalCtrl.changeAllDay(holidayForm, holiday)">
+                      ng-change="aaScheduleModalCtrl.changeAllDay(holidayForm)">
                   </div>
                   <div class="row">
                     <div class="columns medium-6" ng-class="{'error': holidayForm.holidayStart.$error.required && holidayForm.holidayStart.$dirty && !holiday.allDay}">

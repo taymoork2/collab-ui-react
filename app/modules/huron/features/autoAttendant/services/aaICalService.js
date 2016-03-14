@@ -50,7 +50,7 @@
       };
     }
 
-    function addHoursRange(calendar, hoursRange) {
+    function addHoursRange(type, calendar, hoursRange) {
       if ((hoursRange.starttime && hoursRange.endtime) || hoursRange.allDay) {
         // the recurrence days for the hour range
         var days = [];
@@ -61,21 +61,21 @@
             days.push(day.label.substring(0, 2).toUpperCase());
           }
         });
-        if ((days.length > 0) || hoursRange.name) {
+        if ((days.length > 0) || type === 'holiday') {
           // create event
           var vevent = new ical.Component('vevent');
 
           // create vtimezone
-          var isHoliday = false;
           // recurrence
-          if (!hoursRange.name) {
+          if (type === 'open') {
             var strRRule = 'FREQ=WEEKLY;BYDAY=' + days.toString();
             var recur = ical.Recur.fromString(strRRule);
             p = new ical.Property('rrule');
             p.setValue(recur);
             vevent.addProperty(p);
-          } else {
-            isHoliday = true;
+            vevent.addPropertyWithValue('summary', 'open');
+            vevent.addPropertyWithValue('priority', '10');
+          } else if (type === 'holiday') {
             vevent.addPropertyWithValue('summary', 'holiday');
             var date = moment(hoursRange.date).toDate();
             var _date = moment(hoursRange.date).toDate();
@@ -93,6 +93,7 @@
             hoursRange.starttime = date;
             hoursRange.endtime = _date;
             vevent.addPropertyWithValue('description', hoursRange.name);
+            vevent.addPropertyWithValue('priority', '1');
           }
 
           // Server iCalendar parse seems to want Time with a particular date (year, month, day)
@@ -100,10 +101,10 @@
           // But we are doing recurrence based on day of week, so what particular date?
           // The date of the first day selected?  Today?
 
-          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime, isHoliday);
+          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime, type);
           vevent.addProperty(p);
 
-          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime, isHoliday);
+          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime, type);
           vevent.addProperty(p);
 
           // add event to calendar
@@ -126,15 +127,15 @@
       return timezone;
     }
 
-    function getiCalDateTime(calendar, dateType, time, isHoliday) {
+    function getiCalDateTime(calendar, dateType, time, type) {
       var currentDate = new Date();
       var timezone = getTz(calendar);
       var tz = 'UTC/GMT';
       var p = new ical.Property(dateType);
       p.setValue(new ical.Time({
-        year: !isHoliday ? currentDate.getFullYear() : time.getFullYear(),
-        month: !isHoliday ? currentDate.getMonth() : time.getMonth(),
-        day: !isHoliday ? currentDate.getDate() : time.getDate(),
+        year: type !== 'holiday' ? currentDate.getFullYear() : time.getFullYear(),
+        month: type !== 'holiday' ? currentDate.getMonth() : time.getMonth(),
+        day: type !== 'holiday' ? currentDate.getDate() : time.getDate(),
         hour: time.getHours(),
         minute: time.getMinutes(),
         second: 0,
