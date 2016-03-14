@@ -4,8 +4,8 @@ angular.module('Squared')
   .service('csadminservice', CsadminService);
 
 /* @ngInject */
-function CsadminService($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
-  var csadminUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/csadmin';
+function CsadminService($rootScope, $http, Storage, UrlConfig, Log, Auth, Authinfo) {
+  var csadminUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users/csadmin';
 
   var service = {
     csadminUrl: csadminUrl,

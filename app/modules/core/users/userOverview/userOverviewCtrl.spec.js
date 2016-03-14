@@ -3,17 +3,18 @@
 describe('Controller: UserOverviewCtrl', function () {
   var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures;
+  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
     Config = _Config_;
     Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
     Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
@@ -42,7 +43,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     // eww
-    var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
+    var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
     $httpBackend.whenGET(userUrl).respond(updatedUser);
 
     controller = $controller('UserOverviewCtrl', {

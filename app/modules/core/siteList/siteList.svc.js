@@ -5,25 +5,27 @@ angular.module('Core').service('SiteListService', [
   '$translate',
   '$interval',
   'Authinfo',
-  'Userservice',
   'Config',
   'WebExApiGatewayService',
   'WebExUtilsFact',
+  'UrlConfig',
+  'WebExUtilsService',
+  'FeatureToggleService',
 
   function (
     $log,
     $translate,
     $interval,
     Authinfo,
-    Userservice,
     Config,
     WebExApiGatewayService,
-    WebExUtilsFact
+    WebExUtilsFact,
+    UrlConfig,
+    WebExUtilsService,
+    FeatureToggleService
   ) {
 
     var _this = this;
-
-    this.csvPoll = null;
 
     this.updateLicenseTypesColumn = function (siteListGridData) {
       var funcName = "updateLicenseTypesColumn()";
@@ -244,20 +246,36 @@ angular.module('Core').service('SiteListService', [
 
       // $log.log(funcName);
 
-      // make sure that we have the signed in admin user email before we update the columns
-      if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        updateGridColumns();
-      } else {
-        Userservice.getUser('me', function (data, status) {
-          if (
-            (data.success) &&
-            (data.emails)
-          ) {
-            Authinfo.setEmails(data.emails);
-            _this.updateGridColumns();
+      // remove grid column(s) based on feature toggles
+      WebExUtilsService.checkWebExFeaturToggle(FeatureToggleService.features.webexCSV).then(
+        function checkWebExFeaturToggleSuccess(adminUserSupportCSV) {
+          var funcName = "checkWebExFeaturToggleSuccess()";
+          var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "adminUserSupportCSV=" + adminUserSupportCSV;
+          $log.log(logMsg);
+
+          // don't show the CSV column if admin user does not have feature toggle
+          if (!adminUserSupportCSV) {
+            vm.gridOptions.columnDefs.splice(2, 1);
           }
-        });
-      }
+
+          updateGridColumns();
+        }, // checkWebExFeaturToggleSuccess()
+
+        function checkWebExFeaturToggleError(response) {
+          var funcName = "checkWebExFeaturToggleError()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
+          // don't show the CSV column
+          vm.gridOptions.columnDefs.splice(2, 1);
+
+          updateGridColumns();
+        } // checkWebExFeaturToggleError()
+      ); // WebExUtilsService.checkWebExFeaturToggle().then()
 
       function updateGridColumns() {
         var funcName = "updateGridColumns()";
@@ -277,8 +295,8 @@ angular.module('Core').service('SiteListService', [
 
             siteRow.adminEmailParam = Authinfo.getPrimaryEmail();
             siteRow.userEmailParam = Authinfo.getPrimaryEmail();
-            siteRow.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            siteRow.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
+            siteRow.advancedSettings = UrlConfig.getWebexAdvancedEditUrl(siteUrl);
+            siteRow.webexAdvancedUrl = UrlConfig.getWebexAdvancedHomeUrl(siteUrl);
 
             WebExApiGatewayService.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {
@@ -307,18 +325,22 @@ angular.module('Core').service('SiteListService', [
                   // no further data to get
                   siteRow.showCSVInfo = true;
                 } else {
+                  siteRow.checkCsvStatusStart = 0;
+                  siteRow.checkCsvStatusEnd = WebExApiGatewayService.csvStatusTypes.length - 1;
+                  siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
+
                   _this.updateCSVColumn(
                     siteRow
                   );
 
-                  siteRow.csvPollTimeout = $interval(
+                  // start CSV status poll
+                  siteRow.csvPollIntervalObj = $interval(
                     function () {
                       _this.updateCSVColumn(siteRow);
                     },
                     15000
                   );
                 }
-
               }, // isSiteSupportsIframeSuccess()
 
               function isSiteSupportsIframeError(response) {
@@ -352,13 +374,33 @@ angular.module('Core').service('SiteListService', [
       var logMsg = "";
 
       var siteUrl = siteRow.license.siteUrl;
+      var checkCsvStatusReq = null;
+
+      if (
+        (0 <= siteRow.checkCsvStatusIndex) &&
+        (WebExApiGatewayService.csvStatusTypes.length > siteRow.checkCsvStatusIndex)
+      ) {
+        checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.checkCsvStatusIndex];
+
+        ++siteRow.checkCsvStatusIndex;
+
+        if (
+          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.checkCsvStatusIndex) ||
+          (siteRow.checkCsvStatusEnd < siteRow.checkCsvStatusIndex)
+        ) {
+
+          siteRow.checkCsvStatusIndex = siteRow.checkCsvStatusStart;
+        }
+      }
 
       logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
+        "siteUrl=" + siteUrl + "\n" +
+        "checkCsvStatusReq=" + checkCsvStatusReq;
       $log.log(logMsg);
 
       WebExApiGatewayService.csvStatus(
-        siteUrl
+        siteUrl,
+        checkCsvStatusReq // set this to null to get real status
       ).then(
 
         function success(response) {
@@ -370,7 +412,70 @@ angular.module('Core').service('SiteListService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
-          // TODO: parse response and update the row column accordingly
+          // initialize display control flags
+          siteRow.showExportLink = false;
+          siteRow.showExportInProgressLink = false;
+          siteRow.grayedExportLink = false;
+          siteRow.showExportResultsLink = false;
+          siteRow.exportFinishedWithErrors = false;
+          siteRow.exportFailed = false;
+
+          siteRow.showImportLink = false;
+          siteRow.showImportInProgressLink = false;
+          siteRow.grayedImportLink = false;
+          siteRow.showImportResultsLink = false;
+          siteRow.importFinishedWithErrors = false;
+          siteRow.importFailed = false;
+
+          if (response.status == "none") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "exportInProgress") {
+
+            siteRow.showExportInProgressLink = true;
+
+            siteRow.grayedImportLink = true;
+
+          } else if (response.status == "exportCompletedNoErr") {
+
+            siteRow.showExportLink = true;
+            siteRow.showExportResultsLink = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "exportCompletedWithErr") {
+
+            siteRow.showExportLink = true;
+            siteRow.showExportResultsLink = true;
+            siteRow.exportFinishedWithErrors = true;
+
+            siteRow.showImportLink = true;
+
+          } else if (response.status == "importInProgress") {
+
+            siteRow.grayedExportLink = true;
+
+            siteRow.showImportInProgressLink = true;
+
+          } else if (response.status == "importCompletedNoErr") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+            siteRow.showImportResultsLink = true;
+
+          } else if (response.status == "importCompletedWithErr") {
+
+            siteRow.showExportLink = true;
+
+            siteRow.showImportLink = true;
+            siteRow.showImportResultsLink = true;
+            siteRow.importFinishedWithErrors = true;
+
+          }
 
           siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()

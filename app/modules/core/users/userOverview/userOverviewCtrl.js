@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -30,28 +30,32 @@
         name: $translate.instant('onboardModal.message'),
         icon: $translate.instant('onboardModal.message'),
         state: 'user-overview.messaging',
-        detail: $translate.instant('onboardModal.msgFree')
+        detail: $translate.instant('onboardModal.msgFree'),
+        actionsAvailable: getDisplayableServices('MESSAGING')
       };
 
       var commState = {
         name: $translate.instant('onboardModal.call'),
         icon: $translate.instant('onboardModal.call'),
         state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.callFree')
+        detail: $translate.instant('onboardModal.callFree'),
+        actionsAvailable: true
       };
 
       var confState = {
         name: $translate.instant('onboardModal.meeting'),
         icon: $translate.instant('onboardModal.meeting'),
         state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.mtgFree')
+        detail: $translate.instant('onboardModal.mtgFree'),
+        actionsAvailable: true
       };
 
       var contactCenterState = {
         name: $translate.instant('onboardModal.contactCenter'),
         icon: 'ContactCenter',
         state: 'user-overview.contactCenter',
-        detail: $translate.instant('onboardModal.freeContactCenter')
+        detail: $translate.instant('onboardModal.freeContactCenter'),
+        actionsAvailable: true
       };
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
@@ -92,6 +96,16 @@
       state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
     };
 
+    function getDisplayableServices(serviceName) {
+      var displayableServices = Authinfo.getServices();
+      if (Authinfo.hasAccount()) {
+        displayableServices = displayableServices.filter(function (service) {
+          return service.isConfigurable && service.licenseType === serviceName;
+        });
+      }
+      return angular.isArray(displayableServices) && (displayableServices.length > 0);
+    }
+
     function hasEntitlement(entitlement) {
       var userEntitlements = vm.currentUser.entitlements;
       if (userEntitlements) {
@@ -119,7 +133,7 @@
     }
 
     function getCurrentUser() {
-      var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
+      var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
 
       $http.get(userUrl)
         .then(function (response) {

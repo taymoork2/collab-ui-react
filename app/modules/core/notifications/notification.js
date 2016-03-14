@@ -64,17 +64,17 @@
       if (errorKey) {
         errorMsg += $translate.instant(errorKey, errorParams);
       }
-      if (response && response.data && angular.isString(response.data.errorMessage)) {
+      if (_.get(response, 'data.errorMessage')) {
         errorMsg += ' ' + response.data.errorMessage;
-      } else if (response && response.data && angular.isString(response.data.error)) {
+      } else if (_.get(response, 'data.error')) {
         errorMsg += ' ' + response.data.error;
-      } else if (response && response.status === 404) {
+      } else if (_.get(response, 'status') === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
-      } else if (angular.isString(response)) {
+      } else if (_.isString(response)) {
         errorMsg += ' ' + response;
       }
 
-      if (response && angular.isFunction(response.headers)) {
+      if (_.isFunction(_.get(response, 'headers'))) {
         var trackingId = response.headers('TrackingID');
         if (trackingId) {
           if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {

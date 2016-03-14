@@ -590,7 +590,7 @@
                     ("CMR" == userLicenseType)
                   ) {
 
-                    var userLicenseSiteUrl = userLicenseItems[3];
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
                     logMsg = funcName + "\n" +
                       "currSite=" + currSite + "\n" +
@@ -1260,7 +1260,8 @@
         }, // getErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
-          return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
+          var siteName = WebExUtilsFact.getSiteName(webexSiteUrl);
+          return WebExXmlApiFact.getSessionTicket(webexSiteUrl, siteName);
         }, //getSessionTicket()
 
         getSiteUrl: function () {
@@ -1271,8 +1272,7 @@
         }, //getSiteUrl
 
         getSiteName: function (siteUrl) {
-          var index = siteUrl.indexOf(".");
-          return siteUrl.slice(0, index);
+          return WebExUtilsFact.getSiteName(siteUrl);
         }, //getSiteName()
       }; // return
     } //WebExUserSettingsFact

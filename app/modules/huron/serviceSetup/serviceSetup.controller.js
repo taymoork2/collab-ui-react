@@ -476,8 +476,10 @@
           controller: function ($scope) {
             $scope.$watchCollection(function () {
               return vm.externalNumberPoolBeautified;
-            }, function (externalNumberPoolBeautified) {
-              $scope.to.options = externalNumberPoolBeautified;
+            }, function (externalNumbers) {
+              $scope.to.options = _.remove(externalNumbers, function (number) {
+                return number.label === _.get(vm, 'model.serviceNumber.label');
+              });
             });
             $scope.$watch(function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;

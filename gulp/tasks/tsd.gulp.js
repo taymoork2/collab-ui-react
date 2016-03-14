@@ -3,12 +3,12 @@
  */
 'use strict';
 
- var gulp = require('gulp');
- var config = require('../gulp.config')();
- var del = require('del');
- var messageLogger = require('../utils/messageLogger.gulp')();
- var runSeq = require('run-sequence');
- var tsd = require('gulp-tsd');
+var gulp = require('gulp');
+var config = require('../gulp.config')();
+var del = require('del');
+var messageLogger = require('../utils/messageLogger.gulp')();
+var runSeq = require('run-sequence');
+var tsd = require('gulp-tsd');
 
 gulp.task('tsd', function (done) {
   runSeq(

@@ -48,15 +48,12 @@
               </cs-checkbox>
             </div>
             <div ng-if="msgFeature.licenses.length > 1">
-                <fieldset class="onboard-fieldset">
-                  <label class="cs-radio" for="{{license.licenseId}}" 
-                  ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)" 
-                  ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">                         
-                    <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
-                    ng-model="$parent.$parent.radioStates.subLicense" ng-value="license" />
-                    <span>{{license.billingServiceId}} ({{license.volume}})</span>
-                  </label>
-                </fieldset>
+                <div class="onboard-fieldset"
+                  ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
+                  ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
+                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
+                  label="{{license.billingServiceId}}"></cs-checkbox>
+                </div>
             </div>
           </div>
         </div>

@@ -111,6 +111,17 @@
       flex:1;
       padding-left: 1px;
   }
+  .legal-tooltip {
+      color: $gray-light-1;
+      padding-left: rem(5px);
+      margin-top: rem(5px);
+  }
+  .tooltip-arrow {
+      top: rem(26px);
+  }
+  .city-width input {
+      min-width: rem(258px);
+  }
 }
 
 .trial-modal--complete {

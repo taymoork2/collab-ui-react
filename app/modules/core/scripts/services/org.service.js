@@ -6,21 +6,23 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
+  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
     var service = {
-      'getOrg': getOrg,
-      'getAdminOrg': getAdminOrg,
-      'getAdminOrgUsage': getAdminOrgUsage,
-      'getValidLicenses': getValidLicenses,
-      'getLicensesUsage': getLicensesUsage,
-      'getUnlicensedUsers': getUnlicensedUsers,
-      'setSetupDone': setSetupDone,
-      'setOrgSettings': setOrgSettings,
-      'createOrg': createOrg,
-      'listOrgs': listOrgs,
-      'getOrgCacheOption': getOrgCacheOption,
-      'getHybridServiceAcknowledged': getHybridServiceAcknowledged,
-      'setHybridServiceAcknowledged': setHybridServiceAcknowledged
+      getOrg: getOrg,
+      getAdminOrg: getAdminOrg,
+      getAdminOrgUsage: getAdminOrgUsage,
+      getValidLicenses: getValidLicenses,
+      getLicensesUsage: getLicensesUsage,
+      getUnlicensedUsers: getUnlicensedUsers,
+      setSetupDone: setSetupDone,
+      setOrgSettings: setOrgSettings,
+      createOrg: createOrg,
+      listOrgs: listOrgs,
+      getOrgCacheOption: getOrgCacheOption,
+      getHybridServiceAcknowledged: getHybridServiceAcknowledged,
+      setHybridServiceAcknowledged: setHybridServiceAcknowledged,
+      getEftSetting: getEftSetting,
+      setEftSetting: setEftSetting
     };
 
     return service;
@@ -28,9 +30,9 @@
     function getOrg(callback, oid, disableCache) {
       var scomUrl = null;
       if (oid) {
-        scomUrl = Config.getScomUrl() + '/' + oid;
+        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
       } else {
-        scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
+        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
       }
 
       if (disableCache) {
@@ -62,9 +64,9 @@
     function getAdminOrg(callback, oid) {
       var adminUrl = null;
       if (oid) {
-        adminUrl = Config.getAdminServiceUrl() + 'organizations/' + oid;
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
       } else {
-        adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
       $http.get(adminUrl)
@@ -85,7 +87,7 @@
 
     function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
-      var adminUrl = Config.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
       return $http.get(adminUrl);
     }
 
@@ -150,9 +152,9 @@
     function getUnlicensedUsers(callback, oid) {
       var adminUrl = null;
       if (oid) {
-        adminUrl = Config.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + "/unlicensedUsers";
       } else {
-        adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + "/unlicensedUsers";
       }
 
       $http.get(adminUrl)
@@ -170,7 +172,7 @@
     }
 
     function setSetupDone() {
-      var adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/setup';
 
       return $http({
         method: 'PATCH',
@@ -182,7 +184,7 @@
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
     function setOrgSettings(orgId, settings, callback) {
-      var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
+      var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
 
       getOrg(function (orgData, orgStatus) {
         var orgSettings = orgData.orgSettings;
@@ -209,7 +211,7 @@
     }
 
     function createOrg(enc, callback) {
-      var orgUrl = Config.getAdminServiceUrl() + 'organizations';
+      var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
         'encryptedQueryString': enc
       };
@@ -234,7 +236,7 @@
       if (!filter || filter.length <= 3) {
         return $q.reject('filter does not match requirements');
       }
-      var orgUrl = Config.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
+      var orgUrl = UrlConfig.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
 
       return $http.get(orgUrl);
     }
@@ -242,9 +244,9 @@
     function getOrgCacheOption(callback, oid, config) {
       var scomUrl = null;
       if (oid) {
-        scomUrl = Config.getScomUrl() + '/' + oid;
+        scomUrl = UrlConfig.getScomUrl() + '/' + oid;
       } else {
-        scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
+        scomUrl = UrlConfig.getScomUrl() + '/' + Authinfo.getOrgId();
       }
 
       if (!config) {
@@ -266,7 +268,7 @@
     }
 
     function getHybridServiceAcknowledged() {
-      var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
+      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
       return $http({
         method: 'GET',
         url: serviceUrl
@@ -274,7 +276,7 @@
     }
 
     function setHybridServiceAcknowledged(serviceName) {
-      var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
+      var serviceUrl = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
       if (serviceName === 'calendar-service') {
         serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
       } else if (serviceName === 'call-aware-service') {
@@ -294,6 +296,34 @@
         }
       }).error(function () {
         Log.error("Error in PATCH acknowledge status to " + serviceUrl);
+      });
+    }
+
+    function getEftSetting(currentOrgId) {
+      if (_.isUndefined(currentOrgId)) {
+        return $q.reject('An organization ID is required.');
+      }
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'GET',
+        url: serviceUrl
+      });
+    }
+
+    function setEftSetting(setting, currentOrgId) {
+      if (!_.isBoolean(setting) || _.isUndefined(currentOrgId)) {
+        return $q.reject('A proper EFT setting and organization ID is required.');
+      }
+
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId + '/settings/eft';
+
+      return $http({
+        method: 'PUT',
+        url: serviceUrl,
+        data: {
+          eft: setting
+        }
       });
     }
   }

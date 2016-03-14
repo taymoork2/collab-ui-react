@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: CsvDownloadService', function () {
-  var CsvDownloadService, $httpBackend, Config;
+  var CsvDownloadService, $httpBackend, UrlConfig;
 
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -13,10 +13,10 @@ describe('Service: CsvDownloadService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _Config_) {
+  beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_) {
     CsvDownloadService = _CsvDownloadService_;
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
+    UrlConfig = _UrlConfig_;
   }));
 
   afterEach(function () {
@@ -29,12 +29,12 @@ describe('Service: CsvDownloadService', function () {
       "some": "template"
     };
     beforeEach(function () {
-      $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateFile);
+      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateFile);
     });
 
     it('should get template file', function () {
-      CsvDownloadService.getCsv('template').then(function (response) {
-        expect(response.data.some).toEqual('template');
+      CsvDownloadService.getCsv('template').then(function (csvData) {
+        expect(csvData.some).toEqual('template');
       });
       $httpBackend.flush();
     });
@@ -45,12 +45,12 @@ describe('Service: CsvDownloadService', function () {
       "some": "user"
     };
     beforeEach(function () {
-      $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/export').respond(userFile);
+      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/export').respond(userFile);
     });
 
     it('should get user export file', function () {
-      CsvDownloadService.getCsv('user').then(function (response) {
-        expect(response.data.some).toEqual('user');
+      CsvDownloadService.getCsv('user').then(function (csvData) {
+        expect(csvData.some).toEqual('user');
       });
       $httpBackend.flush();
     });
@@ -61,12 +61,12 @@ describe('Service: CsvDownloadService', function () {
       "some": "headers"
     };
     beforeEach(function () {
-      $httpBackend.expectGET(Config.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersFile);
+      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersFile);
     });
 
     it('should get headers file', function () {
-      CsvDownloadService.getCsv('headers').then(function (response) {
-        expect(response.data.some).toEqual('headers');
+      CsvDownloadService.getCsv('headers').then(function (csvData) {
+        expect(csvData.some).toEqual('headers');
       });
       $httpBackend.flush();
     });

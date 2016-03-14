@@ -7,14 +7,12 @@
     .file-download-content {
       @extend .center;
       align-self: center;
-      .icon {
-        font-size: 7rem;
+      .csv-download {
         margin-bottom: 2rem;
-        color: $gray-dark-1;
-        display: block;
-      }
-      h4 {
-        margin-top: rem(20);
+        .icon {
+          font-size: 7rem;
+          color: $gray-dark-1;
+        }
       }
     }
   }

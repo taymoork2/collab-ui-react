@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config) {
+  function EnterpriseSettingsCtrl($scope, $rootScope, $q, $timeout, SSOService, Orgservice, SparkDomainManagementService, Authinfo, Log, Notification, $translate, $window, Config, UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -21,7 +21,7 @@
       isConfirmed: null,
       urlValue: '',
       isRoomLicensed: false,
-      domainSuffix: Config.getSparkDomainCheckUrl(),
+      domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
@@ -46,14 +46,16 @@
     function setSipUri() {
       Orgservice.getOrg(function (data, status) {
         var displayName = '';
-        var sparkDomainStr = Config.getSparkDomainCheckUrl();
+        var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
         if (status === 200) {
           if (data.orgSettings.sipCloudDomain) {
             displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             sipField.isDisabled = true;
             sipField.isButtonDisabled = true;
           } else if (data.verifiedDomains) {
-            displayName = data.verifiedDomains[0];
+            if (_.isArray(data.verifiedDomains)) {
+              displayName = data.verifiedDomains[0].split(/[^A-Za-z]/)[0].toLowerCase();
+            }
           } else if (data.displayName) {
             displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
           }
@@ -85,10 +87,8 @@
         })
         .catch(function (response) {
           if (response.status === 400) {
-            if (response.data.message) {
-              sipField.errorMsg = response.data.message;
-              sipField.isError = true;
-            }
+            sipField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessageInvalidDomain');
+            sipField.isError = true;
           } else {
             Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
           }
@@ -369,7 +369,7 @@
             entityId = data.data[0].entityId;
           }
           if (entityId !== null) {
-            var testUrl = Config.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&requestBinding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&requestBinding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);
