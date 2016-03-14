@@ -71,7 +71,7 @@ describe('Service: AACalendarService', function () {
       AAICalService.addHoursRange(calendar, range);
       var calendarRaw = {};
       calendarRaw.scheduleData = calendar.toString();
-      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw);
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).hours;
       expect(rangeFromCalendar.length).toEqual(1);
       expect(rangeFromCalendar[0]).toEqual(range);
     });
@@ -132,7 +132,7 @@ describe('Service: AACalendarService', function () {
       AAICalService.addHoursRange(calendar, range2);
       var calendarRaw = {};
       calendarRaw.scheduleData = calendar.toString();
-      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw);
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).hours;
       expect(rangeFromCalendar.length).toEqual(2);
       expect(rangeFromCalendar[0]).toEqual(range1);
       expect(rangeFromCalendar[1]).toEqual(range2);
