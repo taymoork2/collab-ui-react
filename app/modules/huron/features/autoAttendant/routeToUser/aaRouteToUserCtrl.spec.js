@@ -3,7 +3,7 @@
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
   var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $q, $httpBackend, Config, HuronConfig, Userservice, UserListService, UserServiceVoice;
-  var $rootScope, $scope, $translate;
+  var $rootScope, $scope, $translate, UrlConfig;
 
   var aaModel = {
 
@@ -297,7 +297,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _Config_, _HuronConfig_, _Userservice_, _UserListService_, _UserServiceVoice_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _Config_, _HuronConfig_, _Userservice_, _UserListService_, _UserServiceVoice_, _UrlConfig_) {
     $translate = _$translate_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -312,6 +312,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     Config = _Config_;
+    UrlConfig = _UrlConfig_;
     HuronConfig = _HuronConfig_;
     Userservice = _Userservice_;
     UserListService = _UserListService_;
@@ -329,7 +330,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
-    var listUsersUrl = Config.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&count=' + listUsersProps.count +
@@ -337,7 +338,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
 
-    var listUsersUrl2 = Config.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl2 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -346,7 +347,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl2).respond(200, userListCISResponse2);
 
-    var listUsersUrl3 = Config.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl3 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=20' +
@@ -356,13 +357,13 @@ describe('Controller: AARouteToUserCtrl', function () {
     $httpBackend.whenGET(listUsersUrl3).respond(200, userListEmptyCISResponse);
 
     // user with all props including display name and extension
-    var userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
+    var userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
     $httpBackend.whenGET(userCisUrl).respond(200, completeUserCisResponse);
     cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[0].id);
     cmiCompleteUserGet.respond(200, directoryCmiResponse);
 
     // user with missing displayname and without extension
-    userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + users[1].id;
+    userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[1].id;
     $httpBackend.whenGET(userCisUrl).respond(200, notSoCompleteUserCisResponse);
     cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
     cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);

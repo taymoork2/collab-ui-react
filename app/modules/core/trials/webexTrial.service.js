@@ -7,15 +7,15 @@
     .factory('WebexOrderStatusResource', WebexOrderStatusResource);
 
   /* @ngInject */
-  function WebexOrderStatusResource($resource, Authinfo, Config) {
-    return $resource(Config.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
+  function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {
+    return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
       orgId: Authinfo.getOrgId(),
       trialId: '@trialId'
     }, {});
   }
 
   /* @ngInject */
-  function WebexTrialService($http, Config, Notification, WebexOrderStatusResource) {
+  function WebexTrialService($http, UrlConfig, Notification, WebexOrderStatusResource) {
     var service = {
       getTimeZones: getTimeZones,
       validateSiteUrl: validateSiteUrl,
@@ -31,7 +31,7 @@
     }
 
     function validateSiteUrl(siteUrl) {
-      var validationUrl = Config.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
+      var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
       var config = {
         method: 'POST',
         url: validationUrl,

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
@@ -15,6 +15,7 @@ module.exports = function() {
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
+  var gulpFiles = 'gulp/**/*.js';
 
   var config = {
     build: build,
@@ -34,11 +35,12 @@ module.exports = function() {
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
 
+    gulpFiles: gulpFiles,
+
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -98,6 +100,7 @@ module.exports = function() {
         all: app + '/**/*.spec.js',
         ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
+        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
@@ -236,6 +239,16 @@ module.exports = function() {
       '',
 
     isJenkins: isJenkins,
+
+    beautifyFiles: [
+      app + '/**/*.js',
+      app + '/**/*.json',
+      test + '/**/*.js',
+      test + '/**/*.json',
+      gulpFiles,
+      '!test/karma-unit.js',
+      '!karma.conf.js'
+    ]
   };
 
   return config;

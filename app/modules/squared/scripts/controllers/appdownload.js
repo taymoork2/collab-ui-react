@@ -8,15 +8,15 @@
  * Controller of the wx2AdminWebClientApp
  */
 angular.module('Squared')
-  .controller('AppdownloadCtrl', ['$window', '$http', 'Log', 'Config', 'Utils',
-    function ($window, $http, Log, Config, Utils) {
+  .controller('AppdownloadCtrl', ['$window', '$http', 'Log', 'UrlConfig', 'Utils',
+    function ($window, $http, Log, UrlConfig, Utils) {
 
       if (Utils.isIPhone()) {
-        $window.location.href = Config.getItunesStoreUrl();
+        $window.location.href = UrlConfig.getItunesStoreUrl();
       } else if (Utils.isAndroid()) {
-        $window.location.href = Config.getAndroidStoreUrl();
+        $window.location.href = UrlConfig.getAndroidStoreUrl();
       } else {
-        $window.location.href = Config.getWebClientUrl();
+        $window.location.href = UrlConfig.getWebClientUrl();
       }
     }
   ]);

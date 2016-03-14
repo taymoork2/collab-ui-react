@@ -16,29 +16,29 @@ class DomainManagementService {
   private _invokeVerifyDomainUrl;
   private _claimDomainUrl;
 
-  constructor(private $http, Config, Authinfo, private $q, private Log, private XhrNotificationService, private $translate) {
+  constructor(private $http, Config, Authinfo, private $q, private Log, private XhrNotificationService, private $translate, private UrlConfig) {
 
     // var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId()) + "Domain";  //not used anymore?
 
     let orgId = Authinfo.getOrgId();
 
-    this._scomUrl = Config.getScomUrl() + '/' + orgId;
+    this._scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
     //POST https://identity.webex.com/organization/{orgid}/v1/actions/DomainVerification/GetToken/invoke HTTP 1.1
-    this._invokeGetTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
+    this._invokeGetTokenUrl = UrlConfig.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
 
     //Unverify: http://wikicentral.cisco.com/display/IDENTITY/API+-+UnVerify+Domain+Ownership
     //POST https://identity.webex.com/organization/{orgid}/v1/actions/DomainVerification/Unverify/invoke
-    this._invokeUnverifyDomainUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/Unverify/invoke';
+    this._invokeUnverifyDomainUrl = UrlConfig.getDomainManagementUrl(orgId) + 'actions/DomainVerification/Unverify/invoke';
 
 
     //Verify: http://wikicentral.cisco.com/display/IDENTITY/API+-+Verify+Domain+Ownership
-    this._invokeVerifyDomainUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/Verify/invoke';
+    this._invokeVerifyDomainUrl = UrlConfig.getDomainManagementUrl(orgId) + 'actions/DomainVerification/Verify/invoke';
 
     //Delete: (domain base64 enc) http://wikicentral.cisco.com/display/IDENTITY/Domain+Management+API+-+Delete+Domain
     //Claim: http://wikicentral.cisco.com/display/IDENTITY/Domain+management+API+-+Add+Domain
     //DELETE https://<server name>/organization/{orgId}/v1/Domains/<domainValue>
-    this._claimDomainUrl = Config.getDomainManagementUrl(orgId) + 'Domains';
+    this._claimDomainUrl = UrlConfig.getDomainManagementUrl(orgId) + 'Domains';
 
   }
 

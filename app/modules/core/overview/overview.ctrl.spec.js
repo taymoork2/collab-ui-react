@@ -8,6 +8,7 @@ describe('Controller: OverviewCtrl', function () {
 
   var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo, FeatureToggleService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
+  var services = getJSONFixture('squared/json/services.json');
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -233,7 +234,7 @@ describe('Controller: OverviewCtrl', function () {
     }).first();
   }
 
-  function defaultWireUpFunc($rootScope, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _CannedDataService_, _Orgservice_, _FeatureToggleService_) {
+  function defaultWireUpFunc($rootScope, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _CannedDataService_, _Orgservice_, _FeatureToggleService_, _Authinfo_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -241,6 +242,7 @@ describe('Controller: OverviewCtrl', function () {
     Log = _Log_;
     Config = _Config_;
     FeatureToggleService = _FeatureToggleService_;
+    Authinfo = _Authinfo_;
 
     ServiceDescriptor = {
       services: function (eventHandler) {}
@@ -278,33 +280,24 @@ describe('Controller: OverviewCtrl', function () {
     };
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-
-    Authinfo = {
-      getConferenceServicesWithoutSiteUrl: function () {
-        return [{
-          license: {
-            siteUrl: 'fakesite1'
-          }
-        }, {
-          license: {
-            siteUrl: 'fakesite2'
-          }
-        }, {
-          license: {
-            siteUrl: 'fakesite3'
-          }
-        }];
-      },
-      getOrgId: function () {
-        return '1';
-      },
-      isPartner: function () {
-        return false;
-      },
-      getLicenses: function () {
-        return [{}];
+    spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
+      license: {
+        siteUrl: 'fakesite1'
       }
-    };
+    }, {
+      license: {
+        siteUrl: 'fakesite2'
+      }
+    }, {
+      license: {
+        siteUrl: 'fakesite3'
+      }
+    }]);
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1');
+    spyOn(Authinfo, 'isPartner').and.returnValue(false);
+    spyOn(Authinfo, 'getLicenses').and.returnValue([{}]);
+    spyOn(Authinfo, 'hasAccount').and.returnValue(true);
+    spyOn(Authinfo, 'getServices').and.returnValue(services);
 
     controller = $controller('OverviewCtrl', {
       $scope: $scope,

@@ -2,8 +2,8 @@
   'use strict';
 
   /*ngInject*/
-  function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData) {
-    var urlBase = Config.getAdminServiceUrl();
+  function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData, UrlConfig) {
+    var urlBase = UrlConfig.getAdminServiceUrl();
 
     function extractData(res) {
       return res.data;

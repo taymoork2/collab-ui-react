@@ -13,6 +13,7 @@
     'Authinfo',
     'Storage',
     'WebExXmlApiConstsSvc',
+
     function (
       $http,
       $log,
@@ -24,6 +25,7 @@
       Storage,
       xmlApiConstants
     ) {
+
       var _self = this;
       var x2js = new X2JS();
 
@@ -271,11 +273,17 @@
           });
         }, //getSessionTicketInfo()
 
-        getSessionTicket: function (wbxSiteUrl) {
+        getSessionTicket: function (
+          wbxSiteUrl,
+          wbxSiteName
+        ) {
+
           var funcName = "getSessionTicket()";
           var logMsg = "";
-          var index = wbxSiteUrl.indexOf(".");
-          var wbxSiteName = wbxSiteUrl.slice(0, index);
+
+          // var siteUrlElements = siteUrl.split(".");
+          // var wbxSiteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
+
           var ticketObj = null;
           var deferred = $q.defer();
           var _this = this;

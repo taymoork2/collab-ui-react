@@ -72,6 +72,22 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
   });
 
+  describe('test Orgservice getOrg callback sets displayName under different conditions', function () {
+    beforeEach(function () {
+      Orgservice.getOrg.and.callFake(function (callback, status) {
+        callback({
+          verifiedDomains: ['AtlasTestSipUri.com', 'AtlasTest.com'],
+          orgSettings: {}
+        }, 200);
+      });
+      initController();
+    });
+
+    it('should set displayName using the verifiedDomains from response', function () {
+      expect($scope.cloudSipUriField.inputValue).toBe('atlastestsipuri');
+    });
+  });
+
   describe('test Orgservice getOrg callback setting displayName', function () {
     beforeEach(function () {
       Orgservice.getOrg.and.callFake(function (callback, status) {
