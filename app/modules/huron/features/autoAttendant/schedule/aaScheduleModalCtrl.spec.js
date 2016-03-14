@@ -133,9 +133,12 @@ fdescribe('Controller: AAScheduleModalCtrl', function () {
 
   describe('saveSchedule', function () {
     beforeEach(function () {
+      controller.holidaysForm = {};
+      controller.holidaysForm.$valid = true;
       controller.calendar = calendar;
       var ceInfo = ce2CeInfo(rawCeInfo);
       controller.openhours = [];
+      controller.holidays = [];
       controller.openhours.push(hours);
       aaModel.ceInfos.push(ceInfo);
       var error = false;
@@ -201,16 +204,23 @@ fdescribe('Controller: AAScheduleModalCtrl', function () {
       AAModelService.getAAModel.and.returnValue(aaModel);
       controller.openhours = [];
       controller.isDeleted = true;
-      var flag = controller.isSavable();
+      var flag = controller.isHoursSavable();
       expect(flag).toBeFalsy();
     });
-  });
 
-  it('should toggle the sections(open/close and holidays)', function () {
-    controller.toggleSection('holiday');
-    $scope.$apply();
-    expect(controller.toggleHours).toBeTruthy();
-    expect(controller.toggleHolidays).toBeTruthy();
-  });
+    it('should toggle the sections holidays', function () {
+      controller.toggleSection('holiday');
+      $scope.$apply();
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.toggleHolidays).toBeFalsy();
+    });
 
+    it('should toggle the sections open/close', function () {
+      controller.toggleSection('hours');
+      controller.toggleHours = true;
+      $scope.$apply();
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.toggleHolidays).toBeTruthy();
+    });
+  });
 });

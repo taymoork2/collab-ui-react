@@ -114,14 +114,14 @@
                   <div class="row">
                     <div class="columns medium-6" ng-class="{'error': holidayForm.holidayStart.$error.required && holidayForm.holidayStart.$dirty && !holiday.allDay}">
                       <label class="cs-input__label" for="holidayStart" translate="cdrLogs.startTime"></label>
-                      <input name="holidayStart" ng-model="holiday.holidayStart" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
+                      <input name="holidayStart" ng-model="holiday.starttime" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
                       <div class="cs-input__messages" ng-messages="holidayForm.holidayStart.$error" role="alert">
                         <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                       </div>
                     </div>
                     <div class="columns medium-6" ng-class="{'error': holidayForm.holidayEnd.$error.compareTo && holidayForm.holidayEnd.$dirty && !holiday.allDay}">
                       <label class="cs-input__label" for="holidayEnd" translate="cdrLogs.endTime"></label>
-                      <input name="holidayEnd" ng-model="holiday.holidayEnd" compare-time="holiday.holidayStart" reset-compare="holiday.allDay" start-time="holiday.holidayStart" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
+                      <input name="holidayEnd" ng-model="holiday.endtime" compare-time="holiday.starttime" reset-compare="holiday.allDay" start-time="holiday.holidayStart" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
                       <div class="cs-input__messages" ng-messages="holidayForm.holidayEnd.$error" role="alert">
                         <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                       </div>

@@ -14,6 +14,7 @@
 
     vm.save = save;
     vm.isSavable = isSavable;
+    vm.isHoursSavable = isHoursSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
@@ -67,10 +68,12 @@
     }
 
     function forceCheckHoliday() {
-      vm.holidaysForm.holidayForm.holidayName.$setDirty();
-      vm.holidaysForm.holidayForm.holidayDate.$setDirty();
-      vm.holidaysForm.holidayForm.holidayStart.$setDirty();
-      vm.holidaysForm.holidayForm.holidayEnd.$setDirty();
+      if (vm.holidaysForm.$invalid) {
+        vm.holidaysForm.holidayForm.holidayName.$setDirty();
+        vm.holidaysForm.holidayForm.holidayDate.$setDirty();
+        vm.holidaysForm.holidayForm.holidayStart.$setDirty();
+        vm.holidaysForm.holidayForm.holidayEnd.$setDirty();
+      }
     }
 
     function removeHoliday(index) {
@@ -149,6 +152,9 @@
       _.each(vm.openhours, function (hours) {
         AAICalService.addHoursRange(vm.calendar, hours);
       });
+      _.each(vm.holidays, function (holiday) {
+        AAICalService.addHoursRange(vm.calendar, holiday);
+      });
       return vm.calendar.toString();
     }
 
@@ -164,7 +170,8 @@
         var notifyName = vm.aaModel.aaRecord.callExperienceName;
 
         if (vm.aaModel.aaRecord.scheduleId) {
-          if (vm.openhours.length > 0) {
+          if ((vm.openhours.length > 0) || (vm.holidays.length > 0 )) {
+          // if ((vm.openhours.length > 0)) {
             savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);
             notifyName = calName; // An update is updating only calendar, so notify indicates calender updated
           } else if (vm.isDeleted) {
@@ -280,7 +287,9 @@
     function populateUiModel() {
       if (vm.aaModel.aaRecord.scheduleId) {
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
-          vm.openhours = AAICalService.getHoursRanges(data);
+          var allHours = AAICalService.getHoursRanges(data);
+          vm.openhours = allHours.hours;
+          vm.holidays = allHours.holidays;
         });
       }
     }
