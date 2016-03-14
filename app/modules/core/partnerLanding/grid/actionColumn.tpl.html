@@ -4,7 +4,7 @@
   </button>
   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
   	<li ng-show="grid.appScope.isOwnOrg(row.entity)">
-  		<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" target="_blank">
+  		<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
   			<span translate="customerPage.myOrgButton"></span>
   		</a>		
   	</li>
@@ -23,6 +23,6 @@
     	<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})">
     		<span translate="didManageModal.buttonText"></span>
     	</a>
-    	</li>
+    </li>
   </ul>
 </span>
