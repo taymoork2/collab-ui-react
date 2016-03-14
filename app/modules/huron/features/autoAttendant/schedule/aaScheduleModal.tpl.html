@@ -63,7 +63,7 @@
             ng-model="aaScheduleModalCtrl.holidayBehavior"
             id="holidayBehavior"
             name="holidayBehavior"
-            cs-input-label="Holidays Follow Closed Behavior"
+            cs-input-label="{{'autoAttendant.closedBehavious' | translate}}"
             cs-input-group-size="left-margin-20">
         </div>
         <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime" class="simple-accordion" ng-if="aaScheduleModalCtrl.holidays.length > 0">
@@ -87,14 +87,14 @@
                     type="text"
                     id="holidayName"
                     name="holidayName"
-                    placeholder="Name"
+                    placeholder="{{'usersPage.nameHeader' | translate}}"
                     ng-model="holiday.name"
                     cs-input-label="{{'callPark.name' | translate }}"
                     cs-input-group-size="medium-12"
                     cs-input-messages="aaScheduleModalCtrl.messages">
                   <label class="cs-input__label" for="html-input" translate="autoAttendant.selectDate"></label>
                   <div ng-class="{'error': holidayForm.holidayDate.$error.required && holidayForm.holidayDate.$dirty}">
-                    <cs-datepicker name="holidayDate" ng-model="holiday.date" placeholder="Choose a day" required></cs-datepicker>
+                    <cs-datepicker name="holidayDate" ng-model="holiday.date" placeholder="{{'cdrLogs.dateExample' | translate}}" required></cs-datepicker>
                     <div class="cs-input__messages" ng-messages="holidayForm.holidayDate.$error" role="alert">
                       <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                     </div>

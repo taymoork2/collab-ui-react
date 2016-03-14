@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: AAScheduleModalCtrl', function () {
+describe('Controller: AAScheduleModalCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService;
   var $rootScope, $scope, $translate, $q, $modalInstance;
@@ -244,6 +244,22 @@ fdescribe('Controller: AAScheduleModalCtrl', function () {
 
     it('isDisabled should return false', function() {
       expect(controller.isDisabled()).toBeFalsy();
+    });
+
+    it('addHoliday should add a holiday', function() {
+      controller.addHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(1);
+      controller.addHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(2);
+    });
+
+    it('removeHoliday should remove a holiday', function() {
+      controller.addHoliday();
+      controller.removeHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(0);
     });
   });
 });

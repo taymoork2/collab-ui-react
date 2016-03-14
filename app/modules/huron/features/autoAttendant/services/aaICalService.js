@@ -23,31 +23,36 @@
       return new ical.Component('vcalendar');
     }
 
-    function getDefaultRange() {
-      return {
-        days: [{
-          label: 'Monday',
-          active: false
-        }, {
-          label: 'Tuesday',
-          active: false
-        }, {
-          label: 'Wednesday',
-          active: false
-        }, {
-          label: 'Thursday',
-          active: false
-        }, {
-          label: 'Friday',
-          active: false
-        }, {
-          label: 'Saturday',
-          active: false
-        }, {
-          label: 'Sunday',
-          active: false
-        }]
-      };
+    function getDefaultRange(type) {
+      if (type !== 'holiday') {
+        return {
+          days: [{
+            label: 'Monday',
+            active: false
+          }, {
+            label: 'Tuesday',
+            active: false
+          }, {
+            label: 'Wednesday',
+            active: false
+          }, {
+            label: 'Thursday',
+            active: false
+          }, {
+            label: 'Friday',
+            active: false
+          }, {
+            label: 'Saturday',
+            active: false
+          }, {
+            label: 'Sunday',
+            active: false
+          }]
+        };
+      } else {
+        return [];
+      }
+      
     }
 
     function addHoursRange(type, calendar, hoursRange) {
@@ -170,9 +175,12 @@
 
         var dtstart = vevent.getFirstPropertyValue('dtstart');
         var dtend = vevent.getFirstPropertyValue('dtend');
-        var hoursRange = {};
-        if (summary !== 'holiday') {
-          hoursRange = getDefaultRange();
+        var hoursRange = getDefaultRange(summary);
+
+        hoursRange.starttime = new Date(dtstart.year, dtstart.month, dtstart.day, dtstart.hour, dtstart.minute, dtstart.second);
+        hoursRange.endtime = new Date(dtend.year, dtend.month, dtend.day, dtend.hour, dtend.minute, dtend.second);
+        if (summary === 'open') {
+          hoursRanges.push(hoursRange);
           var rrule = vevent.getFirstPropertyValue('rrule');
           var strRule = rrule.toString();
           var eventDays = strRule.substring(strRule.indexOf('BYDAY=') + 6);
@@ -184,13 +192,7 @@
               }
             });
           });
-        }
-
-        hoursRange.starttime = new Date(dtstart.year, dtstart.month, dtstart.day, dtstart.hour, dtstart.minute, dtstart.second);
-        hoursRange.endtime = new Date(dtend.year, dtend.month, dtend.day, dtend.hour, dtend.minute, dtend.second);
-        if (summary !== 'holiday') {
-          hoursRanges.push(hoursRange);
-        } else {
+        } else if (summary === 'holiday') {
           hoursRange.name = vevent.getFirstPropertyValue('description');
           hoursRange.date = moment(hoursRange.starttime).format("YYYY-MM-DD");
           if (dtstart.hour === 0 && dtstart.minute === 0 && dtend.hour === 23 && dtend.minute === 59) {
