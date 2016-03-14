@@ -24,5 +24,9 @@
     		<span translate="didManageModal.buttonText"></span>
     	</a>
     </li>
+    <li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span>
+        <span ng-if="!customerOverview.isOrgSetup()" translate="customerPage.setupButton"></span></a></li>
+    <li cr-feature-toggle feature-show="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup"><a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="pstnSetup({customerId: row.entity.customerOrgId, customerName: row.entity.customerName, customerEmail: row.entity.customerEmail})"><span translate="pstnSetup.setupPstn"></span></a></li>
+    <li cr-feature-toggle feature-hide="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="didManageModal.buttonText"></span></a></li>
   </ul>
 </span>
