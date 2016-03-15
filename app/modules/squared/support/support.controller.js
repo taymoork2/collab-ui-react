@@ -35,7 +35,7 @@
 
     function gotoCdrSupport() {
       var url = $state.href('cdrsupport');
-      window.open(url, '_blank');
+      window.open(url, '_self');
     }
 
     function initializeShowCdrCallFlowLink() {
