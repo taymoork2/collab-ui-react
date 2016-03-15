@@ -927,6 +927,8 @@
             blockDueToNoSession = true;
           }
 
+          $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
+
           if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
@@ -934,7 +936,6 @@
             webExUserSettingsModel.disableCancel2 = false;
             errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
             Notification.notify([errMessage], 'error');
-            $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
             return;
           }
 
