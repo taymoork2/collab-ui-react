@@ -58,7 +58,7 @@
 
             <!-- Export In Progress -->
             <span ng-if="row.entity.showExportInProgressLink" 
-                  id="{{row.entity.license.siteUrl}}_exportDisabled"
+                  id="{{row.entity.license.siteUrl}}_exportInProgress"
                   class="csv-text" style="font-weight: bold;"
                   translate="siteList.siteCsvExportInProgressLinkLabel"
                   tooltip-placement="top"
@@ -68,7 +68,7 @@
 
             <!-- Grayed Export -->
             <span ng-if="row.entity.grayedExportLink"
-                  id="{{row.entity.license.siteUrl}}_exportInProgress"
+                  id="{{row.entity.license.siteUrl}}_exportDisabled"
                   style="color: #AEAEAF" 
                   translate="siteList.siteCsvExportLinkLabel" 
                   tooltip-placement="top"

@@ -30,9 +30,11 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
 
-    //getAllSitesLicenseData();
-
     var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
     conferenceServices.forEach(
       function checkConferenceService(conferenceService) {
@@ -53,10 +55,6 @@ angular.module('Core').controller('SiteListCtrl', [
         );
 
         if (isNewSiteUrl) {
-          logMsg = funcName + "\n" +
-            "conferenceService=" + JSON.stringify(conferenceService);
-          // $log.log(logMsg);
-
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
