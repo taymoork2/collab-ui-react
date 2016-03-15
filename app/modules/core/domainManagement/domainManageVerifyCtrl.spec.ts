@@ -22,16 +22,16 @@ namespace domainManagement {
         if (mockToken)
           domainManageService.getToken = sinon.stub().returns($q.resolve());
         return Controller('DomainManageVerifyCtrl', {
-          $state: {params: {domain: domain, loggedOnUser: user}},
-          $previousState: null,
+        $state: {params: {domain: domain, loggedOnUser: user}},
+        $previousState: null,
           DomainManagementService: domainManageService,
           $translate: Translate,
           LogMetricsService: {
-            logMetrics: sinon.stub(),
+          logMetrics: sinon.stub(),
             eventType: {domainManageVerify: 'verify'},
-            eventAction: {buttonClick: 'click'}
-          }
-        });
+          eventAction: {buttonClick: 'click'}
+        }
+      });
       };
 
       it('should return domain provided through state as domain property', ()=> {
