@@ -3,17 +3,19 @@
 describe('Auth Service', function () {
   beforeEach(module('Core'));
 
-  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q;
+  var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $state, $q, OAuthConfig, UrlConfig;
 
   beforeEach(module(function ($provide) {
     $provide.value('$window', $window = {});
   }));
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
     Auth = _Auth_;
     Config = _Config_;
     Storage = _Storage_;
     Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
+    OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
     SessionStorage = _SessionStorage_;
     $state = _$state_;
@@ -33,13 +35,13 @@ describe('Auth Service', function () {
 
   it('should redirect to oauthUrl if redirectToLogin method is called with email', function () {
     $window.location = {};
-    Config.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+    OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
     Auth.redirectToLogin('email@email.com');
     expect($window.location.href).toBe('oauthURL');
   });
 
   it('should get account info using correct API', function (done) {
-    Config.getAdminServiceUrl = sinon.stub().returns('foo/');
+    UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
     $httpBackend
       .expectGET('foo/organization/bar/accounts')
@@ -56,23 +58,19 @@ describe('Auth Service', function () {
   });
 
   it('should get new access token', function (done) {
-    Config.oauthClientRegistration = {
-      scope: 'scope'
-    };
-    Config.getOauth2Url = sinon.stub().returns('oauth/');
-    Config.getRedirectUrl = sinon.stub().returns('redir');
-    Config.getOauthCodeUrl = sinon.stub().returns('codeUrl-');
-    Config.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getNewAccessTokenPostData = sinon.stub().returns('data');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('oauth/access_token', 'codeUrl-scope&redir', assertCredentials)
+      .expectPOST('url', 'data', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
 
     Auth.getNewAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
-      expect(Config.getOauthCodeUrl.getCall(0).args[0]).toBe('argToGetNewAccessToken');
+      expect(OAuthConfig.getNewAccessTokenPostData.getCall(0).args[0]).toBe('argToGetNewAccessToken');
       _.defer(done);
     });
 
@@ -81,12 +79,12 @@ describe('Auth Service', function () {
 
   it('should refresh access token', function (done) {
     Storage.get = sinon.stub().returns('fromStorage');
-    Config.getOauth2Url = sinon.stub().returns('oauth2Url/');
-    Config.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
-    Config.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getOauthAccessCodeUrl = sinon.stub().returns('accessCodeUrl');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'accessCodeUrl', assertCredentials)
+      .expectPOST('url', 'accessCodeUrl', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
@@ -94,7 +92,7 @@ describe('Auth Service', function () {
     Auth.refreshAccessToken('argToGetNewAccessToken').then(function (accessToken) {
       expect(accessToken).toBe('accessTokenFromAPI');
       expect(Storage.get.getCall(0).args[0]).toBe('refreshToken');
-      expect(Config.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
+      expect(OAuthConfig.getOauthAccessCodeUrl.getCall(0).args[0]).toBe('fromStorage');
       _.defer(done);
     });
 
@@ -102,19 +100,12 @@ describe('Auth Service', function () {
   });
 
   it('should set access token', function (done) {
-    Config.getOauth2Url = sinon.stub().returns('oauth2Url/');
-    Config.oauthClientRegistration = {
-      atlas: {
-        scope: 'scope'
-      }
-    };
-    Config.oauthUrl = {
-      oauth2ClientUrlPattern: 'oauth2ClientUrlPattern-'
-    };
-    Config.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
 
     $httpBackend
-      .expectPOST('oauth2Url/access_token', 'oauth2ClientUrlPattern-scope', assertCredentials)
+      .expectPOST('url', 'data', assertCredentials)
       .respond(200, {
         access_token: 'accessTokenFromAPI'
       });
@@ -128,10 +119,11 @@ describe('Auth Service', function () {
   });
 
   it('should refresh token and resend request', function (done) {
-    Config.getOauth2Url = sinon.stub().returns('');
+    OAuthConfig.getOauth2Url = sinon.stub().returns('');
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
 
     $httpBackend
-      .expectPOST('access_token')
+      .expectPOST('access_token_url')
       .respond(200, {
         access_token: ''
       });
@@ -159,10 +151,10 @@ describe('Auth Service', function () {
     var loggedOut = sinon.stub();
     $window.location = {};
     Storage.clear = sinon.stub();
-    Config.getLogoutUrl = sinon.stub().returns('logoutUrl');
+    OAuthConfig.getLogoutUrl = sinon.stub().returns('logoutUrl');
     Storage.get = sinon.stub().returns('accessToken');
-    Config.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
-    Config.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getOauthDeleteTokenUrl = sinon.stub().returns('OauthDeleteTokenUrl');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
 
     $httpBackend
       .expectPOST('OauthDeleteTokenUrl', 'token=accessToken', assertCredentials)
@@ -181,7 +173,7 @@ describe('Auth Service', function () {
 
     beforeEach(function () {
       SessionStorage.get = sinon.stub();
-      Config.getAdminServiceUrl = sinon.stub().returns('path/');
+      UrlConfig.getAdminServiceUrl = sinon.stub().returns('path/');
     });
 
     it('should use correct URL if customer org', function (done) {
@@ -225,7 +217,7 @@ describe('Auth Service', function () {
     describe('given user is full admin', function () {
 
       beforeEach(function () {
-        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -272,7 +264,7 @@ describe('Auth Service', function () {
     describe('given user is not admin', function () {
 
       beforeEach(function () {
-        Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+        UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
         $httpBackend
           .expectGET('path/userauthinfo')
           .respond(200, {
@@ -338,7 +330,7 @@ describe('Auth Service', function () {
 
     it('will add some webex stuff given some condition', function (done) {
       Authinfo.initialize = sinon.stub();
-      Config.getMessengerServiceUrl = sinon.stub().returns('msn');
+      UrlConfig.getMessengerServiceUrl = sinon.stub().returns('msn');
 
       $httpBackend
         .expectGET('path/userauthinfo')

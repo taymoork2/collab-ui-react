@@ -28,6 +28,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
+    vm.setLoadingDone = setLoadingDone;
 
     vm.templateDefinitions = [{
       tname: "template1",
@@ -39,7 +40,17 @@
 
     $scope.saveAARecords = saveAARecords;
 
+    setLoadingStarted();
+
     /////////////////////
+
+    function setLoadingStarted() {
+      vm.loading = true;
+    }
+
+    function setLoadingDone() {
+      vm.loading = false;
+    }
 
     function setAANameFocus() {
       vm.aaNameFocus = true;
@@ -178,6 +189,9 @@
           aaRecords[recNum].assignedResources = angular.copy(aaRecord.assignedResources);
           vm.aaModel.ceInfos[recNum] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[recNum]);
 
+          AACommonService.resetFormStatus();
+          vm.canSave = false;
+
           Notification.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
@@ -210,6 +224,10 @@
           aaRecords.push(newAaRecord);
           vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
           vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
+
+          AACommonService.resetFormStatus();
+          vm.canSave = false;
+
           Notification.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName
           });
@@ -276,8 +294,6 @@
         }
       }
 
-      AACommonService.resetFormStatus();
-
       if (isNewRecord) {
         createCE();
       } else {
@@ -311,6 +327,11 @@
       } else if (vm.aaModel.possibleNumberDiscrepancy) {
         vm.canSave = true;
       }
+
+      if (!AACommonService.isValid()) {
+        vm.canSave = false;
+      }
+
       return vm.canSave;
     }
 
@@ -413,7 +434,6 @@
     }
 
     function activate() {
-
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -431,6 +451,7 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
       });
+
     }
 
     activate();

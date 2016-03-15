@@ -9,7 +9,7 @@ var messageLogger = require('../utils/messageLogger.gulp')();
 var del = require('del');
 
 // Delete build and dist directory files
-gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma','clean:test']);
+gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma', 'clean:test']);
 
 // Delete dist directory files
 gulp.task('clean:dist', function (done) {

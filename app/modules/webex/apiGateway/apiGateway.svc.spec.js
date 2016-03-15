@@ -3,8 +3,178 @@
  */
 'use strict';
 
-describe('WebExApiGatewayService', function () {
+describe('WebExApiGatewayService.csvStatus() test', function () {
+  var $q;
+  var $rootScope;
+  var deferredCsvStatusReq;
+  var WebExRestApiFact;
 
+  beforeEach(module('WebExApp'));
+
+  beforeEach(
+    inject(function (
+      _$q_,
+      _$rootScope_,
+      _WebExRestApiFact_
+    ) {
+      $q = _$q_;
+      $rootScope = _$rootScope_;
+      WebExRestApiFact = _WebExRestApiFact_;
+
+      deferredCsvStatusReq = $q.defer();
+      spyOn(WebExRestApiFact, 'csvStatusReq').and.returnValue(deferredCsvStatusReq.promise);
+    })
+  );
+
+  it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "none"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual("none");
+        expect(response.completionDetails).toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "exportInProgress"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportInProgress');
+        expect(response.completionDetails).toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "exportCompletedNoErr"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportCompletedNoErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "exportCompletedWithErr"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('exportCompletedWithErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "importInProgress"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importInProgress');
+        expect(response.completionDetails).toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "importCompletedNoErr"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importCompletedNoErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      "importCompletedWithErr"
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isTestResult).toEqual(true);
+        expect(response.status).toEqual('importCompletedWithErr');
+        expect(response.completionDetails).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvStatusReq.resolve({});
+    $rootScope.$apply();
+  }));
+});
+
+describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   var $q;
   var $rootScope;
 
@@ -34,6 +204,7 @@ describe('WebExApiGatewayService', function () {
       _$rootScope_,
       _WebExXmlApiFact_
     ) {
+
       $q = _$q_;
       $rootScope = _$rootScope_;
       WebExXmlApiFact = _WebExXmlApiFact_;

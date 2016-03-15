@@ -1,1 +1,16 @@
-<a id="download-csv-{{csvDownload.type}}" href="" ng-click="csvDownload.downloadCsv()"><i id="download-icon" class="icon icon-circle-download"><span class="sr-only" translate="common.download"></span></i></a>
+<div class="csv-download">
+  <div>
+    <a id="download-csv-{{csvDownload.type}}" href="" ng-click="csvDownload.downloadCsv()">
+      <i ng-show="!csvDownload.downloading" id="download-icon" class="icon icon-circle-download">
+        <span class="sr-only" translate="common.download"></span>
+      </i>
+    </a>
+  </div>
+  <div>
+    <a tooltip-placement="top" cs-tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+      <i ng-show="csvDownload.downloading" class="icon icon-spinner">
+        <span class="sr-only" translate="common.downloading"></span>
+      </i>
+    </a>
+  </div>
+</div>

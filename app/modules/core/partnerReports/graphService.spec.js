@@ -9,8 +9,8 @@ describe('Service: Graph Service', function () {
   };
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var dummyGraphData = angular.copy(dummyData.activeUser.four);
-  var mediaQualityGraphData = angular.copy(dummyData.activeUser.four);
+  var dummyActiveUserData = angular.copy(dummyData.activeUser.one);
+  var mediaQualityGraphData = angular.copy(dummyData.activeUser.one);
   var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
   var callMetricsData = angular.copy(dummyData.callMetrics);
 
@@ -30,11 +30,11 @@ describe('Service: Graph Service', function () {
   describe('Active Users graph services', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
-        'dataProvider': dummyGraphData,
+        'dataProvider': dummyActiveUserData,
         validateData: validateService.validate
       });
       activeUsersChart = null;
-      activeUsersChart = GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
+      activeUsersChart = GraphService.getActiveUsersGraph(dummyActiveUserData, activeUsersChart);
     });
 
     it('should have created a graph when getActiveUsersGraph is called the first time', function () {
@@ -43,7 +43,7 @@ describe('Service: Graph Service', function () {
     });
 
     it('should update graph when getActiveUsersGraph is called a second time', function () {
-      GraphService.getActiveUsersGraph(dummyGraphData, activeUsersChart);
+      GraphService.getActiveUsersGraph(dummyActiveUserData, activeUsersChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
   });

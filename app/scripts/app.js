@@ -58,6 +58,8 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
+angular.module('DigitalRiver', ['Core']);
+
 angular.module('Huron', [
   'Core',
   'uc.moh',
@@ -83,6 +85,7 @@ angular.module('Sunlight', ['Core']);
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
+  'DigitalRiver',
   'Huron',
   'Hercules',
   'Mediafusion',

@@ -11,18 +11,18 @@ var runSeq = require('run-sequence');
 gulp.task('build', ['clean'], function (done) {
   var tasks = [];
   var runInParallel = [
-        'template-cache',
-        'scss:build',
-        'copy:build',
-        'ts:build'
-      ];
-  if(!args.nolint){
+    'template-cache',
+    'scss:build',
+    'copy:build',
+    'ts:build'
+  ];
+  if (!args.nolint) {
     tasks.push('analyze');
   }
   tasks.push(runInParallel);
   tasks.push('processHtml:build');
 
-  if(args.karmaSplit){
+  if (args.karmaSplit) {
     tasks.push('karma-all');
   } else {
     tasks.push('karma-config');
@@ -30,5 +30,5 @@ gulp.task('build', ['clean'], function (done) {
   }
   tasks.push(done);
 
-  runSeq.apply(this,tasks);
+  runSeq.apply(this, tasks);
 });

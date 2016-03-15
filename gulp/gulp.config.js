@@ -3,7 +3,7 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
@@ -15,6 +15,7 @@ module.exports = function() {
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
+  var gulpFiles = 'gulp/**/*.js';
 
   var config = {
     build: build,
@@ -34,11 +35,12 @@ module.exports = function() {
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
 
+    gulpFiles: gulpFiles,
+
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -98,6 +100,7 @@ module.exports = function() {
         all: app + '/**/*.spec.js',
         ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
+        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
@@ -130,17 +133,17 @@ module.exports = function() {
         vendor + '/bootstrap/dist/js/bootstrap.js',
         vendor + '/addressparser/src/addressparser.js',
         vendor + '/alertify.js/lib/alertify.js',
-        vendor + '/amcharts3/amcharts/amcharts.js',
-        vendor + '/amcharts3/amcharts/pie.js',
-        vendor + '/amcharts3/amcharts/serial.js',
-        vendor + '/amcharts3/amcharts/funnel.js',
-        vendor + '/amcharts3/amcharts/plugins/export/export.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/fabric.js/fabric.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/blob.js/blob.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/jszip.js/jszip.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
+        vendor + '/cisco-amcharts/amcharts/amcharts.js',
+        vendor + '/cisco-amcharts/amcharts/pie.js',
+        vendor + '/cisco-amcharts/amcharts/serial.js',
+        vendor + '/cisco-amcharts/amcharts/funnel.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/export.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/fabric.js/fabric.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/blob.js/blob.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/jszip.js/jszip.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
         vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
@@ -218,7 +221,7 @@ module.exports = function() {
         vendor + '/angular-dialog-service/dialogs.css',
         vendor + '/animate.css/animate.css',
         vendor + '/ng-tags-input/ng-tags-input.css',
-        vendor + '/amcharts3/amcharts/plugins/export/export.css',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/export.css',
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',
@@ -236,6 +239,16 @@ module.exports = function() {
       '',
 
     isJenkins: isJenkins,
+
+    beautifyFiles: [
+      app + '/**/*.js',
+      app + '/**/*.json',
+      test + '/**/*.js',
+      test + '/**/*.json',
+      gulpFiles,
+      '!test/karma-unit.js',
+      '!karma.conf.js'
+    ]
   };
 
   return config;
