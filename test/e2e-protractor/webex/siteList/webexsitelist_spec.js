@@ -26,6 +26,11 @@ describe('Services > Webex page aka Site List page', function () {
       utils.wait(sitelist.csvColumnId);
     });
 
+    it('should detect the Export | Import label', function () {
+      utils.wait(sitelist.csvImportId);
+      utils.wait(sitelist.csvExportId);
+    });
+
     it('should log out', function () {
       navigation.logout();
     });
