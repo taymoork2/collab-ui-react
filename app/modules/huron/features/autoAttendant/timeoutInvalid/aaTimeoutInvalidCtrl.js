@@ -57,7 +57,6 @@
       childOptions: vm.repeatOptions
     }];
 
-    var fromNewStep;
     var runActionsOnInput = 'runActionsOnInput';
 
     /////////////////////////
@@ -131,27 +130,6 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
-
-      if ($scope.fromNewStepDialBy) {
-        fromNewStep = true;
-
-        if (vm.menuEntry.actions.length === 0) {
-          //should already be built by the time it gets here. 
-          var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionsOnInput, '');
-
-          action.inputType = 2;
-          vm.menuEntry.attempts = 4; // default 3 times
-
-          vm.menuEntry.addAction(action);
-        } else {
-          // make sure action is 'runActionsOnInput' not AA, User, extNum, etc
-          if (!(vm.menuEntry.actions[0].getName() === runActionsOnInput)) {
-            vm.menuEntry.actions[0].setName(runActionsOnInput);
-            vm.menuEntry.actions[0].setValue('');
-          } // else let saved value be used
-        }
-
-      }
 
       populateOptionMenu();
 

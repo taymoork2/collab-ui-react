@@ -26,8 +26,9 @@
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      url: 'modules/huron/features/autoAttendant/routeDialByExt/aaRouteDialByExtMenu.tpl.html',
-      help: $translate.instant('autoAttendant.routeDialByExtMenuHelp'),
+      controller: 'AADialByExtCtrl as aaDialByExtCtrl',
+      url: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
+      help: $translate.instant('autoAttendant.actionDialByExtensionHint'),
       type: 2, // to flag that this is not phonemenu, see setOption
       actions: ['runActionsOnInput']
     }, {

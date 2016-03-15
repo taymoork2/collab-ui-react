@@ -10,8 +10,7 @@ angular
           schedule: '@aaSchedule',
           index: '=aaIndex',
           isMenuHeader: '=aaHeader',
-          menuKeyIndex: '@aaKeyIndex',
-          fromNewStepDialBy: '@aaFromNewStepDialBy'
+          menuKeyIndex: '@aaKeyIndex'
         },
         controller: 'AASayMessageCtrl',
         controllerAs: 'aaSay',

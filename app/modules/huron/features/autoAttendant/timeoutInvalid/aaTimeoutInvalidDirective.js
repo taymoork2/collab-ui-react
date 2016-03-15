@@ -9,8 +9,7 @@ angular
         scope: {
           schedule: '@aaSchedule',
           index: '=aaIndex',
-          keyIndex: '@aaKeyIndex',
-          fromNewStepDialBy: '@aaFromNewStepDialBy'
+          keyIndex: '@aaKeyIndex'
         },
         controller: 'AATimeoutInvalidCtrl',
         controllerAs: 'aaTimeoutInvalidCtrl',

@@ -163,43 +163,4 @@ describe('Controller: AATimeoutInvalidCtrl', function () {
 
   });
 
-  describe('activate', function () {
-
-    it('should create a new action coming from Dial By Extension', function () {
-
-      controller.uiMenu.entries[0].actions = [];
-
-      $scope.fromNewStepDialBy = true;
-
-      controller = $controller('AATimeoutInvalidCtrl', {
-        $scope: $scope
-      });
-
-      $scope.$apply();
-
-      expect(controller.uiMenu.entries[0].actions.length).toEqual(1);
-      expect(controller.uiMenu.entries[0].actions[0].inputType).toEqual(2);
-      expect(controller.uiMenu.entries[0].attempts).toEqual(4);
-
-    });
-
-    it('should create a new action coming from Dial By Extension with type being runActionOnInput', function () {
-
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry('DummyAction', '');
-      aaUiModel['openHours'].entries[0].actions[0] = action;
-
-      $scope.fromNewStepDialBy = true;
-
-      controller = $controller('AATimeoutInvalidCtrl', {
-        $scope: $scope
-      });
-
-      $scope.$apply();
-
-      expect(controller.uiMenu.entries[0].actions[0].getName()).toEqual('runActionsOnInput');
-
-    });
-
-  });
-
 });

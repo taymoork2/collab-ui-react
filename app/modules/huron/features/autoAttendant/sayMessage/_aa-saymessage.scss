@@ -32,38 +32,4 @@
     color: $gray-base;
     white-space: nowrap;
   }
-
-
-}
-
-
-.aa-saymessage-timeout-invalid {
-  min-width: vr-adjust(340);
-
-  .panel {
-    @include vr-spacing(m, 0);
-
-    @include vr-spacing(pt, 1);
-    @include vr-spacing(pl, .5);
-    @include vr-spacing(pr, .5);
-    @include vr-spacing(pb, .75);
-
-    background-color: $gray-light-3;
-
-    & ~ .panel {
-      @include vr-spacing(mt, 0.5);
-    }
-
-  }
-
-}
-
-.control-label {
-    @include vr-spacing(pl, .25);
-    @include vr-spacing(mt, .45);
-    @include vr-spacing(mb, 0);
-}
-
-.aa-pm-timeout {
-  @include vr-spacing(pb, 0);
 }
