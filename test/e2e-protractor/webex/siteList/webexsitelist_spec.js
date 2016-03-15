@@ -32,7 +32,7 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start multi center license tests
-  describe(': License Types - Single : ', function () {
+  xdescribe(': License Types - Single : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
       login.loginThroughGui(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
