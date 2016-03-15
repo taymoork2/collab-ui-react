@@ -36,6 +36,24 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
+  //Start T30 CSV Not Available User Test 
+  describe('T30 CSV Not Available Test : ', function () {
+
+    it('login, navigate to site list page as ' + sitelist.t30csvNotAvailableUser.testAdminUsername, function () {
+      login.loginThroughGui(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword);
+      navigation.clickServicesTab();
+      utils.click(sitelist.conferencingLink);
+    });
+
+    it('should detect Not Available', function () {
+      utils.wait(sitelist.t30csvNotAvail);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
   //Start multi center license tests
   xdescribe(': License Types - Single : ', function () {
 

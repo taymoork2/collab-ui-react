@@ -17,6 +17,12 @@ var SiteListPage = function () {
     testAdminPassword: 'Cisco!23'
   };
 
+  this.t30csvNotAvailableUser = {
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30citestprov9-csvadm1@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   this.siteListPageId = element(by.id('site-list'));
   this.conferencingLink = element(by.css('a[href="#site-list"]'));
   this.csvColumnId = element(by.id('id-siteCsvColumnHeader'));
