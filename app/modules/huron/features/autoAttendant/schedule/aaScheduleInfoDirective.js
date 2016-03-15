@@ -2,14 +2,14 @@
 
 angular
   .module('uc.autoattendant')
-  .directive('aaBuilderScheduleInfo', [
+  .directive('aaScheduleInfo', [
     function () {
       return {
         restrict: 'E',
         scope: {
           schedule: '@',
         },
-        controller: 'AABuilderScheduleInfoCtrl',
+        controller: 'AAScheduleInfoCtrl',
         controllerAs: 'scheduleInfo',
         bindToController: true,
         templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleInfo.tpl.html'

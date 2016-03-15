@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .factory('AACommonService', AACommonService);
 
-  function AACommonService() {
+  function AACommonService(AutoAttendantCeMenuModelService) {
 
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
@@ -21,7 +21,8 @@
       setDialByExtensionStatus: setDialByExtensionStatus,
       isValid: isValid,
       setIsValid: setIsValid,
-      resetFormStatus: resetFormStatus
+      resetFormStatus: resetFormStatus,
+      saveUiModel: saveUiModel
     };
 
     return service;
@@ -67,6 +68,40 @@
 
     function setDialByExtensionStatus(status) {
       aaDialByExtensionStatus = status;
+    }
+
+    function saveUiModel(ui, aaRecord) {
+      var openHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'openHours');
+      var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
+      var holidays = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'holidays');
+      if (ui.isOpenHours) {
+        if (angular.isUndefined(openHours)) {
+          openHours = AutoAttendantCeMenuModelService.newCeMenu();
+          openHours.setType('MENU_WELCOME');
+        }
+        AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'openHours', openHours);
+      }
+
+      if (ui.isClosedHours) {
+        if (angular.isUndefined(closedHours)) { //New
+          closedHours = AutoAttendantCeMenuModelService.newCeMenu();
+          closedHours.setType('MENU_WELCOME');
+        }
+        AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'closedHours', closedHours);
+      } else if (angular.isDefined(closedHours)) { //Delete
+        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'closedHours');
+      }
+
+      if (ui.isHolidays) {
+        if (angular.isUndefined(holidays)) { //New
+          holidays = AutoAttendantCeMenuModelService.newCeMenu();
+          holidays.setType('MENU_WELCOME');
+        }
+        AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'holidays', holidays);
+
+      } else if (angular.isDefined(holidays)) { //delete
+        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'holidays');
+      }
     }
 
   }
