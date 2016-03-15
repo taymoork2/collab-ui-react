@@ -596,13 +596,13 @@
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
         return returnItem;
-      } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
-        if (error.status !== 0) {
+      } else if ((error.status > 0) || (error.config.timeout.$$state.value !== ABORT)) {
+        if (error.status > 0) {
           Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
         } else {
           Log.debug(debug + '  Status: ' + error.status);
         }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+        if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
           Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
         } else {
           Notification.notify([message], 'error');
@@ -613,33 +613,42 @@
       }
     }
 
-    function getQuery(filter) {
+    function getQuery(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
       }
     }
 
-    function getQueryForOnePeriod(filter) {
+    function getQueryForOnePeriod(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=' + cacheOption;
       }
     }
 
-    function getTrendQuery(filter) {
+    function getTrendQuery(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       }
     }
   }

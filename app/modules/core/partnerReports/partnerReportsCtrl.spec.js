@@ -111,7 +111,7 @@ describe('Controller: Partner Reports', function () {
         expect(controller.mostActiveUsers).toEqual(activeUserData.mostActiveResponse);
 
         expect(controller.customerOptions).toEqual(customerData.customerOptions);
-        expect(controller.customerSelected).toEqual(customerData.customerOptions[0]);
+        expect(controller.customerSelected).toEqual(customerData.customerOptions);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
 
         expect(controller.registeredEndpoints).toEqual(registeredEndpointsData.registeredEndpointResponse);
