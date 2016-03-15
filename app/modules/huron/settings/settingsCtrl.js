@@ -37,7 +37,6 @@
     vm.loading = true;
     vm.timeZoneOptions = [];
     vm.externalNumberPool = [];
-    vm.externalNumberPoolBeautified = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.hasVoicemailService = false;
     vm.hasVoiceService = false;
@@ -562,7 +561,7 @@
             inputClass: 'large-5',
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
-            labelfield: 'pattern',
+            labelfield: 'label',
             valuefield: 'uuid',
             filter: true,
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
@@ -578,18 +577,23 @@
           },
           controller: function ($scope) {
             $scope.$watchCollection(function () {
-              return vm.externalNumberPoolBeautified;
-            }, function (externalNumbers) {
-              $scope.to.options = _.remove(externalNumbers, function (number) {
-                return number.label === _.get(vm, 'model.serviceNumber.label');
+              return vm.externalNumberPool;
+            }, function (externalNumberPool) {
+              $scope.to.options = _.filter(externalNumberPool, function (externalNumber) {
+                externalNumber.label = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
+                return externalNumber.pattern !== _.get(vm, 'model.serviceNumber.pattern');
               });
             });
+
             $scope.$watch(function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
             }, function (toggleValue) {
               if (toggleValue && !vm.model.companyVoicemail.companyVoicemailNumber) {
-                if (vm.externalNumberPoolBeautified.length > 0) {
-                  vm.model.companyVoicemail.companyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+                if (vm.externalNumberPool.length > 0) {
+                  vm.model.companyVoicemail.companyVoicemailNumber = {
+                    label: TelephoneNumberService.getDIDLabel(vm.externalNumberPool[0].label),
+                    pattern: vm.externalNumberPool[0].pattern
+                  };
                 } else {
                   $scope.options.templateOptions.isWarn = true;
                 }
@@ -648,7 +652,7 @@
             vm.model.site.vmCluster = site.vmCluster;
             vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
             vm.model.uuid = site.uuid;
-            if (site.emergencyCallBackNumber) {
+            if (site.emergencyCallBackNumber && site.emergencyCallBackNumber.pattern) {
               vm.model.serviceNumber = {
                 pattern: site.emergencyCallBackNumber.pattern,
                 label: TelephoneNumberService.getDIDLabel(site.emergencyCallBackNumber.pattern)
@@ -673,9 +677,10 @@
             vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
             vm.model.companyVoicemail.companyVoicemailEnabled = true;
 
-            var existingVoicemailNumber = {};
-            existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
-            vm.model.companyVoicemail.companyVoicemailNumber = existingVoicemailNumber;
+            vm.model.companyVoicemail.companyVoicemailNumber = {
+              pattern: voicemail.pilotNumber,
+              label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
+            };
           }
         }).catch(function (response) {
           initErrors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailGetError'));
@@ -700,7 +705,6 @@
         .then(loadExternalNumbers)
       );
 
-      // Caller ID
       clearCallerIdFields();
       promises.push(loadCallerId());
       promises.push(loadServiceAddress());
@@ -743,8 +747,6 @@
       var errors = [];
       var hasNewInternalNumberRange = false;
 
-      // Company Voicemail Number
-      var companyVoicemailNumber = TelephoneNumberService.getDIDValue(_.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern'));
       var voicemailToggleEnabled = false;
       if (_.get(vm, 'model.companyVoicemail.companyVoicemailEnabled') && _.get(vm, 'model.companyVoicemail.companyVoicemailNumber')) {
         voicemailToggleEnabled = true;
@@ -793,12 +795,11 @@
 
       function saveSite() {
         // Save the existing site voicemail pilot number, before overwritting with the new value
-        var existingSiteVoicemailPilotNumber = _.get(vm, 'model.site.voicemailPilotNumber');
         if (voicemailToggleEnabled) {
           // When the toggle is ON, update the site if the pilot number changed or wasn't set,
           // otherwise, don't update site since nothing changed.
-          if (existingSiteVoicemailPilotNumber !== companyVoicemailNumber) {
-            return updateSite(companyVoicemailNumber);
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern')) {
+            return updateSite(vm.model.companyVoicemail.companyVoicemailNumber.pattern);
           }
         } else {
           // When the toggle is OFF, update the site if the customer has voicemail
@@ -881,8 +882,8 @@
         if (voicemailToggleEnabled) {
           // When the toggle is ON, update the customer if the pilot number changed or wasn't set,
           // otherwise, don't update customer since nothing changed.
-          if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-            return updateCustomer(companyVoicemailNumber);
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern')) {
+            return updateCustomer(vm.model.companyVoicemail.companyVoicemailNumber.pattern);
           }
         } else {
           // When the toggle is OFF, update the customer if the customer has voicemail
@@ -1094,11 +1095,6 @@
     function loadExternalNumbers(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
-        vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
-          var externalNumber = angular.copy(en);
-          externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
-          return externalNumber;
-        });
       }).catch(function (response) {
         vm.externalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
