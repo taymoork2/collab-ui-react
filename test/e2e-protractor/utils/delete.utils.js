@@ -99,7 +99,7 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 
 // Save the test AA name here, this is also accessed from
 // auto-attendant_spec.js
-exports.testAAName = 'e2e AA Test Name';
+exports.testAAName = 'AA for Atlas e2e Tests';
 // deleteTestAA - Delete the Test AA via the CES API
 //
 // Check all of the autoattendants eturned for this
