@@ -179,21 +179,6 @@
           $log.log(logMsg);
         }, // updateCenterLicenseEntitlements()
 
-        isValidLicenseEntitleMent: function () {
-          var funcName = "isValidLicenseEntitleMent()";
-          var logMsg = "";
-
-          // var validLicenseEntitlements = true;
-          var validLicenseEntitlements = (
-            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
-          ) ? true : false;
-
-          return validLicenseEntitlements;
-        }, // isValidLicenseEntitleMent()
-
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
           var logMsg = null;
@@ -771,7 +756,13 @@
 
                 _self.updateCenterLicenseEntitlements();
 
-                var isValidLicenseEntitlement = _self.isValidLicenseEntitleMent();
+                // var validLicenseEntitlements = true;
+                var isValidLicenseEntitlement = (
+                  (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
+                ) ? true : false;
 
                 if (!isValidLicenseEntitlement) {
                   _self.setLoadingErrorDisplay(
@@ -915,6 +906,7 @@
           // once block save flag has been set to true, skip checking other centers and go straight to block save
           var blockDueToNoSession = false;
 
+          /*
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
             (userSettings.meetingCenter != "true")
@@ -936,6 +928,7 @@
           ) {
             blockDueToNoSession = true;
           }
+          */
 
           if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');

@@ -281,69 +281,81 @@
           var funcName = "getSessionTicket()";
           var logMsg = "";
 
-          // var siteUrlElements = siteUrl.split(".");
-          // var wbxSiteName = ("my" == siteUrlElements[1]) ? siteUrlElements[0] + "." + siteUrlElements[1] : siteUrlElements[0];
-
           var ticketObj = null;
           var deferred = $q.defer();
           var _this = this;
-          var getNewTicket = true;
 
-          if (!$rootScope.sessionTickets) {
-            $log.log("No Session tickets in $rootScope, will check Storage");
+          if ($rootScope.sessionTickets) {
+            logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
+              "Found session tickets in $rootScope";
+            // $log.log(logMsg);
+          } else {
             var storedSessionTicketsJson = Storage.get('sessionTickets');
             if (storedSessionTicketsJson !== null) {
+              logMsg = funcName + ": " + "wbxSiteUrl" + wbxSiteUrl + "\n" +
+                "Found session tickets in Storage";
+              // $log.log(logMsg);
+
               $rootScope.sessionTickets = JSON.parse(storedSessionTicketsJson);
-              $log.log("Found some session tickets in Storage.sessionTickets = " + $rootScope.sessionTickets);
             }
           }
 
           if ($rootScope.sessionTickets) {
             ticketObj = $rootScope.sessionTickets[wbxSiteName];
+
             if (ticketObj) {
-              var validTime = ticketObj.validUntil;
+              var ticketExpireTime = ticketObj.validUntil;
               var d = new Date();
               var currentTime = d.getTime();
-              logMsg = funcName + ": " + "Found Session ticket for Site= " + wbxSiteName;
-              $log.log(logMsg);
-              logMsg = funcName + ": " + "currentTime= " + currentTime + " Ticket Validity= " + validTime;
-              $log.log(logMsg);
-              if (currentTime < validTime) {
-                logMsg = funcName + ": " + "Returning session ticket for Site= " + wbxSiteName + " from cache";
+
+              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                "Verify cached session ticket" + "\n" +
+                "currentTime= " + currentTime + "\n" +
+                "ticketExpireTime= " + ticketExpireTime;
+              // $log.log(logMsg);
+
+              if (currentTime < ticketExpireTime) {
+                logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                  "Returning cached session ticket";
                 $log.log(logMsg);
-                deferred.resolve(ticketObj.sessionTik);
-                getNewTicket = false;
+
+                return $q.resolve(ticketObj.sessionTik);
               }
             }
           }
 
-          if (getNewTicket) {
-            logMsg = funcName + ": " + "No valid Session ticket in scope for Site= " + wbxSiteName + " will create new one for this site";
-            $log.log(logMsg);
-
-            _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
-              function getNewSessionTicketSuccess(tik) {
-                funcName = "getNewSessionTicketSuccess()";
-                if ($rootScope.sessionTickets) {
-                  ticketObj = $rootScope.sessionTickets[wbxSiteName];
-                  if (ticketObj && ticketObj.sessionTik) {
-                    logMsg = funcName + ": " + "Returning a new session ticket for Site= " + wbxSiteName;
-                    $log.log(logMsg);
-                    deferred.resolve(ticketObj.sessionTik);
-                  }
-                }
-              },
-
-              function getNewSessionTicketError(reason) {
-                funcName = "getNewSessionTicketError()";
-                logMsg = funcName + ": " + "ERROR - Failed to create a valid Session ticket for Site= " + wbxSiteName;
-                $log.log(logMsg);
-                deferred.reject(reason);
-              });
-          }
-
-          logMsg = funcName + " Exiting";
+          logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+            "Create a new session ticket";
           $log.log(logMsg);
+
+          _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
+            function getNewSessionTicketSuccess(tik) {
+              var funcName = "getNewSessionTicketSuccess()";
+
+              if ($rootScope.sessionTickets) {
+                ticketObj = $rootScope.sessionTickets[wbxSiteName];
+
+                if (ticketObj && ticketObj.sessionTik) {
+                  logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                    "Return new session ticket";
+                  $log.log(logMsg);
+
+                  deferred.resolve(ticketObj.sessionTik);
+                }
+              }
+            },
+
+            function getNewSessionTicketError(reason) {
+              var funcName = "getNewSessionTicketError()";
+
+              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                "ERROR - Failed to create a new session ticket";
+              $log.log(logMsg);
+
+              deferred.reject(reason);
+            }
+          );
+
           return deferred.promise;
         }, //getSessionTicket()
 
@@ -365,9 +377,10 @@
 
           this.getSessionTicketInfo(xmlApiAccessInfo).then(
             function getSessionTicketInfoSuccess(result) {
-              funcName = "getSessionTicketInfoSuccess()";
+              var funcName = "getSessionTicketInfoSuccess()";
 
-              logMsg = funcName + ": " + "\n" + "data=" + result;
+              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                "result=" + result;
               // $log.log(logMsg);
 
               var JsonData = _this.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
@@ -405,7 +418,7 @@
             }, //getSessionTicketInfoSuccess();
 
             function getSessionTicketInfoError(reason) {
-              funcName = "getSessionTicketInfoError()";
+              var funcName = "getSessionTicketInfoError()";
 
               logMsg = funcName + ".error()" + ": " + "\n" + "reason= " + reason;
               $log.log(logMsg);
@@ -420,6 +433,11 @@
         }, // getNewSessionTicket()
 
         flushWafCache: function (xmlApiAccessInfo) {
+          var funcName = "flushWafCache()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
           return $q(function (resolve, reject) {
             var xmlApiUrl = xmlApiAccessInfo.xmlApiUrl;
             var xmlRequest = $interpolate(xmlApiConstants.flushWafCacheRequest)(xmlApiAccessInfo);
