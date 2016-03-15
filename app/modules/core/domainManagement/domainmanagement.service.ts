@@ -85,6 +85,11 @@ class DomainManagementService {
 
     return this.$http.post(this._invokeUnverifyDomainUrl, requestData).then(res => {
       _.remove(this._domainList, {text: domain});
+
+      if (existingDomain && existingDomain.status != this._states.pending && !_.any(this._domainList, d => { return (d.status == this._states.verified || d.status == this._states.claimed);})){
+        //last domain was deleted. CI will set the _enforceUsersInVerifiedAndClaimedDomains flag to false on server side. We will do it now in our browser cache:
+        this._enforceUsersInVerifiedAndClaimedDomains = false;
+     }
     }, err => {
       this.Log.error('Failed to unverify domain:' + domain, err);
       return this.$q.reject(this.getErrorMessage(err));

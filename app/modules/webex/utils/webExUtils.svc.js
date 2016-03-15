@@ -17,7 +17,7 @@ angular.module('WebExApp').service('WebExUtilsService', [
 
       logMsg = funcName + "\n" +
         "toggleId=" + toggleId;
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var deferredGetToggle = $q.defer();
 
