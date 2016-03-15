@@ -1,8 +1,7 @@
-WebexSquared AdminWebClient
-===========================
+# WebexSquared AdminWebClient
 
-Contributor Style Guides
------------
+## Contributor Style Guides
+
 These style guides establish and enforce best practices
 in order to improve code quality, maintainability, and readability.
 All contributors are expected to take the time to learn and apply them.
@@ -19,30 +18,23 @@ Adherence is mandatory. Please refactor non-compliant code.
     top of the file containing the dependencies in the spec, example:
       `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
 
-If you have any questions open an
-[issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new)
-and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
+If you have any questions open an [issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new) and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
 
-Technology
------------
+## Technology
 
 * UI is developed using [Angular JS](https://angularjs.org)
 * ES6(ES2015) JavaScript is transpiled with [TypeScript](http://www.typescriptlang.org)
 * UI is composed of a core module and service modules for different functional groups
-* Modules are developed using directives, here is a good read on the topic:
-  http://briantford.com/blog/angular-bower
+* Modules are developed using directives, here is a good read on the topic: http://briantford.com/blog/angular-bower
 * The backend of the application are written in Java Web Services, the ui services call the REST APIs
-* Styling the application is done using SASS:
-  http://sass-lang.com/
-* Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal:
-  http://collab-lib.cisco.com/dist/#/overview
+* Styling the application is done using [SASS](http://sass-lang.com/)
+* Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal: http://collab-lib.cisco.com/dist/#/overview
 * Localization is done using angular translation
 * Unit testing is written using Jasmine with Karma
 * End to end testing is based on the JS Selenium framework: Protractor
 * Build process is built and run with Gulp.js
 
-Contribute
------------
+## Contribute
 
 We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
 
@@ -81,8 +73,7 @@ To summarize, this is the process:
 8. You push to Jenkins to start a build ('git push jenkins master')
 9. Your code gets merged
 
-Branching
----------
+## Branching
 
 If you're in a situation where you've been assigned to fix many different issues and need to keep your local environment clean, branching with git provides a very easy way to do this. Below is a good example of how to fix a defect without cluttering up your environment.
 
@@ -106,13 +97,11 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
 
 What's really nice about this process is that you can create many branches that have a separate set of changes associated with them. When you want to start working on fixing a defect, you don't have to worry about mixing up the changes for one defect with the changes of another.
 
-Keeping your fork up-to-date
-----------------------------
+## Keeping your fork up-to-date
 
 When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following command: `git pull upstream master`
 
-Setup the environment (If necessary)
-------------------------------------
+## Setup the environment (If necessary)
 
 * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
 * Run `./setup.sh` (found in the root directory)
@@ -121,21 +110,19 @@ Setup the environment (If necessary)
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
-TypeScript Definitions
------------------
+## TypeScript Definitions
 
 * Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
 * Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
 
-TypeScript & ES6(ES2015)
------------------
+## TypeScript & ES6(ES2015)
+
 * ES6 and TypeScript are the preferred method of writing JavaScript in the app
 * Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2
 
-Project structure
------------------
+## Project structure
 
 * Every functional group has a directory structure under `app/modules`
 * There is no need to edit the index.html file, all dependencies are managed through `gulp.config.js`
@@ -156,18 +143,17 @@ Project structure
   - Preview and detail panels for users
  * All functionality must integrate into core through the user list or navigation menu items
 
-Adding a simple page ("Hello World")
-------------------------------------
+## Adding a simple page ("Hello World")
 
-* **BEFORE WRITING CODE**
-  Please read the following BEST PRACTICES guidelines:
-  Here is the recording and the presentation.
+**BEFORE WRITING CODE**
+Please read the following BEST PRACTICES guidelines:
+Here is the recording and the presentation.
 
-  PRESENTATION
-  http://collab-lib.cisco.com/collab-library/presentations/ui-best-practices/#/
+PRESENTATION
+http://collab-lib.cisco.com/collab-library/presentations/ui-best-practices/#/
 
-  PLAY RECORDING (1 hr 8 min 11 sec)
-  https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
+PLAY RECORDING (1 hr 8 min 11 sec)
+https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
 
 **1. Clone the repo**
 
@@ -270,16 +256,13 @@ $ gulp serve
 * test the app using `gulp e2e --specs=[your module]`, this will test your module
 * test the entire suite by running: `gulp e2e`
 
-
-Adding External Dependencies
-----------------------------
+## Adding External Dependencies
 
 * Dependencies are added to the project through Bower
 * Add dependencies with `bower install package_name --save`
 * Dependencies added to the `gulp.config.js` file will be automatically added to `index.html` and `karma.conf.js` files
 
-Gulp.js Tasks
--------------
+## Gulp.js Tasks
 
 ### Available arguments
 
@@ -350,8 +333,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 * Runs `gulp analyze:eslint` and `gulp jsBeautifier:beautify` tasks
 
-Run the protractor e2e test:
-----------------------------
+## Run the protractor e2e test:
 
 * Configurations are located in `protractor-config.js`
 * Test files are located at `test/e2e-protractor/<test-file>_spec.js`
@@ -400,8 +382,7 @@ Run the protractor e2e test:
 (Optional Arguments)
 * `--build`
 
-List of All Optional Arguments
-------------------------------
+## List of All Optional Arguments
 
 ### `--build`
 
