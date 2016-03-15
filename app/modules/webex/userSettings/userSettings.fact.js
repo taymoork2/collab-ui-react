@@ -905,8 +905,6 @@
           // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
           // once block save flag has been set to true, skip checking other centers and go straight to block save
           var blockDueToNoSession = false;
-
-          /*
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
             (userSettings.meetingCenter != "true")
@@ -928,7 +926,6 @@
           ) {
             blockDueToNoSession = true;
           }
-          */
 
           if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');
