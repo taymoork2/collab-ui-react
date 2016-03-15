@@ -8,8 +8,8 @@ in order to improve code quality, maintainability, and readability.
 All contributors are expected to take the time to learn and apply them.
 Adherence is mandatory. Please refactor non-compliant code.
 
-* [Javascript Style Guide](https://github.com/airbnb/javascript)
-* [Angular Style Guide](https://github.com/johnpapa/angularjs-styleguide)
+* [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
+* [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
 * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
 
 **Additional Conventions**
