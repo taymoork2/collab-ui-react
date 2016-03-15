@@ -44,11 +44,11 @@
 
     /////////////////////
 
-    function setLoadingStarted(){
+    function setLoadingStarted() {
       vm.loading = true;
     }
 
-    function setLoadingDone(){
+    function setLoadingDone() {
       vm.loading = false;
     }
 
@@ -452,14 +452,6 @@
         vm.selectAA(aaName);
       });
 
-    }
-
-    function setLoadingStarted(){
-      vm.loading = true;
-    }
-
-    function setLoadingDone(){
-      vm.loading = false;
     }
 
     activate();

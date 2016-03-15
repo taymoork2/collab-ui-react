@@ -499,10 +499,10 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .loading-container {
+  @include aa-builder-height($h2-font-size);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 14.5625rem);
 }
 
 .loading-spinner {
