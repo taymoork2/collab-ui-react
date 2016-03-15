@@ -18,9 +18,9 @@ describe('CsdmConfigService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _CsdmConfigService_, Config) {
+  beforeEach(inject(function ($injector, _CsdmConfigService_, UrlConfig) {
     Service = _CsdmConfigService_;
-    rootPath = Config.getCsdmServiceUrl();
+    rootPath = UrlConfig.getCsdmServiceUrl();
   }));
 
   it('should return the correct url', function () {

@@ -68,7 +68,7 @@ describe('Service: Customer Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     CustomerReportService = _CustomerReportService_;
     Config = _Config_;
@@ -76,7 +76,7 @@ describe('Service: Customer Reports Service', function () {
 
     spyOn(Notification, 'notify');
 
-    var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+    var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var customerView = '&isCustomerView=true';
     groupRoomsUrl = baseUrl + 'timeCharts/conversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     avgRoomsUrl = baseUrl + 'timeCharts/avgConversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
@@ -87,7 +87,7 @@ describe('Service: Customer Reports Service', function () {
     metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
-    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=false';
 
     activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
     responseActiveData = updateDates(responseActiveData, dayFormat);

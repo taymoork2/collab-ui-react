@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('Core')
-  .service('GroupService', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Log', 'Authinfo', 'Auth',
-    function ($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
+  .service('GroupService', ['$http', '$rootScope', '$location', 'Storage', 'UrlConfig', 'Log', 'Authinfo', 'Auth',
+    function ($http, $rootScope, $location, Storage, UrlConfig, Log, Authinfo, Auth) {
 
-      var groupssUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/groups';
+      var groupssUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/groups';
 
       return {
 

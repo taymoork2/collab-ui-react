@@ -3,7 +3,7 @@ describe('DomainManagementService', () => {
 
   beforeEach(angular.mock.module('Core'));
 
-  let $httpBackend, DomainManagementService:any, Config, Authinfo, XhrNotificationService, $rootScope;
+  let $httpBackend, DomainManagementService:any, UrlConfig, Authinfo, XhrNotificationService, $rootScope;
 
   beforeEach(() => {
     angular.mock.module($provide => {
@@ -24,8 +24,8 @@ describe('DomainManagementService', () => {
     });
   });
 
-  beforeEach(inject(($injector, _DomainManagementService_, _Config_, _$rootScope_) => {
-    Config = _Config_;
+  beforeEach(inject(($injector, _DomainManagementService_, _UrlConfig_, _$rootScope_) => {
+     UrlConfig = _UrlConfig_;
     DomainManagementService = _DomainManagementService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
@@ -40,7 +40,7 @@ describe('DomainManagementService', () => {
   it('should produce a list of domains with tokens for the pending.', done => {
 
     let orgId = 'mockOrgId';
-    let scomUrl = Config.getScomUrl() + '/' + orgId;
+    let scomUrl = UrlConfig.getScomUrl() + '/' + orgId;
 
     $httpBackend
       .expectGET(scomUrl)
@@ -112,7 +112,7 @@ describe('DomainManagementService', () => {
   });
 
   it('add domain should invoke token api and put domain in list', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/GetToken/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
     $httpBackend.expectPOST(url, data=> {
@@ -133,7 +133,7 @@ describe('DomainManagementService', () => {
   });
 
   it('verify domain should invoke verify api and update domain status in list', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
     //noinspection TypeScriptUnresolvedVariable
@@ -173,7 +173,7 @@ describe('DomainManagementService', () => {
   });
 
   it('verify domain with failing verify should set error on reject', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Verify/invoke';
     let domain = 'super.example.com';
     let token = 'mock-token';
     //noinspection TypeScriptUnresolvedVariable
@@ -195,7 +195,7 @@ describe('DomainManagementService', () => {
   });
 
   it('delete pending should invoke api with removePending flag', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
 
     $httpBackend
       .expectPOST(url, (data:any)=> {
@@ -212,6 +212,8 @@ describe('DomainManagementService', () => {
     //when('POST', url).respond({});
     let domain = 'super-domain.com';
     //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
+    //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({text: domain, status: 'pending'});
     DomainManagementService.unverifyDomain(domain).then(res=> {
       expect(res).toBeUndefined();
@@ -221,6 +223,8 @@ describe('DomainManagementService', () => {
     $httpBackend.flush();
     //$rootScope.$digest();
 
+    //noinspection TypeScriptUnresolvedVariable
+    expect(DomainManagementService._enforceUsersInVerifiedAndClaimedDomains).toBe(true); //It should not flip this when deleting a pending domain!
   });
 
   it('when delete empty domain, service should immediately reject', ()=> {
@@ -237,7 +241,7 @@ describe('DomainManagementService', () => {
   });
 
   it('when delete pending and api fails error should be returned with a reject', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
 
     $httpBackend
       .expectPOST(url, (data:any)=> {
@@ -266,7 +270,7 @@ describe('DomainManagementService', () => {
   });
 
   it('delete verified should invoke api with false removePending flag', ()=> {
-    let url = Config.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
+      let url = UrlConfig.getDomainManagementUrl('mockOrgId') + 'actions/DomainVerification/Unverify/invoke';
 
     $httpBackend
       .expectPOST(url, (data:any)=> {
@@ -284,6 +288,9 @@ describe('DomainManagementService', () => {
     let domain = 'super-domain.com';
     //noinspection TypeScriptUnresolvedVariable
     DomainManagementService._domainList.push({text: domain, status: 'verified'});
+    //noinspection TypeScriptUnresolvedVariable
+    DomainManagementService._enforceUsersInVerifiedAndClaimedDomains = true;
+
     DomainManagementService.unverifyDomain(domain).then(res=> {
       expect(res).toBeUndefined();
     }, err=> {
@@ -292,5 +299,9 @@ describe('DomainManagementService', () => {
     $httpBackend.flush();
     //$rootScope.$digest();
 
+    expect(DomainManagementService.domainList.length).toBe(0);
+
+    //noinspection TypeScriptUnresolvedVariable
+    expect(DomainManagementService._enforceUsersInVerifiedAndClaimedDomains).toBe(false);
   });
 });

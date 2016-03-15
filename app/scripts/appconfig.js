@@ -32,7 +32,7 @@ angular
           url: '/enter-email-addr',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
               controller: 'enterEmailAddrController',
               controllerAs: 'enterEmailAddrController'
             }
@@ -43,7 +43,7 @@ angular
           url: '/dr-login-forward',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/drLoginForward/drLoginForward.tpl.html',
               controller: 'drLoginForwardController',
               controllerAs: 'drLoginForwardController'
             }
@@ -53,7 +53,7 @@ angular
           url: '/create-account',
           views: {
             'main@': {
-              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              templateUrl: 'modules/digitalRiver/login/createAccount/createAccount.tpl.html',
               controller: 'createAccountController',
               controllerAs: 'createAccountController'
             }
@@ -333,6 +333,20 @@ angular
             loggedOnUser: null
           }
         })
+        .state('domainmanagement.unclaim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
+          }
+        })
         .state('domainmanagement.claim', {
           parent: 'modal',
           views: {
@@ -430,6 +444,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
             }
           },
@@ -437,8 +452,6 @@ angular
             deleteUserOrgId: null,
             deleteUserUuId: null,
             deleteUsername: null,
-            deleteUserfamilyName: null,
-            Username: null
           }
         })
         .state('users.deleteSelf', {
@@ -446,6 +459,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
             }
           },
@@ -532,8 +546,8 @@ angular
             }
           },
           resolve: {
-            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
-              var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
+            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo, UrlConfig) {
+              var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
 
               return $http.get(userUrl)
                 .then(function (response) {
@@ -830,8 +844,9 @@ angular
         })
         .state('reports', {
           url: '/reports',
-          templateUrl: 'modules/squared/views/reports.html',
-          controller: 'ReportsCtrl',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
           parent: 'main',
           params: {
             tab: null,
@@ -840,8 +855,9 @@ angular
         })
         .state('webex-reports', {
           url: '/reports/webex',
-          templateUrl: 'modules/squared/views/reports.html',
-          controller: 'ReportsCtrl',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
           parent: 'main',
           params: {
             tab: 'webex',
@@ -1001,18 +1017,6 @@ angular
         /*
           end: devices redux prototypes
         */
-
-      .state('devReports', {
-          url: '/devReports',
-          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
-          controller: 'CustomerReportsCtrl',
-          controllerAs: 'nav',
-          parent: 'main',
-          params: {
-            tab: null,
-            siteUrl: null
-          }
-        })
         .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
@@ -1187,8 +1191,9 @@ angular
         })
         .state('trialExtInterest', {
           url: '/trialExtInterest?eqp',
-          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          templateUrl: 'modules/core/trialExtInterest/trialExtInterest.tpl.html',
           controller: 'TrialExtInterestCtrl',
+          controllerAs: 'extInterest',
           parent: 'main'
         })
         .state('helpdesk-main', {

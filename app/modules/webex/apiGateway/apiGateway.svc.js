@@ -23,35 +23,114 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
-    this.csvStatus = function (siteUrl) {
+    this.csvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ];
+
+    this.csvStatus = function (
+      siteUrl,
+      checkCsvStatusReq
+    ) {
+
       var funcName = 'csvStatus()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
+        'siteUrl=' + siteUrl + "\n" +
+        'checkCsvStatusReq=' + checkCsvStatusReq;
       $log.log(logMsg);
 
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'errorId:': null,
-        'errorDesc': null
-      };
+      var completionDetails = null;
 
       var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'none', // none, expInProgress, expCompleted, impInProgress, impCompleted
-        'completionInfo': null // not null only if status is expCompleted or impCompleted
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'none', // can be any one of this.csvStatusTypes
+        completionDetails: null, // null unless status is exportCompleted or importCompleted
+      };
+
+      var errorResult = {
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'error',
+        errorId: null,
+        errorDesc: null
       };
 
       var deferredCsvStatus = $q.defer();
 
-      WebExRestApiFact.csvStatusReq(
-        siteUrl
-      ).then(
+      WebExRestApiFact.csvStatusReq(siteUrl).then(
         function success(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
+          if (null != checkCsvStatusReq) { // return a mock/test csv status if requested
+            successResult.isTestResult = true;
+
+            if ('none' == checkCsvStatusReq) {
+              successResult.status = "none";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportInProgress' == checkCsvStatusReq) {
+              successResult.status = "exportInProgress";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportCompletedNoErr' == checkCsvStatusReq) {
+              completionDetails = {};
+
+              successResult.status = "exportCompletedNoErr";
+              successResult.completionDetails = completionDetails;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('exportCompletedWithErr' == checkCsvStatusReq) {
+              completionDetails = {};
+
+              successResult.status = "exportCompletedWithErr";
+              successResult.completionDetails = completionDetails;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importInProgress' == checkCsvStatusReq) {
+              successResult.status = "importInProgress";
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importCompletedNoErr' == checkCsvStatusReq) {
+              completionDetails = {};
+
+              successResult.status = "importCompletedNoErr";
+              successResult.completionDetails = completionDetails;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+
+            if ('importCompletedWithErr' == checkCsvStatusReq) {
+              completionDetails = {};
+
+              successResult.status = "importCompletedWithErr";
+              successResult.completionDetails = completionDetails;
+
+              deferredCsvStatus.resolve(successResult);
+            }
+          } // return a mock/test csv status if requested
+
+          // TODO: if error response then return reject
+
+          // TODO: update successResult appropriately
           deferredCsvStatus.resolve(successResult);
         },
 
@@ -97,14 +176,45 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + '\n' +
         'siteUrl=' + siteUrl;
       $log.log(logMsg);
+
+      var successResult = {
+        'siteUrl': siteUrl,
+        'status': 'success'
+      };
+
+      var errorResult = {
+        'siteUrl': siteUrl,
+        'status:': "error",
+        'errorCode': null,
+        'errorText': null
+      };
+
+      var deferredCsvExport = $q.defer();
+
+      WebExRestApiFact.csvExportReq(siteUrl).then(
+        function csvExportReqSuccess(response) {
+          deferredCsvExport.resolve(successResult);
+        }, // csvExportReqSuccess()
+
+        function csvExportReqError(response) {
+          deferredCsvExport.reject(errorResult);
+        } // csvExportReqError()
+      );
+
+      return deferredCsvExport.promise;
     }; // csvExport()
 
-    this.csvImport = function (siteUrl) {
+    this.csvImport = function (
+      siteUrl,
+      importFile
+    ) {
+
       var funcName = 'csvImport()';
       var logMsg = '';
 
       logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
+        'siteUrl=' + siteUrl + '\n' +
+        'importFile=' + importFile;
       $log.log(logMsg);
     }; // csvImport()
 
@@ -119,8 +229,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     this.isSiteSupportsIframe = function (siteUrl) {
       var deferredIsSiteSupportsIframe = $q.defer();
+      var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
-      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+      WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(response) {
           $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
@@ -278,7 +389,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           "siteUrl=" + siteUrl + "\n" +
           "trainReleaseOrder=" + trainReleaseOrder + "\n" +
           "isT31IframeSupported=" + isT31IframeSupported;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         return isT31IframeSupported;
       } // isT31IframeSupportedCheck()

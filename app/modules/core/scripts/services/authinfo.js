@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics',
-    function Authinfo($rootScope, $translate, Config, Localytics) {
+  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig',
+    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -92,7 +92,7 @@ angular.module('Core')
 
       //update the tabs when Authinfo data has been populated.
       var initializeTabs = function () {
-        var tabs = angular.copy(Config.tabs);
+        var tabs = angular.copy(tabConfig);
         // Remove states out of tab structure that are not allowed or had all their subPages removed
         for (var i = 0; i < tabs.length; i++) {
           if (tabs[i] && tabs[i].subPages) {

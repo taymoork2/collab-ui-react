@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
-    $translate, LicenseService, $scope, $state, Authinfo, $window) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $state, Authinfo, $window, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -23,7 +22,7 @@
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.licenseUsageReady = false;
     vm.showLicenseToggles = [];
-    vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.statusPageUrl = UrlConfig.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.keyPressHandler = keyPressHandler;

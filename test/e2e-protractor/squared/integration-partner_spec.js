@@ -39,6 +39,11 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.trialsPanel);
       utils.expectIsDisplayed(partner.viewAllLink);
     });
+
+    it('should display partner support page', function () {
+      utils.click(navigation.userInfoButton);
+      utils.click(navigation.supportLink).then(navigation.launchSupportPage);
+    });
   });
 
   describe('Add Partner Trial', function () {
@@ -134,6 +139,7 @@ describe('Partner flow', function () {
       utils.click(wizard.saveBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.click(wizard.nextBtn);
       utils.click(wizard.nextBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');

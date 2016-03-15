@@ -5,15 +5,34 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, Config, $http) {
+  function CsvDownloadService(Authinfo, $resource, UrlConfig) {
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
     var typeUser = 'user';
     var typeHeaders = 'headers';
-    var csvTemplateUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/template';
-    var csvUserDataUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/export';
-    var csvHeadersUrl = Config.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/headers';
+    var typeExport = 'export';
+    var csvUserResource = $resource(UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/:type', {
+      type: '@type'
+    }, {
+      get: {
+        method: 'GET',
+        // override transformResponse function because $resource
+        // returns string array in the case of CSV file download
+        transformResponse: function (data, headers) {
+          if (_.isString(data)) {
+            if (_.startsWith(data, '{') || _.startsWith(data, '[')) {
+              data = angular.fromJson(data);
+            } else {
+              data = {
+                content: data
+              };
+            }
+          }
+          return data;
+        }
+      }
+    });
 
     var service = {
       typeTemplate: typeTemplate,
@@ -31,11 +50,17 @@
 
     function getCsv(type) {
       if (type === typeTemplate) {
-        return $http.get(csvTemplateUrl);
+        return csvUserResource.get({
+          type: typeTemplate
+        }).$promise;
       } else if (type === typeUser) {
-        return $http.get(csvUserDataUrl);
+        return csvUserResource.get({
+          type: typeExport
+        }).$promise;
       } else if (type === typeHeaders) {
-        return $http.get(csvHeadersUrl);
+        return csvUserResource.get({
+          type: typeHeaders
+        }).$promise;
       }
     }
 
@@ -72,10 +97,6 @@
 
     function setObjectUrlTemplate(oUrl) {
       objectUrlTemplate = oUrl;
-    }
-
-    function getHeaders() {
-
     }
   }
 

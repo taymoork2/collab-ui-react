@@ -178,8 +178,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
         ceInfos: []
       };
       AAModelService.getAAModel.and.returnValue(aaModel);
-
-      controller.aaModel = aaModel;
       controller.openhours = [];
       controller.isDeleted = true;
       expect(controller.openhours).toBeTruthy();
@@ -190,6 +188,21 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(Notification.success).toHaveBeenCalled();
 
       expect($modalInstance.close).toHaveBeenCalled();
+    });
+
+    it('Verify schedule is disabled to save for AA before AA is created', function () {
+      var aaModel = {
+        aaRecord: {
+          callExperienceName: 'AA1'
+        },
+        aaRecordUUID: '1111',
+        ceInfos: []
+      };
+      AAModelService.getAAModel.and.returnValue(aaModel);
+      controller.openhours = [];
+      controller.isDeleted = true;
+      var flag = controller.isSavable();
+      expect(flag).toBeFalsy();
     });
   });
 

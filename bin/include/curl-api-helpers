@@ -16,7 +16,7 @@ client_secret=c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857
 oauth_token_metadata_dir=.oauth_token_metadata
 tmp_file=/tmp/http-header.$$
 top_dir=${WX2_ADMIN_WEB_CLIENT_HOME}
-auth_src=${top_dir}/test/api_sanity/test_helper.coffee
+auth_src=${top_dir}/test/api_sanity/test_helper.js
 
 # get list of org ids reflecting the list of orgs that we should *never* delete.
 function get_blacklisted_orgs {

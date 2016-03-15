@@ -216,12 +216,19 @@
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    .searchInputForm {
+      margin-bottom: 0px;
+    }
+    input {
+      font-size: 34px;
+    }
     form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
       max-width: 100%;
       display: block;
       height: auto;
       position: relative;
       z-index: 1;
+      border: 0px;
     }
     .icon-search {
       position: absolute;

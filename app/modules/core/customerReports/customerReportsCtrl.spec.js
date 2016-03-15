@@ -39,11 +39,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   };
 
   var headerTabs = [{
-    title: 'reportsPage.engagement',
-    state: 'reports'
-  }, {
     title: 'reportsPage.sparkReports',
-    state: 'devReports'
+    state: 'reports'
   }];
   var timeOptions = [{
     value: 0,
