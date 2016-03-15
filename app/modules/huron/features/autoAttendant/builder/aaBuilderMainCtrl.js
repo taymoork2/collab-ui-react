@@ -44,11 +44,11 @@
 
     /////////////////////
 
-    function setLoadingStarted(){
+    function setLoadingStarted() {
       vm.loading = true;
     }
 
-    function setLoadingDone(){
+    function setLoadingDone() {
       vm.loading = false;
     }
 
