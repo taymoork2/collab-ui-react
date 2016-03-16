@@ -47,7 +47,7 @@
         icon: $translate.instant('onboardModal.meeting'),
         state: 'user-overview.conferencing',
         detail: $translate.instant('onboardModal.mtgFree'),
-        actionsAvailable: true
+        actionsAvailable: getDisplayableServices('CONFERENCING') || currentUser.trainSiteNames
       };
 
       var contactCenterState = {
