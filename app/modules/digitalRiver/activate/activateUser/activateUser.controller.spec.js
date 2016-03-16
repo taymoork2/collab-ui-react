@@ -3,7 +3,7 @@
 
   describe('Controller: ActivateUserController', function () {
     var controller, DigitalRiverService, $location, $log, $q, $state, $scope;
-    var TEST_UU_ID_FOR_DR = '0b17b44a-4fea-48d4-9660-3da55df5d782';
+    var TEST_UUID_FOR_DR = '0b17b44a-4fea-48d4-9660-3da55df5d782';
 
     beforeEach(module('DigitalRiver'));
     beforeEach(inject(function (_$controller_, _$location_, _$state_, _DigitalRiverService_, _$log_, _$q_, _$rootScope_) {
@@ -21,7 +21,7 @@
       describe('user activation successful navigation:', function () {
         beforeEach(inject(function (_$controller_) {
           spyOn($location, 'search').and.returnValue({
-            uuid: TEST_UU_ID_FOR_DR
+            uuid: TEST_UUID_FOR_DR
           });
           spyOn(DigitalRiverService, 'activateUser').and.returnValue($q.when());
           controller = _$controller_('ActivateUserController', {
@@ -33,7 +33,7 @@
         }));
 
         it('should call activateUser', function () {
-          expect(DigitalRiverService.activateUser).toHaveBeenCalledWith(TEST_UU_ID_FOR_DR);
+          expect(DigitalRiverService.activateUser).toHaveBeenCalledWith(TEST_UUID_FOR_DR);
           expect($state.go).toHaveBeenCalledWith('activateUser.successPage');
         });
       });
