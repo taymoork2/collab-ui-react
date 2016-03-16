@@ -229,8 +229,9 @@ module.exports = {
   getBearerToken: function (user, callback) {
     var creds = auth[user];
     if (!creds) {
-      console.error('Credentials for ' + user + ' not found');
-      return Promise.reject();
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
     }
     var jar = request.jar();
     var req = request.defaults({

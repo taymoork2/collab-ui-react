@@ -35,7 +35,6 @@ var _ = require('lodash');
  * --noretry            Runs tests without retrying failed specs
  * --nofailfast         Runs tests without skipping tests after first failure
  * --specs              Runs tests against specific files or modules
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build              Runs tests against the build directory
  * --verbose            Runs tests with detailed console.log() messages
  ******************************************************************/
@@ -71,7 +70,6 @@ gulp.task('e2e', function (done) {
  * --specs=filepath         Runs only tests in specified file
  * --specs=fromfile         Runs only tests from within a file
  * --filename=filepath      Specify the filename
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  ******************************************************************/
@@ -132,12 +130,6 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.mediafusion
     );
     messageLogger('Running End 2 End tests from all modules.');
-  }
-
-  // Extra regression tests that are not gating
-  if (args.regression) {
-    messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
-    tests.push(config.testFiles.e2e.regression);
   }
 
   return gulp.src(tests)
