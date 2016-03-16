@@ -39,7 +39,7 @@ describe('Services > Webex page aka Site List page', function () {
   //Start T30 CSV Not Available User Test 
   describe('T30 CSV Not Available Test : ', function () {
 
-    it('login, navigate to site list page as ' + sitelist.t30csvNotAvailableUser.testAdminUsername ".  Should see 'Not Available'", function () {
+    it('login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ".  Navigate to site list page, should see 'Not Available'", function () {
       login.loginThroughGui(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword);
       navigation.clickServicesTab();
       utils.click(sitelist.conferencingLink);
@@ -81,7 +81,7 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  describe(': License Types - Multiple : ', function () {
+  xdescribe(': License Types - Multiple : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
       login.loginThroughGui(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
