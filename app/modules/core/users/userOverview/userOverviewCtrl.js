@@ -15,6 +15,8 @@
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
+    vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
+    vm.pendingStatus = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -214,5 +216,14 @@
     function disableAuthCodeLink() {
       _.pull(vm.dropDownItems, generateOtpLink);
     }
+
+    function getAccountStatus() {
+      var currentUserId = vm.currentUser.id;
+      Userservice.getUser(currentUserId, function (data, status) {
+        vm.pendingStatus = _.isEqual(data.accountStatus[0], 'pending');
+      });
+    }
+
+    getAccountStatus();
   }
 })();
