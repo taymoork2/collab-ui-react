@@ -115,12 +115,12 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     }
   } else if (args['files-from']) {
     var filesFrom = args['files-from'];
-      try {
-        tests = fileListParser.toList(filesFrom);
-        messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(filesFrom));
-      } catch (err) {
-        messageLogger('Error:: ' + $.util.colors.red(err));
-      }
+    try {
+      tests = fileListParser.toList(filesFrom);
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(filesFrom));
+    } catch (err) {
+      messageLogger('Error:: ' + $.util.colors.red(err));
+    }
   } else {
     tests = [].concat(
       config.testFiles.e2e.squared,
@@ -139,12 +139,18 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     });
 });
 
+gulp.task('protractor:copy-failures', function () {
+  return gulp.src(config.e2eFailRetry)
+    .pipe($.rename(_.trimLeft(config.e2eFailRetry, '.')))
+    .pipe(gulp.dest(config.cache));
+});
+
 gulp.task('protractor:retry', function (done) {
   if (fs.existsSync(config.e2eFailRetry)) {
     //TODO notify first failures somewhere?
     args['files-from'] = config.e2eFailRetry;
     delete args.specs;
-    runSeq('protractor', done);
+    runSeq('protractor:copy-failures', 'protractor', done);
   } else {
     messageLogger('Nothing to retry');
     done();

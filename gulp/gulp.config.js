@@ -35,6 +35,7 @@ module.exports = function () {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
+    cache: '.cache',
 
     gulpFiles: gulpFiles,
 
