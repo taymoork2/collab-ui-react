@@ -47,7 +47,7 @@
     </div>
     </form>
     <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
-      <p translate="autoAttendant.scheduleMissing"></p>
+      <p translate="autoAttendant.hoursMissing"></p>
     </div>
     <a id="addHours" ng-click="aaScheduleModalCtrl.addRange();" translate="autoAttendant.scheduleAddHours"></a>
     </div>
@@ -65,6 +65,9 @@
             name="holidayBehavior"
             cs-input-label="{{'autoAttendant.closedBehavious' | translate}}"
             cs-input-group-size="left-margin-20">
+        </div>
+        <div ng-show="aaScheduleModalCtrl.holidays.length === 0" class="left-margin-20">
+          <p translate="autoAttendant.holidaysMissing"></p>
         </div>
         <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime" class="simple-accordion" ng-if="aaScheduleModalCtrl.holidays.length > 0">
           <cs-accordion-group ng-repeat="holiday in aaScheduleModalCtrl.holidays" is-disabled="aaScheduleModalCtrl.isDisabled()" is-open="holiday.isOpen">
