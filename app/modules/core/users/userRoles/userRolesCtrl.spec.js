@@ -10,7 +10,7 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(module('Hercules'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $stateParams, _$controller_, _Authinfo_, _Notification_, _Config_, _$q_, _Orgservice_, _Userservice_, _SyncService_) {
+  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Notification_, _Config_, _$q_, _Orgservice_, _Userservice_, _SyncService_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
     Orgservice = _Orgservice_;
@@ -21,7 +21,7 @@ describe('Controller: UserRolesCtrl', function () {
     Authinfo = _Authinfo_;
     Userservice = _Userservice_;
     SyncService = _SyncService_;
-    $stateParams = $stateParams;
+    $stateParams = _$stateParams_;
     $stateParams.currentUser = currentUser;
 
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
@@ -61,7 +61,6 @@ describe('Controller: UserRolesCtrl', function () {
     it('should set type cloud-calling SIP Address to $scope.sipAddr', function () {
       $scope.currentUser = angular.copy(getJSONFixture('core/json/sipTestFakeUser2.json'));
       $scope.setUserSipAddress();
-      $scope.$apply();
       expect($scope.sipAddr).toEqual('fakegmuser+siptestuser786@atlastesting234.ciscospark.com');
     });
   });

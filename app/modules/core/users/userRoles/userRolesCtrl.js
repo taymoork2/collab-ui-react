@@ -42,6 +42,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   function initView() {
     setUserSipAddress();
     setFormValuesToMatchRoles();
+
     Orgservice.getOrgCacheOption(function (data, status) {
       if (data.success) {
         $scope.dirsyncEnabled = data.dirsyncEnabled;
@@ -52,19 +53,31 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
     }, null, {
       cache: true
     });
+
     if (Authinfo.getOrgId()) {
       getMessengerSyncStatus();
+    }
+
+    if ($scope.currentUser) {
+      $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
+      $scope.roles = $scope.currentUser.roles;
     }
   }
 
   function setUserSipAddress() {
     if ($scope.currentUser) {
-      $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
-      $scope.roles = $scope.currentUser.roles;
       if (_.isArray($scope.currentUser.sipAddresses)) {
-        var sipAddrData = _.find($scope.currentUser.sipAddresses, function (addr) {
-          return ((addr.primary && addr.type === 'cloud-calling') || addr.type === 'cloud-calling');
+        var sipAddrData = _.find($scope.currentUser.sipAddresses, {
+          primary: true,
+          type: 'cloud-calling'
         });
+
+        if (_.isEmpty(sipAddrData)) {
+          sipAddrData = _.find($scope.currentUser.sipAddresses, {
+            type: 'cloud-calling'
+          });
+        }
+
         if (sipAddrData.value) {
           $scope.sipAddr = sipAddrData.value;
         }
