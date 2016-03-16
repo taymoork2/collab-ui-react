@@ -141,6 +141,16 @@
               'type': 'csv'
             }
           };
+
+          return $q(
+            function (resolve, reject) {
+              _this.sendRestApiReq(
+                httpReqObj,
+                resolve,
+                reject
+              );
+            }
+          );
         }, // csvExportReq()
 
         csvFileDownloadReq: function (
