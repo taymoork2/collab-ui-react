@@ -24,6 +24,7 @@ module.exports = function () {
     vendor: vendor,
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
+    e2eFailRetry: '.e2e-fail-retry',
     tsTestOutputFolder: tsTestOutputFolder,
     app: 'app',
     unsupportedDir: 'app/unsupported',
