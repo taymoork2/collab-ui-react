@@ -1587,6 +1587,10 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "scheduleAddAdditionalHolidays": "Add Holidays",
+    "selectDate": "Select Date",
+    "allDay": "All Day",
+    "closedBehavious": "Holidays Follow Closed Behavior",
     "voices": {
       "male": "male",
       "female": "female",
