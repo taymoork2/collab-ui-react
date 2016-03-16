@@ -129,6 +129,11 @@
           var funcName = "csvExportReq()";
           var logMsg = "";
 
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "csvFile=" + csvFile;
+          // $log.log(logMsg);
+
           var httpReqObj = {
             'url': 'https://' + siteUrl + '/meeting/v1//users/export',
             'method': 'POST',
