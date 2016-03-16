@@ -989,6 +989,7 @@
     "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
+    "addTag": "Add tag",
     "title": "Devices",
     "modalTitle": "Add a New Device",
     "activateDevice": "Activate a New Device",
@@ -1000,7 +1001,7 @@
     "actionsHeader": "Actions",
     "account": "Account",
     "unactivatedDevice": "Unactivated Device",
-    "informationHeader": "Information",
+    "informationHeader": "Settings",
     "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
