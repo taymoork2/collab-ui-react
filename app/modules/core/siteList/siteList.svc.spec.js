@@ -1,7 +1,500 @@
 'use strict';
 
-describe('Site List Service', function () {
+describe('SiteListService: iframeable site test', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
 
+  var $q;
+  var $rootScope;
+
+  var Authinfo;
+  var UrlConfig;
+  var WebExApiGatewayService;
+  var SiteListService;
+
+  var fakeSiteRow;
+
+  var deferredIsSiteSupportsIframe;
+  var deferredCsvStatus;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _Authinfo_,
+    _UrlConfig_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredIsSiteSupportsIframe = $q.defer();
+    deferredCsvStatus = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      csvStatusCheckMode: {
+        isOn: true,
+        checkStart: 0,
+        checkEnd: 0,
+        checkIndex: 0
+      },
+
+      csvPollIntervalObj: null
+    };
+
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
+    spyOn(UrlConfig, 'getWebexAdvancedEditUrl').and.returnValue("fake.admin.webex.com");
+    spyOn(UrlConfig, 'getWebexAdvancedHomeUrl').and.returnValue("fake.webex.com");
+    spyOn(WebExApiGatewayService, 'isSiteSupportsIframe').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+  })); // beforeEach(inject())
+
+  it('can set up csv status polling', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: true
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvPollIntervalObj).not.toEqual(null);
+  });
+
+  it('can process isIframeSupported=false and isAdminReportEnabled=false', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: false,
+      isAdminReportEnabled: false,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(false);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(false);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=false and isAdminReportEnabled=true', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: false,
+      isAdminReportEnabled: true,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(false);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(true);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=true and isAdminReportEnabled=false', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: false,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(true);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(false);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=true and isAdminReportEnabled=true', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(true);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(true);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+}); // describe()
+
+describe('SiteListService: csv status tests', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+
+  var $q;
+  var $rootScope;
+
+  var deferredCsvStatus;
+
+  var SiteListService;
+  var WebExApiGatewayService;
+
+  var fakeSiteRow = null;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredCsvStatus = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      showCSVInfo: false,
+
+      checkStart: false,
+      checkEnd: false,
+      checkIndex: false,
+
+      csvStatusCheckMode: null,
+
+      csvStatusObj: null,
+
+      showExportLink: false,
+      showExportInProgressLink: false,
+      grayedExportLink: false,
+      showExportResultsLink: false,
+      exportFinishedWithErrors: false,
+
+      showImportLink: false,
+      showImportInProgressLink: false,
+      grayedImportLink: false,
+      showImportResultsLink: false,
+      importFinishedWithErrors: false,
+    };
+
+    WebExApiGatewayService.csvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ];
+
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+  })); // beforeEach(inject())
+
+  it('can process csvStatus="none"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 0,
+      checkEnd: 0,
+      checkIndex: 0
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'none',
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("none");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportInProgress"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 1,
+      checkEnd: 1,
+      checkIndex: 1
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'exportInProgress',
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportInProgress");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedNoErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 2,
+      checkEnd: 2,
+      checkIndex: 2
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'exportCompletedNoErr',
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportCompletedNoErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedWithErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 3,
+      checkEnd: 3,
+      checkIndex: 3
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'exportCompletedWithErr',
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("exportCompletedWithErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importInProgress"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 4,
+      checkEnd: 4,
+      checkIndex: 4
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'importInProgress',
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importInProgress");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedNoErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 5,
+      checkEnd: 5,
+      checkIndex: 5
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'importCompletedNoErr',
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importCompletedNoErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedWithErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 6,
+      checkEnd: 6,
+      checkIndex: 6
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: 'importCompletedWithErr',
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual("importCompletedWithErr");
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+}); // describe()
+
+describe('SiteListService: license types tests', function () {
   //Load the required dependent modules
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -168,5 +661,4 @@ describe('Site List Service', function () {
     expect(fake_gridData[2].licenseTooltipDisplay).toBe(null);
 
   });
-
 }); //END describe

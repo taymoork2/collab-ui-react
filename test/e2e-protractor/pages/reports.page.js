@@ -59,7 +59,7 @@ var ReportsPage = function () {
 
   // call metrics
   this.metricsHeader = element(by.cssContainingText('.report-section-header', 'Call Metrics'));
-  this.customerMetricsDescription = element(by.css('.customer-media')).element(by.css('.report-description'));
+  this.customerMetricsDescription = element(by.css('.call-metrics-customer')).element(by.css('.report-description'));
   this.metricsGraphDiv = element(by.id('metricsGraphDiv'));
   this.metricsData = element.all(by.css('.metrics-display'));
   this.partnerMetricsHeader = element(by.id('callMetrics')).element(by.cssContainingText('article header h4', 'Call Metrics'));
@@ -68,7 +68,7 @@ var ReportsPage = function () {
 
   // media quality
   this.mediaHeader = element(by.cssContainingText('.report-section-header', 'Device Media Quality'));
-  this.customerMediaDescription = element(by.css('.customer-media')).element(by.css('.report-description'));
+  this.customerMediaDescription = element.all(by.css('.customer-media')).last().element(by.css('.report-description'));
   this.mediaFilter = element(by.id('mediaFilter'));
   this.mediaQualityDiv = element(by.id('mediaQualityDiv'));
   this.partnerMediaHeader = element(by.id('mediaQuality')).element(by.cssContainingText('.report-section-header', 'Device Media Quality'));

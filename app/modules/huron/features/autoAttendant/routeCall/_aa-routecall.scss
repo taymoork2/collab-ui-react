@@ -5,15 +5,8 @@
 .aa-route-call-select {
   min-width: vr-adjust(300);
 
-  & .country-list {
-    min-width: vr-adjust(300);
-
-    .dropdown-menu {
-      width: vr-adjust(300);
-    }
-  }
-
   & .select-toggle {
+    width: auto;
 
     @include vr-spacing(pr, 1.75);
 
@@ -28,10 +21,6 @@
     & .csSelect-container {
       @include vr-spacing(pt, 1);
       width : 100%;
-    }
-
-    & .country-list {
-      @include vr-spacing(mt, 1);
     }
 
   }

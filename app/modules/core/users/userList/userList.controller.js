@@ -208,13 +208,18 @@
           }
 
           if (!$scope.obtainedTotalUserCount) {
-            UserListService.getUserCount().then(function (count) {
-              if (count === -1) {
-                count = $scope.USER_EXPORT_THRESHOLD + 1;
-              }
-              $scope.totalUsers = count;
+            if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
+              $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD;
               $scope.obtainedTotalUserCount = true;
-            });
+            } else {
+              UserListService.getUserCount().then(function (count) {
+                if (count === -1) {
+                  count = $scope.USER_EXPORT_THRESHOLD + 1;
+                }
+                $scope.totalUsers = count;
+                $scope.obtainedTotalUserCount = true;
+              });
+            }
           }
         }, $scope.searchStr);
     }

@@ -1,0 +1,66 @@
+'use strict';
+
+/* global LONG_TIMEOUT */
+
+describe('Onboard users with Message Service', function () {
+  var testUser = utils.randomTestGmailwithSalt('meetings');
+  var LICENSE = users.paidMsgCheckbox;
+
+  function checkAndClickInterop(curState, targetState) {
+    utils.clickUser(testUser);
+    utils.click(users.messagingService);
+    utils.expectCheckbox(users.messengerInteropCheckbox, curState);
+
+    utils.click(users.messengerInteropCheckbox);
+    utils.expectCheckbox(users.messengerInteropCheckbox, targetState);
+
+    utils.click(users.saveButton);
+    notifications.assertSuccess(testUser, 'entitlements were updated successfully');
+    utils.click(users.closeSidePanel);
+  }
+
+  afterEach(function () {
+    utils.dumpConsoleErrors();
+  });
+
+  it('should login as an account admin', function () {
+    login.login('account-admin', '#/users');
+  });
+
+  describe('Onboard user', function () {
+    it('should add a user (Message On)', function () {
+      users.createUserWithLicense(testUser, LICENSE);
+    });
+
+    it('should disable the Messenger interop entitlement', function () {
+      checkAndClickInterop(true, false);
+    });
+
+    it('should re-enable the Messenger interop entitlement', function () {
+      checkAndClickInterop(false, true);
+    });
+
+    it('should verify that the Messenger interop entitlement was re-enabled', function () {
+      utils.clickUser(testUser);
+      utils.click(users.messagingService);
+      utils.expectCheckbox(users.messengerInteropCheckbox, true);
+      utils.click(users.closeSidePanel);
+    });
+
+    it('should check (Message On) then uncheck', function () {
+      users.clickServiceCheckbox(testUser, true, false, LICENSE);
+    });
+
+    it('should check (Message Off) then check', function () {
+      users.clickServiceCheckbox(testUser, false, false, LICENSE);
+    });
+
+    it('should check (Message On)', function () {
+      users.clickServiceCheckbox(testUser, true, false, LICENSE);
+    });
+  });
+
+  afterAll(function () {
+    deleteUtils.deleteUser(testUser);
+  });
+});

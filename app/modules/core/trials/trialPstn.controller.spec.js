@@ -1,20 +1,28 @@
 'use strict';
 
 describe('Controller: TrialPstnCtrl', function () {
-  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, PstnSetupService;
+  var controller, trials, $httpBackend, $scope, $q, HuronConfig, TrialPstnService, TrialService, PstnSetupService;
+
+  var customerName = 'Wayne Enterprises';
+  var customerEmail = 'batman@darknight.com';
 
   beforeEach(module('core.trial'));
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _PstnSetupService_) {
+  beforeEach(inject(function ($rootScope, _$q_, $controller, _$httpBackend_, _HuronConfig_, _TrialPstnService_, _TrialService_, _PstnSetupService_) {
     $scope = $rootScope.$new();
-
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     TrialPstnService = _TrialPstnService_;
+    TrialService = _TrialService_;
     PstnSetupService = _PstnSetupService_;
     $q = _$q_;
+
+    //Test initialize
+    $scope.trial = TrialService.getData();
+    $scope.trial.details.customerName = customerName;
+    $scope.trial.details.customerEmail = customerEmail;
 
     controller = $controller('TrialPstnCtrl', {
       $scope: $scope,
@@ -28,6 +36,11 @@ describe('Controller: TrialPstnCtrl', function () {
 
   it('should be created successfully', function () {
     expect(controller).toBeDefined();
+  });
+
+  it('should initialize with the company name and email', function () {
+    expect(controller.trialData.details.pstnContractInfo.companyName).toEqual(customerName);
+    expect(controller.trialData.details.pstnContractInfo.email).toEqual(customerEmail);
   });
 
   describe('Enter info to the controller and expect the same out of the service', function () {

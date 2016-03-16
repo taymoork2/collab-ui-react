@@ -317,6 +317,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
     });
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is empty', function () {
       $scope.vm.aaModel = {};
@@ -327,6 +328,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is set', function () {
@@ -342,6 +344,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
     });
 
     it('should be able to read an existing new aaRecord successfully when no name is given', function () {
@@ -355,6 +358,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
     });
@@ -367,6 +371,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
@@ -386,6 +391,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(Notification.error).toHaveBeenCalled();
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
+      expect($scope.vm.loading).toBeTruthy();
     });
   });
 
@@ -623,6 +629,13 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(menuWithNewStep.entries.length).toEqual(4);
       controller.removeNewStep(menuWithNewStep);
       expect(menuWithNewStep.entries.length).toEqual(2);
+    });
+  });
+
+  describe('setLoadingDone', function () {
+    it('should set the vm.loading to false', function () {
+      controller.setLoadingDone();
+      expect($scope.vm.loading).toBeFalsy();
     });
   });
 });

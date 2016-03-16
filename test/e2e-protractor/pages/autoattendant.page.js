@@ -23,7 +23,7 @@ var AutoAttendantPage = function () {
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 
-  this.sayMessage = element(by.cssContainingText('.aa-message-panel', 'Say Message'));
+  this.sayMessage = element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.sayMessageInput = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.name('sayMessageInput'));
   this.sayMessageLanguage = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
   this.languageDropDownOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
@@ -97,8 +97,8 @@ var AutoAttendantPage = function () {
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
-  this.schedule = element(by.css('.aa-schedule-container'));
-  this.addschedule = element(by.linkText('Add Additional Hours'));
+  this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
+  this.addschedule = element(by.linkText('Add Hours'));
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));

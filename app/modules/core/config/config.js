@@ -27,10 +27,11 @@
         'urn:scim:schemas:extension:cisco:commonidentity:1.0'
       ],
 
-      helpUrl: 'https://support.ciscospark.com',
+      helpUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
       ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
       rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
       supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
+      partnerSupportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners',
 
       usersperpage: 100,
       orgsPerPage: 100,
@@ -206,7 +207,6 @@
         'user-overview',
         'userprofile',
         'reports',
-        'devReports',
         'setupwizardmodal',
         'firsttimewizard',
         'groups',
@@ -236,9 +236,9 @@
         'trialExtInterest',
         'activateProduct'
       ],
-      Support: ['support', 'reports', 'billing', 'devReports', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
-      WX2_User: ['overview', 'reports', 'support', 'devReports', 'activateProduct'],
-      WX2_Support: ['overview', 'reports', 'support', 'devReports'],
+      Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+      WX2_User: ['overview', 'reports', 'support', 'activateProduct'],
+      WX2_Support: ['overview', 'reports', 'support'],
       WX2_SquaredInviter: [],
       PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup', 'video'],
       PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
@@ -326,7 +326,6 @@
       'partner': [
         'overview',
         'reports',
-        'devReports',
         'devices',
         'fusion',
         //'mediafusionconnector',

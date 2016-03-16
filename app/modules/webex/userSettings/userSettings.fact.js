@@ -179,21 +179,6 @@
           $log.log(logMsg);
         }, // updateCenterLicenseEntitlements()
 
-        isValidLicenseEntitleMent: function () {
-          var funcName = "isValidLicenseEntitleMent()";
-          var logMsg = "";
-
-          // var validLicenseEntitlements = true;
-          var validLicenseEntitlements = (
-            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
-          ) ? true : false;
-
-          return validLicenseEntitlements;
-        }, // isValidLicenseEntitleMent()
-
         updateUserSettingsModelPart1: function () {
           var funcName = "updateUserSettingsModelPart1()";
           var logMsg = null;
@@ -590,7 +575,7 @@
                     ("CMR" == userLicenseType)
                   ) {
 
-                    var userLicenseSiteUrl = userLicenseItems[3];
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
 
                     logMsg = funcName + "\n" +
                       "currSite=" + currSite + "\n" +
@@ -771,7 +756,13 @@
 
                 _self.updateCenterLicenseEntitlements();
 
-                var isValidLicenseEntitlement = _self.isValidLicenseEntitleMent();
+                // var validLicenseEntitlements = true;
+                var isValidLicenseEntitlement = (
+                  (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
+                ) ? true : false;
 
                 if (!isValidLicenseEntitlement) {
                   _self.setLoadingErrorDisplay(
@@ -914,7 +905,6 @@
           // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
           // once block save flag has been set to true, skip checking other centers and go straight to block save
           var blockDueToNoSession = false;
-
           if (
             (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
             (userSettings.meetingCenter != "true")
@@ -937,6 +927,8 @@
             blockDueToNoSession = true;
           }
 
+          $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
+
           if (blockDueToNoSession) {
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
@@ -944,7 +936,6 @@
             webExUserSettingsModel.disableCancel2 = false;
             errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
             Notification.notify([errMessage], 'error');
-            $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
             return;
           }
 
@@ -1260,7 +1251,8 @@
         }, // getErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
-          return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
+          var siteName = WebExUtilsFact.getSiteName(webexSiteUrl);
+          return WebExXmlApiFact.getSessionTicket(webexSiteUrl, siteName);
         }, //getSessionTicket()
 
         getSiteUrl: function () {
@@ -1271,8 +1263,7 @@
         }, //getSiteUrl
 
         getSiteName: function (siteUrl) {
-          var index = siteUrl.indexOf(".");
-          return siteUrl.slice(0, index);
+          return WebExUtilsFact.getSiteName(siteUrl);
         }, //getSiteName()
       }; // return
     } //WebExUserSettingsFact

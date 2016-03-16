@@ -15,6 +15,6 @@ function errorLogger(error) {
   this.emit('end');
 }
 
-module.exports = function() {
+module.exports = function () {
   return errorLogger;
-}
+};

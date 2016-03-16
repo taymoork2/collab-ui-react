@@ -8,6 +8,7 @@ angular.module('Core').controller('SiteListCtrl', [
   'Authinfo',
   'Userservice',
   'SiteListService',
+  'WebExApiGatewayService',
 
   function (
     $translate,
@@ -16,7 +17,8 @@ angular.module('Core').controller('SiteListCtrl', [
     $interval,
     Authinfo,
     Userservice,
-    SiteListService
+    SiteListService,
+    WebExApiGatewayService
   ) {
 
     var funcName = "siteListCtrl()";
@@ -28,9 +30,11 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
 
-    //getAllSitesLicenseData();
-
     var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
     conferenceServices.forEach(
       function checkConferenceService(conferenceService) {
@@ -51,10 +55,6 @@ angular.module('Core').controller('SiteListCtrl', [
         );
 
         if (isNewSiteUrl) {
-          logMsg = funcName + "\n" +
-            "conferenceService=" + JSON.stringify(conferenceService);
-          $log.log(logMsg);
-
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
@@ -70,11 +70,19 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
 
-          conferenceService.csvPollIntervalObj = null;
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isCSVSupported = false;
 
-          conferenceService.checkCsvStatusStart = 1;
-          conferenceService.checkCsvStatusEnd = 4;
-          conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
+          // define the range of csv states to check
+          conferenceService.csvStatusCheckMode = {
+            isOn: true, // set this to false to turn off check
+            checkStart: 0,
+            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
+            checkIndex: null
+          };
+
+          conferenceService.csvStatusObj = null;
 
           vm.gridData.push(conferenceService);
         }
@@ -109,21 +117,24 @@ angular.module('Core').controller('SiteListCtrl', [
       displayName: $translate.instant('siteList.siteCsvColumnHeader'),
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
       headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
-      sortable: false
+      sortable: false,
+      width: '30%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
       displayName: $translate.instant('siteList.siteSettings'),
-      cellTemplate: 'modules/core/siteList/siteListConfigColumn.tpl.html',
-      sortable: false
+      cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
+      sortable: false,
+      width: '10%'
     });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteReports',
       displayName: $translate.instant('siteList.siteReports'),
-      cellTemplate: 'modules/core/siteList/siteListReportsColumn.tpl.html',
-      sortable: false
+      cellTemplate: 'modules/core/siteList/siteReportsColumn.tpl.html',
+      sortable: false,
+      width: '10%'
     });
 
     // make sure that we have the signed in admin user email before we update the columns

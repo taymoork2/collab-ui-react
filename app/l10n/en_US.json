@@ -69,7 +69,7 @@
     "resend": "Resend Invitation",
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
-    "deleteUserError": "Error deleting user. Status: {{status}}",
+    "deleteUserError": "Error deleting user.",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
@@ -317,6 +317,8 @@
     "onehundredeightyDays": "180",
     "numberOfLicenses": "Number of Licenses",
     "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "isEFT": "isEFT Enabled",
+    "eftError": "Can not reach EFT Service",
     "organizationInformation": "Organization Information",
     "createOrganization": "Create Organization",
     "cancel": "Cancel",
@@ -370,7 +372,8 @@
     "audioCalls": "Audio Only Calls",
     "customer": "Customer",
     "customers": "Customers",
-    "customerSelect": "Select a customer"
+    "customerSelect": "Select a customer",
+    "trackingId": "Tracking ID: "
   },
   "activeUsers": {
     "active": "Active",
@@ -811,7 +814,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
     "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
@@ -1040,6 +1043,10 @@
   },
   "hercules": {
     "page_title": "Connector Management",
+    "domain-verification": {
+      "domain-not-verified": "The domain for this Directory URI must be verified for this service to function properly. ",
+      "navigateToCallSettings": "Verify the domain in <a ng-click=\"{{onclick}}\">Call Service Settings</a>."
+    },
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -1050,7 +1057,6 @@
       "version": "Version",
       "status": "Status",
       "alarms": "Alarms",
-      "serial": "Serial",
       "hosts": "Hosts",
       "goToHost": "Go to Host",
       "remove": "Remove"
@@ -1216,12 +1222,8 @@
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
         "on": "On by default",
         "connectHeading": "Connect",
-        "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too",
         "connectSettingsHeading": "Connect Settings",
         "connectSettings": "Required settings for the Connect feature.",
-        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "on": "On by default",
-        "connectHeading": "Connect",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
@@ -1233,11 +1235,11 @@
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
-        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
+        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: example.org"
+        "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
@@ -1367,6 +1369,7 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "Not available. Please try another name",
+    "setSipUriErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipUriDomainSuccessMessage": "The SIP Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
@@ -1545,7 +1548,7 @@
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
-    "scheduleAddAdditionalHours": "Add Additional Hours",
+    "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
     "routeCallMenuHelp": "Select the appropriate transfer end point",
@@ -1562,7 +1565,6 @@
     "phoneMenuRouteHunt": "Route to Hunt Group",
     "phoneMenuRouteVM": "Route to Voicemail",
     "phoneMenuRouteAA": "Route to Auto Attendant",
-    "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
     "phoneMenuRepeatTwice": "Twice",
@@ -2103,7 +2105,6 @@
     "meeting": "Meeting",
     "notes": "Notes",
     "active": "Active",
-    "trial": "Trial",
     "free": "Free",
     "daysRemaining": "{{count}} days remaining",
     "expiringToday": "Expiring today",
@@ -2154,7 +2155,6 @@
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
     "meetingParty": "Meeting 25 Party",
-    "call": "Call",
     "roomSystem": "Spark Room System",
     "branding": "Customer Branding",
     "MS": "Message",
@@ -2377,7 +2377,6 @@
     "takeOffline": "Take offline",
     "bringOnline": "Bring online",
     "actionsHeader": "Actions",
-    "deleteResource": "Decomission Resource",
     "deleteResourceConfText1": "Are you sure you want to decomission this resource?",
     "deleteResourceConfText2": "It will be disconnected from the cloud and taken offline.",
     "cancel": "Cancel",
@@ -2591,7 +2590,6 @@
     "030035": "030035",
     "030036": "User account does not support toll free call-in teleconferencing.",
     "030037": "The user or site does not support One-Click.",
-    "030039": "030039",
     "030039": "030039",
     "030040": "030040",
     "030041": "030041",
@@ -3025,7 +3023,6 @@
     "japanese": "Japanese",
     "korean": "Korean",
     "norwegian": "Norwegian",
-    "dutch": "Dutch",
     "polish": "Polish",
     "portugueseBrazillian": "Portuguese (Brazillian)",
     "russian": "Russian",
@@ -3056,9 +3053,11 @@
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Export in progress...",
+    "siteCsvExportResultsLinkLabel": "Export results",
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Import in progress...",
     "siteCsvDownloadLinkLabel": "Download file",
+    "siteCsvImportResultsLinkLabel": "Import results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3069,6 +3068,7 @@
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
     "siteCSVNotAvailable": "Not available",
+    "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
     "systemError": "Unable to communicate with this WebEx site. Contact support.",
     "multipleLicenses": "Multiple..."
@@ -3207,7 +3207,8 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "aaDependsTitle": "{{featureName}} Auto Attendant Dependents",
+    "aaDependsTitle": "Auto Attendant Dependents",
+    "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
@@ -3425,7 +3426,7 @@
       "hybrid": {
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More.",
+        "notEnabledActionText": "Learn More",
         "serviceHeader": "On Premise Status",
         "services": {
           "squared-fusion-cal": "Calendar",
@@ -3618,7 +3619,7 @@
   "domainManagement": {
     "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
-    "addDomain": "Add domain",
+    "addDomain": "Add Domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
     "list": {
@@ -3627,7 +3628,7 @@
       "actionsHeader": "Actions"
     },
     "add": {
-      "header": "Add domain",
+      "header": "Add Domain",
       "description": "Add your organization's domain. If you have multiple domains, repeat this step.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
@@ -3635,14 +3636,20 @@
       "invalidDomainAdded": "This domain was already added."
     },
     "delete": {
-      "header": "Remove domain",
+      "header": "Remove Domain",
       "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
     },
+    "unclaim": {
+      "header": "Release Domain Claim",
+      "unclaim": "Release",
+      "description": "You are about to release the following domain:",
+      "warning": "This domain will now be possible to verify and claim by other organizations."
+    },
     "verify": {
-      "header": "Verify domain",
+      "header": "Verify Domain",
       "verifyThis": "Before you verify",
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
@@ -3650,7 +3657,7 @@
       "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
-      "header": "Claim domain",
+      "header": "Claim Domain",
       "claimThis": "You are about to claim the following domain:",
       "warning": "Users with e-mail addresses in this domain that belong to other organizations will have to provide new e-mail addresses.",
       "claim": "Claim"
@@ -3662,7 +3669,7 @@
       "delete": "Remove domain"
     },
     "instructions": {
-      "title": "Token and instructions",
+      "title": "Token and Instructions",
       "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
