@@ -39,7 +39,7 @@ describe('Services > Webex page aka Site List page', function () {
   //Start T30 CSV Not Available User Test 
   describe('T30 CSV Not Available Test : ', function () {
 
-    it('login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ".  Navigate to site list page, should see 'Not Available'", function () {
+    it('should login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ', and navigate to site list page', function () {
       login.loginThroughGui(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword);
       navigation.clickServicesTab();
       utils.click(sitelist.conferencingLink);
