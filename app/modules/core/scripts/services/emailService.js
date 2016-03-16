@@ -56,7 +56,7 @@
           CUSTOMER_NAME: customerName,
           CUSTOMER_EMAIL: customerEmail,
           PARTNER_EMAIL: partnerEmail,
-          SUBJECT: customerName + ' has requested to purchase service or extend their trial'
+          SUBJECT: customerName + ' wants to order or extend their trial'
         }
       };
     }
