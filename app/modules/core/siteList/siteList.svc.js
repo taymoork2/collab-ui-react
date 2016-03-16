@@ -334,7 +334,11 @@ angular.module('Core').service('SiteListService', [
       var siteUrl = siteRow.license.siteUrl;
       var checkCsvStatusReq = null;
 
-      if (siteRow.csvStatusCheckMode.isOn) {
+      if (
+        (null != siteRow.csvStatusCheckMode) &&
+        (siteRow.csvStatusCheckMode.isOn)
+      ) {
+
         if (null == siteRow.csvStatusCheckMode.checkIndex) {
           siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
         }

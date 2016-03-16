@@ -1,10 +1,14 @@
 'use strict';
 
 var HttpsProxyAgent = require("https-proxy-agent");
-var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 var touch = require('touch');
 var fs = require('fs');
 var e2eFailNotify = '.e2e-fail-notify';
+
+// http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
+// - sauce executors are connected out to the world through the host's network
+// - and at the end of each spec run, a connection back to sauce is made to report results
+var agent = mkProxyAgent();
 
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
@@ -219,4 +223,11 @@ function Logger() {
   }
 
   return log;
+}
+
+function mkProxyAgent () {
+  if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
+    return;
+  }
+  return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 }
