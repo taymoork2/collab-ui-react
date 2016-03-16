@@ -6,17 +6,7 @@ angular.module('Squared')
 function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
   $scope.currentUser = $stateParams.currentUser;
   $scope.sipAddr = '';
-  if ($scope.currentUser) {
-    $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
-    $scope.roles = $scope.currentUser.roles;
-    if ($scope.currentUser.sipAddresses) {
-      for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-        if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
-          $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
-        }
-      }
-    }
-  }
+  $scope.setUserSipAddress = setUserSipAddress;
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
@@ -50,6 +40,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   initView();
 
   function initView() {
+    setUserSipAddress();
     setFormValuesToMatchRoles();
     Orgservice.getOrgCacheOption(function (data, status) {
       if (data.success) {
@@ -63,6 +54,21 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
     });
     if (Authinfo.getOrgId()) {
       getMessengerSyncStatus();
+    }
+  }
+
+  function setUserSipAddress() {
+    if ($scope.currentUser) {
+      $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
+      $scope.roles = $scope.currentUser.roles;
+      if (_.isArray($scope.currentUser.sipAddresses)) {
+        var sipAddrData = _.find($scope.currentUser.sipAddresses, function (addr) {
+          return ((addr.primary && addr.type === 'cloud-calling') || addr.type === 'cloud-calling');
+        });
+        if (sipAddrData.value) {
+          $scope.sipAddr = sipAddrData.value;
+        }
+      }
     }
   }
 
