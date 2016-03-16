@@ -14,10 +14,24 @@
 
     vm.save = save;
     vm.isSavable = isSavable;
+    vm.isHoursSavable = isHoursSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
+    vm.toggleSection = toggleSection;
+    vm.removeHoliday = removeHoliday;
+    vm.addHoliday = addHoliday;
     vm.isDeleted = false;
+    vm.toggleHolidays = true;
+    vm.toggleHours = false;
+    vm.holidays = [];
+    vm.oneAtATime = true;
+    vm.isDisabled = isDisabled;
+    vm.changeAllDay = changeAllDay;
+    vm.messages = {
+      required: $translate.instant('common.invalidRequired'),
+      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
+    };
 
     vm.openhours = [];
     vm.getCalendar = getCalendar;
@@ -32,6 +46,51 @@
       vm.hoursForm.$setDirty();
     }
 
+    function changeAllDay(form) {
+      if (!form.holidayStart.$viewValue || !form.holidayEnd.$viewValue) {
+        form.holidayStart.$setPristine();
+        form.holidayEnd.$setPristine();
+      }
+    }
+
+    function addHoliday() {
+      var canAdd = false;
+      if (vm.holidays.length > 0) {
+        canAdd = !vm.holidaysForm.$invalid;
+      } else {
+        canAdd = true;
+      }
+      if (canAdd) {
+        vm.holidays.push({
+          isOpen: true,
+          allDay: true
+        });
+      } else {
+        forceCheckHoliday();
+      }
+    }
+
+    function forceCheckHoliday() {
+      if (vm.holidaysForm.$invalid) {
+        vm.holidaysForm.holidayForm.holidayName.$setDirty();
+        vm.holidaysForm.holidayForm.holidayDate.$setDirty();
+        vm.holidaysForm.holidayForm.holidayStart.$setDirty();
+        vm.holidaysForm.holidayForm.holidayEnd.$setDirty();
+      }
+    }
+
+    function removeHoliday(index) {
+      vm.holidays.splice(index, 1);
+    }
+
+    function isDisabled() {
+      return vm.holidaysForm.$invalid;
+    }
+
+    vm.openSection = function () {
+      forceCheckHoliday();
+    };
+
     function isOpenHoursAfterCloseHours(hours) {
       if (hours.starttime && hours.endtime) {
         if (hours.starttime <= hours.endtime) {
@@ -42,6 +101,14 @@
     }
 
     function isSavable() {
+      if (isHoursSavable()) {
+        return vm.holidaysForm.$valid;
+      } else if (!vm.openhours.length) {
+        return vm.holidaysForm.$valid;
+      }
+    }
+
+    function isHoursSavable() {
       var flag = false;
       _.each(vm.openhours, function (hours) {
         flag = false; //Verify each OpenHour(time and days) is valid to enable save
@@ -69,10 +136,27 @@
       return flag;
     }
 
+    function toggleSection(section) {
+      if (vm.isSavable()) {
+        if (section === 'hours') {
+          vm.toggleHolidays = true;
+          vm.toggleHours = !vm.toggleHours;
+        } else {
+          vm.toggleHours = true;
+          vm.toggleHolidays = !vm.toggleHolidays;
+        }
+      } else {
+        forceCheckHoliday();
+      }
+    }
+
     function getCalendar() {
       vm.calendar = AAICalService.createCalendar();
       _.each(vm.openhours, function (hours) {
-        AAICalService.addHoursRange(vm.calendar, hours);
+        AAICalService.addHoursRange('open', vm.calendar, hours);
+      });
+      _.each(vm.holidays, function (holiday) {
+        AAICalService.addHoursRange('holiday', vm.calendar, holiday);
       });
       return vm.calendar.toString();
     }
@@ -89,7 +173,7 @@
         var notifyName = vm.aaModel.aaRecord.callExperienceName;
 
         if (vm.aaModel.aaRecord.scheduleId) {
-          if (vm.openhours.length > 0) {
+          if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);
             notifyName = calName; // An update is updating only calendar, so notify indicates calender updated
           } else if (vm.isDeleted) {
@@ -205,7 +289,9 @@
     function populateUiModel() {
       if (vm.aaModel.aaRecord.scheduleId) {
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
-          vm.openhours = AAICalService.getHoursRanges(data);
+          var allHours = AAICalService.getHoursRanges(data);
+          vm.openhours = allHours.hours;
+          vm.holidays = allHours.holidays;
         });
       }
     }
