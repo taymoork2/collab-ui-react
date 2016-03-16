@@ -41,23 +41,25 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var funcName = 'csvStatus()';
       var logMsg = '';
 
-      logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl + "\n" +
-        "checkCsvStatusReq=" + checkCsvStatusReq;
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        'checkCsvStatusReq=' + checkCsvStatusReq;
       $log.log(logMsg);
 
-      var completionInfo = null;
+      var completionDetails = null;
 
       var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'none', // can be any one of this.csvStatusTypes
-        'completionDetails': null, // null unless status is exportCompleted or importCompleted
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'none', // can be any one of this.csvStatusTypes
+        completionDetails: null, // null unless status is exportCompleted or importCompleted
       };
 
       var errorResult = {
-        'siteUrl': siteUrl,
-        'errorId:': null,
-        'errorDesc': null
+        siteUrl: siteUrl,
+        isTestResult: false,
+        status: 'error',
+        errorId: null,
+        errorDesc: null
       };
 
       var deferredCsvStatus = $q.defer();
@@ -67,9 +69,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          // return a mock/test csv status if requested
-          if (null != checkCsvStatusReq) {
-            if ('exportInProgress' == checkCsvStatusReq) {
+          if (null != checkCsvStatusReq) { // return a mock/test csv status if requested
+            successResult.isTestResult = true;
+
+            if ('none' == checkCsvStatusReq) {
               successResult.status = "none";
 
               deferredCsvStatus.resolve(successResult);
@@ -82,19 +85,19 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             }
 
             if ('exportCompletedNoErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "exportCompletedNoErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
 
             if ('exportCompletedWithErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "exportCompletedWithErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
@@ -106,23 +109,23 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             }
 
             if ('importCompletedNoErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "importCompletedNoErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
 
             if ('importCompletedWithErr' == checkCsvStatusReq) {
-              completionInfo = {};
+              completionDetails = {};
 
               successResult.status = "importCompletedWithErr";
-              successResult.completionInfo = completionInfo;
+              successResult.completionDetails = completionDetails;
 
               deferredCsvStatus.resolve(successResult);
             }
-          }
+          } // return a mock/test csv status if requested
 
           // TODO: if error response then return reject
 
@@ -147,8 +150,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
+          logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
@@ -169,8 +171,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var funcName = 'csvExport()';
       var logMsg = '';
 
-      logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl;
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl;
       $log.log(logMsg);
 
       var successResult = {
@@ -208,29 +209,35 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var funcName = 'csvImport()';
       var logMsg = '';
 
-      logMsg = funcName + '\n' +
-        'siteUrl=' + siteUrl + '\n' +
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
         'importFile=' + importFile;
       $log.log(logMsg);
     }; // csvImport()
 
-    this.csvFileDownload = function (downloadUrl) {
+    this.csvFileDownload = function (
+      siteUrl,
+      downloadUrl
+    ) {
       var funcName = 'csvFileDownload()';
       var logMsg = '';
 
-      logMsg = funcName + '\n' +
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
         'downloadUrl=' + downloadUrl;
       $log.log(logMsg);
     }; // csvFileDownload()
 
     this.isSiteSupportsIframe = function (siteUrl) {
+      var funcName = "isSiteSupportsIframe()";
+      var logMsg = "";
+
       var deferredIsSiteSupportsIframe = $q.defer();
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
+      logMsg = funcName + ": " + "siteUrl=" + siteUrl;
+      // $log.log(logMsg);
+
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(response) {
-          $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
-
           webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
@@ -260,10 +267,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
                   isAdminReportEnabled: isAdminReportEnabled
                 };
 
-                logMsg = funcName + ": " + "\n" +
-                  "siteUrl=" + siteUrl + "\n" +
+                logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
                   "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                // $log.log(logMsg);
+                $log.log(logMsg);
 
                 deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
               } else { // check iFrame support for T30 site
@@ -285,10 +291,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
                       isAdminReportEnabled: isAdminReportEnabled
                     };
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
+                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
                       "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    // $log.log(logMsg);
+                    $log.log(logMsg);
 
                     deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
                   }, // getEnableT30UnifiedAdminDataSuccess()
@@ -303,8 +308,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
                       response: response
                     };
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
+                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
                       "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
                     $log.log(logMsg);
 
@@ -324,18 +328,17 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
                 response: response
               };
 
-              logMsg = funcName + ": " + "\n" +
-                "siteUrl=" + siteUrl + "\n" +
+              logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
                 "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
               $log.log(logMsg);
 
               deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
             } // getSiteDataError()
           ); // getSiteData().then
-        }, // getSessionTicketSuccess()
+        }, // isSiteSupportsIframe().getSessionTicketSuccess()
 
         function getSessionTicketError(response) {
-          var funcName = "getSessionTicketError()";
+          var funcName = "isSiteSupportsIframe().getSessionTicketError()";
           var logMsg = "";
 
           var result = {
@@ -344,14 +347,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             response: response
           };
 
-          logMsg = funcName + ": " + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
+          logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
             "result=" + JSON.stringify(result);
           $log.log(logMsg);
 
           deferredIsSiteSupportsIframe.reject(result);
-        } // getSessionTicketError()
-      ); // getSessionTicket(siteUrl).then()
+        } // isSiteSupportsIframe().getSessionTicketError()
+      ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
 
       function getSiteData() {
         var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
@@ -381,11 +383,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           (400 <= +trainReleaseOrder)
         ) ? true : false;
 
-        logMsg = funcName + ": " + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
+        logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
           "trainReleaseOrder=" + trainReleaseOrder + "\n" +
           "isT31IframeSupported=" + isT31IframeSupported;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         return isT31IframeSupported;
       } // isT31IframeSupportedCheck()
@@ -403,11 +404,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
           ("true" == enableT30UnifiedAdmin)
         ) ? true : false;
 
-        logMsg = funcName + ": " + "\n" +
-          "siteUrl=" + siteUrl + "\n" +
+        logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
           "enableT30UnifiedAdmin=" + enableT30UnifiedAdmin + "\n" +
           "isIframeSupported=" + isT30IframeSupported;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         return isT30IframeSupported;
       } // isT30IframeSupportedCheck()

@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService, Authinfo, CsvDownloadService;
+  var controller, $scope, $timeout, $q, $state, $stateParams, GroupService, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, DialPlanService, Authinfo, CsvDownloadService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -14,6 +14,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var sites;
   var fusionServices;
   var headers;
+  var getMessageServices;
   var getLicensesUsage;
   var getLicensesUsageSpy;
   var $controller;
@@ -22,12 +23,13 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_, _Authinfo_, _CsvDownloadService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
+    $stateParams = _$stateParams_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     DialPlanService = _DialPlanService_;
@@ -61,6 +63,7 @@ describe('OnboardCtrl: Ctrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
+    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -420,7 +423,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('With Assigning Users', function () {
+  describe('With assigning meeting licenses', function () {
     beforeEach(initController);
     beforeEach(function () {
       $scope.allLicenses = [{
@@ -454,6 +457,45 @@ describe('OnboardCtrl: Ctrl', function () {
       expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
       expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
     });
+  });
+
+  describe('With assigning message licenses', function () {
+    describe('Check if single licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.singleLicense);
+        $stateParams.currentUser = {
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+        };
+        initController();
+      });
+
+      it('should define licenses model', function () {
+        expect($scope.messageFeatures[1].licenses[0].model).toBeTruthy();
+        expect($scope.radioStates.msgRadio).toEqual(false);
+      });
+    });
+
+    describe('Check if multiple licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.multipleLicenses);
+        $stateParams.currentUser = {
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+        };
+        initController();
+      });
+
+      it('should call getAccountLicenses correctly', function () {
+        var licenseFeatures = $scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
+        expect(licenseFeatures[0].idOperation).toEqual('ADD');
+        expect($scope.messageFeatures[1].licenses[0].model).toEqual(true);
+        expect($scope.radioStates.msgRadio).toEqual(true);
+      });
+    });
+
   });
 
   describe('UserAdd DID and DN assignment', function () {

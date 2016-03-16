@@ -8,6 +8,7 @@ angular.module('Core').controller('SiteListCtrl', [
   'Authinfo',
   'Userservice',
   'SiteListService',
+  'WebExApiGatewayService',
 
   function (
     $translate,
@@ -16,7 +17,8 @@ angular.module('Core').controller('SiteListCtrl', [
     $interval,
     Authinfo,
     Userservice,
-    SiteListService
+    SiteListService,
+    WebExApiGatewayService
   ) {
 
     var funcName = "siteListCtrl()";
@@ -28,9 +30,11 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
 
-    //getAllSitesLicenseData();
-
     var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
     conferenceServices.forEach(
       function checkConferenceService(conferenceService) {
@@ -51,10 +55,6 @@ angular.module('Core').controller('SiteListCtrl', [
         );
 
         if (isNewSiteUrl) {
-          logMsg = funcName + "\n" +
-            "conferenceService=" + JSON.stringify(conferenceService);
-          $log.log(logMsg);
-
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
@@ -69,6 +69,20 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.advancedSettings = null;
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
+
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isCSVSupported = false;
+
+          // define the range of csv states to check
+          conferenceService.csvStatusCheckMode = {
+            isOn: true, // set this to false to turn off check
+            checkStart: 0,
+            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
+            checkIndex: null
+          };
+
+          conferenceService.csvStatusObj = null;
 
           vm.gridData.push(conferenceService);
         }
