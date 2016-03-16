@@ -13,6 +13,9 @@
     'Authinfo',
     'Storage',
     'WebExXmlApiConstsSvc',
+    'Auth',
+    'OAuthConfig',
+    'SessionStorage',
 
     function (
       $http,
@@ -23,7 +26,10 @@
       $rootScope,
       Authinfo,
       Storage,
-      xmlApiConstants
+      xmlApiConstants,
+      Auth,
+      OAuthConfig,
+      SessionStorage
     ) {
 
       var _self = this;
@@ -328,33 +334,38 @@
             "Create a new session ticket";
           $log.log(logMsg);
 
-          _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
-            function getNewSessionTicketSuccess(tik) {
-              var funcName = "getNewSessionTicketSuccess()";
+          _this.validateToken().then(function () {
+            $log.log("Token validated.");
+            _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
+              function getNewSessionTicketSuccess(tik) {
+                var funcName = "getNewSessionTicketSuccess()";
 
-              if ($rootScope.sessionTickets) {
-                ticketObj = $rootScope.sessionTickets[wbxSiteName];
+                if ($rootScope.sessionTickets) {
+                  ticketObj = $rootScope.sessionTickets[wbxSiteName];
 
-                if (ticketObj && ticketObj.sessionTik) {
-                  logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                    "Return new session ticket";
-                  $log.log(logMsg);
+                  if (ticketObj && ticketObj.sessionTik) {
+                    logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                      "Return new session ticket";
+                    $log.log(logMsg);
 
-                  deferred.resolve(ticketObj.sessionTik);
+                    deferred.resolve(ticketObj.sessionTik);
+                  }
                 }
-              }
-            },
+              },
 
-            function getNewSessionTicketError(reason) {
-              var funcName = "getNewSessionTicketError()";
+              function getNewSessionTicketError(reason) {
+                var funcName = "getNewSessionTicketError()";
 
-              logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
-                "ERROR - Failed to create a new session ticket";
-              $log.log(logMsg);
+                logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                  "ERROR - Failed to create a new session ticket";
+                $log.log(logMsg);
 
-              deferred.reject(reason);
-            }
-          );
+                deferred.reject(reason);
+              });
+          }).catch(function () {
+            $log.log("Token validation failed");
+            Auth.redirectToLogin();
+          });
 
           return deferred.promise;
         }, //getSessionTicket()
@@ -509,6 +520,42 @@
 
           return fullBodyJson;
         }, // xml2JsonConvert()
+        getOrgId: function () {
+          var customerOrgId = SessionStorage.get('customerOrgId');
+          if (customerOrgId) {
+            return customerOrgId;
+          }
+
+          var partnerOrgId = SessionStorage.get('partnerOrgId');
+          return partnerOrgId;
+        },
+
+        tokeninfo: function (accessToken) {
+          var orgId = this.getOrgId();
+          var url = "https://identity.webex.com/identity/scim/" + orgId + "/v1/Users/me";
+          return $http.get(url);
+        },
+
+        validateToken: function () {
+          var defer = $q.defer();
+          var token = Storage.get('accessToken');
+          if (!_.isEmpty(token)) {
+            this.tokeninfo(token).then(function () {
+              $log.log("AccessToken valid.");
+              defer.resolve(); //continue
+            }).catch(function () {
+              $log.log("AccessToken not valid.");
+              defer.reject();
+              Auth.redirectToLogin();
+            });
+          } else {
+            $log.log("No AccessToken.");
+            defer.reject();
+            Auth.redirectToLogin();
+          }
+          defer.resolve();
+          return defer.promise;
+        },
       }; // return
     } //XmlApiFact()
   ]);
