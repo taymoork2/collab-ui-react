@@ -28,27 +28,25 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-builder-frame {
-  $frame-margin-size: 2;
+  $frame-margin-size: 2rem;
 
   border-top: $aa-builder-border-size solid $aa-builder-border-color;
   box-shadow: inset 0 0.25rem 0.25rem 0.25rem $gray-light-2;
   border-bottom: $aa-builder-border-size solid $gray-light-3;
   border-left: $aa-builder-border-size solid $gray-light-3;
-  @include vr-spacing(mt, 0);
-  @include vr-spacing(mb, $frame-margin-size);
-  @include vr-spacing(mh, $frame-margin-size);
+  margin: 0 $frame-margin-size $frame-margin-size $frame-margin-size;
 
   .aa-builder-container {
     background-color: $gray-light-4;
     overflow-y: auto;
     overflow-x: hidden;
 
-    $margin-top: 0.125;
+    $margin-top: 0.125rem;
 
-    @include vr-spacing(mt, $margin-top);
+    margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
-    @include aa-builder-height(rem($frame-margin-size) + 2 * rem($aa-builder-border-size) + rem($margin-top));
+    @include aa-builder-height($frame-margin-size + 2 * rem($aa-builder-border-size) + $margin-top);
   }
 }
 
@@ -202,9 +200,8 @@ $aa-builder-text-color: $gray-dark-1;
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
+  margin: .125rem 0;
   @include vr-spacing(p, .5);
-  @include vr-spacing(mv, .125);
-  @include vr-spacing(mh, 0);
 
   /* set to match the select-box's 3px radius */
   border-radius: .188rem;
@@ -480,9 +477,8 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-new-step-info {
   max-width: 18.75rem;
-  @include vr-spacing(mt, 0.625);
-  @include vr-spacing(mb, 1.875);
-
+  margin-top: 0.625rem;
+  margin-bottom: 1.875rem;
 }
 
 .aa-endcall-icon {
