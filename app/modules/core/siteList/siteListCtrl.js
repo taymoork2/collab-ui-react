@@ -160,7 +160,7 @@ angular.module('Core').controller('SiteListCtrl', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
 
-      Notification.success('siteList.exportStartedToast');
+      Notification.success($translate.instant('siteList.exportStartedToast'));
 
       $log.log(logMsg);
     }; // csvExport()
@@ -181,7 +181,7 @@ angular.module('Core').controller('SiteListCtrl', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
 
-      Notification.success('siteList.importStartedToast');
+      Notification.success($translate.instant('siteList.importStartedToast'));
 
       $log.log(logMsg);
     }; // csvImport()
