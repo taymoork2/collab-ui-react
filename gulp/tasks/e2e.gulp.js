@@ -20,6 +20,8 @@ var uuid = require('uuid');
 var _uuid;
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var compression = require('compression');
+var fileListParser = require('../utils/fileListParser.gulp');
+var _ = require('lodash');
 
 /*******************************************************************
  * E2E testing task
@@ -30,31 +32,36 @@ var compression = require('compression');
  * --int                Runs tests against integration atlas
  * --prod               Runs tests against production atlas
  * --nosetup            Runs tests without serving the app
+ * --noretry            Runs tests without retrying failed specs
  * --nofailfast         Runs tests without skipping tests after first failure
  * --specs              Runs tests against specific files or modules
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build              Runs tests against the build directory
  * --verbose            Runs tests with detailed console.log() messages
  ******************************************************************/
 gulp.task('e2e', function (done) {
-  if (args.sauce) {
-    runSeq(
-      'e2e:setup',
-      'protractor:clean',
-      'sauce:start',
-      'protractor',
-      'protractor:clean',
-      done
-    );
-  } else {
-    runSeq(
-      'e2e:setup',
-      'protractor:clean',
-      'protractor',
-      'protractor:clean',
-      done
-    );
+  var e2eTasks = [
+    'e2e:setup',
+    'protractor:clean',
+    'sauce:start',
+    'protractor',
+    'protractor:retry',
+    'sauce:stop',
+    'protractor:clean',
+    'connect:stop',
+    done
+  ];
+  if (args.nosetup) {
+    _.pull(e2eTasks, 'e2e:setup');
+    _.pull(e2eTasks, 'connect:stop');
   }
+  if (!args.sauce) {
+    _.pull(e2eTasks, 'sauce:start');
+    _.pull(e2eTasks, 'sauce:stop');
+  }
+  if (args.noretry) {
+    _.pull(e2eTasks, 'protractor:retry');
+  }
+  runSeq.apply(this, e2eTasks);
 });
 
 /*******************************************************************
@@ -68,7 +75,6 @@ gulp.task('e2e', function (done) {
  * --specs=filepath         Runs only tests in specified file
  * --specs=fromfile         Runs only tests from within a file
  * --filename=filepath      Specify the filename
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  ******************************************************************/
@@ -112,6 +118,14 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       tests = specs.split(',');
       messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
     }
+  } else if (args['files-from']) {
+    var filesFrom = args['files-from'];
+    try {
+      tests = fileListParser.toList(filesFrom);
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(filesFrom));
+    } catch (err) {
+      messageLogger('Error:: ' + $.util.colors.red(err));
+    }
   } else {
     tests = [].concat(
       config.testFiles.e2e.squared,
@@ -123,37 +137,29 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     messageLogger('Running End 2 End tests from all modules.');
   }
 
-  // Extra regression tests that are not gating
-  if (args.regression) {
-    messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
-    tests.push(config.testFiles.e2e.regression);
-  }
-
-  // process.exit() instead of server.close()
-  // $.connect.serverClose() can't be relied on to end sockets
-
-  function exit(exitCode) {
-    if (args.sauce) {
-      $.run('./sauce/stop.sh').exec('', function () {
-        process.nextTick(function () {
-          process.exit(exitCode);
-        });
-      });
-    } else {
-      process.nextTick(function () {
-        process.exit(exitCode);
-      });
-    }
-  }
-
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
-      exit(1);
-    })
-    .on('end', function () {
-      exit(0);
+      this.emit('end'); // allows gulp process to continue instead of exiting
     });
+});
+
+gulp.task('protractor:copy-failures', function () {
+  return gulp.src(config.e2eFailRetry)
+    .pipe($.rename(_.trimLeft(config.e2eFailRetry, '.')))
+    .pipe(gulp.dest(config.cache));
+});
+
+gulp.task('protractor:retry', function (done) {
+  if (fs.existsSync(config.e2eFailRetry)) {
+    //TODO notify first failures somewhere?
+    args['files-from'] = config.e2eFailRetry;
+    delete args.specs;
+    runSeq('protractor:copy-failures', 'protractor', done);
+  } else {
+    messageLogger('Nothing to retry');
+    done();
+  }
 });
 
 gulp.task('protractor:update', webdriverUpdate);
@@ -170,7 +176,7 @@ gulp.task('set-env', function () {
 });
 
 gulp.task('protractor:clean', function (done) {
-  del('.e2e-fail-notify', done);
+  del([config.e2eFailRetry], done);
 });
 
 /**
@@ -248,6 +254,10 @@ gulp.task('connect', function () {
     },
     livereload: false
   });
+});
+
+gulp.task('connect:stop', function () {
+  $.connect.serverClose();
 });
 
 /////////////////////////////

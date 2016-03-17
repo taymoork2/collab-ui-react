@@ -360,6 +360,9 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * Skips the e2e setup task
 * You will need to have started a server manually using the `gulp connect` task
 
+##### `gulp e2e --noretry`
+* Runs tests without retrying failures
+
 ##### `gulp e2e --nofailfast`
 * Runs tests without skipping after first failure
 
