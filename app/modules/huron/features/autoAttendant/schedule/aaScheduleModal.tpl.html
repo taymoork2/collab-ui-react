@@ -47,7 +47,7 @@
     </div>
     </form>
     <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
-      <p translate="autoAttendant.scheduleMissing"></p>
+      <p translate="autoAttendant.hoursMissing"></p>
     </div>
     <a id="addHours" ng-click="aaScheduleModalCtrl.addRange();" translate="autoAttendant.scheduleAddHours"></a>
     </div>
@@ -66,6 +66,9 @@
             cs-input-label="{{'autoAttendant.closedBehavious' | translate}}"
             cs-input-group-size="left-margin-20">
         </div>
+        <div ng-show="aaScheduleModalCtrl.holidays.length === 0" class="left-margin-20">
+          <p translate="autoAttendant.holidaysMissing"></p>
+        </div>
         <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime" class="simple-accordion" ng-if="aaScheduleModalCtrl.holidays.length > 0">
           <cs-accordion-group ng-repeat="holiday in aaScheduleModalCtrl.holidays" is-disabled="aaScheduleModalCtrl.isDisabled()" is-open="holiday.isOpen">
             <cs-accordion-heading>
@@ -78,7 +81,7 @@
               </div>
             </cs-accordion-heading>
             <i class="icon icon-trash pull-right" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
-            <ng-form name="holidayForm">
+            <ng-form name="holidayForm{{$index}}">
               <div class="row">
                 <div class="columns medium-6">
                   <input
@@ -93,9 +96,9 @@
                     cs-input-group-size="medium-12"
                     cs-input-messages="aaScheduleModalCtrl.messages">
                   <label class="cs-input__label" for="html-input" translate="autoAttendant.selectDate"></label>
-                  <div ng-class="{'error': holidayForm.holidayDate.$error.required && holidayForm.holidayDate.$dirty}">
+                  <div ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$error.required && aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$dirty}">
                     <cs-datepicker name="holidayDate" ng-model="holiday.date" placeholder="{{'cdrLogs.dateExample' | translate}}" required></cs-datepicker>
-                    <div class="cs-input__messages" ng-messages="holidayForm.holidayDate.$error" role="alert">
+                    <div class="cs-input__messages" ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayDate.$error" role="alert">
                       <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                     </div>
                   </div>
@@ -109,20 +112,20 @@
                       id="checkbox{{$index}}"
                       name="checkbox{{$index}}"
                       cs-input-label="{{'autoAttendant.allDay' | translate}}"
-                      ng-change="aaScheduleModalCtrl.changeAllDay(holidayForm)">
+                      ng-change="aaScheduleModalCtrl.changeAllDay(aaScheduleModalCtrl.holidaysForm['holidayForm' + $index])">
                   </div>
                   <div class="row">
-                    <div class="columns medium-6" ng-class="{'error': holidayForm.holidayStart.$error.required && holidayForm.holidayStart.$dirty && !holiday.allDay}">
+                    <div class="columns medium-6" ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$error.required && aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$dirty && !holiday.allDay}">
                       <label class="cs-input__label" for="holidayStart" translate="cdrLogs.startTime"></label>
                       <input name="holidayStart" ng-model="holiday.starttime" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
-                      <div class="cs-input__messages" ng-messages="holidayForm.holidayStart.$error" role="alert">
+                      <div class="cs-input__messages" ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$error" role="alert">
                         <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                       </div>
                     </div>
-                    <div class="columns medium-6" ng-class="{'error': holidayForm.holidayEnd.$error.compareTo && holidayForm.holidayEnd.$dirty && !holiday.allDay}">
+                    <div class="columns medium-6" ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayEnd.$error.compareTo && aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayEnd.$dirty && !holiday.allDay}">
                       <label class="cs-input__label" for="holidayEnd" translate="cdrLogs.endTime"></label>
                       <input name="holidayEnd" ng-model="holiday.endtime" compare-time="holiday.starttime" reset-compare="holiday.allDay" start-time="holiday.holidayStart" ng-disabled="holiday.allDay" ng-required="!holiday.allDay" class="cs-input" type="time">
-                      <div class="cs-input__messages" ng-messages="holidayForm.holidayEnd.$error" role="alert">
+                      <div class="cs-input__messages" ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayEnd.$error" role="alert">
                         <div class="message" ng-message="{{::key}}" ng-repeat="(key, value) in ::aaScheduleModalCtrl.messages">{{::value}}</div>
                       </div>
                     </div>
