@@ -47,8 +47,13 @@ gulp.task('e2e', function (done) {
     'protractor:retry',
     'sauce:stop',
     'protractor:clean',
+    'connect:stop',
     done
   ];
+  if (args.nosetup) {
+    _.pull(e2eTasks, 'e2e:setup');
+    _.pull(e2eTasks, 'connect:stop');
+  }
   if (!args.sauce) {
     _.pull(e2eTasks, 'sauce:start');
     _.pull(e2eTasks, 'sauce:stop');
@@ -249,6 +254,10 @@ gulp.task('connect', function () {
     },
     livereload: false
   });
+});
+
+gulp.task('connect:stop', function () {
+  $.connect.serverClose();
 });
 
 /////////////////////////////
