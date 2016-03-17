@@ -133,9 +133,25 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
   describe('saveSchedule', function () {
     beforeEach(function () {
+      controller.holidaysForm = {
+        $valid: true,
+        $invalid: false,
+        holidayStart: {
+          $viewValue: undefined,
+          $setPristine: function () {}
+        },
+        holidayEnd: {
+          $viewValue: undefined,
+          $setPristine: function () {}
+        }
+      };
+      spyOn(controller.holidaysForm.holidayStart, '$setPristine').and.returnValue(true);
+      spyOn(controller.holidaysForm.holidayEnd, '$setPristine').and.returnValue(true);
+      controller.holidaysForm.$valid = true;
       controller.calendar = calendar;
       var ceInfo = ce2CeInfo(rawCeInfo);
       controller.openhours = [];
+      controller.holidays = [];
       controller.openhours.push(hours);
       aaModel.ceInfos.push(ceInfo);
       var error = false;
@@ -201,9 +217,49 @@ describe('Controller: AAScheduleModalCtrl', function () {
       AAModelService.getAAModel.and.returnValue(aaModel);
       controller.openhours = [];
       controller.isDeleted = true;
-      var flag = controller.isSavable();
+      var flag = controller.isHoursSavable();
       expect(flag).toBeFalsy();
     });
-  });
 
+    it('should toggle the sections holidays', function () {
+      controller.toggleSection('holiday');
+      $scope.$apply();
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.toggleHolidays).toBeFalsy();
+    });
+
+    it('should toggle the sections open/close', function () {
+      controller.toggleSection('hours');
+      controller.toggleHours = true;
+      $scope.$apply();
+      expect(controller.toggleHours).toBeTruthy();
+      expect(controller.toggleHolidays).toBeTruthy();
+    });
+
+    it('changeAllDay should make form pristine if values are not in the input fields for startdate and enddate', function () {
+      controller.changeAllDay(controller.holidaysForm);
+      expect(controller.holidaysForm.holidayStart.$setPristine).toHaveBeenCalled();
+      expect(controller.holidaysForm.holidayEnd.$setPristine).toHaveBeenCalled();
+    });
+
+    it('isDisabled should return false', function () {
+      expect(controller.isDisabled()).toBeFalsy();
+    });
+
+    it('addHoliday should add a holiday', function () {
+      controller.addHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(1);
+      controller.addHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(2);
+    });
+
+    it('removeHoliday should remove a holiday', function () {
+      controller.addHoliday();
+      controller.removeHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(0);
+    });
+  });
 });

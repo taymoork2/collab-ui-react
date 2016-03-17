@@ -16,10 +16,11 @@ var twoMinutes = 1000 * 60 * 2;
 describe('atlas api -', function () {
   describe('as customer-support-admin', function () {
     before(function (done) {
-      helper.getBearerToken('customer-support-admin', function (bearer) {
-        this.bearer = bearer;
-        done();
-      }.bind(this));
+      helper.getBearerToken('customer-support-admin')
+        .then(function (bearer) {
+          this.bearer = bearer;
+          done();
+        }.bind(this));
     });
     it('should read user auth info', function (done) {
       var opts;

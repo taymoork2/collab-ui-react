@@ -9,7 +9,7 @@ angular.module('Core').controller('SiteListCtrl', [
   'Userservice',
   'SiteListService',
   'WebExApiGatewayService',
-
+  'Notification',
   function (
     $translate,
     $log,
@@ -18,7 +18,8 @@ angular.module('Core').controller('SiteListCtrl', [
     Authinfo,
     Userservice,
     SiteListService,
-    WebExApiGatewayService
+    WebExApiGatewayService,
+    Notification
   ) {
 
     var funcName = "siteListCtrl()";
@@ -158,6 +159,9 @@ angular.module('Core').controller('SiteListCtrl', [
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+
+      Notification.success('siteList.exportStartedToast');
+
       $log.log(logMsg);
     }; // csvExport()
 
@@ -176,6 +180,9 @@ angular.module('Core').controller('SiteListCtrl', [
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+
+      Notification.success('siteList.importStartedToast');
+
       $log.log(logMsg);
     }; // csvImport()
 

@@ -13,7 +13,7 @@
 .tmp
 .bower-cache
 .bower-registry
-.e2e-fail-notify
+.e2e-fail-retry
 .oauth_token_metadata
 .vscode
 
