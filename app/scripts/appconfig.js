@@ -824,6 +824,18 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        .state('site-list.site-csv-results', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteListCtrl',
+              templateUrl: 'modules/core/siteList/siteCSVResultsModal.tpl.html',
+            }
+          },
+          params: {
+            siteRow: {}
+          }
+        })
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
