@@ -10,24 +10,25 @@ describe('partnerProfileCtrl Test', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var WebexClientVersion, httpBackend, $translate, Config, PartnerProfileCtrl_1, $controller, Authinfo;
-  var $scope, $q, FeatureToggleService;
+  var $scope, $q, FeatureToggleService, $rootScope, controller;
 
   //beforeEach(inject(function ($injector, _Config_, _WebexClientVersion_, _PartnerProfileCtrl_) {
 
-  beforeEach(inject(function ($injector, _Config_, _$controller_, _Authinfo_, _WebexClientVersion_, _$q_, _FeatureToggleService_) {
+  beforeEach(inject(function ($injector, _Config_, _$controller_, _$rootScope_, _Authinfo_, _WebexClientVersion_, _$q_, _FeatureToggleService_) {
 
     $controller = _$controller_;
-    $scope = {};
+    $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
     Authinfo = _Authinfo_;
     $q = _$q_;
     FeatureToggleService = _FeatureToggleService_;
 
-    var PartnerProfileCtrl_1 = $controller(
-      'PartnerProfileCtrl', {
-        $scope: $scope
+    // var PartnerProfileCtrl_1 = $controller(
+    //   'PartnerProfileCtrl', {
+    //     $scope: $scope
 
-      }
-    );
+    //   }
+    // );
 
     WebexClientVersion = _WebexClientVersion_;
     Config = _Config_;
@@ -70,19 +71,34 @@ describe('partnerProfileCtrl Test', function () {
       }
     };
 
-    var controller = $controller(
+    controller = $controller(
       'PartnerProfileCtrl', {
         $scope: $scope,
         Authinfo: Authinfo,
         WebexClientVersion: WebexClientVersion,
+        FeatureToggleService: FeatureToggleService,
       }
     );
-
+    $scope.init();
   }));
 
   afterEach(function () {
     //httpBackend.verifyNoOutstandingExpectation();
     //httpBackend.verifyNoOutstandingRequest();
+  });
+
+  xit('initWbxClientVersions is called', function () {
+    //controller.$scope.init();
+    var c = $controller(
+      'PartnerProfileCtrl', {
+        $scope: $scope,
+        Authinfo: Authinfo,
+        WebexClientVersion: WebexClientVersion,
+        FeatureToggleService: FeatureToggleService,
+      }
+    );
+    c.$scope.init();
+    expect($scope.init()).toHaveBeenCalled();
   });
 
   xit('After call initWbxClientVersions should have useLatestWbxVersion set correctly', function () {

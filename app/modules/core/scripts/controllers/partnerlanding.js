@@ -152,6 +152,19 @@
     var serviceTemplate = $templateCache.get('modules/core/partnerLanding/grid/serviceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/partnerLanding/grid/noteColumn.tpl.html');
 
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isOwnOrg = isOwnOrg;
+
+    function isOrgSetup(customer) {
+      return _.every(customer.unmodifiedLicenses, {
+        status: 'ACTIVE'
+      });
+    }
+
+    function isOwnOrg(customer) {
+      return customer.customerName === Authinfo.getOrgName();
+    }
+
     $scope.gridOptions = {
       data: 'gridData',
       multiSelect: false,

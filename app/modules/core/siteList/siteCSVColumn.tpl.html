@@ -31,19 +31,28 @@
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results">
-                <a id="{{row.entity.license.siteUrl}}_exportResult"
-                   ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);">
-                                      
-                  <i ng-if="row.entity.exportFinishedWithErrors"
-                     id="{{row.entity.license.siteUrl}}_exportResultIcon" 
-                     class="icon-warning icon webex-attention-text"
+                <span ng-if="!row.entity.exportFinishedWithErrors">
+                  <a id="{{row.entity.license.siteUrl}}_exportResult"
+                     ui-sref='site-list.site-csv-results()'>
+                     
+                    <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
+                  </a>
+                </span>
+                
+                <span ng-if="row.entity.exportFinishedWithErrors">
+                  <a id="{{row.entity.license.siteUrl}}_exportResult"
+                     ui-sref='site-list.site-csv-results()'
                      tooltip-append-to-body="true" 
                      tooltip-animation="false"
                      tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
-                     tooltip-placement="top"></i>
+                     tooltip-placement="top">
+                                      
+                    <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
+                       class="icon-warning icon webex-attention-text"></i>
                      
-                  <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
-                </a>
+                    <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
+                  </a>
+                </span>
               </span>
                 
               <!-- Three word spaces -->
@@ -58,7 +67,7 @@
 
             <!-- Export In Progress -->
             <span ng-if="row.entity.showExportInProgressLink" 
-                  id="{{row.entity.license.siteUrl}}_exportDisabled"
+                  id="{{row.entity.license.siteUrl}}_exportInProgress"
                   class="csv-text" style="font-weight: bold;"
                   translate="siteList.siteCsvExportInProgressLinkLabel"
                   tooltip-placement="top"
@@ -68,7 +77,7 @@
 
             <!-- Grayed Export -->
             <span ng-if="row.entity.grayedExportLink"
-                  id="{{row.entity.license.siteUrl}}_exportInProgress"
+                  id="{{row.entity.license.siteUrl}}_exportDisabled"
                   style="color: #AEAEAF" 
                   translate="siteList.siteCsvExportLinkLabel" 
                   tooltip-placement="top"

@@ -129,6 +129,11 @@
           var funcName = "csvExportReq()";
           var logMsg = "";
 
+          logMsg = funcName + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "csvFile=" + csvFile;
+          // $log.log(logMsg);
+
           var httpReqObj = {
             'url': 'https://' + siteUrl + '/meeting/v1//users/export',
             'method': 'POST',
@@ -141,6 +146,16 @@
               'type': 'csv'
             }
           };
+
+          return $q(
+            function (resolve, reject) {
+              _this.sendRestApiReq(
+                httpReqObj,
+                resolve,
+                reject
+              );
+            }
+          );
         }, // csvExportReq()
 
         csvFileDownloadReq: function (

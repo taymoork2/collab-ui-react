@@ -26,13 +26,36 @@ describe('Services > Webex page aka Site List page', function () {
       utils.wait(sitelist.csvColumnId);
     });
 
+    it('should detect the Export | Import label', function () {
+      utils.wait(sitelist.csvImportId);
+      utils.wait(sitelist.csvExportId);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+  //Start T30 CSV Not Available User Test 
+  describe('T30 CSV Not Available Test : ', function () {
+
+    it('should login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ', and navigate to site list page', function () {
+      login.loginThroughGui(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword);
+      navigation.clickServicesTab();
+      utils.click(sitelist.conferencingLink);
+    });
+
+    it('should detect Not Available', function () {
+      utils.wait(sitelist.t30csvNotAvail);
+    });
+
     it('should log out', function () {
       navigation.logout();
     });
   });
 
   //Start multi center license tests
-  describe(': License Types - Single : ', function () {
+  xdescribe(': License Types - Single : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
       login.loginThroughGui(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
@@ -58,7 +81,7 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  describe(': License Types - Multiple : ', function () {
+  xdescribe(': License Types - Multiple : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
       login.loginThroughGui(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
