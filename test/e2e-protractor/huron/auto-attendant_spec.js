@@ -176,6 +176,13 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
       utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
+
+      // a bad external number should not allow save
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "1111111111");
+      utils.expectIsDisabled(autoattendant.saveButton);
+
+      // but a good phone number should be able to be saved
+      utils.clear(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
       utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "4084741234");
 
       // save and assert successful update message
@@ -300,6 +307,18 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.modalsave);
       autoattendant.assertUpdateSuccess();
 
+    }, 60000);
+
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, 12000);
+      utils.click(autoattendant.toggleHoliday);
+      utils.click(autoattendant.addholiday);
+      utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.selectdate);
+      utils.expectIsEnabled(autoattendant.modalsave);
     }, 60000);
 
     it('should update a AA Schedule', function () {

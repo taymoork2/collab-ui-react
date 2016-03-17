@@ -1202,7 +1202,9 @@
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeDone": "Upgrade completed!"
+      "upgradeDone": "Upgrade completed!",
+      "upToDate": "This cluster is up to date.",
+      "upgradeImpossible": "The cluster has to be configured before an update is possible."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1235,11 +1237,11 @@
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
-        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
+        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: example.org"
+        "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
@@ -1545,7 +1547,8 @@
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
-    "scheduleMissing": "No hours defined. This Auto Attendant will use 24 hour schedule",
+    "hoursMissing": "No hours defined.",
+    "holidaysMissing": "No holidays defined.",
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
@@ -1588,6 +1591,10 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "scheduleAddAdditionalHolidays": "Add Holidays",
+    "selectDate": "Select Date",
+    "allDay": "All Day",
+    "closedBehavious": "Holidays Follow Closed Behavior",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1870,7 +1877,7 @@
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
     "checkOrderStatus": "Check Order Status",
-    "launchPortal": "Launch Company Portal",
+    "launchPortal": "Setup Spark Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
@@ -3064,10 +3071,12 @@
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
     "exportFailedTooltip": "Export failed",
+    "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
+    "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3620,7 +3629,7 @@
   "domainManagement": {
     "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
-    "addDomain": "Add domain",
+    "addDomain": "Add Domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
     "list": {
@@ -3629,7 +3638,7 @@
       "actionsHeader": "Actions"
     },
     "add": {
-      "header": "Add domain",
+      "header": "Add Domain",
       "description": "Add your organization's domain. If you have multiple domains, repeat this step.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
@@ -3637,20 +3646,20 @@
       "invalidDomainAdded": "This domain was already added."
     },
     "delete": {
-      "header": "Remove domain",
+      "header": "Remove Domain",
       "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
     },
     "unclaim": {
-      "header": "Release domain claim",
+      "header": "Release Domain Claim",
       "unclaim": "Release",
       "description": "You are about to release the following domain:",
       "warning": "This domain will now be possible to verify and claim by other organizations."
     },
     "verify": {
-      "header": "Verify domain",
+      "header": "Verify Domain",
       "verifyThis": "Before you verify",
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
@@ -3658,7 +3667,7 @@
       "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
-      "header": "Claim domain",
+      "header": "Claim Domain",
       "claimThis": "You are about to claim the following domain:",
       "warning": "Users with e-mail addresses in this domain that belong to other organizations will have to provide new e-mail addresses.",
       "claim": "Claim"
@@ -3670,7 +3679,7 @@
       "delete": "Remove domain"
     },
     "instructions": {
-      "title": "Token and instructions",
+      "title": "Token and Instructions",
       "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",

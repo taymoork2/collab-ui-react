@@ -9,7 +9,7 @@ angular.module('Core').controller('SiteListCtrl', [
   'Userservice',
   'SiteListService',
   'WebExApiGatewayService',
-
+  'Notification',
   function (
     $translate,
     $log,
@@ -18,7 +18,8 @@ angular.module('Core').controller('SiteListCtrl', [
     Authinfo,
     Userservice,
     SiteListService,
-    WebExApiGatewayService
+    WebExApiGatewayService,
+    Notification
   ) {
 
     var funcName = "siteListCtrl()";
@@ -30,9 +31,11 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
 
-    //getAllSitesLicenseData();
-
     var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
     conferenceServices.forEach(
       function checkConferenceService(conferenceService) {
@@ -53,10 +56,6 @@ angular.module('Core').controller('SiteListCtrl', [
         );
 
         if (isNewSiteUrl) {
-          logMsg = funcName + "\n" +
-            "conferenceService=" + JSON.stringify(conferenceService);
-          // $log.log(logMsg);
-
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
@@ -160,6 +159,9 @@ angular.module('Core').controller('SiteListCtrl', [
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+
+      Notification.success('siteList.exportStartedToast');
+
       $log.log(logMsg);
     }; // csvExport()
 
@@ -178,6 +180,9 @@ angular.module('Core').controller('SiteListCtrl', [
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+
+      Notification.success('siteList.importStartedToast');
+
       $log.log(logMsg);
     }; // csvImport()
 
