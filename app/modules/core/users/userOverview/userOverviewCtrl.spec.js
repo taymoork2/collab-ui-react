@@ -181,4 +181,10 @@ describe('Controller: UserOverviewCtrl', function () {
 
   });
 
+  describe('getAccountStatus should be called properly', function () {
+    it('should check if status is pending', function () {
+      expect(controller.pendingStatus).toBe(true);
+    });
+  });
+
 });

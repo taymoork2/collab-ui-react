@@ -16,6 +16,7 @@
     vm.titleCard = '';
     vm.subTitleCard = '';
     vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
+    vm.getAccountStatus = getAccountStatus;
     vm.pendingStatus = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();

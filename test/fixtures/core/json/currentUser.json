@@ -9,5 +9,6 @@
   "addresses": [],
   "meta": {
     "organizationID": "222"
-  }
+  },
+  "accountStatus": ["pending"]
 }
