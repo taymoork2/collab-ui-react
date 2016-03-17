@@ -3,7 +3,7 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
@@ -15,6 +15,7 @@ module.exports = function() {
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
+  var gulpFiles = 'gulp/**/*.js';
 
   var config = {
     build: build,
@@ -23,6 +24,7 @@ module.exports = function() {
     vendor: vendor,
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
+    e2eFailRetry: '.e2e-fail-retry',
     tsTestOutputFolder: tsTestOutputFolder,
     app: 'app',
     unsupportedDir: 'app/unsupported',
@@ -33,12 +35,14 @@ module.exports = function() {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
+    cache: '.cache',
+
+    gulpFiles: gulpFiles,
 
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -237,6 +241,16 @@ module.exports = function() {
       '',
 
     isJenkins: isJenkins,
+
+    beautifyFiles: [
+      app + '/**/*.js',
+      app + '/**/*.json',
+      test + '/**/*.js',
+      test + '/**/*.json',
+      gulpFiles,
+      '!test/karma-unit.js',
+      '!karma.conf.js'
+    ]
   };
 
   return config;

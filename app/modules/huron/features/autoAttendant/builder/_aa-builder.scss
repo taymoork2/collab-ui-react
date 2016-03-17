@@ -497,3 +497,14 @@ $aa-builder-text-color: $gray-dark-1;
   font-size: 2.25rem;
   color: $aa-builder-icon-color;
 }
+
+.loading-container {
+  @include aa-builder-height($h2-font-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+}

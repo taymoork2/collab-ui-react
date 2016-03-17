@@ -333,6 +333,20 @@ angular
             loggedOnUser: null
           }
         })
+        .state('domainmanagement.unclaim', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/unclaim.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            loggedOnUser: null
+          }
+        })
         .state('domainmanagement.claim', {
           parent: 'modal',
           views: {
@@ -430,6 +444,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html'
             }
           },
@@ -437,8 +452,6 @@ angular
             deleteUserOrgId: null,
             deleteUserUuId: null,
             deleteUsername: null,
-            deleteUserfamilyName: null,
-            Username: null
           }
         })
         .state('users.deleteSelf', {
@@ -446,6 +459,7 @@ angular
           views: {
             'modal@': {
               controller: 'UserDeleteCtrl',
+              controllerAs: 'userDelete',
               templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html'
             }
           },
@@ -809,6 +823,18 @@ angular
           controller: 'SiteListCtrl',
           controllerAs: 'siteList',
           parent: 'main'
+        })
+        .state('site-list.site-csv-results', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteListCtrl',
+              templateUrl: 'modules/core/siteList/siteCSVResultsModal.tpl.html',
+            }
+          },
+          params: {
+            siteRow: {}
+          }
         })
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
@@ -1177,8 +1203,9 @@ angular
         })
         .state('trialExtInterest', {
           url: '/trialExtInterest?eqp',
-          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          templateUrl: 'modules/core/trialExtInterest/trialExtInterest.tpl.html',
           controller: 'TrialExtInterestCtrl',
+          controllerAs: 'extInterest',
           parent: 'main'
         })
         .state('helpdesk-main', {

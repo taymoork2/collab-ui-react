@@ -27,7 +27,7 @@
         'urn:scim:schemas:extension:cisco:commonidentity:1.0'
       ],
 
-      helpUrl: 'https://support.ciscospark.com',
+      helpUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
       ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
       rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
       supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
@@ -247,11 +247,11 @@
       User: [],
       Site_Admin: [
         'site-list',
+        'site-csv-results',
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe',
-        'example'
+        'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']

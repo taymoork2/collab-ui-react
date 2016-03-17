@@ -31,9 +31,8 @@
                      ng-if="domain.status==='verified'" translate="domainManagement.actions.unverify"></a>
                 </li>
                 <li>
-                  <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status==='claimed'"
-                     translate="domainManagement.actions.unclaim"></a>
+                  <a ui-sref="domainmanagement.unclaim({domain: domain, loggedOnUser: dv.loggedOnUser})"
+                     ng-if="domain.status==='claimed'" translate="domainManagement.actions.unclaim"></a>
                 </li>
                 <li>
                   <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"

@@ -242,6 +242,60 @@ var UsersPage = function () {
     utils.click(this.plusIcon);
     utils.click(this.nextButton);
   };
+
+  this.createUserWithLicense = function (alias, checkbox) {
+    users.createUser(alias);
+    utils.click(checkbox);
+    utils.click(users.onboardButton);
+    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
+
+    activate.setup(null, alias);
+    utils.search(alias);
+  }
+
+  this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
+    function expectDisplayed(elem, state) {
+      if (state) {
+        utils.expectIsDisplayed(elem);
+      } else {
+        utils.expectIsNotDisplayed(elem);
+      }
+    }
+
+    utils.clickUser(alias);
+    expectDisplayed(users.servicesPanel, true);
+    expectDisplayed(users.messageService, expectedMsgState);
+    expectDisplayed(users.meetingService, expectedMtgState);
+
+    utils.click(users.servicesActionButton);
+    utils.click(users.editServicesButton);
+
+    utils.waitForModal().then(function () {
+      utils.expectCheckbox(users.paidMsgCheckbox, expectedMsgState);
+      utils.expectCheckbox(users.paidMtgCheckbox, expectedMtgState);
+
+      // Uncheck license...
+      utils.click(clickService);
+      utils.click(users.saveButton);
+      notifications.assertSuccess('entitled successfully');
+      utils.click(users.closeSidePanel);
+    });
+  };
+
+  this.createCsvAndReturnUsers = function (path) {
+    var fileText = 'First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Meeting 25 Party,Spark Message\r\n';
+    var userList = _.chain(0)
+      .range(25)
+      .map(function (n) {
+        var randomAddress = utils.randomTestGmailwithSalt('CSV');
+        fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
+        return randomAddress;
+      })
+      .value();
+    utils.writeFile(path, fileText);
+    return userList;
+  }
 };
 
 module.exports = UsersPage;

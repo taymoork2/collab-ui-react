@@ -9,18 +9,19 @@
   function createAccountController($location, $window, $cookies, $translate, DigitalRiverService) {
 
     var vm = this;
+    vm.confirmPlaceholder = confirmPlaceholder;
+    vm.handleCreateAccount = handleCreateAccount;
 
     // TODO: Remove this after the go-live.
     vm.drReferrer = $location.search().referrer === DigitalRiverService.getDrReferrer();
 
     vm.email1 = _.get($location.search(), 'email', '').replace(/\s+/g, '+');
 
-    vm.confirmPlaceholder = function () {
+    function confirmPlaceholder() {
       return $translate.instant('digitalRiver.createAccount.confirmPlaceholder');
-    };
+    }
 
-    vm.handleCreateAccount = function () {
-
+    function handleCreateAccount() {
       if (!vm.email1 || 0 === vm.email1.trim().length) {
         vm.error = $translate.instant('digitalRiver.createAccount.validation.emptyEmail');
         return;
@@ -35,20 +36,20 @@
         return;
       }
 
-      DigitalRiverService.addDrUser({
+      return DigitalRiverService.addDrUser({
           'email': vm.email1,
           'password': vm.password1
         })
         .then(function (result) {
-          if (result.data.success === true) {
+          if (_.get(result, 'data.success') === true) {
             $cookies.atlasDrCookie = _.get(result, 'data.data.token', 'error');
-            $window.location.href = "https://www.digitalriver.com/";
+            $window.location.href = 'https://www.digitalriver.com/';
           } else {
             vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
           }
-        }, function (result, status) {
+        }).catch(function (result, status) {
           vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
         });
-    };
+    }
   }
 })();

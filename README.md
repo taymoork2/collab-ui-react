@@ -1,15 +1,14 @@
-WebexSquared AdminWebClient
-===========================
+# WebexSquared AdminWebClient
 
-Contributor Style Guides
------------
+## Contributor Style Guides
+
 These style guides establish and enforce best practices
 in order to improve code quality, maintainability, and readability.
 All contributors are expected to take the time to learn and apply them.
 Adherence is mandatory. Please refactor non-compliant code.
 
-* [Javascript Style Guide](https://github.com/airbnb/javascript)
-* [Angular Style Guide](https://github.com/johnpapa/angularjs-styleguide)
+* [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
+* [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
 * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
 
 **Additional Conventions**
@@ -19,30 +18,23 @@ Adherence is mandatory. Please refactor non-compliant code.
     top of the file containing the dependencies in the spec, example:
       `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
 
-If you have any questions open an
-[issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new)
-and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
+If you have any questions open an [issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new) and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
 
-Technology
------------
+## Technology
 
 * UI is developed using [Angular JS](https://angularjs.org)
 * ES6(ES2015) JavaScript is transpiled with [TypeScript](http://www.typescriptlang.org)
 * UI is composed of a core module and service modules for different functional groups
-* Modules are developed using directives, here is a good read on the topic:
-  http://briantford.com/blog/angular-bower
+* Modules are developed using directives, here is a good read on the topic: http://briantford.com/blog/angular-bower
 * The backend of the application are written in Java Web Services, the ui services call the REST APIs
-* Styling the application is done using SASS:
-  http://sass-lang.com/
-* Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal:
-  http://collab-lib.cisco.com/dist/#/overview
+* Styling the application is done using [SASS](http://sass-lang.com/)
+* Styling is based on Bootstrap CSS, a custom Cisco Bootstrap CSS is used for the portal: http://collab-lib.cisco.com/dist/#/overview
 * Localization is done using angular translation
 * Unit testing is written using Jasmine with Karma
 * End to end testing is based on the JS Selenium framework: Protractor
 * Build process is built and run with Gulp.js
 
-Contribute
------------
+## Contribute
 
 We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
 
@@ -81,8 +73,7 @@ To summarize, this is the process:
 8. You push to Jenkins to start a build ('git push jenkins master')
 9. Your code gets merged
 
-Branching
----------
+## Branching
 
 If you're in a situation where you've been assigned to fix many different issues and need to keep your local environment clean, branching with git provides a very easy way to do this. Below is a good example of how to fix a defect without cluttering up your environment.
 
@@ -106,13 +97,11 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
 
 What's really nice about this process is that you can create many branches that have a separate set of changes associated with them. When you want to start working on fixing a defect, you don't have to worry about mixing up the changes for one defect with the changes of another.
 
-Keeping your fork up-to-date
-----------------------------
+## Keeping your fork up-to-date
 
 When contributing, it's important to keep your fork up-to-date with the master. You can do so by running the following command: `git pull upstream master`
 
-Setup the environment (If necessary)
-------------------------------------
+## Setup the environment (If necessary)
 
 * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
 * Run `./setup.sh` (found in the root directory)
@@ -121,21 +110,19 @@ Setup the environment (If necessary)
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
-TypeScript Definitions
------------------
+## TypeScript Definitions
 
 * Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
 * Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
 
-TypeScript & ES6(ES2015)
------------------
+## TypeScript & ES6(ES2015)
+
 * ES6 and TypeScript are the preferred method of writing JavaScript in the app
 * Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2
 
-Project structure
------------------
+## Project structure
 
 * Every functional group has a directory structure under `app/modules`
 * There is no need to edit the index.html file, all dependencies are managed through `gulp.config.js`
@@ -156,64 +143,126 @@ Project structure
   - Preview and detail panels for users
  * All functionality must integrate into core through the user list or navigation menu items
 
-Adding a simple page ("Hello World")
-------------------------------------
+## Adding a simple page ("Hello World")
 
-* **BEFORE WRITING CODE**
-  Please read the following BEST PRACTICES guidelines:
-  Here is the recording and the presentation.
+**BEFORE WRITING CODE**
+Please read the following BEST PRACTICES guidelines:
+Here is the recording and the presentation.
 
-  PRESENTATION
-  http://collab-lib.cisco.com/collab-library/presentations/ui-best-practices/#/
+PRESENTATION
+http://collab-lib.cisco.com/collab-library/presentations/ui-best-practices/#/
 
-  PLAY RECORDING (1 hr 8 min 11 sec)
-  https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
+PLAY RECORDING (1 hr 8 min 11 sec)
+https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
 
 **1. Clone the repo**
 
 **2. Add a new module**
 * add new module folder:
-  * **+**`app/modules/hello-world`
+  + `app/modules/helloWorld`
 * add a feature directory to your module directory:
-  * **+**`.../hello-world/say-hello`
-* create a html template file to write `<span>{{hello}}</span>`:
-  * **+**`.../say-hello/say-hello.tpl.html`
-* create the controller that writes "Hello World" to the scope: `angular.module('hello-world').controller('HelloWorldController', ['$scope', function ($scope) { $scope.hello = 'Hello world'; }]);`
-  * **+**`.../say-hello/say-hello.controller.js`
-* add an entry for the module for the app to bootstrap in: `app/scripts/app.js`
-* add a state for the route to your page in: `app/scripts/appconfig.js`
-* add a menu option by adding a tab to `config.js` -> tabs array under: `app/modules/core/scripts/services/config.js`
+  + `.../helloWorld/sayHello`
+* create a html template file to write:
+  + `.../sayHello/sayHello.tpl.html`
 
-**3. Add its unit and end-to-end tests**
-* add a functional test folder for your module:
-  * **+**`test/e2e-protractor/hello-world`
-* add the new test directory to `config.testFiles.e2e` in **gulp/gulp.config.js**:
-  * **+**`hello-world: e2e + '/hello-world/**/*_spec.js'`
+```html
+<!-- prefix controller references using controllerAs property in appconfig.js -->
+<span>{{sayHello.hello}}</span>
+```
+* create the controller that writes "Hello World" to the scope:
+  + `.../sayHello/sayHello.controller.js`
+
+```js
+(function(){
+  angular.module('HelloWorld')
+    .controller('SayHelloController', SayHelloController);
+
+  /*@ngInject*/
+  function SayHelloController(/*DI list*/){
+    var vm = this;
+    vm.hello = 'Hello world';
+  }
+})();
+```
+  * `.../say-hello/say-hello.controller.js`
+* add an entry for the module for the app to bootstrap in: [app/scripts/app.js]
+
+```js
+angular.module('HelloWorld', [/* module dependencies array*/]);
+```
+
+* add a state for the route to your page in: [app/scripts/appconfig.js]
+
+```js
+.state('say-hello', {
+  url: '/say-hello',
+  views: {
+    'main@': {
+      templateUrl: 'modules/helloWorld/sayHello/sayHello.tpl.html',
+      controller: 'SayHelloController',
+      controllerAs: 'sayHello'
+    }
+  }
+})
+```
+* find the proper permissions level / role (who can see this controller) adding a tab to `config.js` -> tabs array under: [app/modules/core/config/config.js]
+
+```js
+// use the 'state' key from appconfig
+User: ['say-hello',..]
+```
+
+* Add a tab to include it in the ui for high level features in [app/modules/core/config/tabConfig.js]
+
+```js
+// it must match the 'state' and 'url' properties in the appconfig.js
+{
+    tab: 'sayHelloTab',
+    icon: 'icon-user',
+    title: 'tabs.sayHelloTab',
+    state: 'say-hello',
+    link: '/say-hello'
+  },
+```
+
+**3. Add its proper unit and end-to-end tests**
+
 * write unit tests and place them side by side the corresponding code under test
   * All unit tests are named the same as the corresponding code file, but append .spec.js
-  * **+**`say-hello: 'app/modules/hello-world/say-hello/say-hello.controller.spec.js'`
-* write an end to end protractor test and place it in the new e2e folder
+  * `'app/modules/helloWorld/sayHello/sayHello.controller.spec.js'`
+
+* ***if your code is a core journey***
+  * add a functional test folder for your module
+    * `test/e2e-protractor/helloWorld`
+  * add the new test directory to `config.testFiles.e2e` in **gulp/gulp.config.js**:
+    * `helloWorld: e2e + '/helloWorld/**/*_spec.js'`
+      * by adding this you get the `gulp karma-helloWorld` task that runs just the unit tests for your module
 * **Testing Resources**
   * https://docs.angularjs.org/guide/unit-testing
   * http://www.pluralsight.com/courses/play-by-play-angular-testing-papa-bell
   * http://www.bradoncode.com/tutorials/angularjs-unit-testing/
 
 **4. Test and Run**
-* run the app using: `gulp serve`
+* run your module specific unit tests using:
+```bash
+# this is added when you add to the `gulp/gulp.config.js` file
+$ gulp karma-helloWorld
+```
+* run the app using:
+```bash
+$ gulp serve
+```
 * you should see your new menu and when you click on it you should see the hello world page
 * test the app using `gulp e2e --specs=[your module]`, this will test your module
 * test the entire suite by running: `gulp e2e`
 
-
-Adding External Dependencies
-----------------------------
+## Adding External Dependencies
 
 * Dependencies are added to the project through Bower
 * Add dependencies with `bower install package_name --save`
 * Dependencies added to the `gulp.config.js` file will be automatically added to `index.html` and `karma.conf.js` files
 
-Gulp.js Tasks
--------------
+## Gulp.js Tasks
 
 ### Available arguments
 
@@ -284,8 +333,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 * Runs `gulp analyze:eslint` and `gulp jsBeautifier:beautify` tasks
 
-Run the protractor e2e test:
-----------------------------
+## Run the protractor e2e test:
 
 * Configurations are located in `protractor-config.js`
 * Test files are located at `test/e2e-protractor/<test-file>_spec.js`
@@ -312,6 +360,9 @@ Run the protractor e2e test:
 * Skips the e2e setup task
 * You will need to have started a server manually using the `gulp connect` task
 
+##### `gulp e2e --noretry`
+* Runs tests without retrying failures
+
 ##### `gulp e2e --nofailfast`
 * Runs tests without skipping after first failure
 
@@ -334,8 +385,7 @@ Run the protractor e2e test:
 (Optional Arguments)
 * `--build`
 
-List of All Optional Arguments
-------------------------------
+## List of All Optional Arguments
 
 ### `--build`
 
@@ -381,3 +431,9 @@ List of All Optional Arguments
 
 * `gulp serve` specific.
 * When running 'gulp serve', use `--safari` to open Safari
+
+[app/scripts/app.js]: https://sqbu-github.cisco.com/admolla/wx2-admin-web-client/tree/master/app/scripts/app.js
+[app/scripts/appconfig.js]: https://sqbu-github.cisco.com/admolla/wx2-admin-web-client/tree/master/app/scripts/appconfig.js
+[app/modules/core/config/config.js]: https://sqbu-github.cisco.com/admolla/wx2-admin-web-client/tree/master/app/modules/core/config/config.js
+[app/modules/core/config/tabConfig.js]: https://sqbu-github.cisco.com/admolla/wx2-admin-web-client/tree/master/app/modules/core/config/tabConfig.js
+[gulp/gulp.config.js]: https://sqbu-github.cisco.com/admolla/wx2-admin-web-client/tree/master/gulp/gulp.config.js

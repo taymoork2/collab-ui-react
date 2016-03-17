@@ -15,8 +15,8 @@
     function downloadCsv() {
       if (vm.type && (vm.type === CsvDownloadService.typeTemplate || vm.type === CsvDownloadService.typeUser)) {
         $scope.$emit('download-start');
-        CsvDownloadService.getCsv(vm.type).then(function (response) {
-          var objectUrl = CsvDownloadService.createObjectUrl(response.data, vm.type);
+        CsvDownloadService.getCsv(vm.type).then(function (csvData) {
+          var objectUrl = CsvDownloadService.createObjectUrl(csvData.content, vm.type);
           $scope.$emit('downloaded', objectUrl);
         }).catch(function (response) {
           Notification.errorResponse(response, 'firstTimeWizard.downloadError');

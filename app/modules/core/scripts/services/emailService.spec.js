@@ -69,7 +69,7 @@ describe('emailService', function () {
               CUSTOMER_NAME: fakeCustName,
               CUSTOMER_EMAIL: fakeCustEmail,
               PARTNER_EMAIL: fakePartnerEmail,
-              SUBJECT: fakeCustName + ' has requested to purchase service or extend their trial'
+              SUBJECT: fakeCustName + ' wants to order or extend their trial'
             }
           });
       });

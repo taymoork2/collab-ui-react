@@ -1,14 +1,20 @@
 'use strict';
 
 var HttpsProxyAgent = require("https-proxy-agent");
-var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 var touch = require('touch');
 var fs = require('fs');
-var e2eFailNotify = '.e2e-fail-notify';
+var config = require('./gulp/gulp.config')();
+
+// http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
+// - sauce executors are connected out to the world through the host's network
+// - and at the end of each spec run, a connection back to sauce is made to report results
+var agent = mkProxyAgent();
 
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
+var E2E_FAIL_RETRY = config.e2eFailRetry;
+var NEWLINE = '\n';
 
 exports.config = {
   framework: "jasmine2",
@@ -39,29 +45,6 @@ exports.config = {
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
   onPrepare: function() {
-    var FailFast = function(){
-      this.suiteStarted = function(suite){
-        if (fs.existsSync(e2eFailNotify)){
-            console.log('fail file exists');
-        }
-      };
-
-      this.specStarted = function(spec){
-        if (fs.existsSync(e2eFailNotify)){
-            env.specFilter = function(spec) {
-              return false;
-            };
-        }
-      };
-
-      this.specDone = function(spec) {
-        if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
-            touch(e2eFailNotify);
-        }
-      };
-    }
-
-    jasmine.getEnv().addReporter(new FailFast());
     browser.ignoreSynchronization = true;
 
     global.isProductionBackend = browser.params.isProductionBackend === 'true';
@@ -69,20 +52,7 @@ exports.config = {
     global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
-    jasmine.getEnv().addReporter(
-      new jasmineReporters.JUnitXmlReporter({
-        savePath:'test/e2e-protractor/reports',
-        consolidateAll: false
-      })
-    );
-
     var SpecReporter = require('jasmine-spec-reporter');
-    jasmine.getEnv().addReporter(
-      new SpecReporter({
-        displayStacktrace: true,
-        displaySpecDuration: true
-      })
-    );
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
@@ -95,6 +65,8 @@ exports.config = {
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
     global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
+
+    global._ = require('lodash');
 
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
@@ -176,11 +148,66 @@ exports.config = {
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
 
-    return browser.getCapabilities().then(function (capabilities) {
-      if (capabilities.caps_.browserName === 'firefox') {
-        browser.driver.manage().window().maximize();
+    function initReporters(config) {
+      var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+
+      jasmine.getEnv().addReporter(
+        new jasmineReporters.JUnitXmlReporter({
+          savePath: 'test/e2e-protractor/reports',
+          consolidateAll: false
+        })
+      );
+
+      jasmine.getEnv().addReporter(
+        new SpecReporter({
+          displayStacktrace: true,
+          displaySpecDuration: true
+        })
+      );
+
+      function FailRetry() {
+        var hasFailure;
+        this.specDone = function (result) {
+          if (result.failedExpectations.length) {
+            hasFailure = true;
+          }
+        };
+        this.jasmineDone = function () {
+          if (hasFailure) {
+            fs.appendFileSync(E2E_FAIL_RETRY, testFile + NEWLINE);
+          }
+        };
       }
-    });
+      jasmine.getEnv().addReporter(new FailRetry());
+
+      function FailFast() {
+        var hasFailure;
+        this.suiteStarted = function (suite) {
+          if (hasFailure) {
+            console.log('skipping - fail file exists');
+          }
+        };
+
+        this.specStarted = function (spec) {
+            if (hasFailure) {
+              env.specFilter = function (spec) {
+                return false;
+              };
+          }
+        };
+
+        this.specDone = function (spec) {
+          if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
+              hasFailure = true;
+          }
+        };
+      }
+      jasmine.getEnv().addReporter(new FailFast());
+
+    }
+
+    return browser.getProcessedConfig()
+      .then(initReporters);
   },
 
   jasmineNodeOpts: {
@@ -217,4 +244,11 @@ function Logger() {
   }
 
   return log;
+}
+
+function mkProxyAgent () {
+  if (process.env.SAUCE_ENABLE_WEB_PROXY === 'false') {
+    return;
+  }
+  return new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 }
