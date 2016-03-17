@@ -31,8 +31,31 @@
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results">
+                <span ng-if="!row.entity.exportFinishedWithErrors">
+                  <a id="{{row.entity.license.siteUrl}}_exportResult"
+                     ui-sref='site-list.site-csv-results()'>
+                     
+                    <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
+                  </a>
+                </span>
+                
+                <span ng-if="row.entity.exportFinishedWithErrors">
+                  <a id="{{row.entity.license.siteUrl}}_exportResult"
+                     ui-sref='site-list.site-csv-results()'
+                     tooltip-append-to-body="true" 
+                     tooltip-animation="false"
+                     tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
+                     tooltip-placement="top">
+                                      
+                    <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
+                       class="icon-warning icon webex-attention-text"></i>
+                     
+                    <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
+                  </a>
+                </span>
+                <!-- 
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
-                   ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);">
+                   ui-sref='site-list.site-csv-results()'>
                                       
                   <i ng-if="row.entity.exportFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_exportResultIcon" 
@@ -44,6 +67,7 @@
                      
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
+                -->
               </span>
                 
               <!-- Three word spaces -->
