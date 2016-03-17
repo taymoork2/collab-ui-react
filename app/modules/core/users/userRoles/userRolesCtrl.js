@@ -65,22 +65,20 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   }
 
   function setUserSipAddress() {
-    if ($scope.currentUser) {
-      if (_.isArray($scope.currentUser.sipAddresses)) {
-        var sipAddrData = _.find($scope.currentUser.sipAddresses, {
-          primary: true,
+    if (_.isArray(_.get($scope, 'currentUser.sipAddresses'))) {
+      var sipAddrData = _.find($scope.currentUser.sipAddresses, {
+        primary: true,
+        type: 'cloud-calling'
+      });
+
+      if (_.isEmpty(sipAddrData)) {
+        sipAddrData = _.find($scope.currentUser.sipAddresses, {
           type: 'cloud-calling'
         });
+      }
 
-        if (_.isEmpty(sipAddrData)) {
-          sipAddrData = _.find($scope.currentUser.sipAddresses, {
-            type: 'cloud-calling'
-          });
-        }
-
-        if (sipAddrData.value) {
-          $scope.sipAddr = sipAddrData.value;
-        }
+      if (sipAddrData.value) {
+        $scope.sipAddr = sipAddrData.value;
       }
     }
   }

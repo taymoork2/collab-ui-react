@@ -1,8 +1,9 @@
 'use strict';
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, rootScope, $scope, $stateParams, Authinfo, Config, Orgservice, Userservice, $q, $controller, Notification, SyncService;
-  var currentUser = angular.copy(getJSONFixture('core/json/sipTestFakeUser.json'));
+  var controller, rootScope, $scope, $stateParams, Authinfo, Orgservice, $controller;
+  var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
+  var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -10,17 +11,11 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(module('Hercules'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Notification_, _Config_, _$q_, _Orgservice_, _Userservice_, _SyncService_) {
+  beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_) {
     $scope = $rootScope.$new();
-    rootScope = $rootScope;
     Orgservice = _Orgservice_;
-    Config = _Config_;
     $controller = _$controller_;
-    Notification = _Notification_;
-    $q = _$q_;
     Authinfo = _Authinfo_;
-    Userservice = _Userservice_;
-    SyncService = _SyncService_;
     $stateParams = _$stateParams_;
     $stateParams.currentUser = currentUser;
 
@@ -59,7 +54,7 @@ describe('Controller: UserRolesCtrl', function () {
     beforeEach(initController);
 
     it('should set type cloud-calling SIP Address to $scope.sipAddr', function () {
-      $scope.currentUser = angular.copy(getJSONFixture('core/json/sipTestFakeUser2.json'));
+      $scope.currentUser = fakeUserJSONFixture.fakeUser2;
       $scope.setUserSipAddress();
       expect($scope.sipAddr).toEqual('fakegmuser+siptestuser786@atlastesting234.ciscospark.com');
     });
