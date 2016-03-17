@@ -349,7 +349,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     }];
 
     var pilotNumber = {
-      pattern: '(229) 229-1234'
+      label: '(229) 229-1234',
+      pattern: '+12292291234'
     };
 
     controller.model.serviceNumber = '';

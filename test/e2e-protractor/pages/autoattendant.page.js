@@ -99,6 +99,11 @@ var AutoAttendantPage = function () {
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
+  this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
+  this.addholiday = element(by.css('#addHoliday'));
+  this.holidayName = element(by.css('#holidayName'));
+  this.selectdate = element(by.css('.calendar span:nth-child(5) .day'));
+  this.date = element(by.css('cs-datepicker input'));
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));

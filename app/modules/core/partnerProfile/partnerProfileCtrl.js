@@ -141,7 +141,12 @@ angular.module('Core')
           $scope.tempLogoUrl = logoUrl;
         });
 
-        $scope.initWbxClientVersions();
+        FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
+          //toggle=false;
+          $scope.showClientVersions = toggle;
+          $scope.initWbxClientVersions();
+        });
+
       };
 
       $scope.initWbxClientVersions = function () {
@@ -180,11 +185,6 @@ angular.module('Core')
 
           $scope.useLatestWbxVersion = json.data.useLatest;
 
-        });
-
-        FeatureToggleService.supports(FeatureToggleService.features.webexClientLockdown).then(function (toggle) {
-          $scope.showClientVersions = toggle;
-          //$scope.showClientVersions = true;
         });
 
       };
