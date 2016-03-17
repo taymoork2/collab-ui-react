@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var request = require('request');
+var Promise = require('promise');
 
 var auth = {
   'sqtest-admin': {
@@ -117,105 +118,111 @@ var auth = {
 var clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec';
 var clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857';
 
-var getSSOToken = function (req, jar, creds, cb) {
-  var opts = {
-    url: 'https://idbroker.webex.com/idb/UI/Login?org=' + creds.org,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form: {
-      IDToken1: creds.user,
-      IDToken2: creds.pass
-    }
-  };
-  req.post(opts, function (err, res, body) {
-    if (err) {
-      console.error(err, body);
-      throw new Error('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : void 0));
-    }
-    var cookie = _.find(res.headers['set-cookie'], function (c) {
-      return c.indexOf('cisPRODAMAuthCookie') !== -1;
-    });
-    if (!cookie) {
-      throw new Error('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : void 0));
-    }
-    var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
-    jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
-    cb();
-  });
-};
-
-var getAuthCode = function (req, creds, cb) {
-  var rand_str = '';
-  while (rand_str.length < 40) {
-    rand_str += Math.random().toString(36).substr(2);
-  }
-  rand_str.substr(0, 40);
-  var opts = {
-    url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form: {
-      response_type: 'code',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-      client_id: clientId,
-      scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin',
-      realm: '/' + creds.org,
-      state: rand_str
-    }
-  };
-  req.post(opts, function (err, res, body) {
-    var ref;
-    if (err) {
-      console.error(err, body);
-      throw new Error('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : void 0));
-    }
-    var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
-    if (!code) {
-      console.error(body);
-      throw new Error('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : void 0));
-    }
-    cb(code);
-  });
-};
-
-var getAccessToken = function (req, code, cb) {
-  var opts = {
-    url: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form: {
-      code: code,
-      grant_type: 'authorization_code',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
-    },
-    auth: {
-      user: clientId,
-      pass: clientSecret
-    }
-  };
-  req.post(opts, function (err, res, body) {
-    var e;
-    if (err) {
-      console.error(err, body);
-      throw new Error('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
-    }
-    var obj = (function () {
-      try {
-        return JSON.parse(body);
-      } catch (_error) {
-        e = _error;
-        console.error(body);
-        throw new Error('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : void 0));
+var getSSOToken = function (req, jar, creds) {
+  return new Promise(function (resolve, reject) {
+    var opts = {
+      url: 'https://idbroker.webex.com/idb/UI/Login?org=' + creds.org,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        IDToken1: creds.user,
+        IDToken2: creds.pass
       }
-    })();
-    if (!(obj != null ? obj.access_token : void 0)) {
-      console.error(body);
-      throw new Error('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : void 0));
+    };
+    req.post(opts, function (err, res, body) {
+      if (err) {
+        console.error(err, body);
+        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      var cookie = _.find(res.headers['set-cookie'], function (c) {
+        return c.indexOf('cisPRODAMAuthCookie') !== -1;
+      });
+      if (!cookie) {
+        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
+      jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
+      resolve();
+    });
+  });
+};
+
+var getAuthCode = function (req, creds) {
+  return new Promise(function (resolve, reject) {
+    var rand_str = '';
+    while (rand_str.length < 40) {
+      rand_str += Math.random().toString(36).substr(2);
     }
-    cb(obj.access_token);
+    rand_str.substr(0, 40);
+    var opts = {
+      url: 'https://idbroker.webex.com/idb/oauth2/v1/authorize',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        response_type: 'code',
+        redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+        client_id: clientId,
+        scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin',
+        realm: '/' + creds.org,
+        state: rand_str
+      }
+    };
+    req.post(opts, function (err, res, body) {
+      var ref;
+      if (err) {
+        console.error(err, body);
+        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : void 0;
+      if (!code) {
+        console.error(body);
+        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      resolve(code);
+    });
+  });
+};
+
+var getAccessToken = function (req, code) {
+  return new Promise(function (resolve, reject) {
+    var opts = {
+      url: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        code: code,
+        grant_type: 'authorization_code',
+        redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
+      },
+      auth: {
+        user: clientId,
+        pass: clientSecret
+      }
+    };
+    req.post(opts, function (err, res, body) {
+      var e;
+      if (err) {
+        console.error(err, body);
+        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      var obj = (function () {
+        try {
+          return JSON.parse(body);
+        } catch (_error) {
+          e = _error;
+          console.error(body);
+          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : void 0));
+        }
+      })();
+      if (!(obj != null ? obj.access_token : void 0)) {
+        console.error(body);
+        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : void 0));
+      }
+      resolve(obj.access_token);
+    });
   });
 };
 
@@ -223,17 +230,27 @@ module.exports = {
   getBearerToken: function (user, callback) {
     var creds = auth[user];
     if (!creds) {
-      throw new Error('Credentials for ' + user + ' not found');
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
     }
     var jar = request.jar();
     var req = request.defaults({
       jar: jar
     });
-    return getSSOToken(req, jar, creds, function () {
-      return getAuthCode(req, creds, function (authCode) {
-        return getAccessToken(req, authCode, callback);
+
+    return getSSOToken(req, jar, creds)
+      .then(function () {
+        return getAuthCode(req, creds);
+      })
+      .then(function (authCode) {
+        return getAccessToken(req, authCode);
+      })
+      .then(callback)
+      .catch(function (error) {
+        console.error('Unable to get bearer token.', error);
+        return Promise.reject(error);
       });
-    });
   },
   parseJSON: function (data) {
     try {
