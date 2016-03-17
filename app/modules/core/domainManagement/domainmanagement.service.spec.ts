@@ -121,7 +121,7 @@ describe('DomainManagementService', () => {
 
     DomainManagementService.addDomain(domain).then(res=> {
       let list = DomainManagementService.domainList;
-      let addedDomain = _.find(list, {text: domain});
+      let addedDomain:any = _.find(list, {text: domain});
       expect(addedDomain).not.toBeNull();
       expect(addedDomain.status).toBe('pending');
       expect(addedDomain.token).toBe(token);
@@ -148,7 +148,7 @@ describe('DomainManagementService', () => {
 
     DomainManagementService.verifyDomain(domain).then(res=> {
       let list = DomainManagementService.domainList;
-      let addedDomain = _.find(list, {text: domain});
+      let addedDomain:any = _.find(list, {text: domain});
       expect(addedDomain).not.toBeNull();
       expect(addedDomain.status).toBe('verified');
     }, err => {
