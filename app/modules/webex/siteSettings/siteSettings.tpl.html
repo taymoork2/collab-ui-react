@@ -1,6 +1,6 @@
 <div id="webexSiteSettings" name="webexSiteSettings" class="webex-site-settings">
   <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
-  <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
+  <cs-page-sub-header>
     <!-- start of breadcrumbs -->
     <cs-page-sub-header-left>
      <img src="/images/webex_logo_16px.png"
@@ -18,7 +18,8 @@
       </ul>
     </cs-page-sub-header-left>
     <!-- end of breadcrumbs -->
-    <cs-page-sub-header-right>
+    
+    <cs-page-sub-header-right ng-if="siteSettingsObj.viewReady">
       <button id="{{siteSettingsObj.emailAllHostsBtnObj.id}}" name="{{siteSettingsObj.emailAllHostsBtnObj.id}}" ui-sref="{{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}" class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
       </button>
     </cs-page-sub-header-right>

@@ -44,6 +44,9 @@
       top: rem-calc(46);
       left: 50%;
     }
+    &.no-line {
+       padding-top: 1rem;
+    }
   }
   .icon {
     font-size: 24px;

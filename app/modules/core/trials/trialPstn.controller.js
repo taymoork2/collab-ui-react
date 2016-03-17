@@ -6,7 +6,7 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
+  function TrialPstnCtrl($scope, $timeout, $translate, Authinfo, DidService, Notification, PstnSetupService, TelephoneNumberService, TerminusCarrierService, TerminusStateService, TerminusResellerCarrierService, TrialPstnService) {
     var vm = this;
 
     vm.trialData = TrialPstnService.getData();
@@ -68,8 +68,20 @@
       },
       controller: /* @ngInject */ function ($scope) {
         TerminusResellerCarrierService.query({
-          resellerId: customerId
-        }).$promise.then(function (carriers) {
+            resellerId: customerId
+          }).$promise.then(function (carriers) {
+            showCarriers(carriers);
+          })
+          .catch(function (response) {
+            TerminusCarrierService.query({
+              defaultOffer: 'true',
+              service: 'pstn'
+            }).$promise.then(function (carriers) {
+              showCarriers(carriers);
+            });
+          });
+
+        function showCarriers(carriers) {
           angular.forEach(carriers, function (item) {
             if (item.name === 'TATA') {
               item.name = 'TATA Communication';
@@ -84,7 +96,7 @@
           if (carriers.length === 1) {
             vm.trialData.details.pstnProvider = carriers[0];
           }
-        });
+        }
       }
     }];
 
