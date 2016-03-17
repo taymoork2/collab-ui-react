@@ -48,11 +48,15 @@
       </tr>
       </tbody>
     </table>
-    <button class="btn btn--primary"
-            ng-click="clusterDetailsCtrl.upgrade()"
-            ng-if="!clusterDetailsCtrl.showUpgradeProgress && clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable"
-            translate="hercules.softwareUpgrade.upgradeNow">
-    </button>
+    <div ng-if="!clusterDetailsCtrl.showUpgradeProgress">
+      <button class="btn btn--primary"
+              ng-click="clusterDetailsCtrl.upgrade()"
+              ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable || !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"
+              translate="hercules.softwareUpgrade.upgradeNow">
+      </button>
+      <p class="hercules-uptodate-text" ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate"></p>
+      <p class="hercules-uptodate-text red" ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible" translate="hercules.softwareUpgrade.upgradeImpossible"></p>
+    </div>
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
