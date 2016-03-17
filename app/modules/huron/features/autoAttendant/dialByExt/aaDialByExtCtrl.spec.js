@@ -51,8 +51,6 @@ describe('Controller: AADialByExtCtrl', function () {
     $scope.index = index;
     $scope.keyIndex = keyIndex;
 
-    $scope.isTextOnly = true;
-
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -123,7 +121,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
     beforeEach(inject(function ($controller, _$rootScope_) {
       $scope = $rootScope;
-      $scope.isTextOnly = false;
+      $scope.keyIndex = undefined;
 
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 
@@ -177,7 +175,7 @@ describe('Controller: AADialByExtCtrl', function () {
 
     beforeEach(inject(function ($controller, _$rootScope_) {
       $scope = $rootScope;
-      $scope.isTextOnly = false;
+      $scope.keyIndex = undefined;
 
       aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
 

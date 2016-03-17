@@ -34,7 +34,7 @@ describe('Directive: aaDialByExt', function () {
   }));
 
   it('replaces the element with the appropriate content', function () {
-    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-index='0' aa-key-index='0' aa--text-only='true'></aa-dial-by-ext>")($rootScope);
+    var element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain("aaDialByExtCtrl");
   });

@@ -9,8 +9,6 @@
   function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService) {
     var vm = this;
 
-    var label = 'label';
-
     var runActionName = 'runActionsOnInput';
 
     var messageInput = '';
@@ -30,8 +28,6 @@
     vm.messageInput = messageInput;
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
-    vm.textAreaRows = "5";
-
     vm.languageOption = languageOption;
     vm.languagePlaceholder = selectPlaceholder;
     vm.languageOptions = [];
@@ -49,7 +45,7 @@
     /////////////////////
 
     function setVoiceOptions() {
-      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), label);
+      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), 'label');
       setVoiceOption();
     }
 
@@ -95,7 +91,7 @@
         vm.menuEntry.actions[0].language = vm.languageOption.value;
       }
 
-      AACommonService.setActionStatus(true);
+      AACommonService.setDialByExtensionStatus(true);
 
     }
 
@@ -123,10 +119,10 @@
       var uiCombinedMenu = uiModel[$scope.schedule];
       var uiPhoneMenu = uiCombinedMenu.entries[$scope.index];
 
-      if ($scope.isTextOnly) {
+      if ($scope.keyIndex) {
         // called from phone menu, no support for lang/voice/timeout
         vm.isTextOnly = true;
-        vm.textAreaRows = "4"; // 5 for larger Dial By extension screen, 4 for phone menu
+
         // Read an existing dialByExt entry if exist or initialize it if not
         if ($scope.keyIndex < uiPhoneMenu.entries.length) {
           vm.menuEntry = uiPhoneMenu.entries[$scope.keyIndex];

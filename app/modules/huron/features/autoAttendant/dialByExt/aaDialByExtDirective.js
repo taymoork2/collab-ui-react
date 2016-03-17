@@ -9,8 +9,7 @@ angular
         scope: {
           schedule: '@aaSchedule',
           index: '=aaIndex',
-          keyIndex: '@aaKeyIndex',
-          isTextOnly: '@aaTextOnly'
+          keyIndex: '@aaKeyIndex'
         },
         controller: 'AADialByExtCtrl',
         controllerAs: 'aaDialByExtCtrl',
