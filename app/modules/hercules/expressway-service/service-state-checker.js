@@ -18,8 +18,28 @@
           if (checkIfSomeConnectorsOk(connectorType)) {
             checkScheduleUpgradeAcknowledged(connectorType, serviceId);
           }
+        } else {
+          // When connector state changes back to i.e. "not_configure", clean up the service notifications
+          removeAllServiceAndUserNotifications();
         }
       }
+    }
+
+    function removeAllUserNotifications() {
+      NotificationService.removeNotification('squared-fusion-uc:noUsersActivated');
+      NotificationService.removeNotification('squared-fusion-uc:noUsersActivated');
+      NotificationService.removeNotification('squared-fusion-cal:noUsersActivated');
+    }
+
+    function removeAllServiceNotifications() {
+      NotificationService.removeNotification('sipDomainNotConfigured');
+      NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+      NotificationService.removeNotification('callServiceConnectAvailable');
+    }
+
+    function removeAllServiceAndUserNotifications() {
+      removeAllUserNotifications();
+      removeAllServiceNotifications();
     }
 
     function checkIfFusePerformed() {
