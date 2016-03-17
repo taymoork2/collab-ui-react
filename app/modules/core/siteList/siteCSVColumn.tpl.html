@@ -34,14 +34,14 @@
               <span class="csv-results">
                   <a ng-if="!row.entity.exportFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_exportResult"
-                     ui-sref='site-list.site-csv-results({siteRow:row.entity})'>
+                     ui-sref="site-csv-results({siteRow:row.entity})">
                      
                     <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                   </a>
                 
                   <a ng-if="row.entity.exportFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_exportResult"
-                     ui-sref='site-list.site-csv-results({siteRow:row.entity})'
+                     ui-sref="site-csv-results({siteRow:row.entity})"
                      tooltip-append-to-body="true" 
                      tooltip-animation="false"
                      tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
@@ -122,14 +122,14 @@
               <span class="csv-results">
                   <a ng-if="!row.entity.importFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_importResult"
-                     ui-sref='site-list.site-csv-results({siteRow:row.entity})'>
+                     ui-sref="site-csv-results({siteRow:row.entity})">
                      
                     <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                   </a>
                 
                   <a ng-if="row.entity.importFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_importResult"
-                     ui-sref='site-list.site-csv-results({siteRow:row.entity})'
+                     ui-sref="site-csv-results({siteRow:row.entity})"
                      tooltip-append-to-body="true" 
                      tooltip-animation="false"
                      tooltip="{{::'siteList.importFinishedWithErrorsTooltip' | translate}}"
