@@ -8,7 +8,7 @@
           </cs-select>
         </div>
         <div class="small-8 columns">
-          <cs-select ng-model="keyAction.action" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
+          <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
           <div ng-switch="keyAction.action.name" class="aa-key-action">
             <aa-route-to-user ng-switch-when="phoneMenuRouteUser"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
