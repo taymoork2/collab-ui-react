@@ -51,15 +51,16 @@ var LoginPage = function () {
     var bearer;
     var method = opts && opts.navigateToUsingIntegrationForTesting ? 'navigateToUsingIntegrationForTesting' : 'navigateTo';
     navigation[method](expectedUrl);
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
@@ -74,15 +75,16 @@ var LoginPage = function () {
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
     navigation.navigateTo(expectedUrl);
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        utils.expectIsDisplayed(unauthorizedTitle);
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          utils.expectIsDisplayed(unauthorizedTitle);
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
