@@ -228,6 +228,54 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
+    it('should say that upgrade is possible when connectors are fine and an upgrade available', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt')
+        ], {
+          upgradeAvailable: ['c_mgmt']
+        })
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.upgradePossible).toBe(true);
+    });
+
+    it('should say that upgrade is not possible when at least a connector is in state not_configured and an upgrade available', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt'),
+          connector('c_mgmt', {
+            state: 'not_configured',
+            hostname: 'host2.example.com'
+          })
+        ], {
+          upgradeAvailable: ['c_mgmt']
+        })
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.upgradePossible).toBe(false);
+    });
+
     it('should add hosts to aggregates', function () {
       var response = org([
         cluster([
