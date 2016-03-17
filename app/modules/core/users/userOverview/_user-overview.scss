@@ -44,14 +44,14 @@
   .resendMsg {
     padding-top: 44px;
   }
+}
 
-  .editServices{
-    font-size: 14px;
-    line-height: 24px;
-    padding-top: 36px;
-    a {
-      color: $color-primary-base;
-    }    
-  }
-
+.editServices{
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  padding-top: 36px;
+  a {
+    color: $color-primary-base;
+  }    
 }

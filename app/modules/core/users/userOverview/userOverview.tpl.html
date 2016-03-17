@@ -1,13 +1,8 @@
 <div ui-view="header"></div>
 <cs-sp-container>
   <cs-sp-section>
-    <div ng-if="userOverview.pendingStatus" class="pendingStatus">
-      <div class="icon icon-circle-email"></div>
-      <div class="pendingTitle" translate="usersPage.invitePending"></div>
-      <div class="pendingMsg" translate="usersPage.inviteMsg"></div>
-      <div class="resendMsg">
-        <button class="btn" translate="usersPage.resendInvitation"></button>
-      </div>
+    <div ng-if="userOverview.pendingStatus">
+      <div ui-view="userPending"></div>
       <div class="editServices">
         <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
       </div>
@@ -41,35 +36,34 @@
           </li>
         </ul>
       </div>
-    
-  </cs-sp-section>
-  <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
-  <cs-sp-section ng-if="userOverview.features.length && false">
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.enabledBetaFeatures"></span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="feature in userOverview.features | orderBy:'key'">
-          <span class="feature-name">{{feature.key}}</span>
-          <span class="feature-status">{{feature.val}}</span>
-        </li>
-      </ul>
-    </div>
-  </cs-sp-section>
-  <cs-sp-section ng-if="userOverview.isSquaredUC">
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.devicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li ng-repeat="item in userOverview.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
+    </cs-sp-section>
+    <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
+    <cs-sp-section ng-if="userOverview.features.length && false">
+      <div class="section-title-row">
+        <span class="section-name" translate="usersPreview.enabledBetaFeatures"></span>
+      </div>
+      <div class="feature-list">
+        <ul>
+          <li class="feature" ng-repeat="feature in userOverview.features | orderBy:'key'">
+            <span class="feature-name">{{feature.key}}</span>
+            <span class="feature-status">{{feature.val}}</span>
+          </li>
         </ul>
-      </span>
-    </div>
-    <uc-devices></uc-devices>
-  </cs-sp-section>
+      </div>
+    </cs-sp-section>
+    <cs-sp-section ng-if="userOverview.isSquaredUC">
+      <div class="section-title-row">
+        <span class="section-name" translate="usersPreview.devicesPreview"></span>
+        <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+            <li ng-repeat="item in userOverview.dropDownItems"><a ui-sref="{{item.state}}">{{item.text}}</a></li>
+          </ul>
+        </span>
+      </div>
+      <uc-devices></uc-devices>
+    </cs-sp-section>
   </div>
 </cs-sp-container>
