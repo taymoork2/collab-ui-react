@@ -6,9 +6,9 @@ namespace domainManagement {
     let Config, $q, $rootScope, $controller, $translate, DomainManagementService:any;
 
     //noinspection TypeScriptValidateTypes
-    beforeEach(module('Core'));
+    beforeEach(angular.mock.module('Core'));
     //noinspection TypeScriptValidateTypes
-    beforeEach(module('Hercules'));
+    beforeEach(angular.mock.module('Hercules'));
 
     beforeEach(inject((_$q_, _$rootScope_, _Config_, _$controller_, _$translate_, _DomainManagementService_)=> {
       Config = _Config_;
