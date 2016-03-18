@@ -224,7 +224,11 @@
     function getAccountStatus() {
       var currentUserId = vm.currentUser.id;
       Userservice.getUser(currentUserId, function (data, status) {
-        vm.pendingStatus = _.indexOf(data.accountStatus, 'pending') >= 0;
+        if (data.success) {
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(licenseID));
+        } else {
+          Log.debug('Get existing account info failed. Status: ' + status);
+        }
       });
     }
 

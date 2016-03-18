@@ -456,7 +456,7 @@
       }];
 
       return $q(function (resolve, reject) {
-        inviteUsers(userData, null, true, function (data) {
+        inviteUsers(userData, null, true, function (data, status) {
           if (data.success) {
             resolve();
           } else {
