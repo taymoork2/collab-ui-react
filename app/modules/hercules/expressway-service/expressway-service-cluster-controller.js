@@ -27,6 +27,7 @@
         provisionedVersion: vm.cluster.aggregates.provisioning.provisionedVersion,
         availableVersion: vm.cluster.aggregates.provisioning.availableVersion,
         isUpgradeAvailable: vm.cluster.aggregates.upgradeAvailable,
+        isUpgradePossible: vm.cluster.aggregates.upgradePossible,
         numberOfHosts: _.size(vm.cluster.aggregates.hosts)
       };
 
