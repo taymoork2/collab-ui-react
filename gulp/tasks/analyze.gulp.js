@@ -54,12 +54,7 @@ gulp.task('eslint:tooling', function () {
     'config/**/*.js'
   );
   messageLogger('Running ESLint on the tooling files', files);
-  return gulp
-    .src(files)
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.eslint())
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError());
+  return createESLintTask(files);
 });
 
 gulp.task('eslint:app', function () {
@@ -68,12 +63,7 @@ gulp.task('eslint:app', function () {
     config.unsupportedDir + '/' + config.unsupported.file
   );
   messageLogger('Running ESLint on the app files', files);
-  return gulp
-    .src(files)
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.eslint())
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError());
+  return createESLintTask(files);
 });
 
 gulp.task('eslint:e2e', function () {
@@ -82,14 +72,9 @@ gulp.task('eslint:e2e', function () {
     config.e2e + '/**/*.js'
   );
   messageLogger('Running ESLint on the e2e tests files', files);
-  return gulp
-    .src(files)
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.eslint({
-      rulePaths: ['config/rules']
-    }))
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError());
+  return createESLintTask(files, {
+    rulePaths: ['config/rules']
+  });
 });
 
 gulp.task('analyze:jscs', function () {
@@ -171,6 +156,26 @@ gulp.task('plato', function (done) {
 });
 
 /////////////////////////////
+
+function hasBeenFixed(file) {
+  // has ESLint fixed the file content?
+  return file.eslint != null && file.eslint.fixed;
+}
+
+function createESLintTask(files, ESLintOptions) {
+  var options = ESLintOptions || {};
+  options.fix = !!args.fix;
+  console.log('createESLintTask options', options);
+  return gulp
+    .src(files, {
+      base: './'
+    })
+    .pipe($.if(args.verbose, $.print()))
+    .pipe($.eslint(options))
+    .pipe($.eslint.format())
+    .pipe($.if(hasBeenFixed, gulp.dest('./')))
+    .pipe($.eslint.failAfterError());
+}
 
 // Start Plato inspector and visualizer
 function startPlatoVisualizer(done) {
