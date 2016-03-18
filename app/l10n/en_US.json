@@ -1079,7 +1079,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Spark Address."
+      "setupCloudSipUriHeader": "Define SIP Domain"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1156,6 +1156,15 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
+    "connectorNames": {
+      "squared-fusion-uc": "Call Connector",
+      "squared-fusion-uc.full": "Call Connector",
+      "squared-fusion-cal": "Calendar Connector",
+      "squared-fusion-media": "Media Service",
+      "contact-center-context": "Context Center Service",
+      "squared-fusion-ec": "Call Connector",
+      "squared-fusion-mgmt": "Management Connector"
+    },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -1198,14 +1207,23 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
+<<<<<<< HEAD
       "explanation": "You are about to upgrade {{serviceName}} software on all hosts in the selected Cisco Expressway cluster:",
+=======
+      "explanation": "You are about to upgrade {{connectorType}} on all hosts in the selected Cisco Expressway cluster:",
+>>>>>>> upstream/master
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
+<<<<<<< HEAD
       "upToDate": "Connector is up to date.",
       "upgradeImpossible": "Connector is not configured. Configure and start it before initiating an upgrade."
+=======
+      "upToDate": "{{connectorType}} is up to date on this cluster.",
+      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
+>>>>>>> upstream/master
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1273,6 +1291,11 @@
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
         "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+      },
+      "configure-connector": {
+        "title": "Configure and Start the Connector",
+        "description": "Your Cisco Expressway is registered for Hybrid Services.",
+        "action": "Now, configure and start the Connector on the Expressway."
       }
     }
   },
