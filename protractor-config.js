@@ -181,29 +181,26 @@ exports.config = {
       jasmine.getEnv().addReporter(new FailRetry());
 
       function FailFast() {
-        var hasFailure;
-        this.suiteStarted = function (suite) {
-          if (hasFailure) {
-            console.log('skipping - fail file exists');
-          }
+        var specs = [];
+
+        jasmine.getEnv().specFilter = function (spec) {
+          specs.push(spec);
+          return true;
         };
 
-        this.specStarted = function (spec) {
-            if (hasFailure) {
-              env.specFilter = function (spec) {
-                return false;
-              };
-          }
-        };
+        function disableSpecs() {
+          _.forEach(specs, function (spec) {
+            spec.disable();
+          });
+        }
 
         this.specDone = function (spec) {
           if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
-              hasFailure = true;
+              disableSpecs();
           }
         };
       }
       jasmine.getEnv().addReporter(new FailFast());
-
     }
 
     return browser.getProcessedConfig()
