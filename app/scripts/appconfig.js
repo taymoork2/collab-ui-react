@@ -1034,7 +1034,7 @@ angular
         .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
-          templateUrl: 'modules/core/views/partnerlanding.html',
+          templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
           controller: 'PartnerHomeCtrl'
         })
         .state('partnerreports', {
@@ -1072,7 +1072,7 @@ angular
         .state('partnercustomers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
-          controller: 'PartnerHomeCtrl',
+          controller: 'CustomerListCtrl',
           params: {
             filter: null
           }
