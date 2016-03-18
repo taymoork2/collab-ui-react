@@ -136,6 +136,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidaysForm = {
         $valid: true,
         $invalid: false,
+        $setDirty: function () {},
         holidayStart: {
           $viewValue: undefined,
           $setPristine: function () {}

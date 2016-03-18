@@ -46,12 +46,19 @@
 
   & .select-list {
     .dropdown-menu {
-      width: 100%;
+      min-width: 100%;
+      width: auto;
     }
+
+    & .select-options > li > a {
+      @include vr-spacing(pr, 1);
+    }
+
   }
 
   & .select-toggle {
-    width: auto;
+    width: 100%;
+    max-width: vr-adjust(320);
 
     @include vr-spacing(pr, 1.75);
 
@@ -138,8 +145,8 @@
             display: inline-block;
             content: " ";
             width: calc(1.75em + 1px);
-            top: 0.15em;
-            left: 0.75em;
+            top: 0.2em;
+            left: 0.8em;
             height: calc(1.75em + 1px);
             background-color: $color-cta-base;
             z-index: -1;

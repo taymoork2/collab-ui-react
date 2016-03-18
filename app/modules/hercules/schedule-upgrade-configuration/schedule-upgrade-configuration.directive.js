@@ -3,9 +3,9 @@
 
   angular
     .module('Hercules')
-    .directive('scheduleUpgradeConfiguration', ScheduleUpgradeConfigurationDirective);
+    .directive('scheduleUpgradeConfiguration', scheduleUpgradeConfiguration);
 
-  function ScheduleUpgradeConfigurationDirective() {
+  function scheduleUpgradeConfiguration() {
     return {
       scope: true,
       restrict: 'E',
@@ -14,7 +14,7 @@
       bindToController: {
         serviceType: '='
       },
-      templateUrl: 'modules/hercules/schedule-upgrade-configuration/schedule-upgrade-configuration.tpl.html'
+      templateUrl: 'modules/hercules/schedule-upgrade-configuration/schedule-upgrade-configuration.directive.html'
     };
   }
 }());

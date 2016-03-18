@@ -81,18 +81,6 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should add a Schedule to AA', function () {
-      utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.addschedule, 12000);
-      utils.click(autoattendant.toggleHoliday);
-      utils.click(autoattendant.addholiday);
-      utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
-      utils.expectIsDisabled(autoattendant.modalsave);
-      utils.sendKeys(autoattendant.date, new Date());
-      utils.click(autoattendant.selectdate);
-      utils.expectIsEnabled(autoattendant.modalsave);
-    }, 60000);
-
   });
 
 });

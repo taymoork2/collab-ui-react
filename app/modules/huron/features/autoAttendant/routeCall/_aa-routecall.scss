@@ -3,7 +3,7 @@
 }
 
 .aa-route-call-select {
-  min-width: vr-adjust(300);
+  width: vr-adjust(300);
 
   & .select-toggle {
     width: auto;
@@ -23,6 +23,17 @@
       width : 100%;
     }
 
+  }
+
+  & .select-list {
+    .dropdown-menu {
+      min-width: 100%;
+      width: auto;
+    }
+  }
+
+  & .select-options > li > a {
+    @include vr-spacing(pr, 1);
   }
 
 }
