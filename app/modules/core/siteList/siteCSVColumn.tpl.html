@@ -60,7 +60,7 @@
             <a ng-if="row.entity.showExportLink" 
                id="{{row.entity.license.siteUrl}}_export"
                translate="siteList.siteCsvExportLinkLabel"
-               ng-click="grid.appScope.csvExport(row.entity.license.siteUrl);"></a>
+               ng-click="grid.appScope.csvExport(row.entity);"></a>
 
             <!-- Export In Progress -->
             <span ng-if="row.entity.showExportInProgressLink" 
