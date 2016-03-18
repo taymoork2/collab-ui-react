@@ -1270,6 +1270,11 @@
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
         "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+      },
+      "configure-connector": {
+        "title": "Configure and Start the Connector",
+        "description": "Your Cisco Expressway is registered for Hybrid Services.",
+        "action": "Now, configure and start the Connector on the Expressway."
       }
     }
   },
