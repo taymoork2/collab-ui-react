@@ -28,8 +28,8 @@
     $scope.gridRows = [];
 
     if (
-      ("exportCompletedNoErr" == $scope.csvStatusObj.status) ||
-      ("exportCompletedWithErr" == $scope.csvStatusObj.status)
+      ("exportCompletedNoErr" === $scope.csvStatusObj.status) ||
+      ("exportCompletedWithErr" === $scope.csvStatusObj.status)
     ) {
 
       $scope.modalTitle = "Export Results";
@@ -84,13 +84,13 @@
       });
 
     } else if (
-      ("importCompletedNoErr" == $scope.csvStatusObj.status) ||
-      ("importCompletedWithErr" == $scope.csvStatusObj.status)
+      ("importCompletedNoErr" === $scope.csvStatusObj.status) ||
+      ("importCompletedWithErr" === $scope.csvStatusObj.status)
     ) {
 
       $scope.modalTitle = "Import Results";
 
-      if ("exportCompletedWithErr" == $scope.csvStatusObj.status) {
+      if ("exportCompletedWithErr" === $scope.csvStatusObj.status) {
         $scope.importErrorFile = "fakeImportErrorFile.csv";
       }
 
