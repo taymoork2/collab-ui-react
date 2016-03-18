@@ -61,7 +61,6 @@
     $scope.filterList = filterList;
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
-    $scope.isHuronUser = isHuronUser;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
@@ -303,46 +302,14 @@
       return false;
     }
 
-    function isHuronUser(allEntitlements) {
-      if (allEntitlements) {
-        for (var i = 0; i < allEntitlements.length; i++) {
-          if (Config.entitlements.huron === allEntitlements[i]) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
-        sendSparkWelcomeEmail(userEmail, userName);
-      } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
-        HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)
-          .then(function () {
-            Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-          }, function (error) {
-            Notification.errorResponse(error, 'usersPage.emailError');
-          });
-      }
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
       angular.element('.open').removeClass('open');
-    }
-
-    function sendSparkWelcomeEmail(userEmail, userName) {
-      var userData = [{
-        'address': userEmail,
-        'name': userName
-      }];
-
-      Userservice.inviteUsers(userData, null, true, function (data) {
-        if (data.success) {
-          Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-        } else {
-          Log.debug('Resending failed. Status: ' + status);
-          Notification.notify([$translate.instant('usersPage.emailError')], 'error');
-          $scope.btnSaveLoad = false;
-        }
-      });
     }
 
     function setDeactivateUser(deleteUserOrgId, deleteUserUuId, deleteUsername) {

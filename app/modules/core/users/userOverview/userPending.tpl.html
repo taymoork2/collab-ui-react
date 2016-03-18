@@ -3,6 +3,8 @@
   <div class="pendingTitle" translate="usersPage.invitePending"></div>
   <div class="pendingMsg" translate="usersPage.inviteMsg"></div>
   <div class="resendMsg">
-    <button class="btn" translate="usersPage.resendInvitation"></button>
+    <button class="btn" translate="usersPage.resendInvitation"
+    ng-click="resendInvitation(userOverview.currentUser.emails[0].value, userOverview.currentUser.userName, 
+    userOverview.currentUser.id, userOverview.currentUser.userStatus, userOverview.dirsyncEnabled, userOverview.entitlements)"></button>
   </div>
 </div>
