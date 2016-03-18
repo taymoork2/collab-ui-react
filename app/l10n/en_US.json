@@ -1203,7 +1203,9 @@
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeDone": "Upgrade completed!"
+      "upgradeDone": "Upgrade completed!",
+      "upToDate": "This cluster is up to date.",
+      "upgradeImpossible": "The cluster has to be configured before an update is possible."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1545,7 +1547,8 @@
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
-    "scheduleMissing": "No hours defined. This Auto Attendant will use 24 hour schedule",
+    "hoursMissing": "No hours defined.",
+    "holidaysMissing": "No holidays defined.",
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
