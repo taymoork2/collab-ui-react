@@ -10,7 +10,9 @@
   function Localytics() {
     var service = {
       customDimension: customDimension,
-      push: push
+      tagEvent: tagEvent,
+      setCustomerId: setCustomerId,
+      tagScreen: tagScreen
     };
 
     return service;
@@ -19,8 +21,16 @@
       ll('setCustomDimension', eventName, attributes);
     }
 
-    function push(eventName, attributes) {
+    function tagEvent(eventName, attributes) {
       ll('tagEvent', eventName, attributes);
+    }
+
+    function setCustomerId(uuid) {
+      ll('setCustomerId', uuid);
+    }
+
+    function tagScreen(state) {
+      ll('tagScreen', state);
     }
   }
 

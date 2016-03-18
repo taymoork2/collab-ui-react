@@ -162,8 +162,9 @@ angular.module('Core')
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
-          //org id of user
-          Localytics.customDimension(1, authData.orgName);
+
+          Localytics.customDimension(1, authData.orgId); // org id
+          Localytics.setCustomerId(authData.userId); // user id
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -185,8 +186,6 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
-          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
-          Localytics.customDimension(0, msg);
         },
         getEmails: function () {
           return authData.emails;
