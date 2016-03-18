@@ -160,7 +160,20 @@ angular.module('Core').controller('SiteListCtrl', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
 
-      Notification.success($translate.instant('siteList.exportStartedToast'));
+      WebExApiGatewayService.csvExport(siteUrl).then(
+        function success(response) {
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+        },
+
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ); // WebExApiGatewayService.csvExport()
 
       $log.log(logMsg);
     }; // csvExport()
@@ -181,7 +194,20 @@ angular.module('Core').controller('SiteListCtrl', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
 
-      Notification.success($translate.instant('siteList.importStartedToast'));
+      WebExApiGatewayService.csvImport(siteUrl).then(
+        function success(response) {
+          Notification.success($translate.instant('siteList.importStartedToast'));
+        },
+
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.importRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.importRejectedToast'));
+        }
+      ); // WebExApiGatewayService.csvImport()
 
       $log.log(logMsg);
     }; // csvImport()
