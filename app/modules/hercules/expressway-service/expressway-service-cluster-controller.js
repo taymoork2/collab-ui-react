@@ -13,6 +13,7 @@
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
+    vm.connectorName = $translate.instant('hercules.connectorNames.' + vm.serviceId);
     vm.getSeverity = ClusterService.getRunningStateSeverity;
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
 
@@ -104,6 +105,7 @@
     vm.availableVersion = softwareUpgrade.availableVersion;
     vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
     vm.clusterName = cluster.name;
+    vm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
 
     vm.ok = function () {
       $modalInstance.close();

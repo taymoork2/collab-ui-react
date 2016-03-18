@@ -54,8 +54,8 @@
               ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable || !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"
               translate="hercules.softwareUpgrade.upgradeNow">
       </button>
-      <p class="hercules-uptodate-text" ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate"></p>
-      <p class="hercules-uptodate-text red" ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible" translate="hercules.softwareUpgrade.upgradeImpossible"></p>
+      <p class="hercules-uptodate-text" ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
+      <p class="hercules-uptodate-text red" ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible" translate="hercules.softwareUpgrade.upgradeImpossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
     </div>
   </cs-sp-section>
   <cs-sp-section>
