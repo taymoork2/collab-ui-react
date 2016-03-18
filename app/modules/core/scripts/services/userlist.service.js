@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* global Uint8Array:false */
+
   angular
     .module('Core')
     .factory('UserListService', UserListService);

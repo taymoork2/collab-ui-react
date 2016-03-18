@@ -1,0 +1,47 @@
+---
+  extends: "../.eslintrc.yaml"
+  rules:
+    array-callback-return: 0
+    block-scoped-var: 0
+    brace-style: 0
+    curly: 0
+    default-case: 0
+    dot-notation: 0
+    guard-for-in: 0
+    new-cap: 0
+    no-alert: 0
+    no-cond-assign: 0
+    no-loop-func: 0
+    no-param-reassign: 0
+    no-self-assign: 0
+    no-spaced-func: 0
+    no-throw-literal: 0
+    no-trailing-spaces: 0
+    one-var-declaration-per-line: 0
+    one-var: 0
+    radix: 0
+    strict: 0
+    wrap-iife: 0
+    yoda: 0
+  globals:
+    _: true
+    $: true
+    afterEach: true
+    AmCharts: true
+    angular: true
+    bard: true
+    beforeEach: true
+    describe: true
+    expect: true
+    fail: true
+    getJSONFixture: true
+    inject: true
+    it: true
+    jasmine: true
+    jstz: true
+    moment: true
+    phoneUtils: true
+    sinon: true
+    spyOn: true
+    xdescribe: true
+    xit: true
