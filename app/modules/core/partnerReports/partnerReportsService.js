@@ -188,23 +188,15 @@
     }
 
     function getCustomerList() {
-      var orgPromise = $q.defer();
-      if (customerList === null) {
-        PartnerService.getManagedOrgsList(function (data, status) {
-          if (data.success) {
-            customerList = data.organizations;
-            orgPromise.resolve(customerList);
-          } else {
-            Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
-            Notification.notify([$translate.instant('reportsPage.customerLoadError')], 'error');
-            orgPromise.reject([]);
-          }
+      return PartnerService.getManagedOrgsList()
+        .catch(function (err) {
+          Log.debug('Failed to retrieve managed orgs information. Status: ' + err.status);
+          Notification.error('reportsPage.customerLoadError');
+          $q.reject([]);
+        })
+        .then(function (response) {
+          return _.get(response, 'data.organizations', []);
         });
-      } else {
-        orgPromise.resolve(customerList);
-      }
-
-      return orgPromise.promise;
     }
 
     function getService(url, canceler) {

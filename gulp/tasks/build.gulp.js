@@ -22,8 +22,9 @@ gulp.task('build', ['clean'], function (done) {
   tasks.push(runInParallel);
   tasks.push('processHtml:build');
 
+  // WARNING: dont use with jenkins, the coverage reports dont work properly yet
   if (args.karmaSplit) {
-    tasks.push('karma-all');
+    tasks.push('karma-each');
   } else {
     tasks.push('karma-config');
     tasks.push('karma');

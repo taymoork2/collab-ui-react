@@ -38,7 +38,7 @@ gulp.task('watch:js', function () {
           'copy:changed-files',
           'index:build'
         ])
-        .on('change', logWatch);
+        .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
           config.appFiles.js
@@ -117,10 +117,15 @@ gulp.task('watch:vendorjs', function () {
 });
 
 gulp.task('karma-watch', ['karma-config-watch'], function (done) {
-  karma.start({
-    configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
-    singleRun: true
-  }, done);
+  if (!args.nounit) {
+    karma.start({
+      configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
+      singleRun: true
+    }, done);
+  } else {
+    log($.util.colors.yellow('--nounit **Skipping Karma Config Task'));
+    done();
+  }
 });
 
 // Compile the karma template so that changes

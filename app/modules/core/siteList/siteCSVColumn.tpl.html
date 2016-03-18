@@ -34,14 +34,14 @@
               <span class="csv-results">
                   <a ng-if="!row.entity.exportFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_exportResult"
-                     ui-sref="site-csv-results({siteRow:row.entity})">
+                     ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                      
                     <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                   </a>
                 
                   <a ng-if="row.entity.exportFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_exportResult"
-                     ui-sref="site-csv-results({siteRow:row.entity})"
+                     ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})"
                      tooltip-append-to-body="true" 
                      tooltip-animation="false"
                      tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
@@ -122,23 +122,23 @@
               <span class="csv-results">
                   <a ng-if="!row.entity.importFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_importResult"
-                     ui-sref="site-csv-results({siteRow:row.entity})">
+                     ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                      
                     <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                   </a>
                 
                   <a ng-if="row.entity.importFinishedWithErrors"
                      id="{{row.entity.license.siteUrl}}_importResult"
-                     ui-sref="site-csv-results({siteRow:row.entity})"
+                     ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})"
                      tooltip-append-to-body="true" 
                      tooltip-animation="false"
                      tooltip="{{::'siteList.importFinishedWithErrorsTooltip' | translate}}"
                      tooltip-placement="top">
                                       
-                    <i id="{{row.entity.license.siteUrl}}_exportResultWithErrorIcon" 
+                    <i id="{{row.entity.license.siteUrl}}_importResultWithErrorIcon" 
                        class="icon-warning icon webex-attention-text"></i>
                      
-                    <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
+                    <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                   </a>
               </span>
             </span> 
