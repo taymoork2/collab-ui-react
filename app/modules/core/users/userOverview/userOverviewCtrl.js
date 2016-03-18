@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice, Log) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -93,6 +93,8 @@
       }
 
       updateUserTitleCard();
+
+      getAccountStatus();
     }
 
     var generateOtpLink = {
@@ -222,11 +224,9 @@
     function getAccountStatus() {
       var currentUserId = vm.currentUser.id;
       Userservice.getUser(currentUserId, function (data, status) {
-        vm.pendingStatus = _.isEqual(data.accountStatus[0], 'pending');
+        vm.pendingStatus = _.indexOf(data.accountStatus, 'pending') >= 0;
       });
     }
-
-    getAccountStatus();
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
       Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
