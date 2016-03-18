@@ -14,25 +14,22 @@ describe('Controller: CustomerListCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _Config_, _Authinfo_, _$stateParams_, _$translate_, _$state_, _$templateCache_, _PartnerService_, _$window_, _TrialService_, _Orgservice_, _Log_, _Notification_, _$controller_, _$q_) {
+  beforeEach(inject(function ($rootScope, _Authinfo_, _$stateParams_, _$translate_, _$state_, _PartnerService_, _$window_, _TrialService_, _Orgservice_, _Notification_, _$controller_, _$q_) {
     $scope = $rootScope.$new();
-    Config = _Config_;
     Authinfo = _Authinfo_;
     $stateParams = _$stateParams_;
     $translate = _$translate_;
     $state = _$state_;
-    $templateCache = _$templateCache_;
     PartnerService = _PartnerService_;
     $window = _$window_;
     TrialService = _TrialService_;
     Orgservice = _Orgservice_;
-    Log = _Log_;
     Notification = _Notification_;
 
     $controller = _$controller_;
     $q = _$q_;
 
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'error');
 
     spyOn(Authinfo, 'getOrgName').and.returnValue(orgName);
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(true);

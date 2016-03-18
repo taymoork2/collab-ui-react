@@ -222,7 +222,7 @@
     }
 
     function getMyOrgDetails() {
-      return $q(resolve,reject){
+      return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
         Orgservice.getAdminOrg(function (data, status) {
           if (status === 200) {
@@ -236,7 +236,7 @@
             Log.debug('Failed to retrieve partner org information. Status: ' + status);
           }
         }, accountId);
-      };
+      });
     }
 
     function getManagedOrgsList() {
@@ -256,6 +256,8 @@
           Notification.error('partnerHomePage.errGetTrialsQuery', {
             status: err.status
           });
+
+          $scope.showManagedOrgsRefresh = false;
         })
         .then(function (results) {
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false);
