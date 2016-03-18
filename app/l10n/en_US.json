@@ -1078,7 +1078,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Domain."
+      "setupCloudSipUriHeader": "Define SIP Domain"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
