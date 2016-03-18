@@ -1198,14 +1198,14 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
+      "explanation": "You are about to upgrade {{serviceName}} software on all hosts in the selected Cisco Expressway cluster:",
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
-      "upToDate": "This cluster is up to date.",
-      "upgradeImpossible": "The cluster has to be configured before an update is possible."
+      "upToDate": "Connector is up to date.",
+      "upgradeImpossible": "Connector is not configured. Configure and start it before initiating an upgrade."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
