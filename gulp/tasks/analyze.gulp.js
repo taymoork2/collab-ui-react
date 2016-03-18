@@ -165,7 +165,6 @@ function hasBeenFixed(file) {
 function createESLintTask(files, ESLintOptions) {
   var options = ESLintOptions || {};
   options.fix = !!args.fix;
-  console.log('createESLintTask options', options);
   return gulp
     .src(files, {
       base: './'
