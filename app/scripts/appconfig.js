@@ -521,6 +521,7 @@ angular
             }
           }
         })
+        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -824,16 +825,17 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        .state('site-list.site-csv-results', {
+        // lhsieh
+        .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
-              controller: 'SiteListCtrl',
-              templateUrl: 'modules/core/siteList/siteCSVResultsModal.tpl.html',
+              controller: 'SiteCSVResultsCtrl',
+              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
             }
           },
           params: {
-            siteRow: {}
+            siteRow: null
           }
         })
         .state('site-list.site-settings', {
