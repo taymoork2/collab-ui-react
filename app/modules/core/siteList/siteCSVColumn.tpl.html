@@ -39,7 +39,7 @@
                      class="icon-warning icon webex-attention-text"></i>
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
@@ -47,7 +47,7 @@
               <span class="csv-results" ng-if="!row.entity.exportFinishedWithErrors">
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
@@ -125,14 +125,14 @@
                      class="icon-warning icon webex-attention-text"></i>
                 <a id="{{row.entity.license.siteUrl}}_importResult"
                    ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
               <span class="csv-results" ng-if="!row.entity.importFinishedWithErrors">
                 <a id="{{row.entity.license.siteUrl}}_importResult"
                    ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
