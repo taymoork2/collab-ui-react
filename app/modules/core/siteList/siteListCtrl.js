@@ -147,16 +147,36 @@
       });
     }
 
-    $scope.csvExport = function (siteUrl) {
+    $scope.csvExport = function (siteRow) {
       var funcName = "csvExport()";
       var logMsg = "";
+      var siteUrl = siteRow.license.siteUrl;
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+      //$log.log(logMsg);
 
-      Notification.success($translate.instant('siteList.exportStartedToast'));
+      WebExApiGatewayService.csvExport(siteUrl).then(
+        function success(response) {
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        },
 
-      $log.log(logMsg);
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        }
+      ); // WebExApiGatewayService.csvExport()
+
     }; // csvExport()
 
     // TODO: remove csvImport() once we start implementing the import modal
@@ -166,8 +186,6 @@
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
-
-      Notification.success($translate.instant('siteList.importStartedToast'));
 
       $log.log(logMsg);
     }; // csvImport()
