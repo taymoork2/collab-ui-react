@@ -1,16 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').controller('SiteListCtrl', [
-  '$translate',
-  '$log',
-  '$scope',
-  '$interval',
-  'Authinfo',
-  'Userservice',
-  'SiteListService',
-  'WebExApiGatewayService',
-  'Notification',
-  function (
+  angular.module('Core').controller('SiteListCtrl', SiteListCtrl);
+
+  /*@ngInject*/
+  function SiteListCtrl(
     $translate,
     $log,
     $scope,
@@ -165,15 +159,7 @@ angular.module('Core').controller('SiteListCtrl', [
       $log.log(logMsg);
     }; // csvExport()
 
-    $scope.csvExportResult = function (siteUrl) {
-      var funcName = "csvExportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvExportResult()
-
+    // TODO: remove csvImport() once we start implementing the import modal
     $scope.csvImport = function (siteUrl) {
       var funcName = "csvImport()";
       var logMsg = "";
@@ -185,15 +171,6 @@ angular.module('Core').controller('SiteListCtrl', [
 
       $log.log(logMsg);
     }; // csvImport()
-
-    $scope.csvImportResult = function (siteUrl) {
-      var funcName = "csvImportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvImportResult()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
@@ -212,5 +189,5 @@ angular.module('Core').controller('SiteListCtrl', [
         } // cancelCsvPollInterval()
       ); // vm.gridData.forEach()
     });
-  } // end top level function
-]);
+  } // SiteListCtrl()
+})(); // top level function

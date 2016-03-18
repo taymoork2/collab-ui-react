@@ -835,7 +835,7 @@ angular
             }
           },
           params: {
-            siteRow: null
+            csvStatusObj: null
           }
         })
         .state('site-list.site-settings', {
