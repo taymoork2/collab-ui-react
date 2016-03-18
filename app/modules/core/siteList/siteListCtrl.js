@@ -159,6 +159,7 @@
       $log.log(logMsg);
     }; // csvExport()
 
+    // TODO: remove csvImport() once we start implementing the import modal
     $scope.csvImport = function (siteUrl) {
       var funcName = "csvImport()";
       var logMsg = "";
