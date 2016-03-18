@@ -155,7 +155,7 @@
       logMsg = funcName + "\n" +
         "siteRow=" + JSON.stringify(siteRow);
       //$log.log(logMsg);
-      
+
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
       //$log.log(logMsg);
