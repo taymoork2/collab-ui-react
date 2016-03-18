@@ -45,17 +45,18 @@ describe('Controller: UserRolesCtrl', function () {
     beforeEach(initController);
 
     it('should set type cloud-calling and primary SIP Address to $scope.sipAddr', function () {
-      expect($scope.sipAddr).toEqual('fakegmuser+siptestuser150@atlastesting234.ciscospark.com');
+      expect($scope.sipAddr).toEqual(fakeUserJSONFixture.fakeUser1.sipAddresses[0].value);
     });
   });
 
   describe('Setting of user SIP Address for another user: ', function () {
-    beforeEach(initController);
+    beforeEach(function () {
+      $stateParams.currentUser = fakeUserJSONFixture.fakeUser2;
+      initController();
+    });
 
     it('should set type cloud-calling SIP Address to $scope.sipAddr', function () {
-      $scope.currentUser = fakeUserJSONFixture.fakeUser2;
-      $scope.setUserSipAddress();
-      expect($scope.sipAddr).toEqual('fakegmuser+siptestuser786@atlastesting234.ciscospark.com');
+      expect($scope.sipAddr).toEqual(fakeUserJSONFixture.fakeUser2.sipAddresses[0].value);
     });
   });
 });
