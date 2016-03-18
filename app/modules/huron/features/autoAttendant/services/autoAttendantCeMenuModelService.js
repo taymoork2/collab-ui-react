@@ -274,10 +274,12 @@
       getCustomMenu: getCustomMenu,
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
+      updateScheduleActionSetMap: updateScheduleActionSetMap,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
       deleteCombinedMenu: deleteCombinedMenu,
+      deleteScheduleActionSetMap: deleteScheduleActionSetMap,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -656,7 +658,30 @@
       };
     }
 
+    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+      if (!ceRecord.scheduleEventTypeMap) {
+        ceRecord['scheduleEventTypeMap'] = {};
+      }
+      if (actionSetName === 'openHours') {
+        ceRecord.scheduleEventTypeMap['open'] = actionSetName;
+        if (!ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'openHours';
+        }
+      } else if (actionSetName === 'closedHours') {
+        ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
+        ceRecord.defaultActionSet = 'closedHours';
+      } else if (actionSetName === 'holidays') {
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
+        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'holidays';
+        }
+      }
+    }
+
     function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+
+      updateScheduleActionSetMap(ceRecord, actionSetName);
+
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
         if (aaCombinedMenu[aaCombinedMenu.length - 1].getType() === 'MENU_OPTION') {
@@ -1056,6 +1081,34 @@
       return false;
     }
 
+    function deleteScheduleActionSetMap(ceRecord, actionSetName) {
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      if (!ceRecord.scheduleEventTypeMap) {
+        return;
+      }
+      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
+        return this.scheduleEventTypeMap[prop] === this.actionSetName;
+      }, {
+        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
+        actionSetName: actionSetName
+      });
+      if (prop) {
+        delete ceRecord.scheduleEventTypeMap[prop];
+        if (ceRecord.scheduleEventTypeMap) {
+          if (ceRecord.scheduleEventTypeMap.closed) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
+          } else if (ceRecord.scheduleEventTypeMap.open) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
+          } else if (ceRecord.scheduleEventTypeMap.holiday) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
+          } else {
+            delete ceRecord.defaultActionSet;
+          }
+        }
+      }
+    }
+
     /*
      * actionSetName: 'regularOpenActions'
      * ceRecord: a customer AA record
@@ -1069,6 +1122,10 @@
       if (angular.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
+
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      deleteScheduleActionSetMap(ceRecord, actionSetName);
 
       // get the action object of actionSetName
       //
