@@ -1207,23 +1207,14 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-<<<<<<< HEAD
-      "explanation": "You are about to upgrade {{serviceName}} software on all hosts in the selected Cisco Expressway cluster:",
-=======
       "explanation": "You are about to upgrade {{connectorType}} on all hosts in the selected Cisco Expressway cluster:",
->>>>>>> upstream/master
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
-<<<<<<< HEAD
-      "upToDate": "Connector is up to date.",
-      "upgradeImpossible": "Connector is not configured. Configure and start it before initiating an upgrade."
-=======
       "upToDate": "{{connectorType}} is up to date on this cluster.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
->>>>>>> upstream/master
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
