@@ -39,6 +39,10 @@ describe('Controller: UserRolesCtrl', function () {
     it('should initialize the UserRolesCtrl controller', function () {
       expect(controller).toBeDefined();
     });
+
+    it('should verify that a currentUser is set to $scope.currentUser', function () {
+      expect($scope.currentUser).toEqual($stateParams.currentUser);
+    });
   });
 
   describe('Setting of user SIP Address: ', function () {

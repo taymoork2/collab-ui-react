@@ -6,7 +6,6 @@ angular.module('Squared')
 function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
   $scope.currentUser = $stateParams.currentUser;
   $scope.sipAddr = '';
-  $scope.setUserSipAddress = setUserSipAddress;
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
