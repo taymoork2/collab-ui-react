@@ -293,7 +293,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-       it('should add a Schedule to AA', function () {
+    it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, 12000);
       utils.click(autoattendant.addschedule);
