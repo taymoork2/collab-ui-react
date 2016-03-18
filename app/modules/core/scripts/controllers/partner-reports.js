@@ -22,26 +22,20 @@ angular.module('Core')
 
       $scope.getManagedOrgs = function () {
         $scope.totalOrgsData = [];
-        PartnerService.getManagedOrgsList(function (data, status) {
-          if (data.success) {
-            if (data.organizations.length > 0) {
-              for (var index in data.organizations) {
-                var org = data.organizations[index];
-                var orgObj = {
-                  customerOrgId: org.customerOrgId,
-                  customerName: org.customerName,
-                };
-                $scope.totalOrgsData.push(orgObj);
-              }
-              $scope.totalOrgsData.sort(function (a, b) {
-                var org1 = a.customerName;
-                var org2 = b.customerName;
-                return org1.localeCompare(org2);
-              });
-            }
-          }
-
-        });
+        PartnerService.getManagedOrgsList()
+          .then(function (reponse) {
+            $scope.totalOrgsData = _.map(_.get(reponse, 'data.organizations'), function (org) {
+              return {
+                customerOrgId: org.customerOrgId,
+                customerName: org.customerName,
+              };
+            });
+            $scope.totalOrgsData.sort(function (a, b) {
+              var org1 = a.customerName;
+              var org2 = b.customerName;
+              return org1.localeCompare(org2);
+            });
+          });
       };
 
       var isAggregateView = function () {
