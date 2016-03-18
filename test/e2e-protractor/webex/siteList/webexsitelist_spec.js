@@ -32,13 +32,9 @@ describe('Services > Webex page aka Site List page', function () {
     });
 
     it('should click the Export link and see a green toast', function () {
+      utils.wait(sitelist.csvExportId);
       utils.click(sitelist.csvExportId);
       notifications.assertSuccess('This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.');
-    });
-
-    it('should click the Import link and see a green toast', function () {
-      utils.click(sitelist.csvImportId);
-      notifications.assertSuccess('This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.');
     });
 
     it('should log out', function () {
