@@ -1,7 +1,17 @@
 #!/bin/bash
 
+# jenkins env vars
+source .jenkins-build-env-vars
+
 # import helper functions
 source ./bin/include/pid-helpers
+
+
+# - restore deps from last successful build
+ls -lah ${BUILD_DEPS_ARCHIVE} || :
+tar xvf ${BUILD_DEPS_ARCHIVE} || :
+./setup.sh --restore || :
+
 
 # -----
 # Phase 1: Pre-setup
@@ -100,7 +110,7 @@ else
     BUILD_NUMBER=0
 fi
 rm -f wx2-admin-web-client.*.tar.gz
-tar -zcvf wx2-admin-web-client.$BUILD_NUMBER.tar.gz dist/*
-tar -zcvf coverage.tar.gz coverage/unit/*
+tar -zcvf ${APP_ARCHIVE} dist/*
+tar -zcvf ${COVERAGE_ARCHIVE} coverage/unit/*
 
 exit $?
