@@ -26,7 +26,7 @@
           valign="top"
           ng-repeat="gridRow in gridRows">
         
-        <td class="wx-csv-td"
+        <td class="wx-csv-modal-td"
             width="50%">
             
           {{gridRow.title}}
@@ -41,7 +41,7 @@
           
           <span ng-if="( gridRow.id == 'export-file' )">
             <a href={{gridRow.fileDownloadUrl}}>
-              <font color="blue">Download attributes file</font>
+              <font color="blue">Download exported CSV file</font>
             </a>
           </span>
             
