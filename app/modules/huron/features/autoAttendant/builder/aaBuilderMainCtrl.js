@@ -6,7 +6,10 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo, AACommonService) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
+    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
+    AAValidationService, AANumberAssignmentService, Notification, Authinfo, AACommonService, AAUiScheduleService) {
+
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -35,6 +38,15 @@
       actions: [{
         lane: 'openHours',
         actionset: ['say', 'runActionsOnInput']
+      }]
+    }, {
+      tname: "OpenClosedHoursTemplate",
+      actions: [{
+        lane: 'openHours',
+        actionset: ['say', 'runActionsOnInput']
+      }, {
+        lane: 'closedHours',
+        actionset: []
       }]
     }];
 
@@ -377,7 +389,7 @@
           vm.ui.isClosedHours = true;
         }
 
-        if (angular.isUndefined(action.actionset) || action.actionset.length === 0) {
+        if (angular.isUndefined(action.actionset)) {
           Notification.error('autoAttendant.errorInvalidTemplateDef', {
             template: vm.templateName
           });
@@ -438,11 +450,12 @@
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
 
-      var aaTemplate = $stateParams.aaTemplate;
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
       vm.ui.builder = {};
+      vm.ui.aaTemplate = $stateParams.aaTemplate;
+
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
@@ -456,5 +469,28 @@
 
     activate();
 
+    $scope.$on('AANameCreated', function () {
+      if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'OpenClosedHoursTemplate') {
+        AAUiScheduleService.create9To5Schedule(vm.ui.builder.ceInfo_name).then(
+          function (scheduleId) {
+            vm.ui.ceInfo.scheduleId = scheduleId;
+            // update vm.ui.ceInfo.name only if the save is successful =>
+            // leave Name assignment page
+            vm.ui.ceInfo.name = vm.ui.builder.ceInfo_name;
+            vm.saveAARecords();
+          },
+          function (response) {
+            Notification.error('autoAttendant.errorCreateSchedule', {
+              name: vm.ui.builder.ceInfo_name,
+              statusText: response.statusText,
+              status: response.status
+            });
+          });
+      } else {
+        vm.ui.ceInfo.name = vm.ui.builder.ceInfo_name;
+        vm.saveAARecords();
+      }
+
+    });
   }
 })();

@@ -6,10 +6,9 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, AAValidationService, Notification) {
+  function AutoAttendantNameBuilderCtrl($rootScope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, AAValidationService, Notification, AAUiScheduleService) {
 
     var vm = this;
-    vm.aaRecord = {};
 
     vm.ui = {};
     vm.saveAARecord = saveAARecord;
@@ -30,24 +29,16 @@
 
       saveUiModel();
 
-      aaBuilderMainCtrl_saveAARecords();
-
+      $rootScope.$broadcast('AANameCreated');
     }
 
     function saveUiModel() {
-      vm.ui.ceInfo.name = vm.name;
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
-        vm.ui.builder.ceInfo_name = vm.ui.ceInfo.getName();
-        AutoAttendantCeInfoModelService.setCeInfo(vm.aaRecord, vm.ui.ceInfo);
-      }
+      vm.ui.builder.ceInfo_name = vm.name;
     }
 
     function activate() {
-      vm.aaRecord = AAModelService.getNewAARecord();
 
       vm.ui = AAUiModelService.getUiModel();
-
-      aaBuilderMainCtrl_saveAARecords = $scope.saveAARecords;
 
     }
 

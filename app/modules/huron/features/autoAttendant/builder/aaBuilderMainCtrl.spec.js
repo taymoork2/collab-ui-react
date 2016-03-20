@@ -4,6 +4,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
+  var AAUiScheduleService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -48,7 +49,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -69,6 +70,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
+    AAUiScheduleService = _AAUiScheduleService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -637,5 +639,63 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.setLoadingDone();
       expect($scope.vm.loading).toBeFalsy();
     });
+  });
+
+  describe('Received AANameCreated Event', function () {
+    var createScheduleDefer;
+
+    beforeEach(function () {
+      $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = {};
+      $scope.vm.ui.builder = {};
+      $scope.vm.ui.aaTemplate = 'OpenClosedHoursTemplate';
+      $scope.vm.ui.builder.ceInfo_name = 'AA';
+
+      createScheduleDefer = $q.defer();
+      spyOn(AAUiScheduleService, 'create9To5Schedule').and.returnValue(createScheduleDefer.promise);
+      spyOn(controller, 'saveAARecords');
+      spyOn(Notification, 'error');
+    });
+
+    it('should save a 9to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
+      $rootScope.$broadcast('AANameCreated');
+
+      createScheduleDefer.resolve('12345');
+      $scope.$apply();
+
+      expect($scope.vm.ui.ceInfo.scheduleId).toEqual('12345');
+      expect($scope.vm.ui.ceInfo.name).toEqual('AA');
+      expect(controller.saveAARecords).toHaveBeenCalled();
+    });
+
+    it('should remain in the AA Name input page if saving a 9to5 schedule fail for OpenClosedHoursTemplate creation', function () {
+      $rootScope.$broadcast('AANameCreated');
+
+      createScheduleDefer.reject({
+        statusText: 'failure',
+        status: '500'
+      });
+      $scope.$apply();
+
+      expect(angular.isUndefined($scope.vm.ui.ceInfo.name)).toBe(true);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should invoke saveAARecords for Basic template creation', function () {
+      $scope.vm.ui.aaTemplate = 'template1';
+      $rootScope.$broadcast('AANameCreated');
+
+      expect($scope.vm.ui.ceInfo.name).toEqual('AA');
+      expect(controller.saveAARecords).toHaveBeenCalled();
+    });
+
+    it('should invoke saveAARecords for Custom template creation', function () {
+      $scope.vm.ui.aaTemplate = '';
+      $rootScope.$broadcast('AANameCreated');
+
+      expect($scope.vm.ui.ceInfo.name).toEqual('AA');
+      expect(controller.saveAARecords).toHaveBeenCalled();
+    });
+
   });
 });
