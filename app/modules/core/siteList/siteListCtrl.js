@@ -73,7 +73,8 @@
           conferenceService.csvStatusMockIt = {
             mockIt: true, // set to true to mock csv status; set to false to get actual status from rest api 
             mockStart: 0, // change mockStart and mockEnd to mock specific csv state(s)
-            mockEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
+            mockEnd: 0,
+            // mockEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
             mockIndex: null
           };
 
