@@ -79,7 +79,7 @@
       $scope.gridRows.push({
         id: 'export-download-file',
         title: 'Download:',
-        value: '',
+        value: 'Exported CSV file',
         fileDownloadUrl: 'https://google.com'
       });
 
@@ -146,7 +146,7 @@
       $scope.gridRows.push({
         id: 'import-download-file',
         title: 'Download:',
-        value: '',
+        value: 'Import error log',
         fileDownloadUrl: 'https://yahoo.com'
       });
     }

@@ -43,7 +43,9 @@
             <b>{{gridRow.value}}</b>
           </span> 
                          
-          <span ng-if="( gridRow.id == 'export-records-failed' ) || ( gridRow.id == 'import-records-failed' )" >
+          <span ng-if="( gridRow.id == 'export-records-failed' ) || 
+                       ( gridRow.id == 'import-records-failed' )">
+                       
             <span ng-if="( gridRow.value == 0 )">
               <b>{{gridRow.value}}</b>
             </span>
@@ -55,16 +57,12 @@
             </span>
           </span>
             
-          <span ng-if="( gridRow.id == 'export-download-file' ) || ( gridRow.id == 'import-download-file' )">
+          <span ng-if="( gridRow.id == 'export-download-file' ) || 
+                       ( gridRow.id == 'import-download-file' )">
+                       
             <a href={{gridRow.fileDownloadUrl}}>
               <font color="blue">
-                <span ng-if="( gridRow.id == 'export-download-file' )">
-                  Exported CSV file
-                </span>
-                
-                <span ng-if="( gridRow.id == 'import-download-file' )">
-                  Import error log
-                </span>
+                {{gridRow.value}}
               </font>
             </a>
           </span>
