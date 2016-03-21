@@ -6,17 +6,6 @@ angular.module('Squared')
 function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
   $scope.currentUser = $stateParams.currentUser;
   $scope.sipAddr = '';
-  if ($scope.currentUser) {
-    $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
-    $scope.roles = $scope.currentUser.roles;
-    if ($scope.currentUser.sipAddresses) {
-      for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-        if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
-          $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
-        }
-      }
-    }
-  }
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
@@ -50,7 +39,9 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   initView();
 
   function initView() {
+    setUserSipAddress();
     setFormValuesToMatchRoles();
+
     Orgservice.getOrgCacheOption(function (data, status) {
       if (data.success) {
         $scope.dirsyncEnabled = data.dirsyncEnabled;
@@ -61,8 +52,33 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
     }, null, {
       cache: true
     });
+
     if (Authinfo.getOrgId()) {
       getMessengerSyncStatus();
+    }
+
+    if ($scope.currentUser) {
+      $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
+      $scope.roles = $scope.currentUser.roles;
+    }
+  }
+
+  function setUserSipAddress() {
+    if (_.isArray(_.get($scope, 'currentUser.sipAddresses'))) {
+      var sipAddrData = _.find($scope.currentUser.sipAddresses, {
+        primary: true,
+        type: 'cloud-calling'
+      });
+
+      if (_.isEmpty(sipAddrData)) {
+        sipAddrData = _.find($scope.currentUser.sipAddresses, {
+          type: 'cloud-calling'
+        });
+      }
+
+      if (sipAddrData.value) {
+        $scope.sipAddr = sipAddrData.value;
+      }
     }
   }
 

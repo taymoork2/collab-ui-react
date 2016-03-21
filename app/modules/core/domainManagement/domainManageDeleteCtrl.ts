@@ -10,7 +10,7 @@ namespace domainManagement {
     constructor($stateParams, $translate, private $state, private $previousState, private DomainManagementService, private LogMetricsService) {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
-      this._moreThanOneVerifiedDomainLeft = DomainManagementService.domainList && (_.filter(DomainManagementService.domainList, (d)=> {return (d.status == DomainManagementService.states.verified || d.status == DomainManagementService.states.claimed)}).length > 1);
+      this._moreThanOneVerifiedDomainLeft = DomainManagementService.domainList && (_.filter(DomainManagementService.domainList, (d:any)=> {return (d.status == DomainManagementService.states.verified || d.status == DomainManagementService.states.claimed)}).length > 1);
 
       if (!this._loggedOnUser.isPartner //Partners do not get lockout warnings
           //Domain is not just pending (which is ok to delete) or claimed (which will just unclaim)

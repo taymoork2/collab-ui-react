@@ -34,14 +34,6 @@
   </div>
   <!-- timeout/invalid action -->
   <div class="panel">
-    <div class="row aa-pm-timeout">
-      <div class="small-4 columns">
-        <label class="control-label" for="timeoutSelect" translate="autoAttendant.phoneMenuTimeout"></label>
-      </div>
-      <div class="small-8 columns">
-        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" on-change-fn="aaPhoneMenu.timeoutInvalidChanged()">
-        </cs-select>
-      </div>
-    </div>
+    <aa-timeout-invalid aa-schedule="{{schedule}}" aa-index="index"></aa-timeout-invalid>
   </div>
 </div>
