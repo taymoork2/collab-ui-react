@@ -31,7 +31,8 @@
       "type": "enterprise",
       "value": "fakegmuser+siptestuser999@atlastesting234.ciscospark.com"
     }],
-    "avatarSyncEnabled": false
+    "avatarSyncEnabled": false,
+    "roles": ["id_full_admin"]
   },
 
   "fakeUser2": {
@@ -65,6 +66,7 @@
       "type": "enterprise",
       "value": "fakegmuser+siptestuser999@atlastesting234.ciscospark.com"
     }],
-    "avatarSyncEnabled": false
+    "avatarSyncEnabled": false,
+    "roles": ["atlas-portal.application"]
   }
 }
