@@ -69,15 +69,16 @@
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isCSVSupported = false;
 
-          // define the range of csv states to check
-          conferenceService.csvStatusCheckMode = {
-            isOn: true, // set this to false to turn off check
-            checkStart: 0,
-            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
-            checkIndex: null
+          // define the range of csv states to mock
+          conferenceService.csvStatusMockIt = {
+            mockIt: true, // set this to false to turn off csv status mocking
+            mockStart: 0, // change mockStart and mockEnd to mock specific csv state(s)
+            mockEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
+            mockIndex: null
           };
 
           conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
           vm.gridData.push(conferenceService);
         }
