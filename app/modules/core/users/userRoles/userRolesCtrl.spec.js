@@ -40,6 +40,11 @@ describe('Controller: UserRolesCtrl', function () {
       expect(controller).toBeDefined();
       expect($scope.currentUser).toEqual($stateParams.currentUser);
     });
+
+    it('should verify the radio button value populated when controller loads with a currentUser', function () {
+      expect($scope.rolesObj.adminRadioValue).toBeDefined();
+      expect($scope.rolesObj.adminRadioValue).toEqual(jasmine.any(Number));
+    });
   });
 
   describe('Setting of user SIP Address: ', function () {
