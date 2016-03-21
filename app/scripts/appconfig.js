@@ -609,6 +609,27 @@ angular
             }
           }
         })
+        .state('user-overview.csdmDevice', {
+          views: {
+            '': {
+              controller: 'DeviceOverviewCtrl',
+              controllerAs: 'deviceOverview',
+              templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html'
+            }
+          },
+          resolve: {
+            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+            }
+          },
+          params: {
+            currentDevice: {},
+            huronDeviceService: {}
+          },
+          data: {
+            displayName: 'Device Configuration'
+          }
+        })
         .state('user-overview.communication.voicemail', {
           template: '<div uc-voicemail></div>',
           data: {
@@ -972,7 +993,8 @@ angular
             }
           },
           params: {
-            currentDevice: {}
+            currentDevice: {},
+            huronDeviceService: {}
           },
           data: {
             displayName: 'Overview'

@@ -22,6 +22,7 @@
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       csdmHuron: 'csdm-huron',
+      useCsdmDeviceSidepanel: 'csdm-devicesidepanel',
       androidAddGuestRelease: 'android-add-guest-release',
       androidCallsTab: 'android-calls-tab',
       androidDirectUpload: 'android-direct-upload',

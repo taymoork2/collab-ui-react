@@ -6,10 +6,11 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, $interval, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, AddDeviceModal, channels, RemoteSupportModal) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
+    var huronDeviceService = $stateParams.huronDeviceService;
 
     deviceOverview.linesAreLoaded = false;
 
@@ -22,7 +23,7 @@
     }
 
     function pollLines() {
-      CsdmHuronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
+      huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
       });
@@ -49,7 +50,7 @@
         for (var i = 32; i > 0; --i) {
           feedbackId += chars[Math.floor(Math.random() * chars.length)];
         }
-        uploadLogsPromise = CsdmHuronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
+        uploadLogsPromise = huronDeviceService.uploadLogs(deviceOverview.currentDevice, feedbackId);
       } else {
         feedbackId = Utils.getUUID();
         uploadLogsPromise = CsdmDeviceService.uploadLogs(deviceOverview.currentDevice.url, feedbackId, Authinfo.getPrimaryEmail());
@@ -96,7 +97,8 @@
       var tag = _.trim(deviceOverview.newTag);
       if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
         deviceOverview.newTag = undefined;
-        return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? CsdmHuronDeviceService : CsdmDeviceService)
+        var service = (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService);
+        return service
           .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
           .catch(XhrNotificationService.notify);
       }
@@ -104,7 +106,7 @@
 
     deviceOverview.removeTag = function (tag) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
-      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? CsdmHuronDeviceService : CsdmDeviceService)
+      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : deviceOverview.currentDevice.isHuronDevice ? huronDeviceService : CsdmDeviceService)
         .updateTags(deviceOverview.currentDevice.url, tags)
         .catch(XhrNotificationService.notify);
     };
