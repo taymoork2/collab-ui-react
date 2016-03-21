@@ -259,7 +259,7 @@
       });
 
       angular.forEach(customers, function (item, index, array) {
-        if (index < 5) {
+        if (index < vm.customerMax) {
           item.isSelected = true;
           vm.customerSelected.push(item);
         }
