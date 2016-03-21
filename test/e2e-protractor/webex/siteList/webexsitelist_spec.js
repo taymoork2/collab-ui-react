@@ -26,7 +26,7 @@ describe('Services > Webex page aka Site List page', function () {
       utils.wait(sitelist.csvColumnId);
     });
 
-    it('should detect CSV Export & Import status being given', function () {
+    it('should detect CSV Export & Import status is given', function () {
       utils.wait(sitelist.csvImportId);
       utils.wait(sitelist.csvExportId);
     });
