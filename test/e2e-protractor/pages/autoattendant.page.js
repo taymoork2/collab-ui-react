@@ -87,7 +87,7 @@ var AutoAttendantPage = function () {
 
   this.phoneSayMessageLanguageFirst = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
 
-  // let's select galacian (10th selection starting from 0 == 9) for a change of pace
+  // let's select galician (10th selection starting from 0 == 9) for a change of pace
   this.phoneLanguageDropDownOptionsTenth = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(9);
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
