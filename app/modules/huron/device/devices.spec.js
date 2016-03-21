@@ -16,8 +16,9 @@ describe('Controller: DevicesCtrlHuron', function () {
   };
 
   var emptyArray = [];
+  var $httpBackend;
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_, _$httpBackend_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
 
@@ -27,17 +28,19 @@ describe('Controller: DevicesCtrlHuron', function () {
     OtpService = _OtpService_;
     Config = _Config_;
 
+    $httpBackend = _$httpBackend_;
+    $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
+
     $stateParams.currentUser = stateParams.currentUser;
 
     spyOn(DeviceService, 'loadDevices').and.returnValue($q.when(deviceList));
     spyOn(DeviceService, 'setCurrentDevice').and.callFake(function (device) {
       currentDevice = device;
     });
-
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
 
     controller = _$controller_('DevicesCtrlHuron', {
-      $scope: $scope,
+      $scope: $scope
     });
 
     $scope.$apply();

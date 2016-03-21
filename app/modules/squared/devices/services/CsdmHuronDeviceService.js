@@ -1,10 +1,118 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Squared')
+    .service('CsdmHuronOrgDeviceService', CsdmHuronOrgDeviceService)
+    .service('CsdmHuronUserDeviceService', CsdmHuronUserDeviceService);
+
+  function CsdmHuronUserDeviceService($injector, $q, $http, CsdmConverter, CsdmCacheFactory, Authinfo, CsdmConfigService) {
+
+    function huronEnabled() {
+      return $q.when(Authinfo.isSquaredUC());
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
+    }
+
+    function create(userId) {
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/users/' + userId + '/huronDevices';
+      var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+      var initialDataPromise = huronEnabled().then(function (enabled) {
+        return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
+          return CsdmConverter.convertHuronDevices(res.data);
+        });
+      });
+      var deviceCache = CsdmCacheFactory.create({
+        fetch: function () {
+          return huronEnabled().then(function (enabled) {
+            return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+              return CsdmConverter.convertHuronDevices(res.data);
+            });
+          });
+        },
+        update: function (url, obj) {
+          return $http.put(url, obj).then(function (res) {
+            var device = _.clone(deviceCache.list()[url]);
+            if (obj.description) {
+              try {
+                device.tags = JSON.parse(decodeHuronTags(obj.description));
+              } catch (e) {
+                device.tags = [];
+              }
+            }
+            return device;
+          });
+        },
+        initializeData: initialDataPromise
+      });
+
+      return $injector.instantiate(CsdmHuronDeviceService, {
+        deviceCache: deviceCache
+      });
+    }
+    return {
+      create: create
+    };
+  }
+
+  function CsdmHuronOrgDeviceService($injector, $q, $http, CsdmConverter, CsdmCacheFactory, Authinfo, CsdmConfigService) {
+
+    function huronEnabled() {
+      return $q.when(Authinfo.isSquaredUC());
+    }
+
+    function decodeHuronTags(description) {
+      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+      return tagString;
+    }
+
+    function create() {
+      var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+      var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+
+      var initialDataPromise = huronEnabled().then(function (enabled) {
+        return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
+          return CsdmConverter.convertHuronDevices(res.data);
+        });
+      });
+
+      var deviceCache = CsdmCacheFactory.create({
+        fetch: function () {
+          return huronEnabled().then(function (enabled) {
+            return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+              return CsdmConverter.convertHuronDevices(res.data);
+            });
+          });
+        },
+        update: function (url, obj) {
+          return $http.put(url, obj).then(function (res) {
+            var device = _.clone(deviceCache.list()[url]);
+            if (obj.description) {
+              try {
+                device.tags = JSON.parse(decodeHuronTags(obj.description));
+              } catch (e) {
+                device.tags = [];
+              }
+            }
+            return device;
+          });
+        },
+        initializeData: initialDataPromise
+      });
+
+      return $injector.instantiate(CsdmHuronDeviceService, {
+        deviceCache: deviceCache
+      });
+    }
+    return {
+      create: create
+    };
+  }
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, HuronConfig, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
-    var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, HuronConfig, CsdmConverter, deviceCache) {
 
     function getCmiUploadLogsUrl(userId, deviceId) {
       return HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users/' + userId + '/phones/' + deviceId + '/commands/logs';
@@ -18,48 +126,9 @@
       return HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/directorynumbers/' + directoryNumberId + '/alternatenumbers?alternatenumbertype=%2BE.164+Number';
     }
 
-    var initialDataPromise = huronEnabled().then(function (enabled) {
-      return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
-        return CsdmConverter.convertHuronDevices(res.data);
-      });
-    });
-
-    function huronEnabled() {
-      return $q.when(Authinfo.isSquaredUC());
-    }
-
     function encodeHuronTags(description) {
       return (description || "").replace(/"/g, "'");
     }
-
-    function decodeHuronTags(description) {
-      var tagString = (description || "").replace(/\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
-      return tagString;
-    }
-
-    var deviceCache = CsdmCacheFactory.create({
-      fetch: function () {
-        return huronEnabled().then(function (enabled) {
-          return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
-            return CsdmConverter.convertHuronDevices(res.data);
-          });
-        });
-      },
-      update: function (url, obj) {
-        return $http.put(url, obj).then(function (res) {
-          var device = _.clone(deviceCache.list()[url]);
-          if (obj.description) {
-            try {
-              device.tags = JSON.parse(decodeHuronTags(obj.description));
-            } catch (e) {
-              device.tags = [];
-            }
-          }
-          return device;
-        });
-      },
-      initializeData: initialDataPromise
-    });
 
     function getDeviceList() {
       return deviceCache.list();
@@ -121,9 +190,4 @@
       updateTags: updateTags
     };
   }
-
-  angular
-    .module('Squared')
-    .service('CsdmHuronDeviceService', CsdmHuronDeviceService);
-
 })();
