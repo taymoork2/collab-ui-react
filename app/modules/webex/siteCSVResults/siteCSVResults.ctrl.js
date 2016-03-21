@@ -142,7 +142,7 @@
         value: 2,
         fileDownloadUrl: null
       });
-      
+
       $scope.gridRows.push({
         id: 'import-download-file',
         title: 'Download:',
