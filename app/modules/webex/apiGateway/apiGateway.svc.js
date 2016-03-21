@@ -41,8 +41,12 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var funcName = 'csvStatus()';
       var logMsg = '';
 
+      var mockIt = (
+        null != checkCsvStatusReq
+      ) ? true : false;
+
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        'checkCsvStatusReq=' + checkCsvStatusReq;
+        'mockIt=' + mockIt;
       $log.log(logMsg);
 
       var completionDetails = null;
@@ -64,12 +68,20 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var deferredCsvStatus = $q.defer();
 
-      WebExRestApiFact.csvStatusReq(siteUrl).then(
+      WebExRestApiFact.csvStatusReq(
+        mockIt,
+        siteUrl
+      ).then(
+
         function success(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.success()";
           var logMsg = "";
 
-          if (null != checkCsvStatusReq) { // return a mock/test csv status if requested
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
+
+          if (mockIt) { // return a mock/test csv status if requested
             successResult.isTestResult = true;
 
             if ('none' == checkCsvStatusReq) {
@@ -136,6 +148,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         function error(response) {
           var funcName = "WebExRestApiFact.csvStatusReq.error()";
           var logMsg = "";
+
+          logMsg = funcName + "\n" +
+            "response=" + JSON.stringify(response);
+          $log.log(logMsg);
 
           deferredCsvStatus.reject(errorResult);
         }
