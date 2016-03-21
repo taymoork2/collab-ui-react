@@ -42,9 +42,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var logMsg = '';
 
       var mockIt = (
-    	        null != checkCsvStatusReq
-    	      ) ? true : false;
-      
+        null != checkCsvStatusReq
+      ) ? true : false;
+
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         'mockIt=' + mockIt;
       $log.log(logMsg);
