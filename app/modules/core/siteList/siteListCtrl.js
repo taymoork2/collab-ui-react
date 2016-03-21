@@ -1,16 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').controller('SiteListCtrl', [
-  '$translate',
-  '$log',
-  '$scope',
-  '$interval',
-  'Authinfo',
-  'Userservice',
-  'SiteListService',
-  'WebExApiGatewayService',
-  'Notification',
-  function (
+  angular.module('Core').controller('SiteListCtrl', SiteListCtrl);
+
+  /*@ngInject*/
+  function SiteListCtrl(
     $translate,
     $log,
     $scope,
@@ -153,27 +147,39 @@ angular.module('Core').controller('SiteListCtrl', [
       });
     }
 
-    $scope.csvExport = function (siteUrl) {
+    $scope.csvExport = function (siteRow) {
       var funcName = "csvExport()";
       var logMsg = "";
+      var siteUrl = siteRow.license.siteUrl;
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+      //$log.log(logMsg);
 
-      Notification.success('siteList.exportStartedToast');
+      WebExApiGatewayService.csvExport(siteUrl).then(
+        function success(response) {
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        },
 
-      $log.log(logMsg);
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        }
+      ); // WebExApiGatewayService.csvExport()
+
     }; // csvExport()
 
-    $scope.csvExportResult = function (siteUrl) {
-      var funcName = "csvExportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvExportResult()
-
+    // TODO: remove csvImport() once we start implementing the import modal
     $scope.csvImport = function (siteUrl) {
       var funcName = "csvImport()";
       var logMsg = "";
@@ -181,19 +187,8 @@ angular.module('Core').controller('SiteListCtrl', [
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
 
-      Notification.success('siteList.importStartedToast');
-
       $log.log(logMsg);
     }; // csvImport()
-
-    $scope.csvImportResult = function (siteUrl) {
-      var funcName = "csvImportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvImportResult()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
@@ -212,5 +207,5 @@ angular.module('Core').controller('SiteListCtrl', [
         } // cancelCsvPollInterval()
       ); // vm.gridData.forEach()
     });
-  } // end top level function
-]);
+  } // SiteListCtrl()
+})(); // top level function

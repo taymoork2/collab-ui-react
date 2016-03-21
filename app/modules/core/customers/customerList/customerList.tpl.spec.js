@@ -2,23 +2,28 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $scope, $compile, $templateCache, $controller, controller, view;
+    var $scope, $compile, $templateCache, $q, $controller, controller, view;
     var Authinfo, PartnerService;
     var ADD_BUTTON = '#addTrial';
 
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
 
-    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _Authinfo_, _PartnerService_) {
+    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _PartnerService_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
       $controller = _$controller_;
       Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
+      $q = _$q_;
 
-      spyOn(PartnerService, 'getTrialsList');
-      spyOn(PartnerService, 'getManagedOrgsList');
+      spyOn(PartnerService, 'getTrialsList').and.returnValue($q.when({
+        data: {}
+      }));
+      spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
+        data: {}
+      }));
     }));
 
     describe('Add trial button', function () {
@@ -35,7 +40,7 @@
     });
 
     function initAndCompile() {
-      controller = $controller('PartnerHomeCtrl', {
+      controller = $controller('CustomerListCtrl', {
         $scope: $scope
       });
       var template = $templateCache.get('modules/core/customers/customerList/customerList.tpl.html');

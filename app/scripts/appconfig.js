@@ -521,6 +521,7 @@ angular
             }
           }
         })
+        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -606,6 +607,27 @@ angular
               controller: 'DeviceDetailCtrl',
               controllerAs: 'ucDeviceDetail'
             }
+          }
+        })
+        .state('user-overview.csdmDevice', {
+          views: {
+            '': {
+              controller: 'DeviceOverviewCtrl',
+              controllerAs: 'deviceOverview',
+              templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html'
+            }
+          },
+          resolve: {
+            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+            }
+          },
+          params: {
+            currentDevice: {},
+            huronDeviceService: {}
+          },
+          data: {
+            displayName: 'Device Configuration'
           }
         })
         .state('user-overview.communication.voicemail', {
@@ -824,6 +846,19 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        // lhsieh
+        .state('site-csv-results', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVResultsCtrl',
+              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+            }
+          },
+          params: {
+            csvStatusObj: null
+          }
+        })
         .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
@@ -958,7 +993,8 @@ angular
             }
           },
           params: {
-            currentDevice: {}
+            currentDevice: {},
+            huronDeviceService: {}
           },
           data: {
             displayName: 'Overview'
@@ -1020,7 +1056,7 @@ angular
         .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
-          templateUrl: 'modules/core/views/partnerlanding.html',
+          templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
           controller: 'PartnerHomeCtrl'
         })
         .state('partnerreports', {
@@ -1058,7 +1094,7 @@ angular
         .state('partnercustomers.list', {
           url: '/customers',
           templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
-          controller: 'PartnerHomeCtrl',
+          controller: 'CustomerListCtrl',
           params: {
             filter: null
           }

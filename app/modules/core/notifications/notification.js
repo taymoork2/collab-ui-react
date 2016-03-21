@@ -48,9 +48,6 @@
         return;
       }
       type = (type == 'success') ? type : 'error';
-      if (type === 'error') {
-        Localytics.push('Error Message', notifications);
-      }
       toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT);
     }
 

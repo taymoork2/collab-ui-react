@@ -3,7 +3,7 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var e2eFailNotify = '.e2e-fail-notify';
+var config = require('./gulp/gulp.config')();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -13,6 +13,8 @@ var agent = mkProxyAgent();
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
+var E2E_FAIL_RETRY = config.e2eFailRetry;
+var NEWLINE = '\n';
 
 exports.config = {
   framework: "jasmine2",
@@ -43,29 +45,6 @@ exports.config = {
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
 
   onPrepare: function() {
-    var FailFast = function(){
-      this.suiteStarted = function(suite){
-        if (fs.existsSync(e2eFailNotify)){
-            console.log('fail file exists');
-        }
-      };
-
-      this.specStarted = function(spec){
-        if (fs.existsSync(e2eFailNotify)){
-            env.specFilter = function(spec) {
-              return false;
-            };
-        }
-      };
-
-      this.specDone = function(spec) {
-        if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
-            touch(e2eFailNotify);
-        }
-      };
-    }
-
-    jasmine.getEnv().addReporter(new FailFast());
     browser.ignoreSynchronization = true;
 
     global.isProductionBackend = browser.params.isProductionBackend === 'true';
@@ -73,20 +52,7 @@ exports.config = {
     global.log = new Logger();
 
     var jasmineReporters = require('jasmine-reporters');
-    jasmine.getEnv().addReporter(
-      new jasmineReporters.JUnitXmlReporter({
-        savePath:'test/e2e-protractor/reports',
-        consolidateAll: false
-      })
-    );
-
     var SpecReporter = require('jasmine-spec-reporter');
-    jasmine.getEnv().addReporter(
-      new SpecReporter({
-        displayStacktrace: true,
-        displaySpecDuration: true
-      })
-    );
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
@@ -182,11 +148,63 @@ exports.config = {
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
 
-    return browser.getCapabilities().then(function (capabilities) {
-      if (capabilities.caps_.browserName === 'firefox') {
-        browser.driver.manage().window().maximize();
+    function initReporters(config) {
+      var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();
+
+      jasmine.getEnv().addReporter(
+        new jasmineReporters.JUnitXmlReporter({
+          savePath: 'test/e2e-protractor/reports',
+          consolidateAll: false
+        })
+      );
+
+      jasmine.getEnv().addReporter(
+        new SpecReporter({
+          displayStacktrace: true,
+          displaySpecDuration: true
+        })
+      );
+
+      function FailRetry() {
+        var hasFailure;
+        this.specDone = function (result) {
+          if (result.failedExpectations.length) {
+            hasFailure = true;
+          }
+        };
+        this.jasmineDone = function () {
+          if (hasFailure) {
+            fs.appendFileSync(E2E_FAIL_RETRY, testFile + NEWLINE);
+          }
+        };
       }
-    });
+      jasmine.getEnv().addReporter(new FailRetry());
+
+      function FailFast() {
+        var specs = [];
+
+        jasmine.getEnv().specFilter = function (spec) {
+          specs.push(spec);
+          return true;
+        };
+
+        function disableSpecs() {
+          _.forEach(specs, function (spec) {
+            spec.disable();
+          });
+        }
+
+        this.specDone = function (spec) {
+          if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
+              disableSpecs();
+          }
+        };
+      }
+      jasmine.getEnv().addReporter(new FailFast());
+    }
+
+    return browser.getProcessedConfig()
+      .then(initReporters);
   },
 
   jasmineNodeOpts: {

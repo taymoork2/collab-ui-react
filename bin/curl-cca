@@ -1,22 +1,13 @@
 #!/bin/sh
 
-function abort {
-    >&2 echo "Aborting '`basename $0`'"
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
-}
-
-cwd=`pwd`
-# get project top-level dir (look for 'fabfile.py')
-while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
-    cd ..
-done
-top_dir=`pwd`
-cd $cwd
-
-if [ "${top_dir}" = "/" ]; then
-    >&2 echo "Error: traversed to '/' while trying to find top-level dir"
-    abort
 fi
+
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/curl-api-helpers
+
 
 function ex_usage {
     local cmd_basename="`basename $0`"
@@ -120,13 +111,11 @@ for arg in "${curl_opts[@]}"; do
     let "i += 1"
 done
 
-source ${top_dir}/bin/include/curl-api-helpers
-
 url_endpoint_prefix="`get_url_endpoint_prefix $( basename $0 )`"
 [ $? -eq 0 ] || abort
 
 # get bearer token
-bearer_token="`${top_dir}/bin/curl-get-bearer-token.sh ${usr_label}`"
+bearer_token="`${WX2_ADMIN_WEB_CLIENT_HOME}/bin/curl-get-bearer-token.sh ${usr_label}`"
 [ $? -eq 0 ] || abort
 
 # check that the pending operation isn't harmful

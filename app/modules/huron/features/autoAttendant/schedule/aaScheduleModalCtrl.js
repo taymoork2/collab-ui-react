@@ -71,16 +71,20 @@
     }
 
     function forceCheckHoliday() {
+      var index = 'holidayForm' + _.findLastIndex(vm.holidays, {
+        isOpen: true
+      });
       if (vm.holidaysForm.$invalid) {
-        vm.holidaysForm.holidayForm.holidayName.$setDirty();
-        vm.holidaysForm.holidayForm.holidayDate.$setDirty();
-        vm.holidaysForm.holidayForm.holidayStart.$setDirty();
-        vm.holidaysForm.holidayForm.holidayEnd.$setDirty();
+        vm.holidaysForm[index].holidayName.$setDirty();
+        vm.holidaysForm[index].holidayDate.$setDirty();
+        vm.holidaysForm[index].holidayStart.$setDirty();
+        vm.holidaysForm[index].holidayEnd.$setDirty();
       }
     }
 
     function removeHoliday(index) {
       vm.holidays.splice(index, 1);
+      vm.holidaysForm.$setDirty();
     }
 
     function isDisabled() {

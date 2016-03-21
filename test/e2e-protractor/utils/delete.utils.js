@@ -130,29 +130,30 @@ exports.deleteTestAA = function (bearer, data) {
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
 
-  helper.getBearerToken('huron-int1', function (bearer) {
-    var options = {
-      url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
-      headers: {
-        Authorization: 'Bearer ' + bearer
-      }
-    };
-
-    var defer = protractor.promise.defer();
-    request(options,
-      function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          defer.fulfill(JSON.parse(body));
-        } else {
-          defer.reject({
-            error: error,
-            message: body
-          });
+  helper.getBearerToken('huron-int1')
+    .then(function (bearer) {
+      var options = {
+        url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
+        headers: {
+          Authorization: 'Bearer ' + bearer
         }
-      });
-    return defer.promise.then(function (data) {
-      return exports.deleteTestAA(bearer, data);
-    });
+      };
 
-  });
+      var defer = protractor.promise.defer();
+      request(options,
+        function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            defer.fulfill(JSON.parse(body));
+          } else {
+            defer.reject({
+              error: error,
+              message: body
+            });
+          }
+        });
+      return defer.promise.then(function (data) {
+        return exports.deleteTestAA(bearer, data);
+      });
+
+    });
 };

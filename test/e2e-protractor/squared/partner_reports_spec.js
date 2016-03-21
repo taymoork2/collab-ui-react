@@ -11,18 +11,15 @@ describe('Partner Reports', function () {
   });
 
   describe('Log In', function () {
-    it('should login', function () {
-      login.login('partner-reports', '#/partner/overview');
+    it('should login to partner reports page', function () {
+      login.login('partner-reports', '#/partner/reports');
     });
   });
 
   describe('Reports Page', function () {
-    it('should navigate to partner reports page', function () {
-      navigation.clickReports();
-      utils.expectIsPresent(reports.pageTitle);
-    });
 
     it('should verify report type buttons', function () {
+      utils.expectIsPresent(reports.pageTitle);
       utils.expectText(reports.allTypes, 'All');
       utils.expectText(reports.engagement, 'Engagement');
       utils.expectText(reports.quality, 'Quality');

@@ -247,11 +247,11 @@
       User: [],
       Site_Admin: [
         'site-list',
+        'site-csv-results',
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe',
-        'example'
+        'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
