@@ -58,29 +58,29 @@
       $scope.gridRows.push({
         id: 'export-records-total',
         title: 'Total records available:',
-        value: 0,
+        value: 5,
         fileDownloadUrl: null
       });
 
       $scope.gridRows.push({
         id: 'export-records-successful',
         title: 'Records successfully exported:',
-        value: 0,
+        value: 4,
         fileDownloadUrl: null
       });
 
       $scope.gridRows.push({
         id: 'export-records-failed',
         title: 'Records failed:',
-        value: 0,
-        fileDownloadUrl: 'https://google.com'
+        value: 1,
+        fileDownloadUrl: null
       });
 
       $scope.gridRows.push({
-        id: 'export-file',
-        title: 'Export file:',
+        id: 'export-download-file',
+        title: 'Download:',
         value: '',
-        fileDownloadUrl: null
+        fileDownloadUrl: 'https://google.com'
       });
 
     } else if (
@@ -132,14 +132,21 @@
       $scope.gridRows.push({
         id: 'import-records-updated',
         title: 'Records successfully updated:',
-        value: 4,
+        value: 3,
         fileDownloadUrl: null
       });
 
       $scope.gridRows.push({
         id: 'import-records-failed',
         title: 'Records failed:',
-        value: 1,
+        value: 2,
+        fileDownloadUrl: null
+      });
+      
+      $scope.gridRows.push({
+        id: 'import-download-file',
+        title: 'Download:',
+        value: '',
         fileDownloadUrl: 'https://yahoo.com'
       });
     }
