@@ -19,6 +19,7 @@
         </span>
 
         <span ng-if="row.entity.isCSVSupported">
+          <!-- export section -->
           <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
@@ -79,6 +80,7 @@
             |
           </span>
           
+          <!-- import section -->
           <span id="{{row.entity.license.siteUrl}}_importStatus">
             <!-- Import -->
             <a ng-if="row.entity.showImportLink"
