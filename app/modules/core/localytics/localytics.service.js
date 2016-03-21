@@ -7,31 +7,63 @@
     .module('Core')
     .service('Localytics', Localytics);
 
-  function Localytics() {
+  /* @ngInject */
+  function Localytics(Config) {
+    var SET_CUSTOM_DIMENSION = 'setCustomDimension';
+    var ORG_CUSTOM_DIMENSION = 1;
+    var SET_CUSTOMER_ID = 'setCustomerId';
+    var TAG_SCREEN = 'tagScreen';
+    var TAG_EVENT = 'tagEvent';
+
     var service = {
-      customDimension: customDimension,
+      setOrgId: setOrgId,
+      setUserId: setUserId,
       tagEvent: tagEvent,
-      setCustomerId: setCustomerId,
       tagScreen: tagScreen
     };
 
     return service;
 
-    function customDimension(eventName, attributes) {
-      ll('setCustomDimension', eventName, attributes);
+    /**
+     * Only save localytics data in production environment
+     */
+    function invokeLocalytics() {
+      if (Config.isProd()) {
+        ll.apply(ll, _.toArray(arguments));
+      }
     }
 
-    function tagEvent(eventName, attributes) {
-      ll('tagEvent', eventName, attributes);
+    /**
+     * Localytics maps to custom dimension Org
+     * @param {string} uuid Uuid of the authenticated org
+     */
+    function setOrgId(uuid) {
+      invokeLocalytics(SET_CUSTOM_DIMENSION, ORG_CUSTOM_DIMENSION, uuid);
     }
 
-    function setCustomerId(uuid) {
-      ll('setCustomerId', uuid);
+    /**
+     * Localytics customer represents the logged in user
+     * @param {string} uuid Uuid of the authenticated user
+     */
+    function setUserId(uuid) {
+      invokeLocalytics(SET_CUSTOMER_ID, uuid);
     }
 
+    /**
+     * Tag the screen for user flows
+     * @param {string} state Name of the state
+     */
     function tagScreen(state) {
-      ll('tagScreen', state);
+      invokeLocalytics(TAG_SCREEN, state);
+    }
+
+    /**
+     * Tag a custom event
+     * @param {string} eventName Name of the custom event
+     * @param {{string|object}} attributes Data object to be stored with the event
+     */
+    function tagEvent(eventName, attributes) {
+      invokeLocalytics(TAG_EVENT, eventName, attributes);
     }
   }
-
 })();
