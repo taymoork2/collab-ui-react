@@ -26,7 +26,7 @@ describe('Services > Webex page aka Site List page', function () {
       utils.wait(sitelist.csvColumnId);
     });
 
-    xit('should detect the Export | Import links', function () {
+    it('should detect the Export & Import links', function () {
       utils.wait(sitelist.csvImportId);
       utils.wait(sitelist.csvExportId);
     });
