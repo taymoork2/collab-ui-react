@@ -26,12 +26,12 @@ describe('Services > Webex page aka Site List page', function () {
       utils.wait(sitelist.csvColumnId);
     });
 
-    it('should detect the Export | Import links', function () {
+    xit('should detect the Export | Import links', function () {
       utils.wait(sitelist.csvImportId);
       utils.wait(sitelist.csvExportId);
     });
 
-    it('should click the Export link and see a green toast', function () {
+    xit('should click the Export link and see a green toast', function () {
       utils.wait(sitelist.csvExportId);
       utils.click(sitelist.csvExportId);
       notifications.assertSuccess('This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.');
