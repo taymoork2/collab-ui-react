@@ -7,11 +7,7 @@ var Promise = require('promise');
 
 exports.deleteUser = function (email, token) {
   return new Promise(function (resolve, reject) {
-      if (token) {
-        resolve(token);
-      } else {
-        utils.getToken().then(resolve);
-      }
+      resolve(token || utils.getToken());
     })
     .then(function (token) {
       var options = {
