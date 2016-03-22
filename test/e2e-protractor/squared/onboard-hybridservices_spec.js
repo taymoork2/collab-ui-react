@@ -3,6 +3,7 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard users with Hybrid Services', function () {
+  var token;
   var testUser = utils.randomTestGmailwithSalt('hybridservices');
 
   function expectHybridServices(calendar, callAware, callConnect) {
@@ -22,7 +23,10 @@ describe('Onboard users with Hybrid Services', function () {
   });
 
   it('should login as an account admin', function () {
-    login.login('account-admin', '#/users');
+    login.login('account-admin', '#/users')
+      .then(function (bearerToken) {
+        token = bearerToken;
+      });
   });
 
   it('should ensure services enabled', function () {
@@ -157,6 +161,6 @@ describe('Onboard users with Hybrid Services', function () {
   });
 
   afterAll(function () {
-    deleteUtils.deleteUser(testUser);
+    deleteUtils.deleteUser(testUser, token);
   });
 });
