@@ -13,6 +13,11 @@ module.exports = function (karma) {
       watched: true,
       served: true,
       included: false
+    }, {
+      pattern: 'app/**/*.json',
+      watched: true,
+      served: true,
+      included: false
     }],
 
     exclude: [],

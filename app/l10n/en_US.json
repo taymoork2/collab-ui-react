@@ -3048,13 +3048,12 @@
     "norwegian": "Norsk",
     "dutch": "Nederlands",
     "polish": "Polski",
-    "portugeseBrazillian": "Português (Brasil)",
+    "portugueseBrazillian": "Português (Brasil)",
     "russian": "Pyccĸий",
     "swedish": "Svenska",
     "turkish": "Tϋrkçe",
     "chineseMandarin": "简体中文",
     "chineseTraditional": "繁體中文",
-    "dutch": "Nederlands",
     "frenchCanadian": "Français (Canada)",
     "finnish": "Suomi",
     "galician": "Galego",
@@ -3063,7 +3062,9 @@
     "spanishChilean": "Español (Chile)",
     "spanishMexican": "Español (mexicano)",
     "portuguese": "Português",
-    "valencian": "Valenciano"
+    "englishAustralian": "English (Australian)",
+    "valencian": "Valenciano",
+    "catalan": "Català"
   },
   "siteList": {
     "conferencing": "WebEx Sites",
