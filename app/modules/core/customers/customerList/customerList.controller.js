@@ -113,13 +113,6 @@
         headerCellClass: 'align-center',
         sortingAlgorithm: serviceSort
       }, {
-        field: 'roomSystems',
-        displayName: $translate.instant('customerPage.roomSystems'),
-        width: '12%',
-        cellTemplate: serviceTemplate,
-        headerCellClass: 'align-center',
-        sortingAlgorithm: serviceSort
-      }, {
         field: 'notes',
         displayName: $translate.instant('customerPage.notes'),
         cellTemplate: noteTemplate,
@@ -334,7 +327,15 @@
     }
 
     function getLicenseObj(rowData, licenseTypeField) {
-      return rowData[licenseTypeField] || null;
+      var license = null;
+      if (licenseTypeField === 'messaging') {
+        license = rowData.messaging;
+      } else if (licenseTypeField === 'conferencing') {
+        license = rowData.conferencing;
+      } else if (licenseTypeField === 'communications') {
+        license = rowData.communications;
+      }
+      return license;
     }
 
     function isLicenseTypeATrial(rowData, licenseTypeField) {

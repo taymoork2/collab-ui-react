@@ -1,7 +1,7 @@
-/* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TimeZoneService*/
+/* globals $controller, $q, $rootScope, TrialMeetingCtrl, TrialMeetingService, WebexTrialService*/
 'use strict';
 
-describe('Controller: Trial Webex', function () {
+describe('Controller: Trial Meeting', function () {
   var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
@@ -9,10 +9,14 @@ describe('Controller: Trial Webex', function () {
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TimeZoneService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialMeetingService', 'WebexTrialService');
 
-    bard.mockService(TrialWebexService, {
-      getData: trialData.enabled.trials.webexTrial,
+    bard.mockService(TrialMeetingService, {
+      getData: trialData.enabled.trials.meetingTrial
+    });
+
+    bard.mockService(WebexTrialService, {
+      getTimeZones: $q.when([]),
       validateSiteUrl: function (siteUrl) {
         return $q(function (resolve, reject) {
           if (siteUrl === 'acmecorp.webex.com') {
@@ -28,11 +32,7 @@ describe('Controller: Trial Webex', function () {
       }
     });
 
-    bard.mockService(TimeZoneService, {
-      getTimeZones: $q.when([])
-    });
-
-    controller = $controller('TrialWebexCtrl');
+    controller = $controller('TrialMeetingCtrl');
   });
 
   it('should resolve siteUrl validation when valid', function (done) {

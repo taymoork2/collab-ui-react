@@ -3,13 +3,13 @@
 
   angular
     .module('core.trial')
-    .controller('TrialWebexCtrl', TrialWebexCtrl);
+    .controller('TrialMeetingCtrl', TrialMeetingCtrl);
 
   /* @ngInject */
-  function TrialWebexCtrl($q, $translate, TrialWebexService, TimeZoneService) {
+  function TrialMeetingCtrl($q, $translate, TrialMeetingService, WebexTrialService) {
     var vm = this;
 
-    var _trialData = TrialWebexService.getData();
+    var _trialData = TrialMeetingService.getData();
 
     vm.details = _trialData.details;
     vm.siteUrl = _trialData.details.siteUrl;
@@ -66,7 +66,7 @@
       expressionProperties: {
         'templateOptions.options': function () {
           var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
-          var timeZones = TimeZoneService.getTimeZones();
+          var timeZones = WebexTrialService.getTimeZones();
           return _.filter(timeZones, function (timeZone) {
             return _.includes(validTimeZoneIds, timeZone.timeZoneId);
           });
@@ -91,7 +91,7 @@
       }
       vm.validatingUrl = true;
       return $q(function (resolve, reject) {
-        TrialWebexService.validateSiteUrl(siteUrl).then(function (site) {
+        WebexTrialService.validateSiteUrl(siteUrl).then(function (site) {
             vm.siteUrlErrorCode = site.errorCode;
             if (site.isValid) {
               resolve();

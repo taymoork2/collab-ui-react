@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, Authinfo, Config, Notification, WebexOrderStatusResource, TrialWebexService, UrlConfig */
+/* globals $httpBackend, $q, Authinfo, UrlConfig, Config, Notification, WebexOrderStatusResource, WebexTrialService */
 'use strict';
 
 describe('Service: Webex Trial Service', function () {
@@ -31,7 +31,7 @@ describe('Service: Webex Trial Service', function () {
   });
 
   beforeEach(function () {
-    bard.inject(this, 'TrialWebexService');
+    bard.inject(this, 'WebexTrialService');
   });
 
   afterEach(function () {
@@ -47,7 +47,7 @@ describe('Service: Webex Trial Service', function () {
           errorCode: '0'
         }]
       });
-      TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
+      WebexTrialService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(true);
       });
       $httpBackend.flush();
@@ -60,7 +60,7 @@ describe('Service: Webex Trial Service', function () {
           errorCode: '434057'
         }]
       });
-      TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+      WebexTrialService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
       });
       $httpBackend.flush();
@@ -73,7 +73,7 @@ describe('Service: Webex Trial Service', function () {
           errorCode: '2'
         }]
       });
-      TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
+      WebexTrialService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
       });
       $httpBackend.flush();
@@ -86,7 +86,7 @@ describe('Service: Webex Trial Service', function () {
           errorCode: '1337'
         }]
       });
-      TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+      WebexTrialService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.errorCode).toBe('invalidSite');
       });
       $httpBackend.flush();
@@ -95,26 +95,26 @@ describe('Service: Webex Trial Service', function () {
 
   describe('get trial status', function () {
     it('should not be pending', function () {
-      TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
+      WebexTrialService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.pending).not.toBe(true);
       });
     });
 
     it('should be pending', function () {
-      TrialWebexService.getTrialStatus('trial-pending').then(function (data) {
+      WebexTrialService.getTrialStatus('trial-pending').then(function (data) {
         expect(data.pending).toBe(true);
       });
     });
 
     it('should have timezoneId', function () {
-      TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
+      WebexTrialService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.timeZoneId).toEqual('4');
         expect(typeof data.timeZoneId).toEqual('string');
       });
     });
 
     it('should have existing trial', function () {
-      TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
+      WebexTrialService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.trialExists).toBe(true);
       });
     });
