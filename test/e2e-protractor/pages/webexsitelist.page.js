@@ -30,12 +30,12 @@ var SiteListPage = function () {
   this.singleLicenseSiteId = element(by.id('t30citestprov44.webex.com_licenseType'));
   this.multiLicenseSiteId = element(by.id('t30citestprov6.webex.com_licenseType'));
 
-  this.csvExportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_export"));
+  this.csvExportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_exportStatus"));
   this.csvExportInProgress = element(by.id(this.t31CSVToggleUser.siteUrl + "_exportInProgress"));
   this.csvExportDisabled = element(by.id(this.t31CSVToggleUser.siteUrl + "_exportDisabled"));
   this.csvExportGoodResult = element(by.id(this.t31CSVToggleUser.siteUrl + "_exportResult"));
   this.csvExportBadResult = element(by.id(this.t31CSVToggleUser.siteUrl + "_exportResultIcon"));
-  this.csvImportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_import"));
+  this.csvImportId = element(by.id(this.t31CSVToggleUser.siteUrl + "_importStatus"));
   this.csvImportInProgress = element(by.id(this.t31CSVToggleUser.siteUrl + "_importInProgress"));
   this.csvImportDisabled = element(by.id(this.t31CSVToggleUser.siteUrl + "_importDisabled"));
   this.csvImportGoodResult = element(by.id(this.t31CSVToggleUser.siteUrl + "_importResult"));

@@ -1,0 +1,5 @@
+CI=true
+
+BUILD_DEPS_ARCHIVE=build-deps.tar
+APP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.tar.gz
+COVERAGE_ARCHIVE=coverage.tar.gz

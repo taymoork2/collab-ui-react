@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, currentDevice;
+  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, currentDevice, FeatureToggleService;
 
   var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
@@ -17,7 +17,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_, _FeatureToggleService_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
 
@@ -26,6 +26,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     DeviceService = _DeviceService_;
     OtpService = _OtpService_;
     Config = _Config_;
+    FeatureToggleService = _FeatureToggleService_;
 
     $stateParams.currentUser = stateParams.currentUser;
 
@@ -35,6 +36,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
 
     spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,

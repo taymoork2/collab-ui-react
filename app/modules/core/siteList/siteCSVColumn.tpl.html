@@ -1,13 +1,3 @@
-<style>
-.csv-text:hover {
-    color: #D03D35;
-}
-
-.csv-results {
-    background-color: #C9EBE6;
-    padding: 5px 10px;
-}
-</style>
 
 <p class="ui-grid-cell-contents">
   <span ng-if="!row.entity.showCSVInfo">
@@ -29,6 +19,8 @@
         </span>
 
         <span ng-if="row.entity.isCSVSupported">
+          <!-- export section -->
+          <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results" ng-if="row.entity.exportFinishedWithErrors" tooltip-append-to-body="true" 
@@ -81,10 +73,15 @@
                   tooltip="{{::'siteList.exportBlockedTooltip' | translate}}"
                   tooltip-animation="false" 
                   tooltip-append-to-body="true"></span>
+          </span>
                 
-            <!-- pipe separator -->
+          <!-- export/import separator -->
+          <span>
             |
-            
+          </span>
+          
+          <!-- import section -->
+          <span id="{{row.entity.license.siteUrl}}_importStatus">
             <!-- Import -->
             <a ng-if="row.entity.showImportLink"
                id="{{row.entity.license.siteUrl}}_import"
@@ -136,8 +133,8 @@
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
-              
             </span> 
+          </span>
         </span>
   </span>
 </p>
