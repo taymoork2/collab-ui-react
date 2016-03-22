@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -29,6 +29,7 @@
     vm.oneAtATime = true;
     vm.isDisabled = isDisabled;
     vm.changeAllDay = changeAllDay;
+    vm.openImportModal = openImportModal;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
@@ -72,10 +73,11 @@
     }
 
     function forceCheckHoliday() {
-      var index = 'holidayForm' + _.findLastIndex(vm.holidays, {
+      var index = _.findLastIndex(vm.holidays, {
         isOpen: true
       });
-      if (vm.holidaysForm.$invalid) {
+      if (vm.holidaysForm.$invalid && index !== -1) {
+        index = 'holidayForm' + index;
         vm.holidaysForm[index].holidayName.$setDirty();
         vm.holidaysForm[index].holidayDate.$setDirty();
         vm.holidaysForm[index].holidayStart.$setDirty();
@@ -317,6 +319,25 @@
           vm.holidays = allHours.holidays;
         });
       }
+    }
+    function openImportModal() {
+      var importModal = $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
+        type: 'dialog',
+        controller: 'AAScheduleImportCtrl',
+        controllerAs: 'import'
+      });
+      importModal.result.then(function (allHours) {
+        if (allHours) {
+          allHours.hours.forEach(function (value) {
+            vm.openhours.unshift(value);
+          });
+          allHours.holidays.forEach(function (value) {
+            vm.holidays.unshift(value);
+          });
+          vm.holidaysForm.$setDirty();
+        }
+      });
     }
 
     function activate() {
