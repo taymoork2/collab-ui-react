@@ -1,6 +1,9 @@
 ---
-  extends: "../.eslintrc.yaml"
+  extends:
+    - "../.eslintrc.yaml"
+    - "angular"
   rules:
+    # airbnb-config inherited rules
     array-callback-return: 0
     block-scoped-var: 0
     brace-style: 0
@@ -23,6 +26,25 @@
     strict: 0
     wrap-iife: 0
     yoda: 0
+    # angular-config rules
+    angular/angularelement: 0
+    angular/controller-as-route: 0
+    angular/controller-as-vm: 0
+    angular/controller-as: 0
+    angular/controller-name: 0
+    angular/definedundefined: 0
+    angular/di: 0
+    angular/document-service: 0
+    angular/json-functions: 0
+    angular/module-getter: 0
+    angular/no-private-call: 0
+    angular/no-service-method: 0
+    angular/no-services: 0
+    angular/on-watch: 0
+    angular/timeout-service: 0
+    angular/typecheck-array: 0
+    angular/typecheck-function: 0
+    angular/window-service: 0
   globals:
     _: true
     $: true
