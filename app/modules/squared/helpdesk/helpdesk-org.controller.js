@@ -84,7 +84,7 @@
     }
 
     function findAdminUsers(org) {
-      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+      HelpdeskService.userAdmins(org.id, 100, 'id_full_admin').then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
