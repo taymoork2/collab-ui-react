@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only">Close</span>
+  </button>
+  <p class="modal-title">Import Schedule</p>
+</div>
+<div class="modal-body">
+  <cs-select
+    ng-model="import.selected"
+    options="import.options"
+    placeholder="import.selectPlaceholder"></cs-select>
+  <div>Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from</div>
+</div>
+<div class="modal-footer">
+  <button class="btn">Cancel</button>
+  <button class="btn--primary" ng-click="import.continueImport()">Continue</button>
+</div>
