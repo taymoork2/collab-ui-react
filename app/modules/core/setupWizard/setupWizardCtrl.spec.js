@@ -19,7 +19,6 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsCsvUpload').and.returnValue($q.when(false));
   }));
 
   function _expectStepIndex(step, index) {
@@ -177,7 +176,7 @@ describe('SetupWizardCtrl', function () {
       expect(addUsers.steps).toBeUndefined();
       expectSubTabOrder('addUsers', ['simple', 'csv', 'advanced']);
       expectSubTabStepOrder('addUsers', 'simple', ['init', 'manualEntry', 'assignServices', 'assignDnAndDirectLines']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvUpload', 'csvServices', 'csvProcessing', 'csvResult']);
+      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
       expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
     });
 
@@ -233,50 +232,28 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When csvupload is false and dirsync is enabled', function () {
+  describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
       initController();
     });
 
-    it('the wizard should have communications as a step 5 steps', function () {
+    it('the wizard should have 5 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
-    it('addUsers should have 2 sub tabs with substeps having 5, and 7 entries respectively (with csvUpload, and with csvServices)', function () {
-      var addUsers = _.find($scope.tabs, {
-        name: 'addUsers'
-      });
-      expect(addUsers.steps).toBeUndefined();
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvUpload', 'csvServices', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
-    });
-  });
-
-  describe('When csvupload is true and dirsync is enabled', function () {
-    beforeEach(function () {
-      FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.supportsCsvUpload.and.returnValue($q.when(true));
-      initController();
-    });
-
-    it('the wizard should have communications as a step 5 steps', function () {
-      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
-    });
-
-    it('addUsers should have 2 sub tabs with substeps having 5, and 7 entries respectively (with csvDownload, and without csvServices)', function () {
+    it('addUsers should have 2 sub steps - csv and advanced', function () {
       var addUsers = _.find($scope.tabs, {
         name: 'addUsers'
       });
       expect(addUsers.steps).toBeUndefined();
       expectSubTabOrder('addUsers', ['csv', 'advanced']);
       expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
+      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
     });
   });
 
-  describe('When csvupload is true and dirsync is enabled', function () {
+  describe('When dirsync is enabled', function () {
     beforeEach(function () {
       FeatureToggleService.supports.and.callFake(function (val) {
         if (val === FeatureToggleService.features.atlasSipUriDomainEnterprise) {
@@ -287,7 +264,7 @@ describe('SetupWizardCtrl', function () {
       initController();
     });
 
-    it('the wizard should have communications as a step 5 steps', function () {
+    it('the wizard should have 5 tabs', function () {
       expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'addUsers', 'finish']);
     });
 
@@ -303,7 +280,6 @@ describe('SetupWizardCtrl', function () {
 
       FeatureToggleService.supports.and.returnValue($q.when(true));
       FeatureToggleService.supportsDirSync.and.returnValue($q.when(true));
-      FeatureToggleService.supportsCsvUpload.and.returnValue($q.when(true));
 
       initController();
     });
@@ -318,7 +294,7 @@ describe('SetupWizardCtrl', function () {
 
       expectSubTabOrder('addUsers', ['csv', 'advanced']);
       expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
+      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
     });
 
   });
