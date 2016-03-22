@@ -32,7 +32,9 @@
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
-
+    vm.everyOptions = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'september', 'october', 'november', 'december'];
+    vm.onOptions = ['first', 'second', 'third', 'fourth'];
+    vm.dayOptions = ['monday','tuesday','wednesday', 'thursday','friday','saturday', 'sunday', 'weekend', 'weekday'];
     vm.openhours = [];
     vm.getCalendar = getCalendar;
 
