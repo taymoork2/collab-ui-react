@@ -3,9 +3,7 @@
  */
 'use strict';
 
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var config = require('../gulp.config')();

@@ -9,9 +9,7 @@ var gulp = require('gulp');
 var config = require('../gulp.config')();
 var fileListParser = require('../utils/fileListParser.gulp');
 var messageLogger = require('../utils/messageLogger.gulp')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var karma = require('karma').server;
 var runSeq = require('run-sequence');
