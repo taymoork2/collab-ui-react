@@ -27,6 +27,7 @@
       var _this = this;
 
       this.sendRestApiReq = function (
+        mockIt,
         httpReq,
         resolve,
         reject
@@ -39,7 +40,12 @@
           "httpReq.url=" + JSON.stringify(httpReq.url);
         $log.log(logMsg);
 
-        /*
+        if (mockIt) {
+          var fakeResult = httpReq;
+          resolve(fakeResult);
+          return;
+        }
+
         $http(
           httpReq
         ).success(
@@ -51,14 +57,11 @@
             reject(data);
           }
         );
-        */
-        var fakeResult = httpReq;
-
-        resolve(fakeResult);
       }; //sendRestApiReq()
 
       return {
         csvStatusReq: function (
+          mockIt,
           siteUrl
         ) {
           var funcName = "csvStatusReq()";
@@ -69,8 +72,8 @@
           // $log.log(logMsg);
 
           var httpReqObj = {
-            'url': 'https://' + siteUrl + '/meeting/v1//users/importexportstatus',
-            'method': 'POST',
+            'url': 'https://' + siteUrl + '/meeting/v1/users/importexportstatus',
+            'method': 'GET',
             'headers': {
               'Content-Type': 'application/json;charset=utf-8',
               'Authorization': 'Bearer ' + Storage.get('accessToken')
@@ -80,6 +83,7 @@
           return $q(
             function (resolve, reject) {
               _this.sendRestApiReq(
+                mockIt,
                 httpReqObj,
                 resolve,
                 reject
@@ -114,6 +118,7 @@
           return $q(
             function (resolve, reject) {
               _this.sendRestApiReq(
+                true,
                 httpReqObj,
                 resolve,
                 reject
@@ -150,13 +155,14 @@
           return $q(
             function (resolve, reject) {
               _this.sendRestApiReq(
+                true,
                 httpReqObj,
                 resolve,
                 reject
               );
             }
           );
-        }, // csvExportReq()
+        }, // csvImportReq()
 
         csvFileDownloadReq: function (
           siteUrl,

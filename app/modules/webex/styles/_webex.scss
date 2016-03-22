@@ -41,3 +41,9 @@
 .webexlogo {
    @include vr-spacing(pr, .25);
 }
+
+.wx-csv-modal-td {
+  padding-bottom: 0;
+  padding-left: 0;
+  text-align: right;
+}

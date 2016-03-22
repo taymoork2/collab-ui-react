@@ -1430,13 +1430,13 @@ angular
         .state('trialAdd.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.meeting', {
-          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
-          controller: 'TrialMeetingCtrl',
-          controllerAs: 'meetingTrial'
+        .state('trialAdd.webex', {
+          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+          controller: 'TrialWebexCtrl',
+          controllerAs: 'webexTrial'
         })
         .state('trialAdd.call', {
-          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
@@ -1488,13 +1488,13 @@ angular
         .state('trialEdit.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialEdit.meeting', {
-          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
-          controller: 'TrialMeetingCtrl',
-          controllerAs: 'meetingTrial'
+        .state('trialEdit.webex', {
+          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+          controller: 'TrialWebexCtrl',
+          controllerAs: 'webexTrial'
         })
         .state('trialEdit.call', {
-          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
