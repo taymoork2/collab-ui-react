@@ -7,11 +7,39 @@ describe('Controller: PstnNumbersCtrl', function () {
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var orderCart = getJSONFixture('huron/json/pstnSetup/orderCart.json');
 
-  var singleOrder = '+12145551000';
-  var consecutiveOrder = ['+12145551000', '+12145551001'];
-  var nonconsecutiveOrder = ['+12145551000', '+12145551100'];
-  var portOrder = angular.copy(consecutiveOrder);
-  portOrder.type = 'port';
+  var singleOrder = {
+    "data": {
+      "numbers": "+12145551000"
+    },
+    "type": "newOrders"
+  };
+  var consecutiveOrder = {
+    "data": {
+      "numbers": [
+        "+12145551000",
+        "+12145551001"
+      ]
+    },
+    "type": "newOrders"
+  };
+  var nonconsecutiveOrder = {
+    "data": {
+      "numbers": [
+        "+12145551234",
+        "+12145551678"
+      ]
+    },
+    "type": "newOrders"
+  };
+  var portOrder = {
+    "data": {
+      "numbers": [
+        "+12145557001",
+        "+12145557002"
+      ]
+    },
+    "type": "portOrders"
+  };
 
   var states = [{
     name: 'Texas',
@@ -101,17 +129,6 @@ describe('Controller: PstnNumbersCtrl', function () {
 
       expect(stateTemplateOptions.helpText).toBeUndefined();
     });
-
-    it('should sum the area code counts when areaCodeOptions changes', function () {
-      controller.model.state = {}; // dummy selection
-      controller.areaCodeOptions = areaCodes;
-      $scope.$apply();
-
-      expect(stateTemplateOptions.helpText).toEqual('pstnSetup.numbers');
-      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
-        count: 45
-      }, 'messageformat');
-    });
   });
 
   describe('Area Code helpText', function () {
@@ -141,16 +158,6 @@ describe('Controller: PstnNumbersCtrl', function () {
 
       expect(areaCodeTemplateOptions.helpText).toBeUndefined();
     });
-
-    it('should set the count of selected area code', function () {
-      controller.model.areaCode = areaCodes[0];
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.helpText).toEqual('pstnSetup.numbers');
-      expect($translate.instant).toHaveBeenCalledWith('pstnSetup.numbers', {
-        count: 15
-      }, 'messageformat');
-    });
   });
 
   describe('orderNumbers', function () {
@@ -167,7 +174,7 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should update with new numbers', function () {
       controller.orderCart = orderCart;
       $scope.$apply();
-      expect(controller.orderNumbersTotal).toEqual(5);
+      expect(controller.orderNumbersTotal).toEqual(3);
       controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });

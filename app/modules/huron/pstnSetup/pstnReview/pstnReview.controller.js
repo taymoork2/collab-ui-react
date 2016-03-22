@@ -8,12 +8,17 @@
   function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification, ExternalNumberPool) {
     var vm = this;
 
+    vm.totalNewAdvancedOrder = 0;
+    vm.totalPortNumbers = 0;
+    vm.orders = [];
+    vm.numbers = [];
+
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
 
     vm.provider = PstnSetup.getProvider();
 
-    initNumbers();
+    initOrders();
 
     ////////////////////////
 
@@ -77,26 +82,26 @@
       }
     }
 
-    function getFlattenedNumbers(phoneNumbers) {
-      return _.chain(phoneNumbers)
-        .flatten()
-        .map(function (phoneNumber) {
-          if (_.isObject(phoneNumber)) {
-            return phoneNumber.value;
-          } else {
-            return phoneNumber;
-          }
-        })
-        .value();
-    }
+    function initOrders() {
+      vm.orders = PstnSetup.getOrders();
 
-    function initNumbers() {
-      var numberPartition = _.partition(PstnSetup.getNumbers(), {
-        type: PstnSetupService.PORT
+      vm.portOrders = _.remove(vm.orders, function (order) {
+        return _.get(order, 'type') === PstnSetupService.PORT_ORDERS;
       });
 
-      vm.portNumbers = getFlattenedNumbers(numberPartition[0]);
-      vm.newNumbers = getFlattenedNumbers(numberPartition[1]);
+      vm.advancedOrders = _.remove(vm.orders, function (order) {
+        return _.get(order, 'type') === PstnSetupService.ADVANCED_ORDERS;
+      });
+
+      vm.newOrders = vm.orders;
+
+      if (vm.advancedOrders.length > 0 || vm.newOrders.length > 0) {
+        vm.totalNewAdvancedOrder = getTotal(vm.newOrders, vm.advancedOrders);
+      }
+
+      if (vm.portOrders.length > 0) {
+        vm.totalPortNumbers = _.get(vm.portOrders[0].data.numbers, 'length');
+      }
     }
 
     function createNumbers() {
@@ -108,17 +113,36 @@
         errors.push(Notification.processErrorResponse(response));
       }
 
-      if (vm.newNumbers.length) {
-        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.newNumbers)
+      var numbers = _.chain(vm.newOrders)
+        .map(function (order) {
+          if (angular.isString(order.data.numbers)) {
+            return order.data.numbers;
+          } else {
+            return _.map(order.data.numbers, function (number) {
+              return number;
+            });
+          }
+        })
+        .flatten()
+        .value();
+
+      if (numbers.length > 0) {
+        promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers)
           .catch(pushErrorArray);
         promises.push(promise);
       }
 
-      if (vm.portNumbers.length) {
-        promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.portNumbers)
+      if (vm.portOrders.length > 0) {
+        promise = PstnSetupService.portNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), _.get(vm, 'portOrders[0].data.numbers'))
           .catch(pushErrorArray);
         promises.push(promise);
       }
+
+      _.forEach(vm.advancedOrders, function (order) {
+        promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
+          .catch(pushErrorArray);
+        promises.push(promise);
+      });
 
       return $q.all(promises).then(function () {
         if (errors.length > 0) {
@@ -126,6 +150,21 @@
           Notification.notify(errors, 'error');
         }
       });
+    }
+
+    function getTotal(newOrders, advancedOrders) {
+      var total = 0;
+      _.forEach(newOrders, function (order) {
+        if (angular.isString(order.data.numbers)) {
+          total += 1;
+        } else {
+          total += order.data.numbers.length;
+        }
+      });
+      _.forEach(advancedOrders, function (order) {
+        total += order.data.length;
+      });
+      return total;
     }
 
     function startPlaceOrderLoad() {

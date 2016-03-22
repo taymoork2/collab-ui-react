@@ -63,6 +63,15 @@
     })
     .factory('TerminusLookupE911Service', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/lookup/e911');
+    })
+    .factory('TerminusAreaCodeService', function ($resource) {
+      return $resource('modules/huron/pstnSetup/areaCodes.json', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          cache: true
+        }
+      });
     });
 
 })();

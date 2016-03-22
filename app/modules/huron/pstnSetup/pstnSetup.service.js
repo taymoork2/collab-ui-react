@@ -15,7 +15,9 @@
     var QUEUED = "QUEUED";
     var BLOCK = 'block';
     var ORDER = 'order';
-    var PORT = 'port';
+    var PORT_ORDERS = 'portOrders';
+    var ADVANCED_ORDERS = 'advancedOrders';
+    var NEW_ORDERS = 'newOrders';
 
     var service = {
       createCustomer: createCustomer,
@@ -44,7 +46,9 @@
       QUEUED: QUEUED,
       BLOCK: BLOCK,
       ORDER: ORDER,
-      PORT: PORT
+      PORT_ORDERS: PORT_ORDERS,
+      ADVANCED_ORDERS: ADVANCED_ORDERS,
+      NEW_ORDERS: NEW_ORDERS
     };
 
     return service;
@@ -220,7 +224,7 @@
       return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
         carrierId: carrierId,
-        type: PORT
+        type: PORT_ORDERS
       }, payload).$promise;
     }
 

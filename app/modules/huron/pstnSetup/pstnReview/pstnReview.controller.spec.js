@@ -27,11 +27,13 @@ describe('Controller: PstnReviewCtrl', function () {
     PstnSetup.setCustomerExists(true);
     PstnSetup.setCarrierExists(true);
     PstnSetup.setSiteExists(true);
-    PstnSetup.setNumbers(orderCart);
+    PstnSetup.setOrders(orderCart);
 
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
     spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
     spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
     spyOn($state, 'go');
