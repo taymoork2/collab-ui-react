@@ -46,7 +46,8 @@ gulp.task('clean:karma', function () {
 // Delete files from individual build sub-directories
 gulp.task('clean:css', function () {
   var files = [
-    config.build + 'styles/**/*.css'
+    config.build + '/styles/**/*.css',
+    config.build + '/styles/**/*.css.map'
   ];
   messageLogger('Cleaning CSS files', files);
   return del(files);
