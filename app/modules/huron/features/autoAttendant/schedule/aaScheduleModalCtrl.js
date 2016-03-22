@@ -320,6 +320,7 @@
         });
       }
     }
+
     function openImportModal() {
       var importModal = $modal.open({
         templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
