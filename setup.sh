@@ -39,12 +39,6 @@ if [ -n "$1" ]; then
     esac
 fi
 
-# Check NPM local path
-echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
-
-# Check NPM global path
-echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
-
 # Check if rvm is installed, otherwise install it
 # rvm --version > /dev/null 2>&1
 # RVM_RET=$?

@@ -26,7 +26,7 @@
           valign="top"
           ng-repeat="gridRow in gridRows">
         
-        <td class="wx-csv-td"
+        <td class="wx-csv-modal-td"
             width="50%">
             
           {{gridRow.title}}
@@ -34,18 +34,18 @@
       
         <td class="wx-td"
             width="50%">
-          
-          <span ng-if="( gridRow.id != 'import-records-failed' ) && ( gridRow.id != 'export-file' )" >
-            <b>{{gridRow.value}}</b>
-          </span>
-          
-          <span ng-if="( gridRow.id == 'export-file' )">
-            <a href={{gridRow.fileDownloadUrl}}>
-              <font color="blue">Download attributes file</font>
-            </a>
-          </span>
             
-          <span ng-if="( gridRow.id == 'import-records-failed' )" >
+          <span ng-if="( gridRow.id != 'export-records-failed' ) &&
+                       ( gridRow.id != 'import-records-failed' ) &&
+                       ( gridRow.id != 'export-download-file' ) &&
+                       ( gridRow.id != 'import-download-file' )">
+                       
+            <b>{{gridRow.value}}</b>
+          </span> 
+                         
+          <span ng-if="( gridRow.id == 'export-records-failed' ) || 
+                       ( gridRow.id == 'import-records-failed' )">
+                       
             <span ng-if="( gridRow.value == 0 )">
               <b>{{gridRow.value}}</b>
             </span>
@@ -54,13 +54,17 @@
               <font color="red">
                 <b>{{gridRow.value}}</b>
               </font>
-              
-              &nbsp;&nbsp;
-              
-              <a href={{gridRow.fileDownloadUrl}}>
-                <font color="blue">Download error log</font>
-              </a>
             </span>
+          </span>
+            
+          <span ng-if="( gridRow.id == 'export-download-file' ) || 
+                       ( gridRow.id == 'import-download-file' )">
+                       
+            <a href={{gridRow.fileDownloadUrl}}>
+              <font color="blue">
+                {{gridRow.value}}
+              </font>
+            </a>
           </span>
         </td>
       </tr>

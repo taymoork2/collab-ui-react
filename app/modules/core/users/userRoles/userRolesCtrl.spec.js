@@ -40,6 +40,23 @@ describe('Controller: UserRolesCtrl', function () {
       expect(controller).toBeDefined();
       expect($scope.currentUser).toEqual($stateParams.currentUser);
     });
+
+    it('should verify the radio button value is populated when controller loads with a currentUser', function () {
+      expect($scope.rolesObj.adminRadioValue).toBeDefined();
+      expect($scope.rolesObj.adminRadioValue).toEqual(1);
+    });
+  });
+
+  describe('Verify Admin Roles Radio input setting: ', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = fakeUserJSONFixture.fakeUser2;
+      initController();
+    });
+
+    it('should verify the radio button value is set to 2 when controller loads with a fakeUser2 as currentUser', function () {
+      expect($scope.rolesObj.adminRadioValue).toBeDefined();
+      expect($scope.rolesObj.adminRadioValue).toEqual(2);
+    });
   });
 
   describe('Setting of user SIP Address: ', function () {

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Partner Reports', function () {
-  var customer = 'Spark UC Reports Functional Tests';
+  var customer = 'Spark UC Report Test Partner';
   var e2eCustomer = 'Spark UC Reports E2E Tests';
   var time = ['Last Week', 'Last Month', 'Last Three Months'];
   var lowerTime = ['last week', 'last month', 'last three months'];
@@ -17,7 +17,6 @@ describe('Partner Reports', function () {
   });
 
   describe('Reports Page', function () {
-
     it('should verify report type buttons', function () {
       utils.expectIsPresent(reports.pageTitle);
       utils.expectText(reports.allTypes, 'All');
@@ -54,7 +53,7 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.partnermostActiveHeader);
       utils.expectIsNotDisplayed(reports.partnerMostActiveDescription);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-      reports.showHideActiveVisibility(false, false, true);
+      reports.showHideActiveVisibility(true, false, true);
 
       // active user population
       utils.expectIsDisplayed(reports.activePopulationHeader);

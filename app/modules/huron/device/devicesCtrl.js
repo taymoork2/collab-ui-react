@@ -11,7 +11,6 @@
     vm.devices = [];
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.showGenerateOtpButton = false;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
     vm.useCsdmDeviceSidepanel = null;
     var csdmHuronUserDeviceService = null;
@@ -48,8 +47,6 @@
 
       var promises = [];
 
-      vm.showGenerateOtpButton = false;
-
       checkFeatureToggleForCsdmSidePanel().then(function (res) {
         if (!res) {
           var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
@@ -66,9 +63,7 @@
 
       return $q.all(promises)
         .then(function () {
-          if (vm.devices.length === 0) {
-            vm.showGenerateOtpButton = true;
-          } else {
+          if (vm.devices.length !== 0) {
             $scope.userOverview.addGenerateAuthCodeLink();
           }
         });

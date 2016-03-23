@@ -51,7 +51,6 @@ describe('Customer Reports', function () {
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
-      reports.showHideActiveVisibility(false, false);
 
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);
@@ -164,7 +163,6 @@ describe('Customer Reports', function () {
       utils.expectIsNotDisplayed(reports.mostActiveSearch);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
       utils.expectIsNotDisplayed(reports.mostActiveCarousel);
-      reports.showHideActiveVisibility(false, false);
 
       // Files Shared
       utils.expectIsDisplayed(reports.filesSharedHeader);
