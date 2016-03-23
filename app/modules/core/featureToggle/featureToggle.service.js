@@ -310,7 +310,7 @@
           deferred.reject(status);
         }
       }, null, {
-        cache: true
+        cache: false
       });
       return deferred.promise;
     }

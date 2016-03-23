@@ -82,6 +82,7 @@
     "requirejs": "~2.1.16",
     "run-sequence": "^1.1.0",
     "sinon": "^1.14.1",
+    "sprintf-js": "^1.0.3",
     "touch": "^1.0.0",
     "uuid": "~2.0.1",
     "yargs": "^3.9.0"
