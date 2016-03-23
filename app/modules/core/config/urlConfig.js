@@ -165,10 +165,10 @@
       prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
     },
     CdrUrl: {
-      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty',
-      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
-      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
+      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/',
+      cfe: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
+      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/',
+      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/'
     },
 
     // urls same for all environments
