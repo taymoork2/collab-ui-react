@@ -340,29 +340,29 @@ angular.module('Core').service('SiteListService', [
       var mockCsvStatusReq = null;
 
       if (
-        (null != siteRow.csvStatusMockIt) &&
-        (siteRow.csvStatusMockIt.mockIt)
+        (null != siteRow.csvStatusMockObj) &&
+        (siteRow.csvStatusMockObj.mockIt)
       ) {
 
-        if (null == siteRow.csvStatusMockIt.mockIndex) {
-          siteRow.csvStatusMockIt.mockIndex = siteRow.csvStatusMockIt.mockStart;
+        if (null == siteRow.csvStatusMockObj.mockIndex) {
+          siteRow.csvStatusMockObj.mockIndex = siteRow.csvStatusMockObj.mockStart;
         }
 
-        mockCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.csvStatusMockIt.mockIndex];
+        mockCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.csvStatusMockObj.mockIndex];
 
         logMsg = funcName + "\n" +
-          "mockIndex=" + siteRow.csvStatusMockIt.mockIndex + "\n" +
+          "mockIndex=" + siteRow.csvStatusMockObj.mockIndex + "\n" +
           "mockCsvStatusReq=" + mockCsvStatusReq;
         // $log.log(logMsg);
 
-        ++siteRow.csvStatusMockIt.mockIndex;
+        ++siteRow.csvStatusMockObj.mockIndex;
 
         if (
-          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.csvStatusMockIt.mockIndex) ||
-          (siteRow.csvStatusMockIt.mockEnd < siteRow.csvStatusMockIt.mockIndex)
+          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.csvStatusMockObj.mockIndex) ||
+          (siteRow.csvStatusMockObj.mockEnd < siteRow.csvStatusMockObj.mockIndex)
         ) {
 
-          siteRow.csvStatusMockIt.mockIndex = siteRow.csvStatusMockIt.mockStart;
+          siteRow.csvStatusMockObj.mockIndex = siteRow.csvStatusMockObj.mockStart;
         }
       }
 
