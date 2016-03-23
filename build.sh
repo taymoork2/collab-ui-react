@@ -92,6 +92,10 @@ else
     fi
 fi
 
+# list our current bower_components for build reference
+echo "Currently installed bower_components:"
+./bin/helpers/list-bower-components.js | sort
+
 
 # -----
 # Phase 3: Build
