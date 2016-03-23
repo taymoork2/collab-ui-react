@@ -1,6 +1,6 @@
 'use strict';
 
-describe('TimingInterceptor', function () {
+describe('ServerErrorInterceptor', function () {
   beforeEach(module('Core'));
 
   var Interceptor, Config, $log;
