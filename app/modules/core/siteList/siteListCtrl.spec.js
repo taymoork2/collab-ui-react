@@ -68,16 +68,6 @@ describe('SiteListCtrl: should update gridData according to conference services'
       }
     };
 
-    WebExApiGatewayService.csvStatusTypes = [
-      'none',
-      'exportInProgress',
-      'exportCompletedNoErr',
-      'exportCompletedWithErr',
-      'importInProgress',
-      'importCompletedNoErr',
-      'importCompletedWithErr'
-    ];
-
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
       Authinfo: Authinfo,
@@ -162,16 +152,6 @@ describe('SiteListCtrl: should update gridData and filter out bad conference ser
         return "nobody@nowhere.com";
       }
     };
-
-    WebExApiGatewayService.csvStatusTypes = [
-      'none',
-      'exportInProgress',
-      'exportCompletedNoErr',
-      'exportCompletedWithErr',
-      'importInProgress',
-      'importCompletedNoErr',
-      'importCompletedWithErr'
-    ];
 
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
