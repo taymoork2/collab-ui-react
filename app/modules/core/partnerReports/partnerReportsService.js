@@ -496,12 +496,37 @@
               returnObject.direction = NEGATIVE;
               if ((returnObject.registeredDevicesTrend === "NaN")) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+0.0";
+                returnObject.registeredDevicesTrend = "+0.0%";
               } else if (returnObject.registeredDevicesTrend >= 0) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend;
+                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend + "%";
+              } else {
+                returnObject.registeredDevicesTrend += "%";
               }
               returnArray.push(returnObject);
+            }
+          });
+        }
+        if (0 < returnArray.length < customer.length) {
+          angular.forEach(customer, function (org, orgIndex, orgArray) {
+            var emptyOrg = true;
+            angular.forEach(returnArray, function (object, objectIndex, objectArray) {
+              if (object.orgId === org.value) {
+                emptyOrg = false;
+              }
+            });
+            if (emptyOrg) {
+              returnArray.push({
+                "orgId": org.value,
+                "deviceRegistrationCountTrend": "N/A",
+                "yesterdaysDeviceRegistrationCount": "N/A",
+                "registeredDevicesTrend": "N/A",
+                "yesterdaysRegisteredDevices": "N/A",
+                "maxRegisteredDevices": "N/A",
+                "minRegisteredDevices": "N/A",
+                "customer": org.label,
+                "direction": ""
+              });
             }
           });
         }
