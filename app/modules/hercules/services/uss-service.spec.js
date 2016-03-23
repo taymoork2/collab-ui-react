@@ -6,17 +6,10 @@ describe('Service: USSService', function () {
   var $httpBackend, Service, authinfo;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
-  beforeEach(function () {
-    module(function ($provide) {
-      authinfo = {
-        getOrgId: sinon.stub()
-      };
-      authinfo.getOrgId.returns("456");
-      $provide.value('Authinfo', authinfo);
-    });
-  });
+  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_) {
+    authinfo = _Authinfo_;
+    authinfo.getOrgId = sinon.stub().returns("456");
 
-  beforeEach(inject(function (_$httpBackend_, _USSService_) {
     Service = _USSService_;
     $httpBackend = _$httpBackend_;
     $httpBackend
