@@ -496,12 +496,37 @@
               returnObject.direction = NEGATIVE;
               if ((returnObject.registeredDevicesTrend === "NaN")) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+0.0";
+                returnObject.registeredDevicesTrend = "+0.0%";
               } else if (returnObject.registeredDevicesTrend >= 0) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend;
+                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend + "%";
+              } else {
+                returnObject.registeredDevicesTrend += "%";
               }
               returnArray.push(returnObject);
+            }
+          });
+        }
+        if (0 < returnArray.length < customer.length) {
+          angular.forEach(customer, function (org) {
+            var emptyOrg = true;
+            angular.forEach(returnArray, function (object) {
+              if (object.orgId === org.value) {
+                emptyOrg = false;
+              }
+            });
+            if (emptyOrg) {
+              returnArray.push({
+                "orgId": org.value,
+                "deviceRegistrationCountTrend": "-",
+                "yesterdaysDeviceRegistrationCount": "-",
+                "registeredDevicesTrend": "-",
+                "yesterdaysRegisteredDevices": "-",
+                "maxRegisteredDevices": "-",
+                "minRegisteredDevices": "-",
+                "customer": org.label,
+                "direction": ""
+              });
             }
           });
         }

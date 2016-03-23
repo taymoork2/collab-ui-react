@@ -83,7 +83,8 @@ describe('Customer Reports', function () {
       utils.click(reports.getOption(reports.timeSelect, time[1]));
     });
 
-    it('should change to display only engagement reports', function () {
+    // Disabling the following Tests until intermittent card resizing failures are fixed
+    xit('should change to display only engagement reports', function () {
       utils.click(reports.engagement);
 
       // engagement graphs
@@ -114,7 +115,7 @@ describe('Customer Reports', function () {
       reports.metricsDataPresent(false);
     });
 
-    it('should change to display only quality reports', function () {
+    xit('should change to display only quality reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
@@ -143,7 +144,7 @@ describe('Customer Reports', function () {
       reports.metricsDataPresent(false);
     });
 
-    it('should return to all reports', function () {
+    xit('should return to all reports', function () {
       utils.click(reports.allTypes);
 
       // Total Rooms
