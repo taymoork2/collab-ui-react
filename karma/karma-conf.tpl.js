@@ -1,5 +1,5 @@
 // Karma configuration
-// http://karma-runner.github.io/0.10/config/configuration-file.html
+// http://karma-runner.github.io/0.13/config/configuration-file.html
 
 module.exports = function (config) {
   'use strict';
@@ -101,6 +101,7 @@ module.exports = function (config) {
     reporters: ['dots', 'junit', 'coverage', 'html'],
 
     junitReporter: {
+      useBrowserName: false,
       outputFile: 'test/unit-test-results.xml',
       suite: ''
     },
