@@ -83,7 +83,7 @@ describe('Customer Reports', function () {
       utils.click(reports.getOption(reports.timeSelect, time[1]));
     });
 
-    // Disabling Tests until intermittent card resizing failures are fixed
+    // Disabling the following Tests until intermittent card resizing failures are fixed
     xit('should change to display only engagement reports', function () {
       utils.click(reports.engagement);
 

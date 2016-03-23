@@ -508,9 +508,9 @@
           });
         }
         if (0 < returnArray.length < customer.length) {
-          angular.forEach(customer, function (org, orgIndex, orgArray) {
+          angular.forEach(customer, function (org) {
             var emptyOrg = true;
-            angular.forEach(returnArray, function (object, objectIndex, objectArray) {
+            angular.forEach(returnArray, function (object) {
               if (object.orgId === org.value) {
                 emptyOrg = false;
               }
