@@ -50,22 +50,22 @@
     "direction": "negative"
   }, {
     "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
-    "deviceRegistrationCountTrend": "N/A",
-    "yesterdaysDeviceRegistrationCount": "N/A",
-    "registeredDevicesTrend": "N/A",
-    "yesterdaysRegisteredDevices": "N/A",
-    "maxRegisteredDevices": "N/A",
-    "minRegisteredDevices": "N/A",
+    "deviceRegistrationCountTrend": "-",
+    "yesterdaysDeviceRegistrationCount": "-",
+    "registeredDevicesTrend": "-",
+    "yesterdaysRegisteredDevices": "-",
+    "maxRegisteredDevices": "-",
+    "minRegisteredDevices": "-",
     "customer": "Test Org Three",
     "direction": ""
   }, {
     "orgId": "1",
-    "deviceRegistrationCountTrend": "N/A",
-    "yesterdaysDeviceRegistrationCount": "N/A",
-    "registeredDevicesTrend": "N/A",
-    "yesterdaysRegisteredDevices": "N/A",
-    "maxRegisteredDevices": "N/A",
-    "minRegisteredDevices": "N/A",
+    "deviceRegistrationCountTrend": "-",
+    "yesterdaysDeviceRegistrationCount": "-",
+    "registeredDevicesTrend": "-",
+    "yesterdaysRegisteredDevices": "-",
+    "maxRegisteredDevices": "-",
+    "minRegisteredDevices": "-",
     "customer": "Test Partner",
     "direction": ""
   }]

@@ -518,12 +518,12 @@
             if (emptyOrg) {
               returnArray.push({
                 "orgId": org.value,
-                "deviceRegistrationCountTrend": "N/A",
-                "yesterdaysDeviceRegistrationCount": "N/A",
-                "registeredDevicesTrend": "N/A",
-                "yesterdaysRegisteredDevices": "N/A",
-                "maxRegisteredDevices": "N/A",
-                "minRegisteredDevices": "N/A",
+                "deviceRegistrationCountTrend": "-",
+                "yesterdaysDeviceRegistrationCount": "-",
+                "registeredDevicesTrend": "-",
+                "yesterdaysRegisteredDevices": "-",
+                "maxRegisteredDevices": "-",
+                "minRegisteredDevices": "-",
                 "customer": org.label,
                 "direction": ""
               });
