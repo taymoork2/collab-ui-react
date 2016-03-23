@@ -14,26 +14,21 @@
     vm.continueImport = continueImport;
 
     function continueImport() {
-      AutoAttendantCeService.readCe(vm.selected.value).then(function (data) {
-        if (data.scheduleId) {
-          AACalendarService.readCalendar(data.scheduleId).then(function (calendar) {
-            var allHours = AAICalService.getHoursRanges(calendar);
-            $modalInstance.close(allHours);
-          });
-        } else {
-          $modalInstance.close(undefined);
-        }
-
+      AACalendarService.readCalendar(vm.selected.value).then(function (calendar) {
+        var allHours = AAICalService.getHoursRanges(calendar);
+        $modalInstance.close(allHours);
       });
     }
 
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
-      vm.aaModel.aaRecords.forEach(function (value) {
-        var obj = {};
-        obj.label = value.callExperienceName;
-        obj.value = value.callExperienceURL;
-        vm.options.push(obj);
+      AACalendarService.readSchedules().then(function (data) {
+        data.forEach(function (value) {
+          var obj = {};
+          obj.label = value.scheduleName.split('Calendar for ')[1];
+          obj.value = value.scheduleUrl.split('/schedules/')[1];
+          vm.options.push(obj);
+        });
       });
     }
 

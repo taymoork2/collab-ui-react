@@ -25,16 +25,14 @@ describe('Controller: AAScheduleImportCtrl', function () {
     $q = _$q_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AutoAttendantCeService, 'readCe').and.callFake(function (url) {
-      if (url === 'url-1') {
-        return $q.when({
-          scheduleId: 'id'
-        });
-      } else {
-        return $q.when({});
-      }
-    });
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when({}));
+    spyOn(AACalendarService, 'readSchedules').and.returnValue($q.when([{
+      scheduleUrl: '/schedules/url-1',
+      scheduleName: 'Calendar for AA1'
+    }, {
+      scheduleUrl: '/schedules/url-2',
+      scheduleName: 'Calendar for AA2'
+    }]));
     spyOn(AAICalService, 'getHoursRanges').and.returnValue({});
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
@@ -57,12 +55,5 @@ describe('Controller: AAScheduleImportCtrl', function () {
     controller.continueImport();
     $scope.$apply();
     expect($modalInstance.close).toHaveBeenCalledWith({});
-  });
-
-  it('select and continue to import with undefined passed from the modal', function () {
-    controller.selected = controller.options[1];
-    controller.continueImport();
-    $scope.$apply();
-    expect($modalInstance.close).toHaveBeenCalledWith(undefined);
   });
 });

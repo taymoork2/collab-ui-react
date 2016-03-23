@@ -13,7 +13,8 @@
       readCalendar: readCalendar,
       createCalendar: createCalendar,
       updateCalendar: updateCalendar,
-      deleteCalendar: deleteCalendar
+      deleteCalendar: deleteCalendar,
+      readSchedules: readSchedules
     };
 
     return service;
@@ -30,6 +31,12 @@
       return calendarService.get({
         customerId: Authinfo.getOrgId(),
         scheduleId: aCalendarId
+      }).$promise;
+    }
+
+    function readSchedules() {
+      return calendarService.query({
+        customerId: Authinfo.getOrgId()
       }).$promise;
     }
 
