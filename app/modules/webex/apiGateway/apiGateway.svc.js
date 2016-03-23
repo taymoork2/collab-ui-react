@@ -25,16 +25,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     var _this = this;
 
-    this.csvStatusTypes = [
-      'none',
-      'exportInProgress',
-      'exportCompletedNoErr',
-      'exportCompletedWithErr',
-      'importInProgress',
-      'importCompletedNoErr',
-      'importCompletedWithErr'
-    ]; // csvStatusTypes[]
-
     this.csvConstructHttpsObj = function (
       siteUrl,
       csvApi
@@ -97,7 +87,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var successResult = {
         siteUrl: siteUrl,
         isMockResult: mockCsvStatus,
-        status: 'none', // can be any one of this.csvStatusTypes
+        status: null, // can be any one of WebExApiGatewayConstsService.csvStatusTypes[]
         details: null
       };
 
@@ -138,6 +128,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
           switch (csvJobType) {
           case 0:
+            successResult.status = 'none';
             break;
 
           case 1:

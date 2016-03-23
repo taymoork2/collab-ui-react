@@ -78,6 +78,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
 
   var deferredCsvApiRequest;
 
+  var WebExApiGatewayConstsService;
   var WebExApiGatewayService;
   var WebExRestApiFact;
 
@@ -96,14 +97,26 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     _$q_,
     _$rootScope_,
     _WebExRestApiFact_,
-    _WebExApiGatewayService_
+    _WebExApiGatewayService_,
+    _WebExApiGatewayConstsService_
   ) {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
 
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExRestApiFact = _WebExRestApiFact_;
+
+    WebExApiGatewayConstsService.csvStates = {
+      none: 'none',
+      exportInProgress: 'exportInProgress',
+      exportCompletedNoErr: 'exportCompletedNoErr',
+      exportCompletedWithErr: 'exportCompletedWithErr',
+      importInProgress: 'importInProgress',
+      importCompletedNoErr: 'importCompletedNoErr',
+      importCompletedWithErr: 'importCompletedWithErr'
+    };
 
     deferredCsvApiRequest = $q.defer();
 
@@ -114,13 +127,13 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "none"
+      WebExApiGatewayConstsService.csvStates.none
     ).then(
 
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual("none");
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -138,12 +151,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "exportInProgress"
+      WebExApiGatewayConstsService.csvStates.exportInProgress
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('exportInProgress');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -164,12 +177,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "exportCompletedNoErr"
+      WebExApiGatewayConstsService.csvStates.exportCompletedNoErr
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('exportCompletedNoErr');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -197,12 +210,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "exportCompletedWithErr"
+      WebExApiGatewayConstsService.csvStates.exportCompletedWithErr
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('exportCompletedWithErr');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -230,12 +243,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "importInProgress"
+      WebExApiGatewayConstsService.csvStates.importInProgress
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('importInProgress');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -256,12 +269,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "importCompletedNoErr"
+      WebExApiGatewayConstsService.csvStates.importCompletedNoErr
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('importCompletedNoErr');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 
@@ -288,12 +301,12 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
-      "importCompletedWithErr"
+      WebExApiGatewayConstsService.csvStates.importCompletedWithErr
     ).then(
       function csvStatusReqSuccess(response) {
         expect(response).not.toEqual(null);
         expect(response.isMockResult).toEqual(true);
-        expect(response.status).toEqual('importCompletedWithErr');
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
         expect(response.details).not.toEqual(null);
       }, // csvStatusReqSuccess()
 

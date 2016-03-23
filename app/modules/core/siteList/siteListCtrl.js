@@ -72,10 +72,9 @@
           // define the range of csv states to mock
           conferenceService.csvStatusMockObj = {
             mockIt: true, // set to true to mock csv status; set to false to get actual status from rest api 
-            mockStart: 0, // change mockStart and mockEnd to mock specific csv state(s)
-            mockEnd: 0,
-            // mockEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
-            mockIndex: null
+            mockStartIndex: 0, // change mockStartIndex and mockEndIndex to mock specific csv state(s)
+            mockEndIndex: 0,
+            mockCurrentIndex: null
           };
 
           conferenceService.csvStatusObj = null;

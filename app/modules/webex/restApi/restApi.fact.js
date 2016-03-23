@@ -10,6 +10,7 @@
     '$rootScope',
     'Authinfo',
     'WebExUtilsFact',
+    'WebExApiGatewayConstsService',
 
     function (
       $http,
@@ -19,7 +20,8 @@
       $timeout,
       $rootScope,
       Authinfo,
-      WebExUtilsFact
+      WebExUtilsFact,
+      WebExApiGatewayConstsService
     ) {
 
       var _this = this;
@@ -71,66 +73,66 @@
 
           var fakeResult = null;
 
-          if ('none' == mockCsvStatusReq) {
+          if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 0,
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
             };
-          } else if ('exportInProgress' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 2,
-              "request": 0
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
             };
-          } else if ('exportCompletedNoErr' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 2,
-              "request": 2,
-              "created": "03/23/16 12:41 AM",
-              "started": "03/23/16 12:41 AM",
-              "finished": "03/23/16 12:41 AM",
-              "totalRecords": 5,
-              "successRecords": 5,
-              "failedRecords": 0,
-              "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+              created: "03/23/16 12:41 AM",
+              started: "03/23/16 12:41 AM",
+              finished: "03/23/16 12:41 AM",
+              totalRecords: 5,
+              successRecords: 5,
+              failedRecords: 0,
+              exportFileLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
             };
-          } else if ('exportCompletedWithErr' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 2,
-              "request": 2,
-              "created": "03/23/16 12:41 AM",
-              "started": "03/23/16 12:41 AM",
-              "finished": "03/23/16 12:41 AM",
-              "totalRecords": 5,
-              "successRecords": 4,
-              "failedRecords": 1,
-              "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+              created: "03/23/16 12:41 AM",
+              started: "03/23/16 12:41 AM",
+              finished: "03/23/16 12:41 AM",
+              totalRecords: 5,
+              successRecords: 4,
+              failedRecords: 1,
+              exportFileLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
             };
-          } else if ('importInProgress' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 1,
-              "request": 0,
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
             };
-          } else if ('importCompletedNoErr' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.importCompletedNoErr == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 1,
-              "request": 2,
-              "created": "03/23/16 12:41 AM",
-              "started": "03/23/16 12:41 AM",
-              "finished": "03/23/16 12:41 AM",
-              "totalRecords": 5,
-              "successRecords": 5,
-              "failedRecords": 0
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+              created: "03/23/16 12:41 AM",
+              started: "03/23/16 12:41 AM",
+              finished: "03/23/16 12:41 AM",
+              totalRecords: 5,
+              successRecords: 5,
+              failedRecords: 0
             };
-          } else if ('importCompletedWithErr' == mockCsvStatusReq) {
+          } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
             fakeResult = {
-              "jobType": 1,
-              "request": 2,
-              "errorLogLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
-              "created": "03/23/16 12:41 AM",
-              "started": "03/23/16 12:41 AM",
-              "finished": "03/23/16 12:41 AM",
-              "totalRecords": 5,
-              "successRecords": 3,
-              "failedRecords": 2
+              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+              errorLogLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
+              created: "03/23/16 12:41 AM",
+              started: "03/23/16 12:41 AM",
+              finished: "03/23/16 12:41 AM",
+              totalRecords: 5,
+              successRecords: 3,
+              failedRecords: 2
             };
           }
 
