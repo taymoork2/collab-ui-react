@@ -255,7 +255,7 @@ describe('Huron Auto Attendant', function () {
       // Click on the language for the new (first) Phone Menu we just added
       utils.click(autoattendant.phoneSayMessageLanguageFirst);
 
-      // Set langauage to Galacian
+      // Set langauage to Galician
       utils.click(autoattendant.phoneLanguageDropDownOptionsTenth);
 
     }, 60000);
