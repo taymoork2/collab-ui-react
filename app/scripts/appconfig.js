@@ -847,6 +847,18 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        .state('site-csv-import', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVImportCtrl',
+              templateUrl: 'modules/webex/siteCSVResults/siteCSVImportModal.tpl.html',
+            }
+          },
+          params: {
+            csvImportObj: null
+          }
+        })
         // lhsieh
         .state('site-csv-results', {
           parent: 'modal',
