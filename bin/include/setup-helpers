@@ -192,9 +192,7 @@ function export_project_root_env_var {
     local entry_line=
     local top_dir=
 
-    if ! get_top_dir; then
-        return 1
-    fi
+    get_top_dir >/dev/null || return 1
 
     top_dir="`get_top_dir`"
     entry_line="export $project_root_env_var_name=$top_dir"
@@ -210,6 +208,12 @@ function export_project_root_env_var {
 
 # make sure WX2_ADMIN_WEB_CLIENT_HOME is set
 export_project_root_env_var
+
+# Check NPM local path
+echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
+
+# Check NPM global path
+echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
 # setup .cache subdir
 mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"

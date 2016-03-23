@@ -197,6 +197,7 @@ angular
       $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
+      $httpProvider.interceptors.push('ServerErrorInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -1430,13 +1431,13 @@ angular
         .state('trialAdd.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.webex', {
-          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-          controller: 'TrialWebexCtrl',
-          controllerAs: 'webexTrial'
+        .state('trialAdd.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
         })
         .state('trialAdd.call', {
-          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
@@ -1488,13 +1489,13 @@ angular
         .state('trialEdit.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialEdit.webex', {
-          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-          controller: 'TrialWebexCtrl',
-          controllerAs: 'webexTrial'
+        .state('trialEdit.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
         })
         .state('trialEdit.call', {
-          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })

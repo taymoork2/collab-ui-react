@@ -3,11 +3,23 @@
 
   angular
     .module('core.trial')
-    .factory('TimeZoneService', TimeZoneService);
+    .factory('WebexTrialService', WebexTrialService)
+    .factory('WebexOrderStatusResource', WebexOrderStatusResource);
 
-  function TimeZoneService() {
+  /* @ngInject */
+  function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {
+    return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
+      orgId: Authinfo.getOrgId(),
+      trialId: '@trialId'
+    }, {});
+  }
+
+  /* @ngInject */
+  function WebexTrialService($http, UrlConfig, Notification, WebexOrderStatusResource) {
     var service = {
-      getTimeZones: getTimeZones
+      getTimeZones: getTimeZones,
+      validateSiteUrl: validateSiteUrl,
+      getTrialStatus: getTrialStatus
     };
 
     return service;
@@ -16,6 +28,55 @@
 
     function getTimeZones() {
       return _getTimeZones();
+    }
+
+    function validateSiteUrl(siteUrl) {
+      var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
+      var config = {
+        method: 'POST',
+        url: validationUrl,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        data: {
+          "isTrial": true,
+          "properties": [{
+            "key": "siteUrl",
+            "value": siteUrl
+          }]
+        }
+      };
+
+      return $http(config).then(function (response) {
+        var data = response.data.properties[0];
+        var errorCodes = {
+          '0': 'validSite',
+          '434057': 'domainInvalid',
+          '439012': 'duplicateSite'
+        };
+        return {
+          'isValid': data.isValid && data.errorCode === '0',
+          'errorCode': errorCodes[data.errorCode] || 'invalidSite'
+        };
+      }).catch(function (response) {
+        Notification.error('trialModal.meeting.validationHttpError');
+      });
+    }
+
+    function getTrialStatus(trialId) {
+      return WebexOrderStatusResource.get({
+        'trialId': trialId
+      }).$promise.then(function (data) {
+        var orderStatus = data.provOrderStatus !== 'PROVISIONED';
+        var timeZoneId = data.timeZoneId && data.timeZoneId.toString();
+
+        return {
+          siteUrl: data.siteUrl,
+          timeZoneId: timeZoneId,
+          trialExists: _.isUndefined(data.errorCode),
+          pending: orderStatus
+        };
+      });
     }
 
     function _getTimeZones() {

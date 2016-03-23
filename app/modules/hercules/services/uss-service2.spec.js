@@ -7,12 +7,6 @@ describe('Service: USSService2', function () {
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
   beforeEach(module(function ($provide) {
-    Authinfo = {
-      getOrgId: sinon.stub()
-    };
-    Authinfo.getOrgId.returns('456');
-    $provide.value('Authinfo', Authinfo);
-
     hubOn = sinon.spy();
     CsdmHubFactory = {
       create: sinon.stub()
@@ -23,7 +17,10 @@ describe('Service: USSService2', function () {
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
-  beforeEach(inject(function (_$httpBackend_, _USSService2_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService2_, _Authinfo_) {
+    Authinfo = _Authinfo_;
+    Authinfo.getOrgId = sinon.stub().returns("456");
+
     $httpBackend = _$httpBackend_;
     USSService2 = _USSService2_;
 

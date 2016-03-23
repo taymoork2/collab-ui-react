@@ -47,7 +47,6 @@ describe('Controller: TrialAddCtrl', function () {
   it('should have default offers', function () {
     expect(controller.messageTrial.enabled).toBeTruthy();
     expect(controller.meetingTrial.enabled).toBeTruthy();
-    expect(controller.webexTrial.enabled).toBeTruthy();
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
     expect(controller.callTrial.enabled).toBeFalsy();
   });
@@ -57,7 +56,7 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have correct navigation state order', function () {
-    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
   });
 
   it('should transition state', function () {
@@ -129,7 +128,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle enabled', function () {
       beforeEach(function () {
-        controller.webexTrial.enabled = true;
+        controller.meetingTrial.enabled = true;
         controller.startTrial(callback);
         $scope.$apply();
       });
@@ -141,7 +140,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle disabled', function () {
       beforeEach(function () {
-        controller.webexTrial.enabled = false;
+        controller.meetingTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
       });
