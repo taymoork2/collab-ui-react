@@ -130,7 +130,7 @@ describe('WebExUserSettingsFact multi-center licenses tests', function () {
     expect(userSettingsModel.supportCenter.isEntitledOnWebEx).toBeDefined();
   }));
 
-  xit('can update user settings base on webex service entitlement in the atlas d/b', inject(function (WebExUserSettingsFact) {
+  it('can update user settings base on webex service entitlement in the atlas d/b', inject(function (WebExUserSettingsFact) {
     var userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
     WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
