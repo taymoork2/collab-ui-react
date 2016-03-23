@@ -81,7 +81,6 @@ var AutoAttendantPage = function () {
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
-  // this.sayMessageAll = element.all(by.cssContainingText('.aa-message-panel', 'Say Message'));
 
   this.sayMessageAll = element.all(by.css('.aa-message-panel'));
 
