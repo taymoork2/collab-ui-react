@@ -755,7 +755,8 @@
     "user": "User",
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
-    "postpone": "Postpone"
+    "postpone": "Postpone",
+    "continue": "Continue"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1613,6 +1614,9 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "selectAA": "Select Auto Attendant",
+    "importSchedule": "Import Schedule",
+    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
     "closedBehavious": "Holidays Follow Closed Behavior",
     "voices": {
       "male": "male",

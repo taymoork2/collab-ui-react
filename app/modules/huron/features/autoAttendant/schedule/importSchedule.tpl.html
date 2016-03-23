@@ -2,16 +2,16 @@
   <button type="button" class="close" ng-click="$dismiss()">
     <span class="sr-only">Close</span>
   </button>
-  <p class="modal-title">Import Schedule</p>
+  <p class="modal-title" translate="autoAttendant.importSchedule"></p>
 </div>
 <div class="modal-body">
   <cs-select
     ng-model="import.selected"
     options="import.options"
     placeholder="import.selectPlaceholder"></cs-select>
-  <div>Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from</div>
+  <p translate="autoAttendant.importDesc"></p>
 </div>
 <div class="modal-footer">
-  <button class="btn">Cancel</button>
-  <button class="btn--primary" ng-click="import.continueImport()">Continue</button>
+  <button class="btn" translate="common.cancel" ng-click="$dismiss()"></button>
+  <button class="btn--primary" ng-click="import.continueImport()" translate="common.continue"></button>
 </div>

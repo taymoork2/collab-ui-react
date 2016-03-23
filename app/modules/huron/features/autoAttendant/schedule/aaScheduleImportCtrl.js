@@ -9,7 +9,7 @@
   function AAScheduleImportCtrl($modalInstance, AutoAttendantCeInfoModelService, AutoAttendantCeService, AACalendarService, AAICalService, AAModelService, $translate) {
 
     var vm = this;
-    vm.selectPlaceholder = 'Select Auto Attendant';
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
     vm.options = [];
     vm.continueImport = continueImport;
 
