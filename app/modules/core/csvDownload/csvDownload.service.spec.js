@@ -24,22 +24,6 @@ describe('Service: CsvDownloadService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getCsv(template)', function () {
-    var templateFile = {
-      "some": "template"
-    };
-    beforeEach(function () {
-      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateFile);
-    });
-
-    it('should get template file', function () {
-      CsvDownloadService.getCsv('template').then(function (csvData) {
-        expect(csvData.some).toEqual('template');
-      });
-      $httpBackend.flush();
-    });
-  });
-
   describe('getCsv(user)', function () {
     var userFile = {
       "some": "user"
@@ -49,24 +33,25 @@ describe('Service: CsvDownloadService', function () {
     });
 
     it('should get user export file', function () {
-      CsvDownloadService.getCsv('user').then(function (csvData) {
-        expect(csvData.some).toEqual('user');
+      CsvDownloadService.getCsv('user').then(function (url) {
+        expect(url).toContain('blob');
       });
       $httpBackend.flush();
     });
   });
 
-  describe('getCsv(headers)', function () {
-    var headersFile = {
-      "some": "headers"
-    };
+  describe('getCsv(user, true)', function () {
+    var userCsvString = "John Doe,jdoe@gmail.com,Spark Call";
     beforeEach(function () {
-      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersFile);
+      $httpBackend.expectPOST(UrlConfig.getUserReportsUrl(Authinfo.getOrgId())).respond({
+        id: '1234'
+      });
+      $httpBackend.expectGET(UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/1234').respond(userCsvString);
     });
 
-    it('should get headers file', function () {
-      CsvDownloadService.getCsv('headers').then(function (csvData) {
-        expect(csvData.some).toEqual('headers');
+    it('should get user export file for a large org', function () {
+      CsvDownloadService.getCsv('template', true).then(function (url) {
+        expect(url).toContain('blob');
       });
       $httpBackend.flush();
     });
