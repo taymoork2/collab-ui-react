@@ -3,13 +3,11 @@
 describe('TimingInterceptor', function () {
   beforeEach(module('Core'));
 
-  var Interceptor, Config, Authinfo, $log, $rootScope;
+  var Interceptor, Config, $log;
 
-  beforeEach(inject(function (_ServerErrorInterceptor_, _Authinfo_, _$log_, _Config_, _$rootScope_) {
+  beforeEach(inject(function (_ServerErrorInterceptor_, _$log_, _Config_) {
     $log = _$log_;
     Config = _Config_;
-    Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
     Interceptor = _ServerErrorInterceptor_;
   }));
 
