@@ -95,9 +95,11 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return !!Storage.get('accessToken');
   }
 
-  function redirectToLogin(email) {
-    if (email) {
+  function redirectToLogin(email, sso) {
+    if (!_.isEmpty(email)) {
       $window.location.href = OAuthConfig.getOauthLoginUrl(email);
+    } else if (!_.isEmpty(sso)) {
+      $window.location.href = OAuthConfig.getOauthLoginUrl();
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
