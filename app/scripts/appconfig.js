@@ -521,7 +521,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -846,12 +845,12 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        // lhsieh
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
+              controllerAs: 'siteCSVResult',
               templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
             }
           },
