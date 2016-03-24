@@ -71,72 +71,74 @@
             );
           }
 
-          var fakeResult = null;
+          var mockResult = null;
 
           if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              created: "03/23/16 12:41 AM",
-              started: "03/23/16 12:41 AM",
-              finished: "03/23/16 12:41 AM",
+              created: '03/23/16 12:41 AM',
+              started: '03 / 23 / 16 12: 41 AM',
+              finished: '03/23/16 12:41 AM',
               totalRecords: 5,
               successRecords: 5,
               failedRecords: 0,
-              exportFileLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+              exportFileLink: "http://google.com"
             };
           } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              created: "03/23/16 12:41 AM",
-              started: "03/23/16 12:41 AM",
-              finished: "03/23/16 12:41 AM",
+              created: '03/23/16 12:41 AM',
+              started: '03 / 23 / 16 12: 41 AM',
+              finished: '03/23/16 12:41 AM',
               totalRecords: 5,
               successRecords: 4,
               failedRecords: 1,
-              exportFileLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+              exportFileLink: "http://google.com"
             };
           } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
             };
           } else if (WebExApiGatewayConstsService.csvStates.importCompletedNoErr == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              created: "03/23/16 12:41 AM",
-              started: "03/23/16 12:41 AM",
-              finished: "03/23/16 12:41 AM",
+              importFileName: 'fakeImport.csv',
+              created: '03/23/16 12:41 AM',
+              started: '03 / 23 / 16 12: 41 AM',
+              finished: '03/23/16 12:41 AM',
               totalRecords: 5,
               successRecords: 5,
               failedRecords: 0
             };
           } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
-            fakeResult = {
+            mockResult = {
               jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
               request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              errorLogLink: "http://fakeSite.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
-              created: "03/23/16 12:41 AM",
-              started: "03/23/16 12:41 AM",
-              finished: "03/23/16 12:41 AM",
+              importFileName: 'fakeImport.csv',
+              created: '03/23/16 12:41 AM',
+              started: '03 / 23 / 16 12: 41 AM',
+              finished: '03/23/16 12:41 AM',
               totalRecords: 5,
               successRecords: 3,
-              failedRecords: 2
+              failedRecords: 2,
+              errorLogLink: 'http://yahoo.com'
             };
           }
 
-          return $q.resolve(fakeResult);
+          return $q.resolve(mockResult);
         }, // csvApiRequest()
       }; // return
     } // top level function()

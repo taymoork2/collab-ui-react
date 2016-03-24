@@ -34,56 +34,50 @@
       vm.gridRows.push({
         id: 'import-request',
         title: 'Request:',
-        value: 'Export User WebEx Attributes',
+        value: 'Export WebEx User Attributes',
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-started-time',
         title: 'Export started:',
-        value: '',
+        value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-finished-time',
         title: 'Export finished:',
-        value: '',
+        value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-total',
         title: 'Total records available:',
-        value: 5,
+        value: vm.csvStatusObj.details.totalRecords,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-successful',
         title: 'Records successfully exported:',
-        value: 4,
+        value: vm.csvStatusObj.details.successRecords,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-records-failed',
         title: 'Records failed:',
-        value: 1,
+        value: vm.csvStatusObj.details.failedRecords,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
-        id: 'export-download-file',
+        id: 'export-download-csv-file',
         title: 'Download:',
         value: 'Exported CSV file',
-        fileDownloadUrl: 'https://google.com'
-      });
-      vm.gridRows.push({
-        id: 'export-request',
-        title: 'Request:',
-        value: 'Import completed',
-        fileDownloadUrl: null
+        fileDownloadUrl: vm.csvStatusObj.details.exportFileLink
       });
 
     } else if (
@@ -96,51 +90,53 @@
       vm.gridRows.push({
         id: 'import-file-name',
         title: 'File name:',
-        value: '',
+        value: vm.csvStatusObj.details.importFileName,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-started-time',
         title: 'Import started:',
-        value: '',
+        value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-finished-time',
         title: 'Import finished:',
-        value: '',
+        value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-total',
         title: 'Total records requested:',
-        value: 5,
+        value: vm.csvStatusObj.details.totalRecords,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-updated',
         title: 'Records successfully updated:',
-        value: 3,
+        value: vm.csvStatusObj.details.successRecords,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-records-failed',
         title: 'Records failed:',
-        value: 2,
+        value: vm.csvStatusObj.details.failedRecords,
         fileDownloadUrl: null
       });
 
-      vm.gridRows.push({
-        id: 'import-download-file',
-        title: 'Download:',
-        value: 'Import error log',
-        fileDownloadUrl: 'https://yahoo.com'
-      });
+      if (0 < vm.csvStatusObj.details.failedRecords) {
+        vm.gridRows.push({
+          id: 'import-download-err-file',
+          title: 'Download:',
+          value: 'Import error log',
+          fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
+        });
+      }
     }
 
     logMsg = funcName + "\n" +
