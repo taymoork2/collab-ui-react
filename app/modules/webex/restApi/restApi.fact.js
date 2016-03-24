@@ -73,69 +73,73 @@
 
           var mockResult = null;
 
-          if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              created: '03/23/16 12:41 AM',
-              started: '03 / 23 / 16 12: 41 AM',
-              finished: '03/23/16 12:41 AM',
-              totalRecords: 5,
-              successRecords: 5,
-              failedRecords: 0,
-              exportFileLink: "http://google.com"
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              created: '03/23/16 12:41 AM',
-              started: '03 / 23 / 16 12: 41 AM',
-              finished: '03/23/16 12:41 AM',
-              totalRecords: 5,
-              successRecords: 4,
-              failedRecords: 1,
-              exportFileLink: "http://google.com"
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.importCompletedNoErr == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              importFileName: 'fakeImport.csv',
-              created: '03/23/16 12:41 AM',
-              started: '03 / 23 / 16 12: 41 AM',
-              finished: '03/23/16 12:41 AM',
-              totalRecords: 5,
-              successRecords: 5,
-              failedRecords: 0
-            };
-          } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
-            mockResult = {
-              jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
-              request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
-              importFileName: 'fakeImport.csv',
-              created: '03/23/16 12:41 AM',
-              started: '03 / 23 / 16 12: 41 AM',
-              finished: '03/23/16 12:41 AM',
-              totalRecords: 5,
-              successRecords: 3,
-              failedRecords: 2,
-              errorLogLink: 'http://yahoo.com'
-            };
+          if (null == mockCsvStatusReq) {
+            mockResult = {};
+          } else {
+            if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 5,
+                failedRecords: 0,
+                exportFileLink: "http://google.com"
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 4,
+                failedRecords: 1,
+                exportFileLink: "http://google.com"
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importCompletedNoErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                importFileName: 'fakeImport.csv',
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 5,
+                failedRecords: 0
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                importFileName: 'fakeImport.csv',
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 3,
+                failedRecords: 2,
+                errorLogLink: 'http://yahoo.com'
+              };
+            }
           }
 
           return $q.resolve(mockResult);
