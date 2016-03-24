@@ -31,12 +31,14 @@
 
       vm.modalTitle = "Export Results";
 
+      /*
       vm.gridRows.push({
         id: 'import-request',
         title: 'Request:',
-        value: 'Export WebEx User Attributes',
+        value: 'Export finished',
         fileDownloadUrl: null
       });
+      */
 
       vm.gridRows.push({
         id: 'export-started-time',
@@ -86,6 +88,15 @@
     ) {
 
       vm.modalTitle = "Import Results";
+      
+      /*
+      vm.gridRows.push({
+        id: 'export-request',
+        title: 'Request:',
+        value: 'Import finished',
+        fileDownloadUrl: null
+      });
+      */
 
       vm.gridRows.push({
         id: 'import-file-name',
