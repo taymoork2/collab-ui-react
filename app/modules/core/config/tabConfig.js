@@ -106,6 +106,7 @@
     tab: 'developmentTab',
     icon: 'icon-tools',
     title: 'tabs.developmentTab',
+    hideProd: true,
     subPages: [{
       title: 'tabs.organizationTab',
       desc: 'tabs.organizationTabDesc',
