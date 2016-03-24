@@ -80,6 +80,49 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
+    
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, 12000);
+      utils.click(autoattendant.toggleHoliday);
+      utils.click(autoattendant.addholiday);
+      utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.selectdate);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      utils.click(autoattendant.closeEditButton);
+    }, 60000);
+    
+    it('should create a new auto attendant named "' + deleteUtils.testAAImportName + '"', function () {
+
+      // click new feature
+      utils.click(autoattendant.newFeatureButton);
+
+      // select AA
+      utils.wait(autoattendant.featureTypeAA, 12000);
+      utils.click(autoattendant.featureTypeAA);
+
+      utils.wait(autoattendant.customAA, 12000);
+      utils.click(autoattendant.customAA);
+
+      // enter AA name
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAImportName);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
+
+      // assert we see the create successful message
+      autoattendant.assertCreateSuccess();
+
+    }, 60000);
+    
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, 12000);
+      utils.click(autoattendant.importSchedule);
+      utils.wait(autoattendant.importScheduleTitle, 12000);
+      //utils.expectIsEnabled(autoattendant.modalsave);
+    }, 60000);
 
   });
 

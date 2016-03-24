@@ -144,6 +144,8 @@ var AutoAttendantPage = function () {
   this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
+  this.importSchedule = element.all(by.cssContainingText('.pull-left', 'Import Schedule'));
+
 
   function assertUpdateSuccess() {
     notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
