@@ -114,7 +114,7 @@
       PreviousState.set(fromState.name);
       PreviousState.setParams(fromParams);
 
-      Localytics.push('Tab Clicked', toState.name);
+      Localytics.tagScreen(toState.name);
 
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

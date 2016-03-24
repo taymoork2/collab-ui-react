@@ -52,7 +52,8 @@ describe('ServiceStateChecker', function () {
     };
     USSService2 = {
       getStatusesSummary: sinon.stub(),
-      getOrg: sinon.stub()
+      getOrg: sinon.stub(),
+      getOrgId: sinon.stub()
     };
     ScheduleUpgradeService = {
       get: sinon.stub()
@@ -188,5 +189,52 @@ describe('ServiceStateChecker', function () {
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
+  });
+
+  it('should clear connect available notification when connect is configured ', function () {
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-uc',
+      activated: 1,
+      error: 0,
+      notActivated: 0
+    }]);
+
+    USSService2.getOrgId.returns('orgId');
+    USSService2.getOrg.returns($q.when({}));
+
+    ServiceDescriptor.isServiceEnabled = function (type, cb) {
+      cb(null, true);
+    };
+
+    ServiceDescriptor.services = function (cb) {
+      cb(null, [{
+        id: 'squared-fusion-ec',
+        enabled: false, // will spawn a 'connect available' notification,
+        acknowledged: false
+      }]);
+    };
+
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    expect(NotificationService.getNotifications()[0].id).toEqual('callServiceConnectAvailable');
+
+    // this should remove the connect notifications
+    ServiceDescriptor.services = function (cb) {
+      cb(null, [{
+        id: 'squared-fusion-ec',
+        enabled: true,
+        acknowledged: false
+      }]);
+    };
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+
+    expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 });

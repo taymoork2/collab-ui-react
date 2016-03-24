@@ -366,7 +366,8 @@
       "password": "",
       "url": "",
       "language": "",
-      "voice": ""
+      "voice": "",
+      "attempts": 3
     }]
   }
 }

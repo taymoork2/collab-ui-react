@@ -131,7 +131,7 @@
     }]
   },
   "endpoints": {
-    "customer": "Test Org One",
+    "customer": "activeUserPopulation.loadingCustomer",
     "deviceRegistrationCountTrend": "0",
     "yesterdaysDeviceRegistrationCount": "0",
     "registeredDevicesTrend": "0",
@@ -302,8 +302,7 @@
     }]
   },
   "activeUserPopulation": [{
-    "customerName": "Test Org One",
-    "customerId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+    "customerName": "activeUserPopulation.loadingCustomer",
     "percentage": 85,
     "colorOne": "#F3F3F3",
     "colorTwo": "#ECECEC",

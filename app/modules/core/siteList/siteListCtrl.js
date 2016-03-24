@@ -69,15 +69,16 @@
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isCSVSupported = false;
 
-          // define the range of csv states to check
-          conferenceService.csvStatusCheckMode = {
-            isOn: true, // set this to false to turn off check
-            checkStart: 0,
-            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
-            checkIndex: null
+          // define the range of csv states to mock
+          conferenceService.csvStatusMockObj = {
+            mockIt: true, // set to true to mock csv status; set to false to get actual status from rest api 
+            mockStartIndex: 0, // change mockStartIndex and mockEndIndex to mock specific csv state(s)
+            mockEndIndex: 0,
+            mockCurrentIndex: null
           };
 
           conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
           vm.gridData.push(conferenceService);
         }
@@ -147,16 +148,36 @@
       });
     }
 
-    $scope.csvExport = function (siteUrl) {
+    $scope.csvExport = function (siteRow) {
       var funcName = "csvExport()";
       var logMsg = "";
+      var siteUrl = siteRow.license.siteUrl;
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+      //$log.log(logMsg);
 
-      Notification.success($translate.instant('siteList.exportStartedToast'));
+      WebExApiGatewayService.csvExport(siteUrl).then(
+        function success(response) {
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        },
 
-      $log.log(logMsg);
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        }
+      ); // WebExApiGatewayService.csvExport()
+
     }; // csvExport()
 
     // TODO: remove csvImport() once we start implementing the import modal
@@ -166,8 +187,6 @@
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
-
-      Notification.success($translate.instant('siteList.importStartedToast'));
 
       $log.log(logMsg);
     }; // csvImport()

@@ -121,6 +121,16 @@
         });
     }
 
+    function userAdmins(orgId, limit, role, includeUnlicensed) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.users);
+      }
+      return cancelableHttpGET(urlBase + 'helpdesk/userAdmins?limit=' + limit + (orgId ?
+          '&orgId=' +
+          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .then(extractUsers);
+    }
+
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
@@ -358,6 +368,7 @@
     }
 
     return {
+      userAdmins: userAdmins,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,

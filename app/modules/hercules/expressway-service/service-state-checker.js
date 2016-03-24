@@ -159,6 +159,8 @@
             id: 'squared-fusion-ec'
           });
           if (callServiceConnect && callServiceConnect.enabled) {
+            // we need to clear the notification after admin has setup enabled
+            NotificationService.removeNotification('callServiceConnectAvailable');
             handleAtlasSipUriDomainEnterpriseNotification(serviceId);
             USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
               if (!org || !org.sipDomain || org.sipDomain === '') {

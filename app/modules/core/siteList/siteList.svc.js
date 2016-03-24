@@ -5,22 +5,24 @@ angular.module('Core').service('SiteListService', [
   '$translate',
   '$interval',
   'Authinfo',
-  'WebExApiGatewayService',
-  'WebExUtilsFact',
   'UrlConfig',
-  'WebExUtilsService',
   'FeatureToggleService',
+  'WebExApiGatewayService',
+  'WebExApiGatewayConstsService',
+  'WebExUtilsFact',
+  'WebExUtilsService',
 
   function (
     $log,
     $translate,
     $interval,
     Authinfo,
-    WebExApiGatewayService,
-    WebExUtilsFact,
     UrlConfig,
-    WebExUtilsService,
-    FeatureToggleService
+    FeatureToggleService,
+    WebExApiGatewayService,
+    WebExApiGatewayConstsService,
+    WebExUtilsFact,
+    WebExUtilsService
   ) {
 
     var _this = this;
@@ -289,17 +291,22 @@ angular.module('Core').service('SiteListService', [
           if (!siteRow.isCSVSupported) {
             // no further data to get
             siteRow.showCSVInfo = true;
-          } else {
-            _this.updateCSVColumnInRow(siteRow);
-
-            // start CSV status poll
-            siteRow.csvPollIntervalObj = $interval(
-              function () {
-                _this.updateCSVColumnInRow(siteRow);
-              },
-              15000
-            );
+            return;
           }
+
+          _this.updateCSVColumnInRow(siteRow);
+
+          // start CSV status poll
+          // var pollInterval = 3600000; // 1hr
+          // var pollInterval = 30000; // 30sec
+          var pollInterval = 15000; // 15sec
+          siteRow.csvPollIntervalObj = $interval(
+            function () {
+              _this.updateCSVColumnInRow(siteRow);
+            },
+
+            pollInterval
+          );
         }, // isSiteSupportsIframeSuccess()
 
         function isSiteSupportsIframeError(response) {
@@ -332,38 +339,38 @@ angular.module('Core').service('SiteListService', [
       // $log.log(logMsg);
 
       var siteUrl = siteRow.license.siteUrl;
-      var checkCsvStatusReq = null;
+      var mockCsvStatusReq = null;
 
       if (
-        (null != siteRow.csvStatusCheckMode) &&
-        (siteRow.csvStatusCheckMode.isOn)
+        (null != siteRow.csvStatusMockObj) &&
+        (siteRow.csvStatusMockObj.mockIt)
       ) {
 
-        if (null == siteRow.csvStatusCheckMode.checkIndex) {
-          siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
+        if (null == siteRow.csvStatusMockObj.mockCurrentIndex) {
+          siteRow.csvStatusMockObj.mockCurrentIndex = siteRow.csvStatusMockObj.mockStartIndex;
         }
 
-        checkCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.csvStatusCheckMode.checkIndex];
+        mockCsvStatusReq = WebExApiGatewayConstsService.csvStatusTypes[siteRow.csvStatusMockObj.mockCurrentIndex];
 
         logMsg = funcName + "\n" +
-          "checkIndex=" + siteRow.csvStatusCheckMode.checkIndex + "\n" +
-          "checkCsvStatusReq=" + checkCsvStatusReq;
+          "mockCurrentIndex=" + siteRow.csvStatusMockObj.mockCurrentIndex + "\n" +
+          "mockCsvStatusReq=" + mockCsvStatusReq;
         // $log.log(logMsg);
 
-        ++siteRow.csvStatusCheckMode.checkIndex;
+        ++siteRow.csvStatusMockObj.mockCurrentIndex;
 
         if (
-          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.csvStatusCheckMode.checkIndex) ||
-          (siteRow.csvStatusCheckMode.checkEnd < siteRow.csvStatusCheckMode.checkIndex)
+          (WebExApiGatewayConstsService.csvStatusTypes.length <= siteRow.csvStatusMockObj.mockCurrentIndex) ||
+          (siteRow.csvStatusMockObj.mockEndIndex < siteRow.csvStatusMockObj.mockCurrentIndex)
         ) {
 
-          siteRow.csvStatusCheckMode.checkIndex = siteRow.csvStatusCheckMode.checkStart;
+          siteRow.csvStatusMockObj.mockCurrentIndex = siteRow.csvStatusMockObj.mockStartIndex;
         }
       }
 
       WebExApiGatewayService.csvStatus(
         siteUrl,
-        checkCsvStatusReq
+        mockCsvStatusReq
       ).then(
 
         function success(response) {
@@ -392,26 +399,26 @@ angular.module('Core').service('SiteListService', [
           siteRow.showImportResultsLink = false;
           siteRow.importFinishedWithErrors = false;
 
-          if (siteRow.csvStatusObj.status == "none") {
+          if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
 
             siteRow.showExportLink = true;
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportInProgress") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
 
             siteRow.showExportInProgressLink = true;
 
             siteRow.grayedImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportCompletedNoErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
 
             siteRow.showExportLink = true;
             siteRow.showExportResultsLink = true;
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportCompletedWithErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
 
             siteRow.showExportLink = true;
             siteRow.showExportResultsLink = true;
@@ -419,20 +426,20 @@ angular.module('Core').service('SiteListService', [
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importInProgress") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
             siteRow.grayedExportLink = true;
 
             siteRow.showImportInProgressLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importCompletedNoErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
             siteRow.showExportLink = true;
 
             siteRow.showImportLink = true;
             siteRow.showImportResultsLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importCompletedWithErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
 
             siteRow.showExportLink = true;
 
@@ -454,7 +461,7 @@ angular.module('Core').service('SiteListService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
-          siteRow.showCSVInfo = true;
+          // siteRow.showCSVInfo = true;
         } // csvStatusError()
       ); // WebExApiGatewayService.csvStatus(siteUrl).then()
     }; // updateCSVColumnInRow()
@@ -473,7 +480,7 @@ angular.module('Core').service('SiteListService', [
 
           logMsg = funcName + "\n" +
             "adminUserSupportCSV=" + adminUserSupportCSV;
-          // $log.log(logMsg);
+          $log.log(logMsg);
 
           // don't show the CSV column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
