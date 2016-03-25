@@ -6,7 +6,7 @@ describe('Controller: CdrService', function () {
 
   var $httpBackend, $q, CdrService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
-  var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty';
+  var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/logstash*/_search?pretty';
   var name = 'call0CDR0';
 
   var model = {
@@ -52,8 +52,9 @@ describe('Controller: CdrService', function () {
 
   it('should return elastic search data from all servers', function () {
     $httpBackend.whenPOST(proxyUrl).respond(proxyResponse);
+    var logstashPath = 'logstash*';
 
-    CdrService.query(model).then(function (response) {
+    CdrService.query(model, logstashPath).then(function (response) {
       var returnValue = proxyResponse.hits.hits[0]._source;
       returnValue.name = name;
       expect(response[0][0][0]).toEqual(returnValue);
