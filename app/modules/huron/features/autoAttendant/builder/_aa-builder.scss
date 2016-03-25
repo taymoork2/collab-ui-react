@@ -243,6 +243,7 @@ $aa-builder-text-color: $gray-dark-1;
   #aa-name-detail {
     @extend h2;
 
+    line-height: 1;
     @include vr-spacing(mh, 0);
     width: 50vw;
     text-align: center;
