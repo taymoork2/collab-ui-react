@@ -222,6 +222,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       return WebExRestApiFact.csvApiRequest(
         mockFlag,
+        null,
         csvHttpsObj
       ).then(
 
@@ -266,7 +267,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         'errorText': null
       };
 
-      var mockFlag = true;
       var csvHttpsObj = _this.csvConstructHttpsObj(
         siteUrl,
         WebExApiGatewayConstsService.csvRequests.csvImport
@@ -275,12 +275,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       // TODO: add the content of csv file to csvHttpsObj
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
       $log.log(logMsg);
 
+      var mockFlag = true;
       return WebExRestApiFact.csvApiRequest(
         mockFlag,
+        null,
         csvHttpsObj
       ).then(
 
