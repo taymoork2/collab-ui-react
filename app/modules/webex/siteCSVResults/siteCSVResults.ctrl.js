@@ -144,7 +144,7 @@
         vm.gridRows.push({
           id: 'import-download-err-file',
           title: 'Download:',
-          value: 'Import error log',
+          value: 'Error log',
           fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
         });
       }
