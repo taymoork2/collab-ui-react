@@ -5,7 +5,6 @@
 
   /*@ngInject*/
   function SiteCSVResultsCtrl(
-    $scope,
     $state,
     $stateParams,
     $translate,
@@ -15,148 +14,148 @@
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
 
-    $scope.viewReady = false;
-
-    var _this = this;
+    var vm = this;
 
     logMsg = funcName + "\n" +
       "$stateParams=" + JSON.stringify($stateParams);
     $log.log(logMsg);
 
-    $scope.csvStatusObj = $stateParams.csvStatusObj;
-
-    $scope.gridRows = [];
+    vm.viewReady = false;
+    vm.csvStatusObj = $stateParams.csvStatusObj;
+    vm.gridRows = [];
 
     if (
-      ("exportCompletedNoErr" === $scope.csvStatusObj.status) ||
-      ("exportCompletedWithErr" === $scope.csvStatusObj.status)
+      ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
+      ("exportCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
-      $scope.modalTitle = "Export Results";
+      vm.modalTitle = "Export Results";
 
-      $scope.gridRows.push({
+      /*
+      vm.gridRows.push({
         id: 'import-request',
         title: 'Request:',
-        value: 'Export User WebEx Attributes',
+        value: 'Export finished',
         fileDownloadUrl: null
       });
+      */
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'export-started-time',
         title: 'Export started:',
-        value: '',
+        value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'export-finished-time',
         title: 'Export finished:',
-        value: '',
+        value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'export-records-total',
         title: 'Total records available:',
-        value: 5,
+        value: vm.csvStatusObj.details.totalRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'export-records-successful',
         title: 'Records successfully exported:',
-        value: 4,
+        value: vm.csvStatusObj.details.successRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'export-records-failed',
         title: 'Records failed:',
-        value: 1,
+        value: vm.csvStatusObj.details.failedRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
-        id: 'export-download-file',
+      vm.gridRows.push({
+        id: 'export-download-csv-file',
         title: 'Download:',
         value: 'Exported CSV file',
-        fileDownloadUrl: 'https://google.com'
+        fileDownloadUrl: vm.csvStatusObj.details.exportFileLink
       });
 
     } else if (
-      ("importCompletedNoErr" === $scope.csvStatusObj.status) ||
-      ("importCompletedWithErr" === $scope.csvStatusObj.status)
+      ("importCompletedNoErr" === vm.csvStatusObj.status) ||
+      ("importCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
-      $scope.modalTitle = "Import Results";
+      vm.modalTitle = "Import Results";
 
-      if ("exportCompletedWithErr" === $scope.csvStatusObj.status) {
-        $scope.importErrorFile = "fakeImportErrorFile.csv";
-      }
-
-      $scope.gridRows.push({
+      /*
+      vm.gridRows.push({
         id: 'export-request',
         title: 'Request:',
-        value: 'Import completed',
+        value: 'Import finished',
         fileDownloadUrl: null
       });
+      */
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-file-name',
         title: 'File name:',
-        value: '',
+        value: vm.csvStatusObj.details.importFileName,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-started-time',
         title: 'Import started:',
-        value: '',
+        value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-finished-time',
         title: 'Import finished:',
-        value: '',
+        value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-records-total',
         title: 'Total records requested:',
-        value: 5,
+        value: vm.csvStatusObj.details.totalRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-records-updated',
         title: 'Records successfully updated:',
-        value: 3,
+        value: vm.csvStatusObj.details.successRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
+      vm.gridRows.push({
         id: 'import-records-failed',
         title: 'Records failed:',
-        value: 2,
+        value: vm.csvStatusObj.details.failedRecords,
         fileDownloadUrl: null
       });
 
-      $scope.gridRows.push({
-        id: 'import-download-file',
-        title: 'Download:',
-        value: 'Import error log',
-        fileDownloadUrl: 'https://yahoo.com'
-      });
+      if (0 < vm.csvStatusObj.details.failedRecords) {
+        vm.gridRows.push({
+          id: 'import-download-err-file',
+          title: 'Download:',
+          value: 'Error log',
+          fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
+        });
+      }
     }
 
     logMsg = funcName + "\n" +
-      "$scope.gridRows=" + JSON.stringify($scope.gridRows);
+      "vm.gridRows=" + JSON.stringify(vm.gridRows);
     $log.log(logMsg);
 
     /*
-    $scope.gridOptions = {
+    vm.gridOptions = {
       data: 'gridRows',
       multiSelect: false,
       enableRowSelection: false,
@@ -165,19 +164,19 @@
       columnDefs: [],
     };
 
-    $scope.gridOptions.columnDefs.push({
+    vm.gridOptions.columnDefs.push({
       field: 'title',
       displayName: '',
       sortable: false
     });
 
-    $scope.gridOptions.columnDefs.push({
+    vm.gridOptions.columnDefs.push({
       field: 'value',
       displayName: '',
       sortable: false
     });
     */
 
-    $scope.viewReady = true;
+    vm.viewReady = true;
   } // SiteCSVResultsCtrl()
 })(); // top level function

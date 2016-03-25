@@ -522,7 +522,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -860,13 +859,13 @@ angular
             csvImportObj: null
           }
         })
-        // lhsieh
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
               templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
+              controllerAs: 'siteCSVResult',
             }
           },
           params: {
