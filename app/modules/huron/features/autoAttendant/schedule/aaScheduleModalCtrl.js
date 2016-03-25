@@ -329,11 +329,11 @@
         controllerAs: 'import'
       });
       importModal.result.then(function (allHours) {
-        Notification.success('autoAttendant.successImport', {
-          holidays: allHours.holidays.length,
-          hours: allHours.hours.length
-        });
         if (allHours) {
+          Notification.success('autoAttendant.successImport', {
+            holidays: allHours.holidays.length,
+            hours: allHours.hours.length
+          });
           allHours.hours.forEach(function (value) {
             vm.openhours.unshift(value);
           });

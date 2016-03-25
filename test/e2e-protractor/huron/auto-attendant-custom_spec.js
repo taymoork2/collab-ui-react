@@ -2,7 +2,7 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
-
+  var waitTime = 12000;
   beforeAll(function () {
     login.login('huron-int1');
   }, 120000);
@@ -27,10 +27,10 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newFeatureButton);
 
       // select AA
-      utils.wait(autoattendant.featureTypeAA, 12000);
+      utils.wait(autoattendant.featureTypeAA, waitTime);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.wait(autoattendant.customAA, 12000);
+      utils.wait(autoattendant.customAA, waitTime);
       utils.click(autoattendant.customAA);
 
       // enter AA name
@@ -43,7 +43,7 @@ describe('Huron Auto Attendant', function () {
     }, 60000);
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      utils.wait(autoattendant.addAANumbers, 12000);
+      utils.wait(autoattendant.addAANumbers, waitTime);
       utils.click(autoattendant.numberDropDownArrow);
 
       // we are going to arbitrarily select the last one
@@ -83,7 +83,7 @@ describe('Huron Auto Attendant', function () {
     
     it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.addschedule, 12000);
+      utils.wait(autoattendant.addschedule, waitTime);
       utils.click(autoattendant.toggleHoliday);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
@@ -101,10 +101,10 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.newFeatureButton);
 
       // select AA
-      utils.wait(autoattendant.featureTypeAA, 12000);
+      utils.wait(autoattendant.featureTypeAA, waitTime);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.wait(autoattendant.customAA, 12000);
+      utils.wait(autoattendant.customAA, waitTime);
       utils.click(autoattendant.customAA);
 
       // enter AA name
@@ -118,12 +118,24 @@ describe('Huron Auto Attendant', function () {
     
     it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.addschedule, 12000);
+      utils.wait(autoattendant.addschedule, waitTime);
       utils.click(autoattendant.importSchedule);
-      utils.wait(autoattendant.importScheduleTitle, 12000);
+      utils.wait(autoattendant.importScheduleTitle, waitTime);
       //utils.expectIsEnabled(autoattendant.modalsave);
     }, 60000);
 
   });
+  
+  it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+
+      // click delete X on the AA card for e2e test AA
+      utils.click(autoattendant.testCardDelete);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+      });
+
+    });
 
 });

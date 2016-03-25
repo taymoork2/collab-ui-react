@@ -13,5 +13,5 @@
 </div>
 <div class="modal-footer">
   <button class="btn" translate="common.cancel" ng-click="$dismiss()"></button>
-  <button class="btn--primary" ng-click="import.continueImport()" translate="common.continue"></button>
+  <button class="btn--primary" ng-click="import.continueImport()" translate="common.continue" ng-disabled="!import.selected"></button>
 </div>

@@ -6,7 +6,7 @@
     .controller('AAScheduleImportCtrl', AAScheduleImportCtrl);
 
   /* @ngInject */
-  function AAScheduleImportCtrl($modalInstance, AutoAttendantCeInfoModelService, AutoAttendantCeService, AACalendarService, AAICalService, AAModelService, $translate) {
+  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
@@ -21,13 +21,12 @@
     }
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      AACalendarService.readSchedules().then(function (data) {
-        data.forEach(function (value) {
-          var obj = {};
-          obj.label = value.scheduleName.split('Calendar for ')[1];
-          obj.value = value.scheduleUrl.split('/schedules/')[1];
-          vm.options.push(obj);
+      AACalendarService.listCalendars().then(function (data) {
+        vm.options = _.map(data, function (obj) {
+          return {
+            label: obj.scheduleName.split('Calendar for ')[1],
+            value: obj.scheduleUrl.split('/schedules/')[1]
+          };
         });
       });
     }
