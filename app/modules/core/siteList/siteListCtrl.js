@@ -78,6 +78,7 @@
             mockStatusCurrentIndex: null,
             mockExport: true,
             mockImport: true,
+            mockFileDownload: true
           };
 
           conferenceService.csvStatusObj = null;
@@ -170,16 +171,31 @@
       ).then(
 
         function success(response) {
+          var funcName = "WebExApiGatewayService.csvExport.success()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           Notification.success($translate.instant('siteList.exportStartedToast'));
           SiteListService.updateCSVColumnInRow(siteRow);
         },
 
         function error(response) {
+          var funcName = "WebExApiGatewayService.csvExport.error()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           //TBD: Actual error result handling
           Notification.error($translate.instant('siteList.exportRejectedToast'));
         }
       ).catch(
         function catchError(response) {
+          var funcName = "WebExApiGatewayService.csvExport.catchError()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           Notification.error($translate.instant('siteList.exportRejectedToast'));
           SiteListService.updateCSVColumnInRow(siteRow);
         }
