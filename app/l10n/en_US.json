@@ -710,7 +710,8 @@
     "first": "First",
     "second": "Second",
     "third": "Third",
-    "fourth": "Fourth"
+    "fourth": "Fourth",
+    "last": "Last"
   },
   "common": {
     "delete": "Delete",
