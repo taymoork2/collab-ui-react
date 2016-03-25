@@ -39,17 +39,22 @@ var _ = require('lodash');
  * --verbose            Runs tests with detailed console.log() messages
  ******************************************************************/
 gulp.task('e2e', function (done) {
-  var e2eTasks = [
-    'e2e:setup',
-    'protractor:clean',
-    'sauce:start',
-    'protractor',
-    'protractor:retry',
-    'sauce:stop',
-    'protractor:clean',
-    'connect:stop',
-    done
-  ];
+  var e2eTasks = [];
+  var retryTasks = mkRetryTaskList();
+
+  e2eTasks = ['e2e:setup',
+      'protractor:clean',
+      'sauce:start',
+      'protractor'
+    ]
+    .concat(retryTasks)
+    .concat([
+      'sauce:stop',
+      'protractor:clean',
+      'connect:stop',
+      done
+    ]);
+
   if (args.nosetup) {
     _.pull(e2eTasks, 'e2e:setup');
     _.pull(e2eTasks, 'connect:stop');
@@ -104,7 +109,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
           tests = tests.filter(function (test) {
             return test.trim() !== '';
           });
-          messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+          messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(specs));
         } catch (err) {
           messageLogger('Error:: ' + $.util.colors.red(err));
         }
@@ -113,16 +118,16 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       }
     } else if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
-      messageLogger('Running End 2 End tests from module: ' + $.util.colors.red(specs));
+      messageLogger('Running End 2 End tests from module: ' + $.util.colors.white.bold(specs));
     } else {
       tests = specs.split(',');
-      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(specs));
     }
   } else if (args['files-from']) {
     var filesFrom = args['files-from'];
     try {
       tests = fileListParser.toList(filesFrom);
-      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(filesFrom));
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(filesFrom));
     } catch (err) {
       messageLogger('Error:: ' + $.util.colors.red(err));
     }
@@ -137,6 +142,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     messageLogger('Running End 2 End tests from all modules.');
   }
 
+  messageLogger('#### Starting E2E Run: ' + config.getE2eRunCounter());
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
@@ -144,18 +150,24 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     });
 });
 
-gulp.task('protractor:copy-failures', function () {
-  return gulp.src(config.e2eFailRetry)
-    .pipe($.rename(_.trimLeft(config.e2eFailRetry, '.')))
-    .pipe(gulp.dest(config.cache));
-});
-
 gulp.task('protractor:retry', function (done) {
+  var retrySpecList;
   if (fs.existsSync(config.e2eFailRetry)) {
     //TODO notify first failures somewhere?
-    args['files-from'] = config.e2eFailRetry;
+
+    // mv default retry file to more specific name correlating to its run
+    // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
+    retrySpecList = config.cache + '/'
+      + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + config.getE2eRunCounter();
+    fs.renameSync(config.e2eFailRetry, retrySpecList);
+
+    // update the source of specs for the next run
+    args['files-from'] = retrySpecList;
     delete args.specs;
-    runSeq('protractor:copy-failures', 'protractor', done);
+
+    // now we can increment the run counter and re-run
+    config.setE2eRunCounter(config.getE2eRunCounter() + 1);
+    runSeq('protractor', done);
   } else {
     messageLogger('Nothing to retry');
     done();
@@ -235,7 +247,7 @@ gulp.task('e2e:setup', function (done) {
       done
     );
   } else {
-    log($.util.colors.red('--nosetup **Skipping E2E Setup Tasks.'));
+    log($.util.colors.yellow('--nosetup **Skipping E2E Setup Tasks.'));
     return done();
   }
 });
@@ -281,4 +293,15 @@ function sourceProduction() {
   $.env({
     file: './test/env/production.json'
   });
+}
+
+function mkRetryTaskList() {
+  var list = []
+  var i;
+  var runCounterMax = process.env.E2E_RUN_COUNTER_MAX && +process.env.E2E_RUN_COUNTER_MAX || 0;
+  for (i = 0; i < runCounterMax; i++) {
+    list.push('protractor:retry');
+  }
+
+  return list;
 }

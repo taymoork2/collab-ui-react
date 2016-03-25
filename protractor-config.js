@@ -5,7 +5,7 @@
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
-var config = require('./gulp/gulp.config')();
+var gulpConfig = require('./gulp/gulp.config')();
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -15,7 +15,7 @@ var agent = mkProxyAgent();
 var TIMEOUT      = 1000 * 60;
 var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
-var E2E_FAIL_RETRY = config.e2eFailRetry;
+var E2E_FAIL_RETRY = gulpConfig.e2eFailRetry;
 var NEWLINE = '\n';
 
 exports.config = {
@@ -58,6 +58,8 @@ exports.config = {
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
+
+    global.e2eRunCounter = gulpConfig.getE2eRunCounter();
 
     global.baseUrl = exports.config.baseUrl;
 
@@ -157,7 +159,7 @@ exports.config = {
 
       jasmine.getEnv().addReporter(
         new jasmineReporters.JUnitXmlReporter({
-          savePath: 'test/e2e-protractor/reports',
+          savePath: 'test/e2e-protractor/reports/run-' + gulpConfig.getE2eRunCounter(),
           consolidateAll: false
         })
       );
