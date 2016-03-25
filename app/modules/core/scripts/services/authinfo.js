@@ -163,8 +163,8 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
 
-          Localytics.customDimension(1, authData.orgId); // org id
-          Localytics.setCustomerId(authData.userId); // user id
+          Localytics.setOrgId(authData.orgId);
+          Localytics.setUserId(authData.userId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();

@@ -39,9 +39,6 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   initView();
 
   function initView() {
-    setUserSipAddress();
-    setFormValuesToMatchRoles();
-
     Orgservice.getOrgCacheOption(function (data, status) {
       if (data.success) {
         $scope.dirsyncEnabled = data.dirsyncEnabled;
@@ -61,6 +58,9 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
       $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
       $scope.roles = $scope.currentUser.roles;
     }
+
+    setUserSipAddress();
+    setFormValuesToMatchRoles();
   }
 
   function setUserSipAddress() {

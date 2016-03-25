@@ -11,7 +11,7 @@
     var features = {
       pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
-      dirSync: 'dirSync',
+      dirSync: 'atlas-dir-sync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
@@ -165,7 +165,6 @@
       generateFeatureToggleRule: generateFeatureToggleRule,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload,
       supportsDirSync: supportsDirSync,
       features: features
     };
@@ -274,9 +273,7 @@
 
     function supports(feature) {
       return $q(function (resolve, reject) {
-        if (feature === features.csvUpload && !Config.isProd()) {
-          resolve(true);
-        } else if (feature === features.dirSync) {
+        if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
@@ -304,10 +301,6 @@
       return supports(features.pstnSetup);
     }
 
-    function supportsCsvUpload() {
-      return supports(features.csvUpload);
-    }
-
     function supportsDirSync() {
       var deferred = $q.defer();
       Orgservice.getOrgCacheOption(function (data, status) {
@@ -317,7 +310,7 @@
           deferred.reject(status);
         }
       }, null, {
-        cache: true
+        cache: false
       });
       return deferred.promise;
     }
