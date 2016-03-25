@@ -17,6 +17,7 @@
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
+      deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
@@ -39,7 +40,9 @@
         scomUrl = scomUrl + '?disableCache=true';
       }
 
-      $http.get(scomUrl)
+      $http.get(scomUrl, {
+          cache: true
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -229,6 +232,15 @@
             data.status = status;
             callback(data, status);
           });
+      });
+    }
+
+    function deleteOrg(currentOrgId) {
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
+
+      return $http({
+        method: 'DELETE',
+        url: serviceUrl
       });
     }
 

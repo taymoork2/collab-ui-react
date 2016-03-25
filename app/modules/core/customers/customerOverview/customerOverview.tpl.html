@@ -91,6 +91,10 @@
         </ul>
       </div>
     </cs-sp-section>
+    <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest"
+    ng-click="customerOverview.deleteTestOrg(customerOverview.currentCustomer.customerOrgId)">
+    {{'customerPage.deleteOrg' | translate}}{{customerOverview.currentCustomer.customerName}}
+    </button>
   </cs-sp-container>
 
 </div>

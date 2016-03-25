@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, Log, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService, Orgservice) {
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
@@ -23,6 +23,8 @@
     vm.logoOverride = false;
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
+    vm.isTest = false;
+    vm.deleteTestOrg = deleteTestOrg;
     vm.reset = reset;
     vm.saveLogoSettings = saveLogoSettings;
     vm.partnerOrgId = Authinfo.getOrgId();
@@ -43,6 +45,7 @@
 
     initCustomer();
     getLogoSettings();
+    isTestOrg();
 
     vm.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
@@ -186,5 +189,20 @@
     function isOwnOrg() {
       return vm.currentCustomer.customerName === Authinfo.getOrgName();
     }
+
+    function isTestOrg() {
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          vm.isTest = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      }, vm.currentCustomer.customerOrgId);
+    }
+
+    function deleteTestOrg(orgId) {
+      Orgservice.deleteOrg(orgId);
+    }
+
   }
 })();
