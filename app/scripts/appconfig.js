@@ -851,8 +851,9 @@ angular
           parent: 'modal',
           views: {
             'modal@': {
-              controller: 'SiteCSVImportCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVImportModal.tpl.html',
+              controller: 'SiteCSVImportModalCtrl',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
+              controllerAs: 'siteCSVImportModalCtrl'
             }
           },
           params: {
@@ -865,7 +866,7 @@ angular
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
             }
           },
           params: {
