@@ -1,10 +1,10 @@
-
 <p class="ui-grid-cell-contents">
   <span ng-if="!row.entity.showCSVInfo">
     <i class="icon-spinner icon"> </i>
   </span>
 
-  <span ng-if="row.entity.showCSVInfo">
+  <span ng-if="!row.entity.isError">
+     <span ng-if="row.entity.showCSVInfo">
         <span ng-if="!row.entity.isCSVSupported">
             <span id="{{row.entity.license.siteUrl}}_notAvailable"
                   translate="siteList.siteCSVNotAvailable"></span> 
@@ -136,5 +136,27 @@
             </span> 
           </span>
         </span>
+    </span>      
   </span>
+  
+  <span ng-if="row.entity.isError">
+    <span ng-if="!row.entity.isWarn" 
+         popover="{{'siteList.systemError' | translate}}" 
+         popover-trigger="mouseenter" 
+         popover-placement="bottom">
+      <span id="{{row.entity.license.siteUrl}}_errorIcon">
+       <i class="icon-error icon err webex-alert-text"></i>
+      </span>
+    </span>
+  
+    <span ng-if="row.entity.isWarn" 
+         popover="{{'siteList.authError' | translate}}" 
+         popover-trigger="mouseenter" 
+         popover-placement="bottom">
+      <span id="{{row.entity.license.siteUrl}}_warningIcon">
+       <i class="icon-warning icon webex-attention-text"></i>
+      </span>
+    </span>
+  </span>
+   
 </p>
