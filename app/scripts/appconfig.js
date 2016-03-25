@@ -522,7 +522,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -847,13 +846,26 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        // lhsieh
+        .state('site-csv-import', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVImportModalCtrl',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
+              controllerAs: 'siteCSVImportModalCtrl'
+            }
+          },
+          params: {
+            csvImportObj: null
+          }
+        })
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
+              controllerAs: 'siteCSVResult',
             }
           },
           params: {
@@ -1332,7 +1344,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
@@ -1351,7 +1364,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           }
         })
         .state('callroutingBase', {

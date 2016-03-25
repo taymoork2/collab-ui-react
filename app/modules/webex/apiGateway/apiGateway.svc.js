@@ -5,72 +5,100 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
   '$q',
   '$log',
   'Authinfo',
+  'Storage',
   'WebExUtilsFact',
   'WebExXmlApiFact',
   'WebExXmlApiInfoSvc',
   'WebExRestApiFact',
+  'WebExApiGatewayConstsService',
 
   function (
     $rootScope,
     $q,
     $log,
     Authinfo,
+    Storage,
     WebExUtilsFact,
     WebExXmlApiFact,
     webExXmlApiInfoObj,
-    WebExRestApiFact
+    WebExRestApiFact,
+    WebExApiGatewayConstsService
   ) {
 
     var _this = this;
 
-    this.csvStatusTypes = [
-      'none',
-      'exportInProgress',
-      'exportCompletedNoErr',
-      'exportCompletedWithErr',
-      'importInProgress',
-      'importCompletedNoErr',
-      'importCompletedWithErr'
-    ];
+    this.csvConstructHttpsObj = function (
+      siteUrl,
+      csvApi
+    ) {
+
+      var httpsObj = null;
+
+      WebExApiGatewayConstsService.csvAPIs.forEach(
+        function checkAPI(csvAPI) {
+          if (csvApi == csvAPI.request) {
+            var csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
+            var accessToken = Storage.get('accessToken');
+
+            httpsObj = {
+              url: csvUrl,
+              method: csvAPI.method,
+              headers: {
+                'Content-Type': csvAPI.contentType,
+                'Authorization': 'Bearer ' + accessToken
+              }
+            };
+          }
+        } // csvAPI()
+      ); // WebExApiGatewayConstsService.csvAPIs.forEach()
+
+      return httpsObj;
+    }; // csvConstructHttpsObj()
 
     this.csvStatus = function (
       siteUrl,
-      checkCsvStatusReq
+      mockCsvStatusReq
     ) {
 
       var funcName = 'csvStatus()';
       var logMsg = '';
 
-      var mockIt = (
-        null != checkCsvStatusReq
+      var mockFlag = (
+        null != mockCsvStatusReq
       ) ? true : false;
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        'mockIt=' + mockIt;
-      $log.log(logMsg);
+      var csvHttpsObj = _this.csvConstructHttpsObj(
+        siteUrl,
+        WebExApiGatewayConstsService.csvRequests.csvStatus
+      );
 
-      var completionDetails = null;
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "mockFlag=" + mockFlag + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      $log.log(logMsg);
 
       var successResult = {
         siteUrl: siteUrl,
-        isTestResult: false,
-        status: 'none', // can be any one of this.csvStatusTypes
-        completionDetails: null, // null unless status is exportCompleted or importCompleted
+        isMockResult: mockFlag,
+        status: null, // can be any one of WebExApiGatewayConstsService.csvStatusTypes[]
+        details: null
       };
 
       var errorResult = {
         siteUrl: siteUrl,
-        isTestResult: false,
+        isMockResult: mockFlag,
         status: 'error',
         errorId: null,
-        errorDesc: null
+        errorDesc: null,
+        details: null
       };
 
       var deferredCsvStatus = $q.defer();
 
-      WebExRestApiFact.csvStatusReq(
-        mockIt,
-        siteUrl
+      WebExRestApiFact.csvApiRequest(
+        mockFlag,
+        mockCsvStatusReq,
+        csvHttpsObj
       ).then(
 
         function success(response) {
@@ -81,67 +109,66 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
 
-          if (mockIt) { // return a mock/test csv status if requested
-            successResult.isTestResult = true;
-
-            if ('none' == checkCsvStatusReq) {
-              successResult.status = "none";
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('exportInProgress' == checkCsvStatusReq) {
-              successResult.status = "exportInProgress";
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('exportCompletedNoErr' == checkCsvStatusReq) {
-              completionDetails = {};
-
-              successResult.status = "exportCompletedNoErr";
-              successResult.completionDetails = completionDetails;
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('exportCompletedWithErr' == checkCsvStatusReq) {
-              completionDetails = {};
-
-              successResult.status = "exportCompletedWithErr";
-              successResult.completionDetails = completionDetails;
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('importInProgress' == checkCsvStatusReq) {
-              successResult.status = "importInProgress";
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('importCompletedNoErr' == checkCsvStatusReq) {
-              completionDetails = {};
-
-              successResult.status = "importCompletedNoErr";
-              successResult.completionDetails = completionDetails;
-
-              deferredCsvStatus.resolve(successResult);
-            }
-
-            if ('importCompletedWithErr' == checkCsvStatusReq) {
-              completionDetails = {};
-
-              successResult.status = "importCompletedWithErr";
-              successResult.completionDetails = completionDetails;
-
-              deferredCsvStatus.resolve(successResult);
-            }
-          } // return a mock/test csv status if requested
+          successResult.details = response;
+          errorResult.details = response;
 
           // TODO: if error response then return reject
 
-          // TODO: update successResult appropriately
+          var csvJobType = response.jobType;
+          var csvJobStatus = response.request;
+
+          switch (csvJobType) {
+          case WebExApiGatewayConstsService.csvJobTypes.typeNone:
+            successResult.status = WebExApiGatewayConstsService.csvStates.none;
+            break;
+
+          case WebExApiGatewayConstsService.csvJobTypes.typeImport:
+            switch (csvJobStatus) {
+            case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
+            case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
+            case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
+              successResult.status = WebExApiGatewayConstsService.csvStates.importInProgress;
+              break;
+
+            case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
+              successResult.status = (
+                response.failedRecords === 0
+              ) ? WebExApiGatewayConstsService.csvStates.importCompletedNoErr : WebExApiGatewayConstsService.csvStates.importCompletedWithErr;
+              break;
+
+            default:
+              // TODO: handle error
+              break;
+            }
+
+            break;
+
+          case WebExApiGatewayConstsService.csvJobTypes.typeExport:
+            switch (csvJobStatus) {
+            case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
+            case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
+            case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
+              successResult.status = WebExApiGatewayConstsService.csvStates.exportInProgress;
+              break;
+
+            case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
+              successResult.status = (
+                response.failedRecords === 0
+              ) ? WebExApiGatewayConstsService.csvStates.exportCompletedNoErr : WebExApiGatewayConstsService.csvStates.exportCompletedWithErr;
+              break;
+
+            default:
+              // TODO: handle error
+              break;
+            }
+
+            break;
+
+          default:
+            // TODO: handle error
+            break;
+          }
+
           deferredCsvStatus.resolve(successResult);
         },
 
@@ -158,32 +185,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       );
 
       return deferredCsvStatus.promise;
-      /*
-      return WebExRestApiFact.csvStatusReq(
-        siteUrl
-      ).then(
-        function success(response) {
-          var funcName = "WebExRestApiFact.csvStatusReq.success()";
-          var logMsg = "";
-
-          logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-            "response=" + JSON.stringify(response);
-          $log.log(logMsg);
-
-          $q.resolve(result);
-        } // csvStatusReqSuccess()
-      ).catch(
-        function errorCatch(result) {
-          var funcName = "WebExRestApiFact.csvStatusReq.errorCatch()";
-          var logMsg = "";
-
-          $q.reject(result);
-        } // restApiReqCatch()
-      ); // return WebExRestApiFact.csvStatusReq()
-      */
     }; // csvStatus()
 
-    this.csvExport = function (siteUrl) {
+    this.csvExport = function (
+      siteUrl,
+      mockFlag
+    ) {
+
       var funcName = 'csvExport()';
       var logMsg = '';
 
@@ -202,7 +210,22 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         'errorText': null
       };
 
-      return WebExRestApiFact.csvExportReq(siteUrl).then(
+      var csvHttpsObj = _this.csvConstructHttpsObj(
+        siteUrl,
+        WebExApiGatewayConstsService.csvRequests.csvExport
+      );
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "mockFlag=" + mockFlag + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      $log.log(logMsg);
+
+      return WebExRestApiFact.csvApiRequest(
+        mockFlag,
+        null,
+        csvHttpsObj
+      ).then(
+
         function success(response) {
           $q.resolve(successResult);
         },
@@ -210,10 +233,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         function error(response) {
           $q.reject(errorResult);
         }
+
       ).catch(
+
         function catchError(response) {
           $q.reject(errorResult);
         }
+
       ); // WebExRestApiFact.csvExportReq()
     }; // csvExport()
 
@@ -241,10 +267,24 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         'errorText': null
       };
 
-      return WebExRestApiFact.csvImportReq(
+      var csvHttpsObj = _this.csvConstructHttpsObj(
         siteUrl,
-        csvFile
+        WebExApiGatewayConstsService.csvRequests.csvImport
+      );
+
+      // TODO: add the content of csv file to csvHttpsObj
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      $log.log(logMsg);
+
+      var mockFlag = true;
+      return WebExRestApiFact.csvApiRequest(
+        mockFlag,
+        null,
+        csvHttpsObj
       ).then(
+
         function success(response) {
           $q.resolve(successResult);
         },
@@ -252,10 +292,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         function error(response) {
           $q.reject(errorResult);
         }
+
       ).catch(
+
         function catchError(response) {
           $q.reject(errorResult);
         }
+
       ); // WebExRestApiFact.csvExportReq()
     }; // csvImport()
 

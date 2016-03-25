@@ -86,7 +86,7 @@
             <a ng-if="row.entity.showImportLink"
                id="{{row.entity.license.siteUrl}}_import"
                translate="siteList.siteCsvImportLinkLabel"
-               ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); ">
+               ui-sref="site-csv-import({csvImportObj:row.entity})">
             </a>
             
             <!-- Grayed Import -->

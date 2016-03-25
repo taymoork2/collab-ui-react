@@ -247,6 +247,7 @@
       User: [],
       Site_Admin: [
         'site-list',
+        'site-csv-import',
         'site-csv-results',
         'site-settings',
         'site-setting',

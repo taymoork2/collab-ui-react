@@ -162,6 +162,25 @@ function mk_workspace_tar {
     rm -rf $tmp_dir
 }
 
+function restore_latest_deps {
+    get_top_dir >/dev/null || return 1
+    top_dir="`get_top_dir`"
+    last_npm_deps_tar="`get_most_recent ${top_dir}/.cache/npm-deps-for-*`"
+    last_bower_deps_tar="`get_most_recent ${top_dir}/.cache/bower-deps-for-*`"
+    tar_opts="$@"
+
+    if [ -n "${last_npm_deps_tar}" -a -n "${last_bower_deps_tar}" ]; then
+        set -x
+        rm -rf ./node_modules ./bower_components
+        tar ${tar_opts} -xzf ${last_npm_deps_tar}
+        tar ${tar_opts} -xzf ${last_bower_deps_tar}
+        set +x
+    else
+        # no built deps exist
+        return 1
+    fi
+}
+
 # define and export project root dir, and add it to bash config
 function get_bash_conf_file {
     if [ "`uname`" = "Darwin" ]; then

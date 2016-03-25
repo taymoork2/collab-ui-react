@@ -16,6 +16,7 @@ var messageLogger = require('../utils/messageLogger.gulp')();
 var logWatch = require('../utils/logWatch.gulp')();
 var path = require('path');
 var reload = browserSync.reload;
+var typeScriptUtil = require('../utils/typeScript.gulp.js');
 
 var changedFiles;
 var testFiles;
@@ -56,8 +57,8 @@ gulp.task('watch:ts', function () {
   if (!args.dist) {
     if (args.nounit) {
       gulp.watch([
-          config.appFiles.ts,
-          '!' + config.testFiles.spec.ts
+          config.typeScript.appFiles,
+          '!' + config.typeScript.testFiles
         ], [
           'ts:changed-files',
           'index:build'
@@ -65,14 +66,14 @@ gulp.task('watch:ts', function () {
         .on('change', karmaModifiedFiles);
       gulp.watch(
           [
-            '!' + config.appFiles.ts,
-            config.testFiles.spec.ts
+            '!' + config.typeScript.appFiles,
+            config.typeScript.testFiles
           ], ['ts:changed-spec-files', 'index:build'])
         .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
-          config.appFiles.ts,
-          '!' + config.testFiles.spec.ts
+          config.typeScript.appFiles,
+          '!' + config.typeScript.testFiles
         ], [
           'karma-watch',
           'ts:changed-files',
@@ -81,8 +82,8 @@ gulp.task('watch:ts', function () {
         .on('change', karmaModifiedFiles);
       gulp.watch(
           [
-            '!' + config.appFiles.ts,
-            config.testFiles.spec.ts
+            '!' + config.typeScript.appFiles,
+            config.typeScript.testFiles
           ], [
             'karma-watch',
             'ts:changed-spec-files',
@@ -172,37 +173,12 @@ gulp.task('copy:changed-files', function () {
 });
 
 gulp.task('ts:changed-spec-files', function () {
-  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.tsTestOutputFolder);
+  return typeScriptUtil.compile([].concat(changedFiles), config.app);
 });
 
 gulp.task('ts:changed-files', function () {
-  return compileTs([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
+  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
 });
-
-function compileTs(files, output) {
-  var filter;
-  var reporter = $.typescript.reporter.defaultReporter();
-  messageLogger('Transpiling changed TypeScript files', changedFiles);
-  return gulp
-    .src(files, {
-      base: config.app
-    })
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.sourcemaps.init())
-    .pipe($.typescript({
-      "removeComments": false,
-      "preserveConstEnums": true,
-      "target": "ES5",
-      "sourceMap": true,
-      "showOutput": "silent",
-      "listFiles": false
-    }, filter, reporter))
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(output))
-    .pipe(reload({
-      stream: true
-    }));
-}
 
 function karmaModifiedFiles(event) {
   var files = logWatch(event);

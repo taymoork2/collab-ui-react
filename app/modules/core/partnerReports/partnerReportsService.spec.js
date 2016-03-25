@@ -96,49 +96,54 @@ describe('Service: Partner Reports Service', function () {
     });
 
     it('should getActiveUserData for an existing customer', function () {
-      $httpBackend.whenGET(mostActiveUsersUrl).respond(activeUserData.mostActiveAPI);
       $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedAPI);
 
       PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
-        expect(response.graphData).toEqual(activeUserDetailedResponse);
-        expect(response.tableData).toEqual(activeUserData.mostActiveResponse);
-        expect(response.populationGraph).toEqual(activeUserData.activePopResponse);
-        expect(response.overallPopulation).toEqual(33);
+        expect(response).toEqual({
+          graphData: activeUserDetailedResponse,
+          isActiveUsers: true,
+          popData: activeUserData.activePopResponse,
+          overallPopulation: 33
+        });
       });
       $httpBackend.flush();
     });
 
-    describe('should notify an error for getActiveUserData', function () {
-      it('and return empty table data', function () {
-        $httpBackend.whenGET(mostActiveUsersUrl).respond(500, error);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(activeUserDetailedAPI);
+    it('should notify an error for getActiveUserData and return empty data', function () {
+      $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
 
-        PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-          expect(response.graphData).toEqual(activeUserDetailedResponse);
-          expect(response.tableData).toEqual([]);
-          expect(response.populationGraph).toEqual(activeUserData.activePopResponse);
-          expect(response.overallPopulation).toEqual(33);
+      var activePopResponse = angular.copy(activeUserData.activePopResponse);
+      activePopResponse[0].percentage = 0;
+
+      PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(response).toEqual({
+          graphData: [],
+          isActiveUsers: false,
+          popData: activePopResponse,
+          overallPopulation: 0
         });
-        $httpBackend.flush();
       });
+      $httpBackend.flush();
+    });
 
-      it('and return empty graph data', function () {
-        $httpBackend.whenGET(mostActiveUsersUrl).respond(activeUserData.mostActiveAPI);
-        $httpBackend.whenGET(activeUsersDetailedUrl).respond(500, error);
+    it('should getActiveTableData for an existing customer', function () {
+      $httpBackend.whenGET(mostActiveUsersUrl).respond(activeUserData.mostActiveAPI);
 
-        var activePopResponse = angular.copy(activeUserData.activePopResponse);
-        activePopResponse[0].percentage = 0;
-
-        PartnerReportService.getActiveUserData(customerData.customerOptions, timeFilter).then(function (response) {
-          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-          expect(response.graphData).toEqual([]);
-          expect(response.tableData).toEqual(activeUserData.mostActiveResponse);
-          expect(response.populationGraph).toEqual(activePopResponse);
-          expect(response.overallPopulation).toEqual(0);
-        });
-        $httpBackend.flush();
+      PartnerReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
+        expect(response).toEqual(activeUserData.mostActiveResponse);
       });
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getActiveTableData and return empty', function () {
+      $httpBackend.whenGET(mostActiveUsersUrl).respond(500, error);
+
+      PartnerReportService.getActiveTableData(customerData.customerOptions, timeFilter).then(function (response) {
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        expect(response).toEqual([]);
+      });
+      $httpBackend.flush();
     });
   });
 
