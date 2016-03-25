@@ -12,14 +12,17 @@
       color: $gray-dark;
   }
   .box-match {
-    top: -14px;
-    left: -12px;
-    position: relative;
-    height: 0;
+    padding-left: rem-calc(24);
+    padding-right: rem-calc(24);
+  }
+  .spinner-most-active {
+    height: rem-calc(70);
+    padding-top: rem-calc(25);
   }
   .active-users-table {
-    padding-bottom: 0;
-    margin-bottom: 0;
+    margin-left: rem-calc(24);
+    margin-right: rem-calc(24);
+    width: auto;
   }
   .carousel-btn {
     border: 1px solid $gray-dark-1;

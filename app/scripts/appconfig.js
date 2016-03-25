@@ -197,6 +197,7 @@ angular
       $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
+      $httpProvider.interceptors.push('ServerErrorInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -1331,7 +1332,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
@@ -1350,7 +1352,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           }
         })
         .state('callroutingBase', {

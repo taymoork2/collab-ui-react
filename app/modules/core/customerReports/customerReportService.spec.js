@@ -126,7 +126,10 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(activeUserDetailedUrl).respond(activeUserData);
 
       CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
-        expect(response).toEqual(responseActiveData);
+        expect(response).toEqual({
+          graphData: responseActiveData,
+          isActiveUsers: true
+        });
       });
 
       $httpBackend.flush();
@@ -136,7 +139,10 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(activeUserDetailedUrl).respond(500, error);
 
       CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
-        expect(response).toEqual([]);
+        expect(response).toEqual({
+          graphData: [],
+          isActiveUsers: false
+        });
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 

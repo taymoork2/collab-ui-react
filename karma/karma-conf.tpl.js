@@ -22,6 +22,12 @@ module.exports = function (config) {
         watched: true,
         served: true,
         included: false
+      },
+      {
+        pattern: 'app/**/*.json',
+        watched: true,
+        served: true,
+        included: false
       }
     ],
 
@@ -69,6 +75,7 @@ module.exports = function (config) {
     plugins: [
       'karma-coverage',
       'karma-phantomjs-launcher',
+      'karma-firefox-launcher',
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-sinon',
