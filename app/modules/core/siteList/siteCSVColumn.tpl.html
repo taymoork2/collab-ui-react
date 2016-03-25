@@ -27,11 +27,14 @@
                      tooltip-animation="false"
                      tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
                      tooltip-placement="top">
+                     
                 <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
                      class="icon-warning icon webex-attention-text"></i>
+                     
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
@@ -39,7 +42,7 @@
               <span class="csv-results" ng-if="!row.entity.exportFinishedWithErrors">
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
