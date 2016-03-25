@@ -38,7 +38,7 @@
 		border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
 		.accordion--navigation {
-			a {
+			> a {
 				background: transparent;
 				border: none;
 				border-top: 1px solid $gray;
@@ -79,7 +79,7 @@
 				@include vr-spacing(pb, 1.5);
 			}
 			&:first-child {
-				a {
+				> a {
 					border-top: none;
 				}
 				.content {

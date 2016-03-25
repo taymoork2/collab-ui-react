@@ -32,7 +32,7 @@
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
-    vm.everyOptions = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'september', 'october', 'november', 'december'];
+    vm.everyOptions = [$translate.instant('months.january'), 'february', 'march', 'april', 'may', 'june', 'july', 'september', 'october', 'november', 'december'];
     vm.onOptions = ['first', 'second', 'third', 'fourth'];
     vm.dayOptions = ['monday','tuesday','wednesday', 'thursday','friday','saturday', 'sunday', 'weekend', 'weekday'];
     vm.openhours = [];
@@ -65,7 +65,9 @@
       if (canAdd) {
         vm.holidays.push({
           isOpen: true,
-          allDay: true
+          allDay: true,
+          exactDate: true,
+          recurAnnually: false
         });
       } else {
         forceCheckHoliday();
