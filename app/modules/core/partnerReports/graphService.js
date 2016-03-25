@@ -282,11 +282,9 @@
     function modifyPopulation(data, overallPopulation) {
       if (angular.isArray(data)) {
         angular.forEach(data, function (item) {
-          var comparison = item.percentage - overallPopulation;
-          item.absCompare = Math.abs(comparison);
           item.overallPopulation = overallPopulation;
           if (item.colorOne === null || item.colorOne === undefined) {
-            if (comparison >= 0) {
+            if ((item.percentage - overallPopulation) >= 0) {
               item.colorOne = chartColors.brandInfo;
             } else {
               item.colorOne = chartColors.brandDanger;
