@@ -72,13 +72,16 @@
           // define the range of csv states to mock
           // list of states are in the file apiGatewayConsts.svc.js
           conferenceService.csvMock = {
-            mockStatus: true, // set to true to mock csv status; set to false to get actual status from rest api 
-            mockStatusStartIndex: 0, // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            mockExport: false,
+            mockImport: true,
+            mockFileDownload: true,
+            mockStatus: false,
+
+            // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            // reference WebExApiGatewayConstsService.csvStatusTypes to know which index value is for which status 
+            mockStatusStartIndex: 0,
             mockStatusEndIndex: 0,
             mockStatusCurrentIndex: null,
-            mockExport: true,
-            mockImport: true,
-            mockFileDownload: true
           };
 
           conferenceService.csvStatusObj = null;
