@@ -16,11 +16,11 @@ describe('WebEx user settings', function () {
     });
   });
 
-/**  
-  xit('should allow login as admin user', function () {
-    login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
-  });
-**/
+  /**  
+    xit('should allow login as admin user', function () {
+      login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
+    });
+  **/
   it('click on users tab', function () {
     navigation.clickUsers();
   });
