@@ -249,7 +249,7 @@ describe('SetupWizardCtrl', function () {
       expect(addUsers.steps).toBeUndefined();
       expectSubTabOrder('addUsers', ['csv', 'advanced']);
       expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
+      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
     });
   });
 
@@ -294,7 +294,7 @@ describe('SetupWizardCtrl', function () {
 
       expectSubTabOrder('addUsers', ['csv', 'advanced']);
       expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus']);
+      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
     });
 
   });

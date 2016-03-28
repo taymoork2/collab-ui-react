@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Config, UrlConfig, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialDeviceService) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialCallService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -44,10 +44,10 @@
     function editTrial(custId, trialId) {
       var data = _trialData;
       var trialData = {
-        'customerOrgId': custId,
-        'trialPeriod': data.details.licenseDuration,
-        'details': _getDetails(data),
-        'offers': _getOffers(data)
+        customerOrgId: custId,
+        trialPeriod: data.details.licenseDuration,
+        details: _getDetails(data),
+        offers: _getOffers(data)
       };
 
       var editTrialUrl = trialsUrl + '/' + trialId;
@@ -64,12 +64,12 @@
     function startTrial() {
       var data = _trialData;
       var trialData = {
-        'customerName': data.details.customerName,
-        'customerEmail': data.details.customerEmail,
-        'trialPeriod': data.details.licenseDuration,
-        'startDate': new Date(),
-        'details': _getDetails(data),
-        'offers': _getOffers(data)
+        customerName: data.details.customerName,
+        customerEmail: data.details.customerEmail,
+        trialPeriod: data.details.licenseDuration,
+        startDate: new Date(),
+        details: _getDetails(data),
+        offers: _getOffers(data)
       };
 
       function logStartTrialMetric(data, status) {
@@ -124,7 +124,7 @@
               })
               .value();
             details.devices = details.devices.concat(callDevices);
-          } else if (trial.type === Config.offerTypes.meetings) {
+          } else if (trial.type === Config.offerTypes.webex) {
             details.siteUrl = _.get(trial, 'details.siteUrl', '');
             details.timeZoneId = _.get(trial, 'details.timeZone.timeZoneId', '');
           }
@@ -170,8 +170,8 @@
           var licenseCount = trial.type === Config.trials.roomSystems ?
             trial.details.quantity : data.details.licenseCount;
           return {
-            'id': trial.type,
-            'licenseCount': licenseCount,
+            id: trial.type,
+            licenseCount: licenseCount,
           };
         })
         .compact(data.trials)
@@ -181,6 +181,7 @@
     function _makeTrial() {
       TrialMessageService.reset();
       TrialMeetingService.reset();
+      TrialWebexService.reset();
       TrialCallService.reset();
       TrialRoomSystemService.reset();
       TrialDeviceService.reset();
@@ -198,6 +199,7 @@
         trials: {
           messageTrial: TrialMessageService.getData(),
           meetingTrial: TrialMeetingService.getData(),
+          webexTrial: TrialWebexService.getData(),
           callTrial: TrialCallService.getData(),
           roomSystemTrial: TrialRoomSystemService.getData(),
           deviceTrial: TrialDeviceService.getData(),
