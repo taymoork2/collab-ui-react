@@ -43,11 +43,14 @@ describe('SiteListService.updateWebExColumnsInRow() test', function () {
         siteUrl: "fake.webex.com"
       },
 
-      csvStatusCheckMode: {
-        isOn: true,
-        checkStart: 0,
-        checkEnd: 0,
-        checkIndex: 0
+      csvMock: {
+        mockStatus: true,
+        mockStatusStartIndex: 0,
+        mockStatusEndIndex: 0,
+        mockStatusCurrentIndex: null,
+        mockExport: true,
+        mockImport: true,
+        mockFileDownload: true
       },
 
       csvPollIntervalObj: null
@@ -200,8 +203,6 @@ describe('SiteListService: csv status tests', function () {
       checkEnd: false,
       checkIndex: false,
 
-      csvStatusCheckMode: null,
-
       csvStatusObj: null,
 
       showExportLink: false,
@@ -215,6 +216,16 @@ describe('SiteListService: csv status tests', function () {
       grayedImportLink: false,
       showImportResultsLink: false,
       importFinishedWithErrors: false,
+
+      csvMock: {
+        mockStatus: true,
+        mockStatusStartIndex: 0,
+        mockStatusEndIndex: 0,
+        mockStatusCurrentIndex: null,
+        mockExport: true,
+        mockImport: true,
+        mockFileDownload: true
+      },
     };
 
     WebExApiGatewayConstsService.csvStates = {

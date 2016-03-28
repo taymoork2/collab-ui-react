@@ -53,13 +53,19 @@
       }; //sendRestApiReq()
 
       return {
+
         csvApiRequest: function (
-          mockCsvStatus,
+          mockFlag,
           mockCsvStatusReq,
           httpsReqObj
         ) {
 
-          if (!mockCsvStatus) {
+          var funcName = "csvApiRequest()";
+          var logMsg = "";
+
+          $log.log(funcName);
+
+          if (!mockFlag) {
             return $q(
               function (resolve, reject) {
                 _this.sendRestApiReq(
@@ -76,6 +82,7 @@
           if (null == mockCsvStatusReq) {
             mockResult = {};
           } else {
+            // mock the request csv status result
             if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
               mockResult = {
                 jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
