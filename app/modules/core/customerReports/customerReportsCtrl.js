@@ -221,7 +221,7 @@
         }
         resizeCards();
         // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
-        $timeout(resizeCards(), 1000);
+        $timeout(resizeCards, 1000);
         currentFilter = filter;
       }
     }
