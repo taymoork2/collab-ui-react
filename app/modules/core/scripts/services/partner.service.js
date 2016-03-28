@@ -316,6 +316,9 @@
         case Config.offerTypes.meetings:
           userServices.push($translate.instant('customerPage.EE'));
           break;
+        case Config.offerTypes.meeting:
+          userServices.push($translate.instant('trials.meeting'));
+          break;
         case Config.offerTypes.roomSystems:
           deviceServiceText.push($translate.instant('trials.roomSystem'));
           break;
