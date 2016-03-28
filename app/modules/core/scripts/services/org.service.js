@@ -40,9 +40,7 @@
         scomUrl = scomUrl + '?disableCache=true';
       }
 
-      $http.get(scomUrl, {
-          cache: true
-        })
+      $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -236,6 +234,9 @@
     }
 
     function deleteOrg(currentOrgId) {
+      if (!currentOrgId) {
+        return $q.reject('currentOrgId is not set');
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
 
       return $http({

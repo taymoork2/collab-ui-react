@@ -2215,7 +2215,9 @@
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System",
-    "deleteOrg": "Delete Org "
+    "deleteOrg": "Delete Org {{orgName}}",
+    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgError": "{{orgName}} was not deleted"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

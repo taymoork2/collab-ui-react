@@ -6,27 +6,30 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, Log, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService, Orgservice) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, Log, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService, Orgservice, Notification) {
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
     vm.currentCustomer = $stateParams.currentCustomer;
+    vm.customerName = vm.currentCustomer.customerName;
 
+    vm.reset = reset;
+    vm.saveLogoSettings = saveLogoSettings;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.isOrgSetup = isOrgSetup;
+    vm.isOwnOrg = isOwnOrg;
+    vm.deleteTestOrg = deleteTestOrg;
+
+    vm.logoOverride = false;
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
-    vm.logoOverride = false;
-    vm.isOrgSetup = isOrgSetup;
-    vm.isOwnOrg = isOwnOrg;
     vm.isTest = false;
-    vm.deleteTestOrg = deleteTestOrg;
-    vm.reset = reset;
-    vm.saveLogoSettings = saveLogoSettings;
+     
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
 
@@ -201,7 +204,16 @@
     }
 
     function deleteTestOrg(orgId) {
-      Orgservice.deleteOrg(orgId);
+      if (confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+        Orgservice.deleteOrg(orgId);
+        Notification.success('customerPage.deleteOrgSuccess', {
+          orgName: vm.customerName
+        });
+      } else {
+        Notification.error('customerPage.deleteOrgError', {
+          orgName: vm.customerName
+        });
+      }
     }
 
   }
