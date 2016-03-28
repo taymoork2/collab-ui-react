@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($rootScope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, AAValidationService, Notification, AAUiScheduleService) {
+  function AutoAttendantNameBuilderCtrl($rootScope, AAUiModelService, AAValidationService) {
 
     var vm = this;
 
@@ -34,6 +34,7 @@
 
     function saveUiModel() {
       vm.ui.builder.ceInfo_name = vm.name;
+      vm.ui.ceInfo.name = vm.name;
     }
 
     function activate() {

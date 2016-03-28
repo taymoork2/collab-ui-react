@@ -1539,6 +1539,7 @@
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
     "errorCreateSchedule": "Failed to create schedule for {{name}}: {{statusText}} ({{status}}).",
+    "errorDeletePredefinedSchedule": "Failed to remove the pre-defined schedule for {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1696,7 +1697,6 @@
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
     "AACustomDesc": "Create a custom Auto Attendant.",
-    "AAOpenClosed": "Open/Closed",
     "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
   },
   "callPark": {

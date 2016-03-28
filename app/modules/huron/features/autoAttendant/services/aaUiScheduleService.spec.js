@@ -76,7 +76,7 @@ describe('Service: AAUiScheduleService', function () {
         scheduleId = value;
       }, function (response) {
         Notification.error('autoAttendant.errorCreateCe', {
-          name: 'Calendar for AA',
+          name: 'AA',
           statusText: response.statusText,
           status: response.status
         });
@@ -85,7 +85,7 @@ describe('Service: AAUiScheduleService', function () {
 
     it('should create 9 to 5, Monday to Friday schedule', function () {
       expect(scheduleId).toBeUndefined();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('Calendar for AA', getRange9To5());
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange9To5());
       createCalendarDefer.resolve(createCalendarSuccess);
 
       $scope.$apply();
@@ -96,7 +96,7 @@ describe('Service: AAUiScheduleService', function () {
 
     it('should should return failure gracefully with a status', function () {
       expect(scheduleId).toBeUndefined();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('Calendar for AA', getRange9To5());
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange9To5());
       createCalendarDefer.reject({
         statusText: 'failure',
         status: '500'

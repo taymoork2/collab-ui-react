@@ -26,7 +26,7 @@
     }, {
       id: 3,
       name: 'OpenClosed',
-      title: $translate.instant('autoAttendant.AAOpenClosed'),
+      title: $translate.instant('autoAttendant.scheduleOpenClosed'),
       desc: $translate.instant('autoAttendant.AAOpenClosedDesc'),
       icons: ['icon-clock', 'icon-audio-plus', 'icon-audio-plus'],
       showTreeLine: true

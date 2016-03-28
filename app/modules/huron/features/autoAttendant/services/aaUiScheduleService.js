@@ -53,7 +53,7 @@
     }
 
     function createSchedule(ceName, calendar) {
-      var calName = "Calendar for " + ceName;
+      var calName = ceName;
       var deferred = $q.defer();
       AACalendarService.createCalendar(calName, calendar).then(
         function (response) {
