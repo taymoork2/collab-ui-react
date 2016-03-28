@@ -17,7 +17,7 @@
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
-    var currentFliter = vm.allReports;
+    var currentFilter = vm.allReports;
 
     vm.displayEngagement = true;
     vm.displayQuality = true;
@@ -210,7 +210,7 @@
     }
 
     function resetCards(filter) {
-      if (currentFliter !== filter) {
+      if (currentFilter !== filter) {
         vm.displayEngagement = false;
         vm.displayQuality = false;
         if (filter === vm.allReports || filter === vm.engagement) {
@@ -220,11 +220,9 @@
           vm.displayQuality = true;
         }
         resizeCards();
-        $timeout(function () {
-          // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
-          resizeCards();
-        }, 1000);
-        currentFliter = filter;
+        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
+        $timeout(resizeCards(), 1000);
+        currentFilter = filter;
       }
     }
 

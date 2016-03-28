@@ -29,8 +29,8 @@
 
     // variables for the call metrics section
     var callMetricsDiv = 'callMetricsDiv';
-    var callMetricsBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
-    var callMetricsLabelText = '[[percents]]%<br>[[callCondition]]';
+    var callMetricsBalloonText = '<div class="donut-hover-text">[[label]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
+    var callMetricsLabelText = '[[percents]]%<br>[[label]]';
 
     return {
       getActiveUsersGraph: getActiveUsersGraph,

@@ -27,7 +27,7 @@
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
-    var currentFliter = vm.allReports;
+    var currentFilter = vm.allReports;
 
     vm.customerPlaceholder = $translate.instant('reportsPage.customerSelect');
     vm.customerSingular = $translate.instant('reportsPage.customer');
@@ -201,7 +201,7 @@
     }
 
     function showHideCards(filter) {
-      if (currentFliter !== filter) {
+      if (currentFilter !== filter) {
         vm.showEngagement = false;
         vm.showQuality = false;
         if (filter === vm.allReports || filter === vm.engagement) {
@@ -211,11 +211,9 @@
           vm.showQuality = true;
         }
         resizeCards();
-        $timeout(function () {
-          // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
-          resizeCards();
-        }, 1000);
-        currentFliter = filter;
+        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
+        $timeout(resizeCards(), 1000);
+        currentFilter = filter;
       }
     }
 
