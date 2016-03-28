@@ -36,6 +36,13 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
         method: 'POST',
         contentType: 'multipart/form-data;charset=utf-8'
       },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
     ];
 
     expectedCsvHttpsObj = null;
@@ -139,7 +146,8 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     WebExApiGatewayConstsService.csvRequests = {
       csvStatus: 'csvStatus',
       csvExport: 'csvExport',
-      csvImport: 'csvImport'
+      csvImport: 'csvImport',
+      csvFileDownload: 'csvFileDownload'
     };
 
     WebExApiGatewayConstsService.csvAPIs = [{
@@ -161,6 +169,13 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
         api: 'import',
         method: 'POST',
         contentType: 'multipart/form-data;charset=utf-8'
+      },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
       },
     ];
 

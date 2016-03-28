@@ -37,7 +37,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       WebExApiGatewayConstsService.csvAPIs.forEach(
         function checkAPI(csvAPI) {
           if (csvApi == csvAPI.request) {
-            var csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
+            var csvUrl = (
+              csvApi == WebExApiGatewayConstsService.csvRequests.csvFileDownload
+            ) ? null : 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
+
             var accessToken = Storage.get('accessToken');
 
             httpsObj = {
@@ -45,9 +48,13 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
               method: csvAPI.method,
               headers: {
                 'Content-Type': csvAPI.contentType,
-                'Authorization': 'Bearer ' + accessToken
+                'Authorization': 'Bearer ' + accessToken,
               }
             };
+            
+            if ("POST" == csvAPI.method) {
+            	httpsObj.data = csvAPI.data;
+            }
           }
         } // csvAPI()
       ); // WebExApiGatewayConstsService.csvAPIs.forEach()
@@ -324,16 +331,16 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
     this.csvFileDownload = function (
       siteUrl,
-      csvHttpsObj,
+      downloadUrl,
       mockFlag
     ) {
       var funcName = 'csvFileDownload()';
       var logMsg = '';
 
-      logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj) + "\n" +
-        "mockFlag=" + mockFlag;
-      $log.log(logMsg);
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
+        'downloadUrl=' + downloadUrl + "\n" +
+        'mockFlag=' + mockFlag;
+      // $log.log(logMsg);
 
       var successResult = {
         'siteUrl': siteUrl,
@@ -346,6 +353,18 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         'errorCode': null,
         'errorText': null
       };
+
+      var csvHttpsObj = _this.csvConstructHttpsObj(
+        siteUrl,
+        WebExApiGatewayConstsService.csvRequests.csvFileDownload
+      );
+
+      csvHttpsObj.url = downloadUrl;
+
+      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+        "mockFlag=" + mockFlag + "\n" +
+        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+      $log.log(logMsg);
 
       var deferredResponse = $q.defer();
 

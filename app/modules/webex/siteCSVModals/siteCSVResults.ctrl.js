@@ -26,7 +26,6 @@
     vm.siteRow = $stateParams.siteRow;
     vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
     vm.gridRows = [];
-    vm.csvHttpsObj = null;
 
     if (
       ("exportCompletedNoErr" === vm.csvStatusObj.status) ||
@@ -183,28 +182,19 @@
 
     vm.viewReady = true;
 
-    vm.csvFileDownload = function (fileLink) {
+    vm.csvFileDownload = function (downloadUrl) {
       var funcName = "csvFileDownload()";
       var logMsg = "";
 
-      fileLink = fileLink.replace("http:", "https:");
+      downloadUrl = downloadUrl.replace("http:", "https:");
 
       logMsg = funcName + "\n" +
-        "fileLink=" + fileLink;
+        "downloadUrl=" + downloadUrl;
       $log.log(logMsg);
-
-      vm.csvHttpsObj = {
-        url: fileLink,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          'Authorization': 'Bearer ' + Storage.get('accessToken')
-        }
-      };
 
       WebExApiGatewayService.csvFileDownload(
         vm.siteRow.license.siteUrl,
-        vm.csvHttpsObj,
+        downloadUrl,
         vm.siteRow.csvMock.mockFileDownload
       ).then(
 
