@@ -52,7 +52,8 @@ var BasicSettigsPage = function () {
     password: 'Cisco!23',
   };
 
-  this.testSiteElement = element(by.id('t30citestprov9.webex.com'));
+  this.testSiteUrl = 't30citestprov9.webex.com';
+  this.testSiteElement = element(by.id(this.testSiteUrl));
 
   this.save = function () {
     utils.click(this.saveButton);
