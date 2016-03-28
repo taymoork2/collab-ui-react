@@ -5,7 +5,7 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
+function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, $log) {
 
   return {
     logout: logout,
@@ -96,12 +96,12 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function redirectToLogin(email, sso) {
+    var $state = $injector.get('$state');
     if (!_.isEmpty(email)) {
       $window.location.href = OAuthConfig.getOauthLoginUrl(email);
-    } else if (!_.isEmpty(sso)) {
+    } else if (sso) {
       $window.location.href = OAuthConfig.getOauthLoginUrl();
     } else {
-      var $state = $injector.get('$state');
       $state.go('login');
     }
   }
