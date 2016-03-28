@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($scope, $q, $translate, $state, $timeout, PstnSetup, PstnSetupService, ValidationService, Notification, TerminusAreaCodeService, TerminusStateService, TelephoneNumberService, DidService, FeatureToggleService) {
+  function PstnNumbersCtrl($scope, $q, $translate, $state, $timeout, PstnSetup, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService, DidService, FeatureToggleService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -39,6 +39,7 @@
     vm.goToReview = goToReview;
     vm.hasBackButton = hasBackButton;
     vm.goBack = goBack;
+    vm.getOrderQuantity = getOrderQuantity;
 
     vm.formatTelephoneNumber = formatTelephoneNumber;
     vm.showOrderQuantity = showOrderQuantity;
@@ -61,7 +62,6 @@
         this.currentPage++;
       }
     };
-    vm.addToOrder = addToOrder;
 
     $scope.$watchCollection(function () {
       return vm.orderCart;
@@ -499,7 +499,20 @@
     }
 
     function showOrderQuantity(order) {
-      return (_.isArray(order.data.numbers) && !isConsecutiveArray(order.data.numbers)) || isPortOrder(order);
+      return (_.isArray(order.data.numbers) && !isConsecutiveArray(order.data.numbers)) || isPortOrder(order) || isAdvancedOrder(order);
+    }
+
+    function getOrderQuantity(order) {
+      switch (_.get(order, 'type')) {
+      case NEW_ORDERS:
+        return order.data.numbers.length;
+      case PORT_ORDERS:
+        return order.data.numbers.length;
+      case ADVANCED_ORDERS:
+        return order.data.length;
+      case undefined:
+        return;
+      }
     }
 
     function hasBackButton() {

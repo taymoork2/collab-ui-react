@@ -58,6 +58,17 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
+
+      it('should contain one of each order', function () {
+        expect(controller.portOrders.length).toEqual(1);
+        expect(controller.advancedOrders.length).toEqual(1);
+        expect(controller.newOrders.length).toEqual(1);
+      });
+
+      it('should show the correct number of new and port numbers', function () {
+        expect(controller.totalNewAdvancedOrder).toEqual(6);
+        expect(controller.totalPortNumbers).toEqual(2);
+      });
     });
 
     describe('when customer exists without a carrier', function () {

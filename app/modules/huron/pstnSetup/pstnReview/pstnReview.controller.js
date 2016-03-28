@@ -115,13 +115,7 @@
 
       var numbers = _.chain(vm.newOrders)
         .map(function (order) {
-          if (angular.isString(order.data.numbers)) {
-            return order.data.numbers;
-          } else {
-            return _.map(order.data.numbers, function (number) {
-              return number;
-            });
-          }
+          return _.get(order, 'data.numbers');
         })
         .flatten()
         .value();
@@ -139,7 +133,7 @@
       }
 
       _.forEach(vm.advancedOrders, function (order) {
-        promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length)
+        promise = PstnSetupService.orderBlock(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), order.data.areaCode, order.data.length, order.data.consecutive)
           .catch(pushErrorArray);
         promises.push(promise);
       });

@@ -36,9 +36,8 @@
             <span class="h6" ng-if="pstnNumbers.model.consecutive" translate="pstnSetup.advancedOrder.extra"></span>
           </section>
           <section>
-            <div class="cs-input-group order-inline">
-              <label class="cs-input__label" for="quantity-input" translate="pstnSetup.quantity"></label>
-              <input id="quantity-input" class="cs-input input-width text-center" type="text" ng-model="pstnNumbers.model.quantity">
+            <div class="order-inline right-margin">
+                <input cs-input type="text" class="input-width text-center" id="advanceQuantityInput" ng-model="pstnNumbers.model.quantity" cs-input-label="{{::'pstnSetup.quantity' | translate}}">
             </div>
             <button type="button" class="btn btn--people btn--large order-inline" ng-click="pstnNumbers.addToCart('advancedOrders')" translate="pstnSetup.advancedOrder.addNumbers"></button>
           </section>
@@ -58,8 +57,7 @@
       <ul class="list-group">
         <li class="list-group-item list-token" ng-repeat="order in pstnNumbers.orderCart">
           <span>{{::pstnNumbers.formatTelephoneNumber(order)}}</span>
-          <span ng-if="::pstnNumbers.showOrderQuantity(order);">{{::'pstnSetup.quantity' | translate}} {{order.data.numbers.length}}</span>
-          <span ng-if="order.type === 'advancedOrders'">{{::'pstnSetup.quantity' | translate}} {{order.data.length}}</span>
+          <span ng-if="::pstnNumbers.showOrderQuantity(order);">{{::'pstnSetup.quantity' | translate}} {{pstnNumbers.getOrderQuantity(order)}}</span>
           <button type="button" class="close" ng-click="pstnNumbers.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
         </li>
       </ul>

@@ -191,10 +191,11 @@
       });
     }
 
-    function orderBlock(customerId, carrierId, npa, quantity) {
+    function orderBlock(customerId, carrierId, npa, quantity, isSequential) {
       var payload = {
         npa: npa,
-        quantity: quantity
+        quantity: quantity,
+        sequential: isSequential
       };
 
       return TerminusCustomerCarrierDidService.save({

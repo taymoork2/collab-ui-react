@@ -40,6 +40,14 @@ describe('Controller: PstnNumbersCtrl', function () {
     },
     "type": "portOrders"
   };
+  var advancedOrder = {
+    data: {
+      areaCode: 321,
+      length: 2,
+      consecutive: false
+    },
+    type: "advancedOrders"
+  };
 
   var states = [{
     name: 'Texas',
@@ -113,53 +121,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
   });
 
-  describe('State helpText', function () {
-    var stateTemplateOptions;
-    beforeEach(function () {
-      stateTemplateOptions = getFieldTemplateOptions('state');
-    });
-
-    it('should not have initial helpText', function () {
-      expect(stateTemplateOptions.helpText).toBeUndefined();
-    });
-
-    it('should not set helpText if state model is not set', function () {
-      controller.areaCodeOptions = areaCodes;
-      $scope.$apply();
-
-      expect(stateTemplateOptions.helpText).toBeUndefined();
-    });
-  });
-
-  describe('Area Code helpText', function () {
-    var areaCodeTemplateOptions;
-    beforeEach(function () {
-      areaCodeTemplateOptions = getFieldTemplateOptions('areaCode');
-    });
-
-    it('should not have initial helpText', function () {
-      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
-    });
-
-    it('should not have initial options', function () {
-      expect(areaCodeTemplateOptions.options).toEqual([]);
-    });
-
-    it('should update field options with areaCodeOptions', function () {
-      controller.areaCodeOptions = areaCodes;
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.options).toEqual(areaCodes);
-    });
-
-    it('should not set helpText if area code model is not set', function () {
-      controller.model.areaCode = undefined;
-      $scope.$apply();
-
-      expect(areaCodeTemplateOptions.helpText).toBeUndefined();
-    });
-  });
-
   describe('orderNumbers', function () {
     it('should default to no orders', function () {
       expect(controller.orderCart).toEqual([]);
@@ -196,6 +157,10 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should show quantity if is a port order', function () {
       expect(controller.showOrderQuantity(portOrder)).toBeTruthy();
     });
+
+    it('should show quantity if is an advanced order', function () {
+      expect(controller.showOrderQuantity(advancedOrder)).toBeTruthy();
+    });
   });
 
   describe('formatTelephoneNumber', function () {
@@ -214,11 +179,15 @@ describe('Controller: PstnNumbersCtrl', function () {
     it('should format a port order', function () {
       expect(controller.formatTelephoneNumber(portOrder)).toEqual('pstnSetup.portNumbersLabel');
     });
+
+    it('should format an advanced order', function () {
+      expect(controller.formatTelephoneNumber(advancedOrder)).toEqual('(' + advancedOrder.data.areaCode + ') XXX-XXXX');
+    });
   });
 
   describe('removeOrder', function () {
     beforeEach(function () {
-      controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder];
+      controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder, advancedOrder];
     });
 
     it('should remove a single order', function () {
@@ -247,6 +216,32 @@ describe('Controller: PstnNumbersCtrl', function () {
       $scope.$apply();
 
       expect(controller.orderCart).not.toContain(portOrder);
+    });
+
+    it('should remove an advanced order', function () {
+      controller.removeOrder(advancedOrder);
+      $scope.$apply();
+
+      expect(controller.orderCart).not.toContain(advancedOrder);
+    });
+  });
+
+  describe('add orders', function () {
+    it('should add an advanced order', function () {
+      controller.model.areaCode = {
+        code: advancedOrder.data.areaCode
+      };
+      controller.model.quantity = advancedOrder.data.length;
+      controller.model.consecutive = advancedOrder.data.consecutive;
+      controller.addToCart(PstnSetupService.ADVANCED_ORDERS);
+      expect(controller.orderCart).toContain({
+        data: {
+          areaCode: advancedOrder.data.areaCode,
+          length: advancedOrder.data.length,
+          consecutive: advancedOrder.data.consecutive
+        },
+        type: PstnSetupService.ADVANCED_ORDERS
+      });
     });
   });
 
