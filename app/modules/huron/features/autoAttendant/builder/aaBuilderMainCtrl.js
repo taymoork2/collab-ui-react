@@ -17,7 +17,6 @@
     vm.errorMessages = [];
     vm.aaNameFocus = false;
     vm.canSave = false;
-    vm.isAANameDefined = false;
 
     vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
@@ -424,6 +423,7 @@
         if (aaName === '') {
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
+          vm.isAANameDefined = false;
         } else {
 
           var aaRecord = _.find(vm.aaModel.aaRecords, {
@@ -435,8 +435,8 @@
               function (data) {
                 vm.aaModel.aaRecord = data;
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
-
                 vm.populateUiModel();
+                vm.isAANameDefined = true;
               },
               function (response) {
                 Notification.error('autoAttendant.errorReadCe', {
@@ -520,9 +520,6 @@
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
-      if (aaName && aaName.length > 0) {
-        vm.isAANameDefined = true;
-      }
       vm.ui.builder = {};
       vm.ui.aaTemplate = $stateParams.aaTemplate;
 

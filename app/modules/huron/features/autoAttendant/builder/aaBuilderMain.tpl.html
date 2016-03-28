@@ -5,7 +5,7 @@
     <i class="icon icon-spinner loading-spinner"></i> 
   </div>
 
-  <div ng-if="!aaBuilderMain.isAANameDefined">
+  <div ng-if="aaBuilderMain.isAANameDefined === false">
     <span ng-include="'modules/huron/features/autoAttendant/name/aaName.tpl.html'" onload="aaBuilderMain.setLoadingDone()"></span>
   </div>
 
