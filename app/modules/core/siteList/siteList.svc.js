@@ -38,6 +38,7 @@ angular.module('Core').service('SiteListService', [
 
           logMsg = funcName + ": " + "\n" +
             "allSitesLicenseInfo=" + JSON.stringify(allSitesLicenseInfo);
+          $log.log(logMsg);
 
           var allSitesWebexLicensesArray = allSitesLicenseInfo;
 
@@ -53,7 +54,7 @@ angular.module('Core').service('SiteListService', [
               //MC
               var siteMC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasMCLicense: true
+                offerCode: "MC"
               });
 
               if (siteMC != null && siteMC.length > 0) {
@@ -77,10 +78,64 @@ angular.module('Core').service('SiteListService', [
                 siteRow.MCLicensed = false;
               }
 
+              //EE
+              var siteEE = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                offerCode: "EE"
+              });
+
+              if (siteEE != null && siteEE.length > 0) {
+                siteRow.EELicensed = true;
+
+                siteEE.forEach(
+                  function processDisplayText(ee) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                      capacity: ee.capacity
+                    });
+                    count++;
+                  }
+                ); //siteEE.forEach
+
+              } else {
+                siteRow.EELicensed = false;
+              }
+
+              //CMR
+              var siteCMR = _.where(allSitesWebexLicensesArray, {
+                webexSite: siteUrl,
+                offerCode: "CMR"
+              });
+
+              if (siteCMR != null && siteCMR.length > 0) {
+                siteRow.CMRLicensed = true;
+
+                siteCMR.forEach(
+                  function processDisplayText(cmr) {
+                    //Grid content display
+                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                      capacity: cmr.capacity
+                    });
+                    //Tooltip display
+                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                      capacity: cmr.capacity
+                    });
+                    count++;
+                  }
+                ); //siteCMR.forEach
+
+              } else {
+                siteRow.CMRLicensed = false;
+              }
+
               //EC
               var siteEC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasECLicense: true
+                offerCode: "EC"
               });
 
               if (siteEC != null && siteEC.length > 0) {
@@ -107,7 +162,7 @@ angular.module('Core').service('SiteListService', [
               //SC
               var siteSC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasSCLicense: true
+                offerCode: "SC"
               });
 
               if (siteSC != null && siteSC.length > 0) {
@@ -134,7 +189,7 @@ angular.module('Core').service('SiteListService', [
               //TC
               var siteTC = _.where(allSitesWebexLicensesArray, {
                 webexSite: siteUrl,
-                siteHasTCLicense: true
+                offerCode: "TC"
               });
 
               if (siteTC != null && siteTC.length > 0) {
@@ -158,60 +213,6 @@ angular.module('Core').service('SiteListService', [
                 siteRow.TCLicensed = false;
               }
 
-              //CMR
-              var siteCMR = _.where(allSitesWebexLicensesArray, {
-                webexSite: siteUrl,
-                siteHasCMRLicense: true
-              });
-
-              if (siteCMR != null && siteCMR.length > 0) {
-                siteRow.CMRLicensed = true;
-
-                siteCMR.forEach(
-                  function processDisplayText(cmr) {
-                    //Grid content display
-                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
-                    });
-                    //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-                      capacity: cmr.capacity
-                    });
-                    count++;
-                  }
-                ); //siteCMR.forEach
-
-              } else {
-                siteRow.CMRLicensed = false;
-              }
-
-              //EE
-              var siteEE = _.where(allSitesWebexLicensesArray, {
-                webexSite: siteUrl,
-                siteHasEELicense: true
-              });
-
-              if (siteEE != null && siteEE.length > 0) {
-                siteRow.EELicensed = true;
-
-                siteEE.forEach(
-                  function processDisplayText(ee) {
-                    //Grid content display
-                    siteRow.licenseTypeContentDisplay = $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
-                    });
-                    //Tooltip display
-                    siteRow.licenseTooltipDisplay = siteRow.licenseTooltipDisplay + "<br>" + $translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-                      capacity: ee.capacity
-                    });
-                    count++;
-                  }
-                ); //siteEE.forEach
-
-              } else {
-                siteRow.EELicensed = false;
-              }
-
               if (count > 1) {
                 siteRow.multipleWebexServicesLicensed = true;
                 siteRow.licenseTypeContentDisplay = $translate.instant('siteList.multipleLicenses');
@@ -221,6 +222,10 @@ angular.module('Core').service('SiteListService', [
                 siteRow.multipleWebexServicesLicensed = false;
                 siteRow.licenseTooltipDisplay = null;
               }
+
+              logMsg = funcName + ": " + "\n" +
+                "siteRow=" + JSON.stringify(siteRow);
+              $log.log(logMsg);
 
               siteRow.showLicenseTypes = true;
             } // processGridForLicense()
