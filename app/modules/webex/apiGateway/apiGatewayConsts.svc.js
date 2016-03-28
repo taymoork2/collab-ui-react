@@ -14,7 +14,7 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         api: 'importexportstatus',
         method: 'POST',
         contentType: 'application/json;charset=utf-8',
-        data: null
+        data: {}
       },
 
       {
@@ -22,7 +22,7 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         api: 'export',
         method: 'POST',
         contentType: 'application/json;charset=utf-8',
-        data: null
+        data: {}
       },
 
       {
@@ -30,7 +30,7 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         api: 'import',
         method: 'POST',
         contentType: 'multipart/form-data;charset=utf-8',
-        data: null
+        data: {}
       },
 
       {
@@ -38,7 +38,7 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         api: null,
         method: 'POST',
         contentType: 'application/json;charset=utf-8',
-        data: null
+        data: {}
       },
     ];
 
