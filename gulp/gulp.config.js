@@ -3,18 +3,19 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
-  var tsTestOutputFolder = test + '/ts';
   var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
+  var gulpFiles = 'gulp/**/*.js';
+  var tsSpecSuffix = '.ts.spec.js';
 
   var config = {
     build: build,
@@ -23,7 +24,7 @@ module.exports = function() {
     vendor: vendor,
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
-    tsTestOutputFolder: tsTestOutputFolder,
+    e2eFailRetry: '.e2e-fail-retry',
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -33,22 +34,30 @@ module.exports = function() {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
+    cache: '.cache',
+
+    gulpFiles: gulpFiles,
 
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
-      ts: [app + '/**/*.ts'],
-      json: [app + '/**/*.json'],
-      csv: [app + '/**/*.csv'],
-      docs: [app + '/docs/**/*'],
-      tpl: [app + '/modules/**/*.html'],
-      html: [app + '/*.html'],
-      scss: ['styles/app.scss'],
-      images: [app + '/images'],
-      lang: [app + '/l10n/*.json'],
+      json: app + '/**/*.json',
+      csv: app + '/**/*.csv',
+      docs: app + '/docs/**/*',
+      tpl: app + '/modules/**/*.html',
+      html: app + '/*.html',
+      scss: 'styles/app.scss',
+      images: app + '/images',
+      lang: app + '/l10n/*.json',
+    },
+
+    typeScript: {
+      appFiles: app + '/**/*.ts',
+      testFiles: app + '/**/*.spec.ts',
+      compiledTestSuffix: tsSpecSuffix,
+      compiledTestFiles: app + '/**/*' + tsSpecSuffix
     },
 
     unsupported: {
@@ -80,7 +89,6 @@ module.exports = function() {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
-        tsTestOutputFolder + '/modules/**/*.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -96,8 +104,8 @@ module.exports = function() {
       ],
       spec: {
         all: app + '/**/*.spec.js',
-        ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
+        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
@@ -236,6 +244,16 @@ module.exports = function() {
       '',
 
     isJenkins: isJenkins,
+
+    beautifyFiles: [
+      app + '/**/*.js',
+      app + '/**/*.json',
+      test + '/**/*.js',
+      test + '/**/*.json',
+      gulpFiles,
+      '!test/karma-unit.js',
+      '!karma.conf.js'
+    ]
   };
 
   return config;

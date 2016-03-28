@@ -34,6 +34,7 @@
     vm.searchField = "";
     vm.mostActiveUsers = [];
     vm.showMostActiveUsers = false;
+    vm.displayMostActive = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
@@ -309,32 +310,34 @@
       vm.searchField = "";
       previousSearch = "";
       vm.showMostActiveUsers = false;
+      vm.displayMostActive = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          setActiveGraph(response);
+          setActiveGraph(response.graphData);
           vm.activeUserStatus = SET;
-          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
-            if (response === ABORT) {
-              return;
-            } else if (response.length === 0) {
-              vm.mostActiveUserStatus = EMPTY;
-            } else {
-              vm.activeUserPredicate = activeUsersSort[3];
-              vm.mostActiveUsers = response;
-              vm.activeUserCurrentPage = 1;
-              vm.activeButton = [1, 2, 3];
-              vm.mostActiveUserStatus = SET;
-            }
-            resizeCards();
-          });
+          vm.displayMostActive = response.isActiveUsers;
+        }
+        activeUserCard = document.getElementById('active-user-card');
+        resizeCards();
+      });
+      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.mostActiveUserStatus = EMPTY;
+        } else {
+          vm.activeUserPredicate = activeUsersSort[3];
+          vm.mostActiveUsers = response;
+          vm.activeUserCurrentPage = 1;
+          vm.activeButton = [1, 2, 3];
+          vm.mostActiveUserStatus = SET;
         }
         resizeCards();
       });
-      activeUserCard = document.getElementById('active-user-card');
     }
 
     function searchMostActive() {
@@ -414,7 +417,8 @@
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          setMediaGraph(response, vm.mediaSelected);
+          mediaData = response;
+          setMediaGraph(mediaData, vm.mediaSelected);
           vm.mediaQualityStatus = SET;
         }
         mediaCard = document.getElementById('media-quality-card');

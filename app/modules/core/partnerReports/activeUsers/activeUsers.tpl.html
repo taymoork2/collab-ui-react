@@ -6,7 +6,7 @@
   <section>
     <p >{{nav.activeUserDescription}}</p>
     <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUsersRefresh) && !nav.isRefresh(nav.activeUsersRefresh)}"></div>
-    <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
+    <div class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
     <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUsersRefresh)">
@@ -15,31 +15,40 @@
         <span translate='reportsPage.noCustomerData'></span>
       </h3>
     </div>
-  <div class="card-section-content" ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
+  <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div ng-show="nav.showMostActiveUsers">
-      <h4 >{{nav.mostActiveTitle}}</h4>
-        <p>{{nav.mostActiveDescription}}</p>
-        <table class="table table-bordered active-users-table">
-          <thead>
-            <tr>
-              <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
-              <th class="vertical-center col-md-4 bold pointer" translate="activeUsers.customer" ng-click="nav.mostActiveSort(1)"></th>
-              <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(2)"></th>
-              <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(3)"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
-              <td class="vertical-center">{{user.userName}}</td>
-              <td class="vertical-center">{{user.orgName}}</td>
-              <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
-              <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <h4 class="box-match">{{nav.mostActiveTitle}}</h4>
+      <p>{{nav.mostActiveDescription}}</p>
+      <table class="table table-bordered active-users-table" ng-show="!nav.isRefresh(nav.mostActiveRefresh) && !nav.isEmpty(nav.mostActiveRefresh)">
+        <thead>
+          <tr>
+            <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
+            <th class="vertical-center col-md-4 bold pointer" translate="activeUsers.customer" ng-click="nav.mostActiveSort(1)"></th>
+            <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(2)"></th>
+            <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(3)"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
+            <td class="vertical-center">{{user.userName}}</td>
+            <td class="vertical-center">{{user.orgName}}</td>
+            <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
+            <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-if="nav.isRefresh(nav.mostActiveRefresh)">
+        <i class='icon icon-spinner icon-2x'></i>
       </div>
-    <div class="card-section-content">
-      <a  ng-click="nav.openCloseMostActive()">
+      <div class="no-data-most-active" ng-if="nav.isEmpty(nav.mostActiveRefresh)">
+        <h3 class="no-data">
+          <i class='icon icon-warning no-data-warning'></i>
+          <span translate='reportsPage.noCustomerData'></span>
+        </h3>
+      </div>
+    </div>
+    <div class="box-match">
+      <a ng-click="nav.openCloseMostActive()">
         <span id="showActiveUsers" ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
         <span id="hideActiveUsrs" ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>

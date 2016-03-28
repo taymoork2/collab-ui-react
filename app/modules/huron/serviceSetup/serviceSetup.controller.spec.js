@@ -200,8 +200,10 @@ describe('Controller: ServiceSetup', function () {
   describe('initNext', function () {
 
     it('customer with voicemail service should create site', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -222,8 +224,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail should not disable if user cancels voicemail modal warning', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
@@ -245,8 +249,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not create site when update customer fails', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -268,8 +274,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not create site when create site fails', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -292,8 +300,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not update site when update site fails', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -315,8 +325,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not update site when update customer fails', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -338,8 +350,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not update site when update voicemail timezone fails', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -365,8 +379,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not update timezone when timezoneid is missing', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -391,8 +407,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should create site and change voicemail timezone', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -416,8 +434,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer with voicemail service should not update customer or site on no change', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = voicemail.label;
+      var selectedPilotNumber = {
+        label: voicemail.label,
+        pattern: voicemail.pilotNumber
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -475,8 +495,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer without voicemail should update site when customer has pilot number misconfig', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -496,8 +518,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer without voicemail should update site', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
@@ -517,8 +541,10 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('customer without voicemail should update site and change voicemail timezone', function () {
-      var selectedPilotNumber = {};
-      selectedPilotNumber.pattern = '(972) 896-5000';
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
 
       controller.hasSites = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;

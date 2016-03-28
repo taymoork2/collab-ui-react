@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderActionsCtrl', function () {
-  var controller, optionController;
+  var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
   var $rootScope, $scope;
   var aaUiModel = {
@@ -20,9 +20,11 @@ describe('Controller: AABuilderActionsCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $controller = _$controller_;
+
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
@@ -34,6 +36,28 @@ describe('Controller: AABuilderActionsCtrl', function () {
     });
     $scope.$apply();
   }));
+  describe('setOption for Dial By Extension', function () {
+    it('option for Dial By Extension is selected', function () {
+
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+
+      aaUiModel['openHours'].addEntryAt(0, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+      action.inputType = 2;
+
+      aaUiModel['openHours'].entries[0].addAction(action);
+
+      $scope.index = 0;
+
+      var controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope
+      });
+
+      expect(controller.option.title).toEqual('autoAttendant.phoneMenuDialExt');
+
+    });
+  });
 
   describe('selectOption', function () {
     it('enables save when a option is selected', function () {

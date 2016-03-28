@@ -10,12 +10,15 @@
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaActionStatus = false;
+    var aaDialByExtensionStatus = false;
+
     var invalidList = {};
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
       setPhoneMenuStatus: setPhoneMenuStatus,
       setActionStatus: setActionStatus,
+      setDialByExtensionStatus: setDialByExtensionStatus,
       isValid: isValid,
       setIsValid: setIsValid,
       resetFormStatus: resetFormStatus
@@ -26,7 +29,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus;
+      return aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus;
     }
 
     function isValid() {
@@ -45,6 +48,8 @@
       aaSayMessageForm = false;
       aaPhoneMenuOptions = false;
       aaActionStatus = false;
+      aaDialByExtensionStatus = false;
+
       invalidList = {};
     }
 
@@ -58,6 +63,10 @@
 
     function setActionStatus(status) {
       aaActionStatus = status;
+    }
+
+    function setDialByExtensionStatus(status) {
+      aaDialByExtensionStatus = status;
     }
 
   }

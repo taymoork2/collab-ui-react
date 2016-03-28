@@ -3,17 +3,10 @@
 }
 
 .aa-route-call-select {
-  min-width: vr-adjust(300);
-
-  & .country-list {
-    min-width: vr-adjust(300);
-
-    .dropdown-menu {
-      width: vr-adjust(300);
-    }
-  }
+  width: vr-adjust(300);
 
   & .select-toggle {
+    width: auto;
 
     @include vr-spacing(pr, 1.75);
 
@@ -30,10 +23,17 @@
       width : 100%;
     }
 
-    & .country-list {
-      @include vr-spacing(mt, 1);
-    }
+  }
 
+  & .select-list {
+    .dropdown-menu {
+      min-width: 100%;
+      width: auto;
+    }
+  }
+
+  & .select-options > li > a {
+    @include vr-spacing(pr, 1);
   }
 
 }

@@ -162,6 +162,25 @@ function mk_workspace_tar {
     rm -rf $tmp_dir
 }
 
+function restore_latest_deps {
+    get_top_dir >/dev/null || return 1
+    top_dir="`get_top_dir`"
+    last_npm_deps_tar="`get_most_recent ${top_dir}/.cache/npm-deps-for-*`"
+    last_bower_deps_tar="`get_most_recent ${top_dir}/.cache/bower-deps-for-*`"
+    tar_opts="$@"
+
+    if [ -n "${last_npm_deps_tar}" -a -n "${last_bower_deps_tar}" ]; then
+        set -x
+        rm -rf ./node_modules ./bower_components
+        tar ${tar_opts} -xzf ${last_npm_deps_tar}
+        tar ${tar_opts} -xzf ${last_bower_deps_tar}
+        set +x
+    else
+        # no built deps exist
+        return 1
+    fi
+}
+
 # define and export project root dir, and add it to bash config
 function get_bash_conf_file {
     if [ "`uname`" = "Darwin" ]; then
@@ -171,10 +190,8 @@ function get_bash_conf_file {
     fi
 }
 
-function export_project_root_env_var {
-    local bash_conf_file="$HOME/`get_bash_conf_file`"
-
-    cwd=`pwd`
+function get_top_dir {
+    local cwd=`pwd`
     # get project top-level dir (look for 'fabfile.py')
     while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
       cd ..
@@ -185,20 +202,37 @@ function export_project_root_env_var {
         >&2 echo "Error: traversed to '/' while trying to find top-level dir"
         return 1
     fi
+    echo $top_dir
+}
 
-    entry_line_prefix="^export ${project_root_env_var_name}="
-    entry_line="export ${project_root_env_var_name}=${top_dir}"
+function export_project_root_env_var {
+    local bash_conf_file="$HOME/`get_bash_conf_file`"
+    local entry_line_prefix="^export ${project_root_env_var_name}="
+    local entry_line=
+    local top_dir=
+
+    get_top_dir >/dev/null || return 1
+
+    top_dir="`get_top_dir`"
+    entry_line="export $project_root_env_var_name=$top_dir"
+
     if grep -q "${entry_line_prefix}" ${bash_conf_file}; then
         sed -i -E "s,${entry_line_prefix}.*,${entry_line}," ${bash_conf_file}
     else
         echo "" >> ${bash_conf_file}
         echo "${entry_line}" >> ${bash_conf_file}
     fi
-    source ${bash_conf_file}
+    eval "$entry_line"
 }
 
 # make sure WX2_ADMIN_WEB_CLIENT_HOME is set
 export_project_root_env_var
+
+# Check NPM local path
+echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
+
+# Check NPM global path
+echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
 # setup .cache subdir
 mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"

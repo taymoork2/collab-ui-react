@@ -117,6 +117,7 @@
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
       var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var upgradeAvailable = provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion;
       var hosts = _.chain(connectors)
         .pluck('hostname')
         .uniq()
@@ -126,7 +127,8 @@
         state: mergeRunningState(connectors),
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
-        upgradeAvailable: provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        upgradeAvailable: upgradeAvailable,
+        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);

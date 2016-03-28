@@ -9,7 +9,7 @@ var messageLogger = require('../utils/messageLogger.gulp')();
 var del = require('del');
 
 // Delete build and dist directory files
-gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma','clean:test']);
+gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma', 'clean:test', 'clean:ts']);
 
 // Delete dist directory files
 gulp.task('clean:dist', function (done) {
@@ -21,8 +21,7 @@ gulp.task('clean:dist', function (done) {
 // Delete build directory files
 gulp.task('clean:build', function (done) {
   var files = [
-    config.build,
-    config.tsTestOutputFolder
+    config.build
   ];
   messageLogger('Cleaning build directory', files);
   del(files, done);
@@ -50,5 +49,13 @@ gulp.task('clean:test', function (done) {
     config.e2e + '/reports/*.xml'
   ];
   messageLogger('Cleaning test results', files);
+  del(files, done);
+});
+
+gulp.task('clean:ts', function (done) {
+  var files = [
+    config.typeScript.compiledTestFiles
+  ];
+  messageLogger('Cleaning TypeScript compiled tests', files);
   del(files, done);
 });

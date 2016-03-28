@@ -44,6 +44,9 @@
       top: rem-calc(46);
       left: 50%;
     }
+    &.no-line {
+       padding-top: 1rem;
+    }
   }
   .icon {
     font-size: 24px;
@@ -56,17 +59,18 @@
 }
 
 .feature-icon-circle {      // Icon in the option.
-  font-family: $brand-font-cisco-TT-Extra-Light;
+  font-family: $brand-font-extra-light;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
   justify-content: center;
-  font-size: $font-size-h1;
+  font-size: $h2-font-size;
   background: $brand-white;
   border-radius: 50%;
   width: rem-calc(78);
   height: rem-calc(78);
   @include vr-spacing(p, .625);
+  padding-top: 12px;
 }
 
 .feature-icon-color-AA {

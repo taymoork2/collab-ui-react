@@ -333,6 +333,7 @@
     $scope.communicationFeatures = [];
     $scope.licenses = [];
     $scope.populateConf = populateConf;
+    $scope.getAccountLicenses = getAccountLicenses;
     var convertSuccess = [];
     var convertFailures = [];
     var convertUsersCount = 0;
@@ -382,9 +383,7 @@
 
     $scope.radioStates = {
       commRadio: false,
-      confRadio: false,
-      msgRadio: false,
-      subLicense: {}
+      msgRadio: false
     };
 
     if (userEnts) {
@@ -526,6 +525,15 @@
       if (services.message) {
         services.message = mergeMultipleLicenseSubscriptions(services.message);
         $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
+        if (userLicenseIds) {
+          _.forEach($scope.messageFeatures[1].licenses, function (license) {
+            license.model = userLicenseIds.indexOf(license.licenseId) >= 0;
+          });
+        }
+
+        if ($scope.messageFeatures[1].licenses.length > 1) {
+          $scope.radioStates.msgRadio = true;
+        }
       }
       if (services.conference) {
         $scope.cmrFeatures = Authinfo.getCmrServices();
@@ -755,20 +763,25 @@
      *
      * @param {null|Object[]} action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
      */
-    var getAccountLicenses = function (action) {
+    function getAccountLicenses(action) {
       var licenseList = [];
       if (Authinfo.hasAccount()) {
+        var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
+        var selMsgService = $scope.messageFeatures[msgIndex];
+        var licenses = selMsgService.license || selMsgService.licenses;
         // Messaging: prefer selected subscription, if specified
-        if ('licenseId' in $scope.radioStates.subLicense) {
-          licenseList.push(new LicenseFeature($scope.radioStates.subLicense.licenseId, true));
+        if (_.isArray(licenses)) {
+          if (licenses.length > 1) {
+            _.forEach(licenses, function (license) {
+              licenseList.push(new LicenseFeature(license.licenseId, license.model));
+            });
+          } else {
+            licenseList.push(new LicenseFeature(licenses[0].licenseId, true));
+          }
         } else {
-          var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
-          var selMsgService = $scope.messageFeatures[msgIndex];
-          // TODO (tohagema): clean up messageFeatures license(s) model :/
-          var license = selMsgService.license || selMsgService.licenses[0];
-          if ('licenseId' in license) {
+          if ('licenseId' in licenses) {
             // Add new licenses
-            licenseList.push(new LicenseFeature(license.licenseId, true));
+            licenseList.push(new LicenseFeature(licenses.licenseId, true));
           } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
             // Remove existing license
             licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
@@ -798,7 +811,7 @@
       }
 
       return licenseList.length === 0 ? null : licenseList;
-    };
+    }
 
     var getEntitlements = function (action) {
       var entitleList = [];
@@ -1054,7 +1067,6 @@
 
     $scope.clearPanel = function () {
       resetUsersfield();
-      $scope.radioStates.subLicense = {};
       $scope.results = null;
     };
 
@@ -1750,7 +1762,7 @@
     var saveDeferred;
     var csvHeaders;
     var orgHeaders;
-    $scope.maxUsers = 250;
+    $scope.maxUsers = 1100;
     var isDirSync = false;
     FeatureToggleService.supportsDirSync().then(function (enabled) {
       isDirSync = enabled;
@@ -1819,18 +1831,11 @@
     };
 
     // Wizard hook
-    $scope.csvProcessingNext = bulkSave;
-    // Feature toggle
-    FeatureToggleService.supportsCsvUpload().then(function (enabled) {
-      if (enabled) {
-        $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
-        $scope.maxUsers = 1100;
-        return CsvDownloadService.getCsv('headers').then(function (response) {
-          orgHeaders = angular.copy(response.data.columns || []);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
-        });
-      }
+    $scope.csvProcessingNext = bulkSaveWithIndividualLicenses;
+    CsvDownloadService.getCsv('headers').then(function (csvData) {
+      orgHeaders = angular.copy(csvData.columns || []);
+    }).catch(function (response) {
+      Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
     });
 
     $scope.initBulkMetric = initBulkMetric;
@@ -2123,35 +2128,36 @@
             } else {
               // get license and entitlements
               _.forEach(headers, function (header, k) {
+                var input = _.trim(userRow[k]);
                 if (header.license) { // if this is a license column
-                  if (isTrue(userRow[k])) {
+                  if (isTrue(input)) {
                     licenseList.push(new LicenseFeature(header.license, true));
                     // Check Active Spark Message
                     if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
                       numOfActiveMessageLicenses++;
                     }
-                  } else if (isFalse(userRow[k])) {
+                  } else if (isFalse(input)) {
                     // TODO - in phase 2, if allow license removal, then un-comment the next line
                     // licenseList.push(new LicenseFeature(header.license, false));
                     _.noop();
-                  } else {
+                  } else if (input !== '') {
                     isWrongLicenseFormat = true;
                   }
                 } else if (angular.isArray(header.entitlements) && header.entitlements.length > 0) {
-                  if (isTrue(userRow[k]) || isFalse(userRow[k])) {
+                  if (isTrue(input) || isFalse(input)) {
                     _.forEach(header.entitlements, function (entitlement) {
                       // if lincense is Calendar Service, only process if it is enabled
                       if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                        if (isTrue(userRow[k])) {
+                        if (isTrue(input)) {
                           entitleList.push(new Feature(entitlement, true));
-                        } else if (isFalse(userRow[k])) {
+                        } else if (isFalse(input)) {
                           // TODO - in phase 2, if allow license removal, then un-comment the next line
                           // entitleList.push(new Feature(entitlement, false));
                           _.noop();
                         }
                       }
                     });
-                  } else {
+                  } else if (input != '') {
                     isWrongLicenseFormat = true;
                   }
                 }
@@ -2281,7 +2287,6 @@
     };
 
     // The existing bulkSave
-    // TODO- remove after the feature toggle of CSV is no longer active
     function bulkSave() {
       saveDeferred = $q.defer();
       cancelDeferred = $q.defer();

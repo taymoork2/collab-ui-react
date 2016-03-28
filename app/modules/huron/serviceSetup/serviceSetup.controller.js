@@ -38,7 +38,6 @@
 
     vm.processing = true;
     vm.externalNumberPool = [];
-    vm.externalNumberPoolBeautified = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -52,7 +51,8 @@
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
-        vmCluster: undefined
+        vmCluster: undefined,
+        emergencyCallBackNumber: undefined
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
@@ -459,7 +459,7 @@
           templateOptions: {
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
-            labelfield: 'pattern',
+            labelfield: 'label',
             valuefield: 'uuid',
             filter: true,
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
@@ -475,18 +475,23 @@
           },
           controller: function ($scope) {
             $scope.$watchCollection(function () {
-              return vm.externalNumberPoolBeautified;
-            }, function (externalNumbers) {
-              $scope.to.options = _.remove(externalNumbers, function (number) {
-                return number.label === _.get(vm, 'model.serviceNumber.label');
+              return vm.externalNumberPool;
+            }, function (externalNumberPool) {
+              $scope.to.options = _.filter(externalNumberPool, function (externalNumber) {
+                externalNumber.label = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
+                return externalNumber.pattern !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
               });
             });
+
             $scope.$watch(function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
             }, function (toggleValue) {
               if (toggleValue && !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber) {
-                if (vm.externalNumberPoolBeautified.length > 0) {
-                  vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+                if (vm.externalNumberPool.length > 0) {
+                  vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
+                    label: TelephoneNumberService.getDIDLabel(vm.externalNumberPool[0].label),
+                    pattern: vm.externalNumberPool[0].pattern
+                  };
                 } else {
                   $scope.options.templateOptions.isWarn = true;
                 }
@@ -563,6 +568,7 @@
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
+              vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
             });
           }
         });
@@ -579,9 +585,10 @@
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
 
-              var existingVoicemailNumber = {};
-              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = existingVoicemailNumber;
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
+                pattern: voicemail.pilotNumber,
+                label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
+              };
             }
           }).catch(function (response) {
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
@@ -595,11 +602,6 @@
     function loadExternalNumberPool(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
-        vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
-          var externalNumber = angular.copy(en);
-          externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
-          return externalNumber;
-        });
       }).catch(function (response) {
         vm.externalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
@@ -780,8 +782,6 @@
         voicemailToggleEnabled = true;
       }
 
-      var companyVoicemailNumber = TelephoneNumberService.getDIDValue(_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern'));
-
       function updateCustomer(companyVoicemailNumber) {
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
@@ -808,8 +808,8 @@
         if (voicemailToggleEnabled) {
           // When the toggle is ON, update the customer if the site voicemail pilot number changed or wasn't set,
           // otherwise, don't update customer since nothing changed.
-          if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-            return updateCustomer(companyVoicemailNumber);
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern')) {
+            return updateCustomer(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern);
           }
         } else {
           // When the toggle is OFF, update the customer if the customer has the voicemail service package
@@ -825,7 +825,7 @@
         if (voicemailToggleEnabled) {
           // Set the site voicemail pilot number when the
           // toggle is ON, otherwise remove it from the site payload.
-          vm.model.site.voicemailPilotNumber = companyVoicemailNumber;
+          vm.model.site.voicemailPilotNumber = _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern');
         } else {
           delete vm.model.site.voicemailPilotNumber;
         }
@@ -867,8 +867,8 @@
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
             // otherwise, don't update site since nothing changed.
-            if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-              return updateSite(companyVoicemailNumber);
+            if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern')) {
+              return updateSite(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern);
             }
           } else {
             // When the toggle is OFF, update the site if the customer has voicemail service package

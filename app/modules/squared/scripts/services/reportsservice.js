@@ -19,7 +19,6 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   var averageCallCount = 'reports/counts/avgCallsPerUser';
   var entitlementCount = 'reports/counts/entitlements';
   var contentSharedCount = 'reports/counts/contentShared';
-  var onboardingUrl = 'reports/funnel/onboarding';
 
   var urls = {
     'callUsage': callMetricsUrl,
@@ -28,8 +27,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     'entitlementCount': entitlementCount,
     'contentSharedCount': contentSharedCount,
     'callsCount': callsUrl,
-    'conversationsCount': conversationsUrl,
-    'onboardingFunnel': onboardingUrl
+    'conversationsCount': conversationsUrl
   };
 
   var service = {
@@ -44,13 +42,11 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     averageCallCount: averageCallCount,
     entitlementCount: entitlementCount,
     contentSharedCount: contentSharedCount,
-    onboardingUrl: onboardingUrl,
     urls: urls,
     buildUrl: buildUrl,
     sendChartResponse: sendChartResponse,
     getCounts: getCounts,
     getTimeCharts: getTimeCharts,
-    getFunnel: getFunnel,
     getUsageMetrics: getUsageMetrics,
     getPartnerMetrics: getPartnerMetrics,
     getLandingMetrics: getLandingMetrics,
@@ -131,18 +127,6 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     }
   }
 
-  function getFunnel(useCache) {
-    var params = {
-      'cache': useCache
-    };
-
-    var funnelCharts = ['onboardingFunnel'];
-
-    for (var chart in funnelCharts) {
-      getUsageMetrics(funnelCharts[chart], params);
-    }
-  }
-
   function getUsageMetrics(metricType, params, orgId) {
     if (Authinfo.isPartner()) { // partner reports
       if (urls[metricType]) { // count metric type
@@ -196,21 +180,11 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
 
     var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
       'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
-      'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations', 'onboardingFunnel'
+      'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
     ];
 
     for (var chart in partnerCharts) {
       getUsageMetrics(partnerCharts[chart], chartParams, orgId);
-    }
-
-    chartParams = {
-      'cache': useCache
-    };
-
-    var funnelCharts = ['onboardingFunnel'];
-
-    for (chart in funnelCharts) {
-      getUsageMetrics(funnelCharts[chart], chartParams);
     }
   }
 
@@ -247,7 +221,6 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     ];
 
     getTimeCharts(useCache, charts);
-    getFunnel(useCache);
   }
 
   function getLogInfo(locusId, startTime, callback) {

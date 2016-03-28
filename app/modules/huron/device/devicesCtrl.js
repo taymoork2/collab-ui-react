@@ -6,25 +6,55 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $q, $stateParams, DeviceService, OtpService, Config) {
+  function DevicesCtrlHuron($scope, $state, $q, $stateParams, DeviceService, OtpService, Config, CsdmHuronUserDeviceService, $window, FeatureToggleService) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
-    vm.showGenerateOtpButton = false;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
+    vm.useCsdmDeviceSidepanel = null;
+    var csdmHuronUserDeviceService = null;
+    checkFeatureToggleForCsdmSidePanel().then(function (res) {
+      if (res) {
+        csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+        vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
+          scope: $scope
+        });
+        vm.devices = csdmHuronUserDeviceService.getDeviceList();
+      }
+      vm.useCsdmDeviceSidepanel = res;
+    }).catch(function () {
+      vm.useCsdmDeviceSidepanel = false;
+    });
+
+    function checkFeatureToggleForCsdmSidePanel() {
+      if ($window.location.search.indexOf("useCsdmDeviceSidepanel=true") > -1) {
+        return $q.when(true);
+      } else {
+        return FeatureToggleService.supports(FeatureToggleService.features.useCsdmDeviceSidepanel);
+      }
+    }
+
+    vm.showDeviceDetails = function (device) {
+      vm.currentDevice = device;
+      $state.go('user-overview.csdmDevice', {
+        currentDevice: device,
+        huronDeviceService: csdmHuronUserDeviceService
+      });
+    };
 
     function activate() {
 
       var promises = [];
 
-      // reset to false when loaded
-      vm.showGenerateOtpButton = false;
-
-      var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
-        vm.devices = deviceList;
+      checkFeatureToggleForCsdmSidePanel().then(function (res) {
+        if (!res) {
+          var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
+            vm.devices = deviceList;
+          });
+          promises.push(devicePromise);
+        }
       });
-      promises.push(devicePromise);
 
       var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
         vm.otps = otpList;
@@ -33,9 +63,7 @@
 
       return $q.all(promises)
         .then(function () {
-          if (vm.devices.length === 0) {
-            vm.showGenerateOtpButton = true;
-          } else {
+          if (vm.devices.length !== 0) {
             $scope.userOverview.addGenerateAuthCodeLink();
           }
         });

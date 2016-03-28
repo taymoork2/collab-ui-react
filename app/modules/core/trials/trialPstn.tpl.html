@@ -36,6 +36,7 @@
     <section class="modal-body row">
         <div class="flex-row">
             <h5 translate="trialModal.pstn.contract"></h5>
+            <i class="icon icon-question-circle legal-tooltip" tooltip="{{'trialModal.pstn.popover' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
         </div>
         <section class="row full indent">
         <formly-form model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
@@ -66,7 +67,7 @@
       translate="common.back">
     </button>
     <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="!pstnTrial.checkForInvalidTokens()">
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !pstnTrial.checkForInvalidTokens()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>

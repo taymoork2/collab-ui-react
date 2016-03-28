@@ -69,7 +69,7 @@
     "resend": "Resend Invitation",
     "resendActivation": "Resend Activation",
     "deleteUserSuccess": "User {{email}} deleted successfully",
-    "deleteUserError": "Error deleting user. Status: {{status}}",
+    "deleteUserError": "Error deleting user.",
     "onboardSuccess": "{{email}} onboarded successfully",
     "onboardError": "{{email}} not onboarded. Status: {{status}}",
     "ciscoucError": "{{email}} did not successfully onboard Call service.",
@@ -317,6 +317,8 @@
     "onehundredeightyDays": "180",
     "numberOfLicenses": "Number of Licenses",
     "invalidOrganizationLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "isEFT": "isEFT Enabled",
+    "eftError": "Can not reach EFT Service",
     "organizationInformation": "Organization Information",
     "createOrganization": "Create Organization",
     "cancel": "Cancel",
@@ -391,7 +393,7 @@
     "users": "Users",
     "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
@@ -460,7 +462,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
-    "loadingCustomer": "Sample Customer Data"
+    "loadingCustomer": "Sample Customer"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -812,9 +814,9 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"
@@ -987,6 +989,7 @@
     "videoError": "There is a problem with the video you are trying to play."
   },
   "spacesPage": {
+    "addTag": "Add tag",
     "title": "Devices",
     "modalTitle": "Add a New Device",
     "activateDevice": "Activate a New Device",
@@ -998,7 +1001,7 @@
     "actionsHeader": "Actions",
     "account": "Account",
     "unactivatedDevice": "Unactivated Device",
-    "informationHeader": "Information",
+    "informationHeader": "Settings",
     "customTagsHeader": "Custom Tags",
     "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
@@ -1076,7 +1079,7 @@
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define SIP Spark Address."
+      "setupCloudSipUriHeader": "Define SIP Domain"
     },
     "redirect-target-dialog": {
       "title": "Register New Expressway",
@@ -1153,6 +1156,15 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service  "
     },
+    "connectorNames": {
+      "squared-fusion-uc": "Call Connector",
+      "squared-fusion-uc.full": "Call Connector",
+      "squared-fusion-cal": "Calendar Connector",
+      "squared-fusion-media": "Media Service",
+      "contact-center-context": "Context Center Service",
+      "squared-fusion-ec": "Call Connector",
+      "squared-fusion-mgmt": "Management Connector"
+    },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -1195,12 +1207,14 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
+      "explanation": "You are about to upgrade {{connectorType}} on all hosts in the selected Cisco Expressway cluster:",
       "pending": "Pending",
       "upgrade": "Upgrade",
       "upgradeNow": "Upgrade Now",
       "upgradingHost": "Upgrading {{host}} to {{version}}",
-      "upgradeDone": "Upgrade completed!"
+      "upgradeDone": "Upgrade completed!",
+      "upToDate": "{{connectorType}} is up to date on this cluster.",
+      "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
@@ -1233,11 +1247,11 @@
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
         "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
         "disableConfirmDialogText5": "Data for the service connector will be deleted.",
-        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
+        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it.",
         "sipDomainHeading": "SIP Destination",
-        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS.",
+        "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: example.org"
+        "sipDomainExample": "For example: sipmtls.example.com"
       },
       "scheduleUpgrade": {
         "title": "Automatic Software Upgrades",
@@ -1268,6 +1282,11 @@
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
         "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+      },
+      "configure-connector": {
+        "title": "Configure and Start the Connector",
+        "description": "Your Cisco Expressway is registered for Hybrid Services.",
+        "action": "Now, configure and start the Connector on the Expressway."
       }
     }
   },
@@ -1367,6 +1386,7 @@
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
     "setSipUriErrorMessage": "Not available. Please try another name",
+    "setSipUriErrorMessageInvalidDomain": "Invalid domain, please try another name",
     "setSipUriDomainSuccessMessage": "The SIP Domain has been successfully saved",
     "sparkDomainManagementServiceErrorMessage": "Failed to reach Spark Domain Management Service",
     "messageSettings": "Message Settings",
@@ -1510,7 +1530,7 @@
     "title": "Auto Attendant",
     "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "namePlaceholder": "Enter Name",
-    "repeatMenu": "Repeat Menu",
+    "repeatMenu": "Repeat",
     "errorReadCe": "Failed to read {{name}}: {{statusText}} ({{status}}).",
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
@@ -1534,6 +1554,7 @@
     "actionRouteCall": "Route Call",
     "actionRouteCallHint": "Route the call to a destination like a hunt group, auto attendant, or extension.",
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
+    "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
@@ -1541,7 +1562,8 @@
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
-    "scheduleMissing": "No hours defined. This Auto Attendant will use 24 hour schedule",
+    "hoursMissing": "No hours defined.",
+    "holidaysMissing": "No holidays defined.",
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
@@ -1584,6 +1606,10 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "scheduleAddAdditionalHolidays": "Add Holidays",
+    "selectDate": "Select Date",
+    "allDay": "All Day",
+    "closedBehavious": "Holidays Follow Closed Behavior",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1866,7 +1892,7 @@
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
     "checkOrderStatus": "Check Order Status",
-    "launchPortal": "Launch Company Portal",
+    "launchPortal": "Setup Spark Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
@@ -2074,8 +2100,8 @@
     "licenseQuantity": "Licenses Quantity",
     "users": "Users",
     "message": "Message",
-    "messageAndMeeting": "Message and Meeting",
-    "meeting": "Meeting and WebEx",
+    "meeting": "Meeting 25 Party",
+    "webex": "WebEx Enterprise Edition 200",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2100,6 +2126,7 @@
     "message": "Message",
     "call": "Call",
     "meeting": "Meeting",
+    "roomSystems": "Room Systems",
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
@@ -3008,37 +3035,37 @@
     "wait": "Please wait while we redirect you"
   },
   "languages": {
-    "danish": "Danish",
-    "german": "German",
-    "englishBritish": "English (British)",
-    "englishAmerican": "English (American)",
-    "spanishSpain": "Spanish (Spain)",
-    "spanishColumbian": "Spanish (Columbian)",
-    "french": "French",
-    "indonesian": "Indonesian",
-    "italian": "Italian",
-    "japanese": "Japanese",
-    "korean": "Korean",
-    "norwegian": "Norwegian",
-    "polish": "Polish",
-    "portugueseBrazillian": "Portuguese (Brazillian)",
-    "russian": "Russian",
-    "swedish": "Swedish",
-    "turkish": "Turkish",
-    "chineseMandarin": "Chinese (Mandarin)",
-    "chineseTraditional": "Chinese (Traditional)",
+    "danish": "Dansk",
+    "german": "Deutsch",
+    "englishBritish": "English (United Kingdom)",
+    "englishAmerican": "English (United States)",
+    "spanishSpain": "Español (España)",
+    "spanishColumbian": "Español (América Latina)",
+    "french": "Français (France)",
+    "indionesian": "Bahasa Indonesia",
+    "italian": "Italiano",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "norwegian": "Norsk",
+    "dutch": "Nederlands",
+    "polish": "Polski",
+    "portugueseBrazillian": "Português (Brasil)",
+    "russian": "Pyccĸий",
+    "swedish": "Svenska",
+    "turkish": "Tϋrkçe",
+    "chineseMandarin": "简体中文",
+    "chineseTraditional": "繁體中文",
+    "frenchCanadian": "Français (Canada)",
+    "finnish": "Suomi",
+    "galician": "Galego",
+    "greek": "Ελληνικά",
+    "spanishArgentine": "Español (Argentina)",
+    "spanishChilean": "Español (Chile)",
+    "spanishMexican": "Español (mexicano)",
+    "portuguese": "Português",
     "englishAustralian": "English (Australian)",
-    "catalan": "Catalan",
-    "dutch": "Dutch",
-    "frenchCanadian": "French (Canadian)",
-    "finnish": "Finnish",
-    "galacian": "Galacian",
-    "greek": "Greek",
-    "spanishArgentine": "Spanish (Argentine)",
-    "spanishChilean": "Spanish (Chilean)",
-    "spanishMexican": "Spanish (Mexican)",
-    "portuguese": "Portuguese",
-    "valencian": "Valencian"
+    "valencian": "Valenciano",
+    "catalan": "Català"
   },
   "siteList": {
     "conferencing": "WebEx Sites",
@@ -3060,10 +3087,17 @@
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
     "exportFailedTooltip": "Export failed",
+    "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
+    "exportRejectedToast": "Export failed, try again.",
+    "importButton": "Import",
+    "importStartModalTitle": "Import WebEx User Attributes",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",
     "importFailedTooltip": "Import failed",
+    "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
+    "importRejectedToast": "Import failed, try again.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3423,7 +3457,7 @@
       "hybrid": {
         "title": "Hybrid Services",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More.",
+        "notEnabledActionText": "Learn More",
         "serviceHeader": "On Premise Status",
         "services": {
           "squared-fusion-cal": "Calendar",
@@ -3616,7 +3650,7 @@
   "domainManagement": {
     "title": "Domains",
     "description": "Add and verify the domains in your organization so that your users can take advantage of Call Service.",
-    "addDomain": "Add domain",
+    "addDomain": "Add Domain",
     "verifyDomain": "Verify",
     "claimDomain": "Claim",
     "list": {
@@ -3625,7 +3659,7 @@
       "actionsHeader": "Actions"
     },
     "add": {
-      "header": "Add domain",
+      "header": "Add Domain",
       "description": "Add your organization's domain. If you have multiple domains, repeat this step.",
       "exampleDomain": "example.com",
       "invalidDomain": "This is not a valid domain name.",
@@ -3633,14 +3667,20 @@
       "invalidDomainAdded": "This domain was already added."
     },
     "delete": {
-      "header": "Remove domain",
+      "header": "Remove Domain",
       "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
       "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Spark services. You will not be able the add any new users that belong to this domain."
     },
+    "unclaim": {
+      "header": "Release Domain Claim",
+      "unclaim": "Release",
+      "description": "You are about to release the following domain:",
+      "warning": "This domain will now be possible to verify and claim by other organizations."
+    },
     "verify": {
-      "header": "Verify domain",
+      "header": "Verify Domain",
       "verifyThis": "Before you verify",
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
@@ -3648,7 +3688,7 @@
       "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
     "claim": {
-      "header": "Claim domain",
+      "header": "Claim Domain",
       "claimThis": "You are about to claim the following domain:",
       "warning": "Users with e-mail addresses in this domain that belong to other organizations will have to provide new e-mail addresses.",
       "claim": "Claim"
@@ -3660,7 +3700,7 @@
       "delete": "Remove domain"
     },
     "instructions": {
-      "title": "Token and instructions",
+      "title": "Token and Instructions",
       "close": "Close",
       "instructions": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",

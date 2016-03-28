@@ -31,6 +31,8 @@ describe('First Time Wizard', function () {
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'SIP Domain');
+    utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);

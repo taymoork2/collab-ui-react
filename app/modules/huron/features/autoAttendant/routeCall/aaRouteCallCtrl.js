@@ -50,7 +50,7 @@
         });
         if (angular.isDefined(val)) {
           if (val.name === option.value) {
-            vm.selected.label = option.label;
+            vm.selected = option;
             return true;
           }
         }

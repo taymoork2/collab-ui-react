@@ -24,6 +24,18 @@
     vm.deleteSuccess = deleteSuccess;
     vm.deleteError = deleteError;
 
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
+
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
 
@@ -91,6 +103,7 @@
           featureName: vm.featureName,
           featureType: vm.featureType
         });
+        reInstantiateMasonry();
       }, 250);
     }
 

@@ -28,6 +28,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
+    vm.setLoadingDone = setLoadingDone;
 
     vm.templateDefinitions = [{
       tname: "template1",
@@ -39,7 +40,17 @@
 
     $scope.saveAARecords = saveAARecords;
 
+    setLoadingStarted();
+
     /////////////////////
+
+    function setLoadingStarted() {
+      vm.loading = true;
+    }
+
+    function setLoadingDone() {
+      vm.loading = false;
+    }
 
     function setAANameFocus() {
       vm.aaNameFocus = true;
@@ -423,7 +434,6 @@
     }
 
     function activate() {
-
       var aaName = $stateParams.aaName;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
@@ -441,6 +451,7 @@
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
       });
+
     }
 
     activate();

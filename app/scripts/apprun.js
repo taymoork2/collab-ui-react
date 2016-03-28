@@ -72,7 +72,7 @@
       } else if (document.URL.indexOf('code') !== -1) {
         params = getFromStandardGetParams(document.URL);
         $rootScope.status = 'loading';
-        Auth.getNewAccessToken(params.code)
+        Auth.getNewAccessToken(params)
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
@@ -114,7 +114,7 @@
       PreviousState.set(fromState.name);
       PreviousState.setParams(fromParams);
 
-      Localytics.push('Tab Clicked', toState.name);
+      Localytics.tagScreen(toState.name);
 
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-') + '-state';

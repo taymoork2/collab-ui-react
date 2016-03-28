@@ -3,6 +3,56 @@
  */
 'use strict';
 
+describe('WebExUtilsFact: getSiteName() test', function () {
+  beforeEach(module('WebExApp'));
+
+  var WebExUtilsFact;
+  var siteName;
+
+  beforeEach(inject(function (
+    _WebExUtilsFact_
+  ) {
+
+    WebExUtilsFact = _WebExUtilsFact_;
+  })); // beforeEach(inject())
+
+  it('can process siteUrl=<blah>.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.webex.com");
+
+    expect(siteName).toEqual("fake");
+  });
+
+  it('can process siteUrl=<blah>.my.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.my.webex.com");
+
+    expect(siteName).toEqual("fake.my");
+  });
+
+  it('can process siteUrl=<blah>.mydmz.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mydmz.webex.com");
+
+    expect(siteName).toEqual("fake.mydmz");
+  });
+
+  it('can process siteUrl=<blah>.mybts.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mybts.webex.com");
+
+    expect(siteName).toEqual("fake.mybts");
+  });
+
+  it('can process siteUrl=<blah>.mydev.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mydev.webex.com");
+
+    expect(siteName).toEqual("fake.mydev");
+  });
+
+  it('can process siteUrl=<blah>.dmz.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.dmz.webex.com");
+
+    expect(siteName).toEqual("fake");
+  });
+}); // describe()
+
 describe('WebExUtilsFact', function () {
 
   var $q;

@@ -1,22 +1,19 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').controller('SiteListCtrl', [
-  '$translate',
-  '$log',
-  '$scope',
-  '$interval',
-  'Authinfo',
-  'Userservice',
-  'SiteListService',
+  angular.module('Core').controller('SiteListCtrl', SiteListCtrl);
 
-  function (
+  /*@ngInject*/
+  function SiteListCtrl(
     $translate,
     $log,
     $scope,
     $interval,
     Authinfo,
     Userservice,
-    SiteListService
+    SiteListService,
+    WebExApiGatewayService,
+    Notification
   ) {
 
     var funcName = "siteListCtrl()";
@@ -28,9 +25,11 @@ angular.module('Core').controller('SiteListCtrl', [
     vm.gridData = [];
     vm.allSitesWebexLicensesArray = [];
 
-    //getAllSitesLicenseData();
-
     var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
     conferenceServices.forEach(
       function checkConferenceService(conferenceService) {
@@ -51,10 +50,6 @@ angular.module('Core').controller('SiteListCtrl', [
         );
 
         if (isNewSiteUrl) {
-          logMsg = funcName + "\n" +
-            "conferenceService=" + JSON.stringify(conferenceService);
-          $log.log(logMsg);
-
           conferenceService.showCSVInfo = false;
           conferenceService.showSiteLinks = false;
           conferenceService.showLicenseTypes = false;
@@ -70,11 +65,23 @@ angular.module('Core').controller('SiteListCtrl', [
           conferenceService.userEmailParam = null;
           conferenceService.webexAdvancedUrl = null;
 
-          conferenceService.csvPollIntervalObj = null;
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isCSVSupported = false;
 
-          conferenceService.checkCsvStatusStart = 1;
-          conferenceService.checkCsvStatusEnd = 4;
-          conferenceService.checkCsvStatusIndex = conferenceService.checkCsvStatusStart;
+          // define the range of csv states to mock
+          // list of states are in the file apiGatewayConsts.svc.js
+          conferenceService.csvMock = {
+            mockStatus: true, // set to true to mock csv status; set to false to get actual status from rest api 
+            mockStatusStartIndex: 0, // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            mockStatusEndIndex: 0,
+            mockStatusCurrentIndex: null,
+            mockExport: true,
+            mockImport: true,
+          };
+
+          conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
           vm.gridData.push(conferenceService);
         }
@@ -144,41 +151,52 @@ angular.module('Core').controller('SiteListCtrl', [
       });
     }
 
-    $scope.csvExport = function (siteUrl) {
+    $scope.csvExport = function (siteRow) {
       var funcName = "csvExport()";
       var logMsg = "";
+      var siteUrl = siteRow.license.siteUrl;
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
-      $log.log(logMsg);
+      //$log.log(logMsg);
+
+      WebExApiGatewayService.csvExport(
+        siteUrl,
+        siteRow.csvMock.mockExport
+      ).then(
+
+        function success(response) {
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        },
+
+        function error(response) {
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        }
+      ); // WebExApiGatewayService.csvExport()
+
     }; // csvExport()
 
-    $scope.csvExportResult = function (siteUrl) {
-      var funcName = "csvExportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvExportResult()
-
+    // TODO: remove csvImport() once we start implementing the import modal
     $scope.csvImport = function (siteUrl) {
       var funcName = "csvImport()";
       var logMsg = "";
 
       logMsg = funcName + "\n" +
         "siteUrl=" + siteUrl;
+
       $log.log(logMsg);
     }; // csvImport()
-
-    $scope.csvImportResult = function (siteUrl) {
-      var funcName = "csvImportResult()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-      $log.log(logMsg);
-    }; // csvImportResult()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
@@ -197,5 +215,5 @@ angular.module('Core').controller('SiteListCtrl', [
         } // cancelCsvPollInterval()
       ); // vm.gridData.forEach()
     });
-  } // end top level function
-]);
+  } // SiteListCtrl()
+})(); // top level function

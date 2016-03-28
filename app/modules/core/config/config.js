@@ -27,7 +27,7 @@
         'urn:scim:schemas:extension:cisco:commonidentity:1.0'
       ],
 
-      helpUrl: 'https://support.ciscospark.com',
+      helpUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
       ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
       rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
       supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
@@ -63,18 +63,20 @@
       },
 
       offerTypes: {
-        collab: 'COLLAB',
-        spark1: 'SPARK1', //to be depricated; use message
-        webex: 'WEBEX', // to be depricated; use meetings
-        squaredUC: 'SQUAREDUC', // to be depricated; use call
+        collab: 'COLLAB', //to be deprecated; use message && meeting
+        spark1: 'SPARK1', //to be deprecated; use message
+        webex: 'WEBEX', // to be deprecated; use meetings
+        squaredUC: 'SQUAREDUC', // to be deprecated; use call
         message: 'MESSAGE',
-        meetings: 'MEETINGS',
+        meetings: 'MEETINGS', // to be deprecated; use meeting && webex
+        meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         pstn: 'PSTN'
       },
 
       //WARNING: Deprecated, use offerTypes
+      // These were how trials used to be mapped
       trials: {
         message: 'COLLAB',
         meeting: 'WEBEX',
@@ -247,11 +249,12 @@
       User: [],
       Site_Admin: [
         'site-list',
+        'site-csv-import',
+        'site-csv-results',
         'site-settings',
         'site-setting',
         'webex-reports',
-        'webex-reports-iframe',
-        'example'
+        'webex-reports-iframe'
       ],
       Application: ['organizations', 'organization-overview'],
       Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']

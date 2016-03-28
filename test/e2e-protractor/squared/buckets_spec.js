@@ -4,22 +4,16 @@ describe('Invite User and Check Buckets', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
-
+  var token;
   var addEmail = utils.randomTestGmailwithSalt('buckets');
 
   //log in as admin with an account
   describe('Account Add User', function () {
     it('should login and view users', function () {
-      login.login('account-admin', '#/users');
-    });
-
-    it('should ensure calendar service enabled', function () {
-      navigation.ensureHybridService(navigation.calendarServicePage);
-    });
-
-    it('should ensure call service enabled', function () {
-      navigation.ensureHybridService(navigation.callServicePage);
-      // $HSE navigation.ensureCallServiceAware();
+      login.login('account-admin', '#/users')
+        .then(function (bearerToken) {
+          token = bearerToken;
+        });
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {
@@ -45,39 +39,6 @@ describe('Invite User and Check Buckets', function () {
         utils.expectIsDisplayed(users.communicationLicenses);
       });
 
-      // $HSE
-      xit('click on Hybrid Services individually', function () {
-        // Defualt is all check boxes unchecked
-        utils.expectCheckbox(users.hybridServices_Cal, false);
-        utils.expectCheckbox(users.hybridServices_UC, false);
-        utils.expectCheckbox(users.hybridServices_EC, false);
-
-        // Hybrid services call label should say "call service aware" when connect available
-        utils.expectTextToBeSet(users.hybridServices_UC, 'Call Service Aware');
-
-        // clicking UC should ONLY enable UC
-        utils.click(users.hybridServices_UC);
-        utils.expectCheckbox(users.hybridServices_UC, true);
-        utils.expectCheckbox(users.hybridServices_EC, false);
-        utils.click(users.hybridServices_UC);
-
-        // clicking EC should ALSO enable UC
-        utils.click(users.hybridServices_EC);
-        utils.expectCheckbox(users.hybridServices_UC, true);
-        utils.expectCheckbox(users.hybridServices_EC, true);
-
-        // unclicking EC should ONLY unclick EC
-        utils.click(users.hybridServices_EC);
-        utils.expectCheckbox(users.hybridServices_UC, true);
-        utils.expectCheckbox(users.hybridServices_EC, false);
-        utils.click(users.hybridServices_EC, true);
-
-        // unclicking UC should ALSO unclick EC
-        utils.click(users.hybridServices_UC);
-        utils.expectCheckbox(users.hybridServices_UC, false);
-        utils.expectCheckbox(users.hybridServices_EC, false);
-      });
-
       it('should add users successfully', function () {
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'onboarded successfully');
@@ -86,7 +47,7 @@ describe('Invite User and Check Buckets', function () {
     });
 
     afterAll(function () {
-      deleteUtils.deleteUser(addEmail);
+      deleteUtils.deleteUser(addEmail, token);
     });
   });
 });

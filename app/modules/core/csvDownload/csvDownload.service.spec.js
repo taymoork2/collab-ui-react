@@ -33,8 +33,8 @@ describe('Service: CsvDownloadService', function () {
     });
 
     it('should get template file', function () {
-      CsvDownloadService.getCsv('template').then(function (response) {
-        expect(response.data.some).toEqual('template');
+      CsvDownloadService.getCsv('template').then(function (csvData) {
+        expect(csvData.some).toEqual('template');
       });
       $httpBackend.flush();
     });
@@ -49,8 +49,8 @@ describe('Service: CsvDownloadService', function () {
     });
 
     it('should get user export file', function () {
-      CsvDownloadService.getCsv('user').then(function (response) {
-        expect(response.data.some).toEqual('user');
+      CsvDownloadService.getCsv('user').then(function (csvData) {
+        expect(csvData.some).toEqual('user');
       });
       $httpBackend.flush();
     });
@@ -65,8 +65,8 @@ describe('Service: CsvDownloadService', function () {
     });
 
     it('should get headers file', function () {
-      CsvDownloadService.getCsv('headers').then(function (response) {
-        expect(response.data.some).toEqual('headers');
+      CsvDownloadService.getCsv('headers').then(function (csvData) {
+        expect(csvData.some).toEqual('headers');
       });
       $httpBackend.flush();
     });
