@@ -2,6 +2,7 @@
 
 describe('Controller: CustomerOverviewCtrl', function () {
   var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService, FeatureToggleService, TrialService, Orgservice;
+  var testOrg;
 
   function LicenseFeature(name, state) {
     this['id'] = name.toString();
@@ -132,4 +133,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
   });
 
+  describe('should call isTestOrg successfully', function () {
+    beforeEach(function () {
+      testOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    });
+
+    it('should identify as a test org', function () {
+      expect(testOrg.isTestOrg).toBe(true);
+    });
+  });
 });
