@@ -51,9 +51,9 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
                 'Authorization': 'Bearer ' + accessToken,
               }
             };
-            
+
             if ("POST" == csvAPI.method) {
-            	httpsObj.data = csvAPI.data;
+              httpsObj.data = csvAPI.data;
             }
           }
         } // csvAPI()
