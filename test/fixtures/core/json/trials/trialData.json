@@ -8,26 +8,29 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": false,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
         "enabled": false,
-        "details": {
-          "siteUrl": "now.istomorrow.org",
-          "timeZone": {
-            "label": "(GMT -8:00) Los Angeles",
-            "timeZoneId": "4",
-            "timeZoneName": "Los Angeles",
-            "DCName": "SJC",
-            "DCID": "PM"
-          }
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
+        "enabled": false,
+        "siteUrl": "now.istomorrow.org",
+        "timeZone": {
+          "label": "(GMT -8:00) Los Angeles",
+          "timeZoneId": "4",
+          "timeZoneName": "Los Angeles",
+          "DCName": "SJC",
+          "DCID": "PM"
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": false,
         "details": {
           "phones": [{
@@ -83,12 +86,17 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": true,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
+        "enabled": true,
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
         "enabled": true,
         "details": {
           "siteUrl": "now.istomorrow.org",
@@ -102,7 +110,7 @@
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": true,
         "details": {
           "phones": [{

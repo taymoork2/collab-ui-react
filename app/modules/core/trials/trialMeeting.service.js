@@ -6,11 +6,11 @@
     .factory('TrialMeetingService', TrialMeetingService);
 
   /* @ngInject */
-  function TrialMeetingService($translate, Config) {
+  function TrialMeetingService(Config) {
     var _trialData;
     var service = {
-      'getData': getData,
-      'reset': reset,
+      getData: getData,
+      reset: reset,
     };
 
     return service;
@@ -27,12 +27,9 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.offerTypes.meetings,
-        'enabled': false,
-        'details': {
-          'siteUrl': '',
-          'timeZone': undefined
-        }
+        type: Config.offerTypes.meeting,
+        enabled: false,
+        details: {},
       };
 
       _trialData = angular.copy(defaults);

@@ -36,8 +36,8 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  //Start T30 CSV Not Available User Test 
-  describe('T30 CSV Not Available Test : ', function () {
+  //Start tests to detect 'Not Available' and warning icon conditions 
+  describe("test CSV 'Not Anavailable' and warning icon conditions : ", function () {
 
     it('should login as admin user ' + sitelist.t30csvNotAvailableUser.testAdminUsername + ', and navigate to site list page', function () {
       login.loginThroughGui(sitelist.t30csvNotAvailableUser.testAdminUsername, sitelist.t30csvNotAvailableUser.testAdminPassword);
@@ -45,8 +45,30 @@ describe('Services > Webex page aka Site List page', function () {
       utils.click(sitelist.conferencingLink);
     });
 
-    it('should detect Not Available', function () {
+    it("should detect 'Not Available' for T30 site", function () {
       utils.wait(sitelist.t30csvNotAvail);
+    });
+
+    it('should detect warning icon due to entitlement authentication failure', function () {
+      utils.wait(sitelist.siteEntitlementAuthFailure);
+    });
+
+    it('should log out', function () {
+      navigation.logout();
+    });
+  });
+
+  //Start tests to detect 'Unable to communicate with WebEx site' error icon condition
+  xdescribe("test CSV error icon condition : ", function () {
+
+    it('should login as admin user ' + sitelist.siteCommErrorUser.testAdminUsername + ', and navigate to site list page', function () {
+      login.loginThroughGui(sitelist.siteCommErrorUser.testAdminUsername, sitelist.siteCommErrorUser.testAdminPassword);
+      navigation.clickServicesTab();
+      utils.click(sitelist.conferencingLink);
+    });
+
+    it("should detect error icon due to 'Unable to communicate with WebEx site'", function () {
+      utils.wait(sitelist.siteCommError);
     });
 
     it('should log out', function () {

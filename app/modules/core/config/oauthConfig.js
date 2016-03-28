@@ -24,8 +24,8 @@
         ciRedirectUrl: 'redirect_uri=%s',
         oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
         oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s&email=%s',
-        oauth2LoginUrlNoEmailPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=random-string&service=%s',
+        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s&email=%s',
+        oauth2LoginUrlNoEmailPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
@@ -63,14 +63,15 @@
       return Utils.Base64.encode(getClientId() + ':' + getClientSecret());
     }
 
-    function getOauthLoginUrl(email) {
-      var acu = UrlConfig.getAdminPortalUrl();
+    function getOauthLoginUrl(email, oauthState) {
+      var redirectUrl = UrlConfig.getAdminPortalUrl();
       var pattern = config.oauthUrl.oauth2LoginUrlPattern;
       var params = [
         getOauth2Url(),
         getClientId(),
         oauth2Scope,
-        encodeURIComponent(acu),
+        encodeURIComponent(redirectUrl),
+        oauthState,
         getOauthServiceType()
       ];
 
