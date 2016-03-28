@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: AAScheduleImportCtrl', function () {
+describe('Controller: AAScheduleImportCtrl', function () {
   var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q;
   var aaModel = {
     aaRecords: [{

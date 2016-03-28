@@ -1619,6 +1619,7 @@
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
     "closedBehavious": "Holidays Follow Closed Behavior",
+    "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",
       "female": "female",

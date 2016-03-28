@@ -116,9 +116,9 @@ exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAA = function (bearer, data) {
-
+  var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
-    if (data[i].callExperienceName === this.testAAName) {
+    if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
 
       return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
 

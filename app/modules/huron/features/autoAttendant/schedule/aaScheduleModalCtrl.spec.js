@@ -3,7 +3,7 @@
 describe('Controller: AAScheduleModalCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $rootScope, $scope, $translate, $q, $modalInstance;
+  var $rootScope, $scope, $translate, $q, $modalInstance, $modal;
   var ical;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -100,11 +100,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-<<<<<<< e6ab411a89aa17c92041589c07d6d562ad6e7b2f
-  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
-=======
-  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _$modal_) {
->>>>>>> US220499 Unit Testing
+  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _$modal_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
@@ -116,11 +112,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
-<<<<<<< e6ab411a89aa17c92041589c07d6d562ad6e7b2f
     AACommonService = _AACommonService_;
-=======
     $modal = _$modal_;
->>>>>>> US220499 Unit Testing
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
