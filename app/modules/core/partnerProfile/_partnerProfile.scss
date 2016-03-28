@@ -21,6 +21,15 @@
     font-style: italic;
     font-size: 12px;
     color: #AEAEAF;
+    white-space: nowrap;
+}
+
+#webex_client_version_drop_down {
+     padding-top: 10px;
+}
+
+#webex_client_versions_label_and_dropdown {
+     padding-bottom: 12px;
 }
 
 .client-version-checkbox-label {
