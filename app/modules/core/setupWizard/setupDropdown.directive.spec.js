@@ -27,7 +27,6 @@ describe('directive: SetupDropdown, testing navigation changes', function () {
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
-    spyOn(FeatureToggleService, 'supportsCsvUpload').and.returnValue($q.when(false));
 
     spyOn($state, 'go');
 

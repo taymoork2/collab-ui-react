@@ -69,15 +69,19 @@
           conferenceService.isAdminReportEnabled = false;
           conferenceService.isCSVSupported = false;
 
-          // define the range of csv states to check
-          conferenceService.csvStatusCheckMode = {
-            isOn: true, // set this to false to turn off check
-            checkStart: 0,
-            checkEnd: WebExApiGatewayService.csvStatusTypes.length - 1,
-            checkIndex: null
+          // define the range of csv states to mock
+          // list of states are in the file apiGatewayConsts.svc.js
+          conferenceService.csvMock = {
+            mockStatus: true, // set to true to mock csv status; set to false to get actual status from rest api 
+            mockStatusStartIndex: 0, // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            mockStatusEndIndex: 0,
+            mockStatusCurrentIndex: null,
+            mockExport: true,
+            mockImport: true,
           };
 
           conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
           vm.gridData.push(conferenceService);
         }
@@ -160,7 +164,11 @@
         "siteUrl=" + siteUrl;
       //$log.log(logMsg);
 
-      WebExApiGatewayService.csvExport(siteUrl).then(
+      WebExApiGatewayService.csvExport(
+        siteUrl,
+        siteRow.csvMock.mockExport
+      ).then(
+
         function success(response) {
           Notification.success($translate.instant('siteList.exportStartedToast'));
           SiteListService.updateCSVColumnInRow(siteRow);

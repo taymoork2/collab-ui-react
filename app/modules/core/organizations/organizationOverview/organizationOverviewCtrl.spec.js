@@ -40,6 +40,7 @@ describe('Controller: organizationOverviewCtrl', function () {
   }));
 
   function initController() {
+    _.set($stateParams, 'currentOrganization.id', '1');
     controller = $controller('OrganizationOverviewCtrl', {
       $scope: $scope,
       Authinfo: authInfo

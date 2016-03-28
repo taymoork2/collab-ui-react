@@ -57,6 +57,27 @@
       title: 'firstTimeWizard.addUsers',
       controller: 'AddUserCtrl',
       subTabs: [{
+        name: 'csv',
+        controller: 'OnboardCtrl',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+        }, {
+          name: 'csvDownload',
+          template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
+        }, {
+          name: 'csvUpload',
+          template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
+        }, {
+          name: 'csvProcessing',
+          template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
+          buttons: false
+        }, {
+          name: 'csvResult',
+          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+          buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
+        }]
+      }, {
         name: 'advanced',
         controller: 'OnboardCtrl',
         steps: [{
@@ -76,18 +97,13 @@
     }];
 
     $scope.isDirSyncEnabled = false;
-    $scope.csvUploadSupport = false;
 
     if (Authinfo.isCustomerAdmin()) {
-      $q.all([FeatureToggleService.supportsDirSync(),
-          FeatureToggleService.supportsCsvUpload()
-        ])
-        .then(function (results) {
-          $scope.isDirSyncEnabled = results[0];
-          $scope.csvUploadSupport = results[1];
-        }).finally(function () {
-          init();
-        });
+      FeatureToggleService.supportsDirSync().then(function (result) {
+        $scope.isDirSyncEnabled = result;
+      }).finally(function () {
+        init();
+      });
     }
 
     function init() {
@@ -167,50 +183,6 @@
           template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
         }]
       };
-      var oldCsvSubTab = {
-        name: 'csv',
-        controller: 'OnboardCtrl',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-        }, {
-          name: 'csvUpload',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
-        }, {
-          name: 'csvServices',
-          template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
-        }, {
-          name: 'csvProcessing',
-          template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-          buttons: false
-        }, {
-          name: 'csvResult',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
-        }]
-      };
-      var newCsvSubTab = {
-        name: 'csv',
-        controller: 'OnboardCtrl',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-        }, {
-          name: 'csvDownload',
-          template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
-        }, {
-          name: 'csvUpload',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
-        }, {
-          name: 'csvProcessing',
-          template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-          buttons: false
-        }, {
-          name: 'csvResult',
-          template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-          buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
-        }]
-      };
       var advancedSubTabSteps = [{
         name: 'dirsyncServices',
         template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
@@ -224,22 +196,15 @@
         buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
       }];
 
-      var csvSubTab = oldCsvSubTab;
-      if ($scope.csvUploadSupport) {
-        csvSubTab = newCsvSubTab;
-      }
-
       if ($scope.isDirSyncEnabled) {
-        userTab.subTabs.splice(0, 0, csvSubTab);
         var advancedSubTab = _.findWhere(userTab.subTabs, {
           name: 'advanced'
         });
         advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
       } else {
         userTab.subTabs.splice(0, 0, simpleSubTab);
-        userTab.subTabs.splice(1, 0, csvSubTab);
       }
-
     }
+
   }
 })();

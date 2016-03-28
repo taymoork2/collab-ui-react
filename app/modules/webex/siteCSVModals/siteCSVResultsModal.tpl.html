@@ -1,0 +1,79 @@
+
+<div ng-if="siteCSVResult.viewReady"
+     id="siteCSVResultsModal">
+     
+  <div class="modal-header">
+    <button type="button" 
+            class="close" 
+            ng-click="$dismiss()" 
+            id="closeCSVResultsModal">
+            
+      <span class="sr-only" 
+            translate="common.close">
+      </span>
+    </button>
+    
+    <h3 class="modal-title">
+      {{siteCSVResult.modalTitle}}
+    </h3>
+    
+    <p>
+      &nbsp;
+    </p>
+    
+    <table class="wx-table">
+      <tr class="wx-tr"
+          valign="top"
+          ng-repeat="gridRow in siteCSVResult.gridRows">
+        
+        <td class="wx-csv-modal-td"
+            width="50%">
+            
+          {{gridRow.title}}
+        </td>
+      
+        <td class="wx-td"
+            width="50%">
+            
+          <span ng-if="( gridRow.id != 'export-records-failed' ) &&
+                       ( gridRow.id != 'import-records-failed' ) &&
+                       ( gridRow.id != 'export-download-csv-file' ) &&
+                       ( gridRow.id != 'import-download-err-file' )">
+                       
+            <b>{{gridRow.value}}</b>
+          </span> 
+                         
+          <span ng-if="( gridRow.id == 'export-records-failed' ) || 
+                       ( gridRow.id == 'import-records-failed' )">
+                       
+            <span ng-if="( gridRow.value == 0 )">
+              <b>{{gridRow.value}}</b>
+            </span>
+
+            <span ng-if="( gridRow.value > 0 )">
+              <font color="red">
+                <b>{{gridRow.value}}</b>
+              </font>
+            </span>
+          </span>
+            
+          <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
+                       ( gridRow.id == 'import-download-err-file' )">
+             
+            <a href={{gridRow.fileDownloadUrl}}>
+              <font color=#049FD9>
+                {{gridRow.value}}
+              </font>
+            </a>
+          </span>
+        </td>
+      </tr>
+    </table>
+    <!-- 
+    <div gridscrollbar 
+         class="gridStyle" 
+         ui-grid="siteCSVResult.gridOptions">
+    </div>
+    -->
+  </div>
+</div>

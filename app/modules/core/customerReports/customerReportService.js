@@ -60,14 +60,19 @@
       }
       activePromse = $q.defer();
 
+      var returnData = {
+        graphData: [],
+        isActiveUsers: false
+      };
+
       return getService(urlBase + detailed + activeUserUrl + getQuery(filter), activePromse).then(function (response) {
         if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
-          return adjustActiveUserData(response.data.data[0].data, filter);
+          return adjustActiveUserData(response.data.data[0].data, filter, returnData);
         } else {
-          return [];
+          return returnData;
         }
       }, function (response) {
-        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
+        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), returnData);
       });
     }
 
@@ -104,7 +109,7 @@
       });
     }
 
-    function adjustActiveUserData(activeData, filter) {
+    function adjustActiveUserData(activeData, filter, returnData) {
       var emptyGraph = true;
       var graphItem = {
         totalRegisteredUsers: 0,
@@ -151,6 +156,10 @@
           }
         }
 
+        if (activeUsers > 0) {
+          returnData.isActiveUsers = true;
+        }
+
         if (activeUsers > 0 || totalRegisteredUsers > 0) {
           for (var i = 0; i < returnGraph.length; i++) {
             if (returnGraph[i].modifiedDate === date) {
@@ -165,10 +174,9 @@
       });
 
       if (!emptyGraph) {
-        return returnGraph;
-      } else {
-        return [];
+        returnData.graphData = returnGraph;
       }
+      return returnData;
     }
 
     function getAvgRoomData(filter) {

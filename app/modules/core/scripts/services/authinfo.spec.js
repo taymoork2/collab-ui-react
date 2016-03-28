@@ -323,8 +323,8 @@ describe('Authinfo:', function () {
 
   function setupConfig(override) {
     override = override || {};
-    var configMock = angular.extend({}, defaultConfig, override);
-    provide.value('Config', configMock);
+    var Config = injector.get('Config');
+    angular.extend(Config, defaultConfig, override);
   }
 
   function setupUser(override) {

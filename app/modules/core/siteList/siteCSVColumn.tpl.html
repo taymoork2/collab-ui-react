@@ -1,20 +1,10 @@
-<style>
-.csv-text:hover {
-    color: #D03D35;
-}
-
-.csv-results {
-    background-color: #C9EBE6;
-    padding: 5px 10px;
-}
-</style>
-
 <p class="ui-grid-cell-contents">
   <span ng-if="!row.entity.showCSVInfo">
     <i class="icon-spinner icon"> </i>
   </span>
 
-  <span ng-if="row.entity.showCSVInfo">
+  <span ng-if="!row.entity.isError">
+     <span ng-if="row.entity.showCSVInfo">
         <span ng-if="!row.entity.isCSVSupported">
             <span id="{{row.entity.license.siteUrl}}_notAvailable"
                   translate="siteList.siteCSVNotAvailable"></span> 
@@ -29,6 +19,8 @@
         </span>
 
         <span ng-if="row.entity.isCSVSupported">
+          <!-- export section -->
+          <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results" ng-if="row.entity.exportFinishedWithErrors" tooltip-append-to-body="true" 
@@ -81,15 +73,20 @@
                   tooltip="{{::'siteList.exportBlockedTooltip' | translate}}"
                   tooltip-animation="false" 
                   tooltip-append-to-body="true"></span>
+          </span>
                 
-            <!-- pipe separator -->
+          <!-- export/import separator -->
+          <span>
             |
-            
+          </span>
+          
+          <!-- import section -->
+          <span id="{{row.entity.license.siteUrl}}_importStatus">
             <!-- Import -->
             <a ng-if="row.entity.showImportLink"
                id="{{row.entity.license.siteUrl}}_import"
                translate="siteList.siteCsvImportLinkLabel"
-               ng-click="grid.appScope.csvImport(row.entity.license.siteUrl); ">
+               ui-sref="site-csv-import({csvImportObj:row.entity})">
             </a>
             
             <!-- Grayed Import -->
@@ -136,8 +133,30 @@
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
-              
             </span> 
+          </span>
         </span>
+    </span>      
   </span>
+  
+  <span ng-if="row.entity.isError">
+    <span ng-if="!row.entity.isWarn" 
+         popover="{{'siteList.systemError' | translate}}" 
+         popover-trigger="mouseenter" 
+         popover-placement="bottom">
+      <span id="{{row.entity.license.siteUrl}}_errorIcon">
+       <i class="icon-error icon err webex-alert-text"></i>
+      </span>
+    </span>
+  
+    <span ng-if="row.entity.isWarn" 
+         popover="{{'siteList.authError' | translate}}" 
+         popover-trigger="mouseenter" 
+         popover-placement="bottom">
+      <span id="{{row.entity.license.siteUrl}}_warningIcon">
+       <i class="icon-warning icon webex-attention-text"></i>
+      </span>
+    </span>
+  </span>
+   
 </p>

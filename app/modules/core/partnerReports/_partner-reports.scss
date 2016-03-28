@@ -58,12 +58,16 @@
       height: 0;
       top: rem-calc(235);
       width: 100%;
-      .no-data {
-        color: $gray-darkest;
-        font-family: $brand-font-cisco-TT-Light;
-        font-size: rem-calc(16);
-        text-align: center;
-        margin: 0;
+    }
+    .no-data {
+      color: $gray-darkest;
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: rem-calc(16);
+      text-align: center;
+      margin: 0;
+      span {
+        position: relative;
+        top: -3px;
       }
     }
     .spinner-position {
@@ -72,12 +76,12 @@
       top: rem-calc(235);
       left: rem-calc(-3);
       width: 100%;
-      .icon-2x {
-        font-size: 4em;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+    }
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     .timechartDiv {
       font-size: rem-calc(11);
