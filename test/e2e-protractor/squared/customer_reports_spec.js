@@ -83,8 +83,7 @@ describe('Customer Reports', function () {
       utils.click(reports.getOption(reports.timeSelect, time[1]));
     });
 
-    // Disabling the following Tests until intermittent card resizing failures are fixed
-    xit('should change to display only engagement reports', function () {
+    it('should change to display only engagement reports', function () {
       utils.click(reports.engagement);
 
       // engagement graphs
@@ -106,30 +105,17 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.endpointsDiv);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.mediaHeader);
-      utils.expectIsNotDisplayed(reports.mediaFilter);
       utils.expectIsNotDisplayed(reports.mediaQualityDiv);
-
-      utils.expectIsNotDisplayed(reports.metricsHeader);
       utils.expectIsNotDisplayed(reports.metricsGraphDiv);
-      reports.metricsDataPresent(false);
     });
 
-    xit('should change to display only quality reports', function () {
+    it('should change to display only quality reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.totalRoomsHeader);
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
-
-      utils.expectIsNotDisplayed(reports.activeHeader);
       utils.expectIsNotDisplayed(reports.activeUsers);
-
-      utils.expectIsNotDisplayed(reports.filesSharedHeader);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
-
-      utils.expectIsNotDisplayed(reports.endpointsHeader);
-      utils.expectIsNotDisplayed(reports.endpointFilter);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
       // quality graphs
@@ -144,7 +130,7 @@ describe('Customer Reports', function () {
       reports.metricsDataPresent(false);
     });
 
-    xit('should return to all reports', function () {
+    it('should return to all reports', function () {
       utils.click(reports.allTypes);
 
       // Total Rooms

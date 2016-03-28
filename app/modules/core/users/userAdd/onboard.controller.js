@@ -698,6 +698,7 @@
 
     $scope.addDnGridOptions = {
       data: 'usrlist',
+      enableHorizontalScrollbar: 0,
       enableRowSelection: false,
       multiSelect: false,
       rowHeight: 45,
@@ -709,22 +710,23 @@
         displayName: $translate.instant('usersPage.nameHeader'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '42%',
-        height: 35
+        width: '*'
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
         cellTemplate: externalExtensionTemplate,
-        width: '33%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
         sortable: false,
         cellTemplate: internalExtensionTemplate,
-        width: '25%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }]
     };
     $scope.collabRadio = 1;

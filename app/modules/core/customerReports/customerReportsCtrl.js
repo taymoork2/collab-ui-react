@@ -24,7 +24,6 @@
 
     var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
-    var activeUserCard = null;
     var previousSearch = "";
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
@@ -42,17 +41,14 @@
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
-    var avgRoomsCard = null;
     vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
 
     var filesSharedChart = null;
-    var filesSharedCard = null;
     vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
     var mediaChart = null;
-    var mediaCard = null;
     var mediaData = [];
     vm.mediaQualityStatus = REFRESH;
     vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
@@ -69,7 +65,6 @@
     vm.mediaSelected = vm.mediaOptions[0];
 
     var deviceChart = null;
-    var deviceCard = null;
     var currentDeviceGraphs = [];
     var defaultDeviceFilter = {
       value: 0,
@@ -82,7 +77,6 @@
     vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
-    var metricsCard = null;
     vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
     vm.metrics = {};
@@ -217,40 +211,18 @@
 
     function resetCards(filter) {
       if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard, deviceCard];
-        var qualityElems = [mediaCard, metricsCard];
-
-        if (filter === vm.allReports) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
-          }
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
+        vm.displayEngagement = false;
+        vm.displayQuality = false;
+        if (filter === vm.allReports || filter === vm.engagement) {
           vm.displayEngagement = true;
-          vm.displayQuality = true;
-        } else if (filter === vm.engagement) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          }
-          if (vm.displayQuality) {
-            $('.cs-card-layout').masonry('remove', qualityElems);
-          }
-          vm.displayEngagement = true;
-          vm.displayQuality = false;
-        } else if (filter === vm.quality) {
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
-          if (vm.displayEngagement) {
-            $('.cs-card-layout').masonry('remove', engagementElems);
-          }
-          vm.displayEngagement = false;
+        }
+        if (filter === vm.allReports || filter === vm.quality) {
           vm.displayQuality = true;
         }
-
-        currentFilter = filter;
         resizeCards();
+        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
+        $timeout(resizeCards, 1000);
+        currentFilter = filter;
       }
     }
 
@@ -321,7 +293,6 @@
           vm.activeUserStatus = SET;
           vm.displayMostActive = response.isActiveUsers;
         }
-        activeUserCard = document.getElementById('active-user-card');
         resizeCards();
       });
       CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
@@ -377,7 +348,6 @@
           setAverageGraph(response);
           vm.avgRoomStatus = SET;
         }
-        avgRoomsCard = document.getElementById('avg-room-card');
       });
     }
 
@@ -398,7 +368,6 @@
           setFilesGraph(response);
           vm.filesSharedStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
       });
     }
 
@@ -421,7 +390,6 @@
           setMediaGraph(mediaData, vm.mediaSelected);
           vm.mediaQualityStatus = SET;
         }
-        mediaCard = document.getElementById('media-quality-card');
       });
     }
 
@@ -443,7 +411,6 @@
           vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
-        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
@@ -479,7 +446,6 @@
             vm.deviceStatus = EMPTY;
           }
         }
-        deviceCard = document.getElementById('device-card');
       });
     }
 

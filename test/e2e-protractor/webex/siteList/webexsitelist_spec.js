@@ -59,7 +59,7 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start tests to detect 'Unable to communicate with WebEx site' error icon condition
-  describe("test CSV error icon condition : ", function () {
+  xdescribe("test CSV error icon condition : ", function () {
 
     it('should login as admin user ' + sitelist.siteCommErrorUser.testAdminUsername + ', and navigate to site list page', function () {
       login.loginThroughGui(sitelist.siteCommErrorUser.testAdminUsername, sitelist.siteCommErrorUser.testAdminPassword);
