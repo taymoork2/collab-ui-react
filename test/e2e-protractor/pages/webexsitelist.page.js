@@ -23,12 +23,6 @@ var SiteListPage = function () {
     testAdminPassword: 'Cisco!23'
   };
 
-  this.siteCommErrorUser = {
-    siteUrl: 't30citestprov3.webex.com',
-    testAdminUsername: 't30citestprov3_csvadm1@mailinator.com',
-    testAdminPassword: 'Cisco!23'
-  };
-
   this.siteListPageId = element(by.id('site-list'));
   this.conferencingLink = element(by.css('a[href="#site-list"]'));
   this.csvColumnId = element(by.id('id-siteCsvColumnHeader'));
@@ -49,9 +43,6 @@ var SiteListPage = function () {
 
   //check T30citestprov9.webex.com 'Not Available'
   this.t30csvNotAvail = element(by.id(this.t30csvNotAvailableUser.siteUrl + "_notAvailable"));
-
-  //check cisjsite031.webex.com for 'Unable to communicate with WebEx site' error icon
-  this.siteCommError = element(by.id(this.siteCommErrorUser.siteUrl + "_errorIcon"));
 
   //check sjsite04.webex.com for 'Entitlement authentication failure' warning icon
   this.siteEntitlementAuthFailure = element(by.id("sjsite04.webex.com" + "_warningIcon"));

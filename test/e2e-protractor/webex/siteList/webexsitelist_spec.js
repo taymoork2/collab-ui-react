@@ -58,24 +58,6 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  //Start tests to detect 'Unable to communicate with WebEx site' error icon condition
-  xdescribe("test CSV error icon condition : ", function () {
-
-    it('should login as admin user ' + sitelist.siteCommErrorUser.testAdminUsername + ', and navigate to site list page', function () {
-      login.loginThroughGui(sitelist.siteCommErrorUser.testAdminUsername, sitelist.siteCommErrorUser.testAdminPassword);
-      navigation.clickServicesTab();
-      utils.click(sitelist.conferencingLink);
-    });
-
-    it("should detect error icon due to 'Unable to communicate with WebEx site'", function () {
-      utils.wait(sitelist.siteCommError);
-    });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
-
   //Start multi center license tests
   xdescribe(': License Types - Single : ', function () {
 
