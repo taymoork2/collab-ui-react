@@ -68,6 +68,8 @@ describe('SiteCSVImportModalCtrl test', function () {
   it('should have valid import modal', function () {
     $rootScope.$apply();
     expect(SiteCSVImportModalCtrl.csvImportObj).not.toBe(null);
+    expect(SiteCSVImportModalCtrl.siteUrl).not.toBe(null);
+    expect(SiteCSVImportModalCtrl.siteUrl).toEqual(fakeSiteRow.license.siteUrl);
   });
 
 }); // describe()
