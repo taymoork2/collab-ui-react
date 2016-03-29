@@ -159,7 +159,7 @@ gulp.task('plato', function (done) {
 
 function hasBeenFixed(file) {
   // has ESLint fixed the file content?
-  return file.eslint != null && file.eslint.fixed;
+  return _.has(file, 'eslint.fixed');
 }
 
 function createESLintTask(files, ESLintOptions) {
