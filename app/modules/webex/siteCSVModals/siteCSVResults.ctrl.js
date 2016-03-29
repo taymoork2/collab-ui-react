@@ -43,14 +43,14 @@
 
       vm.gridRows.push({
         id: 'export-started-time',
-        title: 'Export started:',
+        title: 'Started:',
         value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-finished-time',
-        title: 'Export finished:',
+        title: 'Finished:',
         value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
@@ -108,14 +108,14 @@
 
       vm.gridRows.push({
         id: 'import-started-time',
-        title: 'Import started:',
+        title: 'Started:',
         value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-finished-time',
-        title: 'Import finished:',
+        title: 'Finished:',
         value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
