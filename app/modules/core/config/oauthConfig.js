@@ -74,7 +74,7 @@
         getOauthServiceType()
       ];
 
-      if (!_.isEmpty(email)) {
+      if (email) {
         params.push(encodeURIComponent(email));
         pattern = pattern + '&email=%s';
       }

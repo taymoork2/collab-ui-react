@@ -105,12 +105,12 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function redirectToLogin(email, sso) {
-    var $state = $injector.get('$state');
-    if (!_.isEmpty(email)) {
+    if (email) {
       $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
     } else if (sso) {
       $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
     } else {
+      var $state = $injector.get('$state');
       $state.go('login');
     }
   }
