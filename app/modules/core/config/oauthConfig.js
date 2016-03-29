@@ -24,8 +24,7 @@
         ciRedirectUrl: 'redirect_uri=%s',
         oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
         oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
-        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s&email=%s',
-        oauth2LoginUrlNoEmailPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s',
+        oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&service=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s&scope=%s'
@@ -75,10 +74,9 @@
         getOauthServiceType()
       ];
 
-      if (email) {
+      if (!_.isEmpty(email)) {
         params.push(encodeURIComponent(email));
-      } else {
-        pattern = config.oauthUrl.oauth2LoginUrlNoEmailPattern;
+        pattern = pattern + '&email=%s';
       }
 
       return Utils.sprintf(pattern, params);

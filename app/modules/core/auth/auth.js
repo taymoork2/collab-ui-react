@@ -109,7 +109,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     if (!_.isEmpty(email)) {
       $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
     } else if (sso) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl();
+      $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
     } else {
       $state.go('login');
     }
