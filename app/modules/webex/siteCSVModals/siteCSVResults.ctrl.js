@@ -9,9 +9,7 @@
     $stateParams,
     $translate,
     $log,
-    Storage,
-    WebExApiGatewayService,
-    WebExRestApiFact
+    WebExApiGatewayService
   ) {
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
@@ -80,8 +78,8 @@
 
       vm.gridRows.push({
         id: 'export-download-csv-file',
-        title: 'Download:',
-        value: 'Exported CSV file',
+        title: 'Download CSV file:',
+        value: null,
         fileDownloadUrl: vm.csvStatusObj.details.exportFileLink
       });
 
@@ -146,8 +144,8 @@
       if (0 < vm.csvStatusObj.details.failedRecords) {
         vm.gridRows.push({
           id: 'import-download-err-file',
-          title: 'Download:',
-          value: 'Error log',
+          title: 'Download error log:',
+          value: null,
           fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
         });
       }
@@ -211,7 +209,7 @@
 
           $log.log(funcName);
         }
-      ); // WebExRestApiFact.csvFileDownload().then()
+      ); // WebExApiGatewayService.csvFileDownload().then()
     }; // csvFileDownload()
   } // SiteCSVResultsCtrl()
 })(); // top level function
