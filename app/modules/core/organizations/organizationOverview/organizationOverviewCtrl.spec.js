@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: organizationOverviewCtrl', function () {
+describe('Controller: organizationOverviewCtrl', function () {
   var controller, rootScope, $scope, Config, Orgservice, $q, $controller, Notification;
   var adminServicesJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
 
