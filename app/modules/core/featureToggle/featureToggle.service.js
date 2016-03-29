@@ -48,6 +48,7 @@
       flagMsg: 'flag-msg',
       geoHintEnabled: 'geo-hint-enabled',
       huronPstnPort: 'huron-pstn-port',
+      invitePendingStatus: 'invite-pending-status',
       iosActionBar: 'ios-action-bar',
       iosAecType: 'ios-aec-type',
       iosCameraview: 'ios-cameraview',

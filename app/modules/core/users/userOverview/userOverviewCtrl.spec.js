@@ -200,8 +200,9 @@ describe('Controller: UserOverviewCtrl', function () {
       entitlements = ["squared-call-initiation", "spark", "webex-squared"];
     });
 
-    it('should call resendInvitation successfully', function () {
+    it('should call resendInvitation successfully', function () {  
       controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
+      $scope.$apply();
       expect(Notification.success).toHaveBeenCalled();
     });
   });

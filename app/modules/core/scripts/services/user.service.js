@@ -21,7 +21,7 @@
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
-      resendInvitation: resendInvitation,
+      resendInvitation: resendInvitation
     };
 
     return service;

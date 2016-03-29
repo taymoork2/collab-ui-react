@@ -68,4 +68,15 @@ describe('User Service', function () {
     expect($rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
   });
 
+  it('should call resendInvitation successfully', function () {
+    var userEmail = 'testOrg12345@gmail';
+    var userName = 'testOrgEmail';
+    var uuid = '111112';
+    var userStatus = 'pending';
+    var dirsyncEnabled = true;
+    var entitlements = ["squared-call-initiation", "spark", "webex-squared"];
+    Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
+    expect(Userservice.sendSparkWelcomeEmail(userEmail, userName)).toHaveBeenCalled();
+  });
+
 });

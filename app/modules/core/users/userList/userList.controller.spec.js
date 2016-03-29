@@ -23,7 +23,7 @@ describe('UserListCtrl: Ctrl', function () {
     Authinfo = _Authinfo_;
     Config = _Config_;
     Notification = _Notification_;
-    
+
     $rootScope.typeOfExport = {
       USER: 1,
       CUSTOMER: 2
