@@ -41,6 +41,13 @@ describe('Auth Service', function () {
     expect($window.location.href).toBe('oauthURL');
   });
 
+  it('should login if redirectToLogin method is called with sso=true', function () {
+    $window.location = {};
+    OAuthConfig.getOauthLoginUrl = sinon.stub().returns('oauthURL');
+    Auth.redirectToLogin(null, true);
+    expect($window.location.href).toBe('oauthURL');
+  });
+
   it('should get account info using correct API', function (done) {
     UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
