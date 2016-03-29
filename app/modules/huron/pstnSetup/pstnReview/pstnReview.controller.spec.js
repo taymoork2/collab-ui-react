@@ -27,11 +27,13 @@ describe('Controller: PstnReviewCtrl', function () {
     PstnSetup.setCustomerExists(true);
     PstnSetup.setCarrierExists(true);
     PstnSetup.setSiteExists(true);
-    PstnSetup.setNumbers(orderCart);
+    PstnSetup.setOrders(orderCart);
 
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'portNumbers').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
     spyOn(PstnServiceAddressService, 'createCustomerSite').and.returnValue($q.when());
     spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
     spyOn($state, 'go');
@@ -55,6 +57,17 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnServiceAddressService.createCustomerSite).not.toHaveBeenCalled();
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+      });
+
+      it('should contain one of each order', function () {
+        expect(controller.portOrders.length).toEqual(1);
+        expect(controller.advancedOrders.length).toEqual(1);
+        expect(controller.newOrders.length).toEqual(1);
+      });
+
+      it('should show the correct number of new and port numbers', function () {
+        expect(controller.totalNewAdvancedOrder).toEqual(6);
+        expect(controller.totalPortNumbers).toEqual(2);
       });
     });
 
