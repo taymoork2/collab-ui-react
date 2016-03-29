@@ -3,7 +3,6 @@
 var request = require('request');
 
 function post(url, body) {
-  console.log("post");
   var defer = protractor.promise.defer();
 
   var options = {
@@ -16,7 +15,6 @@ function post(url, body) {
   };
 
   function callback(error, response, body) {
-    console.log("callback");
     var ticket;
     if (!error && response.statusCode == 200) {
       var start = response.body.indexOf('<use:sessionTicket>') + '<use:sessionTicket>'.length;
@@ -24,16 +22,13 @@ function post(url, body) {
       if (start >= 0 & end >= 0) {
         ticket = response.body.slice(start, end);
       }
-      console.log('fulfill');
       defer.fulfill(ticket);
     } else {
-      console.log('reject');
       defer.reject();
     }
 
   }
   request(options, callback);
-  console.log("return");
   return defer.promise;
 }
 
