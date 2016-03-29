@@ -63,18 +63,20 @@
       },
 
       offerTypes: {
-        collab: 'COLLAB',
-        spark1: 'SPARK1', //to be depricated; use message
-        webex: 'WEBEX', // to be depricated; use meetings
-        squaredUC: 'SQUAREDUC', // to be depricated; use call
+        collab: 'COLLAB', //to be deprecated; use message && meeting
+        spark1: 'SPARK1', //to be deprecated; use message
+        webex: 'WEBEX', // to be deprecated; use meetings
+        squaredUC: 'SQUAREDUC', // to be deprecated; use call
         message: 'MESSAGE',
-        meetings: 'MEETINGS',
+        meetings: 'MEETINGS', // to be deprecated; use meeting && webex
+        meeting: 'MEETING',
         call: 'CALL',
         roomSystems: 'ROOMSYSTEMS',
         pstn: 'PSTN'
       },
 
       //WARNING: Deprecated, use offerTypes
+      // These were how trials used to be mapped
       trials: {
         message: 'COLLAB',
         meeting: 'WEBEX',
@@ -247,6 +249,7 @@
       User: [],
       Site_Admin: [
         'site-list',
+        'site-csv-import',
         'site-csv-results',
         'site-settings',
         'site-setting',

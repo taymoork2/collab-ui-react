@@ -393,7 +393,7 @@
     "users": "Users",
     "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
@@ -462,7 +462,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
-    "loadingCustomer": "Sample Customer Data"
+    "loadingCustomer": "Sample Customer"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -816,7 +816,7 @@
     "goSetupCloudSipUri": "Go here to finish this configuration",
     "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"
@@ -2018,7 +2018,7 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
-      "deviceLimitDescription": "Choose at least 2 and up to 7 total devices (maximum 5 per type)",
+      "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
       "skipAddDevices": "Skip adding devices",
@@ -2103,8 +2103,8 @@
     "licenseQuantity": "Licenses Quantity",
     "users": "Users",
     "message": "Message",
-    "messageAndMeeting": "Message and Meeting",
-    "meeting": "Meeting and WebEx",
+    "meeting": "Meeting 25 Party",
+    "webex": "WebEx Enterprise Edition 200",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2129,6 +2129,7 @@
     "message": "Message",
     "call": "Call",
     "meeting": "Meeting",
+    "roomSystems": "Room Systems",
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
@@ -3091,6 +3092,9 @@
     "exportFailedTooltip": "Export failed",
     "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportRejectedToast": "Export failed, try again.",
+    "importButton": "Import",
+    "importStartModalTitle": "Import WebEx User Attributes",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",

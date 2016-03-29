@@ -139,7 +139,7 @@
       var p = new ical.Property(dateType);
       p.setValue(new ical.Time({
         year: type !== 'holiday' ? currentDate.getFullYear() : time.getFullYear(),
-        month: type !== 'holiday' ? currentDate.getMonth() : time.getMonth(),
+        month: type !== 'holiday' ? (currentDate.getMonth() + 1) : (time.getMonth() + 1),
         day: type !== 'holiday' ? currentDate.getDate() : time.getDate(),
         hour: time.getHours(),
         minute: time.getMinutes(),
@@ -177,8 +177,8 @@
         var dtend = vevent.getFirstPropertyValue('dtend');
         var hoursRange = getDefaultRange(summary);
 
-        hoursRange.starttime = new Date(dtstart.year, dtstart.month, dtstart.day, dtstart.hour, dtstart.minute, dtstart.second);
-        hoursRange.endtime = new Date(dtend.year, dtend.month, dtend.day, dtend.hour, dtend.minute, dtend.second);
+        hoursRange.starttime = new Date(dtstart.year, dtstart.month - 1, dtstart.day, dtstart.hour, dtstart.minute, dtstart.second);
+        hoursRange.endtime = new Date(dtend.year, dtend.month - 1, dtend.day, dtend.hour, dtend.minute, dtend.second);
         if (summary === 'open') {
           hoursRanges.push(hoursRange);
           var rrule = vevent.getFirstPropertyValue('rrule');

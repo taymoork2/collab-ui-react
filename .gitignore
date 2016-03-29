@@ -5,6 +5,7 @@
 *.rdb
 *.sublime*
 *.swp
+*.ts.spec.js
 
 .DS_Store
 .idea

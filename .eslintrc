@@ -21,7 +21,8 @@
     "expect": true,
     "spyOn": true,
     "jasmine": true,
-    "fail": true
+    "fail": true,
+    "punycode": true
   },
   "rules": {
     "block-scoped-var": 0,

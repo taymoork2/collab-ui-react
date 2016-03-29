@@ -8,7 +8,7 @@
   /* @ngInject */
   function DevicesCtrlHuron($scope, $state, $q, $stateParams, DeviceService, OtpService, Config, CsdmHuronUserDeviceService, $window, FeatureToggleService) {
     var vm = this;
-    vm.devices = [];
+    vm.devices = null;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
@@ -21,6 +21,9 @@
           scope: $scope
         });
         vm.devices = csdmHuronUserDeviceService.getDeviceList();
+        if (vm.devices.length !== 0) {
+          $scope.userOverview.addGenerateAuthCodeLink();
+        }
       }
       vm.useCsdmDeviceSidepanel = res;
     }).catch(function () {
@@ -45,28 +48,20 @@
 
     function activate() {
 
-      var promises = [];
-
       checkFeatureToggleForCsdmSidePanel().then(function (res) {
         if (!res) {
-          var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
+          DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
             vm.devices = deviceList;
+            if (vm.devices.length !== 0) {
+              $scope.userOverview.addGenerateAuthCodeLink();
+            }
           });
-          promises.push(devicePromise);
         }
       });
 
-      var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
+      OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
         vm.otps = otpList;
       });
-      promises.push(otpPromise);
-
-      return $q.all(promises)
-        .then(function () {
-          if (vm.devices.length !== 0) {
-            $scope.userOverview.addGenerateAuthCodeLink();
-          }
-        });
     }
 
     function showDeviceDetailPanel(device) {

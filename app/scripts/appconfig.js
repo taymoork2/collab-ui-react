@@ -522,7 +522,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -847,17 +846,30 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        // lhsieh
+        .state('site-csv-import', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVImportModalCtrl',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
+              controllerAs: 'siteCSVImportModalCtrl'
+            }
+          },
+          params: {
+            csvImportObj: null
+          }
+        })
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+              controllerAs: 'siteCSVResult',
             }
           },
           params: {
-            csvStatusObj: null
+            siteRow: null
           }
         })
         .state('site-list.site-settings', {
@@ -1332,7 +1344,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
@@ -1351,7 +1364,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           }
         })
         .state('callroutingBase', {
@@ -1431,13 +1445,13 @@ angular
         .state('trialAdd.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.meeting', {
-          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
-          controller: 'TrialMeetingCtrl',
-          controllerAs: 'meetingTrial'
+        .state('trialAdd.webex', {
+          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+          controller: 'TrialWebexCtrl',
+          controllerAs: 'webexTrial'
         })
         .state('trialAdd.call', {
-          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
@@ -1489,13 +1503,13 @@ angular
         .state('trialEdit.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialEdit.meeting', {
-          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
-          controller: 'TrialMeetingCtrl',
-          controllerAs: 'meetingTrial'
+        .state('trialEdit.webex', {
+          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+          controller: 'TrialWebexCtrl',
+          controllerAs: 'webexTrial'
         })
         .state('trialEdit.call', {
-          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })

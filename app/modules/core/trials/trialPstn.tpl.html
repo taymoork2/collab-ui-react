@@ -67,7 +67,7 @@
       translate="common.back">
     </button>
     <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="!pstnTrial.checkForInvalidTokens()">
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !pstnTrial.checkForInvalidTokens()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>

@@ -65,19 +65,25 @@ var AutoAttendantPage = function () {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).first();
 
-  // middle/second item in newStep dropdown: Phone Menu
-  this.newStepSelectMiddle = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+  // second item in newStep dropdown: Phone Menu
+  this.newStepSelectSecond = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(1);
 
-  // last/third item in newStep dropdown: Transfer
+  // third item in newStep dropdown: Dial By Extension 
+  this.newStepSelectThird = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+    return el.isDisplayed();
+  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(2);
+
+  // last/third item in newStep dropdown: Route Call 
   this.newStepSelectLast = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).last();
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
-  this.sayMessageAll = element.all(by.cssContainingText('.aa-message-panel', 'Say Message'));
+
+  this.sayMessageAll = element.all(by.css('.aa-message-panel'));
 
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
@@ -95,6 +101,14 @@ var AutoAttendantPage = function () {
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.routeExternalNumber = this.routeCall.element(by.css('input.phone-number'));
+
+  this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
+
+  this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.name('dialByMessageInput'));
+  this.dialByMessageLanguage = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
+  this.dialBylanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.dialByMessageVoice = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
+  this.dialByMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
