@@ -45,11 +45,6 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
-      if (vm.aaModel.aaRecord.scheduleId) {
-        vm.ui.isClosedHours = true;
-      } else {
-        vm.ui.isClosedHours = false;
-      }
     }
 
     activate();

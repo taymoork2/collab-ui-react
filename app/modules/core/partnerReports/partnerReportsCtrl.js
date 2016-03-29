@@ -206,6 +206,14 @@
       }, 0);
     }
 
+    function delayedResize() {
+      // delayed resize necessary to fix any overlapping on the registered endpoints graph
+      // or the occasional incorrect margin; problems only seen on ubuntu firefox
+      $timeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 500);
+    }
+
     function showHideCards(filter) {
       if (currentFilter !== filter) {
         vm.showEngagement = false;
@@ -217,8 +225,7 @@
           vm.showQuality = true;
         }
         resizeCards();
-        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
-        $timeout(resizeCards, 1000);
+        delayedResize();
         currentFilter = filter;
       }
     }
@@ -382,6 +389,7 @@
             vm.endpointRefresh = SET;
             vm.dummyTable = false;
             resizeCards();
+            delayedResize();
           }
         }
       });
