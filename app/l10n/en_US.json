@@ -1881,6 +1881,7 @@
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "consecutive": "Consecutive",
+    "block": "Block",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
@@ -1911,7 +1912,18 @@
     "serviceAddress": "Service Address",
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
-    "serviceAddressNotFound": "Unable to find address. Please update and try again."
+    "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "advancedOrder": {
+      "noResults": "No search results but we have a solution.",
+      "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
+      "addNumbers": "Add Numbers",
+      "tooltip": "Block allows you to add a large quantity of consecutive and non-consecutive numbers.",
+      "extra": "*Consecutive Numbers will be an additional charge"
+    },
+    "errors": {
+      "states": "Failed to retrieve states",
+      "inventory": "Failed to get PSTN inventory"
+    }
   },
   "pstnContractInformation": {
     "title": "PSTN Contract Information",
@@ -2015,7 +2027,7 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
-      "deviceLimitDescription": "Choose at least 2 and up to 7 total devices (maximum 5 per type)",
+      "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
       "skipAddDevices": "Skip adding devices",
