@@ -66,7 +66,6 @@
     </div>
     <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
       translate}}</p>
-
     <div>
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
@@ -81,5 +80,15 @@
       <span class="cloud-extension-label">{{'cloudExtensions.enterpriseDn' | translate}}:</span>
       <span class="cloud-extension-label status-notActivated">{{callServiceConnect.enterpriseDn}}</span>
     </div>
+
+          <span
+            ng-if="callServiceConnect.entitled
+            && callServiceConnect.status
+            && callServiceConnect.status.state === 'error'
+            && callServiceConnect.status.description"
+            class="cloud-extension-label status-error">
+      {{callServiceConnect.status.description.defaultMessage}}
+    </span>
+
   </cs-sp-section>
 </cs-sp-container>
