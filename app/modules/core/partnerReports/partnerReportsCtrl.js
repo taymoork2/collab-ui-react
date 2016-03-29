@@ -24,6 +24,10 @@
 
     vm.showEngagement = true;
     vm.showQuality = true;
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    var currentFilter = vm.allReports;
 
     vm.customerPlaceholder = $translate.instant('reportsPage.customerSelect');
     vm.customerSingular = $translate.instant('reportsPage.customer');
@@ -60,13 +64,6 @@
     vm.trend = "";
     vm.devices = "";
 
-    vm.showHideCards = showHideCards;
-    var activeUsers = null;
-    var regEndpoints = null;
-    var userPopulation = null;
-    var callMetrics = null;
-    var mediaQuality = null;
-
     vm.timeOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.week'),
@@ -81,6 +78,7 @@
       description: $translate.instant('reportsPage.threeMonths2')
     }];
     vm.timeSelected = vm.timeOptions[0];
+    vm.showHideCards = showHideCards;
 
     // Graph data status checks
     vm.isRefresh = function (tab) {
@@ -197,43 +195,26 @@
     }
 
     function resizeCards() {
-      setTimeout(function () {
+      $timeout(function () {
         $('.cs-card-layout').masonry('layout');
       }, 300);
     }
 
     function showHideCards(filter) {
-      var engagementElems = [activeUsers, regEndpoints, userPopulation];
-      var qualityElems = [callMetrics, mediaQuality];
-      if (filter === 'all') {
-        if (!vm.showEngagement) {
-          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+      if (currentFilter !== filter) {
+        vm.showEngagement = false;
+        vm.showQuality = false;
+        if (filter === vm.allReports || filter === vm.engagement) {
           vm.showEngagement = true;
         }
-        if (!vm.showQuality) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          vm.showQuility = true;
-        }
-      } else if (filter === 'engagement') {
-        if (vm.showQuality === true) {
-          $('.cs-card-layout').masonry('remove', qualityElems);
-          vm.showQuality = false;
-        }
-        if (vm.showEngagement === false) {
-          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          vm.showEngagement = true;
-        }
-      } else if (filter === 'quality') {
-        if (vm.showQuality === false) {
-          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+        if (filter === vm.allReports || filter === vm.quality) {
           vm.showQuality = true;
         }
-        if (vm.showEngagement === true) {
-          $('.cs-card-layout').masonry('remove', engagementElems);
-          vm.showEngagement = false;
-        }
+        resizeCards();
+        // staggered secondary resize necessary to fix any overlapping cards or incorrect margins
+        $timeout(resizeCards, 1000);
+        currentFilter = filter;
       }
-      resizeCards();
     }
 
     function updateCustomerFilter(orgsData) {
@@ -285,7 +266,6 @@
         activeUsersChart = tempActiveUsersChart;
         resizeCards();
       }
-      activeUsers = document.getElementById('activeUser');
     }
 
     function setActivePopulationGraph(data, overallPopulation) {
@@ -294,7 +274,6 @@
         activeUserPopulationChart = tempActivePopChart;
         resizeCards();
       }
-      userPopulation = document.getElementById('userPopulation');
     }
 
     function getActiveUserReports() {
@@ -350,7 +329,6 @@
         mediaQualityChart = tempMediaChart;
         resizeCards();
       }
-      mediaQuality = document.getElementById('mediaQuality');
     }
 
     function getMediaQualityReports() {
@@ -373,7 +351,6 @@
         callMetricsDonutChart = tempMetricsChart;
         resizeCards();
       }
-      callMetrics = document.getElementById('callMetrics');
     }
 
     function getCallMetricsReports() {
@@ -402,7 +379,6 @@
           }
         }
       });
-      regEndpoints = document.getElementById('reg-endpoints');
     }
 
     function setTimeBasedText() {

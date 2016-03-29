@@ -60,7 +60,15 @@
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
              
+            <!-- 
             <a href={{gridRow.fileDownloadUrl}}>
+              <font color=#049FD9>
+                {{gridRow.value}}
+              </font>
+            </a>
+            -->
+            
+            <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
               <font color=#049FD9>
                 {{gridRow.value}}
               </font>
