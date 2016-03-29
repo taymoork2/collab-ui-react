@@ -204,9 +204,15 @@
     }
 
     function resizeCards() {
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 300);
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function resetCards(filter) {

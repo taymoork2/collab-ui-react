@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig) {
+  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -43,14 +43,24 @@
         if (user.success) {
           if (isCiscoDevRole(user.roles)) {
             $scope.showCdrCallFlowLink = true;
-            setTimeout(function () {
-              $('.cs-card-layout').masonry('layout');
-            }, 200);
+            reInstantiateMasonry();
           }
         } else {
           Log.debug('Get current user failed. Status: ' + status);
         }
       });
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function isCiscoDevRole(roleArray) {
@@ -75,9 +85,7 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 200);
+      reInstantiateMasonry();
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
     };
 

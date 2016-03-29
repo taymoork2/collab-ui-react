@@ -196,8 +196,14 @@
 
     function resizeCards() {
       $timeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 300);
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function showHideCards(filter) {
