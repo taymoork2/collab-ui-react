@@ -698,6 +698,7 @@
 
     $scope.addDnGridOptions = {
       data: 'usrlist',
+      enableHorizontalScrollbar: 0,
       enableRowSelection: false,
       multiSelect: false,
       rowHeight: 45,
@@ -709,22 +710,23 @@
         displayName: $translate.instant('usersPage.nameHeader'),
         sortable: false,
         cellTemplate: nameTemplate,
-        width: '42%',
-        height: 35
+        width: '*'
       }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
         cellTemplate: externalExtensionTemplate,
-        width: '33%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }, {
         field: 'internalExtension',
         displayName: $translate.instant('usersPage.extensionHeader'),
         sortable: false,
         cellTemplate: internalExtensionTemplate,
-        width: '25%',
-        height: 35
+        maxWidth: 220,
+        minWidth: 140,
+        width: '*'
       }]
     };
     $scope.collabRadio = 1;
@@ -1174,9 +1176,9 @@
           $scope.btnOnboardLoading = false;
           Notification.notify(successes, 'success');
           if (hybridCheck) {
-            Notification.error(errors[0]);
+            Notification.notify(errors[0], 'error');
           } else {
-            Notification.error(errors);
+            Notification.notify(errors, 'error');
           }
           deferred.resolve();
         }
@@ -2229,6 +2231,8 @@
     /////////////////////////////////
     // Bulk DirSync Onboarding logic
     // Wizard hooks
+    $scope.dirsyncProcessingNext = bulkSave;
+
     $scope.installConnectorNext = function () {
       return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
         return $q(function (resolve, reject) {
@@ -2250,6 +2254,213 @@
 
       });
     };
+
+    $scope.syncStatusNext = function () {
+      var deferred = $q.defer();
+
+      if (!$scope.wizard.isLastStep()) {
+        // load synced users to userArray
+        // userList and useNameList are in the parent scope - AddUserCtrl
+        userArray = [];
+        if ($scope.userList && $scope.userList.length > 0) {
+          userArray = $scope.userList.map(function (user, idx) {
+            var userData = [];
+            userData.push(''); // DirSync can't change first name
+            userData.push(''); // DirSync can't change last name
+            userData.push(''); // DirSync can't change display name
+            userData.push(user.Email);
+            userData.push(''); // No Directory Number
+            userData.push(''); // No Direct Line
+            return userData;
+          });
+        }
+
+        if (userArray.length === 0) {
+          Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+          deferred.reject();
+        } else {
+          deferred.resolve();
+        }
+      } else {
+        deferred.resolve();
+      }
+
+      return deferred.promise;
+    };
+
+    // The existing bulkSave
+    function bulkSave() {
+      saveDeferred = $q.defer();
+      cancelDeferred = $q.defer();
+
+      $scope.model.userErrorArray = [];
+      $scope.model.numMaxUsers = userArray.length;
+      $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
+
+      function addUserError(row, errorMsg) {
+        $scope.model.userErrorArray.push({
+          row: row,
+          error: errorMsg
+        });
+      }
+
+      function addUserErrorWithTrackingID(row, errorMsg, response) {
+        errorMsg = addErrorWithTrackingID(errorMsg, response);
+        addUserError(row, _.trim(errorMsg));
+      }
+
+      function successCallback(response, startIndex, length) {
+        if (_.isArray(response.data.userResponse)) {
+          var addedUsersList = [];
+
+          _.forEach(response.data.userResponse, function (user, index) {
+            if (user.status === 200 || user.status === 201) {
+              if (user.message === 'User Patched') {
+                $scope.model.numExistingUsers++;
+              } else {
+                $scope.model.numNewUsers++;
+              }
+              // Build list of successful onboards and patches
+              var addItem = {
+                address: user.email
+              };
+              if (addItem.address.length > 0) {
+                addedUsersList.push(addItem);
+              }
+            } else {
+              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+            }
+          });
+        } else {
+          for (var i = 0; i < length; i++) {
+            addUserErrorWithTrackingID(startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'), response);
+          }
+        }
+      }
+
+      function errorCallback(response, startIndex, length) {
+        var responseMessage = getBulkErrorResponse(response.status);
+        for (var k = 0; k < length; k++) {
+          addUserErrorWithTrackingID(startIndex + k + 1, responseMessage, response);
+        }
+      }
+
+      // Get license/entitlements
+      var entitleList = [];
+      var licenseList = [];
+      var isCommunicationSelected;
+      if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+        licenseList = getAccountLicenses('additive') || [];
+        isCommunicationSelected = !!_.find(licenseList, function (license) {
+          return _.startsWith(license.id, 'CO_');
+        });
+      } else {
+        entitleList = getEntitlements('add');
+        isCommunicationSelected = !!_.find(entitleList, {
+          entitlementName: 'ciscoUC'
+        });
+      }
+      entitleList = entitleList.concat(getExtensionEntitlements('add'));
+
+      function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
+        return csvPromise.then(function () {
+          return $q(function (resolve, reject) {
+            if (userArray.length > 0) {
+              Userservice.onboardUsers(userArray, entitlementArray, licenseArray, cancelDeferred.promise).then(function (response) {
+                successCallback(response, startIndex - userArray.length + 1, userArray.length);
+              }).catch(function (response) {
+                errorCallback(response, startIndex - userArray.length + 1, userArray.length);
+              }).finally(function () {
+                calculateProcessProgress();
+                resolve();
+              });
+            } else {
+              resolve();
+            }
+          });
+        });
+      }
+
+      function calculateProcessProgress() {
+        $scope.model.numTotalUsers = $scope.model.numNewUsers + $scope.model.numExistingUsers + $scope.model.userErrorArray.length;
+        $scope.model.processProgress = Math.round($scope.model.numTotalUsers / userArray.length * 100);
+
+        if ($scope.model.numTotalUsers >= userArray.length) {
+          $scope.model.userErrorArray.sort(function (a, b) {
+            return a.row - b.row;
+          });
+          $rootScope.$broadcast('USER_LIST_UPDATED');
+          resetFile();
+          saveDeferred.resolve();
+        }
+      }
+
+      function isValidDID(value) {
+        // If communication license is selected and a value is defined
+        if (isCommunicationSelected && value) {
+          try {
+            return TelephoneNumberService.validateDID(value);
+          } catch (e) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      // Onboard users in chunks
+      // Separate chunks on invalid rows
+      var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
+      var csvPromise = $q.when();
+      var tempUserArray = [];
+      var uniqueEmails = [];
+      var processingError;
+      _.forEach(userArray, function (userRow, j) {
+        processingError = false;
+        // If we haven't met the chunk size, process the next user
+        if (tempUserArray.length < csvChunk) {
+          // Validate content in the row
+          if (userRow.length !== 6) {
+            // Report incorrect number of columns
+            processingError = true;
+            addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
+          } else if (!userRow[3]) {
+            // Report required field is missing
+            processingError = true;
+            addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+          } else if (_.contains(uniqueEmails, userRow[3])) {
+            // Report a duplicate email
+            processingError = true;
+            addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+          } else if (!isValidDID(userRow[5])) {
+            // Report an invalid DID format
+            processingError = true;
+            addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
+          } else {
+            uniqueEmails.push(userRow[3]);
+            tempUserArray.push({
+              address: userRow[3],
+              name: userRow[0] + NAME_DELIMITER + userRow[1],
+              displayName: userRow[2],
+              internalExtension: userRow[4],
+              directLine: userRow[5]
+            });
+          }
+        }
+        // Onboard all the previous users in the temp array if there was an error processing a row
+        if (processingError) {
+          csvPromise = onboardCsvUsers(j - 1, tempUserArray, entitleList, licenseList, csvPromise);
+          tempUserArray = [];
+        } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+          // Onboard the current temp array if we've met the chunk size or is the last user in list
+          csvPromise = onboardCsvUsers(j, tempUserArray, entitleList, licenseList, csvPromise);
+          tempUserArray = [];
+        }
+      });
+
+      calculateProcessProgress();
+
+      return saveDeferred.promise;
+    }
 
   }
 })();

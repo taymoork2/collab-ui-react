@@ -183,8 +183,25 @@
           template: 'modules/core/setupWizard/addUsers/addUsers.assignDnAndDirectLines.tpl.html'
         }]
       };
+      var advancedSubTabSteps = [{
+        name: 'dirsyncServices',
+        template: 'modules/core/setupWizard/addUsers/addUsers.assignServices.tpl.html'
+      }, {
+        name: 'dirsyncProcessing',
+        template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
+        buttons: false
+      }, {
+        name: 'dirsyncResult',
+        template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+        buttons: 'modules/core/setupWizard/addUsers/addUsers.dirSyncResultButtons.tpl.html'
+      }];
 
-      if (!$scope.isDirSyncEnabled) {
+      if ($scope.isDirSyncEnabled) {
+        var advancedSubTab = _.findWhere(userTab.subTabs, {
+          name: 'advanced'
+        });
+        advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
+      } else {
         userTab.subTabs.splice(0, 0, simpleSubTab);
       }
     }

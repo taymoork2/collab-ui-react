@@ -2,6 +2,46 @@
 
 angular.module('WebExApp').service('WebExApiGatewayConstsService', [
   function () {
+    this.csvRequests = {
+      csvStatus: 'csvStatus',
+      csvExport: 'csvExport',
+      csvImport: 'csvImport',
+      csvFileDownload: 'csvFileDownload'
+    };
+
+    this.csvAPIs = [{
+        request: this.csvRequests.csvStatus,
+        api: 'importexportstatus',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8',
+        data: {}
+      },
+
+      {
+        request: this.csvRequests.csvExport,
+        api: 'export',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8',
+        data: {}
+      },
+
+      {
+        request: this.csvRequests.csvImport,
+        api: 'import',
+        method: 'POST',
+        contentType: 'multipart/form-data;charset=utf-8',
+        data: {}
+      },
+
+      {
+        request: this.csvRequests.csvFileDownload,
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8',
+        data: {}
+      },
+    ];
+
     this.csvJobTypes = {
       typeNone: 0,
       typeImport: 1,

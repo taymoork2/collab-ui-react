@@ -1,5 +1,5 @@
 <!-- Meeting Trial Modal -->
-<form id="meetingTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
+<form id="webexTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
 
   <!-- header -->
   <div class="modal-header">
@@ -18,7 +18,7 @@
   <section class="modal-body collapse-fields row">
     <h5 translate="trialModal.meeting.webexSiteUrl"></h5>
     <section>
-      <formly-form model="meetingTrial.details" fields="meetingTrial.siteUrlFields" hide-directive="ng-show"
+      <formly-form model="webexTrial.details" fields="webexTrial.siteUrlFields" hide-directive="ng-show"
         class="medium-12 columns">
       </formly-form>
     <div class="medium-12 columns">
@@ -28,7 +28,7 @@
   </section>
   <section class="modal-body collapse-fields row">
     <h5 translate="trialModal.meeting.webexTimezone"></h5>
-    <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields"
+    <formly-form model="webexTrial.details" fields="webexTrial.timezoneFields"
       class="medium-12 columns">
     </formly-form>
     <div class="medium-12 columns">
@@ -42,7 +42,7 @@
       translate="common.back">
     </button>
     <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
-      loading="trial.loading || meetingTrial.validatingUrl"
+      loading="trial.loading || webexTrial.validatingUrl"
       ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
         <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>

@@ -3,13 +3,48 @@
  */
 'use strict';
 
-describe('WebExApiGatewayService.csvStatus() test', function () {
+describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
   var expectedCsvHttpsObj;
   var csvConstructHttpsObj;
 
+  var WebExApiGatewayConstsService;
+
   beforeEach(module('WebExApp'));
 
-  beforeEach(inject(function () {
+  beforeEach(inject(function (
+    _WebExApiGatewayConstsService_
+  ) {
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+
+    WebExApiGatewayConstsService.csvAPIs = [{
+        request: 'csvStatus',
+        api: 'importexportstatus',
+        method: 'GET',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvExport',
+        api: 'export',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvImport',
+        api: 'import',
+        method: 'POST',
+        contentType: 'multipart/form-data;charset=utf-8'
+      },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+    ];
+
     expectedCsvHttpsObj = null;
     csvConstructHttpsObj = null;
   }));
@@ -108,6 +143,49 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExRestApiFact = _WebExRestApiFact_;
 
+    WebExApiGatewayConstsService.csvRequests = {
+      csvStatus: 'csvStatus',
+      csvExport: 'csvExport',
+      csvImport: 'csvImport',
+      csvFileDownload: 'csvFileDownload'
+    };
+
+    WebExApiGatewayConstsService.csvAPIs = [{
+        request: 'csvStatus',
+        api: 'importexportstatus',
+        method: 'GET',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvExport',
+        api: 'export',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvImport',
+        api: 'import',
+        method: 'POST',
+        contentType: 'multipart/form-data;charset=utf-8'
+      },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+    ];
+
+    WebExApiGatewayConstsService.csvJobStatus = {
+      statusQueued: 0,
+      statusPreProcess: 1,
+      statusCompleted: 2,
+      statusInProcess: 3
+    };
+
     WebExApiGatewayConstsService.csvStates = {
       none: 'none',
       exportInProgress: 'exportInProgress',
@@ -118,6 +196,16 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
       importCompletedWithErr: 'importCompletedWithErr'
     };
 
+    WebExApiGatewayConstsService.csvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ]; // csvStatusTypes[]
+
     deferredCsvApiRequest = $q.defer();
 
     spyOn(WebExApiGatewayService, 'csvConstructHttpsObj').and.returnValue(fakeCsvStatusHttpsObj);
@@ -127,6 +215,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.none
     ).then(
 
@@ -151,6 +240,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.exportInProgress
     ).then(
       function csvStatusReqSuccess(response) {
@@ -177,6 +267,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.exportCompletedNoErr
     ).then(
       function csvStatusReqSuccess(response) {
@@ -210,6 +301,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.exportCompletedWithErr
     ).then(
       function csvStatusReqSuccess(response) {
@@ -243,6 +335,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.importInProgress
     ).then(
       function csvStatusReqSuccess(response) {
@@ -269,6 +362,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.importCompletedNoErr
     ).then(
       function csvStatusReqSuccess(response) {
@@ -301,6 +395,7 @@ describe('WebExApiGatewayService.csvStatus() test', function () {
   it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
     WebExApiGatewayService.csvStatus(
       "test.site.com",
+      true,
       WebExApiGatewayConstsService.csvStates.importCompletedWithErr
     ).then(
       function csvStatusReqSuccess(response) {
