@@ -109,9 +109,9 @@ gulp build --nolint --nounit
 # - unit tests - run unit tests in parallel with GNU parallel
 cat > ./.cache/_gulp-karma-all <<_EOF
 for i in \`ls app/modules\`; do echo karma-\$i; done | parallel -k gulp
-gulp karma-combine-coverage
 _EOF
 time nice sh ./.cache/_gulp-karma-all || exit 1
+gulp karma-combine-coverage || exit $?
 
 # - e2e tests
 gulp e2e --sauce --production-backend --nounit | tee ./.cache/e2e-sauce-logs
