@@ -17,6 +17,7 @@
     vm.errorMessages = [];
     vm.aaNameFocus = false;
     vm.canSave = false;
+    vm.isAANameDefined = undefined;
 
     vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
