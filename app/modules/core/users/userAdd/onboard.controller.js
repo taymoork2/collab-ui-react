@@ -1176,9 +1176,9 @@
           $scope.btnOnboardLoading = false;
           Notification.notify(successes, 'success');
           if (hybridCheck) {
-            Notification.error(errors[0]);
+            Notification.notify(errors[0], 'error');
           } else {
-            Notification.error(errors);
+            Notification.notify(errors, 'error');
           }
           deferred.resolve();
         }

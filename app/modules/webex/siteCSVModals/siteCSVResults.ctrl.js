@@ -9,7 +9,9 @@
     $stateParams,
     $translate,
     $log,
-    WebExApiGatewayService
+    Storage,
+    WebExApiGatewayService,
+    WebExRestApiFact
   ) {
     var funcName = "SiteCSVResultsCtrl()";
     var logMsg = '';
@@ -21,7 +23,8 @@
     $log.log(logMsg);
 
     vm.viewReady = false;
-    vm.csvStatusObj = $stateParams.csvStatusObj;
+    vm.siteRow = $stateParams.siteRow;
+    vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
     vm.gridRows = [];
 
     if (
@@ -178,5 +181,37 @@
     */
 
     vm.viewReady = true;
+
+    vm.csvFileDownload = function (downloadUrl) {
+      var funcName = "csvFileDownload()";
+      var logMsg = "";
+
+      downloadUrl = downloadUrl.replace("http:", "https:");
+
+      logMsg = funcName + "\n" +
+        "downloadUrl=" + downloadUrl;
+      $log.log(logMsg);
+
+      WebExApiGatewayService.csvFileDownload(
+        vm.siteRow.license.siteUrl,
+        downloadUrl,
+        vm.siteRow.csvMock.mockFileDownload
+      ).then(
+
+        function success(response) {
+          var funcName = "WebExApiGatewayService.csvFileDownload.success()";
+          var logMsg = "";
+
+          $log.log(funcName);
+        },
+
+        function error(response) {
+          var funcName = "WebExApiGatewayService.csvFileDownload.error()";
+          var logMsg = "";
+
+          $log.log(funcName);
+        }
+      ); // WebExRestApiFact.csvFileDownload().then()
+    }; // csvFileDownload()
   } // SiteCSVResultsCtrl()
 })(); // top level function

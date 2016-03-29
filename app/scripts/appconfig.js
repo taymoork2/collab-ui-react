@@ -864,12 +864,12 @@ angular
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
               controllerAs: 'siteCSVResult',
             }
           },
           params: {
-            csvStatusObj: null
+            siteRow: null
           }
         })
         .state('site-list.site-settings', {

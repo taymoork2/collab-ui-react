@@ -72,12 +72,16 @@
           // define the range of csv states to mock
           // list of states are in the file apiGatewayConsts.svc.js
           conferenceService.csvMock = {
-            mockStatus: true, // set to true to mock csv status; set to false to get actual status from rest api 
-            mockStatusStartIndex: 0, // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            mockExport: false,
+            mockImport: true,
+            mockFileDownload: true,
+            mockStatus: false,
+
+            // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            // reference WebExApiGatewayConstsService.csvStatusTypes to know which index value is for which status 
+            mockStatusStartIndex: 0,
             mockStatusEndIndex: 0,
             mockStatusCurrentIndex: null,
-            mockExport: true,
-            mockImport: true,
           };
 
           conferenceService.csvStatusObj = null;
@@ -170,16 +174,31 @@
       ).then(
 
         function success(response) {
+          var funcName = "WebExApiGatewayService.csvExport.success()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           Notification.success($translate.instant('siteList.exportStartedToast'));
           SiteListService.updateCSVColumnInRow(siteRow);
         },
 
         function error(response) {
+          var funcName = "WebExApiGatewayService.csvExport.error()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           //TBD: Actual error result handling
           Notification.error($translate.instant('siteList.exportRejectedToast'));
         }
       ).catch(
         function catchError(response) {
+          var funcName = "WebExApiGatewayService.csvExport.catchError()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
           Notification.error($translate.instant('siteList.exportRejectedToast'));
           SiteListService.updateCSVColumnInRow(siteRow);
         }
