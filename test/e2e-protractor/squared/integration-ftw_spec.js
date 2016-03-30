@@ -45,7 +45,7 @@ describe('First Time Wizard', function () {
 
   it('should complete simple add users flow', function () {
     wizard.clickAddUsers();
-    utils.click(wizard.radiobuttons.first());
+    utils.click(wizard.manualAddUsers);
     notifications.clearNotifications();
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);
