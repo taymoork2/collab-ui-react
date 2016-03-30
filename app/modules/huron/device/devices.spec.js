@@ -110,4 +110,17 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
   });
 
+  describe('showGenerateOtpButton()', function () {
+    it('should be false when not entitled to huron', function () {
+      $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
+      $scope.$broadcast('entitlementsUpdated');
+      $scope.$apply();
+      expect(controller.showGenerateOtpButton()).toBeFalsy();
+    });
+
+    it('should be false when devices', function () {
+      expect(controller.showGenerateOtpButton()).toBeFalsy();
+    });
+  });
 });
+
