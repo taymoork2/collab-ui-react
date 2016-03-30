@@ -32,9 +32,12 @@
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
-    vm.everyOptions = [$translate.instant('months.january'), 'february', 'march', 'april', 'may', 'june', 'july', 'september', 'october', 'november', 'december'];
-    vm.onOptions = ['first', 'second', 'third', 'fourth'];
-    vm.dayOptions = ['monday','tuesday','wednesday', 'thursday','friday','saturday', 'sunday', 'weekend', 'weekday'];
+    vm.everyOptions = AAICalService.getMonths();
+    vm.everyPlaceholder = $translate.instant('autoAttendant.every');
+    vm.onOptions = AAICalService.getRanks();
+    vm.onPlaceholder = $translate.instant('autoAttendant.on');
+    vm.dayOptions = AAICalService.getDays();
+    vm.dayPlaceholder = $translate.instant('autoAttendant.day');
     vm.openhours = [];
     vm.getCalendar = getCalendar;
 
@@ -67,7 +70,10 @@
           isOpen: true,
           allDay: true,
           exactDate: true,
-          recurAnnually: false
+          recurAnnually: false,
+          month: '',
+          rank: '',
+          day: ''
         });
       } else {
         forceCheckHoliday();
@@ -179,7 +185,6 @@
         var calName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
         var savePromise;
         var notifyName = vm.aaModel.aaRecord.callExperienceName;
-
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);

@@ -11,7 +11,7 @@
       <div collapse="aaScheduleModalCtrl.toggleHours">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
        <div ng-repeat="hours in aaScheduleModalCtrl.openhours">
-   
+
         <div class="row">
           <div class="cs-input-group columns small-6" ng-class="{'error': hoursForm.starttime.$invalid && hoursForm.starttime.$touched}">
             <label for="starttime" translate="autoAttendant.scheduleOpenTime"></label>
@@ -43,7 +43,7 @@
             <a class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.deleteRange($index);"><span class="sr-only ng-scope" translate="huronHuntGroup.deleteAction">Delete</span></a>
           </div>
         </div>
-      
+
     </div>
     </form>
     <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
@@ -156,21 +156,21 @@
                   </div>
                 </div>
               </div>
-              
-              <div class="row" ng-if="!holiday.exactDate">
+
+              <div class="row" ng-if="holiday.exactDate">
                 <div class="columns medium-4 aa-recur-every">
-                  <label class="cs-input__label" for="html-input" translate="autoAttendant.every"></label>
-                  <cs-select name="month" options="aaScheduleModalCtrl.everyOptions" ng-model="holiday.every" labelfield="label" valuefield="value" placeholder="autoAttendant.every" icon="icon-chevron-down"></cs-select>
+                  <label class="cs-input__label" for="month" translate="autoAttendant.every"></label>
+                  <cs-select name="month" options="aaScheduleModalCtrl.everyOptions"  ng-model="holiday.month" placeholder="aaScheduleModalCtrl.everyPlaceholder" icon="icon-chevron-down"></cs-select>
                 </div>
                 <div class="columns medium-4 aa-recur-on">
-                  <label class="cs-input__label" for="holidayStart" translate="autoAttendant.on"></label>
-                  <cs-select name="onWeek" options="aaScheduleModalCtrl.onOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="holiday.onOptions" placeholder="autoAttendant.every"></cs-select>
+                  <label class="cs-input__label" for="rank" translate="autoAttendant.on"></label>
+                  <cs-select name="rank" options="aaScheduleModalCtrl.onOptions" ng-model="holiday.rank" placeholder="aaScheduleModalCtrl.onPlaceholder" icon="icon-chevron-down" ></cs-select>
                 </div>
                 <div class="columns medium-4 aa-recur-day">
-                    <label class="cs-input__label" for="holidayEnd" translate="autoAttendant.day"></label>
-                  <cs-select name="onDay" options="aaScheduleModalCtrl.dayOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="holiday.dayOptions" placeholder="autoAttendant.every"></cs-select>
-                </div> 
-                
+                    <label class="cs-input__label" for="day" translate="autoAttendant.day"></label>
+                  <cs-select name="day" options="aaScheduleModalCtrl.dayOptions" ng-model="holiday.day" placeholder="aaScheduleModalCtrl.dayPlaceholder" icon="icon-chevron-down" ></cs-select>
+                </div>
+
                 <div class="columns medium-6 aa-hour-right">
                   <div class="columns medium-6" ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$error.required && aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$dirty && !holiday.allDay}">
                   <label class="cs-input__label" for="holidayStart" translate="autoAttendant.scheduleOpenTime"></label>
@@ -188,7 +188,7 @@
                   </div>
                 </div>
               </div>
-              
+
             </ng-form>
           </cs-accordion-group>
         </cs-accordion>
@@ -201,6 +201,6 @@
     <button id="saveOpenClosedBtn" cs-btn class="btn btn-primary" ng-disabled="!aaScheduleModalCtrl.isSavable() || (aaScheduleModalCtrl.hoursForm.$pristine && aaScheduleModalCtrl.holidaysForm.$pristine)" ng-click="aaScheduleModalCtrl.save()">
       <span translate="common.save"></span></button>
     </div>
-    
+
   </div>
 

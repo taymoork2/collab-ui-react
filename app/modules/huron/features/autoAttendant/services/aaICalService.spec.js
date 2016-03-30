@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: AACalendarService', function () {
+fdescribe('Service: AACalendarService', function () {
   var AAICalService, ical;
   // require('jasmine-collection-matchers');
   var starttime, endtime;
@@ -29,6 +29,108 @@ describe('Service: AACalendarService', function () {
     }]
   };
 
+  var months = [{
+    label: 'january',
+    index: 0,
+    number: 1
+  }, {
+    label: 'february',
+    index: 1,
+    number: 2
+  }, {
+    label: 'march',
+    index: 2,
+    number: 3
+  }, {
+    label: 'april',
+    index: 3,
+    number: 4
+  }, {
+    label: 'may',
+    index: 4,
+    number: 5
+  }, {
+    label: 'june',
+    index: 5,
+    number: 6
+  }, {
+    label: 'july',
+    index: 6,
+    number: 7
+  }, {
+    label: 'august',
+    index: 7,
+    number: 8
+  }, {
+    label: 'september',
+    index: 8,
+    number: 9
+  }, {
+    label: 'october',
+    index: 9,
+    number: 10
+  }, {
+    label: 'november',
+    index: 10,
+    number: 11
+  }, {
+    label: 'december',
+    index: 11,
+    number: 12
+  }];
+
+  var days = [{
+    label: 'monday',
+    index: '1',
+    abbr: 'MO'
+  }, {
+    label: 'tuesday',
+    index: '2',
+    abbr: 'TU'
+  }, {
+    label: 'wednesday',
+    index: '3',
+    abbr: 'WE'
+  }, {
+    label: 'thursday',
+    index: '4',
+    abbr: 'TH'
+  }, {
+    label: 'friday',
+    index: '5',
+    abbr: 'FR'
+  }, {
+    label: 'saturday',
+    index: '6',
+    abbr: 'SA'
+  }, {
+    label: 'sunday',
+    index: '0',
+    abbr: 'SU'
+  }];
+
+  var ranks = [{
+    label: 'first',
+    index: 0,
+    number: 1
+  }, {
+    label: 'second',
+    index: 1,
+    number: 2
+  }, {
+    label: 'third',
+    index: 2,
+    number: 3
+  }, {
+    label: 'fourth',
+    index: 3,
+    number: 4
+  }, {
+    label: 'last',
+    index: -1,
+    number: -1
+  }];
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -54,6 +156,74 @@ describe('Service: AACalendarService', function () {
       var range = AAICalService.getDefaultRange();
       expect(range).toBeDefined();
       expect(range).toEqual(defaultRange);
+    });
+  });
+
+  describe('getMonths', function () {
+    it('should return the months', function () {
+      var actual = AAICalService.getMonths();
+      expect(actual).toBeDefined();
+      expect(actual).toEqual(months);
+    });
+  });
+
+  describe('findMonthByNumber', function () {
+    it('should return the january', function () {
+      var month = AAICalService.findMonthByNumber(1);
+      expect(month).toBeDefined();
+      expect(month.number).toBe(1);
+    });
+
+    it('should return undefined, invalid month number', function () {
+      expect(AAICalService.findMonthByNumber(0)).toBeUndefined();
+      expect(AAICalService.findMonthByNumber(13)).toBeUndefined();
+    });
+  });
+
+  describe('getDays', function () {
+    it('should return the days', function () {
+      var actual = AAICalService.getDays();
+      expect(actual).toBeDefined();
+      expect(actual).toEqual(days);
+    });
+  });
+
+  describe('findDayByAbbr', function () {
+    it('should return the monday', function () {
+      expect(AAICalService.findDayByAbbr('MO')).toEqual(days[0]);
+    });
+
+    it('should return the weekday', function () {
+      expect(AAICalService.findDayByAbbr('MO,TU,WE,TH,FR')).toEqual(days[7]);
+    });
+
+    it('should return the weekend', function () {
+      expect(AAICalService.findDayByAbbr('SA,SU')).toEqual(days[8]);
+    });
+
+    it('should return undefined', function () {
+      expect(AAICalService.findDayByAbbr('TT')).toBeUndefined();
+    });
+  });
+
+  describe('getRanks', function () {
+    it('should return the ranks', function () {
+      var actual = AAICalService.getRanks();
+      expect(actual).toBeDefined();
+      expect(actual).toEqual(ranks);
+    });
+  });
+
+  describe('findRankByNumber', function () {
+    it('should return the january', function () {
+      var rank = AAICalService.findRankByNumber(2);
+      expect(rank).toBeDefined();
+      expect(rank.number).toBe(2);
+    });
+
+    it('should return undefined, invalid month number', function () {
+      expect(AAICalService.findRankByNumber(0)).toBeUndefined();
+      expect(AAICalService.findRankByNumber(5)).toBeUndefined();
     });
   });
 
@@ -138,12 +308,13 @@ describe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[1]).toEqual(range2);
     });
 
-    it('add holiday and get back holiday range with all day selected', function () {
+    it('add an exact date holiday and get back holiday range with all day selected', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
-        name: 'Thanksgiving',
-        date: '2016-11-25',
-        allDay: true
+        name: 'Christmas',
+        date: '2016-12-25',
+        allDay: true,
+        exactDate: true
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -151,17 +322,22 @@ describe('Service: AACalendarService', function () {
       calendarRaw.scheduleData = calendar.toString();
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
       expect(rangeFromCalendar.length).toEqual(1);
-      expect(rangeFromCalendar[0].allDay).toEqual(true);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].date).toEqual(range.date);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toBeUndefined();
     });
 
-    it('add holiday and get back holiday range with all day unselected', function () {
+    it('add an exact date holiday and get back holiday range with all day unselected', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
-        name: 'Thanksgiving',
-        date: '2016-11-25',
-        allDay: false,
+        name: 'Christmas',
+        date: '2016-12-25',
         starttime: starttime,
-        endtime: endtime
+        endtime: endtime,
+        exactDate: true
       };
 
       AAICalService.addHoursRange('holiday', calendar, range);
@@ -169,8 +345,137 @@ describe('Service: AACalendarService', function () {
       calendarRaw.scheduleData = calendar.toString();
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
       expect(rangeFromCalendar.length).toEqual(1);
-      expect(rangeFromCalendar[0].allDay).toEqual(undefined);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].date).toEqual(range.date);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toBeUndefined();
     });
 
+    it('add an exact date holiday and get back holiday range with yearly recurrence', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Christmas',
+        date: '2016-12-25',
+        allDay: true,
+        exactDate: true,
+        recurAnnually: true
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].date).toEqual(range.date);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add an not exact date holiday and get back holiday range with all day selected', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Thanksgiving',
+        month: AAICalService.getMonths()[10],
+        day: AAICalService.findDayByAbbr('TH'),
+        rank: AAICalService.getRanks()[3],
+        allDay: true,
+        exactDate: false
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].month).toEqual(range.month);
+      expect(rangeFromCalendar[0].day).toEqual(range.day);
+      expect(rangeFromCalendar[0].rank).toEqual(range.rank);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add an not exact date holiday and get back holiday range with all day unselected', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Thanksgiving',
+        month: AAICalService.getMonths()[10],
+        day: AAICalService.findDayByAbbr('TH'),
+        rank: AAICalService.getRanks()[3],
+        starttime: starttime,
+        endtime: endtime,
+        exactDate: false
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].month).toEqual(range.month);
+      expect(rangeFromCalendar[0].day).toEqual(range.day);
+      expect(rangeFromCalendar[0].rank).toEqual(range.rank);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add an not exact date holiday and get back holiday range with yearly recurrence', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Thanksgiving',
+        month: AAICalService.getMonths()[10],
+        day: AAICalService.findDayByAbbr('TH'),
+        rank: AAICalService.getRanks()[3],
+        allDay: true,
+        exactDate: false,
+        recurAnnually: true
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].month).toEqual(range.month);
+      expect(rangeFromCalendar[0].day).toEqual(range.day);
+      expect(rangeFromCalendar[0].rank).toEqual(range.rank);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add an not exact date holiday and get back holiday range with yearly recurrence (last friday of may)', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'Last friday of May',
+        month: AAICalService.getMonths()[4],
+        day: AAICalService.findDayByAbbr('FR'),
+        rank: AAICalService.getRanks()[4],
+        allDay: true,
+        exactDate: false,
+        recurAnnually: true
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].month).toEqual(range.month);
+      expect(rangeFromCalendar[0].day).toEqual(range.day);
+      expect(rangeFromCalendar[0].rank).toEqual(range.rank);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
   });
 });
