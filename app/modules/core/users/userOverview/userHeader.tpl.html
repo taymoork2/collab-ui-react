@@ -8,8 +8,10 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <a id="rolesChevron" ui-sref="user-overview.userProfile">
-	      <i class="feature-arrow"></i>
-        <div class="header-title" title=""><span>{{userOverview.titleCard}}</span><i class="edit-button icon icon-edit"><span class="sr-only" translate="common.edit"></span></i></div>
+        <i class="feature-arrow"></i>
+        <div class="header-title">
+          <span>{{userOverview.titleCard}}</span><i class="edit-button icon icon-edit"><span class="sr-only" translate="common.edit"></span></i>
+        </div>
         <div ng-if="userOverview.subTitleCard" class="header-sub-info">{{userOverview.subTitleCard}}</div>
       </a>
     </div>

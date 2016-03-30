@@ -14,21 +14,23 @@
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
     vm.useCsdmDeviceSidepanel = null;
     var csdmHuronUserDeviceService = null;
-    checkFeatureToggleForCsdmSidePanel().then(function (res) {
-      if (res) {
-        csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-        vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
-          scope: $scope
-        });
-        vm.devices = csdmHuronUserDeviceService.getDeviceList();
-        if (vm.devices.length !== 0) {
-          $scope.userOverview.addGenerateAuthCodeLink();
+    if (isHuronEnabled()) {
+      checkFeatureToggleForCsdmSidePanel().then(function (res) {
+        if (res) {
+          csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+          vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
+            scope: $scope
+          });
+          vm.devices = csdmHuronUserDeviceService.getDeviceList();
+          if (Object.keys(vm.devices).length !== 0) {
+            $scope.userOverview.addGenerateAuthCodeLink();
+          }
         }
-      }
-      vm.useCsdmDeviceSidepanel = res;
-    }).catch(function () {
-      vm.useCsdmDeviceSidepanel = false;
-    });
+        vm.useCsdmDeviceSidepanel = res;
+      }).catch(function () {
+        vm.useCsdmDeviceSidepanel = false;
+      });
+    }
 
     function checkFeatureToggleForCsdmSidePanel() {
       if ($window.location.search.indexOf("useCsdmDeviceSidepanel=true") > -1) {
@@ -37,6 +39,10 @@
         return FeatureToggleService.supports(FeatureToggleService.features.useCsdmDeviceSidepanel);
       }
     }
+
+    vm.showGenerateOtpButton = function () {
+      return (isHuronEnabled() && vm.devices != null && Object.keys(vm.devices).length == 0);
+    };
 
     vm.showDeviceDetails = function (device) {
       vm.currentDevice = device;

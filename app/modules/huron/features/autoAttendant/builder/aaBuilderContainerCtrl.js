@@ -6,7 +6,7 @@
     .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($stateParams, $modal, AutoAttendantCeInfoModelService,
+  function AABuilderContainerCtrl($scope, $stateParams, $modal, AutoAttendantCeInfoModelService,
     AutoAttendantCeMenuModelService, AutoAttendantCeService, AAUiModelService, AAModelService, Config) {
 
     var vm = this;
@@ -30,6 +30,9 @@
 
       modalInstance.result.then(function (result) {
         // Put anything needed after the modal is finished here
+        vm.aaModel = AAModelService.getAAModel();
+        vm.ui = AAUiModelService.getUiModel();
+        $scope.$broadcast('ScheduleChanged');
       });
     }
     /////////////////////

@@ -140,7 +140,8 @@ var AutoAttendantPage = function () {
   this.closedHoursSayMessage = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Say Message"]'));
   this.closedHoursPhoneMenu = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
   this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
-
+  this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
+  this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
 
