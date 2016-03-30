@@ -9,7 +9,7 @@ var messageLogger = require('../utils/messageLogger.gulp')();
 var del = require('del');
 
 // Delete build and dist directory files
-gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma', 'clean:test', 'clean:ts']);
+gulp.task('clean', ['clean:build', 'clean:coverage', 'clean:dist', 'clean:karma', 'clean:test', 'clean:ts']);
 
 // Delete dist directory files
 gulp.task('clean:dist', function (done) {
@@ -24,6 +24,15 @@ gulp.task('clean:build', function (done) {
     config.build
   ];
   messageLogger('Cleaning build directory', files);
+  del(files, done);
+});
+
+// Delete coverage directory files
+gulp.task('clean:coverage', function (done) {
+  var files = [
+    config.coverage
+  ];
+  messageLogger('Cleaning coverage directory', files);
   del(files, done);
 });
 

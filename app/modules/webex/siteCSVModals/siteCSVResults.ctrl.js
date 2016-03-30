@@ -21,7 +21,8 @@
     $log.log(logMsg);
 
     vm.viewReady = false;
-    vm.csvStatusObj = $stateParams.csvStatusObj;
+    vm.siteRow = $stateParams.siteRow;
+    vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
     vm.gridRows = [];
 
     if (
@@ -42,14 +43,14 @@
 
       vm.gridRows.push({
         id: 'export-started-time',
-        title: 'Export started:',
+        title: 'Started:',
         value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'export-finished-time',
-        title: 'Export finished:',
+        title: 'Finished:',
         value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
@@ -77,8 +78,8 @@
 
       vm.gridRows.push({
         id: 'export-download-csv-file',
-        title: 'Download:',
-        value: 'Exported CSV file',
+        title: 'Download CSV file:',
+        value: null,
         fileDownloadUrl: vm.csvStatusObj.details.exportFileLink
       });
 
@@ -107,14 +108,14 @@
 
       vm.gridRows.push({
         id: 'import-started-time',
-        title: 'Import started:',
+        title: 'Started:',
         value: vm.csvStatusObj.details.created,
         fileDownloadUrl: null
       });
 
       vm.gridRows.push({
         id: 'import-finished-time',
-        title: 'Import finished:',
+        title: 'Finished:',
         value: vm.csvStatusObj.details.finished,
         fileDownloadUrl: null
       });
@@ -143,8 +144,8 @@
       if (0 < vm.csvStatusObj.details.failedRecords) {
         vm.gridRows.push({
           id: 'import-download-err-file',
-          title: 'Download:',
-          value: 'Error log',
+          title: 'Download error log:',
+          value: null,
           fileDownloadUrl: vm.csvStatusObj.details.errorLogLink
         });
       }
@@ -178,5 +179,37 @@
     */
 
     vm.viewReady = true;
+
+    vm.csvFileDownload = function (downloadUrl) {
+      var funcName = "csvFileDownload()";
+      var logMsg = "";
+
+      downloadUrl = downloadUrl.replace("http:", "https:");
+
+      logMsg = funcName + "\n" +
+        "downloadUrl=" + downloadUrl;
+      $log.log(logMsg);
+
+      WebExApiGatewayService.csvFileDownload(
+        vm.siteRow.license.siteUrl,
+        downloadUrl,
+        vm.siteRow.csvMock.mockFileDownload
+      ).then(
+
+        function success(response) {
+          var funcName = "WebExApiGatewayService.csvFileDownload.success()";
+          var logMsg = "";
+
+          $log.log(funcName);
+        },
+
+        function error(response) {
+          var funcName = "WebExApiGatewayService.csvFileDownload.error()";
+          var logMsg = "";
+
+          $log.log(funcName);
+        }
+      ); // WebExApiGatewayService.csvFileDownload().then()
+    }; // csvFileDownload()
   } // SiteCSVResultsCtrl()
 })(); // top level function

@@ -40,8 +40,10 @@
         <table>
           <tr>
             <td><span class="icon icon-error" style="color:red;"></span></td>
-            <td><span class="extension-description" style="color:red" translate="hercules.domain-verification.domain-not-verified"/>
-              <span class="extension-description" style="color:red" translate="hercules.domain-verification.navigateToCallSettings"
+            <td><span class="extension-description" style="color:red"
+                      translate="hercules.domain-verification.domain-not-verified"/>
+              <span class="extension-description" style="color:red"
+                    translate="hercules.domain-verification.navigateToCallSettings"
                     translate-value-onclick="navigateToCallSettings()" translate-compile></span></td>
           </tr>
         </table>
@@ -66,7 +68,6 @@
     </div>
     <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
       translate}}</p>
-
     <div>
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
@@ -81,5 +82,13 @@
       <span class="cloud-extension-label">{{'cloudExtensions.enterpriseDn' | translate}}:</span>
       <span class="cloud-extension-label status-notActivated">{{callServiceConnect.enterpriseDn}}</span>
     </div>
+
+    <span
+      ng-if="callServiceConnect.entitled
+      && callServiceConnect.status.state === 'error'"
+      class="cloud-extension-label status-error">
+      {{callServiceConnect.status.description.defaultMessage}}
+    </span>
+
   </cs-sp-section>
 </cs-sp-container>

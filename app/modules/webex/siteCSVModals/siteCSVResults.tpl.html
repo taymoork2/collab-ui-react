@@ -59,10 +59,17 @@
             
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
-             
-            <a href={{gridRow.fileDownloadUrl}}>
+                         
+            <!-- 
+            <csv-download class="webex-csv-download"
+                          type="user" 
+                          filename="{{::'usersPage.csvFilename' | translate}}" 
+                          icon="icon-content-share">
+            </csv-download>
+            -->
+            <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
               <font color=#049FD9>
-                {{gridRow.value}}
+                <i class="icon icon-content-share"></i>
               </font>
             </a>
           </span>

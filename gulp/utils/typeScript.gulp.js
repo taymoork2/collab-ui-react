@@ -3,6 +3,8 @@
  */
 'use strict';
 
+/* eslint no-param-reassign:0 */
+
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({

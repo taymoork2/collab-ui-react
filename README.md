@@ -110,6 +110,12 @@ When contributing, it's important to keep your fork up-to-date with the master. 
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
+## Recommended plugins for your Text Editor / IDE
+
+* Sublime Text: [EditorConfig](https://github.com/sindresorhus/editorconfig-sublime),  [SublimeLinter-eslint](https://github.com/roadhump/SublimeLinter-eslint), [AngularJS snippets](https://github.com/johnpapa/angular-styleguide/tree/master/a1#sublime-text)
+* Atom: [EditorConfig](https://github.com/sindresorhus/atom-editorconfig), [linter-eslint](https://github.com/AtomLinter/linter-eslint), [AngularJS snippets](https://github.com/johnpapa/angular-styleguide/tree/master/a1#atom)
+* WebStorm / IntelliJ: [AngularJS snippets](https://github.com/johnpapa/angular-styleguide/tree/master/a1#webstorm) (EditorConfig and ESLint are handled by default in recent versions of JetBrains software)
+
 ## TypeScript Definitions
 
 * Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
@@ -325,13 +331,13 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 ### `gulp analyze`
 
-* Runs `gulp analyze:eslint, analyze:jslint` and `gulp plato tasks`
-* Creates an analysis report of the JavaScript code using the plato analyzer tool
+* Runs all linters (`eslint`, `jscs`, `json`)
+* Creates an analysis report of the JavaScript code using the plato analyzer tool if `--plato` provided
 * Creates an HTML report at `/report/plato/index.html` of the results
 
 ### `gulp jsb`
 
-* Runs `gulp analyze:eslint` and `gulp jsBeautifier:beautify` tasks
+* Runs `gulp eslint:app`, `gulp eslint:e2e` and `gulp jsBeautifier:beautify` tasks
 
 ## Run the protractor e2e test:
 

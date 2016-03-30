@@ -298,8 +298,8 @@ angular.module('Core').service('SiteListService', [
 
           // start CSV status poll
           // var pollInterval = 3600000; // 1hr
-          // var pollInterval = 30000; // 30sec
-          var pollInterval = 15000; // 15sec
+          var pollInterval = 30000; // 30sec
+          // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
               _this.updateCSVColumnInRow(siteRow);
@@ -370,6 +370,7 @@ angular.module('Core').service('SiteListService', [
 
       WebExApiGatewayService.csvStatus(
         siteUrl,
+        siteRow.csvMock.mockStatus,
         mockCsvStatusReq
       ).then(
 

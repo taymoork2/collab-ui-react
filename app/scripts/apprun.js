@@ -38,6 +38,9 @@
           if (!Authinfo.isAllowedState(to.name)) {
             e.preventDefault();
             $state.go('unauthorized');
+          } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+            e.preventDefault();
+            $state.go('firsttimewizard');
           }
         } else {
           e.preventDefault();
@@ -72,7 +75,7 @@
       } else if (document.URL.indexOf('code') !== -1) {
         params = getFromStandardGetParams(document.URL);
         $rootScope.status = 'loading';
-        Auth.getNewAccessToken(params.code)
+        Auth.getNewAccessToken(params)
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
