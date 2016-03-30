@@ -66,19 +66,12 @@
           </article>
         </cs-card>
         <cs-card class="large">
-          <article ng-controller="PartnerReportsCtrl">
+          <article ng-controller="OverviewReportsCtrl">
             <header>
               <div class="row collapse">
                 <div class="columns small-12 userTitle" cs-dropdown is-open="db.isOpen">
                   <span class="h4">{{'partnerHomePage.onboardingTitle' | translate}}</span>
-                  <button cs-dropdown-toggle id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
-                    <span>{{currentSelection | translate}}</span><span class="icon icon-arrow-down"></span>
-                  </button>
-                  <ul cs-dropdown-menu class="dropdown-menu reports-customer-dropdown" role="menu">
-                    <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
-                    <li class="divider"></li>
-                    <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
-                  </ul>
+                  <cs-select class="right" id="customerDropdown" name="timeFilter" ng-model="currentSelection" options="totalOrgsData"on-change-fn="getCustomerReports()" filter="true" is-disabled="true"></cs-select>
                 </div>
               </div>
             </header>
@@ -88,8 +81,6 @@
                 <div id="avgEntitlementsdiv" class="report"></div>
                 <div class="report-status-partner" id="avg-entitlements-refresh" ng-if="isRefresh('entitlements')">
                   <i class='icon icon-spinner icon-2x'></i>
-                  <span translate="status.noResults" ng-if="isEmpty('entitlements')"></span>
-                  <span translate="status.errorProcessing" ng-if="hasError('entitlements')"></span>
                 </div>
               </div>
             </section>
@@ -102,7 +93,7 @@
             </header>
             <section class="tab-reports onboarded" id="tab-reports">
               <cs-tabset justified="true" large="true" class="tabcontainer">
-                <cs-tab select="resizeActiveUsersChart()">
+                <cs-tab>
                   <cs-tab-heading>
                     <span translate="partnerHomePage.activeUsersTitle"></span>
                     <div class="total">{{counts.activeUsers}}</div>
@@ -110,11 +101,9 @@
                   <div id="activeUsersdiv" class="tab-report"></div>
                   <div id='active-users-refresh' class="report-status-partner" ng-if="isRefresh('activeUsers')">
                     <i class='icon icon-spinner icon-2x'></i>
-                    <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
-                    <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
                   </div>
                 </cs-tab>
-                <cs-tab select="resizeAverageCallsChart()">
+                <cs-tab>
                   <cs-tab-heading>
                     <span translate="partnerHomePage.averageCallsTitle"></span>
                     <div class="total">{{counts.averageCalls}}</div>
@@ -122,11 +111,9 @@
                   <div id="avgCallsdiv" class="tab-report"></div>
                   <div id="calls-refresh" class="report-status-partner" ng-if="isRefresh('avgCalls')">
                     <i class='icon icon-spinner icon-2x'></i>
-                    <span translate="status.noResults" ng-if="isEmpty('avgCalls')"></span>
-                    <span translate="status.errorProcessing" ng-if="hasError('avgCalls')"></span>
                   </div>
                 </cs-tab>
-                <cs-tab select="resizeContentSharedChart()">
+                <cs-tab>
                   <cs-tab-heading>
                     <span translate="partnerHomePage.contentSharedTitle"></span>
                     <div class="total">{{counts.contentShared}}</div>
@@ -134,14 +121,12 @@
                   <div id="contentShareddiv" class="tab-report"></div>
                   <div id="content-shared-refresh" class="report-status-partner" ng-if="isRefresh('contentShared')">
                     <i class='icon icon-spinner icon-2x'></i>
-                    <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
-                    <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
                   </div>
                 </cs-tab>
               </cs-tabset>
             </section>
             <footer>
-              <span ng-click="reloadReports(false)" class="overview-updated right" id="time-click-div">
+              <span ng-click="reloadReports()" class="overview-updated right" id="time-click-div">
                   <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
                 </span>
             </footer>

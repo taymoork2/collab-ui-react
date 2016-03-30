@@ -80,13 +80,9 @@
     font-size: 24px;
   }
   #customerDropdown {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-right: 0;
-    .icon {
-      font-size: 1.5rem;
-      line-height: 1rem;
+    width: rem-calc(250);
+    .select-options {
+      padding: 0;
     }
   }
 }
