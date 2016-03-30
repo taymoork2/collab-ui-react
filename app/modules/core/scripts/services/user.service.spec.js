@@ -76,7 +76,8 @@ describe('User Service', function () {
     var dirsyncEnabled = true;
     var entitlements = ["squared-call-initiation", "spark", "webex-squared"];
     Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
-    expect(Userservice.sendSparkWelcomeEmail(userEmail, userName)).toHaveBeenCalled();
+    expect(Userservice.sendSparkWelcomeEmail).toHaveBeenCalled();
+    $httpBackend.flush();
   });
 
 });

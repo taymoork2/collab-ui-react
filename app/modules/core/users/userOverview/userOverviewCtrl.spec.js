@@ -1,17 +1,18 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
+  var controller, $scope, $httpBackend, $q, $rootScope, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
 
   var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
   var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
-    $scope = $rootScope.$new();
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+    $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
+    $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
@@ -200,9 +201,9 @@ describe('Controller: UserOverviewCtrl', function () {
       entitlements = ["squared-call-initiation", "spark", "webex-squared"];
     });
 
-    it('should call resendInvitation successfully', function () {  
+    it('should call resendInvitation successfully', function () {
       controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
-      $scope.$apply();
+      $rootScope.$apply();
       expect(Notification.success).toHaveBeenCalled();
     });
   });

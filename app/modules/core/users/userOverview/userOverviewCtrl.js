@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice, Log) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice, Log, Notification) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -223,14 +223,16 @@
     }
 
     function getAccountStatus() {
-      var currentUserId = vm.currentUser.id;
-      Userservice.getUser(currentUserId, function (data, status) {
-        if (data.success) {
-          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
-        } else {
-          Log.debug('Get existing account info failed. Status: ' + status);
-        }
-      });
+      FeatureToggleService.supports(FeatureToggleService.invitePendingStatus).then(function (result) {
+        var currentUserId = vm.currentUser.id;
+        Userservice.getUser(currentUserId, function (data, status) {
+          if (data.success) {
+            vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+          } else {
+            Log.debug('Get existing account info failed. Status: ' + status);
+          }
+        });
+      }); 
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
