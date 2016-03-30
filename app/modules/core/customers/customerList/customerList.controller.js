@@ -375,26 +375,30 @@
 
     function addNumbers(org) {
       PstnSetupService.getCustomer(org.customerOrgId)
-        .catch(function () {
-          return NumberSearchServiceV2.get({
-            customerId: org.customerOrgId,
-            type: 'external'
-          }).$promise.then(function (response) {
-            if (response.numbers.length !== 0) {
-              $state.go('didadd', {
-                currentOrg: org
-              });
-              return $q.reject(false);
-            }
+        .catch(_.partial(getExternalNumbers, org))
+        .then(_.partial(goToPstnSetup, org));
+    }
+
+    function getExternalNumbers(org) {
+      return NumberSearchServiceV2.get({
+        customerId: org.customerOrgId,
+        type: 'external'
+      }).$promise.then(function (response) {
+        if (_.get(response, 'numbers.length') !== 0) {
+          $state.go('didadd', {
+            currentOrg: org
           });
-        })
-        .then(function () {
-          return $state.go('pstnSetup', {
-            customerId: org.customerOrgId,
-            customerName: org.customerName,
-            customerEmail: org.customerEmail
-          });
-        });
+          return $q.reject(false);
+        }
+      });
+    }
+
+    function goToPstnSetup(org) {
+      return $state.go('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail
+      });
     }
   }
 })();
