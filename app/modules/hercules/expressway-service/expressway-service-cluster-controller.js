@@ -55,6 +55,19 @@
       wasUpgrading = isUpgrading || vm.fakeUpgrade;
     }, true);
 
+    vm.showDeregisterDialog = function () {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: 'clusterDeregister',
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+      });
+    };
+
     vm.upgrade = function () {
       $modal.open({
         templateUrl: 'modules/hercules/expressway-service/software-upgrade-dialog.html',
