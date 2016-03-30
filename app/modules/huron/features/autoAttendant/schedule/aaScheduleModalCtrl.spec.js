@@ -2,7 +2,7 @@
 
 describe('Controller: AAScheduleModalCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService;
+  var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
   var $rootScope, $scope, $translate, $q, $modalInstance;
   var ical;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -86,7 +86,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_) {
+  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
@@ -98,6 +98,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
+    AACommonService = _AACommonService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -112,6 +113,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when());
 
     spyOn(AutoAttendantCeInfoModelService, 'extractUUID').and.returnValue('1');
+    spyOn(AACommonService, 'saveUiModel');
     Notification = jasmine.createSpyObj('Notification', ['success', 'error']);
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
@@ -161,7 +163,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('should create a schedule for AA', function () {
       controller.save();
       $scope.$apply();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('Calendar for AA1', controller.calendar);
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA1', controller.calendar);
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
@@ -169,18 +171,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
     });
 
     it('should update a schedule for AA', function () {
-      var aaModel = {
-        aaRecord: {
-          scheduleId: '1',
-          callExperienceName: 'AA1'
-        }
-      };
-      AAModelService.getAAModel.and.returnValue(aaModel);
-      controller.aaModel = aaModel;
       expect(controller.openhours).toBeTruthy();
       controller.save();
       $scope.$apply();
       expect(AACalendarService.updateCalendar).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
     });

@@ -452,7 +452,7 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for the selected customer(s).",
-    "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.  Please note that customers lacking endpoint data will not appear on the table.",
+    "description": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
     "customerDescription": "A registered endpoint is any device connected to the cloud in the {{time}}.  The data can be broken down by device type and can be used to help determine device adoption trends and usage at a high level.",
     "customerError": "There was an error while loading registered endpoints.",
     "allDevices": "All Devices"
@@ -1472,7 +1472,9 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
-    "reset": "Reset"
+    "reset": "Reset",
+    "tosReadAndAgree": "I have read and agree to these",
+    "tosTermsAndConditions": "terms and conditions"
   },
   "reports": {
     "title": "Reports",
@@ -1538,6 +1540,8 @@
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
+    "errorCreateSchedule": "Failed to create schedule for {{name}}: {{statusText}} ({{status}}).",
+    "errorDeletePredefinedSchedule": "Failed to remove the predefined schedule for {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1694,7 +1698,8 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Create a custom Auto Attendant."
+    "AACustomDesc": "Create a custom Auto Attendant.",
+    "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
   },
   "callPark": {
     "code": "CP",
@@ -1881,6 +1886,7 @@
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "consecutive": "Consecutive",
+    "block": "Block",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
@@ -1911,7 +1917,18 @@
     "serviceAddress": "Service Address",
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
-    "serviceAddressNotFound": "Unable to find address. Please update and try again."
+    "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "advancedOrder": {
+      "noResults": "No search results but we have a solution.",
+      "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
+      "addNumbers": "Add Numbers",
+      "tooltip": "Block allows you to add a large quantity of consecutive and non-consecutive numbers.",
+      "extra": "*Consecutive Numbers will be an additional charge"
+    },
+    "errors": {
+      "states": "Failed to retrieve states",
+      "inventory": "Failed to get PSTN inventory"
+    }
   },
   "pstnContractInformation": {
     "title": "PSTN Contract Information",
@@ -2015,7 +2032,7 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
-      "deviceLimitDescription": "Choose at least 2 and up to 7 total devices (maximum 5 per type)",
+      "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
       "skipAddDevices": "Skip adding devices",
@@ -2100,8 +2117,8 @@
     "licenseQuantity": "Licenses Quantity",
     "users": "Users",
     "message": "Message",
-    "messageAndMeeting": "Message and Meeting",
-    "meeting": "Meeting and WebEx",
+    "meeting": "Meeting 25 Party",
+    "webex": "WebEx Enterprise Edition 200",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -2126,6 +2143,7 @@
     "message": "Message",
     "call": "Call",
     "meeting": "Meeting",
+    "roomSystems": "Room Systems",
     "notes": "Notes",
     "active": "Active",
     "free": "Free",
@@ -3088,6 +3106,9 @@
     "exportFailedTooltip": "Export failed",
     "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportRejectedToast": "Export failed, try again.",
+    "importButton": "Import",
+    "importStartModalTitle": "Import WebEx User Attributes",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",

@@ -8,9 +8,9 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        {{connector.name}}
+        <span>{{connector.name}}</span>
       </div>
-      
+
       <div class="header-sub-info">
         <span ng-show="{{!connector.needs_attention && connector.software_upgrade_available}}" style="color: #00B29D;">
           Software Upgrades Available
@@ -19,7 +19,7 @@
           Cluster Needs Attention
         </span>
       </div>
-   
+
     </div>
   </div>
 </cs-sp-header>

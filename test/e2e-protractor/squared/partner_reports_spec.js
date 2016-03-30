@@ -106,12 +106,7 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.partnerMetricsHeader);
-      utils.expectIsNotDisplayed(reports.partnerMetricsDescription);
       utils.expectIsNotDisplayed(reports.callMetricsGraph);
-
-      utils.expectIsNotDisplayed(reports.partnerMediaHeader);
-      utils.expectIsNotDisplayed(reports.mediaDescription);
       utils.expectIsNotDisplayed(reports.mediaQualityGraph);
     });
 
@@ -119,16 +114,8 @@ describe('Partner Reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.partnerActiveHeader);
-      utils.expectIsNotDisplayed(reports.activePartnerDescription);
       utils.expectIsNotDisplayed(reports.activeUsers);
-
-      utils.expectIsNotDisplayed(reports.activePopulationHeader);
-      utils.expectIsNotDisplayed(reports.activePopulationDescription);
       utils.expectIsNotDisplayed(reports.activePopulationGraph);
-
-      utils.expectIsNotDisplayed(reports.regEndpointHeader);
-      utils.expectIsNotDisplayed(reports.endpointDescription);
       utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
 
       // quality graphs

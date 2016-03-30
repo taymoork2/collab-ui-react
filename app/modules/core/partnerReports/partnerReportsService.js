@@ -224,6 +224,13 @@
       var activeDataSet = [];
       angular.forEach(customer, function (org, orgIndex, orgArray) {
         var orgData = activeUserCustomerGraphs[org.value];
+        var emptyPopGraph = {
+          customerName: org.label,
+          customerId: org.value,
+          percentage: 0,
+          balloon: true,
+          labelColorField: chartColors.grayDarkest
+        };
         if (angular.isDefined(orgData)) {
           // gather active user data for combining below
           var orgActive = orgData.graphData;
@@ -239,17 +246,15 @@
 
           // add to the combined population graph
           var popGraph = activeUserCustomerGraphs[org.value].populationData;
-          popGraph.customerName = org.label;
+          if (angular.isUndefined(popGraph.balloon)) {
+            popGraph = emptyPopGraph;
+          } else {
+            popGraph.customerName = org.label;
+          }
           returnData.popData.push(popGraph);
         } else if (org.value !== 0) {
           // create placeholder for the combined population graph
-          returnData.popData.push({
-            customerName: org.label,
-            customerId: org.value,
-            percentage: 0,
-            balloon: true,
-            labelColorField: chartColors.grayDarkest
-          });
+          returnData.popData.push(emptyPopGraph);
         }
       });
       var dayOffset = 0;
@@ -496,12 +501,37 @@
               returnObject.direction = NEGATIVE;
               if ((returnObject.registeredDevicesTrend === "NaN")) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+0.0";
+                returnObject.registeredDevicesTrend = "+0.0%";
               } else if (returnObject.registeredDevicesTrend >= 0) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend;
+                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend + "%";
+              } else {
+                returnObject.registeredDevicesTrend += "%";
               }
               returnArray.push(returnObject);
+            }
+          });
+        }
+        if (0 < returnArray.length < customer.length) {
+          angular.forEach(customer, function (org) {
+            var emptyOrg = true;
+            angular.forEach(returnArray, function (object) {
+              if (object.orgId === org.value) {
+                emptyOrg = false;
+              }
+            });
+            if (emptyOrg) {
+              returnArray.push({
+                "orgId": org.value,
+                "deviceRegistrationCountTrend": "-",
+                "yesterdaysDeviceRegistrationCount": "-",
+                "registeredDevicesTrend": "-",
+                "yesterdaysRegisteredDevices": "-",
+                "maxRegisteredDevices": "-",
+                "minRegisteredDevices": "-",
+                "customer": org.label,
+                "direction": ""
+              });
             }
           });
         }

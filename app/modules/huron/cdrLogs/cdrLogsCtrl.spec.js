@@ -7,6 +7,7 @@ describe('Controller: CdrLogsCtrl', function () {
   var controller, state, translate, timeout, Config, formlyValidationMessages, formlyConfig, CdrService, Notification;
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');
   var statusResponse = ['primary', 'danger'];
+  var dateFormat = 'YYYY-MM-DD';
 
   beforeEach(inject(function ($rootScope, $controller, _$q_, _$state_, _$translate_, _$timeout_, _Config_, _formlyConfig_, _CdrService_, _Notification_) {
     var $scope = $rootScope.$new();
@@ -58,4 +59,19 @@ describe('Controller: CdrLogsCtrl', function () {
     expect(controller.selectedCDR).toEqual(callLegs[0][0][0]);
   });
 
+  it('ElasticSearch path should contain the logstash days', function () {
+    var esDays = 'logstash-2016.03.22,logstash-2016.03.23';
+    controller.model.startDate = moment("2016-03-22", dateFormat);
+    controller.model.endDate = moment("2016-03-23", dateFormat);
+    controller.updateLogstashPath();
+    expect(controller.logstashPath).toEqual(esDays);
+  });
+
+  it('ElasticSearch path should contain the logstash months', function () {
+    var esMonths = 'logstash-2015.11.*,logstash-2015.12.*,logstash-2016.01.*,logstash-2016.02.*,logstash-2016.03.*';
+    controller.model.startDate = moment("2015-11-23", dateFormat);
+    controller.model.endDate = moment("2016-03-23", dateFormat);
+    controller.updateLogstashPath();
+    expect(controller.logstashPath).toEqual(esMonths);
+  });
 });

@@ -4,6 +4,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
+  var AAUiScheduleService, AACalendarService;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -48,7 +49,9 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
+    _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
+    _AACalendarService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -69,6 +72,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
+    AAUiScheduleService = _AAUiScheduleService_;
+    AACalendarService = _AACalendarService_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -637,5 +642,247 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.setLoadingDone();
       expect($scope.vm.loading).toBeFalsy();
     });
+  });
+
+  describe('save9To5Schedule', function () {
+
+    var createScheduleDefer;
+    var saveAARecordDefer;
+
+    beforeEach(function () {
+      $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = {};
+      $scope.vm.ui.builder = {};
+      $scope.vm.ui.builder.ceInfo_name = 'AA';
+
+      createScheduleDefer = $q.defer();
+      saveAARecordDefer = $q.defer();
+      spyOn(AAUiScheduleService, 'create9To5Schedule').and.returnValue(createScheduleDefer.promise);
+      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
+      spyOn(Notification, 'error');
+    });
+
+    it('should return and resolve a promise when successfully save a 9to5 schedule', function () {
+
+      var saveSchedulePromise = controller.save9To5Schedule('AA');
+
+      var promiseResolved = false;
+      saveSchedulePromise.then(function () {
+        promiseResolved = true;
+      });
+      createScheduleDefer.resolve('12345');
+
+      expect(promiseResolved).toBe(false);
+      expect($scope.vm.ui.ceInfo.scheduleId).toBeUndefined();
+
+      $rootScope.$apply();
+
+      expect(promiseResolved).toBe(true);
+      expect($scope.vm.ui.ceInfo.scheduleId).toBe('12345');
+    });
+
+    it('should return and reject a promise when failed to save a 9to5 schedule', function () {
+
+      var saveSchedulePromise = controller.save9To5Schedule('AA');
+
+      var errorText = '';
+      saveSchedulePromise.catch(function (error) {
+        errorText = error;
+      });
+      createScheduleDefer.reject({
+        name: 'AA',
+        statusText: 'Server Error',
+        status: '500'
+      });
+
+      expect(errorText).toBe('');
+
+      $rootScope.$apply();
+
+      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateSchedule', jasmine.any(Object));
+      expect(errorText).toBe('SAVE_SCHEDULE_FAILURE');
+    });
+
+  });
+
+  describe('saveCeDefinition', function () {
+
+    var saveAARecordDefer;
+
+    beforeEach(function () {
+      $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = {};
+      $scope.vm.ui.builder = {};
+      $scope.vm.isAANameDefined = false;
+
+      saveAARecordDefer = $q.defer();
+      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
+    });
+
+    it('should return and resolve a promise when successfully save a CE Definition', function () {
+
+      var saveCeDefinitionPromise = controller.saveCeDefinition();
+
+      var promiseResolved = false;
+      saveCeDefinitionPromise.then(function () {
+        promiseResolved = true;
+      });
+      saveAARecordDefer.resolve();
+
+      expect(promiseResolved).toBe(false);
+      expect($scope.vm.isAANameDefined).toBe(false);
+
+      $rootScope.$apply();
+
+      expect(promiseResolved).toBe(true);
+      expect($scope.vm.isAANameDefined).toBe(true);
+    });
+
+    it('should return and reject a promise when failed to save a CE Definition', function () {
+
+      var saveCeDefinitionPromise = controller.saveCeDefinition();
+
+      var errorText = '';
+      saveCeDefinitionPromise.catch(function (error) {
+        errorText = error;
+      });
+      saveAARecordDefer.reject();
+
+      expect(errorText).toBe('');
+
+      $rootScope.$apply();
+
+      expect(errorText).toBe('CE_SAVE_FAILURE');
+    });
+
+  });
+
+  describe('delete9To5Schedule', function () {
+
+    var deleteCalendarDefer;
+
+    beforeEach(function () {
+      $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = {};
+      $scope.vm.ui.builder = {};
+      $scope.vm.isAANameDefined = false;
+
+      deleteCalendarDefer = $q.defer();
+      spyOn(AACalendarService, 'deleteCalendar').and.returnValue(deleteCalendarDefer.promise);
+      spyOn(Notification, 'error');
+    });
+
+    it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
+
+      controller.delete9To5Schedule('CE_SAVE_FAILURE');
+      deleteCalendarDefer.resolve();
+
+      $rootScope.$apply();
+
+      expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('should display an error info when failed to delete a calendar', function () {
+      controller.delete9To5Schedule('CE_SAVE_FAILURE');
+      deleteCalendarDefer.reject();
+
+      $rootScope.$apply();
+
+      expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should do nothing when there is a SAVE_SCHEDULE_FAILURE', function () {
+      controller.delete9To5Schedule('SAVE_SCHEDULE_FAILURE');
+
+      $rootScope.$apply();
+
+      expect(AACalendarService.deleteCalendar).not.toHaveBeenCalled();
+    });
+
+  });
+
+  describe('Received AANameCreated Event', function () {
+    var saveAARecordDefer;
+    var save9To5ScheduleDefer;
+    var saveCeDefinitionDefer;
+
+    beforeEach(function () {
+      $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = {};
+      $scope.vm.ui.builder = {};
+      $scope.vm.ui.aaTemplate = 'OpenClosedHoursTemplate';
+      $scope.vm.ui.builder.ceInfo_name = 'AA';
+      $scope.vm.isAANameDefined = false;
+
+      saveAARecordDefer = $q.defer();
+      save9To5ScheduleDefer = $q.defer();
+      saveCeDefinitionDefer = $q.defer();
+
+      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
+
+      spyOn(controller, 'save9To5Schedule').and.returnValue(save9To5ScheduleDefer.promise);
+      spyOn(controller, 'saveCeDefinition').and.returnValue(saveCeDefinitionDefer.promise);
+      spyOn(controller, 'delete9To5Schedule');
+    });
+
+    it('should save a 9to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
+      $rootScope.$broadcast('AANameCreated');
+      save9To5ScheduleDefer.resolve();
+      saveCeDefinitionDefer.resolve();
+
+      $rootScope.$apply();
+
+      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.saveCeDefinition).toHaveBeenCalled();
+      expect(controller.delete9To5Schedule).not.toHaveBeenCalled();
+    });
+
+    it('should invoke saveAARecords for Basic template creation', function () {
+      $scope.vm.ui.aaTemplate = 'template1';
+      $rootScope.$broadcast('AANameCreated');
+      saveAARecordDefer.resolve();
+
+      $rootScope.$apply();
+
+      expect(controller.saveAARecords).toHaveBeenCalled();
+      expect($scope.vm.isAANameDefined).toBe(true);
+    });
+
+    it('should invoke saveAARecords for Custom template creation', function () {
+      $scope.vm.ui.aaTemplate = '';
+      $rootScope.$broadcast('AANameCreated');
+      saveAARecordDefer.resolve();
+
+      $rootScope.$apply();
+
+      expect(controller.saveAARecords).toHaveBeenCalled();
+      expect($scope.vm.isAANameDefined).toBe(true);
+    });
+
+    it('should undo the 9to5 schedule save if save current CE definition failed.', function () {
+      $rootScope.$broadcast('AANameCreated');
+      save9To5ScheduleDefer.resolve();
+      saveCeDefinitionDefer.reject();
+
+      $rootScope.$apply();
+
+      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.saveCeDefinition).toHaveBeenCalled();
+      expect(controller.delete9To5Schedule).toHaveBeenCalled();
+    });
+
+    it('should invoke delete9To5Schedule but do nothing if fail to save the 9 to 5 schedule.', function () {
+      $rootScope.$broadcast('AANameCreated');
+      save9To5ScheduleDefer.reject();
+
+      $rootScope.$apply();
+
+      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.saveCeDefinition).not.toHaveBeenCalled();
+      expect(controller.delete9To5Schedule).toHaveBeenCalled();
+    });
+
   });
 });

@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, $window, TrialService, Orgservice, Log, Notification) {
+  function CustomerListCtrl($q, $scope, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, PstnSetupService, $window, TrialService, Orgservice, Log, Notification, NumberSearchServiceV2) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
 
@@ -22,6 +22,7 @@
     $scope.closeActionsDropdown = closeActionsDropdown;
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
+    $scope.addNumbers = addNumbers;
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -108,6 +109,13 @@
       }, {
         field: 'communications',
         displayName: $translate.instant('customerPage.call'),
+        width: '12%',
+        cellTemplate: serviceTemplate,
+        headerCellClass: 'align-center',
+        sortingAlgorithm: serviceSort
+      }, {
+        field: 'roomSystems',
+        displayName: $translate.instant('customerPage.roomSystems'),
         width: '12%',
         cellTemplate: serviceTemplate,
         headerCellClass: 'align-center',
@@ -327,15 +335,7 @@
     }
 
     function getLicenseObj(rowData, licenseTypeField) {
-      var license = null;
-      if (licenseTypeField === 'messaging') {
-        license = rowData.messaging;
-      } else if (licenseTypeField === 'conferencing') {
-        license = rowData.conferencing;
-      } else if (licenseTypeField === 'communications') {
-        license = rowData.communications;
-      }
-      return license;
+      return rowData[licenseTypeField] || null;
     }
 
     function isLicenseTypeATrial(rowData, licenseTypeField) {
@@ -371,6 +371,34 @@
 
     function closeActionsDropdown() {
       angular.element('.open').removeClass('open');
+    }
+
+    function addNumbers(org) {
+      PstnSetupService.getCustomer(org.customerOrgId)
+        .catch(_.partial(getExternalNumbers, org))
+        .then(_.partial(goToPstnSetup, org));
+    }
+
+    function getExternalNumbers(org) {
+      return NumberSearchServiceV2.get({
+        customerId: org.customerOrgId,
+        type: 'external'
+      }).$promise.then(function (response) {
+        if (_.get(response, 'numbers.length') !== 0) {
+          $state.go('didadd', {
+            currentOrg: org
+          });
+          return $q.reject(false);
+        }
+      });
+    }
+
+    function goToPstnSetup(org) {
+      return $state.go('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail
+      });
     }
   }
 })();

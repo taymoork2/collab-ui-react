@@ -24,6 +24,7 @@
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var cancelPromise = null;
     var currentJob = null;
+    var cdrUrl = null;
 
     return {
       query: query,
@@ -79,7 +80,8 @@
       return returnDate.utc();
     }
 
-    function query(model) {
+    function query(model, logstashPath) {
+      cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
       proxyData = [];
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
@@ -365,7 +367,7 @@
       if (thisJob === currentJob) {
         $http({
           method: "POST",
-          url: UrlConfig.getCdrUrl(),
+          url: cdrUrl,
           data: query,
           timeout: cancelPromise.promise
         }).success(function (response) {
@@ -375,7 +377,7 @@
           if (status === 500 && response === retryError) {
             $http({
               method: "POST",
-              url: UrlConfig.getCdrUrl(),
+              url: cdrUrl,
               data: query,
               timeout: cancelPromise.promise
             }).success(function (secondaryResponse) {
