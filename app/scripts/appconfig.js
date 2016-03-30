@@ -197,6 +197,7 @@ angular
       $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
+      $httpProvider.interceptors.push('ServerErrorInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -521,7 +522,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -846,13 +846,26 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        // lhsieh
+        .state('site-csv-import', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVImportModalCtrl',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
+              controllerAs: 'siteCSVImportModalCtrl'
+            }
+          },
+          params: {
+            csvImportObj: null
+          }
+        })
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
+              controllerAs: 'siteCSVResult',
             }
           },
           params: {
@@ -1331,7 +1344,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
@@ -1350,7 +1364,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           }
         })
         .state('callroutingBase', {
@@ -1430,13 +1445,13 @@ angular
         .state('trialAdd.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.webex', {
-          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-          controller: 'TrialWebexCtrl',
-          controllerAs: 'webexTrial'
+        .state('trialAdd.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
         })
         .state('trialAdd.call', {
-          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })
@@ -1488,13 +1503,13 @@ angular
         .state('trialEdit.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialEdit.webex', {
-          templateUrl: 'modules/core/trials/trialWebex.tpl.html',
-          controller: 'TrialWebexCtrl',
-          controllerAs: 'webexTrial'
+        .state('trialEdit.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
         })
         .state('trialEdit.call', {
-          templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialDeviceController',
           controllerAs: 'callTrial'
         })

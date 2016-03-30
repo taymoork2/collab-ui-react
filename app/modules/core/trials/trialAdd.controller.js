@@ -10,7 +10,6 @@
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
-    var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
@@ -23,37 +22,38 @@
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
-    vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.trialStates = [{
-      name: 'trialAdd.webex',
-      trials: [vm.webexTrial],
-      enabled: true,
+      'name': 'trialAdd.meeting',
+      'trials': [vm.meetingTrial],
+      'enabled': true,
     }, {
-      name: 'trialAdd.call',
-      trials: [vm.callTrial, vm.roomSystemTrial],
-      enabled: true,
+      'name': 'trialAdd.call',
+      'trials': [vm.callTrial, vm.roomSystemTrial],
+      'enabled': true,
     }, {
-      name: 'trialAdd.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
+      'name': 'trialAdd.addNumbers',
+      'trials': [vm.callTrial],
+      'enabled': true,
     }, {
-      name: 'trialAdd.pstn',
-      trials: [vm.pstnTrial],
-      enabled: true,
+      'name': 'trialAdd.pstn',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
     }, {
-      name: 'trialAdd.emergAddress',
-      trials: [vm.pstnTrial],
-      enabled: true,
+      'name': 'trialAdd.emergAddress',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
+    vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
-    vm.showWebex = false;
+    vm.showMeeting = false;
+    vm.canEditMessage = true;
+    vm.canEditMeeting = true;
     vm.startTrial = startTrial;
 
     vm.custInfoFields = [{
@@ -110,11 +110,16 @@
       model: vm.messageTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
+      className: 'columns medium-12',
       templateOptions: {
-        label: $translate.instant('trials.message'),
+        label: $translate.instant('trials.messageAndMeeting'),
         id: messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.canEditMessage;
+        },
       },
     }, {
       // Meeting Trial
@@ -125,21 +130,15 @@
       templateOptions: {
         label: $translate.instant('trials.meeting'),
         id: meetingTemplateOptionId,
-        class: 'columns medium-12 checkbox-group',
-      },
-    }, {
-      // Webex Trial
-      model: vm.webexTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.webex'),
-        id: webexTemplateOptionId,
         class: 'columns medium-12',
       },
       hideExpression: function () {
-        return !vm.showWebex;
+        return !vm.showMeeting;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return !vm.canEditMeeting;
+        },
       },
     }, {
       // Call Trial
@@ -247,32 +246,31 @@
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0];
-        vm.webexTrial.enabled = results[1];
+        vm.meetingTrial.enabled = results[1];
         vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement;
         vm.supportsHuronCallTrials = results[4];
         vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
-        vm.meetingTrial.enabled = true;
-        if (vm.webexTrial.enabled) {
-          vm.showWebex = true;
+        if (vm.meetingTrial.enabled) {
+          vm.showMeeting = true;
           updateTrialService(messageTemplateOptionId);
         }
 
         var devicesModal = _.find(vm.trialStates, {
-          name: 'trialAdd.call'
+          'name': 'trialAdd.call'
         });
         var meetingModal = _.find(vm.trialStates, {
-          name: 'trialAdd.webex'
+          'name': 'trialAdd.meeting'
         });
         var addNumbersModal = _.find(vm.trialStates, {
-          name: 'trialAdd.addNumbers'
+          'name': 'trialAdd.addNumbers'
         });
         var pstnModal = _.find(vm.trialStates, {
-          name: 'trialAdd.pstn'
+          'name': 'trialAdd.pstn'
         });
         var emergAddressModal = _.find(vm.trialStates, {
-          name: 'trialAdd.emergAddress'
+          'name': 'trialAdd.emergAddress'
         });
 
         pstnModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
@@ -318,6 +316,18 @@
     }
 
     function toggleTrial() {
+      if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+        vm.canEditMessage = false;
+        vm.canEditMeeting = false;
+        if (vm.showMeeting) {
+          vm.meetingTrial.enabled = true;
+        }
+        vm.messageTrial.enabled = true;
+      } else {
+        vm.canEditMessage = true;
+        vm.canEditMeeting = true;
+      }
+
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
@@ -384,7 +394,7 @@
     /**
      * Changed to chain and slice the navOrder instead of navStates
      * so that if you choose to skip a step that you are on
-     * and that state gets removed from the order, the fucntion can
+     * and that state gets removed from the order, the fucntion can 
      * still find the next state and index won't find -1
      * when trying to find the next one
      */
@@ -430,7 +440,7 @@
         .then(function (response) {
           // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
           // handled by the backend process once provisioning is complete)
-          if (!vm.webexTrial.enabled) {
+          if (!vm.meetingTrial.enabled) {
             return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
                 vm.details.licenseDuration, Authinfo.getOrgId())
               .catch(function (response) {
@@ -470,7 +480,7 @@
         .then(function () {
           vm.finishSetup();
           return {
-            customerOrgId: vm.customerOrgId
+            'customerOrgId': vm.customerOrgId
           };
         }).finally(function () {
           vm.loading = false;
@@ -483,14 +493,14 @@
 
     function launchCustomerPortal() {
       $window.open($state.href('login_swap', {
-        customerOrgId: vm.customerOrgId,
-        customerOrgName: vm.details.customerName
+        'customerOrgId': vm.customerOrgId,
+        'customerOrgName': vm.details.customerName
       }));
       $state.modal.close();
     }
 
     function showDefaultFinish() {
-      return !vm.webexTrial.enabled;
+      return !vm.meetingTrial.enabled;
     }
   }
 })();

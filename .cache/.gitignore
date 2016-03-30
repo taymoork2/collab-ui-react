@@ -1,0 +1,4 @@
+# Force this '.cache' subdir into the project
+# - ignore everything except this file in this dir
+*
+!.gitignore

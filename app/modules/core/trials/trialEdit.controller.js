@@ -14,7 +14,9 @@
 
     vm.customerOrgId = undefined;
 
-    vm.showWebex = false;
+    vm.showMeeting = false;
+    vm.canEditMessage = true;
+    vm.canEditMeeting = true;
     vm.showRoomSystems = false;
 
     var _messageTemplateOptionId = 'messageTrial';
@@ -23,7 +25,6 @@
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
-    vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
@@ -31,8 +32,7 @@
     vm.preset = {
       licenseCount: _.get(vm, 'currentTrial.licenses', 0),
       message: hasOfferType(Config.trials.message) || hasOfferType(Config.offerTypes.message),
-      meeting: hasOfferType(Config.trials.message) || hasOfferType(Config.offerTypes.meeting) || hasOfferType(Config.offerTypes.meetings),
-      webex: hasOfferType(Config.trials.meeting) || hasOfferType(Config.offerTypes.meetings) || hasOfferType(Config.offerTypes.webex),
+      meeting: hasOfferType(Config.trials.meeting) || hasOfferType(Config.offerTypes.meetings),
       call: hasOfferType(Config.trials.call) || hasOfferType(Config.offerTypes.call),
       roomSystems: hasOfferType(Config.offerTypes.roomSystems),
       roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
@@ -44,31 +44,30 @@
     vm.roomSystemTrial.details.quantity = vm.preset.roomSystemsValue;
 
     vm.trialStates = [{
-      name: 'trialEdit.webex',
-      trials: [vm.webexTrial],
-      enabled: true,
+      'name': 'trialEdit.meeting',
+      'trials': [vm.meetingTrial],
+      'enabled': true,
     }, {
-      name: 'trialEdit.call',
-      trials: [vm.callTrial, vm.roomSystemTrial],
-      enabled: true,
+      'name': 'trialEdit.call',
+      'trials': [vm.callTrial, vm.roomSystemTrial],
+      'enabled': true,
     }, {
-      name: 'trialEdit.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
+      'name': 'trialEdit.addNumbers',
+      'trials': [vm.callTrial],
+      'enabled': true,
     }, {
-      name: 'trialEdit.pstn',
-      trials: [vm.pstnTrial],
-      enabled: true,
+      'name': 'trialEdit.pstn',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
     }, {
-      name: 'trialEdit.emergAddress',
-      trials: [vm.pstnTrial],
-      enabled: true,
+      'name': 'trialEdit.emergAddress',
+      'trials': [vm.pstnTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-
-    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.meeting', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -101,13 +100,13 @@
       type: 'checkbox',
       className: 'columns medium-12',
       templateOptions: {
-        label: $translate.instant('trials.message'),
+        label: $translate.instant('trials.messageAndMeeting'),
         id: _messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.preset.message;
+          return !vm.canEditMessage;
         },
       },
     }, {
@@ -115,34 +114,18 @@
       model: vm.meetingTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12',
+      className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
         id: 'meetingTrial',
-        class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.preset.meeting;
-        },
-      },
-    }, {
-      // Webex Trial
-      model: vm.webexTrial,
-      key: 'enabled',
-      type: 'checkbox',
-      className: 'columns medium-12 checkbox-group',
-      templateOptions: {
-        label: $translate.instant('trials.webex'),
-        id: 'webexTrial',
         class: 'columns medium-12',
       },
       'hideExpression': function () {
-        return !vm.showWebex;
+        return !vm.showMeeting;
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.preset.webex;
+          return !vm.canEditMeeting;
         },
       },
     }, {
@@ -251,7 +234,6 @@
       hasEnabled: hasEnabled,
       hasEnabledMessageTrial: hasEnabledMessageTrial,
       hasEnabledMeetingTrial: hasEnabledMeetingTrial,
-      hasEnabledWebexTrial: hasEnabledWebexTrial,
       hasEnabledCallTrial: hasEnabledCallTrial,
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
       hasEnabledAnyTrial: hasEnabledAnyTrial
@@ -271,9 +253,8 @@
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
-        vm.webexTrial.enabled = results[1] && vm.preset.webex;
-        vm.meetingTrial.enabled = vm.preset.meeting;
-        vm.showWebex = results[1];
+        vm.meetingTrial.enabled = results[1] && vm.preset.meeting;
+        vm.showMeeting = results[1];
         vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
@@ -282,7 +263,7 @@
 
         vm.canSeeDevicePage = results[3];
 
-        if (vm.showWebex) {
+        if (vm.showMeeting) {
           updateTrialService(_messageTemplateOptionId);
         }
       }).finally(function () {
@@ -324,15 +305,31 @@
     }
 
     function toggleTrial() {
+      if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
+        vm.canEditMessage = false;
+        vm.canEditMeeting = false;
+        if (vm.showMeeting) {
+          vm.meetingTrial.enabled = true;
+        }
+        vm.messageTrial.enabled = true;
+      } else {
+        vm.canEditMessage = true;
+        vm.canEditMeeting = true;
+      }
+
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
       if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
+
+      vm.canEditMeeting = !vm.preset.meeting && vm.canEditMeeting;
+      vm.canEditMessage = !vm.preset.message && vm.canEditMessage;
+
       setViewState('trialEdit.call', canAddDevice());
       setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
-      setViewState('trialEdit.webex', hasEnabledWebexTrial());
+      setViewState('trialEdit.meeting', hasEnabledMeetingTrial());
       setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
 
@@ -491,7 +488,7 @@
 
     function setViewState(modalStage, value) {
       _.find(vm.trialStates, {
-        name: modalStage
+        'name': modalStage
       }).enabled = value;
     }
 
@@ -529,12 +526,6 @@
       return hasEnabled(trial.enabled, preset.meeting);
     }
 
-    function hasEnabledWebexTrial(vmWebexTrial, vmPreset) {
-      var trial = vmWebexTrial || vm.webexTrial;
-      var preset = vmPreset || vm.preset;
-      return hasEnabled(trial.enabled, preset.webex);
-    }
-
     function hasEnabledCallTrial(vmCallTrial, vmPreset) {
       var trial = vmCallTrial || vm.callTrial;
       var preset = vmPreset || vm.preset;
@@ -551,7 +542,6 @@
       // TODO: look into discrepancy for 'roomSystem' vs. 'roomSystems'
       return hasEnabledMessageTrial(vm.messageTrial, vmPreset) ||
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
-        hasEnabledWebexTrial(vm.webexTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset);
     }
@@ -566,7 +556,7 @@
     }
 
     function showDefaultFinish() {
-      return !hasEnabledWebexTrial(vm.webexTrial, vm.preset);
+      return !hasEnabledMeetingTrial(vm.meetingTrial, vm.preset);
     }
 
     function canAddDevice() {

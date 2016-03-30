@@ -9,8 +9,8 @@
     '$timeout',
     '$rootScope',
     'Authinfo',
-    'Storage',
     'WebExUtilsFact',
+    'WebExApiGatewayConstsService',
 
     function (
       $http,
@@ -20,14 +20,13 @@
       $timeout,
       $rootScope,
       Authinfo,
-      Storage,
-      WebExUtilsFact
+      WebExUtilsFact,
+      WebExApiGatewayConstsService
     ) {
 
       var _this = this;
 
       this.sendRestApiReq = function (
-        mockIt,
         httpReq,
         resolve,
         reject
@@ -39,12 +38,6 @@
         logMsg = funcName + "\n" +
           "httpReq.url=" + JSON.stringify(httpReq.url);
         $log.log(logMsg);
-
-        if (mockIt) {
-          var fakeResult = httpReq;
-          resolve(fakeResult);
-          return;
-        }
 
         $http(
           httpReq
@@ -60,125 +53,97 @@
       }; //sendRestApiReq()
 
       return {
-        csvStatusReq: function (
-          mockIt,
-          siteUrl
+        csvApiRequest: function (
+          mockCsvStatus,
+          mockCsvStatusReq,
+          httpsReqObj
         ) {
-          var funcName = "csvStatusReq()";
-          var logMsg = "";
 
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl;
-          // $log.log(logMsg);
+          if (!mockCsvStatus) {
+            return $q(
+              function (resolve, reject) {
+                _this.sendRestApiReq(
+                  httpsReqObj,
+                  resolve,
+                  reject
+                );
+              }
+            );
+          }
 
-          var httpReqObj = {
-            'url': 'https://' + siteUrl + '/meeting/v1/users/importexportstatus',
-            'method': 'GET',
-            'headers': {
-              'Content-Type': 'application/json;charset=utf-8',
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
+          var mockResult = null;
+
+          if (null == mockCsvStatusReq) {
+            mockResult = {};
+          } else {
+            if (WebExApiGatewayConstsService.csvStates.none == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeNone
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportInProgress == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusQueued
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportCompletedNoErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 5,
+                failedRecords: 0,
+                exportFileLink: "http://google.com"
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.exportCompletedWithErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeExport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 4,
+                failedRecords: 1,
+                exportFileLink: "http://google.com"
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importInProgress == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusQueued,
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importCompletedNoErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                importFileName: 'fakeImport.csv',
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 5,
+                failedRecords: 0
+              };
+            } else if (WebExApiGatewayConstsService.csvStates.importCompletedWithErr == mockCsvStatusReq) {
+              mockResult = {
+                jobType: WebExApiGatewayConstsService.csvJobTypes.typeImport,
+                request: WebExApiGatewayConstsService.csvJobStatus.statusCompleted,
+                importFileName: 'fakeImport.csv',
+                created: '03/23/16 12:41 AM',
+                started: '03 / 23 / 16 12: 41 AM',
+                finished: '03/23/16 12:41 AM',
+                totalRecords: 5,
+                successRecords: 3,
+                failedRecords: 2,
+                errorLogLink: 'http://yahoo.com'
+              };
             }
-          };
+          }
 
-          return $q(
-            function (resolve, reject) {
-              _this.sendRestApiReq(
-                mockIt,
-                httpReqObj,
-                resolve,
-                reject
-              );
-            }
-          );
-        }, // csvStatusReq()
-
-        csvExportReq: function (
-          siteUrl
-        ) {
-          var funcName = "csvExportReq()";
-          var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl;
-          // $log.log(logMsg);
-
-          var httpReqObj = {
-            'url': 'https://' + siteUrl + '/meeting/v1//users/export',
-            'method': 'POST',
-            'headers': {
-              'Content-Type': 'application/json;charset=utf-8',
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
-            },
-            'data': {
-              'siteName': WebExUtilsFact.getSiteName(siteUrl),
-              'type': 'csv'
-            }
-          };
-
-          return $q(
-            function (resolve, reject) {
-              _this.sendRestApiReq(
-                true,
-                httpReqObj,
-                resolve,
-                reject
-              );
-            }
-          );
-        }, // csvExportReq()
-
-        csvImportReq: function (
-          siteUrl,
-          csvFile
-        ) {
-          var funcName = "csvExportReq()";
-          var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "siteUrl=" + siteUrl + "\n" +
-            "csvFile=" + csvFile;
-          // $log.log(logMsg);
-
-          var httpReqObj = {
-            'url': 'https://' + siteUrl + '/meeting/v1//users/export',
-            'method': 'POST',
-            'headers': {
-              'Content-Type': 'multipart/form-data;charset=utf-8"',
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
-            },
-            'data': {
-              'siteName': WebExUtilsFact.getSiteName(siteUrl),
-              'type': 'csv'
-            }
-          };
-
-          return $q(
-            function (resolve, reject) {
-              _this.sendRestApiReq(
-                true,
-                httpReqObj,
-                resolve,
-                reject
-              );
-            }
-          );
-        }, // csvImportReq()
-
-        csvFileDownloadReq: function (
-          siteUrl,
-          fileID) {
-          var funcName = "csvFileDownloadReq()";
-          var logMsg = "";
-
-          var httpReqObj = {
-            'url': 'https://' + siteUrl + '/meeting/v1/files/fileID',
-            'method': 'POST',
-            'headers': {
-              'Content-Type': 'application/json;charset=utf-8',
-              'Authorization': 'Bearer ' + Storage.get('accessToken')
-            }
-          };
-        }, // csvFileDownload()
+          return $q.resolve(mockResult);
+        }, // csvApiRequest()
       }; // return
     } // top level function()
   ]);

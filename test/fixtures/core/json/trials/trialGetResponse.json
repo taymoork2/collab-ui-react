@@ -3,11 +3,11 @@
   "startDate": "2015-03-10T00:00:00.000Z",
   "trialPeriod": 180,
   "offers": [{
-    "id": "CALL",
+    "id": "SQUAREDUC",
     "licenseCount": 100,
     "usageCount": 0
   }, {
-    "id": "MESSAGE",
+    "id": "COLLAB",
     "licenseCount": 100,
     "usageCount": 0
   }],
