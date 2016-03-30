@@ -18,6 +18,9 @@ var runSeq = require('run-sequence');
 var log = $.util.log;
 var path = require('path');
 var _ = require('lodash');
+var fs = require('fs');
+var glob = require('glob');
+var istanbul = require('istanbul');
 
 var modules = _.map(config.testFiles.spec, function (val, key) {
   return key;
@@ -167,6 +170,7 @@ function createGulpKarmaConfigModule(module) {
             return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
           }
         }))
+        .pipe($.replace('<module>', module))
         .pipe($.rename({
           basename: 'karma-unit-' + module,
           extname: '.js'
@@ -219,4 +223,25 @@ function karmaConfigParallelArray() {
     }
   });
   return karmaTasks;
+}
+
+gulp.task('karma-combine-coverage', karmaCombineCoverage);
+
+function karmaCombineCoverage() {
+  var dateStart = new Date();
+  var collector = new istanbul.Collector();
+  var reporter = new istanbul.Reporter(undefined, 'coverage/unit/combined/');
+
+  glob('coverage/unit/json/*.json', {}, function (er, files) {
+    _.forEach(files, function (file) {
+      collector.add(JSON.parse(fs.readFileSync(file, 'utf8')));
+    });
+
+    reporter.addAll(['html', 'cobertura']);
+    reporter.write(collector, true, function () {
+      var dateEnd = new Date();
+      var duration = (dateEnd - dateStart) / 1000;
+      messageLogger('Finished \'karma-combine-coverage\' after ' + duration + 's');
+    });
+  });
 }

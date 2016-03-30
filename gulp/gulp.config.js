@@ -16,6 +16,7 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var examples = 'examples';
 
   var config = {
     build: build,
@@ -35,6 +36,7 @@ module.exports = function () {
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
     cache: '.cache',
+    examples: examples,
 
     gulpFiles: gulpFiles,
 
@@ -98,6 +100,7 @@ module.exports = function () {
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
         vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
+        node_modules + 'karma-ng-html2js-preprocessor/lib/index.js'
       ],
       global: [
         test + '/global.spec.js',
@@ -106,6 +109,7 @@ module.exports = function () {
         all: app + '/**/*.spec.js',
         core: appModules + '/core/**/*.spec.js',
         digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
+        example: [examples + '/unit/example.module.js', examples + '/unit/*'],
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
