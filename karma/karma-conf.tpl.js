@@ -34,16 +34,24 @@ module.exports = function (config) {
     preprocessors: {
       'build/scripts/**/*.js': ['coverage'],
       'build/templates-app.js': ['coverage'],
-      'build/modules/**/*.js': ['coverage']
+      'build/modules/**/*.js': ['coverage'],
+      'examples/unit/!(*.spec).js': ['coverage'],
+      'examples/unit/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      moduleName: 'exampleTemplates'
     },
 
     coverageReporter: {
       dir: 'coverage/unit',
       reporters: [{
-        type: 'cobertura'
-      }, {
         type: 'html',
         subdir: 'report-html'
+      }, {
+        type: 'json',
+        subdir: 'json',
+        file: 'coverage-<module>.json'
       }]
     },
 
@@ -80,7 +88,8 @@ module.exports = function (config) {
       'karma-jasmine',
       'karma-sinon',
       'karma-junit-reporter',
-      'karma-htmlfile-reporter'
+      'karma-htmlfile-reporter',
+      'karma-ng-html2js-preprocessor'
     ],
 
     // Continuous Integration mode

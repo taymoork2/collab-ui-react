@@ -864,12 +864,12 @@ angular
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVModals/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
               controllerAs: 'siteCSVResult',
             }
           },
           params: {
-            csvStatusObj: null
+            siteRow: null
           }
         })
         .state('site-list.site-settings', {
@@ -1821,18 +1821,6 @@ angular
           },
           data: {
             displayName: 'Overview'
-          },
-          params: {
-            clusterId: null,
-            serviceType: null
-          }
-        })
-        .state('cluster-details.cluster-settings', {
-          templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
-          controller: 'ExpresswayClusterSettingsController',
-          controllerAs: 'expresswayClusterSettingsCtrl',
-          data: {
-            displayName: 'Edit'
           },
           params: {
             clusterId: null,

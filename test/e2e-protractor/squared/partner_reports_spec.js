@@ -89,8 +89,7 @@ describe('Partner Reports', function () {
       utils.click(reports.getOption(reports.customerSelect, customer));
     });
 
-    // Disabling the following Tests until intermittent card resizing failures are fixed
-    xit('should change to display only engagement reports', function () {
+    it('should change to display only engagement reports', function () {
       utils.click(reports.engagement);
 
       // engagement graphs
@@ -107,29 +106,16 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.partnerMetricsHeader);
-      utils.expectIsNotDisplayed(reports.partnerMetricsDescription);
       utils.expectIsNotDisplayed(reports.callMetricsGraph);
-
-      utils.expectIsNotDisplayed(reports.partnerMediaHeader);
-      utils.expectIsNotDisplayed(reports.mediaDescription);
       utils.expectIsNotDisplayed(reports.mediaQualityGraph);
     });
 
-    xit('should change to display only quality reports', function () {
+    it('should change to display only quality reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.partnerActiveHeader);
-      utils.expectIsNotDisplayed(reports.activePartnerDescription);
       utils.expectIsNotDisplayed(reports.activeUsers);
-
-      utils.expectIsNotDisplayed(reports.activePopulationHeader);
-      utils.expectIsNotDisplayed(reports.activePopulationDescription);
       utils.expectIsNotDisplayed(reports.activePopulationGraph);
-
-      utils.expectIsNotDisplayed(reports.regEndpointHeader);
-      utils.expectIsNotDisplayed(reports.endpointDescription);
       utils.expectIsNotDisplayed(reports.registeredEndpointsTable);
 
       // quality graphs
@@ -142,7 +128,7 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.mediaQualityGraph);
     });
 
-    xit('should change to display all reports', function () {
+    it('should change to display all reports', function () {
       utils.click(reports.allTypes);
 
       // active users
@@ -180,7 +166,7 @@ describe('Partner Reports', function () {
       utils.expectIsDisplayed(reports.mediaQualityGraph);
     });
 
-    xit('should be able to show/hide most active users', function () {
+    it('should be able to show/hide most active users', function () {
       reports.showHideActiveVisibility(true, false, true);
       utils.expectIsDisplayed(reports.showmostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);

@@ -234,6 +234,7 @@ describe('Authinfo:', function () {
 
   describe('initializeTabs', function () {
     var tabConfig;
+    var states;
     beforeEach(function () {
       tabConfig = [{
         tab: 'tab1',
@@ -260,8 +261,30 @@ describe('Authinfo:', function () {
           state: 'subTab2',
           link: '/subTab2'
         }]
+      }, {
+        tab: 'devTab',
+        icon: 'devTab.icon',
+        title: 'devTab.title',
+        desc: 'devTab.desc',
+        state: 'devTab',
+        link: '/devTab',
+        hideProd: true
+      }, {
+        tab: 'devMenu',
+        icon: 'devMenu.icon',
+        title: 'devMenu.title',
+        hideProd: true,
+        subPages: [{
+          tab: 'subDevTab',
+          icon: 'subDevTab.icon',
+          title: 'subDevTab.title',
+          desc: 'subDevTab.desc',
+          state: 'subDevTab',
+          link: '/subDevTab'
+        }]
       }];
       provide.value('tabConfig', tabConfig);
+      states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
     });
 
     it('should remove all tabs not allowed', function () {
@@ -273,7 +296,7 @@ describe('Authinfo:', function () {
 
     it('should remove a single tab that is not allowed', function () {
       setupConfig({
-        publicStates: ['subTab1', 'subTab2']
+        publicStates: _.difference(states, ['tab1'])
       });
       var Authinfo = setupUser();
 
@@ -286,7 +309,7 @@ describe('Authinfo:', function () {
 
     it('should remove a single subPage that is not allowed', function () {
       setupConfig({
-        publicStates: ['tab1', 'subTab2']
+        publicStates: _.difference(states, ['subTab1'])
       });
       var Authinfo = setupUser();
 
@@ -299,7 +322,7 @@ describe('Authinfo:', function () {
 
     it('should remove a subPage parent if all subPages are not allowed', function () {
       setupConfig({
-        publicStates: ['tab1']
+        publicStates: _.difference(states, ['subTab1', 'subTab2'])
       });
       var Authinfo = setupUser();
 
@@ -312,9 +335,28 @@ describe('Authinfo:', function () {
 
     it('should keep tab structure if all pages are allowed', function () {
       setupConfig({
-        publicStates: ['tab1', 'subTab1', 'subTab2']
+        publicStates: states
       });
       var Authinfo = setupUser();
+
+      Authinfo.initializeTabs();
+      expect(Authinfo.getTabs()).toEqual(tabConfig);
+    });
+
+    it('should remove hideProd tabs and subPages of hideProd tabs if in production', function () {
+      setupConfig({
+        publicStates: states,
+        isProd: function () {
+          return true;
+        }
+      });
+      var Authinfo = setupUser();
+      _.remove(tabConfig, {
+        tab: 'devTab'
+      });
+      _.remove(tabConfig, {
+        tab: 'devMenu'
+      });
 
       Authinfo.initializeTabs();
       expect(Authinfo.getTabs()).toEqual(tabConfig);

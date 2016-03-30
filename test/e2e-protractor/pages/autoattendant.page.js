@@ -6,6 +6,7 @@ var AutoAttendantPage = function () {
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
+  this.openClosedAA = element(by.css('.icon-OpenClosed'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -121,8 +122,26 @@ var AutoAttendantPage = function () {
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
+  this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
+  this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));
+  this.day4 = element(by.cssContainingText('cs-checkbox', 'Thursday'));
+  this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
+  this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
+  this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
+  this.modalcancel = element(by.id('cancelDeleteFeature'));
+
+  this.openHoursLane = element(by.name('bottomLane1')).element(by.name('openHours'));
+  this.openHoursSayMessage = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.openHoursPhoneMenu = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.openHoursEndCall = element(by.name('bottomLane1')).element(by.name('endCall'));
+  this.closedHoursLane = element(by.name('bottomLane3')).element(by.name('closedHours'));
+  this.closedHoursSayMessage = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.closedHoursPhoneMenu = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
+  this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
+  this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
 
@@ -133,7 +152,6 @@ var AutoAttendantPage = function () {
   function assertCreateSuccess() {
     notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
   }
-
 };
 
 module.exports = AutoAttendantPage;

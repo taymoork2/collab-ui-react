@@ -23,23 +23,31 @@
           <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
-              <span class="csv-results" ng-if="row.entity.exportFinishedWithErrors" tooltip-append-to-body="true" 
-                     tooltip-animation="false"
-                     tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
-                     tooltip-placement="top">
-                <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
-                     class="icon-warning icon webex-attention-text"></i>
+              <span class="csv-results" 
+                    ng-if="row.entity.exportFinishedWithErrors" 
+                    tooltip-append-to-body="true" 
+                    tooltip-animation="false"
+                    tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
+                    tooltip-placement="top">
+                     
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   
+                  <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
+                     class="icon-warning icon webex-attention-text"></i>
+                     
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
               
-              <span class="csv-results" ng-if="!row.entity.exportFinishedWithErrors">
+              <span class="csv-results" 
+                    ng-if="!row.entity.exportFinishedWithErrors">
+                    
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
                    ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
@@ -114,22 +122,31 @@
               <!-- Three word spaces -->
               &nbsp; &nbsp; &nbsp;
                 
-              <span class="csv-results" ng-if="row.entity.importFinishedWithErrors" tooltip-append-to-body="true" 
-                     tooltip-animation="false"
-                     tooltip="{{::'siteList.importFinishedWithErrorsTooltip' | translate}}"
-                     tooltip-placement="top">
-                <i id="{{row.entity.license.siteUrl}}_importResultIcon" 
-                     class="icon-warning icon webex-attention-text"></i>
+              <span class="csv-results" 
+                    ng-if="row.entity.importFinishedWithErrors" 
+                    tooltip-append-to-body="true" 
+                    tooltip-animation="false"
+                    tooltip="{{::'siteList.importFinishedWithErrorsTooltip' | translate}}"
+                    tooltip-placement="top">
+                     
                 <a id="{{row.entity.license.siteUrl}}_importResult"
                    ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   
+                  <i id="{{row.entity.license.siteUrl}}_importResultIcon" 
+                     class="icon-warning icon webex-attention-text"></i>
+                     
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
-              <span class="csv-results" ng-if="!row.entity.importFinishedWithErrors">
+              
+              <span class="csv-results" 
+                    ng-if="!row.entity.importFinishedWithErrors">
+                    
                 <a id="{{row.entity.license.siteUrl}}_importResult"
                    ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
-                   ui-sref="site-csv-results({csvStatusObj:row.entity.csvStatusObj})">
+                   ui-sref="site-csv-results({siteRow:row.entity})">
+                   
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>

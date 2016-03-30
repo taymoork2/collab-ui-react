@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -28,13 +28,13 @@
       'name': 'Search'
     };
     vm.filters = [{
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
-      name: 'Hunt Group',
+      name: $translate.instant('huronHuntGroup.modalTitle'),
       filterValue: 'HG'
     }, {
-      name: 'Auto Attendant',
+      name: $translate.instant('autoAttendant.title'),
       filterValue: 'AA'
     }];
     /* LIST OF FEATURES

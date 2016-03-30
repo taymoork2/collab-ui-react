@@ -38,6 +38,9 @@
           if (!Authinfo.isAllowedState(to.name)) {
             e.preventDefault();
             $state.go('unauthorized');
+          } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+            e.preventDefault();
+            $state.go('firsttimewizard');
           }
         } else {
           e.preventDefault();
