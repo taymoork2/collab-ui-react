@@ -39,7 +39,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
 
     controller = _$controller_('DevicesCtrlHuron', {
-      $scope: $scope,
+      $scope: $scope
     });
 
     $scope.$apply();
@@ -123,4 +123,3 @@ describe('Controller: DevicesCtrlHuron', function () {
     });
   });
 });
-

@@ -42,7 +42,7 @@
 
     vm.showGenerateOtpButton = function () {
       return (isHuronEnabled() && vm.devices != null && Object.keys(vm.devices).length == 0);
-    }
+    };
 
     vm.showDeviceDetails = function (device) {
       vm.currentDevice = device;
