@@ -216,7 +216,16 @@ function createGulpRunKarmaModule(module) {
           options.singleRun = true;
         }
       }
-      karma.start(options, done);
+      karma.start(options, function (result) {
+        if (result) {
+          // Exit process if we have an error code
+          // Avoids having gulp formatError stacktrace
+          process.exit(result);
+        } else {
+          // Otherwise end task like normal
+          done();
+        }
+      });
     } else {
       log($.util.colors.yellow('--nounit **Skipping Karma Tests'));
       return done();
