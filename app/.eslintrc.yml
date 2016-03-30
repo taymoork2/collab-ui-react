@@ -1,6 +1,6 @@
 ---
   extends:
-    - "../.eslintrc.yaml"
+    - "../.eslintrc.yml"
     - "angular"
   rules:
     # airbnb-config inherited rules
