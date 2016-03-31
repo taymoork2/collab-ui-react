@@ -17,7 +17,7 @@ module.exports = function () {
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
   var examples = 'examples';
-  var e2eRunCounterEnvName = 'E2E_RUN_COUNTER';
+  var cache = '.cache';
 
   var config = {
     build: build,
@@ -25,9 +25,10 @@ module.exports = function () {
     test: test,
     vendor: vendor,
     coverage: 'coverage',
-    e2e: 'test/e2e-protractor',
+    e2e: e2e,
     e2eFailRetry: '.e2e-fail-retry',
-    e2eRunCounterEnvName: e2eRunCounterEnvName,
+    e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
+    e2eReports: e2e + '/reports',
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -37,7 +38,7 @@ module.exports = function () {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
-    cache: '.cache',
+    cache: cache,
     examples: examples,
 
     gulpFiles: gulpFiles,
@@ -249,12 +250,6 @@ module.exports = function () {
       ' */\n' +
       '',
 
-    isJenkins: isJenkins,
-
-    // TODO: consider consolidating all e2e-related properties and methods into a 'e2e' dict
-    setE2eRunCounter: setE2eRunCounter,
-    getE2eRunCounter: getE2eRunCounter,
-
     beautifyFiles: [
       app + '/**/*.js',
       app + '/**/*.json',
@@ -267,18 +262,4 @@ module.exports = function () {
   };
 
   return config;
-
-  ////////////////
-
-  function isJenkins() {
-    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
-  }
-
-  function setE2eRunCounter(runCounter) {
-    process.env[e2eRunCounterEnvName] = runCounter;
-  }
-
-  function getE2eRunCounter() {
-    return process.env[e2eRunCounterEnvName] && +process.env[e2eRunCounterEnvName] || 0;
-  }
 };
