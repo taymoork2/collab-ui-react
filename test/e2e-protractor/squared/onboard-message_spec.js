@@ -20,10 +20,6 @@ describe('Onboard users with Message Service', function () {
     utils.click(users.closeSidePanel);
   }
 
-  beforeEach(function () {
-    log.verbose = true;
-  });
-
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
