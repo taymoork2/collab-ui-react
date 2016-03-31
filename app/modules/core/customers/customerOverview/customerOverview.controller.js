@@ -6,12 +6,12 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, Log, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService, Orgservice, Notification) {
+  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
-    var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
+    vm.customerOrgId = vm.currentCustomer.customerOrgId;
 
     vm.reset = reset;
     vm.saveLogoSettings = saveLogoSettings;
@@ -46,20 +46,24 @@
       }
     });
 
-    initCustomer();
-    getLogoSettings();
-    isTestOrg();
+    init();
 
     vm.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
-        BrandService.enableCustomerLogos(customerOrgId);
+        BrandService.enableCustomerLogos(vm.customerOrgId);
       } else {
-        BrandService.disableCustomerLogos(customerOrgId);
+        BrandService.disableCustomerLogos(vm.customerOrgId);
       }
     }, 2000, {
       'leading': true,
       'trailing': false
     });
+
+    function init() {
+      initCustomer();
+      getLogoSettings();
+      getIsTestOrg();
+    }
 
     function resetForm() {
       if (vm.form) {
@@ -90,7 +94,7 @@
         .then(function (settings) {
           vm.logoOverride = settings.allowCustomerLogos;
         });
-      BrandService.getSettings($stateParams.currentCustomer.customerOrgId)
+      BrandService.getSettings(vm.customerOrgId)
         .then(function (settings) {
           vm.usePartnerLogo = settings.usePartnerLogo;
           vm.allowCustomerLogos = settings.allowCustomerLogos;
@@ -132,7 +136,7 @@
       if (licIds.length > 0) {
         Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
       } else {
-        AccountOrgService.getAccount(vm.currentCustomer.customerOrgId).success(function (data) {
+        AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
           var d = data;
           var len = d.accounts.length;
           var i = 0;
@@ -145,8 +149,8 @@
         });
       }
       $window.open($state.href('login_swap', {
-        customerOrgId: vm.currentCustomer.customerOrgId,
-        customerOrgName: vm.currentCustomer.customerName
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.customerName
       }));
     }
 
@@ -190,22 +194,23 @@
     }
 
     function isOwnOrg() {
-      return vm.currentCustomer.customerName === Authinfo.getOrgName();
+      return vm.customerName === Authinfo.getOrgName();
     }
 
-    function isTestOrg() {
+    function getIsTestOrg() {
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           vm.isTest = data.isTestOrg;
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
-      }, vm.currentCustomer.customerOrgId);
+      }, vm.customerOrgId);
     }
 
+    /* deleteTestOrg is for internal use only, 'confirm' is a bit tricky to test which is why no unit test exists */
     function deleteTestOrg() {
       if (confirm("Press OK if you want to Delete " + vm.customerName) === true) {
-        Orgservice.deleteOrg(customerOrgId);
+        Orgservice.deleteOrg(vm.customerOrgId);
         Notification.success('customerPage.deleteOrgSuccess', {
           orgName: vm.customerName
         });

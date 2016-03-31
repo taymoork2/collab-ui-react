@@ -73,7 +73,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TrialService, 'getTrial').and.returnValue($q.when({}));
-    spyOn(Orgservice, 'getOrg').and.returnValue($q.when({}));
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
     spyOn($window, 'confirm').and.returnValue(true);
 
     controller = $controller('CustomerOverviewCtrl', {
@@ -135,12 +137,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
   });
 
   describe('should call isTestOrg successfully', function () {
-    beforeEach(function () {
-      testOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
-    });
-
     it('should identify as a test org', function () {
-      expect(testOrg.isTestOrg).toBe(true);
+      expect(controller.isTest).toBe(true);
     });
   });
+
 });
