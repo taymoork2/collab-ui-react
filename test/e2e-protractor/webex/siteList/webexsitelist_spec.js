@@ -1,5 +1,7 @@
 'use strict';
 
+/*global webEx, sitelist*/
+
 describe('Services > Webex page aka Site List page', function () {
 
   beforeEach(function () {
@@ -49,7 +51,7 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  //Start tests to detect 'Not Available' and warning icon conditions 
+  //Start tests to detect 'Not Available' and warning icon conditions
   describe("test CSV 'Not Anavailable' and warning icon conditions : ", function () {
     var setup = false;
 

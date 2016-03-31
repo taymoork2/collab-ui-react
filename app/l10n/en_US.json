@@ -755,7 +755,8 @@
     "user": "User",
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
-    "postpone": "Postpone"
+    "postpone": "Postpone",
+    "continue": "Continue"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1537,6 +1538,7 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
+    "successImport": "Imported {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
@@ -1613,7 +1615,11 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "selectAA": "Select Auto Attendant",
+    "importSchedule": "Import Schedule",
+    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
     "closedBehavious": "Holidays Follow Closed Behavior",
+    "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",
       "female": "female",

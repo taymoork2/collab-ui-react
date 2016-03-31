@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
