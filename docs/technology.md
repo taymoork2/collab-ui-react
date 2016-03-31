@@ -14,5 +14,4 @@
 
 ## TypeScript & ES6(ES2015)
 
-* ES6 and TypeScript are the preferred method of writing JavaScript in the app
 * Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2

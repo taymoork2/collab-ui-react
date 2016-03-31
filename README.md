@@ -6,7 +6,7 @@ Take a moment to familiarize yourself with the following rules, guidelines, and 
 
 Learn more about the project's [technologies](docs/technology.md), [setup](docs/setup.md), [structure](docs/structure.md), and [gulp tasks](docs/gulp-tasks.md).
 
-Post any questions to the 'Atlas UI Dev Team' Spark room. If you need an invite to the room, please open an [issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new) and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
+Post any questions to the 'Atlas UI Dev Team' Spark room. Contributors are expected to be actively engaged on Spark. If you need more help or access to a Spark room, please reach out to a [core team member](http://cs.co/atlas-triage#im-still-stuck-who-can-i-contact).
 
 ## Rules and Guidelines
 
@@ -25,7 +25,8 @@ Adherence is mandatory. Please refactor non-compliant code.
   * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
   * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
   * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
-
+* **Build failure triage is mandatory**. When you push code that breaks the builds, you are responsible to investigate
+  and triage this failure before attempting another push. More info on the [triage wiki](http://cs.co/atlas-triage).
 
 ## Contributing
 
@@ -66,6 +67,7 @@ Adherence is mandatory. Please refactor non-compliant code.
   * `git push <fork> <local-branch>`
   * On your fork, select your branch and click `Pull request` to create a new PR
   * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
+    * Add a [core team member](http://cs.co/atlas-triage#im-still-stuck-who-can-i-contact) if needed
   * Respond to feedback and push new commits if necessary
 7. Push to Jenkins for validated merge (after approved review)
   * [Jenkins Validated Merge](https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web/repo.git/)
@@ -76,5 +78,5 @@ Adherence is mandatory. Please refactor non-compliant code.
 8. Jenkins Build Triage
   * Build failures happen - sometimes they are related to your work and sometimes they aren't
   * All contributors are required to triage their failure to a root cause
-  * A GitHub Issue (GHI) will be created with failure details and you will be notified how to triage
+  * A GitHub Issue (GHI) will be created with failure details and you will be notified on Spark how to triage
   * [Atlas Triage Wiki](http://cs.co/atlas-triage)
