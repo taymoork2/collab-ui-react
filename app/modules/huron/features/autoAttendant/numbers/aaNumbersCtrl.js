@@ -6,8 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService, AAModelService, AACommonService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -383,6 +382,9 @@
         function (response) {
           // if we failed to read CMI, we might have discrepancy, and should warn user, unless we have no numbers in CE, and thus no entry in CMI is OK
           if (currentResources.length > 0) {
+            // Use AACommonService to thwart the saving when it is in this state
+            AACommonService.setIsValid('readErrorCMI', false);
+
             vm.aaModel.possibleNumberDiscrepancy = true;
             Notification.error('autoAttendant.errorReadCMI');
           }
