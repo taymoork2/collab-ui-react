@@ -1033,6 +1033,7 @@
 
     function saveCompanyNumbers() {
       return saveExternalNumbers()
+        .catch(_.noop)
         .then(loadExternalNumbers);
     }
 
@@ -1120,11 +1121,10 @@
                   return $q.reject(response);
                 });
             }
-          } else {
-            return deleteCallerId()
-              .then(function () {
-                clearCallerIdFields();
-              });
+          } else if (!_.isEmpty(_.get(vm, 'model.callerId.externalNumber.uuid'))) {
+            return $q.when(true)
+              .then(deleteCallerId)
+              .then(clearCallerIdFields);
           }
         })
         .catch(function (response) {
@@ -1308,7 +1308,7 @@
         });
         // add the existing voicemailPilotNumber back into the list of options
         if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.find(localScope.to.options, function (externalNumber) {
-            return externalNumber.pattern === vm.model.site.voicemailPilotNumber.pattern;
+            return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
           })) {
           var tmpExternalNumber = {
             pattern: vm.model.site.voicemailPilotNumber,
