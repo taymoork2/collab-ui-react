@@ -53,41 +53,6 @@ angular.module('Hercules')
         });
       };
 
-      var getAllWebExSiteOrgLevel = function (callback) {
-        var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
-        if (conferenceServices === undefined) {
-          callback(false);
-        } else {
-          callback(null, conferenceServices.map(function (value) {
-            return value.license.siteUrl.substring(0, value.license.siteUrl.length - String(".webex.com").length); // remove ".webex.com"
-          }));
-        }
-      };
-
-      var getDefaultWebExSiteOrgLevel = function (callback) {
-        $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings')
-          .success(function (data) {
-            callback(null, data.defaultWebExSiteOrgLevel);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      };
-
-      var setDefaultWebExSiteOrgLevel = function (defaultWebExSiteOrgLevel, callback) {
-        $http
-          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/settings', {
-            calSvcDefaultWebExSite: defaultWebExSiteOrgLevel
-          })
-          .success(function () {
-            callback(null);
-          })
-          .error(function () {
-            callback(arguments);
-          });
-      };
-
       var getEmailSubscribers = function (serviceId, callback) {
         $http
           .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
@@ -186,9 +151,6 @@ angular.module('Hercules')
         acknowledgeService: acknowledgeService,
         getServices: getServices,
         servicesInOrg: servicesInOrg,
-        getAllWebExSiteOrgLevel: getAllWebExSiteOrgLevel,
-        getDefaultWebExSiteOrgLevel: getDefaultWebExSiteOrgLevel,
-        setDefaultWebExSiteOrgLevel: setDefaultWebExSiteOrgLevel,
         getEmailSubscribers: getEmailSubscribers,
         setEmailSubscribers: setEmailSubscribers
       };
