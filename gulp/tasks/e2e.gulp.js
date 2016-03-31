@@ -5,6 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
+var processEnvUtil = require('../utils/processEnvUtil.gulp')();
 var $ = require('gulp-load-plugins')({
   lazy: true
 });
@@ -42,6 +43,8 @@ gulp.task('e2e', function (done) {
   var e2eTasks = [];
   var retryTasks = mkRetryTaskList();
 
+  // important: only call 'protractor:clean' before running tests, as jenkins must use the results
+  //   data for further post-build processing
   e2eTasks = ['e2e:setup',
       'protractor:clean',
       'sauce:start',
@@ -50,7 +53,6 @@ gulp.task('e2e', function (done) {
     .concat(retryTasks)
     .concat([
       'sauce:stop',
-      'protractor:clean',
       'connect:stop',
       done
     ]);
@@ -109,7 +111,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
           tests = tests.filter(function (test) {
             return test.trim() !== '';
           });
-          messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(specs));
+          messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(specs));
         } catch (err) {
           messageLogger('Error:: ' + $.util.colors.red(err));
         }
@@ -118,16 +120,16 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       }
     } else if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
-      messageLogger('Running End 2 End tests from module: ' + $.util.colors.white.bold(specs));
+      messageLogger('Running End 2 End tests from module: ' + $.util.colors.gray(specs));
     } else {
       tests = specs.split(',');
-      messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(specs));
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(specs));
     }
   } else if (args['files-from']) {
     var filesFrom = args['files-from'];
     try {
       tests = fileListParser.toList(filesFrom);
-      messageLogger('Running End 2 End tests from file: ' + $.util.colors.white.bold(filesFrom));
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(filesFrom));
     } catch (err) {
       messageLogger('Error:: ' + $.util.colors.red(err));
     }
@@ -142,7 +144,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     messageLogger('Running End 2 End tests from all modules.');
   }
 
-  messageLogger('#### Starting E2E Run: ' + config.getE2eRunCounter());
+  messageLogger('#### Starting E2E Run: ' + processEnvUtil.getE2eRunCounter());
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
@@ -157,8 +159,7 @@ gulp.task('protractor:retry', function (done) {
 
     // mv default retry file to more specific name correlating to its run
     // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
-    retrySpecList = config.cache + '/'
-      + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + config.getE2eRunCounter();
+    retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + processEnvUtil.getE2eRunCounter();
     fs.renameSync(config.e2eFailRetry, retrySpecList);
 
     // update the source of specs for the next run
@@ -166,7 +167,7 @@ gulp.task('protractor:retry', function (done) {
     delete args.specs;
 
     // now we can increment the run counter and re-run
-    config.setE2eRunCounter(config.getE2eRunCounter() + 1);
+    processEnvUtil.setE2eRunCounter(processEnvUtil.getE2eRunCounter() + 1);
     runSeq('protractor', done);
   } else {
     messageLogger('Nothing to retry');
@@ -188,7 +189,7 @@ gulp.task('set-env', function () {
 });
 
 gulp.task('protractor:clean', function (done) {
-  del([config.e2eFailRetry], done);
+  del([config.e2eFailRetry, config.e2eFailRetrySpecLists, config.e2eReports], done);
 });
 
 /**
@@ -296,12 +297,6 @@ function sourceProduction() {
 }
 
 function mkRetryTaskList() {
-  var list = []
-  var i;
-  var runCounterMax = process.env.E2E_RUN_COUNTER_MAX && +process.env.E2E_RUN_COUNTER_MAX || 0;
-  for (i = 0; i < runCounterMax; i++) {
-    list.push('protractor:retry');
-  }
-
-  return list;
+  var runCounterMax = processEnvUtil.getE2eRunCounterMax();
+  return _.fill(Array(runCounterMax), 'protractor:retry');
 }
