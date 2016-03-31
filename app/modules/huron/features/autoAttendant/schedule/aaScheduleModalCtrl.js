@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -24,6 +24,7 @@
     vm.isHolidaysSavable = isHolidaysSavable;
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
+    vm.openImportModal = openImportModal;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = false;
@@ -372,6 +373,30 @@
       });
       _.each(vm.dayOptions, function (day) {
         day.labelTranslate = $translate.instant(day.label);
+      });
+    }
+
+    function openImportModal() {
+      var importModal = $modal.open({
+        templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
+        type: 'dialog',
+        controller: 'AAScheduleImportCtrl',
+        controllerAs: 'import'
+      });
+      importModal.result.then(function (allHours) {
+        if (allHours) {
+          Notification.success('autoAttendant.successImport', {
+            holidays: allHours.holidays.length,
+            hours: allHours.hours.length
+          });
+          allHours.hours.forEach(function (value) {
+            vm.openhours.unshift(value);
+          });
+          allHours.holidays.forEach(function (value) {
+            vm.holidays.unshift(value);
+          });
+          vm.holidaysForm.$setDirty();
+        }
       });
     }
 

@@ -701,3 +701,8 @@ exports.quickDeleteUser = function (bFirst, name) {
 exports.waitForModal = function () {
   return this.wait(element(by.css('.modal-dialog')));
 };
+
+exports.selectDropdown = function (dropdown, option) {
+  this.click(element(by.css(dropdown + ' a.select-toggle')));
+  this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
+};

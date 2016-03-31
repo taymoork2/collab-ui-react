@@ -250,6 +250,7 @@
     </div>
   </div>
   <div class="modal-footer">
+    <button id="importSchedule" class="pull-left" ng-click="aaScheduleModalCtrl.openImportModal()" translate="autoAttendant.importSchedule"></button>
     <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
     <button id="saveOpenClosedBtn" cs-btn class="btn btn-primary"
             ng-disabled="!aaScheduleModalCtrl.isSavable() || (aaScheduleModalCtrl.hoursForm.$pristine && aaScheduleModalCtrl.holidaysForm.$pristine)"

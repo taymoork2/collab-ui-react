@@ -117,6 +117,15 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
+  it('should not save the company caller ID if off and no callerId exists', function () {
+    controller.model.callerId.callerIdEnabled = false;
+    controller.save();
+    $scope.$apply();
+
+    expect(CallerId.saveCompanyNumber).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
   it('should notify error when save caller ID failed', function () {
     controller.model.callerId.callerIdEnabled = true;
     controller.model.callerId.uuid = '';
