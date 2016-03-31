@@ -14,6 +14,9 @@
       getMonths: getMonths,
       getDays: getDays,
       getRanks: getRanks,
+      findMonthByNumber: findMonthByNumber,
+      findRankByNumber: findRankByNumber,
+      findDayByAbbr: findDayByAbbr,
       addHoursRange: addHoursRange,
       getHoursRanges: getHoursRanges,
       getDefaultDayHours: getDefaultDayHours

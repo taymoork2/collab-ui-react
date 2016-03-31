@@ -71,7 +71,8 @@ describe('Controller: AAScheduleModalCtrl', function () {
     var aaUiModel = {
       openHours: {},
       ceInfo: {
-        name: 'AA2'
+        name: 'AA2',
+        scheduleId: '1'
       }
     };
     var date = new Date();
@@ -142,7 +143,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       holidays: holidays
     };
 
-    //spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when(calendar));
     spyOn(AACalendarService, 'createCalendar').and.returnValue($q.when(calendar));
@@ -157,16 +157,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
     Notification = jasmine.createSpyObj('Notification', ['success', 'error']);
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
-    //controller = $controller('AAScheduleModalCtrl as vm', {
-    //  $scope: $scope,
-    //  Notification: Notification,
-    //  $modalInstance: $modalInstance,
-    //  AACalendarService: AACalendarService,
-    //  AAICalService: AAICalService,
-    //  AAModelService: AAModelService,
-    //  AAUiModelService: AAUiModelService
-    //});
-    //$scope.$apply();
   }));
 
   afterEach(function () {
