@@ -104,6 +104,7 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 // Save the test AA name here, this is also accessed from
 // auto-attendant_spec.js
 exports.testAAName = 'AA for Atlas e2e Tests';
+exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 // deleteTestAA - Delete the Test AA via the CES API
 //
 // Check all of the autoattendants eturned for this
@@ -115,9 +116,9 @@ exports.testAAName = 'AA for Atlas e2e Tests';
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAA = function (bearer, data) {
-
+  var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
-    if (data[i].callExperienceName === this.testAAName) {
+    if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
 
       return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
 

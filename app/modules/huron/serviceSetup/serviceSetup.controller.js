@@ -477,10 +477,13 @@
             $scope.$watchCollection(function () {
               return vm.externalNumberPool;
             }, function (externalNumberPool) {
-              $scope.to.options = _.filter(externalNumberPool, function (externalNumber) {
-                externalNumber.label = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
-                return externalNumber.pattern !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
-              });
+              $scope.to.options = _.chain(externalNumberPool)
+                .filter(function (externalNumber) {
+                  externalNumber.label = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
+                  return externalNumber.pattern !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
+                })
+                .concat(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber)
+                .value();
             });
 
             $scope.$watch(function () {

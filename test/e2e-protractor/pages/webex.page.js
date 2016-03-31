@@ -1,5 +1,7 @@
 'use strict';
 
+/*global webEx*/
+
 var request = require('request');
 
 function post(url, body) {

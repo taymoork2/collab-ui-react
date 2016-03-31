@@ -40,7 +40,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
       // assert we see the create successful message
-      autoattendant.assertCreateSuccess();
+      autoattendant.assertCreateSuccess(deleteUtils.testAAName);
 
       // we should see the AA edit page now
       utils.expectIsDisplayed(autoattendant.addAANumbers);
