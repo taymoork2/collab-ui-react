@@ -11,7 +11,7 @@ describe('Services > Webex page aka Site List page', function () {
     utils.dumpConsoleErrors();
   });
 
-  describe(': CSV Export/Import : ', function () {
+  xdescribe(': CSV Export/Import : ', function () {
     var setup = false;
 
     beforeAll(function () {
@@ -50,7 +50,7 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start tests to detect 'Not Available' and warning icon conditions 
-  describe("test CSV 'Not Anavailable' and warning icon conditions : ", function () {
+  xdescribe("test CSV 'Not Anavailable' and warning icon conditions : ", function () {
     var setup = false;
 
     beforeAll(function () {
