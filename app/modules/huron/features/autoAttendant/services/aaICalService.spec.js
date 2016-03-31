@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: AACalendarService', function () {
+describe('Service: AACalendarService', function () {
   var AAICalService, ical;
   // require('jasmine-collection-matchers');
   var starttime, endtime;
@@ -30,103 +30,103 @@ fdescribe('Service: AACalendarService', function () {
   };
 
   var months = [{
-    label: 'january',
+    label: 'months.january',
     index: 0,
     number: 1
   }, {
-    label: 'february',
+    label: 'months.february',
     index: 1,
     number: 2
   }, {
-    label: 'march',
+    label: 'months.march',
     index: 2,
     number: 3
   }, {
-    label: 'april',
+    label: 'months.april',
     index: 3,
     number: 4
   }, {
-    label: 'may',
+    label: 'months.may',
     index: 4,
     number: 5
   }, {
-    label: 'june',
+    label: 'months.june',
     index: 5,
     number: 6
   }, {
-    label: 'july',
+    label: 'months.july',
     index: 6,
     number: 7
   }, {
-    label: 'august',
+    label: 'months.august',
     index: 7,
     number: 8
   }, {
-    label: 'september',
+    label: 'months.september',
     index: 8,
     number: 9
   }, {
-    label: 'october',
+    label: 'months.october',
     index: 9,
     number: 10
   }, {
-    label: 'november',
+    label: 'months.november',
     index: 10,
     number: 11
   }, {
-    label: 'december',
+    label: 'months.december',
     index: 11,
     number: 12
   }];
 
   var days = [{
-    label: 'monday',
+    label: 'weekDays.monday',
     index: '1',
     abbr: 'MO'
   }, {
-    label: 'tuesday',
+    label: 'weekDays.tuesday',
     index: '2',
     abbr: 'TU'
   }, {
-    label: 'wednesday',
+    label: 'weekDays.wednesday',
     index: '3',
     abbr: 'WE'
   }, {
-    label: 'thursday',
+    label: 'weekDays.thursday',
     index: '4',
     abbr: 'TH'
   }, {
-    label: 'friday',
+    label: 'weekDays.friday',
     index: '5',
     abbr: 'FR'
   }, {
-    label: 'saturday',
+    label: 'weekDays.saturday',
     index: '6',
     abbr: 'SA'
   }, {
-    label: 'sunday',
+    label: 'weekDays.sunday',
     index: '0',
     abbr: 'SU'
   }];
 
   var ranks = [{
-    label: 'first',
+    label: 'ranks.first',
     index: 0,
     number: 1
   }, {
-    label: 'second',
+    label: 'ranks.second',
     index: 1,
     number: 2
   }, {
-    label: 'third',
+    label: 'ranks.third',
     index: 2,
     number: 3
   }, {
-    label: 'fourth',
+    label: 'ranks.fourth',
     index: 3,
     number: 4
   }, {
-    label: 'last',
+    label: 'ranks.last',
     index: -1,
     number: -1
   }];
@@ -452,11 +452,11 @@ fdescribe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
     });
 
-    it('add an not exact date holiday and get back holiday range with yearly recurrence (last friday of may)', function () {
+    it('add an not exact date holiday and get back holiday range with yearly recurrence (last Friday of Jan)', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
-        name: 'Last friday of May',
-        month: AAICalService.getMonths()[4],
+        name: 'Last Friday of Jan',
+        month: AAICalService.getMonths()[0],
         day: AAICalService.findDayByAbbr('FR'),
         rank: AAICalService.getRanks()[4],
         allDay: true,
@@ -476,6 +476,45 @@ fdescribe('Service: AACalendarService', function () {
       expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
       expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
       expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add an not exact date holiday and get back holiday range with yearly recurrence (first Tuesday of Feb)', function () {
+      var calendar = AAICalService.createCalendar();
+      var range = {
+        name: 'First Friday of Feb',
+        month: AAICalService.getMonths()[1],
+        day: AAICalService.findDayByAbbr('TU'),
+        rank: AAICalService.getRanks()[0],
+        allDay: true,
+        exactDate: false,
+        recurAnnually: true
+      };
+      AAICalService.addHoursRange('holiday', calendar, range);
+      var calendarRaw = {};
+      calendarRaw.scheduleData = calendar.toString();
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(1);
+      expect(rangeFromCalendar[0]).toBeDefined();
+      expect(rangeFromCalendar[0].name).toEqual(range.name);
+      expect(rangeFromCalendar[0].month).toEqual(range.month);
+      expect(rangeFromCalendar[0].day).toEqual(range.day);
+      expect(rangeFromCalendar[0].rank).toEqual(range.rank);
+      expect(rangeFromCalendar[0].allDay).toEqual(range.allDay);
+      expect(rangeFromCalendar[0].exactDate).toEqual(range.exactDate);
+      expect(rangeFromCalendar[0].recurAnnually).toEqual(range.recurAnnually);
+    });
+
+    it('add multiple holidays and get them sorted', function () {
+      var calendarRaw = {};
+      calendarRaw.scheduleData = 'BEGIN:VCALENDAR \n' + 'BEGIN:VTIMEZONE\n' + 'TZID:UTC/GMT\n' + 'X-LIC-LOCATION:UTC/GMT\n' + 'END:VTIMEZONE\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=1\n' + 'DESCRIPTION:First day of Feb\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150201T000000\n' + 'DTEND;TZID=UTC/GMT:20150201T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=10\n' + 'DESCRIPTION:Feb 10th\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150210T000000\n' + 'DTEND;TZID=UTC/GMT:20150210T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=WE;BYSETPOS=2\n' + 'DESCRIPTION:Second Wed of Feb\;2\;2\;WE\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20170208T000000\n' + 'DTEND;TZID=UTC/GMT:20170208T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=TH;BYSETPOS=4\n' + 'DESCRIPTION:Thanksgiving\;11\;4\;TH\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20161124T000000\n' + 'DTEND;TZID=UTC/GMT:20161124T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Christmas\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20101225T000000\n' + 'DTEND;TZID=UTC/GMT:20101225T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Last Tuesday of Jan\;1\;-1\;TU\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20120124T000000\n' + 'DTEND;TZID=UTC/GMT:20120124T235900\n' + 'END:VEVENT\n' + 'END:VCALENDAR';
+      var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
+      expect(rangeFromCalendar.length).toEqual(6);
+      expect(rangeFromCalendar[0].name).toEqual("Christmas");
+      expect(rangeFromCalendar[1].name).toEqual("Last Tuesday of Jan");
+      expect(rangeFromCalendar[2].name).toEqual("Thanksgiving");
+      expect(rangeFromCalendar[3].name).toEqual("First day of Feb");
+      expect(rangeFromCalendar[4].name).toEqual("Second Wed of Feb");
+      expect(rangeFromCalendar[5].name).toEqual("Feb 10th");
     });
   });
 });

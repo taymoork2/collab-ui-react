@@ -6,7 +6,7 @@
     .factory('AAICalService', AAICalService);
 
   /* @ngInject */
-  function AAICalService(ical, $translate) {
+  function AAICalService(ical) {
 
     //TODO: Remove the find method
     var service = {
@@ -64,137 +64,134 @@
 
     function getMonths() {
       return [{
-        label: 'january',
+        label: 'months.january',
         index: 0,
         number: 1
       }, {
-        label: 'february',
+        label: 'months.february',
         index: 1,
         number: 2
       }, {
-        label: 'march',
+        label: 'months.march',
         index: 2,
         number: 3
       }, {
-        label: 'april',
+        label: 'months.april',
         index: 3,
         number: 4
       }, {
-        label: 'may',
+        label: 'months.may',
         index: 4,
         number: 5
       }, {
-        label: 'june',
+        label: 'months.june',
         index: 5,
         number: 6
       }, {
-        label: 'july',
+        label: 'months.july',
         index: 6,
         number: 7
       }, {
-        label: 'august',
+        label: 'months.august',
         index: 7,
         number: 8
       }, {
-        label: 'september',
+        label: 'months.september',
         index: 8,
         number: 9
       }, {
-        label: 'october',
+        label: 'months.october',
         index: 9,
         number: 10
       }, {
-        label: 'november',
+        label: 'months.november',
         index: 10,
         number: 11
       }, {
-        label: 'december',
+        label: 'months.december',
         index: 11,
         number: 12
       }];
     }
 
     function findMonthByNumber(number) {
-      var months = getMonths();
-      for (var i = 0; i < months.length; i++) {
-        if (number == months[i].number) {
-          return months[i];
+      return _.find(getMonths(), function (month) {
+        if (number == month.number) {
+          return month;
         }
-      }
+      });
     }
 
     function getDays() {
       return [{
-        label: 'monday',
+        label: 'weekDays.monday',
         index: '1',
         abbr: 'MO'
       }, {
-        label: 'tuesday',
+        label: 'weekDays.tuesday',
         index: '2',
         abbr: 'TU'
       }, {
-        label: 'wednesday',
+        label: 'weekDays.wednesday',
         index: '3',
         abbr: 'WE'
       }, {
-        label: 'thursday',
+        label: 'weekDays.thursday',
         index: '4',
         abbr: 'TH'
       }, {
-        label: 'friday',
+        label: 'weekDays.friday',
         index: '5',
         abbr: 'FR'
       }, {
-        label: 'saturday',
+        label: 'weekDays.saturday',
         index: '6',
         abbr: 'SA'
       }, {
-        label: 'sunday',
+        label: 'weekDays.sunday',
         index: '0',
         abbr: 'SU'
       }];
     }
 
     function findDayByAbbr(abbr) {
-      var days = getDays();
-      for (var i = 0; i < days.length; i++) {
-        if (abbr === days[i].abbr) {
-          return days[i];
+      return _.find(getDays(), function (day) {
+        if (abbr === day.abbr) {
+          return day;
         }
-      }
+      });
     }
 
     function getRanks() {
       return [{
-        label: 'first',
+        label: 'ranks.first',
         index: 0,
         number: 1
       }, {
-        label: 'second',
+        label: 'ranks.second',
         index: 1,
         number: 2
       }, {
-        label: 'third',
+        label: 'ranks.third',
         index: 2,
         number: 3
       }, {
-        label: 'fourth',
+        label: 'ranks.fourth',
         index: 3,
         number: 4
       }, {
-        label: 'last',
+        label: 'ranks.last',
         index: -1,
         number: -1
       }];
     }
 
     function findRankByNumber(number) {
-      var ranks = getRanks();
-      for (var i = 0; i < ranks.length; i++) {
-        if (number == ranks[i].number) {
-          return ranks[i];
+      return _.find(getRanks(), function (rank) {
+        if (number == rank.number) {
+          return rank;
         }
-      }
+      });
     }
 
     function addHoursRange(type, calendar, hoursRange) {
@@ -231,39 +228,8 @@
               endDate = moment(hoursRange.date).toDate();
             } else {
               //TODO: Find the first occurrence of the rule
-              var dayOfWeek = hoursRange.day.index;
-              if (hoursRange.rank.index == -1) {
-                //Set the date to the last of the <month>
-                startDate = moment({
-                  month: hoursRange.month.index + 1,
-                  day: -1
-                });
-                if (moment().diff(startDate) > 0) {
-                  startDate.year(startDate.year() + 1);
-                }
-                //Find the last <dayOfWeek> of this month.
-                while (startDate.day() != dayOfWeek && startDate.month() == hoursRange.month.index) {
-                  startDate.subtract(1, "day");
-                }
-              } else {
-                //Set the date to the 1st of the <month>
-                startDate = moment({
-                  month: hoursRange.month.index,
-                  day: 1
-                });
-                if (moment().diff(startDate) > 0) {
-                  startDate.year(startDate.year() + 1);
-                }
-                //Find the first <dayOfWeek> of this month.
-                while (startDate.day() != dayOfWeek && startDate.month() == hoursRange.month.index) {
-                  startDate.add(1, "day");
-                }
-                //Apply the rank if it is not the weekday option
-                startDate.add(hoursRange.rank.index, "week");
-              }
-              startDate = startDate.toDate();
-              endDate = moment(startDate);
-              endDate = endDate.toDate();
+              startDate = getNextOccurrenceHolidays(hoursRange).toDate();
+              endDate = new Date(startDate);
               //Save the rule in the description
               description += ";" + hoursRange.month.number + ";" + hoursRange.rank.number + ";" + hoursRange.day.abbr;
             }
@@ -312,6 +278,66 @@
           calendar.addSubcomponent(vevent);
         }
       }
+    }
+
+    function getNextOccurrenceHolidays(hoursRange) {
+      var date;
+      var dayOfWeek = hoursRange.day.index;
+      if (hoursRange.rank.index == -1) {
+        //Set the date to the last of the <month>
+        date = moment({
+          month: hoursRange.month.index + 1,
+          date: 0
+        });
+
+        //Find the last <dayOfWeek> of this month for the current year
+        while (date.day() != dayOfWeek && date.month() == hoursRange.month.index) {
+          date.subtract(1, 'day');
+        }
+
+        //If the date is in the past,
+        if (moment().diff(date, 'day') > 0) {
+          date = moment({
+            month: hoursRange.month.index + 1,
+            date: 0,
+            year: moment().year() + 1
+          });
+          //Find the last <dayOfWeek> of this month for next year.
+          while (date.day() != dayOfWeek && date.month() == hoursRange.month.index) {
+            date.subtract(1, 'day');
+          }
+        }
+      } else {
+        //Set the date to the 1st of the <month>
+        date = moment({
+          month: hoursRange.month.index,
+          date: 1
+        });
+
+        //Find the first <dayOfWeek> of this month for this year.
+        while (date.day() != dayOfWeek && date.month() == hoursRange.month.index) {
+          date.add(1, 'day');
+        }
+        //Apply the rank if it is not the weekday option
+        date.add(hoursRange.rank.index, 'week');
+
+        //If the date is in the past,
+        if (moment().diff(date, 'day') > 0) {
+          date = moment({
+            month: hoursRange.month.index,
+            date: 1,
+            year: moment().year() + 1
+          });
+
+          //Find the first <dayOfWeek> of this month for this year.
+          while (date.day() != dayOfWeek && date.month() == hoursRange.month.index) {
+            date.add(1, 'day');
+          }
+          //Apply the rank if it is not the weekday option
+          date.add(hoursRange.rank.index, 'week');
+        }
+      }
+      return date;
     }
 
     function getTz(calendar) {
@@ -412,6 +438,30 @@
           holidayRanges.push(hoursRange);
         }
       });
+      holidayRanges.sort(function (holiday1, holiday2) {
+        var date1 = moment(holiday1.date);
+        if (holiday1.exactDate && holiday1.recurAnnually) {
+          date1.year(moment().year());
+          if (moment().diff(date1, 'day') > 0) {
+            date1.year(date1.year() + 1);
+          }
+        }
+        if (!holiday1.exactDate && holiday1.recurAnnually) {
+          date1 = getNextOccurrenceHolidays(holiday1);
+        }
+        var date2 = moment(holiday2.date);
+        if (holiday2.exactDate && holiday2.recurAnnually) {
+          date2.year(moment().year());
+          if (moment().diff(date2, 'day') > 0) {
+            date2.year(date2.year() + 1);
+          }
+        }
+        if (!holiday2.exactDate && holiday2.recurAnnually) {
+          date2 = getNextOccurrenceHolidays(holiday2);
+        }
+        return date1.diff(date2);
+      });
+
       return {
         hours: hoursRanges,
         holidays: holidayRanges
