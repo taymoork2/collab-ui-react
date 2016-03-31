@@ -3,7 +3,7 @@
 describe('Controller: AAScheduleModalCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
-  var $rootScope, $scope, $translate, $q, $modalInstance;
+  var $rootScope, $scope, $translate, $q, $modalInstance, $modal;
   var ical;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
@@ -20,6 +20,20 @@ describe('Controller: AAScheduleModalCtrl', function () {
     openHours: {},
     ceInfo: {
       name: 'AA2'
+    }
+  };
+  var fakeModal = {
+    result: {
+      then: function (okCallback, cancelCallback) {
+        this.okCallback = okCallback;
+        this.cancelCallback = cancelCallback;
+      }
+    },
+    close: function (item) {
+      this.result.okCallback(item);
+    },
+    dismiss: function (type) {
+      this.result.cancelCallback(type);
     }
   };
   var date = new Date();
@@ -86,7 +100,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
+  beforeEach(inject(function (_ical_, $q, $controller, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_, _$modal_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
@@ -99,6 +113,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
     AACommonService = _AACommonService_;
+    $modal = _$modal_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -111,7 +126,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.when(angular.copy(openhours)));
     spyOn(AAICalService, 'addHoursRange');
     spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when());
-
+    spyOn($modal, 'open').and.returnValue(fakeModal);
     spyOn(AutoAttendantCeInfoModelService, 'extractUUID').and.returnValue('1');
     spyOn(AACommonService, 'saveUiModel');
     Notification = jasmine.createSpyObj('Notification', ['success', 'error']);
@@ -254,6 +269,21 @@ describe('Controller: AAScheduleModalCtrl', function () {
     it('removeHoliday should remove a holiday', function () {
       controller.addHoliday();
       controller.removeHoliday();
+      $scope.$apply();
+      expect(controller.holidays.length).toEqual(0);
+    });
+
+    it('should open a modal for importing', function () {
+      controller.openImportModal();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
+    });
+
+    it('should add imported items', function () {
+      fakeModal.close({
+        holidays: [],
+        hours: []
+      });
       $scope.$apply();
       expect(controller.holidays.length).toEqual(0);
     });

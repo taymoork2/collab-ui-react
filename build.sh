@@ -106,11 +106,8 @@ gulp jsb:verify || exit $?
 # - build - build without default 'karma-all' codepath enabled (see below)
 gulp build --nolint --nounit
 
-# - unit tests - run unit tests in parallel with GNU parallel
-cat > ./.cache/_gulp-karma-all <<_EOF
-for i in \`ls app/modules\`; do echo karma-\$i; done | parallel -k gulp
-_EOF
-time nice sh ./.cache/_gulp-karma-all || exit 1
+# - unit tests - run in parallel
+time gulp karma-parallel || exit $?
 gulp karma-combine-coverage || exit $?
 
 # - e2e tests
