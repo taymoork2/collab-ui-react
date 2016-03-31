@@ -203,9 +203,9 @@
       }, vm.currentCustomer.customerOrgId);
     }
 
-    function deleteTestOrg(orgId) {
+    function deleteTestOrg() {
       if (confirm("Press OK if you want to Delete " + vm.customerName) === true) {
-        Orgservice.deleteOrg(orgId);
+        Orgservice.deleteOrg(customerOrgId);
         Notification.success('customerPage.deleteOrgSuccess', {
           orgName: vm.customerName
         });
