@@ -224,8 +224,8 @@
             var startDate, endDate;
             var description = hoursRange.name;
             if (hoursRange.exactDate) {
-              startDate = moment(hoursRange.date).toDate();
-              endDate = moment(hoursRange.date).toDate();
+              startDate = moment(hoursRange.date, 'YYYY-MM-DD').toDate();
+              endDate = moment(hoursRange.date, 'YYYY-MM-DD').toDate();
             } else {
               //Find the first occurrence of the rule
               startDate = getNextOccurrenceHolidays(hoursRange).toDate();
@@ -337,6 +337,13 @@
           date.add(hoursRange.rank.index, 'week');
         }
       }
+      //Force moment to proceed the date
+      date = moment({
+        year: date.year(),
+        month: date.month(),
+        date: date.date()
+      });
+      date.format('YYYY-MM-DD');
       return date;
     }
 
@@ -440,7 +447,7 @@
 
       });
       holidayRanges.sort(function (holiday1, holiday2) {
-        var date1 = moment(holiday1.date);
+        var date1 = moment(holiday1.date, 'YYYY-MM-DD');
         if (holiday1.exactDate && holiday1.recurAnnually) {
           date1.year(moment().year());
           if (moment().diff(date1, 'day') > 0) {
@@ -450,7 +457,8 @@
         if (!holiday1.exactDate && holiday1.recurAnnually) {
           date1 = getNextOccurrenceHolidays(holiday1);
         }
-        var date2 = moment(holiday2.date);
+        holiday1.date = date1.format('YYYY-MM-DD');
+        var date2 = moment(holiday2.date, 'YYYY-MM-DD');
         if (holiday2.exactDate && holiday2.recurAnnually) {
           date2.year(moment().year());
           if (moment().diff(date2, 'day') > 0) {
@@ -460,6 +468,7 @@
         if (!holiday2.exactDate && holiday2.recurAnnually) {
           date2 = getNextOccurrenceHolidays(holiday2);
         }
+        holiday2.date = date2.format('YYYY-MM-DD');
         return date1.diff(date2);
       });
 

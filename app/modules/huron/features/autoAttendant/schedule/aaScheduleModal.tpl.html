@@ -85,7 +85,7 @@
               <div class="row" ng-click="aaScheduleModalCtrl.forceCheckHoliday()">
                 <div ng-bind="holiday.name" class="aa-holidays-name-collapse"></div>
                 <div ng-show="holiday.exactDate">
-                  {{holiday.date | date:'MMM d'}}{{holiday.recurAnnually ? '' : holiday.date | date: ', yyyy'}}
+                  {{holiday.date | date:'MMMM d'}}{{holiday.recurAnnually ? '' : holiday.date | date: ', yyyy'}}
                 </div>
                 <div ng-hide="holiday.exactDate">
                   {{holiday.rank.labelTranslate}} {{holiday.day.labelTranslate}} in {{holiday.month.labelTranslate}}
