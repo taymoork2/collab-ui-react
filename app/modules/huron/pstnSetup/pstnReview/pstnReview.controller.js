@@ -103,8 +103,8 @@
         vm.totalPortNumbers = _.get(vm.portOrders[0].data.numbers, 'length');
       }
     }
-    
-    function getNumbers(orders){
+
+    function getNumbers(orders) {
       return _.chain(orders)
         .map(function (order) {
           return _.get(order, 'data.numbers');
