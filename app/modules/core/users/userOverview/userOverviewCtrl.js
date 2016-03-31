@@ -15,7 +15,6 @@
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
-    vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
@@ -95,7 +94,13 @@
 
       updateUserTitleCard();
 
-      getAccountStatus();
+      FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus).then(function (result) {
+        if (result) {
+          getAccountStatus();
+        } else {
+          vm.pendingStatus = false;
+        }
+      });
     }
 
     var generateOtpLink = {
@@ -223,16 +228,14 @@
     }
 
     function getAccountStatus() {
-      FeatureToggleService.supports(FeatureToggleService.invitePendingStatus).then(function (result) {
-        var currentUserId = vm.currentUser.id;
-        Userservice.getUser(currentUserId, function (data, status) {
-          if (data.success) {
-            vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
-          } else {
-            Log.debug('Get existing account info failed. Status: ' + status);
-          }
-        });
-      }); 
+      var currentUserId = vm.currentUser.id;
+      Userservice.getUser(currentUserId, function (data, status) {
+        if (data.success) {
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+        } else {
+          Log.debug('Get existing account info failed. Status: ' + status);
+        }
+      });
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
