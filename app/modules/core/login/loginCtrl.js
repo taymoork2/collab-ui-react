@@ -82,7 +82,7 @@ angular.module('Core')
       if (!_.isEmpty(Storage.get('accessToken'))) {
         authorizeUser();
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
-        Auth.redirectToLogin();
+        Auth.redirectToLogin(null, queryParams.sso);
       }
 
       // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).

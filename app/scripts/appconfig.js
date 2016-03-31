@@ -197,6 +197,7 @@ angular
       $httpProvider.interceptors.push('TrackingIdInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
+      $httpProvider.interceptors.push('ServerErrorInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -521,7 +522,6 @@ angular
             }
           }
         })
-        // lhsieh
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -846,17 +846,30 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        // lhsieh
+        .state('site-csv-import', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'SiteCSVImportModalCtrl',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVImportModal.tpl.html',
+              controllerAs: 'siteCSVImportModalCtrl'
+            }
+          },
+          params: {
+            csvImportObj: null
+          }
+        })
         .state('site-csv-results', {
           parent: 'modal',
           views: {
             'modal@': {
               controller: 'SiteCSVResultsCtrl',
-              templateUrl: 'modules/webex/siteCSVResults/siteCSVResultsModal.tpl.html',
+              templateUrl: 'modules/webex/siteCSVModals/siteCSVResults.tpl.html',
+              controllerAs: 'siteCSVResult',
             }
           },
           params: {
-            csvStatusObj: null
+            siteRow: null
           }
         })
         .state('site-list.site-settings', {
@@ -1331,7 +1344,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           },
           data: {
             displayName: 'Advanced CDR Report'
@@ -1350,7 +1364,8 @@ angular
             call: [],
             uniqueIds: [],
             events: [],
-            imported: ''
+            imported: '',
+            logstashPath: ''
           }
         })
         .state('callroutingBase', {
@@ -1806,18 +1821,6 @@ angular
           },
           data: {
             displayName: 'Overview'
-          },
-          params: {
-            clusterId: null,
-            serviceType: null
-          }
-        })
-        .state('cluster-details.cluster-settings', {
-          templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
-          controller: 'ExpresswayClusterSettingsController',
-          controllerAs: 'expresswayClusterSettingsCtrl',
-          data: {
-            displayName: 'Edit'
           },
           params: {
             clusterId: null,

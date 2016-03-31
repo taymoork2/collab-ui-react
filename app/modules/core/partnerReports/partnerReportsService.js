@@ -41,6 +41,7 @@
     return {
       getOverallActiveUserData: getOverallActiveUserData,
       getActiveUserData: getActiveUserData,
+      getActiveTableData: getActiveTableData,
       getCustomerList: getCustomerList,
       getMediaQualityMetrics: getMediaQualityMetrics,
       getCallMetricsData: getCallMetricsData,
@@ -149,38 +150,28 @@
     }
 
     function getActiveUserData(customer, filter) {
-      var promises = [];
       var tableData = [];
       var overallStatus = TIMEOUT;
-      var overallPromise = null;
+      var promise = null;
 
       if (filter.value !== timeFilter || activeUserDetailedPromise === null) {
-        overallPromise = getOverallActiveUserData(filter).then(function (response) {
+        promise = getOverallActiveUserData(filter).then(function (response) {
           if (response === ABORT) {
             overallStatus = response;
           }
         });
-        promises.push(overallPromise);
+      } else {
+        promise = activeUserDetailedPromise;
       }
 
-      var tablePromise = getActiveUserTableData(customer, getQueryForOnePeriod(filter)).then(function (response) {
-        tableData = response;
-      });
-      promises.push(tablePromise);
-
-      return $q.all(promises).then(function () {
+      return promise.then(function () {
         if (overallStatus !== ABORT) {
-          return {
-            graphData: getActiveUserGraphData(customer, filter),
-            tableData: tableData,
-            populationGraph: getPopulationGraph(customer),
-            overallPopulation: overallPopulation
-          };
+          return getActiveGraphData(customer, filter);
         } else {
           return {
             graphData: ABORT,
-            tableData: tableData,
-            populationGraph: ABORT,
+            isActiveUsers: false,
+            popData: ABORT,
             overallPopulation: ABORT
           };
         }
@@ -209,34 +200,17 @@
       }
     }
 
-    function getPopulationGraph(customer) {
+    function getActiveGraphData(customer, filter) {
       if (!angular.isArray(customer)) {
         customer = [customer];
       }
 
-      var returnArray = [];
-      angular.forEach(customer, function (org, orgIndex, orgArray) {
-        if (angular.isDefined(activeUserCustomerGraphs[org.value])) {
-          var popGraph = activeUserCustomerGraphs[org.value].populationData;
-          popGraph.customerName = org.label;
-          returnArray.push(popGraph);
-        } else if (org.value !== 0) {
-          returnArray.push({
-            customerName: org.label,
-            customerId: org.value,
-            percentage: 0,
-            balloon: true,
-            labelColorField: chartColors.grayDarkest
-          });
-        }
-      });
-      return returnArray;
-    }
-
-    function getActiveUserGraphData(customer, filter) {
-      if (!angular.isArray(customer)) {
-        customer = [customer];
-      }
+      var returnData = {
+        graphData: [],
+        popData: [],
+        isActiveUsers: false,
+        overallPopulation: overallPopulation
+      };
 
       var graphItem = {
         totalRegisteredUsers: 0,
@@ -247,14 +221,40 @@
         balloon: true
       };
       var date = undefined;
-      var dataSet = [];
+      var activeDataSet = [];
       angular.forEach(customer, function (org, orgIndex, orgArray) {
-        if (angular.isDefined(activeUserCustomerGraphs[org.value])) {
-          var orgData = activeUserCustomerGraphs[org.value].graphData;
-          dataSet.push(orgData);
-          if (angular.isArray(orgData) && (orgData.length > 0) && (angular.isUndefined(date) || orgData[(orgData.length - 1)].date > date)) {
-            date = orgData[(orgData.length - 1)].date;
+        var orgData = activeUserCustomerGraphs[org.value];
+        var emptyPopGraph = {
+          customerName: org.label,
+          customerId: org.value,
+          percentage: 0,
+          balloon: true,
+          labelColorField: chartColors.grayDarkest
+        };
+        if (angular.isDefined(orgData)) {
+          // gather active user data for combining below
+          var orgActive = orgData.graphData;
+          activeDataSet.push(orgActive);
+          if (angular.isArray(orgActive) && (orgActive.length > 0) && (angular.isUndefined(date) || orgActive[(orgActive.length - 1)].date > date)) {
+            date = orgActive[(orgActive.length - 1)].date;
           }
+
+          // Pre-determine if the most active user table will be populated
+          if (orgData.totalActive > 0) {
+            returnData.isActiveUsers = true;
+          }
+
+          // add to the combined population graph
+          var popGraph = activeUserCustomerGraphs[org.value].populationData;
+          if (angular.isUndefined(popGraph.balloon)) {
+            popGraph = emptyPopGraph;
+          } else {
+            popGraph.customerName = org.label;
+          }
+          returnData.popData.push(popGraph);
+        } else if (org.value !== 0) {
+          // create placeholder for the combined population graph
+          returnData.popData.push(emptyPopGraph);
         }
       });
       var dayOffset = 0;
@@ -267,19 +267,20 @@
         }
       }
 
+      // combine the active user data into a single graph
       var baseGraph = getReturnGraph(filter, dayOffset, graphItem);
       var emptyGraph = true;
-      angular.forEach(dataSet, function (item, index, array) {
+      angular.forEach(activeDataSet, function (item, index, array) {
         if (angular.isArray(item) && (item.length > 0)) {
           baseGraph = combineMatchingDates(baseGraph, item);
           emptyGraph = false;
         }
       });
-
       if (!emptyGraph) {
-        return baseGraph;
+        returnData.graphData = baseGraph;
       }
-      return [];
+
+      return returnData;
     }
 
     function combineMatchingDates(graphData, customerData) {
@@ -299,7 +300,7 @@
       return graphData;
     }
 
-    function getActiveUserTableData(customer, query) {
+    function getActiveTableData(customer, filter) {
       if (activeTableCancelPromise !== null && activeTableCancelPromise !== undefined) {
         activeTableCancelPromise.resolve(ABORT);
       }
@@ -310,7 +311,7 @@
       if (angular.isUndefined(customerIds)) {
         return $q.when([]);
       } else {
-        return getService(topn + activeUserUrl + query + customerIds, activeTableCancelPromise).then(function (response) {
+        return getService(topn + activeUserUrl + getQueryForOnePeriod(filter) + customerIds, activeTableCancelPromise).then(function (response) {
           var tableData = [];
           if (angular.isDefined(response.data) && angular.isArray(response.data.data)) {
             angular.forEach(response.data.data, function (org, orgIndex, orgArray) {
@@ -500,12 +501,37 @@
               returnObject.direction = NEGATIVE;
               if ((returnObject.registeredDevicesTrend === "NaN")) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+0.0";
+                returnObject.registeredDevicesTrend = "+0.0%";
               } else if (returnObject.registeredDevicesTrend >= 0) {
                 returnObject.direction = POSITIVE;
-                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend;
+                returnObject.registeredDevicesTrend = "+" + returnObject.registeredDevicesTrend + "%";
+              } else {
+                returnObject.registeredDevicesTrend += "%";
               }
               returnArray.push(returnObject);
+            }
+          });
+        }
+        if (0 < returnArray.length < customer.length) {
+          angular.forEach(customer, function (org) {
+            var emptyOrg = true;
+            angular.forEach(returnArray, function (object) {
+              if (object.orgId === org.value) {
+                emptyOrg = false;
+              }
+            });
+            if (emptyOrg) {
+              returnArray.push({
+                "orgId": org.value,
+                "deviceRegistrationCountTrend": "-",
+                "yesterdaysDeviceRegistrationCount": "-",
+                "registeredDevicesTrend": "-",
+                "yesterdaysRegisteredDevices": "-",
+                "maxRegisteredDevices": "-",
+                "minRegisteredDevices": "-",
+                "customer": org.label,
+                "direction": ""
+              });
             }
           });
         }
@@ -588,13 +614,13 @@
         Log.debug('User not authorized to access reports.  Status: ' + error.status);
         Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
         return returnItem;
-      } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
-        if (error.status !== 0) {
+      } else if ((error.status > 0) || (error.config.timeout.$$state.value !== ABORT)) {
+        if (error.status > 0) {
           Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
         } else {
           Log.debug(debug + '  Status: ' + error.status);
         }
-        if (angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
+        if ((error.data !== null) && angular.isDefined(error.data) && angular.isDefined(error.data.trackingId) && (error.data.trackingId !== null)) {
           Notification.notify([message + '<br>' + $translate.instant('reportsPage.trackingId') + error.data.trackingId], 'error');
         } else {
           Notification.notify([message], 'error');
@@ -605,33 +631,42 @@
       }
     }
 
-    function getQuery(filter) {
+    function getQuery(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheOption;
       }
     }
 
-    function getQueryForOnePeriod(filter) {
+    function getQueryForOnePeriod(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=' + cacheOption;
       }
     }
 
-    function getTrendQuery(filter) {
+    function getTrendQuery(filter, cacheOption) {
+      if (cacheOption === null || angular.isUndefined(cacheOption)) {
+        cacheOption = cacheValue;
+      }
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=' + cacheOption;
       }
     }
   }

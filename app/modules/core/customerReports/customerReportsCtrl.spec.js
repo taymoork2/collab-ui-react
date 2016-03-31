@@ -140,7 +140,6 @@ describe('Controller: Customer Reports Ctrl', function () {
             }
           }];
         },
-
         getOrgId: function () {
           return '1';
         },
@@ -214,6 +213,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mostActiveTitle).toEqual('activeUsers.mostActiveUsers');
         expect(controller.activeUserStatus).toEqual(REFRESH);
         expect(controller.showMostActiveUsers).toBeFalsy();
+        expect(controller.displayMostActive).toBeFalsy();
         expect(controller.mostActiveUsers).toEqual([]);
         expect(controller.searchField).toEqual('');
         expect(controller.activeUserReverse).toBeTruthy();

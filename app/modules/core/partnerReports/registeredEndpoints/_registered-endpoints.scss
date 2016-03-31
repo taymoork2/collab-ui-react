@@ -12,7 +12,7 @@
   .negative {
     color: $brand-danger;
   }
-  .table-data{
+  .table-data {
     padding: 0;
   }
   .table-half {
@@ -35,15 +35,11 @@
       color: $gray-light-1;
     }
   }
-  .td:last-of-type, th:last-of-type {
-    border-right: none;
-
-  }
-
   .customer-data {
     text-overflow: ellipsis;
     overflow: hidden;
     padding-left: 20px;
+    white-space: nowrap;
   }
   .dummyTable {
     border-color:$gray-light-2;

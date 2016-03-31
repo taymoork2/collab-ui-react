@@ -3,6 +3,7 @@
 /* global LONG_TIMEOUT */
 
 describe('Onboard users with Message Service', function () {
+  var token;
   var testUser = utils.randomTestGmailwithSalt('meetings');
   var LICENSE = users.paidMsgCheckbox;
 
@@ -24,7 +25,10 @@ describe('Onboard users with Message Service', function () {
   });
 
   it('should login as an account admin', function () {
-    login.login('account-admin', '#/users');
+    login.login('account-admin', '#/users')
+      .then(function (bearerToken) {
+        token = bearerToken;
+      });
   });
 
   describe('Onboard user', function () {
@@ -61,6 +65,6 @@ describe('Onboard users with Message Service', function () {
   });
 
   afterAll(function () {
-    deleteUtils.deleteUser(testUser);
+    deleteUtils.deleteUser(testUser, token);
   });
 });

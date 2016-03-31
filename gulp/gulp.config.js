@@ -10,12 +10,13 @@ module.exports = function () {
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
-  var tsTestOutputFolder = test + '/ts';
   var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
+  var tsSpecSuffix = '.ts.spec.js';
+  var examples = 'examples';
 
   var config = {
     build: build,
@@ -25,7 +26,6 @@ module.exports = function () {
     coverage: 'coverage',
     e2e: 'test/e2e-protractor',
     e2eFailRetry: '.e2e-fail-retry',
-    tsTestOutputFolder: tsTestOutputFolder,
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -36,6 +36,7 @@ module.exports = function () {
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
     cache: '.cache',
+    examples: examples,
 
     gulpFiles: gulpFiles,
 
@@ -44,15 +45,21 @@ module.exports = function () {
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
       ],
-      ts: [app + '/**/*.ts'],
-      json: [app + '/**/*.json'],
-      csv: [app + '/**/*.csv'],
-      docs: [app + '/docs/**/*'],
-      tpl: [app + '/modules/**/*.html'],
-      html: [app + '/*.html'],
-      scss: ['styles/app.scss'],
-      images: [app + '/images'],
-      lang: [app + '/l10n/*.json'],
+      json: app + '/**/*.json',
+      csv: app + '/**/*.csv',
+      docs: app + '/docs/**/*',
+      tpl: app + '/modules/**/*.html',
+      html: app + '/*.html',
+      scss: 'styles/app.scss',
+      images: app + '/images',
+      lang: app + '/l10n/*.json',
+    },
+
+    typeScript: {
+      appFiles: app + '/**/*.ts',
+      testFiles: app + '/**/*.spec.ts',
+      compiledTestSuffix: tsSpecSuffix,
+      compiledTestFiles: app + '/**/*' + tsSpecSuffix
     },
 
     unsupported: {
@@ -84,7 +91,6 @@ module.exports = function () {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
-        tsTestOutputFolder + '/modules/**/*.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -94,15 +100,16 @@ module.exports = function () {
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
         vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
+        node_modules + 'karma-ng-html2js-preprocessor/lib/index.js'
       ],
       global: [
         test + '/global.spec.js',
       ],
       spec: {
         all: app + '/**/*.spec.js',
-        ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
         digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
+        example: [examples + '/unit/example.module.js', examples + '/unit/*'],
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',

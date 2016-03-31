@@ -4,13 +4,16 @@ describe('Invite User and Check Buckets', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
-
+  var token;
   var addEmail = utils.randomTestGmailwithSalt('buckets');
 
   //log in as admin with an account
   describe('Account Add User', function () {
     it('should login and view users', function () {
-      login.login('account-admin', '#/users');
+      login.login('account-admin', '#/users')
+        .then(function (bearerToken) {
+          token = bearerToken;
+        });
     });
 
     it('click on add button should pop up the adduser modal and display only invite button', function () {
@@ -44,7 +47,7 @@ describe('Invite User and Check Buckets', function () {
     });
 
     afterAll(function () {
-      deleteUtils.deleteUser(addEmail);
+      deleteUtils.deleteUser(addEmail, token);
     });
   });
 });

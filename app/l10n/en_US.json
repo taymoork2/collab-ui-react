@@ -393,7 +393,7 @@
     "users": "Users",
     "search": "Search",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for the selected customer(s).",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or spark messages and searched based on the user name."
   },
@@ -462,7 +462,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Cisco Spark app.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
     "acrossCustomers": "Across All Customers",
-    "loadingCustomer": "Sample Customer Data"
+    "loadingCustomer": "Sample Customer"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -839,7 +839,7 @@
     "goSetupCloudSipUri": "Go here to finish this configuration",
     "setupCloudSipUriMessage": "Your organization's SIP Domain is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex in meeting invitations to automatically add meeting room details.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"
@@ -1495,7 +1495,9 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
-    "reset": "Reset"
+    "reset": "Reset",
+    "tosReadAndAgree": "I have read and agree to these",
+    "tosTermsAndConditions": "terms and conditions"
   },
   "reports": {
     "title": "Reports",
@@ -1561,6 +1563,8 @@
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
+    "errorCreateSchedule": "Failed to create schedule for {{name}}: {{statusText}} ({{status}}).",
+    "errorDeletePredefinedSchedule": "Failed to remove the predefined schedule for {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1722,7 +1726,8 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Create a custom Auto Attendant."
+    "AACustomDesc": "Create a custom Auto Attendant.",
+    "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
   },
   "callPark": {
     "code": "CP",
@@ -1909,6 +1914,7 @@
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "consecutive": "Consecutive",
+    "block": "Block",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
@@ -1939,7 +1945,18 @@
     "serviceAddress": "Service Address",
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
-    "serviceAddressNotFound": "Unable to find address. Please update and try again."
+    "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "advancedOrder": {
+      "noResults": "No search results but we have a solution.",
+      "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
+      "addNumbers": "Add Numbers",
+      "tooltip": "Block allows you to add a large quantity of consecutive and non-consecutive numbers.",
+      "extra": "*Consecutive Numbers will be an additional charge"
+    },
+    "errors": {
+      "states": "Failed to retrieve states",
+      "inventory": "Failed to get PSTN inventory"
+    }
   },
   "pstnContractInformation": {
     "title": "PSTN Contract Information",
@@ -2043,7 +2060,7 @@
     "call": {
       "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
-      "deviceLimitDescription": "Choose at least 2 and up to 7 total devices (maximum 5 per type)",
+      "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
       "skipAddDevices": "Skip adding devices",
@@ -3063,37 +3080,37 @@
     "wait": "Please wait while we redirect you"
   },
   "languages": {
-    "danish": "Danish",
-    "german": "German",
-    "englishBritish": "English (British)",
-    "englishAmerican": "English (American)",
-    "spanishSpain": "Spanish (Spain)",
-    "spanishColumbian": "Spanish (Columbian)",
-    "french": "French",
-    "indonesian": "Indonesian",
-    "italian": "Italian",
-    "japanese": "Japanese",
-    "korean": "Korean",
-    "norwegian": "Norwegian",
-    "polish": "Polish",
-    "portugueseBrazillian": "Portuguese (Brazillian)",
-    "russian": "Russian",
-    "swedish": "Swedish",
-    "turkish": "Turkish",
-    "chineseMandarin": "Chinese (Mandarin)",
-    "chineseTraditional": "Chinese (Traditional)",
+    "danish": "Dansk",
+    "german": "Deutsch",
+    "englishBritish": "English (United Kingdom)",
+    "englishAmerican": "English (United States)",
+    "spanishSpain": "Español (España)",
+    "spanishColumbian": "Español (América Latina)",
+    "french": "Français (France)",
+    "indionesian": "Bahasa Indonesia",
+    "italian": "Italiano",
+    "japanese": "日本語",
+    "korean": "한국어",
+    "norwegian": "Norsk",
+    "dutch": "Nederlands",
+    "polish": "Polski",
+    "portugueseBrazillian": "Português (Brasil)",
+    "russian": "Pyccĸий",
+    "swedish": "Svenska",
+    "turkish": "Tϋrkçe",
+    "chineseMandarin": "简体中文",
+    "chineseTraditional": "繁體中文",
+    "frenchCanadian": "Français (Canada)",
+    "finnish": "Suomi",
+    "galician": "Galego",
+    "greek": "Ελληνικά",
+    "spanishArgentine": "Español (Argentina)",
+    "spanishChilean": "Español (Chile)",
+    "spanishMexican": "Español (mexicano)",
+    "portuguese": "Português",
     "englishAustralian": "English (Australian)",
-    "catalan": "Catalan",
-    "dutch": "Dutch",
-    "frenchCanadian": "French (Canadian)",
-    "finnish": "Finnish",
-    "galacian": "Galacian",
-    "greek": "Greek",
-    "spanishArgentine": "Spanish (Argentine)",
-    "spanishChilean": "Spanish (Chilean)",
-    "spanishMexican": "Spanish (Mexican)",
-    "portuguese": "Portuguese",
-    "valencian": "Valencian"
+    "valencian": "Valenciano",
+    "catalan": "Català"
   },
   "siteList": {
     "conferencing": "WebEx Sites",
@@ -3117,6 +3134,9 @@
     "exportFailedTooltip": "Export failed",
     "exportStartedToast": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportRejectedToast": "Export failed, try again.",
+    "importButton": "Import",
+    "importStartModalTitle": "Import WebEx User Attributes",
+    "importStartModalInstruction_1": "To upload a comma-delimited file, select the file to upload, and select import. If the import file contains non-ASCII characters, verify it uses a Unicode comma delimiter.",
     "importBlockedTooltip": "In order to Import, you must wait for Export to complete.",
     "importInProgressTooltip": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importFinishedWithErrorsTooltip": "Import finished with errors",

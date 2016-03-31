@@ -4,7 +4,7 @@ var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
-var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var remote = require('selenium-webdriver/remote');
 var fs = require('fs');
 
 exports.getDateTimeString = function () {

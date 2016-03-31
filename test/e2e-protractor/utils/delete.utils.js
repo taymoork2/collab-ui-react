@@ -3,22 +3,26 @@
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 var request = require('request');
+var Promise = require('promise');
 
-exports.deleteUser = function (email) {
-  return utils.getToken().then(function (token) {
-    var options = {
-      method: 'delete',
-      url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-    };
+exports.deleteUser = function (email, token) {
+  return new Promise(function (resolve, reject) {
+      resolve(token || utils.getToken());
+    })
+    .then(function (token) {
+      var options = {
+        method: 'delete',
+        url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+      };
 
-    return utils.sendRequest(options).then(function () {
-      return 200;
+      return utils.sendRequest(options).then(function () {
+        return 200;
+      });
     });
-  });
 };
 
 exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {

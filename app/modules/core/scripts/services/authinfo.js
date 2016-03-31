@@ -90,36 +90,34 @@ angular.module('Core')
         return false;
       };
 
-      //update the tabs when Authinfo data has been populated.
-      var initializeTabs = function () {
+      function isAllowedTab(tab) {
+        return isAllowedState(tab.state) && !isHideProdTab(tab);
+      }
+
+      function isHideProdTab(tab) {
+        return tab.hideProd && Config.isProd();
+      }
+
+      function initializeTabs() {
         var tabs = angular.copy(tabConfig);
-        // Remove states out of tab structure that are not allowed or had all their subPages removed
-        for (var i = 0; i < tabs.length; i++) {
-          if (tabs[i] && tabs[i].subPages) {
-            for (var j = 0; j < tabs[i].subPages.length; j++) {
-              if (tabs[i].subPages[j] && !isAllowedState(tabs[i].subPages[j].state)) {
-                tabs[i].subPages.splice(j--, 1);
-              }
-            }
-            if (tabs[i].subPages.length === 0) {
-              tabs.splice(i--, 1);
-            }
-          } else if (tabs[i] && !isAllowedState(tabs[i].state)) {
-            tabs.splice(i--, 1);
-          }
-        }
-        //Localize tabs
-        for (var index in tabs) {
-          tabs[index].title = getTabTitle(tabs[index].title);
-          if (tabs[index].subPages) {
-            for (var k in tabs[index].subPages) {
-              tabs[index].subPages[k].title = $translate.instant(tabs[index].subPages[k].title);
-              tabs[index].subPages[k].desc = $translate.instant(tabs[index].subPages[k].desc);
-            }
-          }
-        }
-        return tabs;
-      };
+        return _.chain(tabs)
+          .filter(function (tab) {
+            // Remove subPages whose parent tab is hideProd or states that aren't allowed
+            _.remove(tab.subPages, function (subTab) {
+              return isHideProdTab(tab) || !isAllowedTab(subTab);
+            });
+            // Filter allowed states or tabs with subPages
+            return isAllowedTab(tab) || _.size(tab.subPages);
+          })
+          .forEach(function (tab) {
+            tab.title = $translate.instant(tab.title);
+            _.forEach(tab.subPages, function (subTab) {
+              subTab.title = $translate.instant(subTab.title);
+              subTab.desc = $translate.instant(subTab.desc);
+            });
+          })
+          .value();
+      }
 
       var isEntitled = function (entitlement) {
         var services = authData.services;
@@ -163,8 +161,8 @@ angular.module('Core')
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
 
-          Localytics.customDimension(1, authData.orgId); // org id
-          Localytics.setCustomerId(authData.userId); // user id
+          Localytics.setOrgId(authData.orgId);
+          Localytics.setUserId(authData.userId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();

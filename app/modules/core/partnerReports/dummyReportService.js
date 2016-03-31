@@ -10,6 +10,7 @@
     var monthFormat = "MMMM";
     var dummyPopulation = null;
     var customers = null;
+    var loadingCustomer = $translate.instant('activeUserPopulation.loadingCustomer');
 
     return {
       dummyActiveUserData: dummyActiveUserData,
@@ -67,16 +68,32 @@
       return dummyGraph;
     }
 
-    function dummyActivePopulationData(customer, overallPopulation) {
-      return [{
-        customerName: customer.label,
-        customerId: customer.value,
-        percentage: 85,
-        colorOne: chartColors.dummyGrayLight,
-        colorTwo: chartColors.dummyGray,
-        balloon: false,
-        labelColorField: chartColors.grayLight
-      }];
+    function dummyActivePopulationData(customers) {
+      if (angular.isArray(customers) && customers.length > 0) {
+        var returnArray = [];
+
+        angular.forEach(customers, function (item, index, array) {
+          returnArray.push({
+            customerName: loadingCustomer,
+            percentage: 85 - (index * 10),
+            colorOne: chartColors.dummyGrayLight,
+            colorTwo: chartColors.dummyGray,
+            balloon: false,
+            labelColorField: chartColors.grayLight
+          });
+        });
+
+        return returnArray;
+      } else {
+        return [{
+          customerName: loadingCustomer,
+          percentage: 85,
+          colorOne: chartColors.dummyGrayLight,
+          colorTwo: chartColors.dummyGray,
+          balloon: false,
+          labelColorField: chartColors.grayLight
+        }];
+      }
     }
 
     function dummyMediaQualityData(time) {
@@ -152,9 +169,9 @@
       };
     }
 
-    function dummyEndpointData(customer) {
+    function dummyEndpointData() {
       return [{
-        customer: customer.label,
+        customer: loadingCustomer,
         deviceRegistrationCountTrend: "0",
         yesterdaysDeviceRegistrationCount: "0",
         registeredDevicesTrend: "0",
