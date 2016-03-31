@@ -711,7 +711,7 @@
         });
     }
 
-    function updateSiteEmergencyCallBack() {
+    function saveEmergencyCallBack() {
       if (vm.model.serviceNumber && (_.get(vm, 'model.serviceNumber.pattern') !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern'))) {
         var site = {};
         site.emergencyCallBackNumber = {
@@ -1021,20 +1021,23 @@
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
         .then(updateSiteVoicemail)
-        .then(updateVoicemailUserTimeZone);
+        .then(updateVoicemailUserTimeZone)
+        .catch(_.noop);
     }
 
     function saveExternalNumbers() {
       return $q.when(true)
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
-        .then(saveCallerId);
+        .then(saveCallerId)
+        .then(saveEmergencyCallBack);
     }
 
     function saveCompanyNumbers() {
       return saveExternalNumbers()
         .catch(_.noop)
-        .then(loadExternalNumbers);
+        .then(loadExternalNumbers)
+        .then(loadSite);
     }
 
     function saveInternalNumberRanges() {
@@ -1129,7 +1132,6 @@
         })
         .catch(function (response) {
           errors.push(Notification.processErrorResponse(response, 'huronSettings.companyCallerIdsaveError'));
-          return $q.reject();
         });
     }
 
@@ -1146,11 +1148,6 @@
               .then(loadInternationalDialing);
           }
         });
-    }
-
-    function saveEmergencyCallBack() {
-      return $q.when(true)
-        .then(updateSiteEmergencyCallBack);
     }
 
     function init() {
@@ -1178,7 +1175,6 @@
 
       var promises = [];
       promises.push(saveCompanyNumbers());
-      promises.push(saveEmergencyCallBack());
       promises.push(saveInternalNumberRanges());
       promises.push(saveInternationalDialing());
 
