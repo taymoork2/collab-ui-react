@@ -50,7 +50,7 @@
         PstnSetup.getCustomerLastName(),
         PstnSetup.getCustomerEmail(),
         PstnSetup.getProviderId(),
-        vm.newNumbers
+        getNumbers(vm.newOrders)
       ).then(function () {
         PstnSetup.setCustomerExists(true);
       }).catch(function (response) {
@@ -103,6 +103,15 @@
         vm.totalPortNumbers = _.get(vm.portOrders[0].data.numbers, 'length');
       }
     }
+    
+    function getNumbers(orders){
+      return _.chain(orders)
+        .map(function (order) {
+          return _.get(order, 'data.numbers');
+        })
+        .flatten()
+        .value();
+    }
 
     function createNumbers() {
       var promises = [];
@@ -113,12 +122,7 @@
         errors.push(Notification.processErrorResponse(response));
       }
 
-      var numbers = _.chain(vm.newOrders)
-        .map(function (order) {
-          return _.get(order, 'data.numbers');
-        })
-        .flatten()
-        .value();
+      var numbers = getNumbers(vm.newOrders);
 
       if (numbers.length > 0) {
         promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers)
