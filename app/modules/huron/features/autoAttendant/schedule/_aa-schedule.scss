@@ -29,9 +29,28 @@
 }
 
 .aa-schedule-info-item {
-  @include vr-spacing(mt, 1.0);
-  @include vr-spacing(mb, 1.0);
+  @include vr-spacing(pb, .5);
+  line-height: 1rem;
   text-align: left;
+}
+
+.aa-column {
+  @include vr-spacing(pl, 1.0);
+  white-space: normal;
+}
+
+.aa-schedule-info-day{
+  @include vr-spacing(pt, 1.0);
+  @include vr-spacing(pr, 0.3);
+}
+
+.aa-schedule-info-hours {
+ color: $gray-light-1;
+ text-align: left;
+}
+
+.aa-trim-padding {
+  @include vr-spacing(pl, 0);
 }
 
 .aa-holidays {
@@ -47,13 +66,9 @@
 		}
 	}
 }
+
 .left-margin-20 {
 	@include vr-spacing(ml, 1.25);
-}
-
-.schedule-hours {
- color: $gray-light-1;
- text-align: left;
 }
 
 #addHoliday {
