@@ -55,7 +55,6 @@
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
     vm.isCloudSipUriSet = false;
-    vm.isSipToggleEnabled = false;
     vm.isSipUriAcknowledged = false;
     init();
     vm.setSipUriNotification = setSipUriNotification;
@@ -77,20 +76,14 @@
     });
 
     function setSipUriNotification() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise).then(function (result) {
-        result = true;
-        if (result) {
-          vm.isSipToggleEnabled = true;
-          Orgservice.getOrg(function (data, status) {
-            if (status === 200) {
-              if (data.orgSettings.sipCloudDomain) {
-                vm.isCloudSipUriSet = true;
-              }
-            } else {
-              Log.debug('Get existing org failed. Status: ' + status);
-              Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
-            }
-          });
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          if (data.orgSettings.sipCloudDomain) {
+            vm.isCloudSipUriSet = true;
+          }
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       });
     }
@@ -109,6 +102,8 @@
     vm.setSipUriNotificationAcknowledged = function () {
       vm.isSipUriAcknowledged = true;
     };
+
+    $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
 
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {

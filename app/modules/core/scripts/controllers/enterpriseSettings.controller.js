@@ -107,6 +107,7 @@
               sipField.isDisabled = true;
               sipField.isButtonDisabled = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
+              $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
             }
           })
           .catch(function (response) {
