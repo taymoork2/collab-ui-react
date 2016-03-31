@@ -193,14 +193,6 @@ describe('Service: AACalendarService', function () {
       expect(AAICalService.findDayByAbbr('MO')).toEqual(days[0]);
     });
 
-    it('should return the weekday', function () {
-      expect(AAICalService.findDayByAbbr('MO,TU,WE,TH,FR')).toEqual(days[7]);
-    });
-
-    it('should return the weekend', function () {
-      expect(AAICalService.findDayByAbbr('SA,SU')).toEqual(days[8]);
-    });
-
     it('should return undefined', function () {
       expect(AAICalService.findDayByAbbr('TT')).toBeUndefined();
     });
@@ -505,6 +497,7 @@ describe('Service: AACalendarService', function () {
     });
 
     it('add multiple holidays and get them sorted', function () {
+      //The holidays are sort chronologically based on today, so this test will fail at some point.
       var calendarRaw = {};
       calendarRaw.scheduleData = 'BEGIN:VCALENDAR \n' + 'BEGIN:VTIMEZONE\n' + 'TZID:UTC/GMT\n' + 'X-LIC-LOCATION:UTC/GMT\n' + 'END:VTIMEZONE\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=1\n' + 'DESCRIPTION:First day of Feb\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150201T000000\n' + 'DTEND;TZID=UTC/GMT:20150201T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=10\n' + 'DESCRIPTION:Feb 10th\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20150210T000000\n' + 'DTEND;TZID=UTC/GMT:20150210T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=WE;BYSETPOS=2\n' + 'DESCRIPTION:Second Wed of Feb\;2\;2\;WE\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20170208T000000\n' + 'DTEND;TZID=UTC/GMT:20170208T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=TH;BYSETPOS=4\n' + 'DESCRIPTION:Thanksgiving\;11\;4\;TH\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20161124T000000\n' + 'DTEND;TZID=UTC/GMT:20161124T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Christmas\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20101225T000000\n' + 'DTEND;TZID=UTC/GMT:20101225T235900\n' + 'END:VEVENT\n' + 'BEGIN:VEVENT\n' + 'SUMMARY:holiday\n' + 'DESCRIPTION:Last Tuesday of Jan\;1\;-1\;TU\n' + 'PRIORITY:1\n' + 'DTSTART;TZID=UTC/GMT:20120124T000000\n' + 'DTEND;TZID=UTC/GMT:20120124T235900\n' + 'END:VEVENT\n' + 'END:VCALENDAR';
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).holidays;
