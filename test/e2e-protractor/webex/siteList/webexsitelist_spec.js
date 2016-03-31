@@ -13,7 +13,7 @@ describe('Services > Webex page aka Site List page', function () {
     utils.dumpConsoleErrors();
   });
 
-  xdescribe(': CSV Export/Import : ', function () {
+  describe(': CSV Export/Import : ', function () {
     var setup = false;
 
     beforeAll(function () {
