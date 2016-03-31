@@ -1,5 +1,7 @@
 'use strict';
 
+/*global deleteTrialUtils*/
+
 describe('Remove partner trials from partner org page', function () {
 
   var accessToken;

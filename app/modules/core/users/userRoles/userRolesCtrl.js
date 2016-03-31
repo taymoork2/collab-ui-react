@@ -76,7 +76,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
         });
       }
 
-      if (sipAddrData.value) {
+      if (_.get(sipAddrData, 'value')) {
         $scope.sipAddr = sipAddrData.value;
       }
     }

@@ -6,7 +6,8 @@
     .controller('AAScheduleModalCtrl', AAScheduleModalCtrl);
 
   /* @ngInject */
-  function AAScheduleModalCtrl($modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService) {
+
+  function AAScheduleModalCtrl($modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -214,14 +215,18 @@
         // even on update we are just re-creating the calendar, otherwise the events accumulate
         vm.calendar = getCalendar();
         // save calendar to CES
-        var calName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
+        var calName = vm.aaModel.aaRecord.callExperienceName;
         var savePromise;
-        var notifyName = vm.aaModel.aaRecord.callExperienceName;
+        var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
+
+        vm.ui.isHolidays = (vm.holidays.length) ? true : false;
+        vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
-            savePromise = AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar);
+            savePromise = updateSchedule(calName);
             notifyName = calName; // An update is updating only calendar, so notify indicates calender updated
-          } else if (vm.isDeleted) {
+          } else if (vm.isDeleted || !vm.holidays.length) {
+            vm.isDeleted = true;
             savePromise = deleteSchedule();
           }
         } else {
@@ -238,14 +243,15 @@
               name: notifyName
             });
             vm.isDeleted = false;
+            vm.ui.isHolidays = (vm.holidays.length) ? true : false;
+            vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
             $modalInstance.close(response);
           },
           function (response) {
             // failure
-            if (vm.isDeleted && !vm.openhours.length) {
+            if (vm.isDeleted && !vm.openhours.length && !vm.holidays.length) {
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
-              vm.ui.isClosedHours = true;
               vm.isDeleted = false;
               Notification.error('autoAttendant.errorDeleteCe', {
                 name: calName,
@@ -278,12 +284,14 @@
           var scheduleId = AutoAttendantCeInfoModelService.extractUUID(response.scheduleUrl);
           vm.aaModel.aaRecord.scheduleId = scheduleId;
           vm.ui.ceInfo.scheduleId = scheduleId;
-          return updateCE(vm.aaModel.aaRecord.callExperienceName);
+          return updateCE(vm.aaModel.aaRecord.callExperienceName, true);
         });
     }
 
-    function updateCE(ceName) {
+    function updateCE(ceName, isNew) {
       var ceUrl;
+      AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
+
       if (vm.aaModel.aaRecordUUID.length > 0) {
         _.each(vm.aaModel.aaRecords, function (aarecord) {
           if (AutoAttendantCeInfoModelService.extractUUID(aarecord.callExperienceURL) === vm.aaModel.aaRecordUUID) {
@@ -294,18 +302,21 @@
       }
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
-          vm.ui.isClosedHours = true;
           vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
         }, function (response) {
-          // failure in updating CE with schedue id, so clean up the possible orphaned schedule and theobjects
+          // failure in updating CE with schedue id, so clean up the possible orphaned schedule and the objects
           Notification.error('autoAttendant.errorUpdateCe', {
             name: ceName,
             statusText: response.statusText,
             status: response.status
           });
-          vm.ui.isClosedHours = false;
           vm.aaModel.aaRecord.scheduleId = undefined;
-          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+          if (isNew) {
+            return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+          } else {
+            return;
+          }
+
         });
     }
 
@@ -313,6 +324,7 @@
       var id = vm.aaModel.aaRecord.scheduleId;
       var ceName = vm.aaModel.aaRecord.callExperienceName;
       vm.aaModel.aaRecord.scheduleId = undefined;
+      AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
       var ceUrl;
       if (vm.aaModel.aaRecordUUID.length > 0) {
         _.each(vm.aaModel.aaRecords, function (aarecord) {
@@ -325,8 +337,15 @@
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
           // success removing ScheduleId from CE, delete the calendar 
-          vm.ui.isClosedHours = false;
           return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+        });
+    }
+
+    function updateSchedule(calName) {
+
+      return AACalendarService.updateCalendar(vm.aaModel.aaRecord.scheduleId, calName, vm.calendar)
+        .then(function (response) {
+          return updateCE(vm.aaModel.aaRecord.callExperienceName, false);
         });
     }
 

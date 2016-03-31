@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Controller: AAScheduleModalCtrl', function () {
-  var Notification, AutoAttendantCeService, AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService;
+  var Notification, AutoAttendantCeService;
+  var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
   var $scope, $translate, $modalInstance, $controller;
   var ical;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -38,7 +39,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_) {
+  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
@@ -49,6 +50,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAICalService = _AAICalService_;
     AACalendarService = _AACalendarService_;
+    AACommonService = _AACommonService_;
 
     aaModel = {
       aaRecord: {
@@ -151,7 +153,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     spyOn(AAICalService, 'getHoursRanges').and.returnValue(data);
     spyOn(AAICalService, 'addHoursRange');
     spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when());
-
+    spyOn(AACommonService, 'saveUiModel');
     Notification = jasmine.createSpyObj('Notification', ['success', 'error']);
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
@@ -271,7 +273,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.holidays = holidays;
       controller.save();
       $scope.$apply();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('Calendar for AA1', controller.calendar);
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA1', controller.calendar);
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
@@ -297,6 +299,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.save();
       $scope.$apply();
       expect(AACalendarService.updateCalendar).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
     });

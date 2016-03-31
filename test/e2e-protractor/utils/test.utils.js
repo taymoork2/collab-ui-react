@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;

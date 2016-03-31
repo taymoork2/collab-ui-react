@@ -8,18 +8,15 @@
   /* @ngInject */
   function AAICalService(ical) {
 
-    //TODO: Remove the find method
     var service = {
       createCalendar: createCalendar,
       getDefaultRange: getDefaultRange,
       getMonths: getMonths,
-      findMonthByNumber: findMonthByNumber,
       getDays: getDays,
-      findDayByAbbr: findDayByAbbr,
       getRanks: getRanks,
-      findRankByNumber: findRankByNumber,
       addHoursRange: addHoursRange,
-      getHoursRanges: getHoursRanges
+      getHoursRanges: getHoursRanges,
+      getDefaultDayHours: getDefaultDayHours
     };
 
     return service;
@@ -34,7 +31,7 @@
       if (type !== 'holiday') {
         return {
           days: [{
-            label: 'Monday', //TODO: Use translate?
+            label: 'Monday', //Use translate?
             active: false
           }, {
             label: 'Tuesday',
@@ -227,7 +224,7 @@
               startDate = moment(hoursRange.date).toDate();
               endDate = moment(hoursRange.date).toDate();
             } else {
-              //TODO: Find the first occurrence of the rule
+              //Find the first occurrence of the rule
               startDate = getNextOccurrenceHolidays(hoursRange).toDate();
               endDate = new Date(startDate);
               //Save the rule in the description
@@ -247,7 +244,7 @@
             hoursRange.starttime = startDate;
             hoursRange.endtime = endDate;
             if (hoursRange.recurAnnually) {
-              //TODO Set the rule in the calendar
+              //Set the rule in the calendar
               strRRule = '';
               if (hoursRange.exactDate) {
                 strRRule = 'FREQ=YEARLY;BYMONTH=' + (startDate.getMonth() + 1) + ';BYMONTHDAY=' + (startDate.getDate());
@@ -341,7 +338,7 @@
     }
 
     function getTz(calendar) {
-      //TODO: Issue multiple time the timezone in the calendar.
+      //Issue multiple time the timezone in the calendar.
       var tz = 'UTC/GMT';
       var timezoneComp = new ical.Component('vtimezone');
       timezoneComp.addPropertyWithValue('tzid', tz);
@@ -407,7 +404,7 @@
           var strRule = rrule.toString();
           var eventDays = strRule.substring(strRule.indexOf('BYDAY=') + 6);
           // icalendar uses the first two letters as abbrev for the day
-          _.forEach(eventDays.split(','), function (eventDay) { //TODO: Use object instead?
+          _.forEach(eventDays.split(','), function (eventDay) { //Use object instead?
             _.forEach(hoursRange.days, function (day) {
               if (eventDay.substring(0, 2).toUpperCase() == day.label.substring(0, 2).toUpperCase()) {
                 day.active = true;
@@ -430,13 +427,14 @@
             hoursRange.starttime = undefined;
             hoursRange.endtime = undefined;
           }
-          //TODO: Read the recurrence
+          //Read the recurrence
           rrule = vevent.getFirstPropertyValue('rrule');
           if (rrule && rrule.freq == 'YEARLY') {
             hoursRange.recurAnnually = true;
           }
           holidayRanges.push(hoursRange);
         }
+
       });
       holidayRanges.sort(function (holiday1, holiday2) {
         var date1 = moment(holiday1.date);
@@ -466,6 +464,31 @@
         hours: hoursRanges,
         holidays: holidayRanges
       };
+    }
+
+    function getDefaultDayHours() {
+      return [{
+        label: 'Monday',
+        hours: []
+      }, {
+        label: 'Tuesday',
+        hours: []
+      }, {
+        label: 'Wednesday',
+        hours: []
+      }, {
+        label: 'Thursday',
+        hours: []
+      }, {
+        label: 'Friday',
+        hours: []
+      }, {
+        label: 'Saturday',
+        hours: []
+      }, {
+        label: 'Sunday',
+        hours: []
+      }];
     }
   }
 })();

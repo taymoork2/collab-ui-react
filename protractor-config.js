@@ -1,5 +1,7 @@
 'use strict';
 
+/*global jasmine, browser, _*/
+
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');

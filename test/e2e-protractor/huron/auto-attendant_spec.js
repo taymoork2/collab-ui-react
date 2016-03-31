@@ -359,6 +359,11 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
+    it('verify open/closed lanes are visible', function () {
+      utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
+      utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
+    }, 60000); 
+
     it('should update a AA Schedule', function () {
       utils.wait(autoattendant.schedule, 12000);
       utils.click(autoattendant.schedule);
@@ -379,6 +384,11 @@ describe('Huron Auto Attendant', function () {
 
       autoattendant.assertUpdateSuccess();
 
+    }, 60000);
+
+    it('should verify open/closed lanes are not visible', function () {
+      utils.expectIsNotDisplayed(autoattendant.scheduleInfoOpenHours);
+      utils.expectIsNotDisplayed(autoattendant.scheduleInfoClosedHours);
     }, 60000);
 
     it('should close AA edit and return to landing page', function () {
