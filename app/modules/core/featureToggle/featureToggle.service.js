@@ -64,6 +64,7 @@
       iosKmsMessagingApi3: 'ios-kms-messaging-api3',
       iosKmsMessagingApi4: 'ios-kms-messaging-api4',
       iosLocalNotification2: 'ios-local-notification2',
+      iosLocusUsingResource: 'ios-locus-using-resource',
       iosMentions: 'ios-mentions',
       iosMentionsFilter: 'ios-mentions-filter',
       iosOutboundDialing: 'ios-outbound-dialing',

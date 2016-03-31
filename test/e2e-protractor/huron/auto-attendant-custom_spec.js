@@ -2,7 +2,7 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
-
+  var waitTime = 12000;
   beforeAll(function () {
     login.login('huron-int1');
   }, 120000);
@@ -21,64 +21,71 @@ describe('Huron Auto Attendant', function () {
 
     }, 120000);
 
+    it('should create a new auto attendant named "' + deleteUtils.testAAImportName + '"', function () {
+
+      // click new feature
+      utils.click(autoattendant.newFeatureButton);
+
+      // select AA
+      utils.wait(autoattendant.featureTypeAA, waitTime);
+      utils.click(autoattendant.featureTypeAA);
+
+      utils.wait(autoattendant.customAA, waitTime);
+      utils.click(autoattendant.customAA);
+
+      // enter AA name
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAImportName);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
+
+      // assert we see the create successful message
+      autoattendant.assertCreateSuccess(deleteUtils.testAAImportName);
+
+    }, 60000);
+
+    it('should add a Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, waitTime);
+      utils.click(autoattendant.toggleHoliday);
+      utils.click(autoattendant.addholiday);
+      utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.sendKeys(autoattendant.date, new Date());
+      utils.click(autoattendant.selectdate);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      utils.click(autoattendant.closeEditButton);
+    }, 60000);
+
     it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
 
       // select AA
-      utils.wait(autoattendant.featureTypeAA, 12000);
+      utils.wait(autoattendant.featureTypeAA, waitTime);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.wait(autoattendant.customAA, 12000);
+      utils.wait(autoattendant.customAA, waitTime);
       utils.click(autoattendant.customAA);
 
       // enter AA name
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
-      // assert we see the create successful message
-      autoattendant.assertCreateSuccess();
+      autoattendant.assertCreateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
-    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-      utils.wait(autoattendant.addAANumbers, 12000);
-      utils.click(autoattendant.numberDropDownArrow);
-
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-    }, 60000);
-
-    it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      utils.click(autoattendant.numberIconClose);
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-    }, 60000);
-
-    it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      utils.click(autoattendant.numberDropDownArrow);
-
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
-      utils.expectIsDisabled(autoattendant.saveButton);
-
+    it('should add a Schedule to AA by importing', function () {
+      utils.wait(autoattendant.addAANumbers, waitTime);
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.addschedule, waitTime);
+      utils.click(autoattendant.importSchedule);
+      utils.wait(autoattendant.importScheduleTitle, waitTime);
+      utils.expectIsDisabled(autoattendant.importContinue);
+      utils.selectDropdown('.import-schedule-modal', deleteUtils.testAAImportName);
+      utils.expectIsEnabled(autoattendant.importContinue);
+      utils.click(autoattendant.importContinue);
     }, 60000);
 
   });
