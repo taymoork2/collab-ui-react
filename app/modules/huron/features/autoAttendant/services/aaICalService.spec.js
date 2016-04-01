@@ -145,9 +145,17 @@ describe('Service: AACalendarService', function () {
 
   describe('createCalendar', function () {
     it('should return a new calendar object from ical', function () {
-      var calendar = AAICalService.createCalendar();
-      expect(calendar).toBeDefined();
-      expect(calendar).toEqual(new ical.Component('vcalendar'));
+      var actual = AAICalService.createCalendar();
+
+      var expected = new ical.Component('vcalendar');
+      var tz = 'UTC/GMT';
+      var timezoneComp = new ical.Component('vtimezone');
+      timezoneComp.addPropertyWithValue('tzid', tz);
+      timezoneComp.addPropertyWithValue('x-lic-location', tz);
+      expected.addSubcomponent(timezoneComp);
+
+      expect(actual).toBeDefined();
+      expect(actual).toEqual(expected);
     });
   });
 

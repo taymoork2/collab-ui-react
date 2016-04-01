@@ -27,7 +27,9 @@
     /////////////////////
 
     function createCalendar() {
-      return new ical.Component('vcalendar');
+      var calendar = new ical.Component('vcalendar');
+      setTz(calendar);
+      return calendar;
     }
 
     function getDefaultRange(type) {
@@ -266,7 +268,7 @@
           // Server iCalendar parse seems to want Time with a particular date (year, month, day)
           // Or at least default year, month, day don't parse on server side
           // But we are doing recurrence based on day of week, so what particular date?
-          // The date of the firs t day selected?  Today?
+          // The date of the first day selected?  Today?
 
           var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime, type);
           vevent.addProperty(p);
@@ -278,6 +280,7 @@
           calendar.addSubcomponent(vevent);
         }
       }
+      console.log(calendar.toString());
     }
 
     function getNextOccurrenceHolidays(hoursRange) {
@@ -348,24 +351,26 @@
     }
 
     function getTz(calendar) {
-      //Issue multiple time the timezone in the calendar.
+      var timezoneComp = calendar.getFirstSubcomponent('vtimezone');
+      var tzid = timezoneComp.getFirstPropertyValue('tzid');
+
+      return new ical.Timezone({
+        component: timezoneComp,
+        tzid: tzid
+      });
+    }
+
+    function setTz(calendar) {
       var tz = 'UTC/GMT';
       var timezoneComp = new ical.Component('vtimezone');
       timezoneComp.addPropertyWithValue('tzid', tz);
       timezoneComp.addPropertyWithValue('x-lic-location', tz);
       calendar.addSubcomponent(timezoneComp);
-
-      var timezone = new ical.Timezone({
-        component: timezoneComp,
-        tzid: tz
-      });
-      return timezone;
     }
 
     function getiCalDateTime(calendar, dateType, time, type) {
       var currentDate = new Date();
       var timezone = getTz(calendar);
-      var tz = 'UTC/GMT';
       var p = new ical.Property(dateType);
       p.setValue(new ical.Time({
         year: type !== 'holiday' ? currentDate.getFullYear() : time.getFullYear(),
@@ -375,8 +380,8 @@
         minute: time.getMinutes(),
         second: 0,
         isDate: false
-      }, timezone));
-      p.setParameter('tzid', tz);
+      }));
+      p.setParameter('tzid', timezone.tzid);
       return p;
     }
 
@@ -390,16 +395,7 @@
       var holidayRanges = [];
 
       _.forEach(calendar.getAllSubcomponents("vevent"), function (vevent) {
-        var event = new ical.Event(vevent);
 
-        // create vtimezone
-        var timezoneComp = calendar.getFirstSubcomponent('vtimezone');
-        var tzid = timezoneComp.getFirstPropertyValue('tzid');
-
-        var timezone = new ical.Timezone({
-          component: timezoneComp,
-          tzid: tzid
-        });
         var summary = vevent.getFirstPropertyValue('summary');
 
         var dtstart = vevent.getFirstPropertyValue('dtstart');
