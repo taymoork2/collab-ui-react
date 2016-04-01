@@ -60,7 +60,7 @@
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
                               type='webexexport'
                               filedownloadurl={{gridRow.fileDownloadUrl}}
-                              filename="exported.csv">
+                              filename="SiteUsers.csv">
           </webex-csv-download>
           
           <webex-csv-download ng-if="(gridRow.id == 'import-download-err-file')"
@@ -69,6 +69,7 @@
                               filename="importErr.csv">
           </webex-csv-download>
           
+          <!-- 
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
             
@@ -76,14 +77,13 @@
                                 filename="{{::'usersPage.csvFilename' | translate}}"> 
             </webex-csv-download>
           
-            <!-- 
             <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
               <font color=#049FD9>
                 <i class="icon icon-content-share"></i>
               </font>
             </a>
-            -->
           </span>
+          -->
         </td>
       </tr>
     </table>
