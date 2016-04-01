@@ -1078,7 +1078,7 @@
       "loading": "Loading, please wait…",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add Resource",
+      "add-resource-button": "Add a Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define SIP Domain"
     },
@@ -1279,17 +1279,17 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
-        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+        "action": "You must either <a ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
       },
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Now, configure and start the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway."
       }
     }
   },
