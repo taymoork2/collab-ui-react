@@ -1176,6 +1176,9 @@
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
+    "serviceHelpInfo": {
+      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
+    },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed.",
