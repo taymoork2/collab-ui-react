@@ -22,14 +22,35 @@
     function downloadCsv() {
       var logMsg = "";
 
-      if (vm.type) {
+      if (
+        (vm.type == WebExCsvDownloadService.typeWebExExport) ||
+        (vm.type == WebExCsvDownloadService.typeWebExImport)
+      ) {
+
+        WebExCsvDownloadService.getWebExCsv(
+          vm.type,
+          vm.fileDownloadUrl
+        ).then(
+
+          function (csvData) {
+            var objectUrl = WebExCsvDownloadService.createObjectUrl(
+              csvData.content,
+              vm.type
+            );
+
+            $scope.$emit('downloaded', objectUrl);
+          }
+
+        ).catch(
+
+          function (response) {
+            Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+          }
+        );
+      } else if (vm.type) {
         $scope.$emit('download-start');
 
-        if (
-          (vm.type == WebExCsvDownloadService.typeUser) ||
-          (vm.type == WebExCsvDownloadService.typeTemplate)
-        ) {
-
+        if (vm.type == WebExCsvDownloadService.typeUser) {
           WebExCsvDownloadService.getCsv(
             vm.type
           ).then(
@@ -49,31 +70,6 @@
             }
           );
 
-        } else if (
-          (vm.type == WebExCsvDownloadService.typeWebExExport) ||
-          (vm.type == WebExCsvDownloadService.typeWebExImport)
-        ) {
-
-          WebExCsvDownloadService.getWebExCsv(
-            vm.type,
-            vm.fileDownloadUrl
-          ).then(
-
-            function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(
-                csvData.content,
-                vm.type
-              );
-
-              $scope.$emit('downloaded', objectUrl);
-            }
-
-          ).catch(
-
-            function (response) {
-              Notification.errorResponse(response, 'firstTimeWizard.downloadError');
-            }
-          );
         }
       }
     }
@@ -129,13 +125,14 @@
           anchor[0].click();
         });
 
-        $timeout(function () {
-          // Remove the object URL if not template
-          if (scope.webexCsvDownload.type !== WebExCsvDownloadService.typeTemplate) {
+        $timeout(
+          function () {
+            // Remove the object URL
             WebExCsvDownloadService.revokeObjectUrl();
             changeAnchorAttrToOriginalState();
-          }
-        }, 500);
+          },
+          500
+        );
       });
 
       if (attrs.filedownloadurl) {
