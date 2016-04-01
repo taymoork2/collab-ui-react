@@ -103,15 +103,18 @@
     state: 'profile',
     link: '/profile'
   }, {
+    tab: 'organizationTab',
+    icon: 'icon-admin',
+    title: 'tabs.organizationTab',
+    state: 'organizations',
+    link: '/organizations'
+  }, {
+    // DEPRECATED - REPLACE WITH FEATURE TOGGLES - DO NOT ADD MORE PAGES UNDER developmentTab
     tab: 'developmentTab',
     icon: 'icon-tools',
     title: 'tabs.developmentTab',
+    hideProd: true,
     subPages: [{
-      title: 'tabs.organizationTab',
-      desc: 'tabs.organizationTabDesc',
-      state: 'organizations',
-      link: '#organizations'
-    }, {
       title: 'tabs.callRoutingTab',
       desc: 'tabs.callRoutingTabDesc',
       state: 'callrouting',

@@ -5,22 +5,24 @@ angular.module('Core').service('SiteListService', [
   '$translate',
   '$interval',
   'Authinfo',
-  'WebExApiGatewayService',
-  'WebExUtilsFact',
   'UrlConfig',
-  'WebExUtilsService',
   'FeatureToggleService',
+  'WebExApiGatewayService',
+  'WebExApiGatewayConstsService',
+  'WebExUtilsFact',
+  'WebExUtilsService',
 
   function (
     $log,
     $translate,
     $interval,
     Authinfo,
-    WebExApiGatewayService,
-    WebExUtilsFact,
     UrlConfig,
-    WebExUtilsService,
-    FeatureToggleService
+    FeatureToggleService,
+    WebExApiGatewayService,
+    WebExApiGatewayConstsService,
+    WebExUtilsFact,
+    WebExUtilsService
   ) {
 
     var _this = this;
@@ -296,8 +298,8 @@ angular.module('Core').service('SiteListService', [
 
           // start CSV status poll
           // var pollInterval = 3600000; // 1hr
-          // var pollInterval = 30000; // 30sec
-          var pollInterval = 15000; // 15sec
+          var pollInterval = 30000; // 30sec
+          // var pollInterval = 15000; // 15sec
           siteRow.csvPollIntervalObj = $interval(
             function () {
               _this.updateCSVColumnInRow(siteRow);
@@ -340,34 +342,35 @@ angular.module('Core').service('SiteListService', [
       var mockCsvStatusReq = null;
 
       if (
-        (null != siteRow.csvStatusMockIt) &&
-        (siteRow.csvStatusMockIt.mockIt)
+        (null != siteRow.csvMock) &&
+        (siteRow.csvMock.mockStatus)
       ) {
 
-        if (null == siteRow.csvStatusMockIt.mockIndex) {
-          siteRow.csvStatusMockIt.mockIndex = siteRow.csvStatusMockIt.mockStart;
+        if (null == siteRow.csvMock.mockStatusCurrentIndex) {
+          siteRow.csvMock.mockStatusCurrentIndex = siteRow.csvMock.mockStatusStartIndex;
         }
 
-        mockCsvStatusReq = WebExApiGatewayService.csvStatusTypes[siteRow.csvStatusMockIt.mockIndex];
+        mockCsvStatusReq = WebExApiGatewayConstsService.csvStatusTypes[siteRow.csvMock.mockStatusCurrentIndex];
 
         logMsg = funcName + "\n" +
-          "mockIndex=" + siteRow.csvStatusMockIt.mockIndex + "\n" +
+          "mockStatusCurrentIndex=" + siteRow.csvMock.mockStatusCurrentIndex + "\n" +
           "mockCsvStatusReq=" + mockCsvStatusReq;
         // $log.log(logMsg);
 
-        ++siteRow.csvStatusMockIt.mockIndex;
+        ++siteRow.csvMock.mockStatusCurrentIndex;
 
         if (
-          (WebExApiGatewayService.csvStatusTypes.length <= siteRow.csvStatusMockIt.mockIndex) ||
-          (siteRow.csvStatusMockIt.mockEnd < siteRow.csvStatusMockIt.mockIndex)
+          (WebExApiGatewayConstsService.csvStatusTypes.length <= siteRow.csvMock.mockStatusCurrentIndex) ||
+          (siteRow.csvMock.mockStatusEndIndex < siteRow.csvMock.mockStatusCurrentIndex)
         ) {
 
-          siteRow.csvStatusMockIt.mockIndex = siteRow.csvStatusMockIt.mockStart;
+          siteRow.csvMock.mockStatusCurrentIndex = siteRow.csvMock.mockStatusStartIndex;
         }
       }
 
       WebExApiGatewayService.csvStatus(
         siteUrl,
+        siteRow.csvMock.mockStatus,
         mockCsvStatusReq
       ).then(
 
@@ -397,26 +400,26 @@ angular.module('Core').service('SiteListService', [
           siteRow.showImportResultsLink = false;
           siteRow.importFinishedWithErrors = false;
 
-          if (siteRow.csvStatusObj.status == "none") {
+          if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
 
             siteRow.showExportLink = true;
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportInProgress") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
 
             siteRow.showExportInProgressLink = true;
 
             siteRow.grayedImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportCompletedNoErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
 
             siteRow.showExportLink = true;
             siteRow.showExportResultsLink = true;
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "exportCompletedWithErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
 
             siteRow.showExportLink = true;
             siteRow.showExportResultsLink = true;
@@ -424,20 +427,20 @@ angular.module('Core').service('SiteListService', [
 
             siteRow.showImportLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importInProgress") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
 
             siteRow.grayedExportLink = true;
 
             siteRow.showImportInProgressLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importCompletedNoErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
 
             siteRow.showExportLink = true;
 
             siteRow.showImportLink = true;
             siteRow.showImportResultsLink = true;
 
-          } else if (siteRow.csvStatusObj.status == "importCompletedWithErr") {
+          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
 
             siteRow.showExportLink = true;
 

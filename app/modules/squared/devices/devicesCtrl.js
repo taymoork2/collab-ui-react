@@ -45,6 +45,10 @@ angular.module('Squared')
           (vm.huronDeviceListSubscription.eventCount !== 0 || csdmHuronOrgDeviceService.getDeviceList().length > 0);
       };
 
+      vm.isEntitledToRoomSystem = function () {
+        return Authinfo.isDeviceMgmt();
+      };
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())

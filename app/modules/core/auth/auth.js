@@ -7,7 +7,7 @@ angular
 /* @ngInject */
 function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
 
-  return {
+  var service = {
     logout: logout,
     authorize: authorize,
     getAccount: getAccount,
@@ -17,8 +17,11 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     getNewAccessToken: getNewAccessToken,
     refreshAccessToken: refreshAccessToken,
     setAuthorizationHeader: setAuthorizationHeader,
-    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest
+    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
+    verifyOauthState: verifyOauthState
   };
+
+  return service;
 
   var deferred;
 
@@ -39,14 +42,20 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return httpGET(url);
   }
 
-  function getNewAccessToken(code) {
+  function getNewAccessToken(params) {
     var url = OAuthConfig.getAccessTokenUrl();
-    var data = OAuthConfig.getNewAccessTokenPostData(code);
+    var data = OAuthConfig.getNewAccessTokenPostData(params.code);
     var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
-    return httpPOST(url, data, token)
-      .then(updateAccessToken)
-      .catch(handleError('Failed to obtain new oauth access_token.'));
+    // Security: verify authentication request came from our site
+    if (service.verifyOauthState(params.state)) {
+      return httpPOST(url, data, token)
+        .then(updateAccessToken)
+        .catch(handleError('Failed to obtain new oauth access_token.'));
+    } else {
+      clearStorage();
+      return $q.reject();
+    }
   }
 
   function refreshAccessToken() {
@@ -86,7 +95,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return httpPOST(url, data, token)
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
-        Storage.clear();
+        clearStorage();
         $window.location.href = OAuthConfig.getLogoutUrl();
       });
   }
@@ -95,9 +104,11 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return !!Storage.get('accessToken');
   }
 
-  function redirectToLogin(email) {
+  function redirectToLogin(email, sso) {
     if (email) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl(email);
+      $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
+    } else if (sso) {
+      $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
@@ -227,6 +238,26 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     Storage.put('accessToken', token);
     setAuthorizationHeader(token);
     return token;
+  }
+
+  function getOauthState() {
+    var state = SessionStorage.get('oauthState') || generateOauthState();
+    return state;
+  }
+
+  function generateOauthState() {
+    var state = Utils.getUUID();
+    SessionStorage.put('oauthState', state);
+    return state;
+  }
+
+  function verifyOauthState(testState) {
+    return _.isEqual(testState, getOauthState());
+  }
+
+  function clearStorage() {
+    Storage.clear();
+    SessionStorage.clear();
   }
 
   function handleError(message) {

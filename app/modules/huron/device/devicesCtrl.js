@@ -8,24 +8,29 @@
   /* @ngInject */
   function DevicesCtrlHuron($scope, $state, $q, $stateParams, DeviceService, OtpService, Config, CsdmHuronUserDeviceService, $window, FeatureToggleService) {
     var vm = this;
-    vm.devices = [];
+    vm.devices = null;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
     vm.useCsdmDeviceSidepanel = null;
     var csdmHuronUserDeviceService = null;
-    checkFeatureToggleForCsdmSidePanel().then(function (res) {
-      if (res) {
-        csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-        vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
-          scope: $scope
-        });
-        vm.devices = csdmHuronUserDeviceService.getDeviceList();
-      }
-      vm.useCsdmDeviceSidepanel = res;
-    }).catch(function () {
-      vm.useCsdmDeviceSidepanel = false;
-    });
+    if (isHuronEnabled()) {
+      checkFeatureToggleForCsdmSidePanel().then(function (res) {
+        if (res) {
+          csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+          vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
+            scope: $scope
+          });
+          vm.devices = csdmHuronUserDeviceService.getDeviceList();
+          if (Object.keys(vm.devices).length !== 0) {
+            $scope.userOverview.addGenerateAuthCodeLink();
+          }
+        }
+        vm.useCsdmDeviceSidepanel = res;
+      }).catch(function () {
+        vm.useCsdmDeviceSidepanel = false;
+      });
+    }
 
     function checkFeatureToggleForCsdmSidePanel() {
       if ($window.location.search.indexOf("useCsdmDeviceSidepanel=true") > -1) {
@@ -34,6 +39,10 @@
         return FeatureToggleService.supports(FeatureToggleService.features.useCsdmDeviceSidepanel);
       }
     }
+
+    vm.showGenerateOtpButton = function () {
+      return (isHuronEnabled() && vm.devices != null && Object.keys(vm.devices).length == 0);
+    };
 
     vm.showDeviceDetails = function (device) {
       vm.currentDevice = device;
@@ -45,28 +54,20 @@
 
     function activate() {
 
-      var promises = [];
-
       checkFeatureToggleForCsdmSidePanel().then(function (res) {
         if (!res) {
-          var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
+          DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
             vm.devices = deviceList;
+            if (vm.devices.length !== 0) {
+              $scope.userOverview.addGenerateAuthCodeLink();
+            }
           });
-          promises.push(devicePromise);
         }
       });
 
-      var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
+      OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
         vm.otps = otpList;
       });
-      promises.push(otpPromise);
-
-      return $q.all(promises)
-        .then(function () {
-          if (vm.devices.length !== 0) {
-            $scope.userOverview.addGenerateAuthCodeLink();
-          }
-        });
     }
 
     function showDeviceDetailPanel(device) {

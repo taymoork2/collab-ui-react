@@ -122,13 +122,14 @@ ng-model="sel.selected"
    
    <!-- <form id="myForm"> -->
     <div ng-if="showClientVersions">    
-      <div class="row form-spacing">
+      <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
         <div class="small-12 columns">
           <div class="row collapse" ng-if="isPartner">
            <p><h4 translate="partnerProfile.webexClientVersion"></h4>  
               <span class="badge"></span>
             </p>
             <cs-select
+               id="webex_client_version_drop_down"
                ng-model="wbxclientversionselected"
                options="wbxclientversions"
                placeholder="wbxclientversionplaceholder"

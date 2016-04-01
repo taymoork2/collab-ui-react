@@ -105,30 +105,17 @@ describe('Customer Reports', function () {
       utils.expectIsDisplayed(reports.endpointsDiv);
 
       // quality graphs
-      utils.expectIsNotDisplayed(reports.mediaHeader);
-      utils.expectIsNotDisplayed(reports.mediaFilter);
       utils.expectIsNotDisplayed(reports.mediaQualityDiv);
-
-      utils.expectIsNotDisplayed(reports.metricsHeader);
       utils.expectIsNotDisplayed(reports.metricsGraphDiv);
-      reports.metricsDataPresent(false);
     });
 
     it('should change to display only quality reports', function () {
       utils.click(reports.quality);
 
       // engagement graphs
-      utils.expectIsNotDisplayed(reports.totalRoomsHeader);
       utils.expectIsNotDisplayed(reports.totalRoomsGraph);
-
-      utils.expectIsNotDisplayed(reports.activeHeader);
       utils.expectIsNotDisplayed(reports.activeUsers);
-
-      utils.expectIsNotDisplayed(reports.filesSharedHeader);
       utils.expectIsNotDisplayed(reports.filesSharedDiv);
-
-      utils.expectIsNotDisplayed(reports.endpointsHeader);
-      utils.expectIsNotDisplayed(reports.endpointFilter);
       utils.expectIsNotDisplayed(reports.endpointsDiv);
 
       // quality graphs

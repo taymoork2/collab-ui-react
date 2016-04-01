@@ -17,8 +17,8 @@
         </div>
         <div class="package-detail-text">
           <div>{{::pstnReview.provider.title}}</div>
-          <div class="detail-text" ng-if="::pstnReview.newNumbers.length" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnReview.newNumbers.length}}"></div>
-          <div class="detail-text" ng-if="::pstnReview.portNumbers.length" translate="pstnSetup.portNumbers" translate-value-count="{{::pstnReview.portNumbers.length}}"></div>
+          <div class="detail-text" ng-if="pstnReview.totalNewAdvancedOrder" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnReview.totalNewAdvancedOrder}}"></div>
+          <div class="detail-text" ng-if="pstnReview.totalPortNumbers" translate="pstnSetup.portNumbers" translate-value-count="{{::pstnReview.totalPortNumbers}}"></div>
         </div>
       </div>
     </div>

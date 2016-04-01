@@ -1,5 +1,7 @@
 'use strict';
 
+/*global jasmine, browser, _*/
+
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
 var fs = require('fs');
@@ -96,6 +98,7 @@ exports.config = {
     var SiteListPage = require('./test/e2e-protractor/pages/webexsitelist.page.js');
     var SiteSettigsPage = require('./test/e2e-protractor/pages/webexsitesettings.page.js');
     var SiteReportsPage = require('./test/e2e-protractor/pages/webexsitereports.page.js');
+    var WebExPage = require('./test/e2e-protractor/pages/webex.page.js');
     var OrgProfilePage = require('./test/e2e-protractor/pages/orgprofile.page.js');
     var MediaServicePage = require('./test/e2e-protractor/pages/mediaService.page.js');
     var EnterpriseResourcePage = require('./test/e2e-protractor/pages/enterpriseResource.page.js');
@@ -136,6 +139,7 @@ exports.config = {
     global.sitelist = new SiteListPage();
     global.sitesettings = new SiteSettigsPage();
     global.sitereports = new SiteReportsPage();
+    global.webEx = new WebExPage();
     global.orgprofile = new OrgProfilePage();
     global.mediaservice = new MediaServicePage();
     global.enterpriseResource = new EnterpriseResourcePage();

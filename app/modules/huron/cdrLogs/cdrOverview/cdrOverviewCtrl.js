@@ -10,6 +10,7 @@
     var vm = this;
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
+    var logstashPath = $stateParams.logstashPath;
 
     var cdrData = formatCdr($stateParams.cdrData);
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
@@ -47,7 +48,8 @@
       $state.go('cdrladderdiagram', {
         call: $stateParams.call,
         uniqueIds: $stateParams.uniqueIds,
-        events: $stateParams.events
+        events: $stateParams.events,
+        logstashPath: logstashPath
       });
     };
 

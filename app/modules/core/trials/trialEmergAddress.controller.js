@@ -42,7 +42,7 @@
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.unit'),
             labelClass: 'columns medium-3 text-right',
-            inputClass: 'columns medium-8',
+            inputClass: 'columns medium-9',
 
           }
         }]
@@ -71,8 +71,8 @@
             label: $translate.instant('trialModal.pstn.state'),
             labelfield: 'abbreviation',
             valuefield: 'abbreviation',
-            labelClass: 'columns medium-6 text-right',
-            inputClass: 'columns medium-9',
+            labelClass: 'columns medium-5 text-right',
+            inputClass: 'columns medium-7',
             options: []
           },
           controller: /* @ngInject */ function ($scope) {
@@ -89,7 +89,7 @@
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.zip'),
             labelClass: 'columns medium-6 text-right',
-            inputClass: 'columns medium-9',
+            inputClass: 'columns medium-7',
             onBlur: validateAddress
           }
         }]

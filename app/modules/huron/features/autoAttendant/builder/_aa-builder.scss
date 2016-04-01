@@ -64,36 +64,6 @@ $aa-builder-text-color: $gray-dark-1;
   align-items: center;
 }
 
-.aa-flex-item.schedule {
-  @include vr-spacing(pv, .25);
-  @include vr-spacing(ph, 2);
-}
-
-.aa-schedule-modal {
-  width: 785px;
-  background: #FFF none repeat scroll 0% 0%;
-  .aa-schedule-days {
-    padding: 4px;
-    label {
-      @include vr-spacing(mb, 0);
-    }
-  }
-  .aa-schedule-subtitle {
-    font-size: 20px
-  }
-  .aa-schedule-trash {
-    font-size: 35px;
-    color: #858688;
-    float: right;
-  }
-}
-
-.aa-schedule-container {
-  h3{
-    display: inline-block;
-  }
-}
-
 .aa-flex-row-item {
   display: flex;
   flex: 1 1 auto;
@@ -243,6 +213,7 @@ $aa-builder-text-color: $gray-dark-1;
   #aa-name-detail {
     @extend h2;
 
+    line-height: 1;
     @include vr-spacing(mh, 0);
     width: 50vw;
     text-align: center;
@@ -326,10 +297,14 @@ $aa-builder-text-color: $gray-dark-1;
   line-height: .5rem;
 
   .text-info {
-    color: $brand-info;
+    color: $color-people-base;;
     text-align: center;
   }
 
+  .text-info-left {
+    color: $color-people-base;
+    text-align: left;
+  }
   .aa-panel-body {
     @extend .panel-body;
 

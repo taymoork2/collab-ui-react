@@ -18,31 +18,13 @@ var fs = require('fs');
 var _ = require('lodash');
 var util = require('gulp-util');
 
-// Lint E2E test files
-gulp.task('eslint:e2e', function () {
-  var files = [].concat(
-    config.test + '/e2e-protractor/squared/*_spec.js',
-    config.test + '/e2e-protractor/huron/*_spec.js',
-    config.test + '/e2e-protractor/mediafusion/*_spec.js'
-  );
-  messageLogger('Running eslint on E2E test files', files);
-  return gulp
-    .src(files)
-    .pipe($.eslint({
-      configFile: 'config/eslint.json',
-      rulePaths: ['config/rules']
-    }))
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError());
-});
-
 // vet JS files and create coverage report
 gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
   if (args.plato) {
     messageLogger('Analyzing source with ESLint, JSCS, JsonLint, and Plato');
     runSeq([
       'analyze:jscs',
-      'analyze:eslint',
+      'eslint',
       'json:verify',
       'languages:verify',
       'plato',
@@ -51,28 +33,48 @@ gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
     messageLogger('Analyzing source with ESLint, JSCS and JsonLint');
     runSeq([
       'analyze:jscs',
-      'analyze:eslint',
+      'eslint',
       'json:verify',
       'languages:verify',
     ], done);
   }
-
 });
 
-gulp.task('analyze:eslint', function () {
+gulp.task('eslint', [
+  'eslint:tooling',
+  'eslint:app',
+  'eslint:e2e'
+]);
+
+gulp.task('eslint:tooling', function () {
+  var files = [].concat(
+    'gulpfile.js',
+    'protractor-config.js',
+    config.gulpFiles,
+    'config/**/*.js'
+  );
+  messageLogger('Running ESLint on the tooling files', files);
+  return createESLintTask(files);
+});
+
+gulp.task('eslint:app', function () {
   var files = [].concat(
     config.appFiles.js,
-    config.unsupportedDir + '/' + config.unsupported.file,
-    config.testFiles.spec.all,
-    config.gulpFiles
+    config.unsupportedDir + '/' + config.unsupported.file
   );
-  messageLogger('Running ESLint on JS files', files);
-  return gulp
-    .src(files)
-    .pipe($.if(args.verbose, $.print()))
-    .pipe($.eslint())
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError());
+  messageLogger('Running ESLint on the app files', files);
+  return createESLintTask(files);
+});
+
+gulp.task('eslint:e2e', function () {
+  var files = [].concat(
+    config.test + '/api_sanity/*.js',
+    config.e2e + '/**/*.js'
+  );
+  messageLogger('Running ESLint on the e2e tests files', files);
+  return createESLintTask(files, {
+    rulePaths: ['config/rules']
+  });
 });
 
 gulp.task('analyze:jscs', function () {
@@ -89,7 +91,7 @@ gulp.task('analyze:jscs', function () {
 gulp.task('jsb', function (done) {
   runSeq(
     'jsBeautifier:beautify',
-    'analyze:eslint',
+    'eslint:app',
     'eslint:e2e',
     'json:verify',
     'languages:verify',
@@ -100,7 +102,7 @@ gulp.task('jsb', function (done) {
 gulp.task('jsb:verify', function (done) {
   runSeq(
     'jsBeautifier:verify',
-    'analyze:eslint',
+    'eslint:app',
     'eslint:e2e',
     'json:verify',
     'languages:verify',
@@ -154,6 +156,25 @@ gulp.task('plato', function (done) {
 });
 
 /////////////////////////////
+
+function hasBeenFixed(file) {
+  // has ESLint fixed the file content?
+  return _.has(file, 'eslint.fixed');
+}
+
+function createESLintTask(files, ESLintOptions) {
+  var options = ESLintOptions || {};
+  options.fix = !!args.fix;
+  return gulp
+    .src(files, {
+      base: './'
+    })
+    .pipe($.if(args.verbose, $.print()))
+    .pipe($.eslint(options))
+    .pipe($.eslint.format())
+    .pipe($.if(hasBeenFixed, gulp.dest('./')))
+    .pipe($.eslint.failAfterError());
+}
 
 // Start Plato inspector and visualizer
 function startPlatoVisualizer(done) {

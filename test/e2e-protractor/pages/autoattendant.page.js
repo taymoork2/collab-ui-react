@@ -6,6 +6,7 @@ var AutoAttendantPage = function () {
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
+  this.openClosedAA = element(by.css('.icon-OpenClosed'));
   this.newAAname = element(by.id('aa-name-detail'));
   this.addAANumbers = element(by.css('.aa-selected-phones .icon-chevron-down'));
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
@@ -64,19 +65,25 @@ var AutoAttendantPage = function () {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).first();
 
-  // middle/second item in newStep dropdown: Phone Menu
-  this.newStepSelectMiddle = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+  // second item in newStep dropdown: Phone Menu
+  this.newStepSelectSecond = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(1);
 
-  // last/third item in newStep dropdown: Transfer
+  // third item in newStep dropdown: Dial By Extension 
+  this.newStepSelectThird = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
+    return el.isDisplayed();
+  }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).get(2);
+
+  // last/third item in newStep dropdown: Route Call 
   this.newStepSelectLast = element.all(by.css('div.aa-panel[name="newStepForm"]')).filter(function (el) {
     return el.isDisplayed();
   }).first().all(by.css("div.aa-flex-row")).last().all(by.tagName('li')).last();
 
   // since we added a Say Message via Add New Step, there should be more than 1 from now on.
   // Get them all so we can check:
-  this.sayMessageAll = element.all(by.cssContainingText('.aa-message-panel', 'Say Message'));
+
+  this.sayMessageAll = element.all(by.css('.aa-message-panel'));
 
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
@@ -95,6 +102,14 @@ var AutoAttendantPage = function () {
   this.routeExternal = this.routeCall.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.routeExternalNumber = this.routeCall.element(by.css('input.phone-number'));
 
+  this.dialByExtension = element(by.css('div.aa-panel-body[name="Dial by Extension"]'));
+
+  this.dialByMessageInput = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.name('dialByMessageInput'));
+  this.dialByMessageLanguage = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div a.select-toggle'));
+  this.dialBylanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.dialByMessageVoice = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
+  this.dialByMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Dial by Extension"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+
   this.trash = element.all(by.css('.aa-trash-icon')).last();
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
@@ -107,19 +122,39 @@ var AutoAttendantPage = function () {
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
   this.day1 = element(by.cssContainingText('cs-checkbox', 'Monday'));
+  this.day2 = element(by.cssContainingText('cs-checkbox', 'Tuesday'));
+  this.day3 = element(by.cssContainingText('cs-checkbox', 'Wednesday'));
+  this.day4 = element(by.cssContainingText('cs-checkbox', 'Thursday'));
+  this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
+  this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
+  this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
+  this.modalcancel = element(by.id('cancelDeleteFeature'));
+
+  this.openHoursLane = element(by.name('bottomLane1')).element(by.name('openHours'));
+  this.openHoursSayMessage = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.openHoursPhoneMenu = element(by.name('bottomLane1')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.openHoursEndCall = element(by.name('bottomLane1')).element(by.name('endCall'));
+  this.closedHoursLane = element(by.name('bottomLane3')).element(by.name('closedHours'));
+  this.closedHoursSayMessage = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Say Message"]'));
+  this.closedHoursPhoneMenu = element(by.name('bottomLane3')).element(by.css('div.aa-panel-body[name="Phone Menu"]'));
+  this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
+  this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
+  this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
+  this.importSchedule = element(by.id('importSchedule'));
+  this.importContinue = element(by.id('importCtn'));
+  this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
 
-  function assertUpdateSuccess() {
-    notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+  function assertUpdateSuccess(test) {
+    notifications.assertSuccess(test + ' updated successfully');
   }
 
-  function assertCreateSuccess() {
-    notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
+  function assertCreateSuccess(test) {
+    notifications.assertSuccess(test + ' created successfully');
   }
-
 };
 
 module.exports = AutoAttendantPage;
