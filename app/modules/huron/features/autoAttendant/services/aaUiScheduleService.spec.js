@@ -4,9 +4,9 @@ describe('Service: AAUiScheduleService', function () {
   var $q, $scope, $rootScope, AAUiScheduleService, AAICalService, AutoAttendantCeInfoModelService, AACalendarService;
   var Notification;
 
-  function getRange9To5() {
+  function getRange8To5() {
     var calendar = AAICalService.createCalendar();
-    var _starttime = new Date('', '', '', '09', '00', '00');
+    var _starttime = new Date('', '', '', '08', '00', '00');
     var _endtime = new Date('', '', '', '17', '00', '00');
     var defaultRange = [{
       days: [{
@@ -85,7 +85,7 @@ describe('Service: AAUiScheduleService', function () {
 
     it('should create 9 to 5, Monday to Friday schedule', function () {
       expect(scheduleId).toBeUndefined();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange9To5());
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange8To5());
       createCalendarDefer.resolve(createCalendarSuccess);
 
       $scope.$apply();
@@ -96,7 +96,7 @@ describe('Service: AAUiScheduleService', function () {
 
     it('should should return failure gracefully with a status', function () {
       expect(scheduleId).toBeUndefined();
-      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange9To5());
+      expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange8To5());
       createCalendarDefer.reject({
         statusText: 'failure',
         status: '500'
