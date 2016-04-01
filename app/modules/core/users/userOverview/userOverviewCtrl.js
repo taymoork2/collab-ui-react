@@ -15,11 +15,12 @@
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
-    vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
+    vm.enableAuthCodeLink = enableAuthCodeLink;
+    vm.disableAuthCodeLink = disableAuthCodeLink;
 
     init();
 
@@ -204,8 +205,14 @@
       }
     }
 
-    function addGenerateAuthCodeLink() {
-      vm.dropDownItems.push(generateOtpLink);
+    function enableAuthCodeLink() {
+      if (!_.includes(vm.dropDownItems, generateOtpLink)) {
+        vm.dropDownItems.push(generateOtpLink);
+      }
+    }
+
+    function disableAuthCodeLink() {
+      _.pull(vm.dropDownItems, generateOtpLink);
     }
   }
 })();
