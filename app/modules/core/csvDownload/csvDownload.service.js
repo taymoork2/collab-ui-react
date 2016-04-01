@@ -61,7 +61,11 @@
         } else {
           url = Utils.sprintf(userExportUrl, [csvType]);
           return $http.get(url).then(function (csvData) {
-            return createObjectUrl(csvData.data, csvType);
+            if (csvType === typeHeaders) {
+              return csvData.data;
+            } else {
+              return createObjectUrl(csvData.data, csvType);
+            }
           });
         }
       }
