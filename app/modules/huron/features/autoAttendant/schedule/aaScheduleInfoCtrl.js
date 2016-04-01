@@ -24,12 +24,15 @@
     vm.isHolidays = isHolidays;
     vm.formatDate = formatDate;
     vm.formatTime = formatTime;
+    vm.isStartTimeSet = false;
 
     $scope.$on('ScheduleChanged', function () {
       if (vm.aaModel.aaRecord.scheduleId) {
         populateScheduleHours();
       }
     });
+
+    vm.scheduleClass = 'aa-panel-body';
 
     function populateScheduleHours() {
       vm.dayGroup = [];
@@ -146,9 +149,11 @@
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
           if (angular.isDefined(vm.openhours) && vm.openhours.length || angular.isDefined(vm.holidays) && vm.holidays.length) {
+            vm.isStartTimeSet = isStartTimePresent();
             getScheduleTitle();
             getHoursInfo();
             prepareDayHourReport();
+            vm.scheduleClass = (vm.isStartTimeSet) ? 'aa-schedule-body' : 'aa-panel-body';
           }
         });
       }
@@ -177,11 +182,21 @@
     }
 
     function formatTime(tt) {
-      return moment(tt).format('hh:mm a');
+      return (tt) ? moment(tt).format('h:mm a') : 0;
     }
 
     function formatDate(dt) {
       return (moment(dt).format('MMM') === 'May') ? moment(dt).format('MMM DD, YYYY') : moment(dt).format('MMM. DD, YYYY');
+    }
+
+    function isStartTimePresent() {
+      var flag = false;
+      _.each(vm.holidays, function (day) {
+        if (day.starttime) {
+          flag = true;
+        }
+      });
+      return flag;
     }
 
     function activate() {

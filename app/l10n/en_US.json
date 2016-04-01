@@ -1078,7 +1078,7 @@
       "loading": "Loading, please wait…",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add Resource",
+      "add-resource-button": "Add a Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define SIP Domain"
     },
@@ -1118,7 +1118,9 @@
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster."
+      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
+      "deregisterSectionHeader": "Deregister",
+      "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1277,17 +1279,17 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
-        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+        "action": "You must either <a ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
       },
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Now, configure and start the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway."
       }
     }
   },
@@ -2203,7 +2205,10 @@
     "EE": "WebEx Enterprise Edition",
     "CO": "Call",
     "ST": "Storage",
-    "SD": "Spark Room System"
+    "SD": "Spark Room System",
+    "deleteOrg": "Delete Org {{orgName}}",
+    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgError": "{{orgName}} was not deleted"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3541,6 +3546,9 @@
     "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
     "managedBy": "Managed By",
+    "supportedBy": "Supported By",
+    "ts": "TS(TAC)",
+    "trials": "Trials",
     "administratorUsers": "Administrator Users",
     "message": "Message",
     "meeting": "Meeting",
