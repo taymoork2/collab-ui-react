@@ -168,14 +168,14 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('AuthCodeLink', function () {
     it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
-      controller.addGenerateAuthCodeLink();
+      controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
       expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
       expect(controller.dropDownItems[0].text).toBe("usersPreview.generateActivationCode");
     });
 
     it('should find existing auth code link when addGenerateAuthCodeLink is called second time', function () {
-      controller.addGenerateAuthCodeLink();
+      controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
     });
 

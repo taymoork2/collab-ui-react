@@ -206,17 +206,6 @@
 
     }; // csvExport()
 
-    // TODO: remove csvImport() once we start implementing the import modal
-    $scope.csvImport = function (siteUrl) {
-      var funcName = "csvImport()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-
-      $log.log(logMsg);
-    }; // csvImport()
-
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
       vm.gridData.forEach(
