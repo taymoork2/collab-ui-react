@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-unreachable:0 */
+
   angular
     .module('Huron')
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);

@@ -14,27 +14,39 @@
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
     vm.useCsdmDeviceSidepanel = null;
     var csdmHuronUserDeviceService = null;
-    checkFeatureToggleForCsdmSidePanel().then(function (res) {
-      if (res) {
-        csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-        vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', angular.noop, {
-          scope: $scope
-        });
-        vm.devices = csdmHuronUserDeviceService.getDeviceList();
-        if (vm.devices.length !== 0) {
-          $scope.userOverview.addGenerateAuthCodeLink();
+    vm.showGenerateOtpButton = false;
+    if (isHuronEnabled()) {
+      checkFeatureToggleForCsdmSidePanel().then(function (res) {
+        if (res) {
+          csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+          vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', addLinkOrButtonForActivationCode, {
+            scope: $scope
+          });
+          vm.devices = csdmHuronUserDeviceService.getDeviceList();
         }
-      }
-      vm.useCsdmDeviceSidepanel = res;
-    }).catch(function () {
-      vm.useCsdmDeviceSidepanel = false;
-    });
+        vm.useCsdmDeviceSidepanel = res;
+      }).catch(function () {
+        vm.useCsdmDeviceSidepanel = false;
+      });
+    }
 
     function checkFeatureToggleForCsdmSidePanel() {
       if ($window.location.search.indexOf("useCsdmDeviceSidepanel=true") > -1) {
         return $q.when(true);
       } else {
         return FeatureToggleService.supports(FeatureToggleService.features.useCsdmDeviceSidepanel);
+      }
+    }
+
+    function addLinkOrButtonForActivationCode() {
+      if (!vm.deviceListSubscription || vm.deviceListSubscription.eventCount !== 0) {
+        if (_.size(vm.devices)) {
+          $scope.userOverview.enableAuthCodeLink();
+          vm.showGenerateOtpButton = false;
+        } else {
+          $scope.userOverview.disableAuthCodeLink();
+          vm.showGenerateOtpButton = true;
+        }
       }
     }
 
@@ -52,9 +64,7 @@
         if (!res) {
           DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
             vm.devices = deviceList;
-            if (vm.devices.length !== 0) {
-              $scope.userOverview.addGenerateAuthCodeLink();
-            }
+            addLinkOrButtonForActivationCode();
           });
         }
       });

@@ -77,4 +77,15 @@ describe('Controller: UserRolesCtrl', function () {
       expect($scope.sipAddr).toEqual(fakeUserJSONFixture.fakeUser2.sipAddresses[0].value);
     });
   });
+
+  describe('Setting of user SIP Address for another user without an approprate SIP address stored: ', function () {
+    beforeEach(function () {
+      $stateParams.currentUser = fakeUserJSONFixture.fakeUser3;
+      initController();
+    });
+
+    it('should set type cloud-calling SIP Address to $scope.sipAddr', function () {
+      expect($scope.sipAddr).toEqual('');
+    });
+  });
 });

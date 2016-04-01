@@ -1,3 +1,58 @@
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
+}
+
+.aa-schedule-modal {
+  width: 785px;
+  background: #FFF none repeat scroll 0% 0%;
+  .aa-schedule-days {
+    padding: 4px;
+    label {
+      @include vr-spacing(mb, 0);
+    }
+  }
+  .aa-schedule-subtitle {
+    font-size: 20px
+  }
+  .aa-schedule-trash {
+    font-size: 35px;
+    color: #858688;
+    float: right;
+  }
+}
+
+.aa-schedule-container {
+  h3{
+    display: inline-block;
+  }
+}
+
+.aa-schedule-info-item {
+  @include vr-spacing(pb, .5);
+  line-height: 1rem;
+  text-align: left;
+}
+
+.aa-column {
+  @include vr-spacing(pl, 1.0);
+  white-space: normal;
+}
+
+.aa-schedule-info-day{
+  @include vr-spacing(pt, 1.0);
+  @include vr-spacing(pr, 0.3);
+}
+
+.aa-schedule-info-hours {
+ color: $gray-light-1;
+ text-align: left;
+}
+
+.aa-trim-padding {
+  @include vr-spacing(pl, 0);
+}
+
 .aa-holidays {
 	background: $gray-light-4;
 	@include vr-spacing(mh, 1.875);
@@ -11,9 +66,11 @@
 		}
 	}
 }
+
 .left-margin-20 {
 	@include vr-spacing(ml, 1.25);
 }
+
 #addHoliday {
 	padding-bottom: 10px;
 	padding-left: 10px;

@@ -49,7 +49,7 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-              } else if (Authinfo.isPartnerAdmin()) {
+              } else if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) {
                 Log.debug('Sending "partner logged in" metrics');
                 LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 state = 'partneroverview';
@@ -82,7 +82,7 @@ angular.module('Core')
       if (!_.isEmpty(Storage.get('accessToken'))) {
         authorizeUser();
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
-        Auth.redirectToLogin();
+        Auth.redirectToLogin(null, queryParams.sso);
       }
 
       // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).

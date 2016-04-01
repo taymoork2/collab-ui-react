@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var LoginPage = function () {
 
   var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));

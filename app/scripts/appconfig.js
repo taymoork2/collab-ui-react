@@ -1827,18 +1827,6 @@ angular
             serviceType: null
           }
         })
-        .state('cluster-details.cluster-settings', {
-          templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
-          controller: 'ExpresswayClusterSettingsController',
-          controllerAs: 'expresswayClusterSettingsCtrl',
-          data: {
-            displayName: 'Edit'
-          },
-          params: {
-            clusterId: null,
-            serviceType: null
-          }
-        })
         .state('cluster-details.alarm-details', {
           templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
           controller: 'AlarmController',

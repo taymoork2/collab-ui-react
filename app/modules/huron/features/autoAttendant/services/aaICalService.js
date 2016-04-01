@@ -12,7 +12,8 @@
       createCalendar: createCalendar,
       getDefaultRange: getDefaultRange,
       addHoursRange: addHoursRange,
-      getHoursRanges: getHoursRanges
+      getHoursRanges: getHoursRanges,
+      getDefaultDayHours: getDefaultDayHours
     };
 
     return service;
@@ -160,7 +161,7 @@
 
       var vevents = calendar.getAllSubcomponents("vevent");
 
-      _.forEach(vevents, function (vevent) {
+      _.forEach(vevents, function (vevent, index) {
         var event = new ical.Event(vevent);
 
         // create vtimezone
@@ -202,11 +203,37 @@
           }
           holidayRanges.push(hoursRange);
         }
+
       });
       return {
         hours: hoursRanges,
         holidays: holidayRanges
       };
+    }
+
+    function getDefaultDayHours() {
+      return [{
+        label: 'Monday',
+        hours: []
+      }, {
+        label: 'Tuesday',
+        hours: []
+      }, {
+        label: 'Wednesday',
+        hours: []
+      }, {
+        label: 'Thursday',
+        hours: []
+      }, {
+        label: 'Friday',
+        hours: []
+      }, {
+        label: 'Saturday',
+        hours: []
+      }, {
+        label: 'Sunday',
+        hours: []
+      }];
     }
   }
 })();

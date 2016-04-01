@@ -41,7 +41,8 @@
         if (Config.isDev() || Config.isIntegration()) {
           $modal.open({
             templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
-            controller: 'AATypeSelectCtrl'
+            controller: 'AATypeSelectCtrl',
+            size: 'lg'
           });
         } else {
           $state.go('huronfeatures.aabuilder', {

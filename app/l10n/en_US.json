@@ -755,7 +755,8 @@
     "user": "User",
     "ipAddress": "IP Address",
     "tryAgain": "Try Again",
-    "postpone": "Postpone"
+    "postpone": "Postpone",
+    "continue": "Continue"
   },
   "notifications": {
     "success": "Success notifications",
@@ -899,6 +900,7 @@
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
     "carrierCountryGetError": "Failed to get phone carrier information.",
+    "siteUpdateError": "Failed to update site.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
@@ -1077,7 +1079,7 @@
       "loading": "Loading, please wait…",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
-      "add-resource-button": "Add Resource",
+      "add-resource-button": "Add a Resource",
       "add-resource-button-information": " to start the registration and configuration of your Expressways.",
       "setupCloudSipUriHeader": "Define SIP Domain"
     },
@@ -1117,7 +1119,9 @@
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster."
+      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
+      "deregisterSectionHeader": "Deregister",
+      "deregisterSectionBody": "Disconnect this cluster from Cisco Collaboration Cloud and remove all connectors and related configuration."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1172,6 +1176,9 @@
       "contact-center-context": "",
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
+    },
+    "serviceHelpInfo": {
+      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -1276,17 +1283,17 @@
       },
       "connect": {
         "title": "Enable Call Service Connect for Users",
-        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the appropriate option in Expressway for how to create CTI remote devices for your users. "
+        "navigateToUsers": "You have successfully configured Call Service Connect. Go to <a ng-click=\"{{onclick}}\">User and Group Management</a> to enable Call Service Connect for your users. Make sure you selected the applicable method in Expressway to create CTI remote devices for your users. "
       },
       "scheduleUpgrade": {
         "title": "Acknowledge the Scheduled Upgrade",
         "description": "The clusters for this service have a default time set for a scheduled upgrade",
-        "action": "You must either <a ng-click=\"{{onclick}}\">change it or confirm it.</a>"
+        "action": "You must either <a ng-click=\"{{onclick}}\">change the time or confirm it.</a>"
       },
       "configure-connector": {
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
-        "action": "Now, configure and start the Connector on the Expressway."
+        "action": "Next, configure the Connector on the Expressway."
       }
     }
   },
@@ -1472,22 +1479,15 @@
     "assignDnAndDirectLines": "Assign Numbers",
     "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
     "mapDirectLineWithExt": "Map Direct Line With Extension",
-    "reset": "Reset"
+    "reset": "Reset",
+    "tosReadAndAgree": "I have read and agree to these",
+    "tosTermsAndConditions": "terms and conditions"
   },
   "reports": {
     "title": "Reports",
     "engagementTab": "Engagement",
     "qualityTab": "Quality",
     "opportunitiesTab": "Opportunities",
-    "time": "All time",
-    "week": "Previous week",
-    "month": "Previous month",
-    "threeMonths": "Last three months",
-    "mostEngaged": "5 most engaged",
-    "leastEngaged": "5 least engaged",
-    "highQuality": "5 highest quality",
-    "leastQuality": "5 lowest quality",
-    "services": "All services",
     "UsersOnboarded": "Users Onboarded this Month",
     "AvgCallsPerUser": "Avg. Calls per User this Month",
     "AvgRoomsPerUser": "Avg. Rooms per User this Month",
@@ -1499,11 +1499,10 @@
     "ContentShared": "Files Shared this Month",
     "AmountofContentShared": "GB of Content Shared this Month",
     "UserEngagement": "User Engagement",
-    "weekOf": "Week Ending",
     "numberOfCallsAxis": "Number of Calls (Total)",
     "numberOfRoomsAxis": "Number of Rooms (Avg.)",
     "numberActiveAxis": "Number of Active Users (Total)",
-    "oneRoomAxis": "Number of 1:1 Rooms (total)",
+    "oneRoomAxis": "Number of 1:1 Rooms (Total)",
     "groupRoomsAxis": "Number of Group Rooms (Total)",
     "videoCallsAxis": "Number of Video Calls (Total)",
     "avgCallsAxis": "Call Duration in Minutes (Avg.)",
@@ -1511,9 +1510,8 @@
     "numberCallsAxis": "Number of Calls (Total)",
     "filesSharedAxis": "Number of Files Shared (Total)",
     "gbSharedAxis": "Number of Gigabytes Shared (Total)",
-    "orgDsc": "The total number of users in an organization.",
-    "onboardDsc": "The total number of users who have logged in or have been entitled to Spark.",
-    "activeDsc": "The total number of users who sent/read a message or created/entered a room in the past week.",
+    "error": "There was a problem loading data for {{graph}}.",
+    "weekOf": "Week Ending",
     "allCustomers": "All Customers"
   },
   "callRouting": {
@@ -1535,9 +1533,12 @@
     "successCreateCe": "{{name}} created successfully.",
     "successDeleteCe": "{{name}} deleted successfully.",
     "successUpdateCe": "{{name}} updated successfully.",
+    "successImport": "Imported {{hours}} Open/Closed Hours and {{holidays}} Holidays Successfully",
     "errorCreateCe": "Failed to create {{name}}: {{statusText}} ({{status}}).",
     "errorDeleteCe": "Failed to delete {{name}}: {{statusText}} ({{status}}).",
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
+    "errorCreateSchedule": "Failed to create schedule for {{name}}: {{statusText}} ({{status}}).",
+    "errorDeletePredefinedSchedule": "Failed to remove the predefined schedule for {{name}}: {{statusText}} ({{status}}).",
     "newCardCustom": "Create custom messages, build phone menus, and route calls.",
     "resourceCountPlusMore": "+{{count}} more",
     "builderTitle": "Auto Attendant Builder",
@@ -1609,7 +1610,11 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "selectAA": "Select Auto Attendant",
+    "importSchedule": "Import Schedule",
+    "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
     "closedBehavious": "Holidays Follow Closed Behavior",
+    "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1694,7 +1699,8 @@
     "AABasic": "Basic",
     "AABasicDesc": "Simple played messages with custom phone menu.",
     "AACustom": "Custom",
-    "AACustomDesc": "Create a custom Auto Attendant."
+    "AACustomDesc": "Create a custom Auto Attendant.",
+    "AAOpenClosedDesc": "Simple open/closed schedule with custom message and phone menu."
   },
   "callPark": {
     "code": "CP",
@@ -2203,7 +2209,10 @@
     "EE": "WebEx Enterprise Edition",
     "CO": "Call",
     "ST": "Storage",
-    "SD": "Spark Room System"
+    "SD": "Spark Room System",
+    "deleteOrg": "Delete Org {{orgName}}",
+    "deleteOrgSuccess": "{{orgName}} was successfully deleted",
+    "deleteOrgError": "{{orgName}} was not deleted"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3541,6 +3550,9 @@
     "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
     "managedBy": "Managed By",
+    "supportedBy": "Supported By",
+    "ts": "TS(TAC)",
+    "trials": "Trials",
     "administratorUsers": "Administrator Users",
     "message": "Message",
     "meeting": "Meeting",
