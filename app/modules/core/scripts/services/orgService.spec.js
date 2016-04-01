@@ -58,6 +58,8 @@ describe('orgService', function () {
     httpBackend.when('GET', 'l10n/en_US.json').respond({});
   }));
 
+  beforeEach(installPromiseMatchers);
+
   afterEach(function () {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
@@ -192,7 +194,6 @@ describe('orgService', function () {
 
   it('should successfully set organization settings', function () {
     var orgId = Authinfo.getOrgId();
-    var callback = sinon.stub();
     var payload = {
       reportingSiteUrl: 'http://example.com',
       reportingSiteDesc: 'Description',
@@ -200,12 +201,11 @@ describe('orgService', function () {
       isCiscoHelp: true,
       isCiscoSupport: false
     };
-    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
-    httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
-    Orgservice.setOrgSettings(orgId, payload, callback);
+    httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
+    httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
+    var promise = Orgservice.setOrgSettings(orgId, payload);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(true);
+    expect(promise).toBeResolved();
   });
 
   it('should fail to set organization settings', function () {
@@ -220,10 +220,9 @@ describe('orgService', function () {
     };
     httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
     httpBackend.when('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
-    Orgservice.setOrgSettings(orgId, payload, callback);
+    var promise = Orgservice.setOrgSettings(orgId, payload);
     httpBackend.flush();
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].success).toBe(false);
+    expect(promise).toBeRejected();
   });
 
   it('should overwrite current settings with new settings', function () {
@@ -235,7 +234,7 @@ describe('orgService', function () {
     var settings = {
       'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com'
     };
-    httpBackend.when('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, currentSettings);
+    httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, currentSettings);
 
     // Assert PATCH data overwrites current reporting url with new reporting url
     httpBackend.expect('PATCH', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', {
@@ -243,9 +242,9 @@ describe('orgService', function () {
       'isCiscoSupport': true
     }).respond(200, {});
 
-    Orgservice.setOrgSettings(orgId, settings, callback);
-
-    expect(httpBackend.flush).not.toThrow();
+    var promise = Orgservice.setOrgSettings(orgId, settings, callback);
+    httpBackend.flush();
+    expect(promise).toBeResolved();
   });
 
   it('should get Acknowledged', function () {

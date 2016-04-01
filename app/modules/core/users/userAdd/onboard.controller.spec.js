@@ -1,5 +1,3 @@
-/* global installPromiseMatchers */
-
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
