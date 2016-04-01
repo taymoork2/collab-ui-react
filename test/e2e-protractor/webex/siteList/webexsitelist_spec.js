@@ -52,7 +52,7 @@ describe('Services > Webex page aka Site List page', function () {
   });
 
   //Start tests to detect 'Not Available' and warning icon conditions 
-  xdescribe("test CSV 'Not Anavailable' and warning icon conditions : ", function () {
+  describe("test CSV 'Not Anavailable' condition : ", function () {
     var setup = false;
 
     beforeAll(function () {
@@ -74,6 +74,30 @@ describe('Services > Webex page aka Site List page', function () {
     it("should detect 'Not Available' for T30 site", function () {
       if (setup) {
         utils.wait(sitelist.t30csvNotAvail);
+      }
+    });
+
+    afterAll(function () {
+      navigation.logout();
+    });
+  });
+
+  describe("test CSV warning icon condition: ", function () {
+    var setup = false;
+
+    beforeAll(function () {
+      var promise = webEx.setup(sitelist.t30csvWbxNotEntitledUser.testAdminUsername, sitelist.t30csvWbxNotEntitledUser.testAdminPassword, sitelist.t30csvNotAvailableUser.siteUrl);
+      promise.then(function (ticket) {
+        if (ticket) {
+          setup = true;
+        }
+      });
+    });
+
+    it('should login as admin user ' + sitelist.t30csvWbxNotEntitledUser.testAdminUsername + ', and navigate to site list page', function () {
+      if (setup) {
+        navigation.clickServicesTab();
+        utils.click(sitelist.conferencingLink);
       }
     });
 
