@@ -91,21 +91,22 @@
         isOpen: true
       });
       if (index >= 0) {
+        var indexForm = 'holidayForm' + index;
         if (!isHolidaysSavable()) {
-          vm.holidaysForm['holidayForm' + index].holidayName.$setDirty();
-          vm.holidaysForm['holidayForm' + index].holidayDate.$setDirty();
-          vm.holidaysForm['holidayForm' + index].holidayStart.$setDirty();
-          vm.holidaysForm['holidayForm' + index].holidayEnd.$setDirty();
+          vm.holidaysForm[indexForm].holidayName.$setDirty();
+          vm.holidaysForm[indexForm].holidayDate.$setDirty();
+          vm.holidaysForm[indexForm].holidayStart.$setDirty();
+          vm.holidaysForm[indexForm].holidayEnd.$setDirty();
         }
         if (!vm.holidays[index].exactDate) {
           if (vm.holidays[index].month == '') {
-            vm.holidaysForm['holidayForm' + index].month.$error.required = true;
+            vm.holidaysForm[indexForm].month.$error.required = true;
           }
           if (vm.holidays[index].rank == '') {
-            vm.holidaysForm['holidayForm' + index].rank.$error.required = true;
+            vm.holidaysForm[indexForm].rank.$error.required = true;
           }
           if (vm.holidays[index].day == '') {
-            vm.holidaysForm['holidayForm' + index].day.$error.required = true;
+            vm.holidaysForm[indexForm].day.$error.required = true;
           }
         }
       }
@@ -393,6 +394,11 @@
             vm.openhours.unshift(value);
           });
           allHours.holidays.forEach(function (value) {
+            if (!value.exactDate) {
+              value.month.labelTranslate = $translate.instant(value.month.label);
+              value.rank.labelTranslate = $translate.instant(value.rank.label);
+              value.day.labelTranslate = $translate.instant(value.day.label);
+            }
             vm.holidays.unshift(value);
           });
           vm.holidaysForm.$setDirty();
