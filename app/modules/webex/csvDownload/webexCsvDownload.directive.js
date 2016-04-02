@@ -22,35 +22,35 @@
     function downloadCsv() {
       var logMsg = "";
 
-      if (
-        (vm.type == WebExCsvDownloadService.typeWebExExport) ||
-        (vm.type == WebExCsvDownloadService.typeWebExImport)
-      ) {
-
-        WebExCsvDownloadService.getWebExCsv(
-          vm.type,
-          vm.fileDownloadUrl
-        ).then(
-
-          function (csvData) {
-            var objectUrl = WebExCsvDownloadService.createObjectUrl(
-              csvData.content,
-              vm.type
-            );
-
-            $scope.$emit('downloaded', objectUrl);
-          }
-
-        ).catch(
-
-          function (response) {
-            Notification.errorResponse(response, 'firstTimeWizard.downloadError');
-          }
-        );
-      } else if (vm.type) {
+      if (vm.type) {
         $scope.$emit('download-start');
 
-        if (vm.type == WebExCsvDownloadService.typeUser) {
+        if (
+          (vm.type == WebExCsvDownloadService.typeWebExExport) ||
+          (vm.type == WebExCsvDownloadService.typeWebExImport)
+        ) {
+
+          WebExCsvDownloadService.getWebExCsv(
+            vm.type,
+            vm.fileDownloadUrl
+          ).then(
+
+            function (csvData) {
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(
+                csvData.content,
+                vm.type
+              );
+
+              $scope.$emit('downloaded', objectUrl);
+            }
+
+          ).catch(
+
+            function (response) {
+              Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+            }
+          );
+        } else if (vm.type == WebExCsvDownloadService.typeUser) {
           WebExCsvDownloadService.getCsv(
             vm.type
           ).then(
@@ -69,7 +69,6 @@
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
             }
           );
-
         }
       }
     }
