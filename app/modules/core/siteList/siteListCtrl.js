@@ -16,7 +16,7 @@
     Notification
   ) {
 
-    var funcName = "siteListCtrl()";
+    var funcName = "SiteListCtrl()";
     var logMsg = "";
 
     var vm = this;
@@ -74,7 +74,7 @@
           conferenceService.csvMock = {
             mockExport: false,
             mockImport: true,
-            mockFileDownload: true,
+            mockFileDownload: false,
             mockStatus: false,
 
             // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
