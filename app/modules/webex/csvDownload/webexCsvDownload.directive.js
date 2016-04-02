@@ -85,7 +85,7 @@
 
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/webex/csvDownload/csvDownload.tpl.html',
+      templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
       scope: {
         type: '@',
         downloading: '@'
