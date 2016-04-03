@@ -304,7 +304,10 @@ $aa-builder-text-color: $gray-dark-1;
   .text-info-left {
     color: $color-people-base;
     text-align: left;
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pb, 1);
   }
+
   .aa-panel-body {
     @extend .panel-body;
 
@@ -317,6 +320,11 @@ $aa-builder-text-color: $gray-dark-1;
     &:hover {
       border-color: $color-primary-base;
     }
+  }
+
+  .aa-schedule-body {
+    @extend .aa-panel-body;
+    width: rem-calc(380);
   }
 
   .aa-panel-body-endcall {

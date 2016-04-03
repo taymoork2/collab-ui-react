@@ -15,10 +15,20 @@
       'balloonColor': chartColors.grayLight,
       'columnWidth': 0.6
     };
+    baseVariables['line'] = {
+      'type': 'line',
+      'bullet': 'round',
+      'fillAlphas': 0,
+      'lineAlpha': 1,
+      'lineThickness': 3,
+      'hidden': false
+    };
     baseVariables['axis'] = {
       'axisColor': chartColors.grayLight,
       'gridColor': chartColors.grayLight,
       'color': chartColors.grayDarkest,
+      'titleColor': chartColors.grayDarkest,
+      'fontFamily': 'CiscoSansTT Light',
       'gridAlpha': 0,
       'axisAlpha': 1,
       'tickLength': 0
@@ -101,7 +111,7 @@
         'type': 'serial',
         'startEffect': 'easeOutSine',
         'addClassNames': true,
-        'fontFamily': 'Arial',
+        'fontFamily': 'CiscoSansTT Extra Light',
         'backgroundColor': chartColors.brandWhite,
         'backgroundAlpha': 1,
         'balloon': baseVariables['balloon'],

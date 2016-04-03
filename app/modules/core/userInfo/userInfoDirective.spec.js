@@ -1,25 +1,71 @@
 'use strict';
 
 describe('UserInfoDirective', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  var $compile, $rootScope, Authinfo, Userservice;
+  var view, scope;
 
-  var $compile, $rootScope;
-  beforeEach(inject(function ($httpBackend, _$compile_, _$rootScope_) {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+  beforeEach(inject(dependencies));
+  beforeEach(initSpies);
+
+  function dependencies(_$compile_, _$rootScope_, _Authinfo_, _Userservice_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    $httpBackend.when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
-    $httpBackend.when('POST', 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl').respond({});
-  }));
+    Authinfo = _Authinfo_;
+    Userservice = _Userservice_;
+  }
 
-  it('replaces the element with the appropriate content', function () {
-    var element = $compile("<cr-user-info/>")($rootScope);
-    $rootScope.$digest();
+  function initSpies() {
+    spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
+    spyOn(Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+    spyOn(Userservice, 'getUser');
+  }
 
-    expect($rootScope.sendFeedback).toBeTruthy();
-    $rootScope.sendFeedback = sinon.stub();
+  function compileTemplate() {
+    view = $compile("<cr-user-info/>")($rootScope);
+    $rootScope.$apply();
+    scope = view.scope();
+  }
 
-    element.find('#feedback-lnk').click();
-    expect($rootScope.sendFeedback.callCount).toBe(1);
+  describe('Feedback Link', function () {
+    var FEEDBACK_LINK = '#feedback-lnk';
+    it('should send feedback on click', function () {
+      compileTemplate();
+      spyOn(scope, 'sendFeedback');
+
+      view.find(FEEDBACK_LINK).click();
+      expect(scope.sendFeedback).toHaveBeenCalled();
+    });
+  });
+
+  describe('Video Tutorial Link', function () {
+    var VIDEO_TUTORIAL_LINK = '#videoTutorial-lnk';
+
+    it('should not exist for regular admin', function () {
+      compileTemplate();
+      expect(view.find(VIDEO_TUTORIAL_LINK).length).toBe(0);
+    });
+
+    describe('should exist', function () {
+      afterEach(clickAndVerifyOpenVideo);
+
+      it('for a partner admin', function () {
+        Authinfo.isPartnerAdmin.and.returnValue(true);
+      });
+
+      it('for a partner sales admin', function () {
+        Authinfo.isPartnerSalesAdmin.and.returnValue(true);
+      });
+
+      function clickAndVerifyOpenVideo() {
+        compileTemplate();
+        spyOn(scope, 'openVideo');
+
+        view.find(VIDEO_TUTORIAL_LINK).click();
+        expect(scope.openVideo).toHaveBeenCalled();
+      }
+    });
   });
 });
