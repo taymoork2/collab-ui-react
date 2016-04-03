@@ -129,5 +129,9 @@
     vm.openFirstTimeSetupWiz = function () {
       $state.go('firsttimewizard');
     };
+
+    vm.displayNotifications = function () {
+      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)))
+    };
   }
 })();

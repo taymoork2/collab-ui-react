@@ -215,7 +215,7 @@ describe('Controller: OverviewCtrl', function () {
   describe('Cloud SIP URI Notification', function () {
     beforeEach(inject(defaultWireUpFunc));
     beforeEach(function () {
-      Orgservice.getOrg = jasmine.createSpy().and.callFake(function (callback, status) {
+      Orgservice.getOrg = jasmine.createSpy().and.callFake(function (callback, oid, disableCache) {
         callback({
           orgSettings: {}
         }, 200);
