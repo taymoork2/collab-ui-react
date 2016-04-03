@@ -131,7 +131,7 @@
     };
 
     vm.displayNotifications = function () {
-      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)))
+      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)));
     };
   }
 })();
