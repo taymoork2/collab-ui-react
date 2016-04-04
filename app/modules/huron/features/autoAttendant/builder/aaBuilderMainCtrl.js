@@ -345,9 +345,7 @@
     }
 
     function canSaveAA() {
-      if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
-        vm.canSave = true;
-      } else if (AACommonService.isFormDirty()) {
+      if (AACommonService.isFormDirty()) {
         vm.canSave = true;
       } else if (vm.aaModel.possibleNumberDiscrepancy) {
         vm.canSave = true;

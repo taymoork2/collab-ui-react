@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService, AACommonService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -88,7 +88,7 @@
       vm.availablePhoneNums.sort(function (a, b) {
         return compareNumbersExternalThenInternal(a.value, b.value);
       });
-
+      AACommonService.setCENumberStatus(true);
       deleteAAResource(number);
 
       // clear selection
@@ -166,6 +166,7 @@
               }
 
               sortAssignedResources(resources);
+              AACommonService.setCENumberStatus(true);
 
             },
             function (response) {
