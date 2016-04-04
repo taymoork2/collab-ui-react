@@ -62,6 +62,7 @@
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
     $scope.isHuronUser = isHuronUser;
+    $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
@@ -314,6 +315,14 @@
       return false;
     }
 
+    // if there is only one Admin in the org, the user should not be able to delete it
+    function isOnlyAdmin(entity) {
+      if ($scope.userList.adminUsers.length < 2) {
+        return $scope.userList.adminUsers[0].userName === entity.userName;
+      }
+      return false;
+    }
+
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
       if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
         sendSparkWelcomeEmail(userEmail, userName);
@@ -374,10 +383,11 @@
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
+
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
@@ -466,8 +476,9 @@
     }
 
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
+    // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
-      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id'));
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
     }
 
     function isValidThumbnail(user) {
