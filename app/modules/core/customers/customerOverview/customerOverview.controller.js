@@ -210,7 +210,7 @@
     function deleteTestOrg() {
       if (vm.isTest) {
         if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
-          Orgservice.deleteOrg(vm.customerOrgId).then(function (){
+          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
             Notification.success('customerPage.deleteOrgSuccess', {
               orgName: vm.customerName
             });
