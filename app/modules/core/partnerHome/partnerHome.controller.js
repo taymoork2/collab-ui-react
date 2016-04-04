@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, PartnerService, Notification, Log, Authinfo) {
+  function PartnerHomeCtrl($scope, $state, $window, PartnerService, Notification, Log, Authinfo, Orgservice, Localytics) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -13,6 +13,8 @@
     $scope.expiredRows = 3;
     $scope.showTrialsRefresh = true;
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
+    $scope.isTestOrg = false;
+
     $scope.launchCustomerPortal = launchCustomerPortal;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.getProgressStatus = getProgressStatus;
@@ -28,9 +30,22 @@
       if ($scope.activeList) {
         $scope.activeCount = $scope.activeList.length;
       }
+
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          $scope.isTestOrg = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      });
     }
 
     function openAddTrialModal() {
+      if ($scope.isTestOrg) {
+        Localytics.tagEvent('Start Trial Button Click', {
+          from: $state.current.name
+        });
+      }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(getTrialsList);
       });
