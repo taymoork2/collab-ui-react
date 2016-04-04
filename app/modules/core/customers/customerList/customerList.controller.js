@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, PstnSetupService, $window, TrialService, Orgservice, Log, Notification, NumberSearchServiceV2, Localytics) {
+  function CustomerListCtrl($q, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, Localytics, Log, Notification, NumberSearchServiceV2, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
     $scope.isTestOrg = false;

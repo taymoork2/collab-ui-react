@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, PartnerService, Notification, Log, Authinfo, Orgservice, Localytics) {
+  function PartnerHomeCtrl($scope, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
