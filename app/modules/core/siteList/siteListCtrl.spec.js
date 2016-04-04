@@ -124,16 +124,6 @@ describe('SiteListCtrl: should launch export function', function () {
     spyOn(SiteListService, 'updateCSVColumnInRow');
     spyOn(Notification, 'success');
 
-    beforeEach(function () {
-      deferredCsvStatus.resolve({
-        siteUrl: 'fake.webex.com',
-        isTestResult: true,
-        status: WebExApiGatewayConstsService.csvStates.exportInProgress,
-        completionDetails: null,
-      });
-      //scope.$apply();
-    });
-
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
       Authinfo: Authinfo,
@@ -144,12 +134,20 @@ describe('SiteListCtrl: should launch export function', function () {
 
   it('should be able to call export function with expected parameters', function () {
 
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+      completionDetails: null,
+    });
+    //scope.$apply();
+
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
     scope.csvExport(fakeSiteRow);
 
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
-    //expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
+    expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
 
   });
 
