@@ -19,7 +19,6 @@
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
       checkAANumberAssignments: checkAANumberAssignments,
-      formatAAE164ResourcesBasedOnList: formatAAE164ResourcesBasedOnList,
       formatAAE164ResourcesBasedOnCMI: formatAAE164ResourcesBasedOnCMI,
       formatAAExtensionResourcesBasedOnCMI: formatAAExtensionResourcesBasedOnCMI,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
@@ -98,6 +97,14 @@
     function formatAAE164Resource(res, extNum) {
       if (res.getType() === service.EXTERNAL_NUMBER) {
         var fmtRes = angular.copy(res);
+        if (extNum instanceof Array) {
+          var num = res.id ? res.id.replace(/\D/g, '') : res.number.replace(/\D/g, '');
+          extNum = _.find(extNum, function (obj) {
+            return obj.pattern.replace(/\D/g, '') === num;
+          });
+
+        }
+
         if (extNum) {
           // For external numbers, save the number in id so it's matched in call processsing
           // Save the E164 in number
@@ -118,30 +125,13 @@
       }
     }
 
-    // Format AA E164 resources based on a list of external numbers from CMI
-    function formatAAE164ResourcesBasedOnList(resources, externalNumberList) {
-      var formattedResources = _.map(resources, function (res) {
-
-        var extNum = _.find(externalNumberList, function (n) {
-          if (res.number)
-            return n.pattern.replace(/\D/g, '') === res.number.replace(/\D/g, '');
-          else
-            return n.pattern.replace(/\D/g, '') === res.id.replace(/\D/g, '');
-        });
-        return formatAAE164Resource(res, extNum);
-      });
-
-      return formattedResources;
-    }
-
     // Format AA E164 resources based on entries in CMI external number list
     function formatAAE164ResourcesBasedOnCMI(resources) {
 
       var formattedResources = _.map(resources, function (res) {
 
         return TelephonyInfoService.loadExternalNumberPool(res.number.replace(/\D/g, '')).then(function (extNums) {
-          return formatAAE164ResourcesBasedOnList([res], extNums)[0];
-
+          return formatAAE164Resource(res, extNums);
         });
 
       });
