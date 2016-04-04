@@ -58,7 +58,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -70,7 +70,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -85,7 +85,7 @@ describe('Huron Auto Attendant', function () {
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -107,7 +107,7 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
     }, 60000);
@@ -163,7 +163,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -202,7 +202,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -322,7 +322,7 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -340,7 +340,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.day1);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
@@ -355,7 +355,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
@@ -372,7 +372,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.starttime, '2:30AM');
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
     it('should delete a AA Schedule', function () {
@@ -382,7 +382,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
