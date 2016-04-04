@@ -18,6 +18,7 @@
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',
       atlasWebexTrials: 'atlas-webex-trials',
       atlasDeviceTrials: 'atlas-device-trials',
+      atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasTrialConversion: 'atlas-trial-conversion',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',

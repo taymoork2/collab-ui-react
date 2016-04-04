@@ -51,6 +51,9 @@
     vm.timeZoneOptions = [];
     vm.unassignedExternalNumbers = [];
     vm.allExternalNumbers = [];
+    vm.steeringDigits = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    ];
 
     vm.model = {
       site: {
@@ -80,7 +83,8 @@
       internationalDialingUuid: null,
       showServiceAddress: false,
       serviceNumber: undefined,
-      serviceNumberWarning: false
+      serviceNumberWarning: false,
+      ftswSteeringDigit: undefined
     };
 
     vm.validations = {
@@ -228,11 +232,6 @@
       },
       hideExpression: function () {
         return vm.hideFieldSteeringDigit;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return true;
-        }
       }
     }, {
       className: 'service-setup service-setup-extension',
@@ -684,34 +683,30 @@
       }
     }
 
-    function updateSiteVoicemailNumber(voicemailNumber) {
-      var site = {};
-      if (voicemailNumber) {
-        site.voicemailPilotNumber = voicemailNumber;
-      } else {
-        // Assume disable voicemail when no pilot number is set
-        site.disableVoicemail = true;
-      }
-
-      return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, site)
-        .then(function () {
-          // Set the new site voicemail pilot number
-          if (site.voicemailPilotNumber) {
-            vm.model.site.voicemailPilotNumber = site.voicemailPilotNumber;
-          } else if (site.disableVoicemail) {
+    function updateSiteVoicemailNumber(siteData) {
+      if (!_.isEmpty(siteData)) {
+        return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
+          .then(function () {
+            // Set the new site voicemail pilot number
+            if (siteData.voicemailPilotNumber) {
+              vm.model.site.voicemailPilotNumber = siteData.voicemailPilotNumber;
+            } else if (siteData.disableVoicemail) {
+              vm.model.site.voicemailPilotNumber = undefined;
+            }
+          })
+          .then(loadVoicemailUserTimeZone)
+          .catch(function (response) {
+            // unset the site voicemail pilot number
             vm.model.site.voicemailPilotNumber = undefined;
-          }
-        })
-        .then(loadVoicemailUserTimeZone)
-        .catch(function (response) {
-          // unset the site voicemail pilot number
-          vm.model.site.voicemailPilotNumber = undefined;
-          errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-          return $q.reject(response);
-        });
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteUpdateError'));
+            return $q.reject(response);
+          });
+      } else {
+        return $q.when();
+      }
     }
 
-    function updateSiteEmergencyCallBack() {
+    function saveEmergencyCallBack() {
       if (vm.model.serviceNumber && (_.get(vm, 'model.serviceNumber.pattern') !== _.get(vm, 'model.site.emergencyCallBackNumber.pattern'))) {
         var site = {};
         site.emergencyCallBackNumber = {
@@ -726,22 +721,27 @@
       }
     }
 
-    function updateSiteVoicemail() {
+    function updateSite() {
+      var siteData = {};
+      if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+        siteData.steeringDigit = vm.model.site.steeringDigit;
+      }
       // Save the existing site voicemail pilot number, before overwritting with the new value
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         // When the toggle is ON, update the site if the pilot number changed or wasn't set,
         // otherwise, don't update site since nothing changed.
         if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.pattern')) {
-          return updateSiteVoicemailNumber(vm.model.companyVoicemail.companyVoicemailNumber.pattern);
+          siteData.voicemailPilotNumber = vm.model.companyVoicemail.companyVoicemailNumber.pattern;
         }
       } else {
         // When the toggle is OFF, update the site if the customer has voicemail
         // to disable voicemail, otherwise they already have voice only and don't
         // require an update.
         if (vm.hasVoicemailService) {
-          return updateSiteVoicemailNumber();
+          siteData.disableVoicemail = true;
         }
       }
+      return updateSiteVoicemailNumber(siteData);
     }
 
     function updateVoicemailUserTemplate() {
@@ -826,6 +826,7 @@
             .then(function (site) {
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
+              vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -1020,21 +1021,24 @@
       return $q.when(true)
         .then(showDisableVoicemailWarning)
         .then(updateCustomerVoicemail)
-        .then(updateSiteVoicemail)
-        .then(updateVoicemailUserTimeZone);
+        .then(updateSite)
+        .then(updateVoicemailUserTimeZone)
+        .catch(_.noop);
     }
 
     function saveExternalNumbers() {
       return $q.when(true)
         .then(releaseCallerIdNumber)
         .then(saveVoicemailNumber)
-        .then(saveCallerId);
+        .then(saveCallerId)
+        .then(saveEmergencyCallBack);
     }
 
     function saveCompanyNumbers() {
       return saveExternalNumbers()
         .catch(_.noop)
-        .then(loadExternalNumbers);
+        .then(loadExternalNumbers)
+        .then(loadSite);
     }
 
     function saveInternalNumberRanges() {
@@ -1129,7 +1133,6 @@
         })
         .catch(function (response) {
           errors.push(Notification.processErrorResponse(response, 'huronSettings.companyCallerIdsaveError'));
-          return $q.reject();
         });
     }
 
@@ -1146,11 +1149,6 @@
               .then(loadInternationalDialing);
           }
         });
-    }
-
-    function saveEmergencyCallBack() {
-      return $q.when(true)
-        .then(updateSiteEmergencyCallBack);
     }
 
     function init() {
@@ -1175,10 +1173,8 @@
     function save() {
       vm.processing = true;
       errors = [];
-
       var promises = [];
       promises.push(saveCompanyNumbers());
-      promises.push(saveEmergencyCallBack());
       promises.push(saveInternalNumberRanges());
       promises.push(saveInternationalDialing());
 

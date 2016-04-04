@@ -5,6 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
+var processEnvUtil = require('../utils/processEnvUtil.gulp')();
 var $ = require('gulp-load-plugins')({
   lazy: true
 });
@@ -24,7 +25,7 @@ gulp.task('scss:build', ['clean:css'], function () {
     .pipe($.sourcemaps.init())
     .pipe($.plumber(function (error) {
       log(colors.red(error));
-      if (config.isJenkins()) {
+      if (processEnvUtil.isJenkins()) {
         log('Environment is jenkins, aborting...');
         process.exit(1);
       } else {
