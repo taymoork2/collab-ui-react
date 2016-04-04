@@ -90,6 +90,7 @@
     "retire": "^1.1.4",
     "run-sequence": "^1.1.0",
     "selenium-webdriver": "^2.53.1",
+    "semver": "^5.1.0",
     "sinon": "^1.14.1",
     "sprintf-js": "^1.0.3",
     "touch": "^1.0.0",
