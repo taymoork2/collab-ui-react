@@ -147,7 +147,7 @@ describe('SiteListCtrl: should launch export function', function () {
     scope.csvExport(fakeSiteRow);
 
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
-    expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
+    //expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
 
   });
 
