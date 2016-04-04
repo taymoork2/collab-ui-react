@@ -9,7 +9,7 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, ExternalNumberPoolService, TelephonyInfoService) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, TelephonyInfoService) {
 
     var feature;
     var customerId = Authinfo.getOrgId();
