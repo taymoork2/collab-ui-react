@@ -142,4 +142,11 @@ describe('Controller: CustomerOverviewCtrl', function () {
     });
   });
 
+  describe('should call deleteOrg successfully', function () {
+    it('should call deleteTestOrg', function () {
+      controller.deleteTestOrg();
+      expect($window.confirm).toHaveBeenCalled();
+    });
+  });
+
 });
