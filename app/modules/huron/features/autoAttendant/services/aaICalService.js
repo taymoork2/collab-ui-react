@@ -280,7 +280,6 @@
           calendar.addSubcomponent(vevent);
         }
       }
-      console.log(calendar.toString());
     }
 
     function getNextOccurrenceHolidays(hoursRange) {
