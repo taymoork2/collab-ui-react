@@ -16,6 +16,9 @@
     "clear": "Clear",
     "add": "Add Users",
     "entitle": "Entitle",
+    "invitePending": "Invite Pending",
+    "inviteMsg": "Users services are pending and will be shown here when the user activates their account",
+    "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
@@ -900,6 +903,7 @@
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
     "carrierCountryGetError": "Failed to get phone carrier information.",
+    "siteUpdateError": "Failed to update site.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
@@ -1175,6 +1179,9 @@
       "contact-center-context": "",
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
+    },
+    "serviceHelpInfo": {
+      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",

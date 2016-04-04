@@ -17,9 +17,15 @@ var SiteListPage = function () {
     testAdminPassword: 'Cisco!23'
   };
 
+  this.t30csvWbxNotEntitledUser = {
+    siteUrl: 't30citestprov9.webex.com',
+    testAdminUsername: 't30citestprov9_csvadm2@mailinator.com',
+    testAdminPassword: 'Cisco!23'
+  };
+
   this.t30csvNotAvailableUser = {
     siteUrl: 't30citestprov9.webex.com',
-    testAdminUsername: 't30citestprov9-csvadm1@mailinator.com',
+    testAdminUsername: 't30citestprov9_csvadm3@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
@@ -45,7 +51,7 @@ var SiteListPage = function () {
   this.t30csvNotAvail = element(by.id(this.t30csvNotAvailableUser.siteUrl + "_notAvailable"));
 
   //check sjsite04.webex.com for 'Entitlement authentication failure' warning icon
-  this.siteEntitlementAuthFailure = element(by.id("sjsite04.webex.com" + "_warningIcon"));
+  this.siteEntitlementAuthFailure = element(by.id(this.t30csvWbxNotEntitledUser.siteUrl + "_warningIcon"));
 
 };
 

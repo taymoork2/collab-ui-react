@@ -61,7 +61,6 @@
     $scope.filterList = filterList;
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
-    $scope.isHuronUser = isHuronUser;
     $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
@@ -304,17 +303,6 @@
       return false;
     }
 
-    function isHuronUser(allEntitlements) {
-      if (allEntitlements) {
-        for (var i = 0; i < allEntitlements.length; i++) {
-          if (Config.entitlements.huron === allEntitlements[i]) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
     // if there is only one Admin in the org, the user should not be able to delete it
     function isOnlyAdmin(entity) {
       if ($scope.userList.adminUsers.length < 2) {
@@ -324,34 +312,13 @@
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
-        sendSparkWelcomeEmail(userEmail, userName);
-      } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
-        HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)
-          .then(function () {
-            Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-          }, function (error) {
-            Notification.errorResponse(error, 'usersPage.emailError');
-          });
-      }
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
       angular.element('.open').removeClass('open');
-    }
-
-    function sendSparkWelcomeEmail(userEmail, userName) {
-      var userData = [{
-        'address': userEmail,
-        'name': userName
-      }];
-
-      Userservice.inviteUsers(userData, null, true, function (data) {
-        if (data.success) {
-          Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-        } else {
-          Log.debug('Resending failed. Status: ' + status);
-          Notification.notify([$translate.instant('usersPage.emailError')], 'error');
-          $scope.btnSaveLoad = false;
-        }
-      });
     }
 
     function setDeactivateUser(deleteUserOrgId, deleteUserUuId, deleteUsername) {
@@ -381,8 +348,8 @@
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
-        '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\'), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
+        '<li ng-if="row.entity.userStatus === \'pending\'" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +

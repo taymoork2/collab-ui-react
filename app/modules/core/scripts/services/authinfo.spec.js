@@ -56,44 +56,7 @@ describe('Authinfo:', function () {
       });
       Authinfo = setupUser();
 
-      accountData = {
-        accounts: [{
-          accountId: '1',
-          accountName: 'Atlas_Test_1',
-          accountOrgId: '1',
-          customerAdminEmail: 'test@test.com',
-          partnerId: '1',
-          partnerOrgId: '1',
-          licenses: [{
-            licenseId: 'MS_1',
-            offerName: 'MS',
-            licenseType: 'MESSAGING',
-            features: ['squared-room-moderation'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CF_1',
-            offerName: 'CF',
-            licenseType: 'CONFERENCING',
-            features: ['squared-syncup'],
-            volume: 100,
-            isTrial: false,
-            trialId: '1',
-            status: 'ACTIVE'
-          }, {
-            licenseId: 'CO_1',
-            offerName: 'CO',
-            licenseType: 'COMMUNICATION',
-            features: ['ciscouc'],
-            volume: 100,
-            isTrial: true,
-            trialId: '1',
-            status: 'ACTIVE'
-          }]
-        }]
-      };
+      accountData = getJSONFixture('core/json/authInfo/msg_mtg_comm_Licenses.json');
     });
 
     it('should return true if license isTrial is true', function () {

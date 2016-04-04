@@ -31,6 +31,23 @@ describe('Onboard users with Message Service', function () {
       });
   });
 
+  describe('Test manage dialog functionality', function () {
+    it('click on add button should pop up the adduser modal and display only invite button', function () {
+      navigation.clickUsers();
+      utils.click(users.addUsers);
+      utils.expectIsDisplayed(users.manageDialog);
+    });
+
+    it('should clear user input field and error message', function () {
+      utils.sendKeys(users.addUsersField, 'abcdefg' + protractor.Key.ENTER);
+      utils.click(users.clearButton);
+      utils.expectTextToBeSet(users.addUsersField, '');
+      utils.expectIsDisabled(users.nextButton);
+      utils.click(users.close);
+      utils.expectIsNotDisplayed(users.manageDialog);
+    });
+  });
+
   describe('Onboard user', function () {
     it('should add a user (Message On)', function () {
       users.createUserWithLicense(testUser, LICENSE);
