@@ -108,38 +108,38 @@ describe('SiteListCtrl: should launch export function', function () {
         return "nobody@nowhere.com";
       }
     };
-    
+
     var fakeCsvStatusHttpsObj = {
-    	    url: 'https://test.site.com/meetingsapi/v1/users/csvStatus',
-    	    method: 'GET',
-    	    headers: {
-    	      'Content-Type': 'application/json;charset=utf-8',
-    	      'Authorization': 'Bearer someFakeBearer'
-    	    }
-    	  };
+      url: 'https://test.site.com/meetingsapi/v1/users/csvStatus',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': 'Bearer someFakeBearer'
+      }
+    };
 
     spyOn(WebExApiGatewayService, 'csvConstructHttpsObj').and.returnValue(fakeCsvStatusHttpsObj);
     spyOn(WebExRestApiFact, 'csvApiRequest').and.returnValue(deferredCsvApiRequest.promise);
     spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvStatus.promise);
     spyOn(SiteListService, 'updateCSVColumnInRow');
     spyOn(Notification, 'success');
-    
+
     beforeEach(function () {
-    	deferredCsvStatus.resolve({
-            siteUrl: 'fake.webex.com',
-            isTestResult: true,
-            status: WebExApiGatewayConstsService.csvStates.exportInProgress,
-            completionDetails: null,
-          });
-    	scope.$apply();
+      deferredCsvStatus.resolve({
+        siteUrl: 'fake.webex.com',
+        isTestResult: true,
+        status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+        completionDetails: null,
+      });
+      //scope.$apply();
     });
-    
+
     SiteListCtrl = $controller('SiteListCtrl', {
-        $scope: scope,
-        Authinfo: Authinfo,
-        WebExApiGatewayService: WebExApiGatewayService
+      $scope: scope,
+      Authinfo: Authinfo,
+      WebExApiGatewayService: WebExApiGatewayService
     });
-    
+
   }));
 
   it('should be able to call export function with expected parameters', function () {
@@ -147,10 +147,10 @@ describe('SiteListCtrl: should launch export function', function () {
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
     scope.csvExport(fakeSiteRow);
-        
+
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
     //expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
-    
+
   });
 
 });
