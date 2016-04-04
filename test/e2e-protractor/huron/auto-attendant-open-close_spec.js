@@ -57,7 +57,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should create a 9am to 5pm, Monday to Friday open hours schedule', function () {
+    it('should create a 8am to 5pm, Monday to Friday open hours schedule', function () {
 
       utils.click(autoattendant.schedule);
       utils.expectCheckbox(autoattendant.day1, true);
@@ -67,7 +67,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectCheckbox(autoattendant.day5, true);
       utils.expectCheckbox(autoattendant.day6, false);
       utils.expectCheckbox(autoattendant.day7, false);
-      utils.expectValueToContain(autoattendant.starttime, '09:00:00.000');
+      utils.expectValueToContain(autoattendant.starttime, '08:00:00.000');
       utils.expectValueToContain(autoattendant.endtime, '17:00:00.000');
       utils.wait(autoattendant.modalcancel, 12000);
       utils.click(autoattendant.modalcancel);
@@ -110,6 +110,30 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveButton);
       autoattendant.assertUpdateSuccess();
       utils.expectIsDisabled(autoattendant.saveButton);
+
+    }, 60000);
+
+    it('should close AA edit and return to landing page', function () {
+
+      utils.click(autoattendant.closeEditButton);
+
+    });
+
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+
+      utils.expectIsEnabled(autoattendant.testCardName);
+
+    });
+
+    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+
+      // click delete X on the AA card for e2e test AA
+      utils.click(autoattendant.testCardDelete);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+      });
 
     }, 60000);
 

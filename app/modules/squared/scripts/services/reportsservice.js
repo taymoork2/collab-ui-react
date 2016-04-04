@@ -168,7 +168,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
       });
   }
 
-  function getPartnerMetrics(useCache, orgId) {
+  function getPartnerMetrics(useCache, orgId, partnerCharts) {
     var chartParams = {
       'intervalCount': 1,
       'intervalType': 'month',
@@ -178,10 +178,12 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
       'isCustomerView': false
     };
 
-    var partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
-      'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
-      'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
-    ];
+    if (angular.isUndefined(partnerCharts) || partnerCharts === null) {
+      partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
+        'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
+        'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
+      ];
+    }
 
     for (var chart in partnerCharts) {
       getUsageMetrics(partnerCharts[chart], chartParams, orgId);

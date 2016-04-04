@@ -16,9 +16,9 @@
 
     /////////////////////
 
-    function getRange9To5() {
+    function getRange8To5() {
       var calendar = AAICalService.createCalendar();
-      var _starttime = new Date('', '', '', '09', '00', '00');
+      var _starttime = new Date('', '', '', '08', '00', '00');
       var _endtime = new Date('', '', '', '17', '00', '00');
       var defaultRange = [{
         days: [{
@@ -67,7 +67,7 @@
     }
 
     function create9To5Schedule(ceName) {
-      var defaultSchedule = getRange9To5();
+      var defaultSchedule = getRange8To5();
       return createSchedule(ceName, defaultSchedule);
     }
   }

@@ -11,6 +11,7 @@
     } else {
       vm.orgId = $stateParams.id;
     }
+
     vm.messageCard = {};
     vm.meetingCard = {};
     vm.callCard = {};
@@ -30,9 +31,19 @@
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
     vm.usageText = usageText;
     vm.launchAtlasReadonly = launchAtlasReadonly;
+    vm.isTrials = isTrials;
     vm.allowLaunchAtlas = vm.orgId != Authinfo.getOrgId() && Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
+    function isTrials(orgSettings) {
+      var eft = false;
+      if (orgSettings) {
+        var orgSettingsJson = JSON.parse(_.last(orgSettings));
+        eft = orgSettingsJson.isEFT;
+      }
+      return eft;
+    }
 
     function initOrgView(org) {
       vm.org = org;
@@ -48,6 +59,7 @@
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
+      vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
     }
 
