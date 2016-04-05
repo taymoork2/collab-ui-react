@@ -24,6 +24,7 @@
     vm.siteRow = $stateParams.siteRow;
     vm.csvStatusObj = $stateParams.siteRow.csvStatusObj;
     vm.gridRows = [];
+    vm.downloadFileUrl = null;
     vm.downloadFileName = null;
 
     if (
@@ -68,7 +69,7 @@
         title: $translate.instant("webexCSVResultsModal.csvExportDownloadFile"),
         value: null,
       });
-      
+
       vm.downloadFileUrl = vm.csvStatusObj.details.exportFileLink;
       vm.downloadFileName = $translate.instant("webexCSVResultsModal.csvExportResultsFilename");
 
@@ -87,7 +88,7 @@
 
       vm.gridRows.push({
         id: 'import-started-time',
-        title: $translate.instant("webexCSVResultsModal.csvStarted"),
+        title: $translate.instant("webexCSVResultsModal.csvImportFileName"),
         value: vm.csvStatusObj.details.created,
       });
 
@@ -105,7 +106,6 @@
 
       vm.gridRows.push({
         id: 'import-records-updated',
-        title: 'Records successfully updated:',
         title: $translate.instant("webexCSVResultsModal.csvImportRecordsUpdated"),
         value: vm.csvStatusObj.details.successRecords,
       });
@@ -122,7 +122,7 @@
           title: $translate.instant("webexCSVResultsModal.csvImportDownloadErr"),
           value: null,
         });
-        
+
         vm.downloadFileUrl = vm.csvStatusObj.details.errorLogLink;
         vm.downloadFileName = $translate.instant("webexCSVResultsModal.csvImportErrFilename");
       }
