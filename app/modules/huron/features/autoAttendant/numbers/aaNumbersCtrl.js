@@ -278,7 +278,7 @@
 
       vm.availablePhoneNums = [];
 
-      getExternalNumbers(pattern).then(function () {
+      getExternalNumbers(pattern).finally(function () {
         getInternalNumbers(pattern);
       });
 

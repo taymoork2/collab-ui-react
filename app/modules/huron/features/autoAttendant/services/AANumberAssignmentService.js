@@ -137,8 +137,12 @@
       });
 
       return $q.all(formattedResources).then(function (value) {
-        return value;
-      });
+          return value;
+        },
+        function (response) {
+          // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
+          return $q.reject(response);
+        });
 
     }
 
