@@ -1,6 +1,6 @@
 .site-list {
   @extend %grid-header;
-  
+
   .multi-center-license{
     .tooltip-inner {
        max-width: 400px;
@@ -11,11 +11,13 @@
    }
 }
 
+
 .csv-text:hover {
     color: #D03D35;
 }
 
 .csv-results {
-    background-color: #C9EBE6;
+    background-color: 0, 0;
     padding: 5px 10px;
 }
+
