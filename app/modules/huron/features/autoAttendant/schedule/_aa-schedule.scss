@@ -59,11 +59,8 @@
 	.aa-schedule-subtitle {
 		@include vr-spacing(p, 1.25);
 	}
-	.aa-hour-right {
+	.aa-recur-annually-box {
 		@include vr-spacing(pt, 1.75);
-		.cs-input-group {
-			@include vr-spacing(mb, 1.5);
-		}
 	}
 }
 
@@ -95,7 +92,7 @@
 		border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
 		.accordion--navigation {
-			a {
+			> a {
 				background: transparent;
 				border: none;
 				border-top: 1px solid $gray;
@@ -105,13 +102,13 @@
 				padding: 0;
 				> .row {
 					padding: .5rem 1rem;
-					div {
+					.aa-holidays-name-collapse {
 						width: 30%;
 						float: left;
 						@include vr-spacing(pl, .5);
 					}
-					div:last-child {
-						width: 70%;
+					div {
+						display: inline-block;
 					}
 				}
 				&:before {
@@ -136,7 +133,7 @@
 				@include vr-spacing(pb, 1.5);
 			}
 			&:first-child {
-				a {
+				> a {
 					border-top: none;
 				}
 				.content {
@@ -150,6 +147,10 @@
 	}
 }
 
+.aa-holidays-recur-select-container {
+	@include vr-spacing(mb, 6);
+}
+
 /* Should go in toolkit for timepicker error state */
 
 .error .cs-datapicker-normal {
@@ -158,4 +159,10 @@
 	input[type="text"][readonly].cs-datepicker-input {
 		background-color: $color-alerts-lighter;
 	}
+}
+
+/* Should go in toolkit for cs-select error state */
+.error .select-toggle {
+	border-color: $color-alerts-base;
+	background-color: $color-alerts-lighter;
 }

@@ -50,7 +50,7 @@
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
             }
           );
-        } else if (vm.type == WebExCsvDownloadService.typeUser) {
+        } else {
           WebExCsvDownloadService.getCsv(
             vm.type
           ).then(
