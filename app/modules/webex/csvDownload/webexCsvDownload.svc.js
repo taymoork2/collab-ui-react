@@ -96,7 +96,7 @@
     ) {
 
       var blob = new Blob([data], {
-        type: 'text/plain'
+        type: 'text/csv'
       });
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
