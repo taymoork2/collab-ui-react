@@ -207,17 +207,19 @@
       }, vm.customerOrgId);
     }
 
-    /* deleteTestOrg is for internal use only, 'confirm' is a bit tricky to test which is why no unit test exists */
     function deleteTestOrg() {
-      if (confirm("Press OK if you want to Delete " + vm.customerName) === true) {
-        Orgservice.deleteOrg(vm.customerOrgId);
-        Notification.success('customerPage.deleteOrgSuccess', {
-          orgName: vm.customerName
-        });
-      } else {
-        Notification.error('customerPage.deleteOrgError', {
-          orgName: vm.customerName
-        });
+      if (vm.isTest) {
+        if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+            Notification.success('customerPage.deleteOrgSuccess', {
+              orgName: vm.customerName
+            });
+          }).catch(function (error) {
+            Notification.error('customerPage.deleteOrgError', {
+              orgName: vm.customerName
+            });
+          });
+        }
       }
     }
 
