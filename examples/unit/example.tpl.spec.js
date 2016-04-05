@@ -20,12 +20,13 @@ describe('Template: Example', function () {
   }
 
   function compileView() {
+    var template = $templateCache.get('examples/unit/example.tpl.html');
+
     controller = $controller('ExampleController', {
       $scope: $scope
     });
     $scope.example = controller;
 
-    var template = $templateCache.get('examples/unit/example.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }
