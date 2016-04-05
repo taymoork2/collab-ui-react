@@ -2,91 +2,104 @@
   'use strict';
 
   angular.module('Core')
-    .controller('csvDownloadCtrl', csvDownloadCtrl)
     .directive('csvDownload', csvDownload);
 
+  /* Sample usage:
+   *  <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>
+   *    - $emit event 'csv-download-request' and pass in download type
+   *  <csv-download type="template" filename="template.csv"></csv-download>
+   *    - static download type
+   *    - call scope.downloadCsv()
+   * /
   /* @ngInject */
-  function csvDownloadCtrl($scope, CsvDownloadService, Notification) {
-    /*jshint validthis: true */
-    var vm = this;
-    vm.downloadCsv = downloadCsv;
-    vm.downloading = false;
-
-    function downloadCsv() {
-      if (vm.type && (vm.type === CsvDownloadService.typeTemplate || vm.type === CsvDownloadService.typeUser)) {
-        $scope.$emit('download-start');
-        CsvDownloadService.getCsv(vm.type).then(function (csvData) {
-          var objectUrl = CsvDownloadService.createObjectUrl(csvData.content, vm.type);
-          $scope.$emit('downloaded', objectUrl);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'firstTimeWizard.downloadError');
-        });
-      }
-    }
-  }
-
-  /* @ngInject */
-  function csvDownload($compile, $timeout, CsvDownloadService) {
+  function csvDownload($rootScope, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/core/csvDownload/csvDownload.tpl.html',
       scope: {
         type: '@',
-        downloading: '@'
+        filename: '@'
       },
-      controller: csvDownloadCtrl,
-      controllerAs: 'csvDownload',
-      bindToController: true,
       link: link
     };
 
     return directive;
 
     function link(scope, element, attrs) {
-      // disable the button when download starts
-      scope.$on('download-start', function () {
-        scope.csvDownload.downloading = true;
-        var anchor = angular.element('#download-csv-' + scope.csvDownload.type);
-        anchor.attr('disabled', 'disabled');
-      });
+      scope.downloading = false;
+      scope.downloadingMessage = '';
+      scope.type = scope.type || CsvDownloadService.typeAny;
+      scope.downloadCsv = downloadCsv;
+      var downloadAnchor = $(element.find('a')[0]);
+      var downloadIcon = $(element.find('i')[0]);
+      var downloadingIcon = $(element.find('i')[1]);
 
-      // pass the objectUrl to the href of anchor when download is done
-      scope.$on('downloaded', function (event, url) {
-        scope.csvDownload.downloading = false;
-        var anchor = angular.element('#download-csv-' + scope.csvDownload.type);
-        changeAnchorAttrToDownload(url);
+      function downloadCsv(csvType, tooManyUsers) {
+        csvType = csvType || scope.type;
 
-        $timeout(function () {
-          anchor[0].click();
+        if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser) {
+          startDownload(csvType);
+          CsvDownloadService.getCsv(csvType, tooManyUsers).then(function (url) {
+            finishDownload(csvType, url);
+          }).catch(function (response) {
+            if (response.status !== -1) {
+              Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+            }
+            flagDownloading(false);
+            changeAnchorAttrToOriginalState();
+          });
+        }
+      }
+
+      function startDownload(csvType) {
+        // disable the button when download starts
+        flagDownloading(true);
+        scope.downloadingMessage = $translate.instant('csvDownload.csvDownloadInProgress', {
+          type: csvType
         });
         $timeout(function () {
-          // Remove the object URL if not template
-          if (scope.csvDownload.type !== CsvDownloadService.typeTemplate) {
+          downloadAnchor.attr('disabled', 'disabled');
+          if (scope.type === CsvDownloadService.typeAny) {
+            downloadingIcon.mouseover();
+            $timeout(function () {
+              downloadingIcon.mouseout();
+            }, 3000);
+          }
+        });
+      }
+
+      function finishDownload(csvType, url) {
+        // pass the objectUrl to the href of anchor when download is done
+        changeAnchorAttrToDownloadState(url);
+
+        $timeout(function () {
+          if (scope.downloading) {
+            if (scope.type === CsvDownloadService.typeAny) {
+              downloadingIcon.mouseout();
+            }
+            downloadAnchor[0].click();
+            Notification.success('csvDownload.csvDownloadSuccess', {
+              type: csvType
+            });
+            flagDownloading(false);
+          }
+        });
+        $timeout(function () {
+          // remove the object URL if it's not a template
+          if (scope.type !== CsvDownloadService.typeTemplate) {
             CsvDownloadService.revokeObjectUrl();
             changeAnchorAttrToOriginalState();
           }
         }, 500);
-      });
-
-      // set the icon
-      if (attrs.icon) {
-        var i = angular.element('#download-icon');
-        i.removeClass('icon-circle-download').addClass(attrs.icon);
       }
 
-      // if the template Object URL is already loaded, change the anchor's attributes to download from blob
-      if (scope.csvDownload.type && scope.csvDownload.type === 'template' && CsvDownloadService.getObjectUrlTemplate()) {
-        changeAnchorAttrToDownload(CsvDownloadService.getObjectUrlTemplate());
-      }
-
-      function changeAnchorAttrToDownload(url) {
+      function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          var anchor = angular.element('#download-csv-' + scope.csvDownload.type);
-          scope.csvDownload.tempFunction = scope.csvDownload.downloadCsv || angular.noop;
-          scope.csvDownload.downloadCsv = angular.noop;
-          anchor.attr({
+          // scope.tempFunction = scope.downloadCsv;
+          scope.downloadCsv = removeFocus;
+          downloadAnchor.attr({
               href: url,
-              download: attrs.filename
+              download: scope.filename || 'exported_file.csv'
             })
             .removeAttr('disabled');
         });
@@ -94,13 +107,77 @@
 
       function changeAnchorAttrToOriginalState() {
         $timeout(function () {
-          var anchor = angular.element('#download-csv-' + scope.csvDownload.type);
-          scope.csvDownload.downloadCsv = scope.csvDownload.tempFunction || angular.noop;
-          anchor.attr({
+          scope.downloadCsv = downloadCsv;
+          downloadAnchor.attr({
               href: ''
             })
             .removeAttr('download');
         });
+      }
+
+      function removeFocus() {
+        $timeout(function () {
+          downloadAnchor.blur();
+        });
+      }
+
+      function flagDownloading(flag) {
+        flag = _.isBoolean(flag) ? flag : false;
+        scope.downloading = flag;
+        if (scope.type === CsvDownloadService.typeAny) {
+          CsvDownloadService.downloadInProgress = flag;
+        }
+      }
+
+      function cancelDownload() {
+        var deferred = $q.defer();
+        if (CsvDownloadService.downloadInProgress) {
+          CsvDownloadService.cancelDownload();
+          flagDownloading(false);
+          changeAnchorAttrToOriginalState();
+          $timeout(function () {
+            deferred.resolve();
+          }, 1000);
+        } else {
+          deferred.resolve();
+        }
+        return deferred.promise;
+      }
+
+      // dynamic CSV download
+      if (attrs.type === CsvDownloadService.typeAny) {
+        $rootScope.$on('csv-download-request', function (event, csvType, tooManyUsers) {
+          tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
+          if (tooManyUsers && CsvDownloadService.downloadInProgress) {
+            Notification.error('csvDownload.csvDownloadIsRunning');
+          } else {
+            $modal.open({
+              templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
+              controller: function () {
+                var vm = this;
+                vm.messageBody1 = CsvDownloadService.downloadInProgress ? $translate.instant('csvDownload.confirmCsvCancelMsg') : '';
+                vm.messageBody2 = $translate.instant('csvDownload.confirmCsvDownloadMsg');
+              },
+              controllerAs: 'csv'
+            }).result.then(function () {
+              cancelDownload().then(function () {
+                scope.downloadCsv(csvType, tooManyUsers);
+              });
+            });
+          }
+        });
+      }
+
+      // if icon attribute is defined, set the icon
+      if (attrs.icon) {
+        downloadIcon.removeClass('icon-circle-download').addClass(attrs.icon);
+      } else if (angular.isDefined(attrs.noIcon)) {
+        downloadIcon.removeClass('icon-circle-download');
+      }
+
+      // if the template Object URL is already loaded, change the anchor's attributes to download from blob
+      if (attrs.type && attrs.type === 'template' && CsvDownloadService.getObjectUrlTemplate()) {
+        changeAnchorAttrToDownloadState(CsvDownloadService.getObjectUrlTemplate());
       }
     }
 
