@@ -96,9 +96,7 @@
     ) {
 
       var blob = new Blob([data], {
-        type: 'text/csv'
-          // type: 'text/plain'
-          // type: 'application/json;charset=UTF-16LE'
+        type: 'text/plain'
       });
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
@@ -132,12 +130,12 @@
     }
 
     function createWebexCsvResource(fileDownloadUrl) {
+      var funcName = "WebExCsvDownloadService().createWebexCsvResource()";
       var logMsg = "";
 
-      // var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
-      var fileDownloadUrlFixed = 'https://sjsite14.webex.com/meetingsapi/v1/files/OTcyJSVTaXRlVXNlcnMuY3N2LVVURjg=';
+      var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
 
-      logMsg = "WebExCsvDownloadService().createWebexCsvResource()" + "\n" +
+      logMsg = funcName + "\n" +
         "fileDownloadUrl=" + fileDownloadUrl + "\n" +
         "fileDownloadUrlFixed=" + fileDownloadUrlFixed;
       // $log.log(logMsg);
@@ -149,26 +147,14 @@
             // override transformResponse function because $resource
             // returns string array in the case of CSV file download
             transformResponse: function (data, headers) {
-              var funcName = "transformResponse()";
-              var logMsg = "";
+                var noTabData = data.replace(/\t/g, ',');
+                var resultData = {
+                  content: noTabData
+                };
 
-              logMsg = funcName + "\n" +
-                "data=" + "\n" + data;
-              // $log.log(logMsg);
-
-              var noTabData = data.replace(/\t/g, ',');
-
-              logMsg = funcName + "\n" +
-                "noTabData=" + "\n" + noTabData;
-              // $log.log(logMsg);
-              
-              var resultData = {
-                      content: noTabData
-              };
-              
-              return resultData;
-            }
-          }
+                return resultData;
+              } // transformResponse()
+          } // get
         }
       );
     } // createWebexCsvResource()
