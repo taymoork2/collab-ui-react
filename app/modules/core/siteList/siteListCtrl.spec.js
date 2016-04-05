@@ -6,20 +6,13 @@ describe('Testing controller: SiteListCtrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
 
-  var WebExApiGatewayService, WebExApiGatewayConstsService, Userservice, SiteListService, Notification, FeatureToggleService;
-  var Authinfo, fakeConferenceServices, deferredCsvStatus, deferredCsvApiRequest, deferredCsvStatus, fakeSiteRow;
-  var httpBackend, scope, $q, $controller, getUserMe;
-  var SiteListCtrl;
-
-  var getCsvUserFeatureToggle = getJSONFixture('core/json/webex/siteCsvFeatureToggle.json');
-  var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
+  var SiteListCtrl, WebExApiGatewayService, WebExApiGatewayConstsService, SiteListService, Notification;
+  var scope, $q, $controller, Authinfo, fakeConferenceServices, deferredCsvExport, fakeSiteRow;
 
   beforeEach(inject(function (
     $rootScope,
     _$q_,
-    _$httpBackend_,
     _$controller_,
-    _Userservice_,
     _SiteListService_,
     _FeatureToggleService_,
     _WebExApiGatewayService_,
@@ -28,20 +21,16 @@ describe('Testing controller: SiteListCtrl', function () {
   ) {
 
     scope = $rootScope.$new();
-    httpBackend = _$httpBackend_;
 
     $q = _$q_;
     $controller = _$controller_;
 
-    Userservice = _Userservice_;
     SiteListService = _SiteListService_;
-    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
 
-    deferredCsvApiRequest = $q.defer();
-    deferredCsvStatus = $q.defer();
+    deferredCsvExport = $q.defer();
 
     fakeSiteRow = {
       license: {
@@ -107,26 +96,8 @@ describe('Testing controller: SiteListCtrl', function () {
       }
     };
 
-    var fakeCsvStatusHttpsObj = {
-      url: 'https://test.site.com/meetingsapi/v1/users/csvStatus',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': 'Bearer someFakeBearer'
-      }
-    };
-
-    getUserMe = getJSONFixture('core/json/users/me.json');
-
-    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
-      callback(getUserMe, 200);
-    });
-
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.callFake(function (uid, callback) {
-      callback(getCsvUserFeatureToggle, 200);
-    });
-
-    spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvStatus.promise);
+    spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvExport.promise);
+    spyOn(SiteListService, 'updateGrid');
     spyOn(SiteListService, 'updateCSVColumnInRow');
     spyOn(Notification, 'success');
 
@@ -139,19 +110,17 @@ describe('Testing controller: SiteListCtrl', function () {
 
   it('should be able to call export function with expected parameters', function () {
 
-    deferredCsvStatus.resolve({
+    deferredCsvExport.resolve({
       siteUrl: 'fake.webex.com',
       isTestResult: true,
       status: WebExApiGatewayConstsService.csvStates.exportInProgress,
       completionDetails: null,
     });
 
-    httpBackend.whenGET(userRegex).respond(200, getCsvUserFeatureToggle);
-
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
-    scope.csvExport(fakeSiteRow);
 
+    scope.csvExport(fakeSiteRow);
     scope.$apply();
 
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
