@@ -28,7 +28,6 @@
     }
 
     vm.showDeviceDetails = function (device) {
-      vm.currentDevice = device;
       $state.go('user-overview.csdmDevice', {
         currentDevice: device,
         huronDeviceService: csdmHuronUserDeviceService
@@ -51,6 +50,7 @@
     }
 
     function isEntitled(ent) {
+      vm.currentUser = $stateParams.currentUser;
       if (vm.currentUser && vm.currentUser.entitlements) {
         for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
           var svc = vm.currentUser.entitlements[i];

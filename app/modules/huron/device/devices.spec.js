@@ -1,14 +1,11 @@
 'use strict';
 
 describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, CsdmHuronUserDeviceService, OtpService, Config, poller;
-
-  //var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
+  var controller, $scope, $q, $stateParams, $state, CsdmHuronUserDeviceService, OtpService, Config, poller;
 
   beforeEach(module('Huron'));
 
   var deviceList = {};
-  //deviceList.push(getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
 
   var userOverview = {
     addGenerateAuthCodeLink: jasmine.createSpy(),
@@ -18,7 +15,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _OtpService_, _Config_, _CsdmHuronUserDeviceService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$state_, _OtpService_, _Config_, _CsdmHuronUserDeviceService_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
     $stateParams = _$stateParams_;
@@ -26,6 +23,7 @@ describe('Controller: DevicesCtrlHuron', function () {
     CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     OtpService = _OtpService_;
     Config = _Config_;
+    $state = _$state_;
 
     $stateParams.currentUser = {
       "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
@@ -103,24 +101,25 @@ describe('Controller: DevicesCtrlHuron', function () {
       expect(OtpService.loadOtps.calls.count()).toEqual(0);
     });
 
-    //it('should not call activate when currentUser is not defined', function () {
-    //  poller.getDeviceList.calls.reset();
-    //  OtpService.loadOtps.calls.reset();
-    //  $stateParams.currentUser = undefined;
-    //  $scope.$broadcast('entitlementsUpdated');
-    //  $scope.$apply();
-    //
-    //  expect(poller.getDeviceList.calls.count()).toEqual(0);
-    //  expect(OtpService.loadOtps.calls.count()).toEqual(0);
-    //});
+    it('should not call activate when currentUser is not defined', function () {
+      poller.getDeviceList.calls.reset();
+      OtpService.loadOtps.calls.reset();
+      $stateParams.currentUser = undefined;
+      $scope.$broadcast('entitlementsUpdated');
+      $scope.$apply();
+
+      expect(poller.getDeviceList.calls.count()).toEqual(0);
+      expect(OtpService.loadOtps.calls.count()).toEqual(0);
+    });
 
   });
 
-  describe('showDeviceDetailPanel() method', function () {
-    //it('should call DeviceService.setCurrentDevice', function () {
-    //  controller.showDeviceDetails('currentDevice');
-    //  expect(currentDevice).toEqual('currentDevice');
-    //});
+  describe('showDeviceDetails() method', function () {
+    it('should call $state.go', function () {
+      spyOn($state, 'go').and.returnValue($q.when());
+      controller.showDeviceDetails('currentDevice');
+      expect($state.go).toHaveBeenCalled();
+    });
   });
 
   describe('showGenerateOtpButton()', function () {
