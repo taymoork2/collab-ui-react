@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: DevicesCtrlHuron', function () {
+describe('Controller: DevicesCtrlHuron', function () {
   var controller, $scope, $q, $stateParams, CsdmHuronUserDeviceService, OtpService, Config, poller;
 
   //var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
