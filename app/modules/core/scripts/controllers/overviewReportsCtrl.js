@@ -10,6 +10,7 @@
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
     var READY = 'ready';
+    var REFRESH = 'refresh';
 
     var entitlementsChart;
     var entId = 'entitlementsdiv';
@@ -25,14 +26,13 @@
       label: $translate.instant('reports.allCustomers')
     };
 
-    $scope.REFRESH = 'refresh';
     $scope.entCount = 0;
-    $scope.entitlementStatus = $scope.REFRESH;
+    $scope.entitlementStatus = REFRESH;
     $scope.totalOrgsData = [angular.copy(allCustomers)];
     $scope.currentSelection = angular.copy(allCustomers);
 
     $scope.getCustomerReports = function () {
-      $scope.entitlementStatus = $scope.REFRESH;
+      $scope.entitlementStatus = REFRESH;
       angular.element('#' + entRefreshDiv).html('<i class=\'icon icon-spinner icon-2x\'/>');
 
       if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
@@ -231,7 +231,8 @@
     }
 
     $scope.$on('entitlementsLoaded', function (event, response) {
-      if (response.data.success && usableData(response.data.data)) {
+      var data = _.get(response, 'data', {});
+      if (data.success && usableData(data.data)) {
         $scope.entitlementStatus = READY;
         entitlementsChart = updateChart(response.data.data, chartColors.blue, true);
       } else {

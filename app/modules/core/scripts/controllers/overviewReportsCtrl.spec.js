@@ -90,7 +90,6 @@ describe('Controller: Overview Reports', function () {
     }));
 
     it('should instantiate all variables', function () {
-      expect($scope.REFRESH).toEqual(REFRESH);
       expect($scope.entCount).toEqual(0);
       expect($scope.entitlementStatus).toEqual(REFRESH);
       expect($scope.totalOrgsData).toEqual(customerList);

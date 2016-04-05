@@ -305,7 +305,7 @@
 
     // if there is only one Admin in the org, the user should not be able to delete it
     function isOnlyAdmin(entity) {
-      if ($scope.userList.adminUsers.length < 2) {
+      if ($scope.userList.adminUsers.length === 1) {
         return $scope.userList.adminUsers[0].userName === entity.userName;
       }
       return false;
