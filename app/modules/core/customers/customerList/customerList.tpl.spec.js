@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Template: customerList.tpl.html', function () {
-    var $scope, $compile, $templateCache, $q, $controller, controller, view;
+    var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
     var Authinfo, PartnerService, Orgservice;
     var ADD_BUTTON = '#addTrial';
 
@@ -18,6 +18,10 @@
       PartnerService = _PartnerService_;
       Orgservice = _Orgservice_;
       $q = _$q_;
+      $rootScope.typeOfExport = {
+        USER: 1,
+        CUSTOMER: 2
+      };
 
       spyOn(PartnerService, 'getTrialsList').and.returnValue($q.when({
         data: {}

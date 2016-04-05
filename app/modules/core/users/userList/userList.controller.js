@@ -8,7 +8,7 @@
   /* @ngInject */
   function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
-    $scope.pageTitle = $translate.instant('usersPage.manageUsers');
+    $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
     $scope.page = 1;
     $scope.status = null;
@@ -69,6 +69,7 @@
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = isValidThumbnail;
+    $scope.startExportUserList = startExportUserList;
 
     init();
 
@@ -91,7 +92,7 @@
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
-          if ($scope.gridApi.selection) {
+          if ($scope.gridApi && $scope.gridApi.selection) {
             $scope.gridApi.selection.clearSelectedRows();
           }
         }
@@ -457,6 +458,14 @@
         return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
       });
       return !_.isEmpty(validThumbs);
+    }
+
+    function startExportUserList() {
+      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
+        $scope.$emit('csv-download-request', 'user', true);
+      } else {
+        $scope.$emit('csv-download-request', 'user');
+      }
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?
