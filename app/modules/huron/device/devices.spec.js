@@ -12,7 +12,8 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var userOverview = {
     addGenerateAuthCodeLink: jasmine.createSpy(),
-    removeGenerateAuthCodeLink: jasmine.createSpy()
+    enableAuthCodeLink: jasmine.createSpy(),
+    disableAuthCodeLink: jasmine.createSpy()
   };
 
   var emptyArray = [];
@@ -115,11 +116,11 @@ describe('Controller: DevicesCtrlHuron', function () {
       $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
       $scope.$broadcast('entitlementsUpdated');
       $scope.$apply();
-      expect(controller.showGenerateOtpButton()).toBeFalsy();
+      expect(controller.showGenerateOtpButton).toBeFalsy();
     });
 
     it('should be false when devices', function () {
-      expect(controller.showGenerateOtpButton()).toBeFalsy();
+      expect(controller.showGenerateOtpButton).toBeFalsy();
     });
   });
 });

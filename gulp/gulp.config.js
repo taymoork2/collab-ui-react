@@ -17,6 +17,7 @@ module.exports = function () {
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
   var examples = 'examples';
+  var cache = '.cache';
 
   var config = {
     build: build,
@@ -24,8 +25,10 @@ module.exports = function () {
     test: test,
     vendor: vendor,
     coverage: 'coverage',
-    e2e: 'test/e2e-protractor',
+    e2e: e2e,
     e2eFailRetry: '.e2e-fail-retry',
+    e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
+    e2eReports: e2e + '/reports',
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -35,7 +38,7 @@ module.exports = function () {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
-    cache: '.cache',
+    cache: cache,
     examples: examples,
 
     gulpFiles: gulpFiles,
@@ -247,8 +250,6 @@ module.exports = function () {
       ' */\n' +
       '',
 
-    isJenkins: isJenkins,
-
     beautifyFiles: [
       app + '/**/*.js',
       app + '/**/*.json',
@@ -261,10 +262,4 @@ module.exports = function () {
   };
 
   return config;
-
-  ////////////////
-
-  function isJenkins() {
-    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
-  }
 };

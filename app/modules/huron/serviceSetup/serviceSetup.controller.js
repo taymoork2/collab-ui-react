@@ -62,7 +62,8 @@
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
-      }
+      },
+      ftswSteeringDigit: undefined
     };
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
@@ -212,11 +213,6 @@
         },
         hideExpression: function () {
           return vm.hideFieldSteeringDigit;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return vm.hasSites;
-          }
         }
       }, {
         key: 'siteSteeringDigit',
@@ -568,6 +564,7 @@
               vm.hasSites = true;
 
               vm.model.site.steeringDigit = site.steeringDigit;
+              vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
@@ -844,22 +841,18 @@
           });
       }
 
-      function updateSite(voicemailNumber) {
-        var site = {};
-        if (voicemailNumber) {
-          site.voicemailPilotNumber = voicemailNumber;
+      function updateSite(siteData) {
+        if (!_.isEmpty(siteData)) {
+          return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
+            .catch(function (response) {
+              // unset the site voicemail pilot number
+              vm.model.site.voicemailPilotNumber = undefined;
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteUpdateError'));
+              return $q.reject(response);
+            });
         } else {
-          // Assume disable voicemail when no pilot number is set
-          site.disableVoicemail = true;
+          return $q.when();
         }
-
-        return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, site)
-          .catch(function (response) {
-            // unset the site voicemail pilot number
-            vm.model.site.voicemailPilotNumber = undefined;
-            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-            return $q.reject(response);
-          });
       }
 
       function saveSite() {
@@ -867,20 +860,25 @@
           // Always create the site if one doesn't exist.
           return createSite(vm.model.site);
         } else {
+          var siteData = {};
+          if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+            siteData.steeringDigit = vm.model.site.steeringDigit;
+          }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
             // otherwise, don't update site since nothing changed.
             if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern')) {
-              return updateSite(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern);
+              siteData.voicemailPilotNumber = vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern;
             }
           } else {
             // When the toggle is OFF, update the site if the customer has voicemail service package
             // to disable voicemail, otherwise they are already voice only and don't
             // require an update.
             if (vm.hasVoicemailService) {
-              return updateSite();
+              siteData.disableVoicemail = true;
             }
           }
+          return updateSite(siteData);
         }
       }
 
