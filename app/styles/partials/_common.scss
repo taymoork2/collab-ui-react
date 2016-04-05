@@ -55,17 +55,19 @@ body {
 
 @media print {
   body * {
-    display: none;
+    visibility: hidden !important;
+    height: 0;
   }
 
   #printSection, #printSection * {
-    display: block;
+    visibility: visible !important;
+    height: auto !important;
   }
 
   #printSection {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 1rem;
   }
 
   .modal {

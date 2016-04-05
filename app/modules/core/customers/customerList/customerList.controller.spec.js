@@ -56,6 +56,9 @@ describe('Controller: CustomerListCtrl', function () {
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
+    });
   }));
 
   function initController() {
