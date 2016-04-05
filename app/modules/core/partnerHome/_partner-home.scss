@@ -72,16 +72,13 @@
   .tab-reports .nav-tabs li .total {
     font-size: 24px;
   }
+  .report-status-partner {
+    height: 0;
+  }
   #customerDropdown {
     width: rem-calc(250);
     .select-options {
       padding: 0;
     }
-  }
-}
-
-.report-cards {
-  article {
-    padding: 1rem;
   }
 }
