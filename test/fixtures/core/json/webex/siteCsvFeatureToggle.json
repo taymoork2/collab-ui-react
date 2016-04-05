@@ -1,0 +1,15 @@
+{
+  "developer": [{
+    "key": "webex-CSV",
+    "val": "true",
+    "mutable": false,
+    "lastModified": "2016-04-04T23:13:42.253Z"
+  }],
+  "entitlement": [{
+    "key": "call-initiation",
+    "val": "false",
+    "mutable": false,
+    "lastModified": "2015-09-04T23:13:42.252Z"
+  }],
+  "user": []
+}

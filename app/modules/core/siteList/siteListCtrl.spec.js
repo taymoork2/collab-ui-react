@@ -1,46 +1,44 @@
 'use strict';
 
-describe('SiteListCtrl: should launch export function', function () {
+describe('Testing controller: SiteListCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
 
-  var WebExApiGatewayService, WebExApiGatewayConstsService, Userservice, SiteListService, Notification, WebExRestApiFact;
+  var WebExApiGatewayService, WebExApiGatewayConstsService, Userservice, SiteListService, Notification, FeatureToggleService;
   var Authinfo, fakeConferenceServices, deferredCsvStatus, deferredCsvApiRequest, deferredCsvStatus, fakeSiteRow;
-  var xyz, scope, $q, $translate, $interval, Log, $controller, $httpBackend;
+  var httpBackend, scope, $q, $controller, getUserMe;
   var SiteListCtrl;
+
+  var getCsvUserFeatureToggle = getJSONFixture('core/json/webex/siteCsvFeatureToggle.json');
+  var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
 
   beforeEach(inject(function (
     $rootScope,
     _$q_,
-    _$translate_,
-    _$interval_,
-    _$controller_,
     _$httpBackend_,
-    _Log_,
+    _$controller_,
     _Userservice_,
     _SiteListService_,
+    _FeatureToggleService_,
     _WebExApiGatewayService_,
     _WebExApiGatewayConstsService_,
-    _WebExRestApiFact_,
     _Notification_
   ) {
 
     scope = $rootScope.$new();
+    httpBackend = _$httpBackend_;
+
     $q = _$q_;
-    $translate = _$translate_;
-    $interval = _$interval_;
     $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
-    Log = _Log_;
 
     Userservice = _Userservice_;
     SiteListService = _SiteListService_;
+    FeatureToggleService = _FeatureToggleService_;
     Notification = _Notification_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
-    WebExRestApiFact = _WebExRestApiFact_;
 
     deferredCsvApiRequest = $q.defer();
     deferredCsvStatus = $q.defer();
@@ -118,16 +116,23 @@ describe('SiteListCtrl: should launch export function', function () {
       }
     };
 
-    spyOn(WebExApiGatewayService, 'csvConstructHttpsObj').and.returnValue(fakeCsvStatusHttpsObj);
-    spyOn(WebExRestApiFact, 'csvApiRequest').and.returnValue(deferredCsvApiRequest.promise);
+    getUserMe = getJSONFixture('core/json/users/me.json');
+
+    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
+      callback(getUserMe, 200);
+    });
+
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.callFake(function (uid, callback) {
+      callback(getCsvUserFeatureToggle, 200);
+    });
+
     spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvStatus.promise);
     spyOn(SiteListService, 'updateCSVColumnInRow');
     spyOn(Notification, 'success');
 
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
-      Authinfo: Authinfo,
-      WebExApiGatewayService: WebExApiGatewayService
+      Authinfo: Authinfo
     });
 
   }));
@@ -140,14 +145,18 @@ describe('SiteListCtrl: should launch export function', function () {
       status: WebExApiGatewayConstsService.csvStates.exportInProgress,
       completionDetails: null,
     });
-    //scope.$apply();
+
+    httpBackend.whenGET(userRegex).respond(200, getCsvUserFeatureToggle);
 
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
     scope.csvExport(fakeSiteRow);
 
+    scope.$apply();
+
     expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
-    //expect(Notification.success).toHaveBeenCalled(); //With('siteList.exportStartedToast');
+    expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
+    expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
 
   });
 
