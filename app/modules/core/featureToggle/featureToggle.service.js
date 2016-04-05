@@ -23,8 +23,6 @@
       atlasTrialConversion: 'atlas-trial-conversion',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      csdmHuron: 'csdm-huron',
-      useCsdmDeviceSidepanel: 'csdm-devicesidepanel',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
