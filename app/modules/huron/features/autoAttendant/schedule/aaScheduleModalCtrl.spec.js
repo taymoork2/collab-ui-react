@@ -128,13 +128,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
     var holiday1 = {
       name: 'Thanksgiving',
       month: {
-        label: 'months.november',
         index: 10,
         number: 11
       },
       day: {
-        label: 'weekDays.thursday',
-        index: '4',
+        index: 4,
         abbr: 'TH'
       },
       rank: {

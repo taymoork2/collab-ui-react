@@ -88,7 +88,7 @@
                   {{holiday.date | date:'MMMM d'}}{{holiday.recurAnnually ? '' : holiday.date | date: ', yyyy'}}
                 </div>
                 <div ng-hide="holiday.exactDate">
-                  {{holiday.rank.labelTranslate}} {{holiday.day.labelTranslate}} in {{holiday.month.labelTranslate}}
+                  {{holiday.rank.labelTranslate}} {{holiday.day.label}} in {{holiday.month.label}}
                   {{holiday.recurAnnually ? '' : holiday.date | date: 'yyyy'}}
                 </div>
                 <i class="icon icon-trash pull-right" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
@@ -170,7 +170,7 @@
                        ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}">
                     <label class="cs-input__label" for="month" translate="autoAttendant.every"></label>
                     <cs-select name="month" options="aaScheduleModalCtrl.monthOptions" ng-model="holiday.month"
-                               placeholder="aaScheduleModalCtrl.monthPlaceholder" labelfield="labelTranslate"
+                               placeholder="aaScheduleModalCtrl.monthPlaceholder" labelfield="label"
                                icon="icon-chevron-down"
                                ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].month.$error.required}"></cs-select>
                     <div class="cs-input__messages"
@@ -199,7 +199,7 @@
                        ng-class="{'error': aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error.required}">
                     <label class="cs-input__label" for="day" translate="autoAttendant.day"></label>
                     <cs-select name="day" options="aaScheduleModalCtrl.dayOptions" ng-model="holiday.day"
-                               placeholder="aaScheduleModalCtrl.dayPlaceholder" labelfield="labelTranslate"
+                               placeholder="aaScheduleModalCtrl.dayPlaceholder" labelfield="label"
                                icon="icon-chevron-down"></cs-select>
                     <div class="cs-input__messages"
                          ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].day.$error"

@@ -34,11 +34,11 @@
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
-    vm.monthOptions = AAICalService.getMonths();
+    vm.monthOptions = [];
+    vm.dayOptions = [];
+    vm.rankOptions = [];
     vm.monthPlaceholder = $translate.instant('autoAttendant.every');
-    vm.rankOptions = AAICalService.getRanks();
     vm.rankPlaceholder = $translate.instant('autoAttendant.on');
-    vm.dayOptions = AAICalService.getDays();
     vm.dayPlaceholder = $translate.instant('autoAttendant.day');
     vm.openhours = [];
 
@@ -359,21 +359,33 @@
           vm.holidays = allHours.holidays;
           _.each(vm.holidays, function (holiday) {
             if (!holiday.exactDate) {
-              holiday.month.labelTranslate = $translate.instant(holiday.month.label);
+              holiday.month.label = moment.months(holiday.month.index);
               holiday.rank.labelTranslate = $translate.instant(holiday.rank.label);
-              holiday.day.labelTranslate = $translate.instant(holiday.day.label);
+              holiday.day.label = moment.weekdays(holiday.day.index);
             }
           });
         });
       }
-      _.each(vm.monthOptions, function (month) {
-        month.labelTranslate = $translate.instant(month.label);
+
+      vm.monthOptions = [];
+      _.times(12, function (i) {
+        vm.monthOptions.push({
+          index: i,
+          number: i + 1,
+          label: moment.months(i)
+        });
       });
+      vm.rankOptions = AAICalService.getRanks();
       _.each(vm.rankOptions, function (rank) {
         rank.labelTranslate = $translate.instant(rank.label);
       });
-      _.each(vm.dayOptions, function (day) {
-        day.labelTranslate = $translate.instant(day.label);
+      vm.dayOptions = [];
+      _.each(AAICalService.getTwoLetterDays(), function (value, index) {
+        vm.dayOptions.push({
+          index: index,
+          abbr: value,
+          label: moment.weekdays(index)
+        });
       });
     }
 
@@ -395,9 +407,9 @@
           });
           allHours.holidays.forEach(function (value) {
             if (!value.exactDate) {
-              value.month.labelTranslate = $translate.instant(value.month.label);
+              value.month.label = moment.months(value.month.index);
               value.rank.labelTranslate = $translate.instant(value.rank.label);
-              value.day.labelTranslate = $translate.instant(value.day.label);
+              value.day.label = moment.weekdays(value.day.index);
             }
             vm.holidays.unshift(value);
           });

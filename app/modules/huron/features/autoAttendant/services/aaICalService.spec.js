@@ -29,85 +29,7 @@ describe('Service: AACalendarService', function () {
     }]
   };
 
-  var months = [{
-    label: 'months.january',
-    index: 0,
-    number: 1
-  }, {
-    label: 'months.february',
-    index: 1,
-    number: 2
-  }, {
-    label: 'months.march',
-    index: 2,
-    number: 3
-  }, {
-    label: 'months.april',
-    index: 3,
-    number: 4
-  }, {
-    label: 'months.may',
-    index: 4,
-    number: 5
-  }, {
-    label: 'months.june',
-    index: 5,
-    number: 6
-  }, {
-    label: 'months.july',
-    index: 6,
-    number: 7
-  }, {
-    label: 'months.august',
-    index: 7,
-    number: 8
-  }, {
-    label: 'months.september',
-    index: 8,
-    number: 9
-  }, {
-    label: 'months.october',
-    index: 9,
-    number: 10
-  }, {
-    label: 'months.november',
-    index: 10,
-    number: 11
-  }, {
-    label: 'months.december',
-    index: 11,
-    number: 12
-  }];
-
-  var days = [{
-    label: 'weekDays.monday',
-    index: '1',
-    abbr: 'MO'
-  }, {
-    label: 'weekDays.tuesday',
-    index: '2',
-    abbr: 'TU'
-  }, {
-    label: 'weekDays.wednesday',
-    index: '3',
-    abbr: 'WE'
-  }, {
-    label: 'weekDays.thursday',
-    index: '4',
-    abbr: 'TH'
-  }, {
-    label: 'weekDays.friday',
-    index: '5',
-    abbr: 'FR'
-  }, {
-    label: 'weekDays.saturday',
-    index: '6',
-    abbr: 'SA'
-  }, {
-    label: 'weekDays.sunday',
-    index: '0',
-    abbr: 'SU'
-  }];
+  var days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
   var ranks = [{
     label: 'ranks.first',
@@ -140,7 +62,6 @@ describe('Service: AACalendarService', function () {
     var date = new Date();
     starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '8', 0, 0);
     endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
-
   }));
 
   describe('createCalendar', function () {
@@ -167,42 +88,11 @@ describe('Service: AACalendarService', function () {
     });
   });
 
-  describe('getMonths', function () {
-    it('should return the months', function () {
-      var actual = AAICalService.getMonths();
-      expect(actual).toBeDefined();
-      expect(actual).toEqual(months);
-    });
-  });
-
-  describe('findMonthByNumber', function () {
-    it('should return the january', function () {
-      var month = AAICalService.findMonthByNumber(1);
-      expect(month).toBeDefined();
-      expect(month.number).toBe(1);
-    });
-
-    it('should return undefined, invalid month number', function () {
-      expect(AAICalService.findMonthByNumber(0)).toBeUndefined();
-      expect(AAICalService.findMonthByNumber(13)).toBeUndefined();
-    });
-  });
-
-  describe('getDays', function () {
+  describe('getTwoLetterDays', function () {
     it('should return the days', function () {
-      var actual = AAICalService.getDays();
+      var actual = AAICalService.getTwoLetterDays();
       expect(actual).toBeDefined();
       expect(actual).toEqual(days);
-    });
-  });
-
-  describe('findDayByAbbr', function () {
-    it('should return the monday', function () {
-      expect(AAICalService.findDayByAbbr('MO')).toEqual(days[0]);
-    });
-
-    it('should return undefined', function () {
-      expect(AAICalService.findDayByAbbr('TT')).toBeUndefined();
     });
   });
 
@@ -379,8 +269,14 @@ describe('Service: AACalendarService', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
-        month: AAICalService.getMonths()[10],
-        day: AAICalService.findDayByAbbr('TH'),
+        month: {
+          index: 10,
+          number: 11
+        },
+        day: {
+          index: 4,
+          abbr: 'TH'
+        },
         rank: AAICalService.getRanks()[3],
         allDay: true,
         exactDate: false
@@ -404,8 +300,14 @@ describe('Service: AACalendarService', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
-        month: AAICalService.getMonths()[10],
-        day: AAICalService.findDayByAbbr('TH'),
+        month: {
+          index: 10,
+          number: 11
+        },
+        day: {
+          index: 4,
+          abbr: 'TH'
+        },
         rank: AAICalService.getRanks()[3],
         starttime: starttime,
         endtime: endtime,
@@ -430,8 +332,14 @@ describe('Service: AACalendarService', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Thanksgiving',
-        month: AAICalService.getMonths()[10],
-        day: AAICalService.findDayByAbbr('TH'),
+        month: {
+          index: 10,
+          number: 11
+        },
+        day: {
+          index: 4,
+          abbr: 'TH'
+        },
         rank: AAICalService.getRanks()[3],
         allDay: true,
         exactDate: false,
@@ -456,8 +364,14 @@ describe('Service: AACalendarService', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'Last Friday of Jan',
-        month: AAICalService.getMonths()[0],
-        day: AAICalService.findDayByAbbr('FR'),
+        month: {
+          index: 0,
+          number: 1
+        },
+        day: {
+          index: 5,
+          abbr: 'FR'
+        },
         rank: AAICalService.getRanks()[4],
         allDay: true,
         exactDate: false,
@@ -482,8 +396,14 @@ describe('Service: AACalendarService', function () {
       var calendar = AAICalService.createCalendar();
       var range = {
         name: 'First Friday of Feb',
-        month: AAICalService.getMonths()[1],
-        day: AAICalService.findDayByAbbr('TU'),
+        month: {
+          index: 1,
+          number: 2
+        },
+        day: {
+          index: 5,
+          abbr: 'FR'
+        },
         rank: AAICalService.getRanks()[0],
         allDay: true,
         exactDate: false,

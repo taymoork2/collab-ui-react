@@ -11,12 +11,9 @@
     var service = {
       createCalendar: createCalendar,
       getDefaultRange: getDefaultRange,
-      getMonths: getMonths,
-      getDays: getDays,
+      getTwoLetterDays: getTwoLetterDays,
       getRanks: getRanks,
-      findMonthByNumber: findMonthByNumber,
       findRankByNumber: findRankByNumber,
-      findDayByAbbr: findDayByAbbr,
       addHoursRange: addHoursRange,
       getHoursRanges: getHoursRanges,
       getDefaultDayHours: getDefaultDayHours
@@ -64,104 +61,8 @@
 
     }
 
-    function getMonths() {
-      return [{
-        label: 'months.january',
-        index: 0,
-        number: 1
-      }, {
-        label: 'months.february',
-        index: 1,
-        number: 2
-      }, {
-        label: 'months.march',
-        index: 2,
-        number: 3
-      }, {
-        label: 'months.april',
-        index: 3,
-        number: 4
-      }, {
-        label: 'months.may',
-        index: 4,
-        number: 5
-      }, {
-        label: 'months.june',
-        index: 5,
-        number: 6
-      }, {
-        label: 'months.july',
-        index: 6,
-        number: 7
-      }, {
-        label: 'months.august',
-        index: 7,
-        number: 8
-      }, {
-        label: 'months.september',
-        index: 8,
-        number: 9
-      }, {
-        label: 'months.october',
-        index: 9,
-        number: 10
-      }, {
-        label: 'months.november',
-        index: 10,
-        number: 11
-      }, {
-        label: 'months.december',
-        index: 11,
-        number: 12
-      }];
-    }
-
-    function findMonthByNumber(number) {
-      return _.find(getMonths(), function (month) {
-        if (number == month.number) {
-          return month;
-        }
-      });
-    }
-
-    function getDays() {
-      return [{
-        label: 'weekDays.monday',
-        index: '1',
-        abbr: 'MO'
-      }, {
-        label: 'weekDays.tuesday',
-        index: '2',
-        abbr: 'TU'
-      }, {
-        label: 'weekDays.wednesday',
-        index: '3',
-        abbr: 'WE'
-      }, {
-        label: 'weekDays.thursday',
-        index: '4',
-        abbr: 'TH'
-      }, {
-        label: 'weekDays.friday',
-        index: '5',
-        abbr: 'FR'
-      }, {
-        label: 'weekDays.saturday',
-        index: '6',
-        abbr: 'SA'
-      }, {
-        label: 'weekDays.sunday',
-        index: '0',
-        abbr: 'SU'
-      }];
-    }
-
-    function findDayByAbbr(abbr) {
-      return _.find(getDays(), function (day) {
-        if (abbr === day.abbr) {
-          return day;
-        }
-      });
+    function getTwoLetterDays() {
+      return ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
     }
 
     function getRanks() {
@@ -421,9 +322,13 @@
           var description = vevent.getFirstPropertyValue('description').split(";");
           hoursRange.name = description[0];
           if (description.length > 3) {
-            hoursRange.month = findMonthByNumber(description[1]);
+            hoursRange.month = {};
+            hoursRange.month.number = parseInt(description[1]);
+            hoursRange.month.index = hoursRange.month.number - 1;
             hoursRange.rank = findRankByNumber(description[2]);
-            hoursRange.day = findDayByAbbr(description[3]);
+            hoursRange.day = {};
+            hoursRange.day.abbr = description[3];
+            hoursRange.day.index = getTwoLetterDays().indexOf(description[3]);
             hoursRange.exactDate = false;
           }
           hoursRange.date = moment(hoursRange.starttime).format("YYYY-MM-DD");
