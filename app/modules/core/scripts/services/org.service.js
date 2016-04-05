@@ -17,6 +17,7 @@
       setSetupDone: setSetupDone,
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
+      deleteOrg: deleteOrg,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getHybridServiceAcknowledged: getHybridServiceAcknowledged,
@@ -229,6 +230,18 @@
             data.status = status;
             callback(data, status);
           });
+      });
+    }
+
+    function deleteOrg(currentOrgId) {
+      if (!currentOrgId) {
+        return $q.reject('currentOrgId is not set');
+      }
+      var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
+
+      return $http({
+        method: 'DELETE',
+        url: serviceUrl
       });
     }
 

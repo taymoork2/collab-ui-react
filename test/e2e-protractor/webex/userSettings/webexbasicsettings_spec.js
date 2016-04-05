@@ -1,5 +1,7 @@
 'use strict';
 
+/*global webEx*/
+
 describe('WebEx user settings', function () {
   var setup = false;
 
@@ -16,7 +18,7 @@ describe('WebEx user settings', function () {
     });
   });
 
-  /**  
+  /**
     xit('should allow login as admin user', function () {
       login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
     });

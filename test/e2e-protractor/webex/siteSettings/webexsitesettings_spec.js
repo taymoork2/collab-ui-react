@@ -1,5 +1,7 @@
 'use strict';
 
+/*global sitesettings*/
+
 sitesettings.testInfo.describeCount = 0;
 while (1 >= sitesettings.testInfo.describeCount) {
   switch (sitesettings.testInfo.describeCount) {

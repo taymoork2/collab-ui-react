@@ -79,10 +79,14 @@
     </div>
   </cs-sp-section>
   <cs-sp-section>
-    <button class="btn btn--negative hercules-btn-deregister"
-            ng-disabled="saving"
-            ng-click="clusterDetailsCtrl.showDeregisterDialog();"
-            translate="hercules.clusters.deregister">
-    </button>
+    <div class="section-title-row section-name" translate="hercules.clusters.deregisterSectionHeader"></div>
+    <span translate="hercules.clusters.deregisterSectionBody"></span>
+    <div>
+      <button class="btn btn--negative hercules-btn-deregister"
+              ng-disabled="saving"
+              ng-click="clusterDetailsCtrl.showDeregisterDialog();"
+              translate="hercules.clusters.deregister">
+      </button>
+    </div>
   </cs-sp-section>
 </cs-sp-container>

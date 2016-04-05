@@ -544,6 +544,9 @@ angular
             },
             'header@user-overview': {
               templateUrl: 'modules/core/users/userOverview/userHeader.tpl.html'
+            },
+            'userPending@user-overview': {
+              templateUrl: 'modules/core/users/userOverview/userPending.tpl.html'
             }
           },
           resolve: {

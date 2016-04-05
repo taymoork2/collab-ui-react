@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Localytics, Config) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config) {
     var NO_TIMEOUT = 0;
     var FAILURE_TIMEOUT = NO_TIMEOUT;
     var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
@@ -38,6 +38,8 @@
     }
 
     function notify(notifications, type) {
+      var closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + $translate.instant('common.close') + '</span></button>';
+
       if (!notifications) {
         return;
       }
@@ -48,7 +50,12 @@
         return;
       }
       type = (type == 'success') ? type : 'error';
-      toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT);
+      toaster.pop({
+        type: type,
+        body: notifications.join('<br/>'),
+        timeout: type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT,
+        closeHtml: closeHtml
+      });
     }
 
     function errorResponse(response, errorKey, errorParams) {

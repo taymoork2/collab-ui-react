@@ -16,7 +16,7 @@
     Notification
   ) {
 
-    var funcName = "siteListCtrl()";
+    var funcName = "SiteListCtrl()";
     var logMsg = "";
 
     var vm = this;
@@ -74,7 +74,7 @@
           conferenceService.csvMock = {
             mockExport: false,
             mockImport: true,
-            mockFileDownload: true,
+            mockFileDownload: false,
             mockStatus: false,
 
             // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
@@ -205,17 +205,6 @@
       ); // WebExApiGatewayService.csvExport()
 
     }; // csvExport()
-
-    // TODO: remove csvImport() once we start implementing the import modal
-    $scope.csvImport = function (siteUrl) {
-      var funcName = "csvImport()";
-      var logMsg = "";
-
-      logMsg = funcName + "\n" +
-        "siteUrl=" + siteUrl;
-
-      $log.log(logMsg);
-    }; // csvImport()
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {

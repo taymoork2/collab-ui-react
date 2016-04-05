@@ -19,3 +19,39 @@
     padding-right: rem-calc(23);
   }
 }
+
+.pendingStatus {
+  text-align: center;
+  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  .icon-circle-email {
+    font-size: 96px;
+    padding-top: 96px;
+  }
+
+  .pendingTitle {
+    font-size: 20px;
+    line-height: 32px;
+    padding-top: 24px;
+  }
+
+  .pendingMsg {
+    font-size: 14px;
+    line-height: 24px;
+    padding-top: 12px; 
+  }
+
+  .resendMsg {
+    padding-top: 44px;
+  }
+}
+
+.editServices{
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  padding-top: 36px;
+  a {
+    color: $color-primary-base;
+  }    
+}
