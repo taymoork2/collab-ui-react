@@ -3,19 +3,20 @@
 
   describe('Template: customerList.tpl.html', function () {
     var $scope, $compile, $templateCache, $q, $controller, controller, view;
-    var Authinfo, PartnerService;
+    var Authinfo, PartnerService, Orgservice;
     var ADD_BUTTON = '#addTrial';
 
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
 
-    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _PartnerService_) {
+    beforeEach(inject(function ($rootScope, _$compile_, _$templateCache_, _$controller_, _$q_, _Authinfo_, _PartnerService_, _Orgservice_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
       $templateCache = _$templateCache_;
       $controller = _$controller_;
       Authinfo = _Authinfo_;
       PartnerService = _PartnerService_;
+      Orgservice = _Orgservice_;
       $q = _$q_;
 
       spyOn(PartnerService, 'getTrialsList').and.returnValue($q.when({
@@ -24,6 +25,11 @@
       spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when({
         data: {}
       }));
+      spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid) {
+        callback({
+          success: true
+        }, 200);
+      });
     }));
 
     describe('Add trial button', function () {

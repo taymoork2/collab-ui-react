@@ -13,6 +13,7 @@
       csvUpload: 'atlas-csv-upload',
       dirSync: 'atlas-dir-sync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasInvitePendingStatus: 'atlas-invite-pending-status',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasSipUriDomainEnterprise: 'atlas-sip-uri-domain-enterprise',

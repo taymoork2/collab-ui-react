@@ -3,14 +3,12 @@
  */
 'use strict';
 
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var config = require('../gulp.config')();
 var gulp = require('gulp');
-var karma = require('karma').server;
+var Server = require('karma').Server;
 var log = $.util.log;
 var messageLogger = require('../utils/messageLogger.gulp')();
 var logWatch = require('../utils/logWatch.gulp')();
@@ -119,10 +117,20 @@ gulp.task('watch:vendorjs', function () {
 
 gulp.task('karma-watch', ['karma-config-watch'], function (done) {
   if (!args.nounit) {
-    karma.start({
+    var server = new Server({
       configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
       singleRun: true
-    }, done);
+    }, function (result) {
+      if (result) {
+        // Exit process if we have an error code
+        // Avoids having gulp formatError stacktrace
+        process.exit(result);
+      } else {
+        // Otherwise end task like normal
+        done();
+      }
+    });
+    server.start();
   } else {
     log($.util.colors.yellow('--nounit **Skipping Karma Config Task'));
     done();
