@@ -14,7 +14,6 @@
     var objectUrl;
     var objectUrlTemplate;
 
-    var typeUser = 'user';
     var typeExport = 'export';
     var typeWebExExport = 'webexexport';
     var typeWebExImport = 'webeximport';
@@ -48,7 +47,6 @@
     );
 
     var service = {
-      typeUser: typeUser,
       typeWebExExport: typeWebExExport,
       typeWebExImport: typeWebExImport,
       getCsv: getCsv,
@@ -64,11 +62,9 @@
     return service;
 
     function getCsv(type) {
-      if (type === typeUser) {
-        return csvUserResource.get({
-          type: typeExport
-        }).$promise;
-      }
+      return csvUserResource.get({
+        type: typeExport
+      }).$promise;
     } // getCsv()
 
     function getWebExCsv(
@@ -100,7 +96,9 @@
     ) {
 
       var blob = new Blob([data], {
-        type: 'text/plain'
+        type: 'text/csv'
+          // type: 'text/plain'
+          // type: 'application/json;charset=UTF-16LE'
       });
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
@@ -136,7 +134,8 @@
     function createWebexCsvResource(fileDownloadUrl) {
       var logMsg = "";
 
-      var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
+      // var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
+      var fileDownloadUrlFixed = 'https://sjsite14.webex.com/meetingsapi/v1/files/OTcyJSVTaXRlVXNlcnMuY3N2LVVURjg=';
 
       logMsg = "WebExCsvDownloadService().createWebexCsvResource()" + "\n" +
         "fileDownloadUrl=" + fileDownloadUrl + "\n" +
@@ -150,17 +149,24 @@
             // override transformResponse function because $resource
             // returns string array in the case of CSV file download
             transformResponse: function (data, headers) {
-              if (_.isString(data)) {
-                if (_.startsWith(data, '{') || _.startsWith(data, '[')) {
-                  data = angular.fromJson(data);
-                } else {
-                  data = {
-                    content: data
-                  };
-                }
-              }
+              var funcName = "transformResponse()";
+              var logMsg = "";
 
-              return data;
+              logMsg = funcName + "\n" +
+                "data=" + "\n" + data;
+              // $log.log(logMsg);
+
+              var noTabData = data.replace(/\t/g, ',');
+
+              logMsg = funcName + "\n" +
+                "noTabData=" + "\n" + noTabData;
+              // $log.log(logMsg);
+              
+              var resultData = {
+                      content: noTabData
+              };
+              
+              return resultData;
             }
           }
         }
