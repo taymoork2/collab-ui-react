@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('ClusterDeregisterController', ClusterDeregisterController);
+
   /* @ngInject */
   function ClusterDeregisterController(cluster, ClusterService, XhrNotificationService, $translate, $modalInstance, $window) {
     var vm = this;
@@ -34,9 +38,5 @@
 
     vm.close = $modalInstance.close;
   }
-
-  angular
-    .module('Hercules')
-    .controller('ClusterDeregisterController', ClusterDeregisterController);
 
 }());
