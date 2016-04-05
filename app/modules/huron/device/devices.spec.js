@@ -1,14 +1,14 @@
 'use strict';
 
-describe('Controller: DevicesCtrlHuron', function () {
-  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, currentDevice, FeatureToggleService;
+fdescribe('Controller: DevicesCtrlHuron', function () {
+  var controller, $scope, $q, currentUser, CsdmHuronUserDeviceService, OtpService, Config, currentDevice, FeatureToggleService, poller;
 
-  var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
+  //var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
   beforeEach(module('Huron'));
 
-  var deviceList = [];
-  deviceList.push(getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
+  var deviceList = {};
+  //deviceList.push(getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
 
   var userOverview = {
     addGenerateAuthCodeLink: jasmine.createSpy(),
@@ -18,20 +18,30 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   var emptyArray = [];
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _CsdmHuronUserDeviceService_, _OtpService_, _Config_, _FeatureToggleService_) {
     $scope = _$rootScope_.$new();
     $scope.userOverview = userOverview;
 
     $q = _$q_;
-    $stateParams = _$stateParams_;
-    DeviceService = _DeviceService_;
+    CsdmHuronUserDeviceService = _CsdmHuronUserDeviceService_;
     OtpService = _OtpService_;
     Config = _Config_;
     FeatureToggleService = _FeatureToggleService_;
 
-    $stateParams.currentUser = stateParams.currentUser;
+    currentUser = {
+        "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
+        "entitlements": [
+          "squared-room-moderation",
+          "webex-messenger",
+          "ciscouc",
+          "squared-call-initiation",
+          "webex-squared",
+          "squared-syncup"
+        ]}
 
-    spyOn(DeviceService, 'loadDevices').and.returnValue($q.when(deviceList));
+        poller = {}
+    spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
+    spyOn(poller, 'getDeviceList').and.returnValue($q.when(deviceList));
     spyOn(DeviceService, 'setCurrentDevice').and.callFake(function (device) {
       currentDevice = device;
     });
@@ -106,7 +116,7 @@ describe('Controller: DevicesCtrlHuron', function () {
 
   describe('showDeviceDetailPanel() method', function () {
     it('should call DeviceService.setCurrentDevice', function () {
-      controller.showDeviceDetailPanel('currentDevice');
+      controller.showDeviceDetails('currentDevice');
       expect(currentDevice).toEqual('currentDevice');
     });
   });
