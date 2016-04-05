@@ -9,11 +9,9 @@ var gulp = require('gulp');
 var config = require('../gulp.config')();
 var fileListParser = require('../utils/fileListParser.gulp');
 var messageLogger = require('../utils/messageLogger.gulp')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
-var karma = require('karma').server;
+var Server = require('karma').Server;
 var runSeq = require('run-sequence');
 var log = $.util.log;
 var path = require('path');
@@ -216,7 +214,7 @@ function createGulpRunKarmaModule(module) {
           options.singleRun = true;
         }
       }
-      karma.start(options, function (result) {
+      var server = new Server(options, function (result) {
         if (result) {
           // Exit process if we have an error code
           // Avoids having gulp formatError stacktrace
@@ -226,6 +224,7 @@ function createGulpRunKarmaModule(module) {
           done();
         }
       });
+      server.start();
     } else {
       log($.util.colors.yellow('--nounit **Skipping Karma Tests'));
       return done();

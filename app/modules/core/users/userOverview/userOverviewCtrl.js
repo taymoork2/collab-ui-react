@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig) {
+  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice, Log, Notification) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -15,6 +15,10 @@
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
+    vm.getAccountStatus = getAccountStatus;
+    vm.resendInvitation = resendInvitation;
+    vm.pendingStatus = false;
+    vm.dirsyncEnabled = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -89,6 +93,14 @@
       }
 
       updateUserTitleCard();
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus).then(function (result) {
+        if (result) {
+          getAccountStatus();
+        } else {
+          vm.pendingStatus = false;
+        }
+      });
     }
 
     var generateOtpLink = {
@@ -213,6 +225,37 @@
 
     function disableAuthCodeLink() {
       _.pull(vm.dropDownItems, generateOtpLink);
+    }
+
+    function getAccountStatus() {
+      var currentUserId = vm.currentUser.id;
+      Userservice.getUser(currentUserId, function (data, status) {
+        if (data.success) {
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+        } else {
+          Log.debug('Get existing account info failed. Status: ' + status);
+        }
+      });
+    }
+
+    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
+      angular.element('.open').removeClass('open');
+    }
+
+    function getOrg() {
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          vm.dirsyncEnabled = data.dirsyncEnabled;
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+        }
+      });
     }
   }
 })();
