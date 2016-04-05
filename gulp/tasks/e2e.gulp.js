@@ -6,9 +6,7 @@
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var processEnvUtil = require('../utils/processEnvUtil.gulp')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var del = require('del');
 var fs = require('fs');
@@ -189,8 +187,8 @@ gulp.task('set-env', function () {
   }
 });
 
-gulp.task('protractor:clean', function (done) {
-  del([config.e2eFailRetry, config.e2eFailRetrySpecLists, config.e2eReports], done);
+gulp.task('protractor:clean', function () {
+  return del([config.e2eFailRetry, config.e2eFailRetrySpecLists, config.e2eReports]);
 });
 
 /**
