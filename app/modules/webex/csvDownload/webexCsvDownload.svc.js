@@ -140,23 +140,25 @@
         "fileDownloadUrlFixed=" + fileDownloadUrlFixed;
       // $log.log(logMsg);
 
-      webexCsvResource = $resource(
-        fileDownloadUrlFixed, {}, {
-          get: {
-            method: 'POST',
-            // override transformResponse function because $resource
-            // returns string array in the case of CSV file download
-            transformResponse: function (data, headers) {
-                var noTabData = data.replace(/\t/g, ',');
-                var resultData = {
-                  content: noTabData
-                };
+      webexCsvResource = $resource(fileDownloadUrlFixed, {}, {
+        get: {
+          method: 'POST',
+          // override transformResponse function because $resource
+          // returns string array in the case of CSV file download
+          transformResponse: function (
+              data,
+              headers
+            ) {
 
-                return resultData;
-              } // transformResponse()
-          } // get
-        }
-      );
+              var noTabData = data.replace(/\t/g, ',');
+              var resultData = {
+                content: noTabData
+              };
+
+              return resultData;
+            } // transformResponse()
+        } // get
+      }); // $resource()
     } // createWebexCsvResource()
   } // WebExCsvDownloadService()
 })();

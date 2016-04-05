@@ -52,21 +52,21 @@
           </span>
           
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
-                                   type='webexexport'
-                                   filedownloadurl={{gridRow.fileDownloadUrl}}
-                                   filename="CI-SiteUsers.csv"></webex-csv-download>
+                              type='webexexport'
+                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
           <webex-csv-download ng-if="(gridRow.id == 'import-download-err-file')"
-                                   type='webeximport'
-                                   filedownloadurl={{gridRow.fileDownloadUrl}}
-                                   filename="CI-importErr.csv"></webex-csv-download>
+                              type='webeximport'
+                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
           <!-- 
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
             
             <webex-csv-download type="export" 
-                                     filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
+                                filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
           </span>
           -->
         </td>
