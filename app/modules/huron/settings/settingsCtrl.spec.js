@@ -417,6 +417,32 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(assignedExternalNumbers);
     });
 
+    it('_buildServiceNumberOptions - add the service number back in the list if it is already set but not assigned to a user or spark call feature', function () {
+      controller.model.site.emergencyCallBackNumber = {
+        pattern: '+19725551003'
+      };
+      controller.model.serviceNumber = {
+        pattern: '+19725551003',
+        label: '(972) 555-1003'
+      };
+
+      var expectedOptions = [{
+        pattern: '+19725551001',
+        label: '(972) 555-1001'
+      }, {
+        pattern: '+19725551002',
+        label: '(972) 555-1002'
+      }, {
+        pattern: '+19725551003',
+        label: '(972) 555-1003'
+      }];
+
+      controller._buildServiceNumberOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(expectedOptions);
+    });
+
     it('_buildServiceNumberOptions - should also remove the voicemail number if found', function () {
       controller.model.site.voicemailPilotNumber = '+19725551001';
       var expectedOptions = [{
@@ -439,7 +465,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(controller.unassignedExternalNumbers);
     });
 
-    it('_buildVoicemailNumberOptions - should also add the voicemail number back in the list if it is already assigned', function () {
+    it('_buildVoicemailNumberOptions - should add the voicemail number back in the list if it is already assigned', function () {
       controller.model.serviceNumber = undefined;
       controller.model.site.voicemailPilotNumber = '+19725551001';
       var expectedOptions = [{

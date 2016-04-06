@@ -1341,6 +1341,17 @@
             return externalNumber.pattern === _.get(vm, 'model.site.voicemailPilotNumber');
           })
           .value();
+
+        // add the existing emergencyCallBackNumber back into the list of options
+        if (_.get(vm, 'model.site.emergencyCallBackNumber.pattern') && !_.find(localScope.to.options, function (externalNumber) {
+            return externalNumber.pattern === vm.model.site.emergencyCallBackNumber.pattern;
+          })) {
+          var tmpExternalNumber = {
+            pattern: vm.model.site.emergencyCallBackNumber.pattern,
+            label: TelephoneNumberService.getDIDLabel(vm.model.site.emergencyCallBackNumber.pattern)
+          };
+          localScope.to.options.push(tmpExternalNumber);
+        }
       });
     }
 
@@ -1352,7 +1363,11 @@
           var showWarning = false;
           if (localScope.to.options.length > 0) {
             if (_.isUndefined(vm.model.companyVoicemail.companyVoicemailNumber)) {
-              vm.model.companyVoicemail.companyVoicemailNumber = localScope.to.options[0];
+              // pre-select a number which isn't callerIdNumber or serviceNumber if those were just selected
+              vm.model.companyVoicemail.companyVoicemailNumber = _.find(localScope.to.options, function (externalNumber) {
+                return externalNumber.label !== vm.model.callerId.callerIdNumber ||
+                  (externalNumber.pattern !== _.get(vm, 'model.serviceNumber.pattern'));
+              });
             }
           } else {
             showWarning = true;
@@ -1374,7 +1389,11 @@
           }
 
           if (localScope.to.options.length > 0 && (vm.model.callerId.callerIdNumber === '')) {
-            vm.model.callerId.callerIdNumber = localScope.to.options[0];
+            // pre-select a number which isn't companyVoicemailNumber
+            var found = _.find(localScope.to.options, function (externalNumberLabel) {
+              return externalNumberLabel !== _.get(vm, 'model.companyVoicemail.companyVoicemailNumber.label');
+            });
+            vm.model.callerId.callerIdNumber = _.isUndefined(found) ? '' : found;
           }
         } else {
           vm.model.callerId.callerIdNumber = '';
