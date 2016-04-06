@@ -8,9 +8,9 @@ namespace domainManagement {
       isLoaded: false,
       isPartner: false
     };
-    
+
     /* @ngInject */
-    constructor(Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
+    constructor(Authinfo, CiService, private DomainManagementService) {
 
       CiService.getUser().then(curUser => {
 
