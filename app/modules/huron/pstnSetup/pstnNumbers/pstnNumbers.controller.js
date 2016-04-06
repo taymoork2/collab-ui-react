@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, FeatureToggleService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -193,7 +193,7 @@
     }];
 
     ////////////////////////
-    
+
     FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
       .then(function (isSupported) {
         vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
