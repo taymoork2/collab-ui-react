@@ -1,7 +1,7 @@
-//.aa-flex-item.schedule {
-//  @include vr-spacing(pv, .25);
-//  @include vr-spacing(ph, 2);
-//}
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
+}
 
 .aa-schedule-modal {
   width: 785px; //TODO: width dynamic
@@ -22,12 +22,10 @@
     color: $color-primary-base;
     transform: rotate(90deg);
   }
-  //.aa-schedule-days {
-  //  padding: 4px;
-  //  label {
-  //    @include vr-spacing(mb, 0);
-  //  }
-  //}
+  .aa-schedule-days {
+    display: flex;
+    justify-content: space-between;
+  }
   //.aa-schedule-trash {
   //  font-size: 35px;
   //  color: #858688;

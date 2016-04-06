@@ -37,18 +37,19 @@
                 <label translate="autoAttendant.scheduleClosedTimeCheck"></label>
               </div>
             </div>
-            <div class="columns">
-            <span class="aa-schedule-days" ng-repeat="day in hours.days">
-              <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
+          </div>
+          <div class="aa-schedule-days">
+            <div ng-repeat="day in hours.days">
+            <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
                            label="{{day.label}}"></cs-checkbox>
-            </span>
             </div>
+          </div>
+          <div class="row">
             <div class="columns">
               <a class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.deleteRange($index);"><span
                 class="sr-only ng-scope" translate="huronHuntGroup.deleteAction">Delete</span></a>
             </div>
           </div>
-
         </div>
       </form>
       <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
