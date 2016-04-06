@@ -1095,7 +1095,7 @@
             alertType: null
           };
 
-          var userStatus = user.status;
+          var userStatus = user.httpStatus;
 
           if (userStatus === 200 || userStatus === 201) {
             userResult.message = $translate.instant('usersPage.onboardSuccess', {
@@ -1930,8 +1930,8 @@
           var addedUsersList = [];
 
           _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
+            if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.httpStatus === 200) {
                 $scope.model.numExistingUsers++;
               } else {
                 $scope.model.numNewUsers++;
@@ -1944,7 +1944,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
@@ -2299,8 +2299,8 @@
           var addedUsersList = [];
 
           _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
+            if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.httpStatus === 200) {
                 $scope.model.numExistingUsers++;
               } else {
                 $scope.model.numNewUsers++;
@@ -2313,7 +2313,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {

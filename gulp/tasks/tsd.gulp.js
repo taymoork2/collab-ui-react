@@ -20,10 +20,10 @@ gulp.task('tsd', function (done) {
   );
 });
 
-gulp.task('clean:tsd', function (done) {
+gulp.task('clean:tsd', function () {
   var files = ['typings'];
   messageLogger('Cleaning typings directory', files);
-  del(files, done);
+  return del(files);
 });
 
 gulp.task('tsd:app', function (done) {

@@ -93,6 +93,7 @@
     vm.openCloseMostActive = function () {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
       resizeCards();
+      delayedResize();
     };
 
     vm.activePage = function (num) {

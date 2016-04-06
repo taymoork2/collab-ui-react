@@ -108,10 +108,12 @@ describe('OnboardCtrl: Ctrl', function () {
       data: {
         userResponse: [{
           status: statusCode,
+          httpStatus: statusCode,
           message: responseMessage,
           email: 'blah@example.com'
         }, {
           status: statusCode,
+          httpStatus: statusCode,
           message: responseMessage,
           email: 'blah@example.com'
         }]
@@ -195,7 +197,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201, 'User Patched')));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(200)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();

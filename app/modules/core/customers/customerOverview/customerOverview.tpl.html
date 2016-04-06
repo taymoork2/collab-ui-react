@@ -91,7 +91,7 @@
         </ul>
       </div>
     </cs-sp-section>
-    <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest"
+    <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
     ng-click="customerOverview.deleteTestOrg()"
     translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}">
     </button>

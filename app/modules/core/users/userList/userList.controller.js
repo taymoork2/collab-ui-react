@@ -8,7 +8,7 @@
   /* @ngInject */
   function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
-    $scope.pageTitle = $translate.instant('usersPage.manageUsers');
+    $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
     $scope.page = 1;
     $scope.status = null;
@@ -61,7 +61,7 @@
     $scope.filterList = filterList;
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
-    $scope.isHuronUser = isHuronUser;
+    $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
@@ -69,6 +69,7 @@
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = isValidThumbnail;
+    $scope.startExportUserList = startExportUserList;
 
     init();
 
@@ -91,7 +92,7 @@
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
-          if ($scope.gridApi.selection) {
+          if ($scope.gridApi && $scope.gridApi.selection) {
             $scope.gridApi.selection.clearSelectedRows();
           }
         }
@@ -303,46 +304,22 @@
       return false;
     }
 
-    function isHuronUser(allEntitlements) {
-      if (allEntitlements) {
-        for (var i = 0; i < allEntitlements.length; i++) {
-          if (Config.entitlements.huron === allEntitlements[i]) {
-            return true;
-          }
-        }
+    // if there is only one Admin in the org, the user should not be able to delete it
+    function isOnlyAdmin(entity) {
+      if ($scope.userList.adminUsers.length === 1) {
+        return $scope.userList.adminUsers[0].userName === entity.userName;
       }
       return false;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
-        sendSparkWelcomeEmail(userEmail, userName);
-      } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
-        HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)
-          .then(function () {
-            Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-          }, function (error) {
-            Notification.errorResponse(error, 'usersPage.emailError');
-          });
-      }
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
       angular.element('.open').removeClass('open');
-    }
-
-    function sendSparkWelcomeEmail(userEmail, userName) {
-      var userData = [{
-        'address': userEmail,
-        'name': userName
-      }];
-
-      Userservice.inviteUsers(userData, null, true, function (data) {
-        if (data.success) {
-          Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-        } else {
-          Log.debug('Resending failed. Status: ' + status);
-          Notification.notify([$translate.instant('usersPage.emailError')], 'error');
-          $scope.btnSaveLoad = false;
-        }
-      });
     }
 
     function setDeactivateUser(deleteUserOrgId, deleteUserUuId, deleteUsername) {
@@ -374,10 +351,11 @@
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
+
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
@@ -466,8 +444,9 @@
     }
 
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
+    // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
-      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id'));
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
     }
 
     function isValidThumbnail(user) {
@@ -479,6 +458,14 @@
         return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
       });
       return !_.isEmpty(validThumbs);
+    }
+
+    function startExportUserList() {
+      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
+        $scope.$emit('csv-download-request', 'user', true);
+      } else {
+        $scope.$emit('csv-download-request', 'user');
+      }
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

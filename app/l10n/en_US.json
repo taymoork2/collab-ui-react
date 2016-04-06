@@ -9,13 +9,16 @@
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
     "inviteModalBtn": "Add Users",
-    "manageUsers": "Users",
+    "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
     "clear": "Clear",
     "add": "Add Users",
     "entitle": "Entitle",
+    "invitePending": "Invite Pending",
+    "inviteMsg": "Users services are pending and will be shown here when the user activates their account",
+    "resendInvitation": "Re-send Invitation",
     "firstnameHeader": "First Name",
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
@@ -60,6 +63,10 @@
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
+    "manageUsers": "Manage Users",
+    "exportUserList": "Export User List",
+    "importUserList": "Import User List",
+    "viewLastImport": "View Last Import",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -689,6 +696,13 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+  "ranks": {
+    "first": "First",
+    "second": "Second",
+    "third": "Third",
+    "fourth": "Fourth",
+    "last": "Last"
   },
   "common": {
     "delete": "Delete",
@@ -1609,6 +1623,11 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "recurAnnually": "Recur Annually",
+    "exactDate": "Exact Date",
+    "every": "Every",
+    "on": "On",
+    "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
@@ -2296,7 +2315,7 @@
     "macAddr": "MAC Address",
     "sipUrl": "Sip Address",
     "issues": "Issues",
-    "lastSeen": "Offline since:",
+    "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
     "codeExpires": "This activation code expires {{inXDays}}",
@@ -2924,6 +2943,24 @@
   "webexReportsLabels": {
     "pageId_xxxx": "Undefined",
     "pageId_underDevelopment": "Under Development"
+  },
+  "webexCSVResultsModal": {
+    "csvExportTitle": "Export Results",
+    "csvExportRecordsAvailable": "Total records available:",
+    "csvExportRecordsSuccessful": "Records successfully exported:",
+    "csvExportDownloadFile": "Download CSV file:",
+    "csvExportResultsFilename": "CI-SiteUsers.csv",
+
+    "csvImportTitle": "Import Results",
+    "csvImportFileName": "File Name:",
+    "csvImportRecordsRequested": "Total records requested:",
+    "csvImportRecordsUpdated": "Records successfully updated:",
+    "csvImportDownloadErr": "Download error log:",
+    "csvImportErrFilename": "CI-ImportErr.csv",
+
+    "csvStarted": "Started:",
+    "csvFinished": "Finished:",
+    "csvRecordsFailed": "Records failed:"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -3729,5 +3766,14 @@
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify"
     }
+  },
+  "csvDownload": {
+    "csvDownloadConfirmTitle": "Are you sure?",
+    "confirmCsvDownloadMsg": "Gathering your data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+    "confirmCsvDownload": "Do you want to continue?",
+    "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
+    "csvDownloadIsRunning": "An export task is already running. Please try again later.",
+    "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
+    "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   }
 }

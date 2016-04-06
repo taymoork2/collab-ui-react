@@ -92,8 +92,8 @@
         serviceId: serviceId
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
-      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
-        0);
+      var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
+        0;
       if (needsUserActivation) {
         switch (serviceId) {
         case "squared-fusion-cal":
