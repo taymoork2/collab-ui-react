@@ -1327,7 +1327,6 @@
     "addUsers": "사용자 추가",
     "addUsersSubDescription": "사용자 초대 및 서비스 지정",
     "addUsersDescription": "사용자를 업로드하기 위한 방법을 선택하십시오.",
-    "msgrSyncDesc": "귀하의 조직에 WebEx Messenger 서비스에서 동기화된 사용자 정보가 포함되어 있습니다. 사용자 정보를 추가, 제거 또는 편집하려면 WebEx 메신저 관리 도구를 사용해야 합니다.",
     "getStarted": "시작하기",
     "startTrial": "평가판 시작",
     "doLater": "나중에 실행하기",
