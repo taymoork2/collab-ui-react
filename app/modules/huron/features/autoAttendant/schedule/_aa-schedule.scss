@@ -4,7 +4,7 @@
 }
 
 .aa-schedule-modal {
-  width: 785px; //TODO: width dynamic
+  width: 130%;
   background: #FFF none repeat scroll 0% 0%;
   .aa-schedule-subtitle {
     font-size: 20px;
@@ -48,8 +48,77 @@
       color: $color-primary-base;
     }
   }
-  .form {
-    margin: 0;
+  .aa-schedule-holidays-behavior {
+    @include vr-spacing(mt, 1);
+  }
+  .aa-recur-annually-box {
+    @include vr-spacing(pt, 1.75);
+  }
+  .aa-holidays-recur-select-container {
+    @include vr-spacing(mb, 6);
+  }
+  .accordion {
+    border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+    .accordion--navigation {
+      > a {
+        background: transparent;
+        border: none;
+        border-top: 1px solid $gray;
+        border-radius: 0;
+        @include vr-spacing(mt, 0);
+        @include vr-spacing(p, 0);
+        color: $gray;
+        > .row {
+          @include vr-spacing(pv, .5);
+          .aa-holidays-name-collapse {
+            width: 30%;
+            float: left;
+            @include vr-spacing(pl, .5);
+          }
+          div {
+            display: inline-block;
+            font-size: $paragraph-font-size;
+          }
+        }
+        &:before {
+          content: initial;
+        }
+        &.active {
+          display: none;
+        }
+        &:hover {
+          background: transparent;
+          border-top: 1px solid $gray;
+        }
+        &:focus {
+          box-shadow: none;
+        }
+        &.text-muted {
+          color: $gray;
+        }
+      }
+      .content {
+        border-radius: 0;
+        background: transparent;
+        border: none;
+        border-top: 1px solid $gray;
+        @include vr-spacing(mt, 0);
+        @include vr-spacing(pb, 1.5);
+        &.active {
+          background: transparent;
+          @include vr-spacing(ph, 0);
+        }
+      }
+      &:first-child {
+        > a {
+          border-top: none;
+        }
+        .content {
+          border-top: none;
+        }
+      }
+    }
   }
 }
 
@@ -82,99 +151,6 @@
 
 .aa-trim-padding {
   @include vr-spacing(pl, 0);
-}
-
-//Holidays
-.aa-recur-annually-box {
-  @include vr-spacing(pt, 1.75);
-}
-
-.left-margin-20 {
-  @include vr-spacing(ml, 1.25);
-}
-
-#addHoliday {
-  padding-bottom: 10px;
-  padding-left: 10px;
-  display: block;
-  i {
-    padding: 10px;
-  }
-}
-
-.simple-accordion {
-  font-size: 14px;
-  .icon-trash {
-    cursor: pointer;
-    color: $gray;
-    &:hover {
-      color: $gray-dark-1
-    }
-  }
-  .collapse {
-    @include vr-spacing(mt, -1.5);
-  }
-  .accordion {
-    border-top: 1px solid $gray;
-    border-bottom: 1px solid $gray;
-    .accordion--navigation {
-      > a {
-        background: transparent;
-        border: none;
-        border-top: 1px solid $gray;
-        border-radius: 0;
-        margin-top: 0;
-        color: $gray;
-        padding: 0;
-        > .row {
-          padding: .5rem 1rem;
-          .aa-holidays-name-collapse {
-            width: 30%;
-            float: left;
-            @include vr-spacing(pl, .5);
-          }
-          div {
-            display: inline-block;
-          }
-        }
-        &:before {
-          content: initial;
-        }
-        &.active {
-          display: none;
-        }
-        &:hover {
-          background: transparent;
-        }
-        &:focus {
-          box-shadow: none;
-        }
-      }
-      .content {
-        margin-top: 0;
-        border-radius: 0;
-        background: transparent;
-        border: none;
-        border-top: 1px solid $gray;
-        @include vr-spacing(pb, 1.5);
-      }
-      &:first-child {
-        > a {
-          border-top: none;
-        }
-        .content {
-          border-top: none;
-        }
-      }
-    }
-    .cs-checkbox {
-      @include vr-spacing(mb, 1.75);
-    }
-  }
-}
-
-.aa-holidays-recur-select-container {
-  @include vr-spacing(mb, 6);
 }
 
 /* Should go in toolkit for timepicker error state */

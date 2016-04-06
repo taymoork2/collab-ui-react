@@ -42,7 +42,7 @@
           </div>
           <div class="aa-schedule-days">
             <div ng-repeat="day in hours.days">
-            <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
+              <cs-checkbox ckid="{{'chk_'+$parent.$index+'_'+$index}}" ng-model="day.active"
                            label="{{day.label}}"></cs-checkbox>
             </div>
           </div>
@@ -51,31 +51,31 @@
       <div ng-show="aaScheduleModalCtrl.openhours.length === 0">
         <p translate="autoAttendant.hoursMissing"></p>
       </div>
-      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();"><i class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddHours' | translate}}</a>
+      <a class="aa-schedule-add" id="addHours" ng-click="aaScheduleModalCtrl.addRange();"><i
+        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddHours' | translate}}</a>
     </div>
   </div>
 
 
-  <div class="simple-accordion modal-body">
+  <div class="modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleHolidays' | translate}} <a
       ng-click="aaScheduleModalCtrl.toggleSection('holidays')" class="icon icon-right-arrow pull-right"
       ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
+      <div class="aa-schedule-holidays-behavior">
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="aaScheduleModalCtrl.holidayBehavior"
+          id="holidayBehavior"
+          name="holidayBehavior"
+          cs-input-label="{{'autoAttendant.closedBehavious' | translate}}">
+      </div>
       <form name="aaScheduleModalCtrl.holidaysForm" role="form" novalidate>
-        <div class="row">
-          <input
-            cs-input
-            type="checkbox"
-            ng-model="aaScheduleModalCtrl.holidayBehavior"
-            id="holidayBehavior"
-            name="holidayBehavior"
-            cs-input-label="{{'autoAttendant.closedBehavious' | translate}}"
-            cs-input-group-size="left-margin-20">
-        </div>
-        <div ng-show="aaScheduleModalCtrl.holidays.length === 0" class="left-margin-20">
+        <div ng-show="aaScheduleModalCtrl.holidays.length === 0">
           <p translate="autoAttendant.holidaysMissing"></p>
         </div>
-        <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime" class="simple-accordion"
+        <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime"
                       ng-if="aaScheduleModalCtrl.holidays.length > 0">
           <cs-accordion-group ng-repeat="holiday in aaScheduleModalCtrl.holidays"
                               is-disabled="!aaScheduleModalCtrl.isHolidaysSavable()" is-open="holiday.isOpen">
@@ -89,10 +89,10 @@
                   {{holiday.rank.labelTranslate}} {{holiday.day.label}} in {{holiday.month.label}}
                   {{holiday.recurAnnually ? '' : holiday.date | date: 'yyyy'}}
                 </div>
-                <i class="icon icon-trash pull-right" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
+                <i class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
               </div>
             </cs-accordion-heading>
-            <i class="icon icon-trash pull-right" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
+            <i class="icon icon-trash aa-schedule-trash" ng-click="aaScheduleModalCtrl.removeHoliday($index)"></i>
             <ng-form name="holidayForm{{$index}}">
               <div class="row">
                 <div class="columns medium-6">
@@ -242,7 +242,8 @@
             </ng-form>
           </cs-accordion-group>
         </cs-accordion>
-        <a id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
+        <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i
+          class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
           | translate}}</a>
       </form>
     </div>
