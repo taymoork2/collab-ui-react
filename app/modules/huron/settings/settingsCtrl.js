@@ -34,6 +34,7 @@
 
     vm.init = init;
     vm.save = save;
+    vm.resetSettings = resetSettings;
 
     vm._voicemailNumberWatcher = _voicemailNumberWatcher;
     vm._voicemailEnabledWatcher = _voicemailEnabledWatcher;
@@ -1212,17 +1213,13 @@
     $scope.$watchCollection(function () {
       return [vm.model.serviceNumber, vm.unassignedExternalNumbers];
     }, function (serviceNumber) {
-      vm.model.serviceNumberWarning = Boolean(_.find(vm.unassignedExternalNumbers, function (externalNumber) {
+
+      // indication that the service number is set, but not assigned to any device
+      var found = Boolean(_.find(vm.unassignedExternalNumbers, function (externalNumber) {
         return externalNumber.pattern === _.get(serviceNumber[0], 'pattern');
       }));
-    });
 
-    $scope.$watch(function () {
-      return vm.model.callerId.callerIdEnabled;
-    }, function (toggleValue) {
-      if (toggleValue && !vm.model.callerId.uuid && !vm.model.callerId.callerIdName) {
-        vm.model.callerId.callerIdName = Authinfo.getOrgName();
-      }
+      vm.model.serviceNumberWarning = found ? true : _.isUndefined(vm.model.serviceNumber);
     });
 
     // The following functions are used to make unit testing easier and should not be used
@@ -1300,10 +1297,11 @@
       }, function (externalNumberPool) {
         // remove the emergency callback number from the list of options
         localScope.to.options = _.reject(externalNumberPool, function (externalNumber) {
-          return externalNumber.pattern === _.get(vm, 'model.serviceNumber.pattern');
+          return externalNumber.pattern === _.get(vm, 'model.serviceNumber.pattern') ||
+            (externalNumber.label === vm.model.callerId.callerIdNumber);
         });
         // add the existing voicemailPilotNumber back into the list of options
-        if (_.get(vm, 'model.site.voicemailPilotNumber') && !_.find(localScope.to.options, function (externalNumber) {
+        if (vm.model.site.voicemailPilotNumber && !_.find(localScope.to.options, function (externalNumber) {
             return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
           })) {
           var tmpExternalNumber = {
@@ -1312,9 +1310,9 @@
           };
           localScope.to.options.push(tmpExternalNumber);
         }
-
-        if (localScope.to.options < 1) {
-          localScope.options.templateOptions.isWarn = true;
+        // if a warning existed, then numbers became available remove the warning
+        if (localScope.to.options.length > 0) {
+          localScope.options.templateOptions.isWarn = false;
         }
       });
     }
@@ -1350,13 +1348,17 @@
       localScope.$watch(function () {
         return vm.model.companyVoicemail.companyVoicemailEnabled;
       }, function (toggleValue) {
-        if (toggleValue && !vm.model.companyVoicemail.companyVoicemailNumber) {
+        if (toggleValue) {
+          var showWarning = false;
           if (localScope.to.options.length > 0) {
-            vm.model.companyVoicemail.companyVoicemailNumber = localScope.to.options[0];
+            if (_.isUndefined(vm.model.companyVoicemail.companyVoicemailNumber)) {
+              vm.model.companyVoicemail.companyVoicemailNumber = localScope.to.options[0];
+            }
+          } else {
+            showWarning = true;
           }
-        }
-
-        if (!toggleValue) {
+          localScope.options.templateOptions.isWarn = showWarning;
+        } else {
           vm.model.companyVoicemail.companyVoicemailNumber = undefined;
         }
       });
@@ -1366,14 +1368,16 @@
       localScope.$watch(function () {
         return vm.model.callerId.callerIdEnabled;
       }, function (toggleValue) {
-        if (toggleValue && !vm.model.callerId.callerIdNumber) {
-          if (localScope.to.options.length > 0) {
+        if (toggleValue) {
+          if (vm.model.callerId.uuid === '' && (vm.model.callerId.callerIdName === '')) {
+            vm.model.callerId.callerIdName = Authinfo.getOrgName();
+          }
+
+          if (localScope.to.options.length > 0 && (vm.model.callerId.callerIdNumber === '')) {
             vm.model.callerId.callerIdNumber = localScope.to.options[0];
           }
-        }
-
-        if (!toggleValue) {
-          vm.model.callerId.callerIdNumber = undefined;
+        } else {
+          vm.model.callerId.callerIdNumber = '';
         }
       });
     }
