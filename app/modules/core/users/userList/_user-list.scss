@@ -33,8 +33,20 @@
     }
   }
 
+  .action-panel {
+    .icon {
+      color: $color-people-base;
+      font-size: 2.2rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    .add-users-button {
+      margin-top: 0.6rem;
+    }
+  }
+
   .export-users {
-    margin-top: 0.6rem;
     .icon {
       color: $gray-dark-1;
       font-size: 1.5rem;
