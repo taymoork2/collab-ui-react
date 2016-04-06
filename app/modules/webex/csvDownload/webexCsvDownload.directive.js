@@ -36,10 +36,7 @@
           ).then(
 
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(
-                csvData.content,
-                vm.type
-              );
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }
@@ -51,15 +48,9 @@
             }
           );
         } else {
-          WebExCsvDownloadService.getCsv(
-            vm.type
-          ).then(
-
+          WebExCsvDownloadService.getCsv(vm.type).then(
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(
-                csvData.content,
-                vm.type
-              );
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }
