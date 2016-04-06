@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $translate, $modalInstance, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
