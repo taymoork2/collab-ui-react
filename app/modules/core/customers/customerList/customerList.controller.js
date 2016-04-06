@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, Localytics, Log, Notification, NumberSearchServiceV2, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, Localytics, Log, Notification, NumberSearchServiceV2, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
@@ -26,6 +26,7 @@
     $scope.addNumbers = addNumbers;
     $scope.isOrgSetup = isOrgSetup;
     $scope.isOwnOrg = isOwnOrg;
+    $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used

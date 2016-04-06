@@ -11,6 +11,9 @@ describe('UserListCtrl: Ctrl', function () {
   getOrgJson = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  var photoUsers = getJSONFixture('core/json/users/userlist.controller.json');
+  var currentUser = getJSONFixture('core/json/currentUser.json');
+  var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
 
   beforeEach(inject(function ($rootScope, _$state_, $controller, _$timeout_, _$q_, _Userservice_, _UserListService_, _Orgservice_, _Authinfo_, _Config_, _Notification_) {
     $scope = $rootScope.$new();
@@ -41,6 +44,7 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
       callback(getOrgJson, 200);
     });
+    spyOn($scope, '$emit').and.callThrough();
 
     controller = $controller('UserListCtrl', {
       $scope: $scope,
@@ -92,6 +96,20 @@ describe('UserListCtrl: Ctrl', function () {
       $scope.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       $scope.$apply();
       expect(Notification.success).toHaveBeenCalled();
+    });
+  });
+
+  describe('startExportUserList', function () {
+    it('should emit csv-download-request', function () {
+      $scope.startExportUserList();
+      $scope.$apply();
+      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", "user");
+    });
+    it('should emit csv-download-request with tooManyUsers when there are too many users in the org', function () {
+      $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD + 1;
+      $scope.startExportUserList();
+      $scope.$apply();
+      expect($scope.$emit).toHaveBeenCalledWith("csv-download-request", "user", true);
     });
   });
 });

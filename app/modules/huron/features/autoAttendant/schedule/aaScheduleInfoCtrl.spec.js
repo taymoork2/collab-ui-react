@@ -1,6 +1,5 @@
 'use strict';
 
-// fdescribe('Controller: AAScheduleInfoCtrl', function () {
 describe('Controller: AAScheduleInfoCtrl', function () {
 
   var controller;
@@ -21,14 +20,15 @@ describe('Controller: AAScheduleInfoCtrl', function () {
       name: 'AA2'
     }
   };
-  var starttime = moment();
-  var endtime = moment(starttime).add(8, 'h');
-  var openhours = [];
+  var openhours = {
+    hours: [],
+    holidays: []
+  };
   var defaultRange = getJSONFixture('huron/json/autoAttendant/defaultDays.json');
   var hours = defaultRange;
-  hours.starttime = starttime;
-  hours.endtime = endtime;
-  openhours.push(hours);
+  hours.starttime = moment().set('hour', '8').set('minute', '00');
+  hours.endtime = moment().set('hour', '17').set('minute', '00');
+  openhours.hours.push(hours);
 
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
@@ -44,8 +44,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AACalendarService, 'readCalendar').and.returnValue($q.when());
     spyOn(AAICalService, 'getDefaultRange').and.returnValue(defaultRange);
-    spyOn(AAICalService, 'getHoursRanges').and.returnValue($q.when(angular.copy(openhours)));
-
+    spyOn(AAICalService, 'getHoursRanges').and.returnValue(angular.copy(openhours));
     controller = $controller('AAScheduleInfoCtrl as vm', {
       $scope: $scope,
       AACalendarService: AACalendarService,
@@ -62,35 +61,185 @@ describe('Controller: AAScheduleInfoCtrl', function () {
   describe('prepareDayHourReport', function () {
     beforeEach(function () {
       $scope.schedule = 'openHours';
-      var error = false;
     });
 
-    it('should have the lane report for openHours', function () {
+    it('should have the lane report for openHours for active days', function () {
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '08:00 am',
+          endtime: '05:00 pm'
+        }],
+        label: 'Thursday - Friday'
+      };
+      controller.activate();
+      $scope.$apply();
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+    });
+
+    it('should have the lane report for closedHours with multiple hours info', function () {
+      $scope.schedule = 'closedHours';
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '12:00 am',
+          endtime: '11:59 pm'
+        }],
+        label: 'Monday,Tuesday,Wednesday,Saturday,Sunday'
+      };
+      var expectedDayGroup2 = {
+        hours: [{
+          starttime: '12:00 am',
+          endtime: '07:59 am'
+        }, {
+          starttime: '05:01 pm',
+          endtime: '11:59 pm'
+        }],
+        label: 'Thursday - Friday'
+      };
+      controller.activate();
+      $scope.$apply();
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+      expect(controller.dayGroup[1]).toEqual(expectedDayGroup2);
+
+    });
+
+    it('should have the lane report for closedHours for inactive days', function () {
+      $scope.schedule = 'closedHours';
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '12:00 am',
+          endtime: '11:59 pm'
+        }],
+        label: 'Monday,Tuesday,Wednesday,Saturday,Sunday'
+      };
+
+      controller.activate();
+      $scope.$apply();
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+
+    });
+  });
+
+  describe('prepareDayHourReport with few days of 24 hours schedule', function () {
+    beforeEach(function () {
+      $scope.schedule = 'closedHours';
+      controller.days = [];
+      var openhours = {
+        hours: [],
+        holidays: []
+      };
+      var hours = defaultRange;
+      hours.starttime = moment().set('hour', '00').set('minute', '00');
+      hours.endtime = moment().set('hour', '23').set('minute', '59');
+      openhours.hours.push(hours);
+      AAICalService.getHoursRanges.and.returnValue(openhours);
+    });
+
+    it('should have the lane report for closedHours excluding 24Hours days', function () {
+      $scope.schedule = 'closedHours';
+      controller.activate();
+      $scope.$apply();
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '12:00 am',
+          endtime: '11:59 pm'
+        }],
+        label: 'Monday,Tuesday,Wednesday,Saturday,Sunday'
+      };
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup).toBeTruthy();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+    });
+  });
+
+  describe('prepareDayHourReport closedHours schedule for starttime 0 hours', function () {
+    beforeEach(function () {
+      $scope.schedule = 'closedHours';
+      controller.days = [];
+      var openhours = {
+        hours: [],
+        holidays: []
+      };
+      var hours = defaultRange;
+      for (var i = 0; i <= 6; i++) {
+        hours.days[i].active = false;
+      }
+      hours.days[0].active = true;
+      hours.starttime = moment().set('hour', '00').set('minute', '00');
+      hours.endtime = moment().set('hour', '14').set('minute', '00');
+      openhours.hours.push(hours);
+      AAICalService.getHoursRanges.and.returnValue(openhours);
+    });
+
+    it('should have the lane report for closedHours for starttime 0 hours', function () {
+      $scope.schedule = 'closedHours';
+      controller.activate();
+      $scope.$apply();
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '02:01 pm',
+          endtime: '11:59 pm'
+        }],
+        label: 'Monday'
+      };
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup).toBeTruthy();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+    });
+
+    it('should have the lane report for closedHours without duplicate entries', function () {
+      $scope.schedule = 'closedHours';
+      openhours.hours.push(hours);
+      AAICalService.getHoursRanges.and.returnValue(openhours);
+      controller.activate();
+      $scope.$apply();
+      var expectedDayGroup = {
+        hours: [{
+          starttime: '02:01 pm',
+          endtime: '11:59 pm'
+        }],
+        label: 'Monday'
+      };
+      expect(AACalendarService.readCalendar).toHaveBeenCalled();
+      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
+      expect(controller.dayGroup[0]).toEqual(expectedDayGroup);
+    });
+  });
+
+  describe('prepareDayHourReport with holidays', function () {
+    beforeEach(function () {
+      $scope.schedule = 'holidays';
+      controller.days = [];
+      var starttime = moment().set('hour', '00').set('minute', '00');
+      var endtime = moment().set('hour', '14').set('minute', '00');
+
+      var openhours = {
+        hours: [],
+        holidays: [{
+          name: 'Thanksgiving',
+          date: moment(),
+          starttime: starttime,
+          endtime: endtime
+        }]
+      };
+      AAICalService.getHoursRanges.and.returnValue(openhours);
+    });
+
+    it('should have the lane report for Holidays', function () {
+      $scope.schedule = 'holidays';
       controller.activate();
       $scope.$apply();
       expect(AACalendarService.readCalendar).toHaveBeenCalled();
       expect(AAICalService.getHoursRanges).toHaveBeenCalled();
       expect(controller.dayGroup).toBeTruthy();
+      expect(controller.holidays).toBeTruthy();
     });
-
-    it('should have the lane report for closedHours', function () {
-      $scope.schedule = 'closedHours';
-      controller.activate();
-      $scope.$apply();
-      expect(AACalendarService.readCalendar).toHaveBeenCalled();
-      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
-      expect(controller.dayGroup).toBeTruthy();
-    });
-
-    it('should not have the lane report for open/closedHours', function () {
-      $scope.schedule = 'closedHours';
-      $scope.openhours = [];
-      controller.activate();
-      $scope.$apply();
-      expect(AACalendarService.readCalendar).toHaveBeenCalled();
-      expect(AAICalService.getHoursRanges).toHaveBeenCalled();
-      expect(controller.dayGroup.hours).toBeFalsy();
-    });
-
   });
 });
