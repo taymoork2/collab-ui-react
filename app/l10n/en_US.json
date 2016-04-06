@@ -9,7 +9,7 @@
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
     "inviteModalBtn": "Add Users",
-    "manageUsers": "Users",
+    "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
@@ -63,6 +63,10 @@
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
+    "manageUsers": "Manage Users",
+    "exportUserList": "Export User List",
+    "importUserList": "Import User List",
+    "viewLastImport": "View Last Import",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -692,6 +696,13 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+  "ranks": {
+    "first": "First",
+    "second": "Second",
+    "third": "Third",
+    "fourth": "Fourth",
+    "last": "Last"
   },
   "common": {
     "delete": "Delete",
@@ -1413,7 +1424,6 @@
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1613,6 +1623,11 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "recurAnnually": "Recur Annually",
+    "exactDate": "Exact Date",
+    "every": "Every",
+    "on": "On",
+    "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
@@ -1688,7 +1703,7 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
-    "errorReadCMI": "Unable to load assigned phone numbers",
+    "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s).",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
@@ -2300,7 +2315,7 @@
     "macAddr": "MAC Address",
     "sipUrl": "Sip Address",
     "issues": "Issues",
-    "lastSeen": "Offline since:",
+    "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
     "codeExpires": "This activation code expires {{inXDays}}",
@@ -2929,6 +2944,24 @@
     "pageId_xxxx": "Undefined",
     "pageId_underDevelopment": "Under Development"
   },
+  "webexCSVResultsModal": {
+    "csvExportTitle": "Export Results",
+    "csvExportRecordsAvailable": "Total records available:",
+    "csvExportRecordsSuccessful": "Records successfully exported:",
+    "csvExportDownloadFile": "Download CSV file:",
+    "csvExportResultsFilename": "CI-SiteUsers.csv",
+
+    "csvImportTitle": "Import Results",
+    "csvImportFileName": "File Name:",
+    "csvImportRecordsRequested": "Total records requested:",
+    "csvImportRecordsUpdated": "Records successfully updated:",
+    "csvImportDownloadErr": "Download error log:",
+    "csvImportErrFilename": "CI-ImportErr.csv",
+
+    "csvStarted": "Started:",
+    "csvFinished": "Finished:",
+    "csvRecordsFailed": "Records failed:"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
@@ -3100,12 +3133,12 @@
     "siteReports": "Reports",
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
-    "siteCsvExportInProgressLinkLabel": "Export in progress...",
-    "siteCsvExportResultsLinkLabel": "Export results",
+    "siteCsvExportInProgressLinkLabel": "Exporting...",
+    "siteCsvExportResultsLinkLabel": "Exported Results",
     "siteCsvImportLinkLabel": "Import",
-    "siteCsvImportInProgressLinkLabel": "Import in progress...",
+    "siteCsvImportInProgressLinkLabel": "Importing...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvImportResultsLinkLabel": "Import results",
+    "siteCsvImportResultsLinkLabel": "Imported Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3733,5 +3766,14 @@
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify"
     }
+  },
+  "csvDownload": {
+    "csvDownloadConfirmTitle": "Are you sure?",
+    "confirmCsvDownloadMsg": "Gathering your data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+    "confirmCsvDownload": "Do you want to continue?",
+    "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
+    "csvDownloadIsRunning": "An export task is already running. Please try again later.",
+    "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
+    "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   }
 }
