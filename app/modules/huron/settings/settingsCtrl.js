@@ -1297,7 +1297,8 @@
       }, function (externalNumberPool) {
         // remove the emergency callback number from the list of options
         localScope.to.options = _.reject(externalNumberPool, function (externalNumber) {
-          return externalNumber.pattern === _.get(vm, 'model.serviceNumber.pattern');
+          return externalNumber.pattern === _.get(vm, 'model.serviceNumber.pattern') ||
+            (externalNumber.label === vm.model.callerId.callerIdNumber);
         });
         // add the existing voicemailPilotNumber back into the list of options
         if (vm.model.site.voicemailPilotNumber && !_.find(localScope.to.options, function (externalNumber) {
