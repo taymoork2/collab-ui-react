@@ -8,17 +8,9 @@ namespace domainManagement {
       isLoaded: false,
       isPartner: false
     };
-
-    private _feature = false;
-
+    
     /* @ngInject */
     constructor(Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
-
-      FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
-        .then(dmEnabled => {
-            this._feature = !!dmEnabled;
-          }
-        );
 
       CiService.getUser().then(curUser => {
 
@@ -48,9 +40,6 @@ namespace domainManagement {
       return this._loggedOnUser;
     }
 
-    get feature() {
-      return this._feature;
-    }
   }
   angular
     .module('Core')
