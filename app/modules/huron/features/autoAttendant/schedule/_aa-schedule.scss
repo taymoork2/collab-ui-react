@@ -22,15 +22,24 @@
     color: $color-primary-base;
     transform: rotate(90deg);
   }
+  .aa-schedule-time {
+    display: inline-block;
+    @include vr-spacing(mr, 2);
+  }
+  .aa-schedule-trash {
+    font-size: 1.25rem;
+    float: right;
+  }
   .aa-schedule-days {
     display: flex;
     justify-content: space-between;
   }
-  //.aa-schedule-trash {
-  //  font-size: 35px;
-  //  color: #858688;
-  //  float: right;
-  //}
+  .aa-schedule-add {
+    i {
+      @include vr-spacing(pr, 0.5);
+      color: $color-primary-base;
+    }
+  }
   .form {
     margin: 0;
   }
