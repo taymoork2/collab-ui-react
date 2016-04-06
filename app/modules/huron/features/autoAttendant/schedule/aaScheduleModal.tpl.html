@@ -12,7 +12,7 @@
       ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHours">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
-        <div ng-repeat="hours in aaScheduleModalCtrl.openhours">
+        <div ng-repeat="hours in aaScheduleModalCtrl.openhours" class="aa-schedule-hour">
           <div class="row">
             <div class="cs-input-group aa-schedule-time"
                  ng-class="{'error': hoursForm.starttime.$invalid && hoursForm.starttime.$touched}">

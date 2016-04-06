@@ -22,6 +22,14 @@
     color: $color-primary-base;
     transform: rotate(90deg);
   }
+  .aa-schedule-hour {
+    @include vr-spacing(pt, 1);
+    border-bottom: 1px solid $gray;
+    &:nth-of-type(1) {
+      @include vr-spacing(mt, 1);
+      border-top: 1px solid $gray;
+    }
+  }
   .aa-schedule-time {
     display: inline-block;
     @include vr-spacing(mr, 2);
