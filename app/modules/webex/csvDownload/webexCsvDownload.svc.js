@@ -90,13 +90,10 @@
       }
     } // getWebExCsv()
 
-    function createObjectUrl(
-      data,
-      type
-    ) {
-
+    function createObjectUrl(data) {
       var blob = new Blob([data], {
-        type: 'text/csv'
+        // type: 'text/csv'
+        type: 'application/octet-stream'
       });
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);

@@ -2,12 +2,14 @@
   'use strict';
 
   /*ngInject*/
-  function USSService2($http, ConfigService, Authinfo, CsdmPoller, CsdmHubFactory) {
+  function USSService2($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
     var cachedUserStatusSummary = {};
+
+    var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
     var fetchStatusesSummary = function () {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId() + '&entitled=true')
+        .get(USSUrl + '/userStatuses/summary?orgId=' + Authinfo.getOrgId() + '&entitled=true')
         .then(function (res) {
           cachedUserStatusSummary = res.data.summary;
         });
@@ -51,7 +53,7 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId + '&orgId=' + orgId)
+        .get(USSUrl + '/userStatuses?userId=' + userId + '&orgId=' + orgId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
             return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
@@ -61,13 +63,13 @@
 
     function getOrg(orgId) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/orgs/' + orgId)
+        .get(USSUrl + '/orgs/' + orgId)
         .then(extractData);
     }
 
     function updateOrg(org) {
       return $http
-        .patch(ConfigService.getUSSUrl() + '/orgs/' + org.id, org)
+        .patch(USSUrl + '/orgs/' + org.id, org)
         .then(extractData);
     }
 
@@ -77,7 +79,7 @@
 
     function getStatuses(serviceId, state, limit) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
+        .get(USSUrl + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
         .then(extractData);
     }
 

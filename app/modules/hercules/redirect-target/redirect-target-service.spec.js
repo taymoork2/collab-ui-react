@@ -12,8 +12,8 @@ describe('RedirectTargetService', function () {
         return "foo";
       }
     });
-    $provide.value("ConfigService", {
-      getUrl: function () {
+    $provide.value("UrlConfig", {
+      getHerculesUrl: function () {
         return "http://server";
       }
     });
