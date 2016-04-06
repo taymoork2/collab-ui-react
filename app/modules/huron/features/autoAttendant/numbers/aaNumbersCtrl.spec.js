@@ -110,13 +110,20 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       'uuid': '8888888881-id'
     }]);
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
-      'pattern': '+9999999991',
-      'uuid': '9999999991-id'
-    }, {
-      'pattern': '+8888888881',
-      'uuid': '8888888881-id'
-    }]);
+    // for an external number query, return the number formatted with a +
+    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
+    $httpBackend.whenGET(externalNumberQueryUri)
+      .respond(function (method, url, data, headers) {
+
+        var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
+
+        var response = [{
+          'pattern': '+' + pattern.replace(/\D/g, ''),
+          'uuid': pattern.replace(/\D/g, '') + '-id'
+        }];
+
+        return [200, response];
+      });
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",

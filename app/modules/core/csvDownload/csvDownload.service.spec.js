@@ -24,51 +24,63 @@ describe('Service: CsvDownloadService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getCsv(template)', function () {
-    var templateFile = {
-      "some": "template"
-    };
-    beforeEach(function () {
-      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/template').respond(templateFile);
-    });
-
-    it('should get template file', function () {
-      CsvDownloadService.getCsv('template').then(function (csvData) {
-        expect(csvData.some).toEqual('template');
-      });
-      $httpBackend.flush();
-    });
-  });
-
   describe('getCsv(user)', function () {
     var userFile = {
-      "some": "user"
+      data: {
+        "some": "user"
+      }
     };
     beforeEach(function () {
       $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/export').respond(userFile);
     });
 
     it('should get user export file', function () {
-      CsvDownloadService.getCsv('user').then(function (csvData) {
-        expect(csvData.some).toEqual('user');
+      CsvDownloadService.getCsv('user').then(function (data) {
+        expect(data).toContain('blob');
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getCsv(user, true)', function () {
+    var userCsvString = "John Doe,jdoe@gmail.com,Spark Call";
+    beforeEach(function () {
+      $httpBackend.expectPOST(UrlConfig.getUserReportsUrl(Authinfo.getOrgId())).respond({
+        id: '1234'
+      });
+      $httpBackend.expectGET(UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/1234').respond(userCsvString);
+    });
+
+    it('should get user export file for a large org', function () {
+      CsvDownloadService.getCsv('user', true).then(function (data) {
+        expect(data).toContain('blob');
       });
       $httpBackend.flush();
     });
   });
 
   describe('getCsv(headers)', function () {
-    var headersFile = {
-      "some": "headers"
+    var headersObj = {
+      data: {
+        "columns": [{
+          "name": "First Name"
+        }, {
+          "name": "Last Name"
+        }]
+      }
     };
     beforeEach(function () {
-      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersFile);
+      $httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'csv/organizations/1/users/headers').respond(headersObj);
     });
 
-    it('should get headers file', function () {
-      CsvDownloadService.getCsv('headers').then(function (csvData) {
-        expect(csvData.some).toEqual('headers');
+    it('should get headers object', function () {
+      CsvDownloadService.getCsv('headers').then(function (response) {
+        expect(response.data.columns.length).toBe(2);
+        expect(response.data.columns[0].name).toBe("First Name");
+        expect(response.data.columns[1].name).toBe("Last Name");
       });
       $httpBackend.flush();
     });
   });
+
 });
