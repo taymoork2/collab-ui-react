@@ -75,6 +75,21 @@ describe('orgService', function () {
     expect(callback.args[0][0].success).toBe(true);
   });
 
+  it('should successfully get an organization for a given orgId and resolve the returned promise', function () {
+    var orgId = 123;
+    var responseObj = {
+      test: 'val'
+    };
+    httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(200, responseObj);
+    var promise = Orgservice.getOrg(_.noop, orgId)
+      .then(function (response) {
+        expect(response.data).toEqual(jasmine.objectContaining(_.assign({}, responseObj, {
+          orgSettings: {}
+        })));
+      });
+    httpBackend.flush();
+  });
+
   it('should fail to get an organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
@@ -83,6 +98,14 @@ describe('orgService', function () {
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
+  });
+
+  it('should fail to get an organization for a given orgId and reject the returned promise', function () {
+    var orgId = 123;
+    httpBackend.expect('GET', UrlConfig.getScomUrl() + '/' + orgId).respond(500, {});
+    var promise = Orgservice.getOrg(_.noop, orgId);
+    httpBackend.flush();
+    expect(promise).toBeRejected();
   });
 
   it('should get an organization for getOrgId provided by Authinfo', function () {

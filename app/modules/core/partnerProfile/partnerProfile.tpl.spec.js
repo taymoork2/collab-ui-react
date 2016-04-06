@@ -13,6 +13,9 @@ describe('Template: partnerProfile', function () {
 
   var PARTNER_HELP_URL = '#partnerHelpUrl';
 
+  var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
+  var USE_LATEST_WEBEX_CHECKBOX = '#useLatestWbxVersion';
+
   var BUTTON_CONTAINER = '.save-section';
   var CANCEL_BUTTON = '#orgProfileCancelBtn';
   var SAVE_BUTTON = '#orgProfileSaveBtn';
@@ -52,7 +55,7 @@ describe('Template: partnerProfile', function () {
       });
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.when());
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.when());
     spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.when());
     spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.when());
@@ -84,8 +87,8 @@ describe('Template: partnerProfile', function () {
     it('Custom logo radio should not exist', verifyRadioNotExist(CUSTOM_LOGO_RADIO));
 
     describe('Form Buttons', function () {
-      it('should not be visible without form changes', expectButtonContainerNotVisible);
 
+      it('should not be visible without form changes', expectButtonContainerNotVisible);
       it('should be visible after form changes', changeValueAndExpectButtonContainerVisible);
 
       describe('should be dismissed', function () {
@@ -108,14 +111,6 @@ describe('Template: partnerProfile', function () {
         });
       });
 
-      function changeValueAndExpectButtonContainerVisible() {
-        view.find(PARTNER_HELP_URL).val('newHelpUrl').change();
-        expect(view.find(BUTTON_CONTAINER)).not.toHaveClass(INVISIBLE);
-      }
-
-      function expectButtonContainerNotVisible() {
-        expect(view.find(BUTTON_CONTAINER)).toHaveClass(INVISIBLE);
-      }
     });
   });
 
@@ -124,7 +119,34 @@ describe('Template: partnerProfile', function () {
 
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
+
+    describe('Save buttons should not be visible with autosave changes', function () {
+      afterEach(expectButtonContainerNotVisible);
+
+      it('by clicking allow logo checkbox', function () {
+        spyOn($scope, 'toggleAllowCustomerLogos');
+        view.find(ALLOW_LOGO_CHECKBOX).click();
+
+        expect($scope.toggleAllowCustomerLogos).toHaveBeenCalled();
+      });
+
+      it('by clicking latest webex checkbox', function () {
+        spyOn($scope, 'toggleWebexSelectLatestVersionAlways');
+        view.find(USE_LATEST_WEBEX_CHECKBOX).click();
+
+        expect($scope.toggleWebexSelectLatestVersionAlways).toHaveBeenCalled();
+      });
+    });
   });
+
+  function changeValueAndExpectButtonContainerVisible() {
+    view.find(PARTNER_HELP_URL).val('newHelpUrl').change();
+    expect(view.find(BUTTON_CONTAINER)).not.toHaveClass(INVISIBLE);
+  }
+
+  function expectButtonContainerNotVisible() {
+    expect(view.find(BUTTON_CONTAINER)).toHaveClass(INVISIBLE);
+  }
 
   function verifyRadioAndLabel(id) {
     return function () {
