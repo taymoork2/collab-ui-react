@@ -479,6 +479,23 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(expectedOptions);
     });
 
+    it('_buildVoicemailNumberOptions - should remove the caller id number if found', function () {
+      controller.model.callerId.callerIdNumber = '(972) 555-1003';
+      controller.model.site.voicemailPilotNumber = '+19725551001';
+      var expectedOptions = [{
+        pattern: '+19725551004',
+        label: '(972) 555-1004'
+      }, {
+        pattern: '+19725551001',
+        label: '(972) 555-1001'
+      }];
+
+      controller._buildVoicemailNumberOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(expectedOptions);
+    });
+
     it('_buildCallerIdOptions - should update the callerId number options when collection changes', function () {
       controller.model.site.voicemailPilotNumber = undefined;
       controller.model.serviceNumber = undefined;
