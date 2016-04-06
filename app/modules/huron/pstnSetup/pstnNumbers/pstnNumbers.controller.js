@@ -29,7 +29,7 @@
     };
     vm.orderNumbersTotal = 0;
     vm.showAdvancedOrder = false;
-    vm.showPortNumbers = !PstnSetup.getIsTrial();
+    vm.showPortNumbers = false;
     var ADVANCED_ORDERS = PstnSetupService.ADVANCED_ORDERS;
     var PORT_ORDERS = PstnSetupService.PORT_ORDERS;
     var NEW_ORDERS = PstnSetupService.NEW_ORDERS;
@@ -193,6 +193,11 @@
     }];
 
     ////////////////////////
+    
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
+      .then(function (isSupported) {
+        vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
+      });
 
     function getStateInventory() {
       PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.state.abbreviation)
