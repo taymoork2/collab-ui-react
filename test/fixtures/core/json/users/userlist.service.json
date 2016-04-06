@@ -146,17 +146,20 @@
       "avatarSyncEnabled": false
     }],
     "usersToExport": [{
-      "name": "usersPage.csvHeaderName",
-      "email": "usersPage.csvHeaderEmailAddress",
-      "entitlements": "usersPage.csvHeaderEntitlements"
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "displayName": "Display Name",
+      "email": "User ID/Email (Required)"
     }, {
-      "name": "Jackson Smith",
-      "email": "atlaspartneradmin@atlas.test.com",
-      "entitlements": "squared-call-initiation webex-squared"
+      "firstName": "Jackson",
+      "lastName": "Smith",
+      "displayName": "Partner Administrator",
+      "email": "atlaspartneradmin@atlas.test.com"
     }, {
-      "name": "SQ Doe",
-      "email": "sq-testpaiduser@atlas.test.com",
-      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup"
+      "firstName": "SQ",
+      "lastName": "Doe",
+      "displayName": "John Doe w1ksv6pxm",
+      "email": "sq-testpaiduser@atlas.test.com"
     }]
   },
   "listPartners": {

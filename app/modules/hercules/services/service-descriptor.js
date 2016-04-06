@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ServiceDescriptor', ['$http', 'ConfigService', 'Authinfo',
-    function ServiceDescriptor($http, config, Authinfo) {
+  .service('ServiceDescriptor', ['$http', 'UrlConfig', 'Authinfo',
+    function ServiceDescriptor($http, UrlConfig, Authinfo) {
       var services = function (callback, includeStatus) {
         $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
+          .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
           .success(function (data) {
             callback(null, data.items || []);
           })
@@ -15,7 +15,7 @@ angular.module('Hercules')
       };
 
       function getServices() {
-        return $http.get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+        return $http.get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .then(function (response) {
             return response.data.items || [];
           });
@@ -27,7 +27,7 @@ angular.module('Hercules')
 
       var servicesInOrg = function (orgId, includeStatus) {
         return $http
-          .get(config.getUrl() + '/organizations/' + orgId + '/services' + (includeStatus ? '?fields=status' : ''))
+          .get(UrlConfig.getHerculesUrl() + '/organizations/' + orgId + '/services' + (includeStatus ? '?fields=status' : ''))
           .then(extractData);
       };
 
@@ -55,7 +55,7 @@ angular.module('Hercules')
 
       var getEmailSubscribers = function (serviceId, callback) {
         $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .success(function (data) {
             var service = _.find(data.items, {
               id: serviceId
@@ -73,7 +73,7 @@ angular.module('Hercules')
 
       var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
         $http
-          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             emailSubscribers: emailSubscribers
           })
           .success(function () {
@@ -86,7 +86,7 @@ angular.module('Hercules')
 
       var setServiceEnabled = function (serviceId, enabled, callback) {
         $http
-          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             enabled: enabled
           })
           .success(function () {
@@ -99,7 +99,7 @@ angular.module('Hercules')
 
       var isServiceEnabled = function (serviceId, callback) {
         $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .get(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .success(function (data) {
             var service = _.find(data.items, {
               id: serviceId
@@ -135,7 +135,7 @@ angular.module('Hercules')
 
       var acknowledgeService = function (serviceId) {
         return $http
-          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             acknowledged: true
           });
       };
