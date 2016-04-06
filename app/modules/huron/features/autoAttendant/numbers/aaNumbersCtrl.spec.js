@@ -3,7 +3,7 @@
 describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
   var controller, Notification, AutoAttendantCeService, ExternalNumberPoolService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService;
+  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
   var url, cmiAAAsignmentURL;
@@ -81,7 +81,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Config_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
@@ -96,6 +96,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     Authinfo = _Authinfo_;
+    AACommonService = _AACommonService_;
 
     Notification = _Notification_;
 
@@ -598,6 +599,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       $scope.$apply();
 
       expect(errorSpy).toHaveBeenCalled();
+      expect(AACommonService.isValid()).toBe(false);
 
     });
 
