@@ -8,11 +8,11 @@
   </div>
   <div class="modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleOpenClosed' | translate}}<a
-      ng-click="aaScheduleModalCtrl.toggleSection('hours')" class="icon icon-right-arrow pull-right"></a></p>
+      ng-click="aaScheduleModalCtrl.toggleSection('hours')" class="icon icon-right-arrow pull-right"
+      ng-class="{'down': !aaScheduleModalCtrl.toggleHours}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHours">
       <form name="aaScheduleModalCtrl.hoursForm" role="form" novalidate>
         <div ng-repeat="hours in aaScheduleModalCtrl.openhours">
-
           <div class="row">
             <div class="cs-input-group columns small-6"
                  ng-class="{'error': hoursForm.starttime.$invalid && hoursForm.starttime.$touched}">
@@ -59,9 +59,10 @@
   </div>
 
 
-  <div class="simple-accordion aa-holidays">
+  <div class="simple-accordion modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleHolidays' | translate}} <a
-      ng-click="aaScheduleModalCtrl.toggleSection('holidays')" class="icon icon-right-arrow pull-right"></a></p>
+      ng-click="aaScheduleModalCtrl.toggleSection('holidays')" class="icon icon-right-arrow pull-right"
+      ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a></p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
       <form name="aaScheduleModalCtrl.holidaysForm" role="form" novalidate>
         <div class="row">
@@ -250,7 +251,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button id="importSchedule" class="pull-left" ng-click="aaScheduleModalCtrl.openImportModal()" translate="autoAttendant.importSchedule"></button>
+    <button id="importSchedule" class="pull-left" ng-click="aaScheduleModalCtrl.openImportModal()"
+            translate="autoAttendant.importSchedule"></button>
     <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
     <button id="saveOpenClosedBtn" cs-btn class="btn btn-primary"
             ng-disabled="!aaScheduleModalCtrl.isSavable() || (aaScheduleModalCtrl.hoursForm.$pristine && aaScheduleModalCtrl.holidaysForm.$pristine)"
