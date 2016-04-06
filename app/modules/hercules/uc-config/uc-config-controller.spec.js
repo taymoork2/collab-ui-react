@@ -1,7 +1,7 @@
 'use strict';
 
 describe('UConfigController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var ussService, controller, $scope, notification, Authinfo;
 

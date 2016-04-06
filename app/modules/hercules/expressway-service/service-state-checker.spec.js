@@ -1,7 +1,8 @@
 'use strict';
 
 describe('ServiceStateChecker', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
+  beforeEach(module('Huron')); // Because FeatureToggle is used
 
   var $q, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor;
 
