@@ -22,6 +22,7 @@
 
     return {
       success: success,
+      warning: warning,
       error: error,
       notify: notify,
       errorResponse: errorResponse,
@@ -33,11 +34,16 @@
       notify($translate.instant(messageKey, messageParams), 'success');
     }
 
+    function warning(messageKey, messageParams) {
+      notify($translate.instant(messageKey, messageParams), 'warning');
+    }
+
     function error(messageKey, messageParams) {
       notify($translate.instant(messageKey, messageParams), 'error');
     }
 
     function notify(notifications, type) {
+      var types = ['success', 'warning', 'error'];
       var closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + $translate.instant('common.close') + '</span></button>';
 
       if (!notifications) {
@@ -49,7 +55,7 @@
       if (!notifications.length) {
         return;
       }
-      type = (type == 'success') ? type : 'error';
+      type = _.includes(types, type) ? type : 'error';
       toaster.pop({
         type: type,
         body: notifications.join('<br/>'),

@@ -10,34 +10,54 @@
   </div>
 
   <!-- body -->
-  <section class="modal-body collapse-fields">
-    <h5 translate="trialModal.call.selectDevicesHeader"></h5>
-    <section class="row">
-      <div class="small-12 columns" translate="trialModal.call.deviceLimitDescription"></div>
-      <h6 class="small-12 columns" translate="trialModal.call.meetingRoomCamera"></h6>
-      <formly-form class="small-12 columns" model="callTrial.details.roomSystems"
-         fields="callTrial.roomSystemFields" hide-directive="ng-show">
-      </formly-form>
-    </section>
-    <section class="row">
-      <h6 class="small-12 columns" translate="trialModal.call.deskPhones"></h6>
-      <formly-form class="small-12 columns" model="callTrial.details.phones"
-         fields="callTrial.deskPhoneFields" hide-directive="ng-show">
-      </formly-form>
-    </section>
+  <section class="modal-body row" ng-if="callTrial.limitReached && !callTrial.canAddMoreDevices">
+    <h5 translate="trialModal.call.deviceTrialCapacityHeader"></h5>
+    <div ng-if="callTrial.limitsError">
+      <div class="medium-12 columns" translate="trialModal.call.deviceTrialUnavailable"></div>
+    </div>
+    <!-- TODO: Add tooltip when toolkit allows localized strings to contain the directive markup -->
+    <div ng-if="!callTrial.limitsError">
+      <div class="medium-12 columns"
+        translate="trialModal.call.deviceTrialLimitReached"
+        translate-values="{number: callTrial.maxTrials}">
+      </div>
+      <div class="pad-top"></div>
+      <div class="medium-12 columns pad-top" translate="trialModal.call.deviceTrialLimitHelp"></div>
+    </div>
   </section>
-  <section class="modal-body collapse-fields">
-    <h5 translate="trialModal.call.shippingInfo"></h5>
-    <section class="row">
-      <formly-form class="small-12 columns" model="callTrial.details.shippingInfo"
-        fields="callTrial.shippingFields" hide-directive="ng-show">
-      </formly-form>
+  <div ng-if="callTrial.canAddMoreDevices || !callTrial.limitReached">
+    <section class="modal-body collapse-fields">
+      <h5 translate="trialModal.call.selectDevicesHeader"></h5>
+      <section class="row">
+        <div class="small-12 columns" translate="trialModal.call.deviceLimitDescription"></div>
+        <h6 class="small-12 columns" translate="trialModal.call.meetingRoomCamera"></h6>
+        <formly-form class="small-12 columns" model="callTrial.details.roomSystems"
+           fields="callTrial.roomSystemFields" hide-directive="ng-show">
+        </formly-form>
+      </section>
+      <section class="row">
+        <h6 class="small-12 columns" translate="trialModal.call.deskPhones"></h6>
+        <formly-form class="small-12 columns" model="callTrial.details.phones"
+           fields="callTrial.deskPhoneFields" hide-directive="ng-show">
+        </formly-form>
+      </section>
     </section>
-  </section>
+    <section class="modal-body collapse-fields">
+      <h5 translate="trialModal.call.shippingInfo"></h5>
+      <section class="row">
+        <formly-form class="small-12 columns" model="callTrial.details.shippingInfo"
+          fields="callTrial.shippingFields" hide-directive="ng-show">
+        </formly-form>
+      </section>
+    </section>
+  </div>
 
   <!-- footer -->
   <div class="modal-footer">
-    <a class="pad-top pull-left" ng-click="callTrial.skip(true); trial.nextStep()" translate="trialModal.call.skipAddDevices"></a>
+    <a class="pad-top pull-left" ng-if="callTrial.canAddDevice || !callTrial.limitReached"
+      ng-click="callTrial.skip(true); trial.nextStep()"
+      translate="trialModal.call.skipAddDevices">
+    </a>
     <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.loading"
       translate="common.back">
     </button>

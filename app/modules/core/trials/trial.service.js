@@ -20,6 +20,8 @@
 
     var service = {
       getTrial: getTrial,
+      getTrialsList: getTrialsList,
+      getDeviceTrialsLimit: getDeviceTrialsLimit,
       editTrial: editTrial,
       startTrial: startTrial,
       getData: getData,
@@ -39,6 +41,19 @@
       return TrialResource.get({
         trialId: id
       }).$promise;
+    }
+
+    function getTrialsList() {
+      return $http.get(trialsUrl);
+    }
+
+    function getDeviceTrialsLimit() {
+      return service.getTrialsList().then(function (response) {
+        return {
+          activeDeviceTrials: response.data.activeDeviceTrials,
+          maxDeviceTrials: response.data.activeDeviceTrialsLimit
+        };
+      });
     }
 
     function editTrial(custId, trialId) {
@@ -206,6 +221,8 @@
           pstnTrial: TrialPstnService.getData()
         },
       };
+
+      _trialData.trials.deviceTrial.limitsPromise = service.getDeviceTrialsLimit();
 
       return _trialData;
     }
