@@ -2316,7 +2316,7 @@
     "macAddr": "MAC Address",
     "sipUrl": "Sip Address",
     "issues": "Issues",
-    "lastSeen": "Offline since:",
+    "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
     "codeExpires": "This activation code expires {{inXDays}}",
