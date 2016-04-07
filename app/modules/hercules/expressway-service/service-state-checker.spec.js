@@ -1,9 +1,11 @@
 'use strict';
 
-describe('ServiceStateChecker', function () {
+fdescribe('ServiceStateChecker', function () {
   beforeEach(module('wx2AdminWebClientApp'));
+  //beforeEach(module('Core'));
+  //beforeEach(module('Hercules'));
 
-  var $q, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -58,16 +60,31 @@ describe('ServiceStateChecker', function () {
     ScheduleUpgradeService = {
       get: sinon.stub()
     };
+    DomainManagementService = {
+      domainList: sinon.stub(),
+      getVerifiedDomains: function(dontcare) {
+        return $q.resolve();
+      }
+    };
+
+    DomainManagementService.domainList = [{
+      "domain": "somedomain"
+    }];
+
     AuthInfo.getOrgId.returns('orgId');
     $provide.value('ClusterService', ClusterService);
     $provide.value('Authinfo', AuthInfo);
     $provide.value('USSService2', USSService2);
     $provide.value('ScheduleUpgradeService', ScheduleUpgradeService);
     $provide.value('ServiceDescriptor', ServiceDescriptor);
+    $provide.value('DomainManagementService', DomainManagementService);
   }));
 
-  beforeEach(inject(function (_$q_, _ServiceStateChecker_, _NotificationService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, $injector, _ServiceStateChecker_, _NotificationService_) {
+    $httpBackend = $injector.get('$httpBackend');
+    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     $q = _$q_;
+    $rootScope = _$rootScope_;
     ServiceStateChecker = _ServiceStateChecker_;
     NotificationService = _NotificationService_;
   }));
@@ -235,6 +252,94 @@ describe('ServiceStateChecker', function () {
 
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
 
+    expect(NotificationService.getNotificationLength()).toEqual(0);
+  });
+
+  it('should add a notification when no domains are added ', function () {
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-uc',
+      activated: 1,
+      error: 0,
+      notActivated: 0
+    }]);
+
+    USSService2.getOrgId.returns('orgId');
+    USSService2.getOrg.returns($q.when({}));
+
+    ServiceDescriptor.isServiceEnabled = function (type, cb) {
+      cb(null, true);
+    };
+
+    ServiceDescriptor.services = function (cb) {
+      cb(null, [{
+        id: 'squared-fusion-ec',
+        enabled: true,
+        acknowledged: false
+      }]);
+    };
+
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
+    // this should spawn a dom verification notification
+    /*DomainManagementService.domainList = [];
+
+    DomainManagementService.getVerifiedDomains.returns($q.when({
+
+    }));*/// = function (a,cb) {cb(null)};
+    //DomainManagementService.getVerifiedDomains.returns();// = function(c) { c()};
+    //DomainManagementService.getVerifiedDomains.then = function() {};//returns($q.resolve(true));
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
+
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
+  });
+
+  it('should clear the domain verification notification when one domain is added ', function () {
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-uc',
+      activated: 1,
+      error: 0,
+      notActivated: 0
+    }]);
+
+    USSService2.getOrgId.returns('orgId');
+    USSService2.getOrg.returns($q.when({}));
+
+    ServiceDescriptor.isServiceEnabled = function (type, cb) {
+      cb(null, true);
+    };
+
+    ServiceDescriptor.services = function (cb) {
+      cb(null, [{
+        id: 'squared-fusion-ec',
+        enabled: true,
+        acknowledged: false
+      }]);
+    };
+
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
+    // this should spawn a dom verification notification
+    DomainManagementService.domainList = [];
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
+
+    // now lets prented the user adds a domain
+    DomainManagementService.domainList = [{
+      "domain": "some domain"
+    }];
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 });
