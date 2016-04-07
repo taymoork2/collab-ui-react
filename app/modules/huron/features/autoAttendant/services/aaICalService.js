@@ -33,11 +33,11 @@
         days: []
       };
       _.each(getTwoLetterDays(), function (value, index) {
-        hours.days.push({
+        hours.days[(index - 1 + 7) % 7] = {
           abbr: value,
           index: index,
           active: false
-        });
+        };
       });
       return hours;
     }
@@ -173,7 +173,6 @@
           calendar.addSubcomponent(vevent);
         }
       }
-      console.log(calendar.toString());
     }
 
     function getNextOpenDate(days) {
@@ -407,9 +406,6 @@
 
     function getDefaultDayHours() {
       return [{
-        label: 'Sunday',
-        hours: []
-      }, {
         label: 'Monday',
         hours: []
       }, {
@@ -426,6 +422,9 @@
         hours: []
       }, {
         label: 'Saturday',
+        hours: []
+      }, {
+        label: 'Sunday',
         hours: []
       }];
     }

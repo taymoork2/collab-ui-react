@@ -124,7 +124,7 @@
 
     function isOpenHoursAfterCloseHours(hours) {
       if (hours.starttime && hours.endtime) {
-        return hours.starttime > hours.endtime;
+        return moment(hours.starttime).isSame(moment(hours.endtime)) || moment(hours.starttime).isAfter(moment(hours.endtime));
       }
     }
 
@@ -390,11 +390,11 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions.push({
+        vm.dayOptions[(index - 1 + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)
-        });
+        };
       });
     }
 

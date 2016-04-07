@@ -34,6 +34,7 @@
   }
   .aa-schedule-time {
     display: inline-block;
+    vertical-align: text-top;
     @include vr-spacing(mr, 2);
   }
   .aa-schedule-trash {
