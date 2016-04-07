@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($scope, $q, $translate, $state, $timeout, PstnSetup, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService, DidService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, FeatureToggleService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -29,6 +29,7 @@
     };
     vm.orderNumbersTotal = 0;
     vm.showAdvancedOrder = false;
+    vm.showPortNumbers = false;
     var ADVANCED_ORDERS = PstnSetupService.ADVANCED_ORDERS;
     var PORT_ORDERS = PstnSetupService.PORT_ORDERS;
     var NEW_ORDERS = PstnSetupService.NEW_ORDERS;
@@ -192,6 +193,11 @@
     }];
 
     ////////////////////////
+
+    FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
+      .then(function (isSupported) {
+        vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
+      });
 
     function getStateInventory() {
       PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.state.abbreviation)
@@ -359,7 +365,6 @@
     // Port Numbers
     var PORTING_NUMBERS = $translate.instant('pstnSetup.portNumbersLabel');
     vm.addPortNumbersToOrder = addPortNumbersToOrder;
-    vm.showPortNumbers = false;
     vm.unsavedTokens = [];
     vm.validCount = 0;
     vm.tokenfieldId = 'pstn-port-numbers';
@@ -378,11 +383,6 @@
       removedtoken: removedToken,
       edittoken: editToken
     };
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
-      .then(function (isSupported) {
-        vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
-      });
 
     function createToken(e) {
       var tokenNumber = e.attrs.label;

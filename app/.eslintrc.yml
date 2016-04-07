@@ -58,6 +58,7 @@
     fail: true
     getJSONFixture: true
     inject: true
+    installPromiseMatchers: true
     it: true
     jasmine: true
     jstz: true

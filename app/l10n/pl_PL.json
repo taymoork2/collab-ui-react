@@ -1327,7 +1327,6 @@
     "addUsers": "Dodaj użytkowników",
     "addUsersSubDescription": "Zaproś użytkowników i przypisz im usługi",
     "addUsersDescription": "Wybierz metodę przesyłania użytkowników.",
-    "msgrSyncDesc": "Informacje o użytkownikach w Twojej organizacji są synchronizowane za pomocą usługi WebEx Messenger. Aby dodać, usunąć lub edytować użytkownika, użyj narzędzia administracyjnego programu WebEx Messenger.",
     "getStarted": "Rozpocznij",
     "startTrial": "Rozpocznij wersję próbną",
     "doLater": "Zrób to później",
