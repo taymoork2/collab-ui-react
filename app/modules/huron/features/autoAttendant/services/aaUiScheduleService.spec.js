@@ -11,32 +11,32 @@ describe('Service: AAUiScheduleService', function () {
     var _endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
     var defaultRange = [{
       days: [{
-        label: 'Monday',
+        abbr: 'SU',
+        index: 0,
+        active: false
+      }, {
+        abbr: 'MO',
         index: 1,
         active: true
       }, {
-        label: 'Tuesday',
+        abbr: 'TU',
         index: 2,
         active: true
       }, {
-        label: 'Wednesday',
+        abbr: 'WE',
         index: 3,
         active: true
       }, {
-        label: 'Thursday',
+        abbr: 'TH',
         index: 4,
         active: true
       }, {
-        label: 'Friday',
+        abbr: 'FR',
         index: 5,
         active: true
       }, {
-        label: 'Saturday',
+        abbr: 'SAy',
         index: 6,
-        active: false
-      }, {
-        label: 'Sunday',
-        index: 0,
         active: false
       }],
       starttime: _starttime,
@@ -70,7 +70,7 @@ describe('Service: AAUiScheduleService', function () {
     $scope = $rootScope.$new();
   }));
 
-  describe('create9To5Schedule', function () {
+  describe('create8To5Schedule', function () {
 
     beforeEach(inject(function () {
       // setup the promises
@@ -80,7 +80,7 @@ describe('Service: AAUiScheduleService', function () {
       spyOn(Notification, 'error');
 
       scheduleId = undefined;
-      AAUiScheduleService.create9To5Schedule('AA').then(function (value) {
+      AAUiScheduleService.create8To5Schedule('AA').then(function (value) {
         scheduleId = value;
       }, function (response) {
         Notification.error('autoAttendant.errorCreateCe', {
@@ -91,7 +91,7 @@ describe('Service: AAUiScheduleService', function () {
       });
     }));
 
-    it('should create 9 to 5, Monday to Friday schedule', function () {
+    it('should create 8 to 5, Monday to Friday schedule', function () {
       expect(scheduleId).toBeUndefined();
       expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA', getRange8To5());
       createCalendarDefer.resolve(createCalendarSuccess);

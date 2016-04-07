@@ -28,43 +28,18 @@
       return calendar;
     }
 
-    function getDefaultRange(type) {
-      if (type !== 'holiday') {
-        return {
-          days: [{
-            label: 'Monday',
-            index: 1,
-            active: false
-          }, {
-            label: 'Tuesday',
-            index: 2,
-            active: false
-          }, {
-            label: 'Wednesday',
-            index: 3,
-            active: false
-          }, {
-            label: 'Thursday',
-            index: 4,
-            active: false
-          }, {
-            label: 'Friday',
-            index: 5,
-            active: false
-          }, {
-            label: 'Saturday',
-            index: 6,
-            active: false
-          }, {
-            label: 'Sunday',
-            index: 0,
-            active: false
-          }]
-        };
-      } else {
-        return [];
-      }
-
+    function getDefaultRange() {
+      var hours = {
+        days: []
+      };
+      _.each(getTwoLetterDays(), function (value, index) {
+        hours.days.push({
+          abbr: value,
+          index: index,
+          active: false
+        });
+      });
+      return hours;
     }
 
     function getTwoLetterDays() {
@@ -111,7 +86,7 @@
         // icalendar uses the first two letters as abbrev for the day
         _.forEach(hoursRange.days, function (day) {
           if (day.active) {
-            days.push(day.label.substring(0, 2).toUpperCase());
+            days.push(day.abbr);
           }
         });
         if ((days.length > 0) || type === 'holiday') {
@@ -343,12 +318,10 @@
         if (summary === 'open') {
           hoursRanges.push(hoursRange);
           var rrule = vevent.getFirstPropertyValue('rrule');
-          var strRule = rrule.toString();
-          var eventDays = strRule.substring(strRule.indexOf('BYDAY=') + 6);
           // icalendar uses the first two letters as abbrev for the day
-          _.forEach(eventDays.split(','), function (eventDay) { //Use object instead?
+          _.forEach(rrule.parts.BYDAY, function (eventDay) {
             _.forEach(hoursRange.days, function (day) {
-              if (eventDay.substring(0, 2).toUpperCase() == day.label.substring(0, 2).toUpperCase()) {
+              if (eventDay == day.abbr) {
                 day.active = true;
               }
             });
@@ -416,6 +389,9 @@
 
     function getDefaultDayHours() {
       return [{
+        label: 'Sunday',
+        hours: []
+      }, {
         label: 'Monday',
         hours: []
       }, {
@@ -432,9 +408,6 @@
         hours: []
       }, {
         label: 'Saturday',
-        hours: []
-      }, {
-        label: 'Sunday',
         hours: []
       }];
     }

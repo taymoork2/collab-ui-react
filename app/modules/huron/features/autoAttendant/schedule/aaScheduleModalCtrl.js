@@ -43,7 +43,11 @@
     vm.openhours = [];
 
     function addRange() {
-      vm.openhours.push(angular.copy(AAICalService.getDefaultRange()));
+      var openhour = AAICalService.getDefaultRange();
+      _.each(openhour.days, function (day) {
+        day.label = moment.weekdays(day.index);
+      });
+      vm.openhours.push(angular.copy(openhour));
     }
 
     function deleteRange(index) {
@@ -356,6 +360,11 @@
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
           var allHours = AAICalService.getHoursRanges(data);
           vm.openhours = allHours.hours;
+          _.each(vm.openhours, function (openhour) {
+            _.each(openhour.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
+          });
           vm.holidays = allHours.holidays;
           _.each(vm.holidays, function (holiday) {
             if (!holiday.exactDate) {

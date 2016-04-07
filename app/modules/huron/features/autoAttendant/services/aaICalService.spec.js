@@ -6,32 +6,32 @@ describe('Service: AACalendarService', function () {
   var starttime, endtime;
   var defaultRange = {
     days: [{
-      label: 'Monday',
+      abbr: 'SU',
+      index: 0,
+      active: false
+    }, {
+      abbr: 'MO',
       index: 1,
       active: false
     }, {
-      label: 'Tuesday',
+      abbr: 'TU',
       index: 2,
       active: false
     }, {
-      label: 'Wednesday',
+      abbr: 'WE',
       index: 3,
       active: false
     }, {
-      label: 'Thursday',
+      abbr: 'TH',
       index: 4,
       active: false
     }, {
-      label: 'Friday',
+      abbr: 'FR',
       index: 5,
       active: false
     }, {
-      label: 'Saturday',
+      abbr: 'SA',
       index: 6,
-      active: false
-    }, {
-      label: 'Sunday',
-      index: 0,
       active: false
     }]
   };

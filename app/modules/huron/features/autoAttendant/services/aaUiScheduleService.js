@@ -9,7 +9,7 @@
   function AAUiScheduleService($q, AutoAttendantCeInfoModelService, AACalendarService, AAICalService) {
 
     var service = {
-      create9To5Schedule: create9To5Schedule
+      create8To5Schedule: create8To5Schedule
     };
 
     return service;
@@ -20,39 +20,15 @@
       var calendar = AAICalService.createCalendar();
       var _starttime = new Date('', '', '', '08', '00', '00');
       var _endtime = new Date('', '', '', '17', '00', '00');
-      var defaultRange = [{
-        days: [{
-          label: 'Monday',
-          index: 1,
-          active: true
-        }, {
-          label: 'Tuesday',
-          index: 2,
-          active: true
-        }, {
-          label: 'Wednesday',
-          index: 3,
-          active: true
-        }, {
-          label: 'Thursday',
-          index: 4,
-          active: true
-        }, {
-          label: 'Friday',
-          index: 5,
-          active: true
-        }, {
-          label: 'Saturday',
-          index: 6,
-          active: false
-        }, {
-          label: 'Sunday',
-          index: 0,
-          active: false
-        }],
-        starttime: _starttime,
-        endtime: _endtime
-      }];
+      var openhours = AAICalService.getDefaultRange();
+      openhours.starttime = _starttime;
+      openhours.endtime = _endtime;
+      _.each(openhours.days, function (day) {
+        if (day.abbr != "SU" && day.abbr != "SA") {
+          day.active = true;
+        }
+      });
+      var defaultRange = [openhours];
       _.each(defaultRange, function (hours) {
         AAICalService.addHoursRange('open', calendar, hours);
       });
@@ -73,7 +49,7 @@
       return deferred.promise;
     }
 
-    function create9To5Schedule(ceName) {
+    function create8To5Schedule(ceName) {
       var defaultSchedule = getRange8To5();
       return createSchedule(ceName, defaultSchedule);
     }
