@@ -850,7 +850,7 @@
     function loadVoicemailNumber() {
       return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
         if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-          // There may be existing customers who have yet to set the company voicemail number; 
+          // There may be existing customers who have yet to set the company voicemail number;
           // likely they have it set to orgId.
           vm.model.site.voicemailPilotNumber = undefined;
         } else if (voicemail.pilotNumber) {
@@ -1238,7 +1238,7 @@
           });
         }
         // if the value isn't changing ignore it, otherwise add the old value
-        // back into the list of available options 
+        // back into the list of available options
         if ((newValue !== oldValue) && (oldValue && oldValue.label)) {
           if (!_.find(localScope.to.options, function (externalNumberLabel) {
               return externalNumberLabel === oldValue.label;
