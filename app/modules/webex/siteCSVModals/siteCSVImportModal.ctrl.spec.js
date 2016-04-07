@@ -7,6 +7,7 @@ describe('SiteCSVImportModalCtrl test', function () {
 
   var $q;
   var $rootScope;
+  var $scope;
   var $controller;
 
   var Authinfo;
@@ -34,6 +35,7 @@ describe('SiteCSVImportModalCtrl test', function () {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
     $controller = _$controller_;
 
     Authinfo = _Authinfo_;
@@ -63,16 +65,20 @@ describe('SiteCSVImportModalCtrl test', function () {
     fakeCSVImportFileContents = "First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,cisjsite031.webex.com - WebEx Meeting Center,sjsite04.webex.com - WebEx Meeting Center,sjsite14.webex.com - WebEx Collaboration Meeting Room,sjsite14.webex.com - WebEx Meeting Center,t30citestprov9.webex.com - WebEx Meeting Center John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false";
 
     SiteCSVImportModalCtrl = $controller('SiteCSVImportModalCtrl', {
+      $scope: $scope,
       $stateParams: {
         csvImportObj: fakeSiteRow
       }
     });
+
+    $scope.$apply();
 
     //Create spies
     spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCsvStatus.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
 
+    $scope.$close = jasmine.createSpy('$close');
   })); // beforeEach(inject())
 
   it('should have valid import modal', function () {
@@ -83,7 +89,6 @@ describe('SiteCSVImportModalCtrl test', function () {
   });
 
   it('should have started import (trigger: import button click)', function () {
-
     WebExApiGatewayService.csvImport(fakeSiteRow.license.siteUrl, fakeCSVImportFileContents);
 
     deferredCsvStatus.resolve({
@@ -98,7 +103,6 @@ describe('SiteCSVImportModalCtrl test', function () {
     expect(fakeSiteRow).not.toBe(null);
     expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
     //expect(Notification.success).toHaveBeenCalled();
-
   });
 
 }); // describe()
