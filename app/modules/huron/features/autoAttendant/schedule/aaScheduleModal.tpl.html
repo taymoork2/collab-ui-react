@@ -72,9 +72,6 @@
           cs-input-label="{{'autoAttendant.closedBehavious' | translate}}">
       </div>
       <form name="aaScheduleModalCtrl.holidaysForm" role="form" novalidate>
-        <div ng-show="aaScheduleModalCtrl.holidays.length === 0">
-          <p translate="autoAttendant.holidaysMissing"></p>
-        </div>
         <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime"
                       ng-if="aaScheduleModalCtrl.holidays.length > 0">
           <cs-accordion-group ng-repeat="holiday in aaScheduleModalCtrl.holidays"
@@ -242,10 +239,13 @@
             </ng-form>
           </cs-accordion-group>
         </cs-accordion>
-        <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i
-          class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
-          | translate}}</a>
       </form>
+      <div ng-show="aaScheduleModalCtrl.holidays.length === 0">
+        <p translate="autoAttendant.holidaysMissing"></p>
+      </div>
+      <a class="aa-schedule-add" id="addHoliday" ng-click="aaScheduleModalCtrl.addHoliday();"><i
+        class="icon icon-plus-circle"></i>{{'autoAttendant.scheduleAddAdditionalHolidays'
+        | translate}}</a>
     </div>
   </div>
   <div class="modal-footer">

@@ -4,7 +4,9 @@
 }
 
 .aa-schedule-modal {
+  position: relative;
   width: 130%;
+  left: -15%;
   background: #FFF none repeat scroll 0% 0%;
   .aa-schedule-subtitle {
     font-size: 20px;
