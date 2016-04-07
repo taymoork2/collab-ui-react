@@ -5,6 +5,7 @@
 
   /*@ngInject*/
   function SiteCSVImportModalCtrl(
+    $scope,
     $state,
     $stateParams,
     $translate,
@@ -53,9 +54,12 @@
       //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
       WebExApiGatewayService.csvImport(vm.siteUrl, vm.modal.file).then(
         function success(response) {
-          //TBD Close the modal before showing the green toast
           Notification.success($translate.instant('siteList.importStartedToast'));
           SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+
+          if (_.isFunction($scope.$close)) {
+            $scope.$close();
+          }
         },
 
         function error(response) {
@@ -69,6 +73,5 @@
         }
       ); // WebExApiGatewayService.csvImport()
     };
-
   } // SiteCSVImportModalCtrl()
 })(); // top level function
