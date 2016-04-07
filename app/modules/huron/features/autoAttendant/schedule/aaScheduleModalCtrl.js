@@ -412,6 +412,9 @@
             hours: allHours.hours.length
           });
           allHours.hours.forEach(function (value) {
+            _.each(value.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
             vm.openhours.unshift(value);
           });
           allHours.holidays.forEach(function (value) {

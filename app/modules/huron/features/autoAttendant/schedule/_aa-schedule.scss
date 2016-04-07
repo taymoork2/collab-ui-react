@@ -59,6 +59,13 @@
   .aa-holidays-recur-select-container {
     @include vr-spacing(mb, 6);
   }
+  .aa-schedule-holidays-time {
+    display: inline-block;
+    float: right;
+    &:last-of-type {
+      @include vr-spacing(mr, 2);
+    }
+  }
   .accordion {
     border-top: 1px solid $gray;
     border-bottom: 1px solid $gray;
