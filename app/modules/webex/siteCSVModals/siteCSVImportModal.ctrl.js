@@ -5,7 +5,7 @@
 
   /*@ngInject*/
   function SiteCSVImportModalCtrl(
-	$scope,
+    $scope,
     $state,
     $stateParams,
     $translate,
@@ -56,9 +56,9 @@
         function success(response) {
           Notification.success($translate.instant('siteList.importStartedToast'));
           SiteListService.updateCSVColumnInRow(vm.csvImportObj);
-          
+
           if (_.isFunction($scope.$close)) {
-              $scope.$close();
+            $scope.$close();
           }
         },
 
