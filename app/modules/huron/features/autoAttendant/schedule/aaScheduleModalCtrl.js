@@ -34,6 +34,10 @@
       required: $translate.instant('common.invalidRequired'),
       compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
     };
+    vm.messagesHolidaysTime = {
+      required: $translate.instant('common.invalidRequired'),
+      compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
+    };
     vm.monthOptions = [];
     vm.dayOptions = [];
     vm.rankOptions = [];
