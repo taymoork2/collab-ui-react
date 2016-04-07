@@ -6,15 +6,13 @@
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors) {
+  function OnboardCtrl($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, OnboardService, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, TelephoneNumberService, DialPlanService, CsvDownloadService, TrackingId, chartColors) {
     $scope.hasAccount = Authinfo.hasAccount();
     $scope.usrlist = [];
     $scope.internalNumberPool = [];
     $scope.externalNumberPool = [];
-    $scope.isMsgrSyncEnabled = false;
     $scope.telephonyInfo = {};
 
-    $scope.getMessengerSyncStatus = getMessengerSyncStatus;
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -292,15 +290,6 @@
       $scope.model.userInfoValid = false;
     }
 
-    function getMessengerSyncStatus() {
-      SyncService.isMessengerSyncEnabled()
-        .then(function (isIt) {
-          $scope.isMsgrSyncEnabled = isIt;
-        }, function (errorMsg) {
-          Log.error(errorMsg);
-        });
-    }
-
     function ServiceFeature(label, value, name, license) {
       this.label = label;
       this.value = value;
@@ -350,10 +339,6 @@
     if ($scope.currentUser) {
       userEnts = $scope.currentUser.entitlements;
       userLicenseIds = $scope.currentUser.licenseID;
-    }
-
-    if (null !== Authinfo.getOrgId()) {
-      getMessengerSyncStatus();
     }
 
     function populateConf() {
@@ -1110,7 +1095,7 @@
             alertType: null
           };
 
-          var userStatus = user.status;
+          var userStatus = user.httpStatus;
 
           if (userStatus === 200 || userStatus === 201) {
             userResult.message = $translate.instant('usersPage.onboardSuccess', {
@@ -1945,8 +1930,8 @@
           var addedUsersList = [];
 
           _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
+            if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.httpStatus === 200) {
                 $scope.model.numExistingUsers++;
               } else {
                 $scope.model.numNewUsers++;
@@ -1959,7 +1944,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {
@@ -2314,8 +2299,8 @@
           var addedUsersList = [];
 
           _.forEach(response.data.userResponse, function (user, index) {
-            if (user.status === 200 || user.status === 201) {
-              if (user.message === 'User Patched') {
+            if (user.httpStatus === 200 || user.httpStatus === 201) {
+              if (user.httpStatus === 200) {
                 $scope.model.numExistingUsers++;
               } else {
                 $scope.model.numNewUsers++;
@@ -2328,7 +2313,7 @@
                 addedUsersList.push(addItem);
               }
             } else {
-              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.status, user.message, user.email), response);
+              addUserErrorWithTrackingID(startIndex + index + 1, getBulkErrorResponse(user.httpStatus, user.message, user.email), response);
             }
           });
         } else {

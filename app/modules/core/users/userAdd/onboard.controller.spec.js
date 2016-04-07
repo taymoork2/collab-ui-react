@@ -1,9 +1,7 @@
-/* global installPromiseMatchers */
-
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, $q, $state, $stateParams, GroupService, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, DialPlanService, Authinfo, CsvDownloadService;
+  var controller, $scope, $timeout, $q, $state, $stateParams, GroupService, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, DialPlanService, Authinfo, CsvDownloadService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -23,7 +21,7 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _Authinfo_, _CsvDownloadService_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $timeout = _$timeout_;
@@ -37,7 +35,6 @@ describe('OnboardCtrl: Ctrl', function () {
     Orgservice = _Orgservice_;
     TelephonyInfoService = _TelephonyInfoService_;
     FeatureToggleService = _FeatureToggleService_;
-    SyncService = _SyncService_;
     Authinfo = _Authinfo_;
     CsvDownloadService = _CsvDownloadService_;
     var current = {
@@ -78,7 +75,6 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'onboardUsers');
     spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
-    spyOn(SyncService, 'isMessengerSync');
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
@@ -110,10 +106,12 @@ describe('OnboardCtrl: Ctrl', function () {
       data: {
         userResponse: [{
           status: statusCode,
+          httpStatus: statusCode,
           message: responseMessage,
           email: 'blah@example.com'
         }, {
           status: statusCode,
+          httpStatus: statusCode,
           message: responseMessage,
           email: 'blah@example.com'
         }]
@@ -197,7 +195,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201, 'User Patched')));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(200)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();

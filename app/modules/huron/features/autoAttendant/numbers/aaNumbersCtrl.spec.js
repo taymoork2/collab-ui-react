@@ -3,7 +3,7 @@
 describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
   var controller, Notification, AutoAttendantCeService, ExternalNumberPoolService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService;
+  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
   var url, cmiAAAsignmentURL;
@@ -81,7 +81,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Config_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
@@ -96,6 +96,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     Authinfo = _Authinfo_;
+    AACommonService = _AACommonService_;
 
     Notification = _Notification_;
 
@@ -109,13 +110,20 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       'uuid': '8888888881-id'
     }]);
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
-      'pattern': '+9999999991',
-      'uuid': '9999999991-id'
-    }, {
-      'pattern': '+8888888881',
-      'uuid': '8888888881-id'
-    }]);
+    // for an external number query, return the number formatted with a +
+    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
+    $httpBackend.whenGET(externalNumberQueryUri)
+      .respond(function (method, url, data, headers) {
+
+        var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
+
+        var response = [{
+          'pattern': '+' + pattern.replace(/\D/g, ''),
+          'uuid': pattern.replace(/\D/g, '') + '-id'
+        }];
+
+        return [200, response];
+      });
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
       "pattern": "4000",
@@ -598,6 +606,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       $scope.$apply();
 
       expect(errorSpy).toHaveBeenCalled();
+      expect(AACommonService.isValid()).toBe(false);
 
     });
 

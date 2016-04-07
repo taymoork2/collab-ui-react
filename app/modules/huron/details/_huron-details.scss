@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  @include vr-spacing(ph, 2);
+  padding: 5px 25px;
   z-index: $zindex-popover;
   border-bottom: 1px solid $gray-light;
   background-color: $white;
@@ -16,10 +16,8 @@
   p {
     flex: 1;
   }
-  .right {
-    button:first-child {
-      @include vr-spacing(mr, 0.5);
-    }
+  button {
+    @include vr-spacing(ml, 0.5);
   }
 }
 
