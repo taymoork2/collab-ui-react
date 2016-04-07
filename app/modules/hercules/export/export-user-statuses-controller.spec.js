@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ExportUserStatusesController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UiStats, UserDetails, USSService2, ClusterService;
 
@@ -23,9 +23,6 @@ describe('ExportUserStatusesController', function () {
   beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_, _$q_) {
     $q = _$q_;
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
     $httpBackend
       .when('GET', '/connectors/')
       .respond({});

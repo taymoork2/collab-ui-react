@@ -1,26 +1,12 @@
 'use strict';
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService',
-    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService, FeatureToggleService) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'FeatureToggleService',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, FeatureToggleService) {
       var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
-
-      // Messeger User Sync Mode flag
-      $scope.isMsgrSyncEnabled = false;
-
-      SyncService.isMessengerSyncEnabled()
-        .then(function (isIt) {
-          $scope.isMsgrSyncEnabled = isIt;
-
-          if (isIt) {
-            $scope.options.addUsers = -1;
-          }
-        }, function (errorMsg) {
-          Log.error(errorMsg);
-        });
 
       FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
         if (dirSyncEnabled) {
@@ -49,15 +35,6 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
-
-        // Messenger Sync mode should exit
-        if ($scope.isMsgrSyncEnabled) {
-          // Move to the next tab as current tab is irrelevant
-          $scope.wizard.nextTab();
-          deferred.reject();
-
-          return deferred.promise;
-        }
 
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           var simpleSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {

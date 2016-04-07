@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService) {
+  function PartnerHomeCtrl($scope, $timeout, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -86,6 +86,7 @@
         })
         .finally(function () {
           $scope.showTrialsRefresh = false;
+          resizeCards();
         });
     }
 
@@ -94,6 +95,18 @@
         customerOrgId: trial.customerOrgId,
         customerOrgName: trial.customerName
       }));
+    }
+
+    function resizeCards() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
   }
 })();

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('URI Verification Service', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var service;
 

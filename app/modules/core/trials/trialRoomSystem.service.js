@@ -36,7 +36,8 @@
             model: 'CISCO_SX10',
             enabled: false,
             quantity: 0,
-            readonly: false
+            readonly: false,
+            valid: true
           }],
         }
       };

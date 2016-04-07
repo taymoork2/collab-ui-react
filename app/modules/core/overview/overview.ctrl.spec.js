@@ -271,12 +271,6 @@ describe('Controller: OverviewCtrl', function () {
     };
 
     ReportsService = {
-      getPartnerMetrics: function (backendCache) {
-        return null;
-      },
-      getAllMetrics: function (backendCache) {
-        return null;
-      },
       getOverviewMetrics: function (backendCach) {},
       healthMonitor: function (eventHandler) {}
     };
