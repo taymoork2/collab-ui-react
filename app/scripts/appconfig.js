@@ -655,6 +655,26 @@ angular
             }
           }
         })
+        .state('users.csv', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'UserCsvCtrl',
+              controllerAs: 'csv',
+              template: '<div ui-view="usersCsv"></div>'
+            },
+            'usersCsv@users.csv': {
+              templateUrl: 'modules/core/users/userCsv/userCsvFileModal.tpl.html'
+            }
+          }
+        })
+        .state('users.csv.results', {
+          views: {
+            'usersCsv@users.csv': {
+              templateUrl: 'modules/core/users/userCsv/userCsvResultsModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {
