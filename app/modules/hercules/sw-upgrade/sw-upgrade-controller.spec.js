@@ -1,7 +1,7 @@
 'use strict';
 
 describe('SWUpgradeController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var $scope, controller, service;
 

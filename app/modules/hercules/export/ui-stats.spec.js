@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: UiStats', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var UiStats;
   var stats;

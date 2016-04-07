@@ -1,7 +1,11 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  angular
+    .module('Hercules')
+    .service('USSService2', USSService2);
+
+  /* @ngInject */
   function USSService2($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
     var cachedUserStatusSummary = {};
 
@@ -95,6 +99,4 @@
     };
   }
 
-  angular.module('Hercules')
-    .service('USSService2', USSService2);
 }());
