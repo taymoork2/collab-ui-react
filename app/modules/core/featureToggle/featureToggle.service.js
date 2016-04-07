@@ -98,6 +98,7 @@
       squrls: 'squrls',
       stickiesSend: 'stickies.send',
       titleEncryption: 'title-encryption',
+      telstraCsb: 'telstra-csb',
       uploadCallLogs: 'upload-call-logs',
       userPresence: 'user-presence',
       webGuestCall: 'web-guest-call',
