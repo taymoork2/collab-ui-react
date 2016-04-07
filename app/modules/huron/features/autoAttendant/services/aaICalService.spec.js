@@ -111,19 +111,6 @@ describe('Service: AACalendarService', function () {
     });
   });
 
-  describe('findRankByNumber', function () {
-    it('should return the january', function () {
-      var rank = AAICalService.findRankByNumber(2);
-      expect(rank).toBeDefined();
-      expect(rank.number).toBe(2);
-    });
-
-    it('should return undefined, invalid month number', function () {
-      expect(AAICalService.findRankByNumber(0)).toBeUndefined();
-      expect(AAICalService.findRankByNumber(5)).toBeUndefined();
-    });
-  });
-
   describe('addHoursRange - getHoursRanges', function () {
     it('add valid hours range to the calendar and should get the same range', function () {
       var calendar = AAICalService.createCalendar();
@@ -158,7 +145,11 @@ describe('Service: AACalendarService', function () {
       range.days[5].active = true;
       range.days[6].active = true;
       //Today is a closed day
-      var today = AAICalService.findDayByIndex(starttime.getDay(), range.days);
+      var today = _.find(range.days, function (day) {
+        if (starttime.getDay() == day.index) {
+          return day;
+        }
+      });
       today.active = false;
       range.starttime = new Date(starttime);
       range.endtime = new Date(endtime);

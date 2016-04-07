@@ -13,11 +13,9 @@
       getDefaultRange: getDefaultRange,
       getTwoLetterDays: getTwoLetterDays,
       getRanks: getRanks,
-      findRankByNumber: findRankByNumber,
       addHoursRange: addHoursRange,
       getHoursRanges: getHoursRanges,
-      getDefaultDayHours: getDefaultDayHours,
-      findDayByIndex: findDayByIndex
+      getDefaultDayHours: getDefaultDayHours
     };
 
     return service;
@@ -200,11 +198,18 @@
     }
 
     function getNextOpenDate(days) {
-      var date = moment();
-      while (!findDayByIndex(date.day(), days).active) {
-        date.add(1, 'day');
+      var flag = _.each(days, function (day) {
+        if (day.active) {
+          return true;
+        }
+      });
+      if (flag) {
+        var date = moment();
+        while (!findDayByIndex(date.day(), days).active) {
+          date.add(1, 'day');
+        }
+        return date;
       }
-      return date;
     }
 
     function findDayByIndex(dayIndex, days) {
