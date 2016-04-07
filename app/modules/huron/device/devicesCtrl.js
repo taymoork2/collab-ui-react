@@ -14,7 +14,6 @@
     var csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
 
-
     function addLinkOrButtonForActivationCode() {
       if (!vm.deviceListSubscription || vm.deviceListSubscription.eventCount !== 0) {
         if (_.size(vm.devices)) {

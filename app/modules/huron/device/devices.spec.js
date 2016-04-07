@@ -38,10 +38,10 @@ describe('Controller: DevicesCtrlHuron', function () {
     };
 
     poller = {
-       getDeviceList: function() {
-         return null;
-       },
-      on: function() {}
+      getDeviceList: function () {
+        return null;
+      },
+      on: function () {}
     };
 
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
