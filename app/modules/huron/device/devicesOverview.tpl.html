@@ -10,7 +10,6 @@
   <ul>
 
     <li class="feature" ng-repeat="device in ucDevices.devices">
-      <!--<a ui-sref="user-overview.device({currentDevice: device})">-->
         <a ng-click="ucDevices.showDeviceDetails(device)">
         <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
         <span class="feature-name">{{device.product}}</span>
