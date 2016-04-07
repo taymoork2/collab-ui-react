@@ -208,8 +208,7 @@
     }
 
     function delayedResize() {
-      // delayed resize necessary to fix any overlapping on the registered endpoints graph
-      // or the occasional incorrect margin; problems only seen on ubuntu firefox
+      // delayed resize necessary to fix any overlapping cards on smaller screens
       $timeout(function () {
         $('.cs-card-layout').masonry('layout');
       }, 500);
