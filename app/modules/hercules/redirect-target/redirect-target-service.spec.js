@@ -1,7 +1,7 @@
 'use strict';
 
 describe('RedirectTargetService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var service;
   var httpBackend;
@@ -22,7 +22,6 @@ describe('RedirectTargetService', function () {
   beforeEach(inject(function (RedirectTargetService, $httpBackend) {
     service = RedirectTargetService;
     httpBackend = $httpBackend;
-    httpBackend.whenGET('l10n/en_US.json').respond({});
   }));
 
   afterEach(function () {

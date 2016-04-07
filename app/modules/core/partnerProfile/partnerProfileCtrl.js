@@ -62,7 +62,6 @@ angular.module('Core')
       $scope.init = function () {
         $scope.rep = null; // cs admin rep
         $scope.partner = {};
-        $scope.radioModified = false;
 
         $scope.companyName = Authinfo.getOrgName();
         $scope.problemSiteRadioValue = 0;
@@ -132,6 +131,7 @@ angular.module('Core')
             if (!_.isUndefined(settings.logoUrl)) {
               $scope.logoUrl = settings.logoUrl;
             }
+            resetForm();
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
@@ -149,6 +149,7 @@ angular.module('Core')
 
       };
 
+      // TODO webex team clean this up and add unit tests
       $scope.initWbxClientVersions = function () {
 
         //wbxclientversionselected
@@ -159,19 +160,17 @@ angular.module('Core')
 
         //nothing to do on error.
         WebexClientVersion.getWbxClientVersions().then(succ);
-        //will need to do more stuff here. Init selected version as well. 
-        //disable drop down ... but maybe not. 
+        //will need to do more stuff here. Init selected version as well.
+        //disable drop down ... but maybe not.
 
         var p = WebexClientVersion.getPartnerIdGivenOrgId(orgId).then(function (resp) {
-          return resp.data.partnerId; //this is the pid
-        }).then(function (pid) {
-          return WebexClientVersion.getTemplate(pid);
+          return WebexClientVersion.getTemplate(_.get(resp, 'data.partnerId'));
         });
 
         //var p = WebexClientVersion.getTemplate(orgId)
 
         p.then(function (json) {
-          var clientVersion = json.data.clientVersion;
+          var clientVersion = _.get(json, 'data.clientVersion');
           if (clientVersion === 'latest') {
             clientVersion = '';
           }
@@ -183,7 +182,7 @@ angular.module('Core')
             $scope.wbxclientversionselected = clientVersion;
           }
 
-          $scope.useLatestWbxVersion = json.data.useLatest;
+          $scope.useLatestWbxVersion = _.get(json, 'data.useLatest');
 
         });
 
@@ -207,16 +206,16 @@ angular.module('Core')
           var isCiscoHelp = $scope.isManaged ? $scope.isCiscoHelp : ($scope.helpSiteRadioValue === 0);
           var isCiscoSupport = $scope.isManaged ? $scope.isCiscoSupport : ($scope.problemSiteRadioValue === 0);
           var settings = {
-            'reportingSiteUrl': $scope.supportUrl || null,
-            'reportingSiteDesc': $scope.supportText || null,
-            'helpUrl': $scope.helpUrl || null,
-            'isCiscoHelp': isCiscoHelp,
-            'isCiscoSupport': isCiscoSupport
+            reportingSiteUrl: $scope.supportUrl || null,
+            reportingSiteDesc: $scope.supportText || null,
+            helpUrl: $scope.helpUrl || null,
+            isCiscoHelp: isCiscoHelp,
+            isCiscoSupport: isCiscoSupport
           };
 
           updateOrgSettings(orgId, settings);
         } else {
-          Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
+          Notification.error('partnerProfile.orgSettingsError');
         }
       };
 
@@ -225,36 +224,38 @@ angular.module('Core')
           $scope.supportUrl = '';
           $scope.supportText = '';
         }
-        $scope.radioModified = true;
         $scope.problemSiteRadioValue = value;
+        touchForm();
       };
 
       $scope.setHelpRadio = function (value) {
         if (value === $scope.helpSiteInfo.cisco) {
           $scope.helpUrl = '';
         }
-        $scope.radioModified = true;
         $scope.helpSiteRadioValue = value;
-      };
-
-      $scope.isBtnDisabled = function () {
-        return !($scope.radioModified || $scope.supportForm.$dirty);
+        touchForm();
       };
 
       function updateOrgSettings(orgId, settings) {
         $scope.orgProfileSaveLoad = true;
-        Orgservice.setOrgSettings(orgId, settings, function (data, status) {
-          if (data.success) {
-            $scope.orgProfileSaveLoad = false;
-            Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
-          } else {
-            var error = $translate.instant('errors.statusError', {
-              status: status
-            });
+        Orgservice.setOrgSettings(orgId, settings)
+          .then(notifySuccess)
+          .then(resetForm)
+          .catch(notifyError)
+          .finally(stopLoading);
+      }
 
-            Notification.notify(error, 'error');
-            $scope.orgProfileSaveLoad = false;
-          }
+      function stopLoading() {
+        $scope.orgProfileSaveLoad = false;
+      }
+
+      function notifySuccess() {
+        Notification.success('partnerProfile.processing');
+      }
+
+      function notifyError(response) {
+        Notification.errorResponse(response, 'errors.statusError', {
+          status: status
         });
       }
 
@@ -401,6 +402,19 @@ angular.module('Core')
 
       function uploadProgress(evt) {
         $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+      }
+
+      function resetForm() {
+        if ($scope.partnerProfileForm) {
+          $scope.partnerProfileForm.$setPristine();
+          $scope.partnerProfileForm.$setUntouched();
+        }
+      }
+
+      function touchForm() {
+        if ($scope.partnerProfileForm) {
+          $scope.partnerProfileForm.$setDirty();
+        }
       }
     }
   ]);

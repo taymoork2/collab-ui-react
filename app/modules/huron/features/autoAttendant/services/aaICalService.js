@@ -13,7 +13,6 @@
       getDefaultRange: getDefaultRange,
       getTwoLetterDays: getTwoLetterDays,
       getRanks: getRanks,
-      findRankByNumber: findRankByNumber,
       addHoursRange: addHoursRange,
       getHoursRanges: getHoursRanges,
       getDefaultDayHours: getDefaultDayHours
@@ -33,25 +32,32 @@
       if (type !== 'holiday') {
         return {
           days: [{
-            label: 'Monday', //Use translate?
+            label: 'Monday',
+            index: 1,
             active: false
           }, {
             label: 'Tuesday',
+            index: 2,
             active: false
           }, {
             label: 'Wednesday',
+            index: 3,
             active: false
           }, {
             label: 'Thursday',
+            index: 4,
             active: false
           }, {
             label: 'Friday',
+            index: 5,
             active: false
           }, {
             label: 'Saturday',
+            index: 6,
             active: false
           }, {
             label: 'Sunday',
+            index: 0,
             active: false
           }]
         };
@@ -122,6 +128,14 @@
             vevent.addProperty(p);
             vevent.addPropertyWithValue('summary', 'open');
             vevent.addPropertyWithValue('priority', '10');
+            var date = getNextOpenDate(hoursRange.days);
+            date.seconds(0);
+            date.hours(hoursRange.starttime.getHours());
+            date.minutes(hoursRange.starttime.getMinutes());
+            hoursRange.starttime = new Date(date.toDate());
+            date.hours(hoursRange.endtime.getHours());
+            date.minutes(hoursRange.endtime.getMinutes());
+            hoursRange.endtime = new Date(date.toDate());
           } else if (type === 'holiday') {
             vevent.addPropertyWithValue('summary', 'holiday');
             var startDate, endDate;
@@ -171,16 +185,39 @@
           // But we are doing recurrence based on day of week, so what particular date?
           // The date of the first day selected?  Today?
 
-          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime, type);
+          var p = getiCalDateTime(calendar, 'dtstart', hoursRange.starttime);
           vevent.addProperty(p);
 
-          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime, type);
+          p = getiCalDateTime(calendar, 'dtend', hoursRange.endtime);
           vevent.addProperty(p);
 
           // add event to calendar
           calendar.addSubcomponent(vevent);
         }
       }
+    }
+
+    function getNextOpenDate(days) {
+      var flag = _.each(days, function (day) {
+        if (day.active) {
+          return true;
+        }
+      });
+      if (flag) {
+        var date = moment();
+        while (!findDayByIndex(date.day(), days).active) {
+          date.add(1, 'day');
+        }
+        return date;
+      }
+    }
+
+    function findDayByIndex(dayIndex, days) {
+      return _.find(days, function (day) {
+        if (dayIndex == day.index) {
+          return day;
+        }
+      });
     }
 
     function getNextOccurrenceHolidays(hoursRange) {
@@ -268,14 +305,13 @@
       calendar.addSubcomponent(timezoneComp);
     }
 
-    function getiCalDateTime(calendar, dateType, time, type) {
-      var currentDate = new Date();
+    function getiCalDateTime(calendar, dateType, time) {
       var timezone = getTz(calendar);
       var p = new ical.Property(dateType);
       p.setValue(new ical.Time({
-        year: type !== 'holiday' ? currentDate.getFullYear() : time.getFullYear(),
-        month: type !== 'holiday' ? (currentDate.getMonth() + 1) : (time.getMonth() + 1),
-        day: type !== 'holiday' ? currentDate.getDate() : time.getDate(),
+        year: time.getFullYear(),
+        month: (time.getMonth() + 1),
+        day: time.getDate(),
         hour: time.getHours(),
         minute: time.getMinutes(),
         second: 0,

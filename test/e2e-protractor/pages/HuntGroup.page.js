@@ -53,7 +53,7 @@ var HuntGroup = function () {
   this.modifiedHGName = 'e2e-hg-new-' + utils.randomId();
   this.backBtn = element(by.css('.page-title a'));
   this.cancelBtn = element(by.css('[ng-click="hge.resetForm()"]'));
-  this.cancelSaveBar = element(by.css('.hg-save .left'));
+  this.cancelSaveBar = element(by.css('.hg-save p'));
   this.saveBtn = element(by.css('[ng-click="hge.saveForm()"]'));
   this.hgNumbers = element(by.css('.hg-num [name="numbers"]'));
   this.selectedHgNumbers = element.all(by.css('.hg-num [name="numbers"] li [ng-if="option.isSelected"] label'));

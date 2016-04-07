@@ -1,7 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules')
-  .directive('herculesPopover', function () {
+  angular
+    .module('Hercules')
+    .directive('herculesPopover', herculesPopover);
+
+  /* @ngInject */
+  function herculesPopover() {
     return {
       restrict: 'A',
       link: function (scope, element) {
@@ -21,4 +26,5 @@ angular.module('Hercules')
         });
       }
     };
-  });
+  }
+}());

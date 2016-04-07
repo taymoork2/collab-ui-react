@@ -1,6 +1,11 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .directive('herculesNotifications', herculesNotificationsDirective);
+
+  /* @ngInject */
   function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
     var vm = this;
     vm.notificationsLength = function () {
@@ -99,7 +104,4 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
 })();
