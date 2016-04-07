@@ -1,11 +1,11 @@
 'use strict';
 
-fdescribe('ServiceStateChecker', function () {
+describe('ServiceStateChecker', function () {
   beforeEach(module('wx2AdminWebClientApp'));
   //beforeEach(module('Core'));
   //beforeEach(module('Hercules'));
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -60,16 +60,16 @@ fdescribe('ServiceStateChecker', function () {
     ScheduleUpgradeService = {
       get: sinon.stub()
     };
-    DomainManagementService = {
-      domainList: sinon.stub(),
-      getVerifiedDomains: function(dontcare) {
-        return $q.resolve();
-      }
+
+    FeatureToggleService = {
+      supports: sinon.stub(),
+      features: {atlasSipUriDomainEnterprise: ''}
     };
 
-    DomainManagementService.domainList = [{
-      "domain": "somedomain"
-    }];
+    DomainManagementService = {
+      domainList: sinon.stub(),
+      getVerifiedDomains: sinon.stub()
+    };
 
     AuthInfo.getOrgId.returns('orgId');
     $provide.value('ClusterService', ClusterService);
@@ -78,16 +78,28 @@ fdescribe('ServiceStateChecker', function () {
     $provide.value('ScheduleUpgradeService', ScheduleUpgradeService);
     $provide.value('ServiceDescriptor', ServiceDescriptor);
     $provide.value('DomainManagementService', DomainManagementService);
+    $provide.value('FeatureToggleService', FeatureToggleService);
   }));
 
   beforeEach(inject(function (_$q_, _$rootScope_, $injector, _ServiceStateChecker_, _NotificationService_) {
-    $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    $q = _$q_;
-    $rootScope = _$rootScope_;
-    ServiceStateChecker = _ServiceStateChecker_;
-    NotificationService = _NotificationService_;
-  }));
+      $httpBackend = $injector.get('$httpBackend');
+      $httpBackend.when('GET', 'l10n/en_US.json').respond({});
+      $q = _$q_;
+      $rootScope = _$rootScope_;
+      ServiceStateChecker = _ServiceStateChecker_;
+      NotificationService = _NotificationService_;
+
+      FeatureToggleService.supports.returns($q.resolve(true));
+
+      DomainManagementService.getVerifiedDomains.returns($q.resolve());
+
+
+      DomainManagementService.domainList = [{
+        "domain": "somedomain"
+      }];
+    })
+  )
+  ;
 
   it('should raise the "fuseNotPerformed" message if there are no connectors', function () {
     ClusterService.getClustersByConnectorType.returns([]);
@@ -101,7 +113,7 @@ fdescribe('ServiceStateChecker', function () {
 
   it('should raise the "fuseNotPerformed" message if all connectors are not configured ', function () {
     ClusterService.getClustersByConnectorType.returns([notConfiguredClusterMockData]);
-    ScheduleUpgradeService.get.returns($q.when({
+    ScheduleUpgradeService.get.returns($q.resolve({
       isAdminAcknowledged: true
     }));
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
@@ -167,7 +179,7 @@ fdescribe('ServiceStateChecker', function () {
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
 
-  // Will happen if connector toggles back to "not_configured" state.
+// Will happen if connector toggles back to "not_configured" state.
   it('should clear all user and service notifications when connector is not configured ', function () {
     USSService2.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-uc',
@@ -285,9 +297,9 @@ fdescribe('ServiceStateChecker', function () {
     // this should spawn a dom verification notification
     /*DomainManagementService.domainList = [];
 
-    DomainManagementService.getVerifiedDomains.returns($q.when({
+     DomainManagementService.getVerifiedDomains.returns($q.when({
 
-    }));*/// = function (a,cb) {cb(null)};
+     }));*/// = function (a,cb) {cb(null)};
     //DomainManagementService.getVerifiedDomains.returns();// = function(c) { c()};
     //DomainManagementService.getVerifiedDomains.then = function() {};//returns($q.resolve(true));
 
@@ -342,4 +354,5 @@ fdescribe('ServiceStateChecker', function () {
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
-});
+})
+;
