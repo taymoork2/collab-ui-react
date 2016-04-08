@@ -10,7 +10,7 @@ describe('Huron Auto Attendant', function () {
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    it('should navigate to AA landing page', function () {
+    fit('should navigate to AA landing page', function () {
 
       // First ensure the test AA is deleted (in case last test run failed for example)
       var flow = protractor.promise.controlFlow();
@@ -20,7 +20,7 @@ describe('Huron Auto Attendant', function () {
       navigation.clickAutoAttendant();
     }, 120000);
 
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    fit('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -328,7 +328,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should add a Schedule to AA', function () {
+    fit('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, 12000);
       utils.click(autoattendant.addschedule);
@@ -341,13 +341,12 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
     }, 60000);
 
-    it('should add a Holiday Schedule to AA', function () {
+    fit('should add a Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
-      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
@@ -359,10 +358,10 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should add a Recurring Holiday Schedule to AA', function () {
+    fit('should add a Recurring Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
-      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.recurAnnually, 'Recur Annually');
       utils.sendKeys(autoattendant.exactDate, 'Exact Date');
@@ -380,13 +379,13 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('verify open/closed/holidays lanes are visible', function () {
+    fit('verify open/closed/holidays lanes are visible', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000); 
 
-    it('should update a AA Schedule', function () {
+    fit('should update a AA Schedule', function () {
       utils.wait(autoattendant.schedule, 12000);
       utils.click(autoattendant.schedule);
       // utils.wait(autoattendant.starttime);
@@ -397,7 +396,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
-    it('should delete a AA Schedule', function () {
+    fit('should delete a AA Schedule', function () {
       utils.click(autoattendant.schedule);
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.scheduletrash);
@@ -408,24 +407,24 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    it('should verify open/closed lanes are not visible', function () {
+    fit('should verify open/closed lanes are not visible', function () {
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoClosedHours);
     }, 60000);
 
-    it('should close AA edit and return to landing page', function () {
+    fit('should close AA edit and return to landing page', function () {
 
       utils.click(autoattendant.closeEditButton);
 
     });
 
-    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+    fit('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       utils.expectIsEnabled(autoattendant.testCardName);
 
     });
 
-    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+    fit('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA
       utils.click(autoattendant.testCardDelete);

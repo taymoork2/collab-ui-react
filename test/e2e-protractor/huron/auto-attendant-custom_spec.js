@@ -45,7 +45,7 @@ describe('Huron Auto Attendant', function () {
     it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, waitTime);
-      utils.click(autoattendant.toggleHoliday);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
