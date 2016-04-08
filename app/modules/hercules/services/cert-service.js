@@ -1,7 +1,11 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  angular
+    .module('Hercules')
+    .service('CertService', CertService);
+
+  /* @ngInject */
   function CertService($http, UrlConfig, Utils, $q) {
 
     var CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
@@ -40,5 +44,4 @@
     };
   }
 
-  angular.module('Hercules').service('CertService', CertService);
 }());

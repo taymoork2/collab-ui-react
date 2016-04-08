@@ -149,6 +149,11 @@ describe('Controller: ServiceSetup', function () {
     expect(controller.model.numberRanges).toEqual(model.numberRanges);
   });
 
+  it('should have site steering digit removed from the steeringDigits array', function () {
+    var index = _.indexOf(controller.steeringDigits, model.site.siteSteeringDigit);
+    expect(index).toEqual(-1);
+  });
+
   describe('deleteInternalNumberRange', function () {
 
     it('should remove from list and notify success', function () {
@@ -565,6 +570,16 @@ describe('Controller: ServiceSetup', function () {
       expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
+    });
+
+    it('customer with new outbound steering digit should update site', function () {
+      controller.hasSites = true;
+      controller.model.ftswSteeringDigit = '5';
+      controller.model.site.steeringDigit = '1';
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
     });
 
     it('should notify error if createInternalNumberRange fails', function () {

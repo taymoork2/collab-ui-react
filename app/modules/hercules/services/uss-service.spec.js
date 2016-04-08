@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: USSService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var $httpBackend, Service, authinfo;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
@@ -12,9 +12,6 @@ describe('Service: USSService', function () {
 
     Service = _USSService_;
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {
@@ -155,11 +152,6 @@ describe('Service: USSService', function () {
   });
 
   describe('status decoration', function () {
-
-    afterEach(function () {
-      $httpBackend.flush();
-    });
-
     describe('when not entitled', function () {
 
       it('error state is not entitled', function () {

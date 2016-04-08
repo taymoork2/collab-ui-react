@@ -1,9 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules').service('UiStats',
+  angular
+    .module('Hercules')
+    .service('UiStats', UiStats);
 
   /* @ngInject  */
-  function (Log) {
+  function UiStats(Log) {
 
     var statuses = [];
 
@@ -79,6 +82,6 @@ angular.module('Hercules').service('UiStats',
       initStats: initStats,
       updateProgress: updateProgress
     };
-
   }
-);
+
+})();
