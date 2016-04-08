@@ -210,6 +210,8 @@
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).catch(
         function (response) {
+          /* Use AACommonService to thwart the saving when it is in this state. And will also reset the state of Save set by CENumberStatus */
+          AACommonService.setIsValid('errorRemoveCMI', false);
           Notification.error('autoAttendant.errorRemoveCMI');
         });
 
