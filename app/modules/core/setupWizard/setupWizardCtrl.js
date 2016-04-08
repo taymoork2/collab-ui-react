@@ -164,56 +164,56 @@
     }
 
     function setupAddUserTabs() {
-      // Will change flag depending on call
-      var test = false;
-      if (test) {
-        $scope.tabs.push({
-          name: 'addUsers',
-          label: 'firstTimeWizard.addUsers',
-          description: 'firstTimeWizard.addUsersSubDescription',
-          icon: 'icon-add-users',
-          title: 'firstTimeWizard.addUsers',
-          controller: 'AddUserCtrl',
-          subTabs: [{
-            name: 'csv',
-            controller: 'OnboardCtrl',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+        if (result) {
+          $scope.tabs.push({
+            name: 'addUsers',
+            label: 'firstTimeWizard.addUsers',
+            description: 'firstTimeWizard.addUsersSubDescription',
+            icon: 'icon-add-users',
+            title: 'firstTimeWizard.addUsers',
+            controller: 'AddUserCtrl',
+            subTabs: [{
+              name: 'csv',
+              controller: 'OnboardCtrl',
+              steps: [{
+                name: 'init',
+                template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+              }, {
+                name: 'csvDownload',
+                template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
+              }, {
+                name: 'csvUpload',
+                template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
+              }, {
+                name: 'csvProcessing',
+                template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
+                buttons: false
+              }, {
+                name: 'csvResult',
+                template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+                buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
+              }]
             }, {
-              name: 'csvDownload',
-              template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
-            }, {
-              name: 'csvUpload',
-              template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
-            }, {
-              name: 'csvProcessing',
-              template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-              buttons: false
-            }, {
-              name: 'csvResult',
-              template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-              buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
+              name: 'advanced',
+              controller: 'OnboardCtrl',
+              steps: [{
+                name: 'init',
+                template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+              }, {
+                name: 'domainEntry',
+                template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
+              }, {
+                name: 'installConnector',
+                template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+              }, {
+                name: 'syncStatus',
+                template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
+              }],
             }]
-          }, {
-            name: 'advanced',
-            controller: 'OnboardCtrl',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-            }, {
-              name: 'domainEntry',
-              template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
-            }, {
-              name: 'installConnector',
-              template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
-            }, {
-              name: 'syncStatus',
-              template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-            }],
-          }]
-        });
-      }
+          });
+        }
+      });
     }
 
     function setupAddUserSubTabs() {
