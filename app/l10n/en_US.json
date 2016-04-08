@@ -1308,6 +1308,10 @@
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
         "action": "Next, configure the Connector on the Expressway."
+      },
+      "no-domain-verified":{
+        "title":"Add Call Service Configuration",
+        "description":"You need at least one verified domain to use call services. Add domains under settings."
       }
     }
   },
