@@ -21,6 +21,7 @@
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
     var dummyChartVals = [];
     var orgNameMap = {};
+    var customerList = [];
     var allCustomers = {
       value: 0,
       label: $translate.instant('reports.allCustomers')
@@ -37,7 +38,8 @@
 
       if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
         if ($scope.currentSelection.value === allCustomers.value) {
-          ReportsService.getPartnerMetrics(cacheValue, null, partnerCharts);
+          ReportsService.getPartnerMetrics(cacheValue, null, [partnerCharts[0]]);
+          ReportsService.getTotalPartnerCounts(cacheValue, customerList, [partnerCharts[1]]);
         } else {
           ReportsService.getPartnerMetrics(cacheValue, $scope.currentSelection.value, partnerCharts);
         }
@@ -53,7 +55,6 @@
 
     function getManagedOrgs() {
       $scope.totalOrgsData = [angular.copy(allCustomers)];
-      var customerList = [];
       PartnerService.getManagedOrgsList()
         .then(function (reponse) {
           customerList = _.map(_.get(reponse, 'data.organizations'), function (org) {
@@ -74,6 +75,7 @@
           angular.forEach(customerList, function (item) {
             $scope.totalOrgsData.push(item);
           });
+          $scope.getCustomerReports();
         });
     }
     getManagedOrgs();

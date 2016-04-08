@@ -345,7 +345,7 @@
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      var actionsTemplate = '<span cs-dropdown ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
+      var actionsTemplate = '<span cs-dropdown class="actions-menu" ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
