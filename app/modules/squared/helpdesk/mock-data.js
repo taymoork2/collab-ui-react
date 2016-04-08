@@ -380,8 +380,8 @@
       "trialExpiresInDays": 49
     }, {
       "offerCode": "CO",
-      "type": "COMMUNICATIONS",
-      "name": "Communications",
+      "type": "COMMUNICATION",
+      "name": "Communication",
       "status": "SUSPENDED",
       "volume": 1000,
       "trialExpiresInDays": 100,

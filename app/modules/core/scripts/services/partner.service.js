@@ -239,7 +239,7 @@
               licenseType: Config.licenseTypes.CONFERENCING
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATIONS
+              licenseType: Config.licenseTypes.COMMUNICATION
             });
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
@@ -287,6 +287,17 @@
 
       var deviceServiceText = [];
       var userServices = [];
+
+      _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
+        if (!licenseInfo) {
+          return;
+        }
+        switch (licenseInfo.licenseType) {
+        case Config.licenseTypes.COMMUNICATION:
+          partial.isSquaredUcOffer = true;
+          break;
+        }
+      });
 
       for (var offer in _.get(customer, 'offers', [])) {
         var offerInfo = customer.offers[offer];
