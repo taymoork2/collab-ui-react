@@ -1025,6 +1025,11 @@
 
     $q.all(initServiceSetup()).finally(function () {
       vm.processing = false;
+      if (vm.firstTimeSetup) {
+        _.remove(vm.steeringDigits, function (digit) {
+          return digit === DEFAULT_SITE_SD;
+        });
+      }
     });
   }
 })();

@@ -37,6 +37,7 @@ describe('Controller: TrialEditCtrl:', function () {
     spyOn($window, 'open');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getDeviceTrialsLimit');
 
     controller = $controller('TrialEditCtrl', {
       $scope: $scope,

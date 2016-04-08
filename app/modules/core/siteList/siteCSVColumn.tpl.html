@@ -1,24 +1,37 @@
-<p class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.showCSVInfo">
-    <i class="icon-spinner icon ui-grid-vcenter"> </i>
-  </span>
+<div ng-if="!row.entity.showCSVInfo">
+  <p class="ui-grid-cell-contents">
+    <i class="icon-spinner icon ui-grid-vcenter"></i>
+  </p>
+</div>
 
-  <span ng-if="!row.entity.isError">
-     <span ng-if="row.entity.showCSVInfo">
-        <span ng-if="!row.entity.isCSVSupported">
-            <span id="{{row.entity.license.siteUrl}}_notAvailable"
-                  translate="siteList.siteCSVNotAvailable"></span> 
+
+<div ng-if="row.entity.showCSVInfo">
+  <div ng-if="!row.entity.isError">
+        
+        <div ng-if="!row.entity.isCSVSupported">
+          <p class="ui-grid-cell-contents"
+            tooltip-append-to-body="true" 
+            tooltip-animation="false"
+            tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
+            tooltip-placement="top">
+
+          <span
+            id="{{row.entity.license.siteUrl}}_notAvailable"
+            translate="siteList.siteCSVNotAvailable">
+          </span>
             
-            <span id="{{row.entity.license.siteUrl}}_infoIcon">
-              <i class="icon icon-information icon-lg ng-scope ui-grid-vcenter"
-                 tooltip-append-to-body="true" 
-                 tooltip-animation="false"
-                 tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
-                 tooltip-placement="top"></i>
-            </span>
-        </span>
+          <span>
+            <i class="icon icon-information icon-lg ng-scope ui-grid-vcenter"
+              id="{{row.entity.license.siteUrl}}_infoIcon"></i>
+          </span>
+            
+          </p>
+        </div>
+        
+        <!--  /div> -->
 
-        <span ng-if="row.entity.isCSVSupported">
+        <div ng-if="row.entity.isCSVSupported">
+        <p class="ui-grid-cell-contents">
           <!-- export section -->
           <span id="{{row.entity.license.siteUrl}}_exportStatus">
 
@@ -103,7 +116,8 @@
           <span>
             &nbsp;
           </span>
-                      <!-- Export Results -->
+
+            <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results ui-grid-vcenter" 
                     ng-if="row.entity.exportFinishedWithErrors" 
@@ -172,29 +186,32 @@
                 </a>
               </span>
             </span> 
-          
-        </span>
-    </span>      
-  </span>
+          </p>
+        </div>
+    </div>      
   
-  <span ng-if="row.entity.isError">
-    <span ng-if="!row.entity.isWarn" 
+  <div ng-if="row.entity.isError">
+    <div ng-if="!row.entity.isWarn"
+         id="{{row.entity.license.siteUrl}}_errorIcon"
          popover="{{'siteList.systemError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
-      <span id="{{row.entity.license.siteUrl}}_errorIcon">
+         
+      <p class="ui-grid-cell-contents">
        <i class="icon-error icon err webex-alert-text ui-grid-vcenter"></i>
-      </span>
-    </span>
-  
-    <span ng-if="row.entity.isWarn" 
+      </p>
+    </div>
+
+    <div ng-if="row.entity.isWarn"
+         id="{{row.entity.license.siteUrl}}_warningIcon"
          popover="{{'siteList.authError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
-      <span id="{{row.entity.license.siteUrl}}_warningIcon">
+         
+     <p class="ui-grid-cell-contents">
        <i class="icon-warning icon webex-attention-text ui-grid-vcenter"></i>
-      </span>
-    </span>
-  </span>
+     </p>
+    </div>
+  </div>
    
-</p>
+</div>
