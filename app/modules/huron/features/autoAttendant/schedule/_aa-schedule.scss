@@ -63,6 +63,7 @@
   .aa-schedule-holidays-time {
     display: inline-block;
     float: right;
+    width: 10.75rem;
     &:last-of-type {
       @include vr-spacing(mr, 2);
     }

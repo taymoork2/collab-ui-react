@@ -16,6 +16,7 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
@@ -122,9 +123,23 @@
       vm.holidaysForm.$setDirty();
     }
 
-    function isOpenHoursAfterCloseHours(hours) {
-      if (hours.starttime && hours.endtime) {
-        return moment(hours.starttime).isSame(moment(hours.endtime)) || moment(hours.starttime).isAfter(moment(hours.endtime));
+    function isOpenHoursAfterCloseHours(startTime, endTime) {
+      if (startTime && endTime) {
+        var startTime = moment(startTime);
+        var endTime = moment(endTime);
+        var start = moment({hour: startTime.hour(), minute: startTime.minute()});
+        var end = moment({hour: endTime.hour(), minute: endTime.minute()});
+        return start.isSame(end) || start.isAfter(end);
+      }
+    }
+
+    function forceStartBeforeEndCheck() {
+      var index = _.findLastIndex(vm.holidays, {
+        isOpen: true
+      });
+      if (index >= 0) {
+        var indexForm = 'holidayForm' + index;
+        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
       }
     }
 
@@ -166,7 +181,7 @@
       var flag = false;
       _.each(vm.openhours, function (hours) {
         flag = false; //Verify each OpenHour(time and days) is valid to enable save
-        if (isOpenHoursAfterCloseHours(hours)) {
+        if (isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)) {
           return flag;
         }
         if (hours.starttime && hours.endtime) {
