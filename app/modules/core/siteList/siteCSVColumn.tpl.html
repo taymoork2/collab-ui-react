@@ -9,24 +9,24 @@
   <div ng-if="!row.entity.isError">
         
         <div ng-if="!row.entity.isCSVSupported">
-        	<p class="ui-grid-cell-contents"
-        	tooltip-append-to-body="true" 
+          <p class="ui-grid-cell-contents"
+            tooltip-append-to-body="true" 
             tooltip-animation="false"
             tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
             tooltip-placement="top">
 
-			<span
+          <span
             id="{{row.entity.license.siteUrl}}_notAvailable"
             translate="siteList.siteCSVNotAvailable">
-            </span>
+          </span>
             
-           <span>
-              <i class="icon icon-information icon-lg ng-scope ui-grid-vcenter"
+          <span>
+            <i class="icon icon-information icon-lg ng-scope ui-grid-vcenter"
               id="{{row.entity.license.siteUrl}}_infoIcon"></i>
-            </span>
+          </span>
             
-            </p>
-         </div>
+          </p>
+        </div>
         
         <!--  /div> -->
 
@@ -116,7 +116,8 @@
           <span>
             &nbsp;
           </span>
-                      <!-- Export Results -->
+
+            <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
               <span class="csv-results ui-grid-vcenter" 
                     ng-if="row.entity.exportFinishedWithErrors" 
@@ -191,25 +192,25 @@
   
   <div ng-if="row.entity.isError">
     <div ng-if="!row.entity.isWarn"
-    	id="{{row.entity.license.siteUrl}}_errorIcon"
+         id="{{row.entity.license.siteUrl}}_errorIcon"
          popover="{{'siteList.systemError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
          
-     <p class="ui-grid-cell-contents">
+      <p class="ui-grid-cell-contents">
        <i class="icon-error icon err webex-alert-text ui-grid-vcenter"></i>
-	 </p>
+      </p>
     </div>
-  
+
     <div ng-if="row.entity.isWarn"
-    	id="{{row.entity.license.siteUrl}}_warningIcon"
+         id="{{row.entity.license.siteUrl}}_warningIcon"
          popover="{{'siteList.authError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
          
      <p class="ui-grid-cell-contents">
        <i class="icon-warning icon webex-attention-text ui-grid-vcenter"></i>
-	 </p>
+     </p>
     </div>
   </div>
    
