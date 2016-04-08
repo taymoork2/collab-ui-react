@@ -22,9 +22,9 @@
     var hub = CsdmHubFactory.create();
     var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary, hub);
 
-    var statusesParameterRequestString = function (serviceId, state, limit) {
-      var statefilter = state ? '&state=' + state : '';
-      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&entitled=true';
+    var statusesParameterRequestString = function (serviceId, state, offset, limit) {
+      var statefilter = state ? "&state=" + state : "";
+      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
     };
 
     function extractData(res) {
@@ -81,9 +81,9 @@
       return cachedUserStatusSummary;
     }
 
-    function getStatuses(serviceId, state, limit) {
+    function getStatuses(serviceId, state, offset, limit) {
       return $http
-        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
+        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, offset, limit))
         .then(extractData);
     }
 

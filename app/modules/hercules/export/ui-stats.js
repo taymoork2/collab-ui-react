@@ -22,14 +22,14 @@
         "stateType": "error",
         "text": "errors",
         "count": serviceInfo.error.toString(),
-        "selected": false,
+        "selected": true,
         "unselectable": serviceInfo.error === 0 ? true : false,
         "progress": 0
       }, {
         "stateType": "notActivated",
         "text": "pending activation",
         "count": serviceInfo.notActivated.toString(),
-        "selected": false,
+        "selected": true,
         "unselectable": serviceInfo.notActivated === 0 ? true : false,
         "progress": 0
       }];
