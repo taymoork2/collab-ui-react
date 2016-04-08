@@ -616,12 +616,12 @@
     function toggleShipFields() {
       var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
       var invalidDeviceQuantity = quantity < 2 || quantity > 7;
-      var invalidPhoneQuantity = !(_(_trialCallData.details.phones).flatten()
+      var invalidPhoneQuantity = _(_trialCallData.details.phones)
+        .flatten()
         .pluck('quantity')
-        .filter(function (quantity) {
+        .some(function (quantity) {
           return quantity > 5;
-        })
-        .isEmpty());
+        });
       var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
 
       _.forEach(vm.shippingFields, function (field) {
