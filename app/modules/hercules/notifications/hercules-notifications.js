@@ -6,7 +6,7 @@
     .directive('herculesNotifications', herculesNotificationsDirective);
 
   /* @ngInject */
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor, ServiceStateChecker) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -87,6 +87,10 @@
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings'
       });
+    };
+
+    vm.setSipUriNotificationAcknowledged = function () {
+      ServiceStateChecker.setSipUriNotificationAcknowledgedAndRemoveNotification();
     };
   }
 

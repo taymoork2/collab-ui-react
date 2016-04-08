@@ -6,8 +6,10 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService) {
+  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice) {
+    var vm = this;
 
+    vm.isSipUriAcknowledged = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
     function checkState(connectorType, serviceId) {
@@ -76,6 +78,11 @@
       }
     }
 
+    function setSipUriNotificationAcknowledgedAndRemoveNotification() {
+      NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+      vm.isSipUriAcknowledged = true;
+    }
+
     function addNotification(noUsersActivatedId, serviceId, notification) {
       NotificationService.addNotification(
         NotificationService.types.TODO,
@@ -96,22 +103,22 @@
         0;
       if (needsUserActivation) {
         switch (serviceId) {
-        case "squared-fusion-cal":
-          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
-          break;
-        case "squared-fusion-uc":
-          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-            if (!error) {
-              if (enabled) {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-              } else {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+          case "squared-fusion-cal":
+            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+            break;
+          case "squared-fusion-uc":
+            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+              if (!error) {
+                if (enabled) {
+                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+                } else {
+                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+                }
               }
-            }
-          });
-          break;
-        default:
-          break;
+            });
+            break;
+          default:
+            break;
         }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);
@@ -129,24 +136,28 @@
     }
 
     function handleAtlasSipUriDomainEnterpriseNotification(serviceId) {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
-        .then(function (support) {
-          if (support) {
-            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
-              if (!org || !org.orgSettings || !org.orgSettings.sipCloudDomain) {
-                NotificationService.addNotification(
-                  NotificationService.types.TODO,
-                  'sipUriDomainEnterpriseNotConfigured',
-                  5,
-                  'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
-              } else {
-                NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-              }
-            });
-          } else {
-            NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
-          }
-        });
+      if (!vm.isSipUriAcknowledged) {
+        FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomainEnterprise)
+          .then(function (support) {
+            if (support) {
+              Orgservice.getOrg(function (data, status) {
+                if (status === 200) {
+                  if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
+                    NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+                  }
+                } else {
+                  NotificationService.addNotification(
+                    NotificationService.types.TODO,
+                    'sipUriDomainEnterpriseNotConfigured',
+                    5,
+                    'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
+                }
+              });
+            } else {
+              NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+            }
+          });
+      }
     }
 
     function checkCallServiceConnect(serviceId) {
@@ -239,7 +250,8 @@
     });
 
     return {
-      checkState: checkState
+      checkState: checkState,
+      setSipUriNotificationAcknowledgedAndRemoveNotification: setSipUriNotificationAcknowledgedAndRemoveNotification
     };
   }
 }());
