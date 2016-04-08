@@ -267,16 +267,19 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     }; // csvExport()
 
     this.csvImport = function (
-      siteUrl,
-      csvFile
+      siteRow
     ) {
 
       var funcName = 'csvImport()';
       var logMsg = '';
 
+      var siteUrl = siteRow.license.siteUrl;
+      var mockFlag = siteRow.csvMock.mockImport;
+      var csvFile = siteRow.modal.file;
+
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'csvFile=' + csvFile;
-      $log.log(logMsg);
+        'mockFlag=' + mockFlag;
+      // $log.log(logMsg);
 
       var successResult = {
         'siteUrl': siteUrl,
@@ -303,7 +306,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var deferredResponse = $q.defer();
 
-      var mockFlag = true;
       WebExRestApiFact.csvApiRequest(
         mockFlag,
         null,
