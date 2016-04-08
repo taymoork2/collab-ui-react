@@ -344,6 +344,14 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
+  it('should update site if there is a new outbound steering digit', function () {
+    controller.model.site.steeringDigit = '7';
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).toHaveBeenCalled();
+  });
+
   it('should show international dialing when feature toggle is ON', function () {
     InternationalDialing.isDisableInternationalDialing.and.returnValue($q.when(false));
 
@@ -367,6 +375,15 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect($scope.to.options).toEqual(controller.timeZoneOptions);
+  });
+
+  it('outbound dial digit should not be equal to site steering digit', function () {
+    expect(site.siteSteeringDigit).not.toEqual(controller.model.steeringDigit);
+  });
+
+  it('should have site steering digit removed from the steeringDigits array', function () {
+    var index = _.indexOf(controller.steeringDigits, site.siteSteeringDigit);
+    expect(index).toEqual(-1);
   });
 
   describe('formly watcher functions: ', function () {
@@ -417,6 +434,32 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(assignedExternalNumbers);
     });
 
+    it('_buildServiceNumberOptions - add the service number back in the list if it is already set but not assigned to a user or spark call feature', function () {
+      controller.model.site.emergencyCallBackNumber = {
+        pattern: '+19725551003'
+      };
+      controller.model.serviceNumber = {
+        pattern: '+19725551003',
+        label: '(972) 555-1003'
+      };
+
+      var expectedOptions = [{
+        pattern: '+19725551001',
+        label: '(972) 555-1001'
+      }, {
+        pattern: '+19725551002',
+        label: '(972) 555-1002'
+      }, {
+        pattern: '+19725551003',
+        label: '(972) 555-1003'
+      }];
+
+      controller._buildServiceNumberOptions($scope);
+      $scope.$apply();
+
+      expect($scope.to.options).toEqual(expectedOptions);
+    });
+
     it('_buildServiceNumberOptions - should also remove the voicemail number if found', function () {
       controller.model.site.voicemailPilotNumber = '+19725551001';
       var expectedOptions = [{
@@ -439,7 +482,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect($scope.to.options).toEqual(controller.unassignedExternalNumbers);
     });
 
-    it('_buildVoicemailNumberOptions - should also add the voicemail number back in the list if it is already assigned', function () {
+    it('_buildVoicemailNumberOptions - should add the voicemail number back in the list if it is already assigned', function () {
       controller.model.serviceNumber = undefined;
       controller.model.site.voicemailPilotNumber = '+19725551001';
       var expectedOptions = [{

@@ -67,7 +67,8 @@ describe('Controller: Overview Reports', function () {
       };
 
       ReportsService = {
-        getPartnerMetrics: jasmine.createSpy('getPartnerMetrics').and.callFake(emptyFunction)
+        getPartnerMetrics: jasmine.createSpy('getPartnerMetrics').and.callFake(emptyFunction),
+        getTotalPartnerCounts: jasmine.createSpy('getTotalPartnerCounts').and.callFake(emptyFunction)
       };
 
       CannedDataService = {
