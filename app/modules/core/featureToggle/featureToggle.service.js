@@ -21,6 +21,7 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasTrialConversion: 'atlas-trial-conversion',
+      atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
       androidAddGuestRelease: 'android-add-guest-release',

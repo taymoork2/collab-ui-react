@@ -49,6 +49,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getTimeCharts: getTimeCharts,
     getUsageMetrics: getUsageMetrics,
     getPartnerMetrics: getPartnerMetrics,
+    getTotalPartnerCounts: getTotalPartnerCounts,
     getLandingMetrics: getLandingMetrics,
     getAllMetrics: getAllMetrics,
     getLogInfo: getLogInfo,
@@ -165,7 +166,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   }
 
   function getPartnerMetrics(useCache, orgId, partnerCharts) {
-    var chartParams = {
+    var params = {
       'intervalCount': 1,
       'intervalType': 'month',
       'spanCount': 1,
@@ -175,7 +176,51 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     };
 
     for (var chart in partnerCharts) {
-      getUsageMetrics(partnerCharts[chart], chartParams, orgId);
+      getUsageMetrics(partnerCharts[chart], params, orgId);
+    }
+  }
+
+  // For retrieving the 
+  function getTotalPartnerCounts(useCache, customerList, countTypes) {
+    if (Authinfo.isPartner() && angular.isArray(customerList) && angular.isArray(countTypes)) {
+      var params = {
+        'intervalCount': 1,
+        'intervalType': 'month',
+        'spanCount': 1,
+        'spanType': 'week',
+        'cache': useCache,
+        'isCustomerView': false
+      };
+
+      angular.forEach(countTypes, function (count) {
+        var promises = [];
+        var dataResponse = {
+          success: true,
+          data: 0,
+          status: null,
+          errorMsg: null
+        };
+
+        angular.forEach(customerList, function (org) {
+          timeChartUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + org.value + '/' + urls[count];
+          var metricUrl = buildUrl(count, params);
+          var promise = $http.get(metricUrl)
+            .success(function (data, status) {
+              dataResponse.data += Math.round(data.data);
+              dataResponse.status = status;
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              data.errorMsg = data;
+            });
+          promises.push(promise);
+        });
+
+        $q.all(promises).then(function () {
+          sendChartResponse(dataResponse, dataResponse.status, count);
+        });
+      });
     }
   }
 
