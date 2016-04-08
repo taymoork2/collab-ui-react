@@ -3,8 +3,8 @@
     <i class="icon icon-three-dots"></i>
   </button>
   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-    <li ng-show="grid.appScope.isOwnOrg(row.entity)">
-      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
+    <li ng-show="grid.appScope.isOwnOrg(row.entity)" id="{{row.entity.customerName}}LaunchMyOrgButton">
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="launch_partner_org({partnerOrgId: row.entity.customerOrgId, partnerOrgName: row.entity.customerName, launchPartner: true})" target="_blank">
         <span translate="customerPage.myOrgButton"></span>
       </a>
     </li>
