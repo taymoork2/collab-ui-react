@@ -88,7 +88,6 @@
       vm.availablePhoneNums.sort(function (a, b) {
         return compareNumbersExternalThenInternal(a.value, b.value);
       });
-      AACommonService.setCENumberStatus(true);
       deleteAAResource(number);
 
       // clear selection
@@ -208,7 +207,9 @@
 
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
-        vm.aaModel.aaRecordUUID, resources).catch(
+        vm.aaModel.aaRecordUUID, resources).then(function () {
+        AACommonService.setCENumberStatus(true);
+      }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. And will also reset the state of Save set by CENumberStatus */
           AACommonService.setIsValid('errorRemoveCMI', false);
