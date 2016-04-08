@@ -3488,29 +3488,61 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "title": "Atlas Portal Shopping Cart Login (APSCL)",
-      "header": "Enter eMail Addr",
-      "emailPlaceholder": "Ex. x@y.com",
+      "startTrial": "To start a Spark trial you must create an account.",
+      "enterEmail": "Please enter account email address",
+      "emailPlaceholder": "Enter email address",
       "validation": {
-        "emptyEmail": "The email address cannot be blank"
+        "emptyEmail": "The email address is missing or invalid."
       }
     },
     "createAccount": {
-      "title": "Create Account",
-      "passwordLabel": "Enter your password:",
-      "confirmPlaceholder": "confirm",
+      "noAccount": "{{email}} does not have an account. Please create one:",
+      "passwordLabel": "Enter your password",
+      "confirmEmailPlaceholder": "Verify email address",
+      "passwordPlaceholder": "Enter password",
+      "confirmPasswordPlaceholder": "Verify password",
+      "createAccount": "Create Account",
       "validation": {
-        "emptyEmail": "Empty email",
-        "emptyPassword": "Empty password",
-        "emailsDontMatch": "Emails do not match",
-        "passwordsDontMatch": "Passwords do not match"
+        "emptyEmail": "An email address is missing or invalid.",
+        "emptyPassword": "A password is missing.",
+        "emailsDontMatch": "The email addresses do not match.",
+        "passwordsDontMatch": "The passwords do not match."
       }
+    },
+    "submitOrder": {
+      "submitting": "Submitting Order...",
+      "activate": "Click the Activate button below to start your subscription and begin using your new service.",
+      "newUser": "Thank you for your purchase. An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
+      "missingEmail": "It has been over 30 minutes and I still have not received the email."
+    },
+    "drOnboardQuestion": {
+      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Spark services?"
+    },
+    "drConfirmAdminOrg": {
+      "useDifferentName": "Use Different Name",
+      "companyAndOrg1": "We have matched your email address to the following organization:",
+      "companyAndOrg2": "Would you like to assign the Spark services to this organization?"
+    },
+    "drOnboardEnterAdminEmail": {
+      "adminEmailLabel": "Please enter the email address of the person who will be managing the Spark services",
+      "validation": {
+        "emptyEmail": "Empty email"
+      }
+    },
+    "orgName": {
+      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Spark services, etc.",
+      "enterOrgName": "Enter Company Name"
     },
     "validation": {
       "unexpectedError": "Unexpected error"
     },
+    "restrictedPage": "Restricted Page",
+    "ciscoSpark": "Cisco Spark",
     "emailLabel": "Enter your email address:",
-    "nextButton": "Next"
+    "nextButton": "Next",
+    "submitButton": "Submit",
+    "activateButton": "Activate",
+    "continue": "Continue"
   },
   "overview": {
     "pageTitle": "Overview",

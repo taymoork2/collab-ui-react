@@ -20,6 +20,8 @@
 
       consumerOrgId: 'consumer',
 
+      consumerMockOrgId: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
+
       feedbackUrl: 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl',
 
       scimSchemas: [
@@ -246,7 +248,8 @@
       PARTNER_READ_ONLY_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialEdit', 'profile', 'pstnSetup'],
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
-      User: [],
+      //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName'],
       Site_Admin: [
         'site-list',
         'site-csv-import',

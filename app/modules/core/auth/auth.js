@@ -18,7 +18,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     refreshAccessToken: refreshAccessToken,
     setAuthorizationHeader: setAuthorizationHeader,
     refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
-    verifyOauthState: verifyOauthState
+    verifyOauthState: verifyOauthState,
+    getAuthorizationUrl: getAuthorizationUrl
   };
 
   return service;
