@@ -7,14 +7,16 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
   var expectedCsvHttpsObj;
   var csvConstructHttpsObj;
 
-  var WebExApiGatewayConstsService;
+  var WebExApiGatewayConstsService, $log;
 
   beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (
-    _WebExApiGatewayConstsService_
+    _WebExApiGatewayConstsService_,
+    _$log_
   ) {
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    $log = _$log_;
 
     WebExApiGatewayConstsService.csvAPIs = [{
         request: 'csvStatus',
@@ -92,7 +94,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       url: 'https://test.site.com/meetingsapi/v1/users/import',
       method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data;charset=utf-8"',
+        'Content-Type': 'application/json;charset=utf-8',
         'Authorization': 'Bearer someFakeBearer'
       }
     };
