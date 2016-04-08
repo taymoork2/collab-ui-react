@@ -25,8 +25,11 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+<<<<<<< HEAD
     spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
+=======
+>>>>>>> 685b3ab... US233291 - Remove pstn-setup and call-trials feature toggles
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -87,7 +90,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and not skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;
@@ -97,7 +99,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;

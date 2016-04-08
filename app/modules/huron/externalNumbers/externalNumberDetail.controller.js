@@ -17,6 +17,9 @@
     vm.filteredPendingNumbers = [];
     vm.filteredUnassignedNumbers = [];
 
+    vm.showPstnSetup = false;
+    vm.loading = false;
+
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
@@ -29,6 +32,7 @@
     init();
 
     function init() {
+      vm.loading = true;
       setCountryCode()
         .then(function () {
           listPhoneNumbers();
@@ -36,6 +40,13 @@
           $scope.$on('$destroy', function () {
             $interval.cancel(interval);
           });
+        });
+
+      ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
+        .then(function (response) {
+          vm.showPstnSetup = response;
+        }).finally(function () {
+          vm.loading = false;
         });
     }
 
