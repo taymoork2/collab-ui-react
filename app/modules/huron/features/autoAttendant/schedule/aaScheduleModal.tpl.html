@@ -234,6 +234,7 @@
                            ng-model="holiday.starttime"
                            ng-disabled="holiday.allDay"
                            ng-required="!holiday.allDay"
+                           ng-change="aaScheduleModalCtrl.forceStartBeforeEndCheck()"
                            type="text">
                     <div class="cs-input__messages"
                          ng-messages="aaScheduleModalCtrl.holidaysForm['holidayForm' + $index].holidayStart.$error"

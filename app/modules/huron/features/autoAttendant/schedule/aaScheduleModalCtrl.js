@@ -127,8 +127,14 @@
       if (startTime && endTime) {
         var startTime = moment(startTime);
         var endTime = moment(endTime);
-        var start = moment({hour: startTime.hour(), minute: startTime.minute()});
-        var end = moment({hour: endTime.hour(), minute: endTime.minute()});
+        var start = moment({
+          hour: startTime.hour(),
+          minute: startTime.minute()
+        });
+        var end = moment({
+          hour: endTime.hour(),
+          minute: endTime.minute()
+        });
         return start.isSame(end) || start.isAfter(end);
       }
     }
@@ -139,7 +145,8 @@
       });
       if (index >= 0) {
         var indexForm = 'holidayForm' + index;
-        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        vm.holidaysForm[indexForm].holidayEnd.$setDirty();
       }
     }
 
@@ -169,7 +176,7 @@
             return flag;
           }
         }
-        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined)) {
+        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined || isOpenHoursAfterCloseHours(holiday.starttime, holiday.endtime))) {
           return flag;
         }
         flag = true;
