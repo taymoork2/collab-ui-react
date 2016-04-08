@@ -89,10 +89,9 @@ describe('ServiceStateChecker', function () {
       ServiceStateChecker = _ServiceStateChecker_;
       NotificationService = _NotificationService_;
 
-      FeatureToggleService.supports.returns($q.resolve(true));
+      FeatureToggleService.supports.returns($q.resolve(false));
 
       DomainManagementService.getVerifiedDomains.returns($q.resolve());
-
 
       DomainManagementService.domainList = [{
         "domain": "somedomain"
@@ -282,29 +281,22 @@ describe('ServiceStateChecker', function () {
       cb(null, true);
     };
 
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
-        id: 'squared-fusion-ec',
-        enabled: true,
-        acknowledged: false
-      }]);
-    };
-
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ScheduleUpgradeService.get.returns($q.when({
       isAdminAcknowledged: true
     }));
     // this should spawn a dom verification notification
-    /*DomainManagementService.domainList = [];
-
-     DomainManagementService.getVerifiedDomains.returns($q.when({
-
-     }));*/// = function (a,cb) {cb(null)};
-    //DomainManagementService.getVerifiedDomains.returns();// = function(c) { c()};
-    //DomainManagementService.getVerifiedDomains.then = function() {};//returns($q.resolve(true));
-
+    DomainManagementService.domainList = [];
+    
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
     $rootScope.$digest();
+    //notifications not shown because first call to dv service hasn't returned
+    expect(NotificationService.getNotificationLength()).toEqual(0);
+
+    //notifications shown because since first call is now resolved.  (digest on line 307)
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
+
 
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
@@ -324,15 +316,7 @@ describe('ServiceStateChecker', function () {
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
       cb(null, true);
     };
-
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
-        id: 'squared-fusion-ec',
-        enabled: true,
-        acknowledged: false
-      }]);
-    };
-
+    
     ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
     ScheduleUpgradeService.get.returns($q.when({
       isAdminAcknowledged: true
@@ -340,6 +324,8 @@ describe('ServiceStateChecker', function () {
     // this should spawn a dom verification notification
     DomainManagementService.domainList = [];
 
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
     $rootScope.$digest();
     expect(NotificationService.getNotificationLength()).toEqual(1);
