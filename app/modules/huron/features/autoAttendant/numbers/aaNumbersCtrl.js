@@ -211,7 +211,7 @@
         AACommonService.setCENumberStatus(true);
       }).catch(
         function (response) {
-          /* Use AACommonService to thwart the saving when it is in this state. And will also reset the state of Save set by CENumberStatus */
+          /* Use AACommonService to thwart the saving when it is in this state. */
           AACommonService.setIsValid('errorRemoveCMI', false);
           Notification.error('autoAttendant.errorRemoveCMI');
         });
