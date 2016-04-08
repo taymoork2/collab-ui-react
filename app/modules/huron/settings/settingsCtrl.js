@@ -84,8 +84,7 @@
       internationalDialingUuid: null,
       showServiceAddress: false,
       serviceNumber: undefined,
-      serviceNumberWarning: false,
-      ftswSteeringDigit: undefined
+      serviceNumberWarning: false
     };
 
     vm.validations = {
@@ -190,6 +189,13 @@
       }
     };
 
+    vm.steeringDigitChangeValidation = function ($viewValue, $modelValue, scope) {
+      if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
+        return true;
+      }
+      return false;
+    };
+
     vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
       if (_.get(vm, 'model.site.steeringDigit.length') > 0 &&
         ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) ||
@@ -226,13 +232,18 @@
       key: 'steeringDigit',
       type: 'select',
       templateOptions: {
-        inputClass: 'medium-2',
+        inputClass: 'large-10',
         label: $translate.instant('serviceSetupModal.steeringDigit'),
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+        warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+        isWarn: false,
         options: vm.steeringDigits
       },
       hideExpression: function () {
         return vm.hideFieldSteeringDigit;
+      },
+      expressionProperties: {
+        'templateOptions.isWarn': vm.steeringDigitChangeValidation
       }
     }, {
       className: 'service-setup service-setup-extension',
@@ -724,7 +735,7 @@
 
     function updateSite() {
       var siteData = {};
-      if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+      if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
       // Save the existing site voicemail pilot number, before overwritting with the new value
@@ -827,8 +838,10 @@
             .then(function (site) {
               vm.firstTimeSetup = false;
               vm.model.site.steeringDigit = site.steeringDigit;
-              vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              _.remove(vm.steeringDigits, function (digit) {
+                return digit === site.siteSteeringDigit;
+              });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
@@ -1207,7 +1220,32 @@
     }
 
     function setModel(data) {
-      vm.model = angular.copy(data);
+      vm.model.site.siteIndex = savedModel.site.siteIndex;
+      vm.model.site.steeringDigit = savedModel.site.steeringDigit;
+      vm.model.site.siteSteeringDigit = savedModel.site.siteSteeringDigit;
+      vm.model.site.siteCode = savedModel.site.siteCode;
+      vm.model.site.timeZone = savedModel.site.timeZone;
+      vm.model.site.voicemailPilotNumber = savedModel.site.voicemailPilotNumber;
+      vm.model.site.vmCluster = savedModel.site.vmCluster;
+      vm.model.site.emergencyCallBackNumber = savedModel.site.emergencyCallBackNumber;
+      vm.model.site.uuid = savedModel.site.uuid;
+
+      angular.copy(savedModel.numberRanges, vm.model.numberRanges);
+      angular.copy(savedModel.displayNumberRanges, vm.model.displayNumberRanges);
+
+      vm.model.callerId.callerIdEnabled = savedModel.callerId.callerIdEnabled;
+      vm.model.callerId.uuid = savedModel.callerId.uuid;
+      vm.model.callerId.callerIdName = savedModel.callerId.callerIdName;
+      vm.model.callerId.callerIdNumber = savedModel.callerId.callerIdNumber;
+
+      vm.model.companyVoicemail.companyVoicemailEnabled = savedModel.companyVoicemail.companyVoicemailEnabled;
+      vm.model.companyVoicemail.companyVoicemailNumber = savedModel.companyVoicemail.companyVoicemailNumber;
+
+      vm.model.internationalDialingEnabled = savedModel.internationalDialingEnabled;
+      vm.model.internationalDialingUuid = savedModel.internationalDialingUuid;
+      vm.model.showServiceAddress = savedModel.showServiceAddress;
+      vm.model.serviceNumber = savedModel.serviceNumber;
+      vm.model.serviceNumberWarning = savedModel.serviceNumberWarning;
     }
 
     $scope.$watchCollection(function () {

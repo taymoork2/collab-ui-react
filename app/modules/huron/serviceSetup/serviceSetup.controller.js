@@ -174,6 +174,15 @@
       return false;
     };
 
+    vm.steeringDigitChangeValidation = function ($viewValue, $modelValue, scope) {
+      if (vm.firstTimeSetup) {
+        return false;
+      } else if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+        return true;
+      }
+      return false;
+    };
+
     vm.fields = [{
       model: vm.model.site,
       className: 'service-setup',
@@ -209,10 +218,15 @@
         templateOptions: {
           label: $translate.instant('serviceSetupModal.steeringDigit'),
           description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+          warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+          isWarn: false,
           options: vm.steeringDigits
         },
         hideExpression: function () {
           return vm.hideFieldSteeringDigit;
+        },
+        expressionProperties: {
+          'templateOptions.isWarn': vm.steeringDigitChangeValidation
         }
       }, {
         key: 'siteSteeringDigit',
@@ -578,6 +592,9 @@
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              _.remove(vm.steeringDigits, function (digit) {
+                return digit === site.siteSteeringDigit;
+              });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
