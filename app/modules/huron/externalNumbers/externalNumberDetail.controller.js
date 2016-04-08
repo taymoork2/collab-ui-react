@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
+  function ExternalNumberDetail($state, $stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -18,7 +18,6 @@
     vm.filteredUnassignedNumbers = [];
 
     vm.showPstnSetup = false;
-    vm.loading = false;
 
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
@@ -26,13 +25,18 @@
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
+    vm.addNumbers = addNumbers;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
+
+    var numberPromise = ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
+      .then(function (response) {
+        vm.showPstnSetup = response;
+      });
 
     init();
 
     function init() {
-      vm.loading = true;
       setCountryCode()
         .then(function () {
           listPhoneNumbers();
@@ -40,13 +44,6 @@
           $scope.$on('$destroy', function () {
             $interval.cancel(interval);
           });
-        });
-
-      ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
-        .then(function (response) {
-          vm.showPstnSetup = response;
-        }).finally(function () {
-          vm.loading = false;
         });
     }
 
@@ -103,6 +100,22 @@
       vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
+    }
+
+    function addNumbers(org) {
+      numberPromise.then(function () {
+        if (vm.showPstnSetup) {
+          return $state.go('pstnSetup', {
+            customerId: org.customerOrgId,
+            customerName: org.customerName,
+            customerEmail: org.customerEmail
+          });
+        } else {
+          return $state.go('didadd', {
+            currentOrg: org
+          });
+        }
+      });
     }
   }
 })();

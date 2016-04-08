@@ -36,10 +36,6 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
-      name: 'trialAdd.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
-    }, {
       name: 'trialAdd.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -49,9 +45,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
+    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
     vm.showWebex = false;
     vm.startTrial = startTrial;
@@ -261,9 +255,6 @@
         var meetingModal = _.find(vm.trialStates, {
           name: 'trialAdd.webex'
         });
-        var addNumbersModal = _.find(vm.trialStates, {
-          name: 'trialAdd.addNumbers'
-        });
         var pstnModal = _.find(vm.trialStates, {
           name: 'trialAdd.pstn'
         });
@@ -275,7 +266,6 @@
         emergAddressModal.enabled = vm.pstnTrial.enabled;
         devicesModal.enabled = results[2];
         meetingModal.enabled = results[1];
-        addNumbersModal.enabled = !vm.hasCallEntitlement;
 
       }).finally(function () {
         $scope.$watch(function () {

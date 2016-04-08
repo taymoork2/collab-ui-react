@@ -52,10 +52,6 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
-      name: 'trialEdit.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
-    }, {
       name: 'trialEdit.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -65,10 +61,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-
-    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -327,7 +320,6 @@
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
-      setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.hasCallEntitlement));
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
       setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);

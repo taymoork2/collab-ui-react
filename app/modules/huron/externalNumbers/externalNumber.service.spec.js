@@ -2,7 +2,7 @@
 
 describe('Service: ExternalNumberService', function () {
   var $rootScope, $httpBackend, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
-  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse;
+  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse;
   var customerId, externalNumber;
 
   beforeEach(module('Huron'));
@@ -53,6 +53,10 @@ describe('Service: ExternalNumberService', function () {
 
     numberResponse = {
       numbers: [1, 2, 3]
+    };
+
+    noNumberResponse = {
+      numbers: []
     };
 
     externalNumbers = unassignedNumbers.concat(assignedNumbers);
@@ -150,6 +154,34 @@ describe('Service: ExternalNumberService', function () {
 
     expect(PstnSetupService.deleteNumber).not.toHaveBeenCalled();
     expect(ExternalNumberPool.deletePool).toHaveBeenCalledWith(customerId, externalNumber.uuid);
+  });
+
+  describe('isTerminus customer function', function () {
+    it('should return true for existing Terminus customer', function () {
+      ExternalNumberService.isTerminusCustomer(customerId).then(function (response) {
+        expect(response).toBe(true);
+      });
+    });
+
+    it('should return true for no Terminus customer and has no numbers', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(noNumberResponse);
+      PstnSetupService.getCustomer.and.returnValue($q.reject());
+      var value = ExternalNumberService.isTerminusCustomer(customerId);
+      $httpBackend.flush();
+      $q.when(value).then(function (response) {
+        expect(response).toBe(true);
+      });
+    });
+
+    it('should return false for no Terminus customer and has numbers', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/numbers?type=external').respond(numberResponse);
+      PstnSetupService.getCustomer.and.returnValue($q.reject());
+      var value = ExternalNumberService.isTerminusCustomer(customerId);
+      $httpBackend.flush();
+      $q.when(value).then(function (response) {
+        expect(response).toBe(false);
+      });
+    });
   });
 
 });
