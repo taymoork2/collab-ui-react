@@ -10,7 +10,7 @@ describe('Huron Auto Attendant', function () {
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    fit('should navigate to AA landing page', function () {
+    it('should navigate to AA landing page', function () {
 
       // First ensure the test AA is deleted (in case last test run failed for example)
       var flow = protractor.promise.controlFlow();
@@ -20,7 +20,7 @@ describe('Huron Auto Attendant', function () {
       navigation.clickAutoAttendant();
     }, 120000);
 
-    fit('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -328,7 +328,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    fit('should add a Schedule to AA', function () {
+    it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, 12000);
       utils.click(autoattendant.addschedule);
@@ -343,7 +343,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
-    fit('should add a Holiday Schedule to AA', function () {
+    it('should add a Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.toggleHolidays);
@@ -358,7 +358,7 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    fit('should add a Recurring Holiday Schedule to AA', function () {
+    it('should add a Recurring Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.toggleHolidays, 12000);
       utils.click(autoattendant.toggleHolidays);
