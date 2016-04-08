@@ -379,13 +379,13 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    fit('verify open/closed/holidays lanes are visible', function () {
+    it('verify open/closed/holidays lanes are visible', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000); 
 
-    fit('should update a AA Schedule', function () {
+    it('should update a AA Schedule', function () {
       utils.wait(autoattendant.schedule, 12000);
       utils.click(autoattendant.schedule);
       // utils.wait(autoattendant.starttime);
@@ -396,7 +396,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
-    fit('should delete a AA Schedule', function () {
+    it('should delete a AA Schedule', function () {
       utils.click(autoattendant.schedule);
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.scheduletrash);
@@ -407,24 +407,24 @@ describe('Huron Auto Attendant', function () {
 
     }, 60000);
 
-    fit('should verify open/closed lanes are not visible', function () {
+    it('should verify open/closed lanes are not visible', function () {
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsNotDisplayed(autoattendant.scheduleInfoClosedHours);
     }, 60000);
 
-    fit('should close AA edit and return to landing page', function () {
+    it('should close AA edit and return to landing page', function () {
 
       utils.click(autoattendant.closeEditButton);
 
     });
 
-    fit('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       utils.expectIsEnabled(autoattendant.testCardName);
 
     });
 
-    fit('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA
       utils.click(autoattendant.testCardDelete);
