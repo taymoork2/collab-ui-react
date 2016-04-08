@@ -1076,7 +1076,9 @@
       "alarms": "Alarms",
       "hosts": "Hosts",
       "goToHost": "Go to Host",
-      "remove": "Remove"
+      "removeButton": "Remove",
+      "removeSectionHeader": "Remove",
+      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud."
     },
     "export": {
       "modalTitle": "User Status Report",
