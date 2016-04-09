@@ -71,65 +71,19 @@
               <div class="row collapse">
                 <div class="columns small-12 userTitle" cs-dropdown is-open="db.isOpen">
                   <span class="h4">{{'partnerHomePage.onboardingTitle' | translate}}</span>
-                  <cs-select class="right" id="customerDropdown" name="timeFilter" ng-model="currentSelection" options="totalOrgsData" on-change-fn="getCustomerReports()" filter="true" is-disabled="true"></cs-select>
+                  <cs-select class="right" id="customerDropdown" name="timeFilter" ng-model="currentSelection" options="totalOrgsData" on-change-fn="getCustomerReports()" filter="true"></cs-select>
                 </div>
               </div>
             </header>
             <section class="onboarded">
               <div class="onboarded">
-                <div id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> <span class="total">{{counts.entitlements}}</span></div>
-                <div id="avgEntitlementsdiv" class="report"></div>
-                <div class="report-status-partner" id="avg-entitlements-refresh" ng-if="isRefresh('entitlements')">
+                <div id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> <span class="total">{{entCount}}</span></div>
+                <div id="entitlementsdiv" class="report"></div>
+                <div class="report-status-partner" id="entitlements-refresh" ng-if="entitlementStatus === 'refresh'">
                   <i class='icon icon-spinner icon-2x'></i>
                 </div>
               </div>
             </section>
-            <header>
-              <div class="row collapse">
-                <div class="columns small-12 userTitle" cs-dropdown is-open="db.isOpen">
-                  <h1 class="h4 columns small-6">{{'partnerHomePage.activity-title' | translate}}</h1>
-                </div>
-              </div>
-            </header>
-            <section class="tab-reports onboarded" id="tab-reports">
-              <cs-tabset justified="true" large="true" class="tabcontainer">
-                <cs-tab>
-                  <cs-tab-heading>
-                    <span translate="partnerHomePage.activeUsersTitle"></span>
-                    <div class="total">{{counts.activeUsers}}</div>
-                  </cs-tab-heading>
-                  <div id="activeUsersdiv" class="tab-report"></div>
-                  <div id='active-users-refresh' class="report-status-partner" ng-if="isRefresh('activeUsers')">
-                    <i class='icon icon-spinner icon-2x'></i>
-                  </div>
-                </cs-tab>
-                <cs-tab>
-                  <cs-tab-heading>
-                    <span translate="partnerHomePage.averageCallsTitle"></span>
-                    <div class="total">{{counts.averageCalls}}</div>
-                  </cs-tab-heading>
-                  <div id="avgCallsdiv" class="tab-report"></div>
-                  <div id="calls-refresh" class="report-status-partner" ng-if="isRefresh('avgCalls')">
-                    <i class='icon icon-spinner icon-2x'></i>
-                  </div>
-                </cs-tab>
-                <cs-tab>
-                  <cs-tab-heading>
-                    <span translate="partnerHomePage.contentSharedTitle"></span>
-                    <div class="total">{{counts.contentShared}}</div>
-                  </cs-tab-heading>
-                  <div id="contentShareddiv" class="tab-report"></div>
-                  <div id="content-shared-refresh" class="report-status-partner" ng-if="isRefresh('contentShared')">
-                    <i class='icon icon-spinner icon-2x'></i>
-                  </div>
-                </cs-tab>
-              </cs-tabset>
-            </section>
-            <footer>
-              <span ng-click="reloadReports()" class="overview-updated right" id="time-click-div">
-                  <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
-                </span>
-            </footer>
           </article>
         </cs-card>
       </cs-card-layout>

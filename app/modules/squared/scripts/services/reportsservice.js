@@ -30,7 +30,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     'conversationsCount': conversationsUrl
   };
 
-  var service = {
+  return {
     apiUrl: apiUrl,
     callMetricsUrl: callMetricsUrl,
     activeUsersUrl: activeUsersUrl,
@@ -49,6 +49,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getTimeCharts: getTimeCharts,
     getUsageMetrics: getUsageMetrics,
     getPartnerMetrics: getPartnerMetrics,
+    getTotalPartnerCounts: getTotalPartnerCounts,
     getLandingMetrics: getLandingMetrics,
     getAllMetrics: getAllMetrics,
     getLogInfo: getLogInfo,
@@ -58,12 +59,8 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getOverviewMetrics: getOverviewMetrics
   };
 
-  return service;
-
   function buildUrl(metricType, params) {
-    var metricUrl = '';
-
-    metricUrl = timeChartUrl;
+    var metricUrl = timeChartUrl;
 
     if (params) {
       metricUrl += '?';
@@ -169,7 +166,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   }
 
   function getPartnerMetrics(useCache, orgId, partnerCharts) {
-    var chartParams = {
+    var params = {
       'intervalCount': 1,
       'intervalType': 'month',
       'spanCount': 1,
@@ -178,20 +175,56 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
       'isCustomerView': false
     };
 
-    if (angular.isUndefined(partnerCharts) || partnerCharts === null) {
-      partnerCharts = ['activeUsers', 'avgCallsPerUser', 'entitlements', 'contentShared',
-        'contentShareSizes', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount',
-        'convOneOnOne', 'convGroup', 'calls', 'callsAvgDuration', 'avgConversations'
-      ];
-    }
-
     for (var chart in partnerCharts) {
-      getUsageMetrics(partnerCharts[chart], chartParams, orgId);
+      getUsageMetrics(partnerCharts[chart], params, orgId);
+    }
+  }
+
+  // For retrieving the 
+  function getTotalPartnerCounts(useCache, customerList, countTypes) {
+    if (Authinfo.isPartner() && angular.isArray(customerList) && angular.isArray(countTypes)) {
+      var params = {
+        'intervalCount': 1,
+        'intervalType': 'month',
+        'spanCount': 1,
+        'spanType': 'week',
+        'cache': useCache,
+        'isCustomerView': false
+      };
+
+      angular.forEach(countTypes, function (count) {
+        var promises = [];
+        var dataResponse = {
+          success: true,
+          data: 0,
+          status: null,
+          errorMsg: null
+        };
+
+        angular.forEach(customerList, function (org) {
+          timeChartUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + org.value + '/' + urls[count];
+          var metricUrl = buildUrl(count, params);
+          var promise = $http.get(metricUrl)
+            .success(function (data, status) {
+              dataResponse.data += Math.round(data.data);
+              dataResponse.status = status;
+            })
+            .error(function (data, status) {
+              data.success = false;
+              data.status = status;
+              data.errorMsg = data;
+            });
+          promises.push(promise);
+        });
+
+        $q.all(promises).then(function () {
+          sendChartResponse(dataResponse, dataResponse.status, count);
+        });
+      });
     }
   }
 
   function getOverviewMetrics(useCache) {
-
     var charts = ['conversations', 'activeRooms'];
     getTimeCharts(useCache, charts, {
       intervalType: 'week',
@@ -205,7 +238,6 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
       intervalCount: 2,
       spanType: 'month'
     });
-
   }
 
   function getLandingMetrics(useCache) {

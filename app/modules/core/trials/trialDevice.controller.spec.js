@@ -1,15 +1,15 @@
-/* globals $controller, $q, $rootScope, TrialDeviceController, TrialCallService, TrialRoomSystemService*/
+/* globals $controller, $q, $rootScope, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
-  var controller, $scope, $translate;
+  var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialCallService', 'TrialRoomSystemService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
 
     controller = $controller('TrialDeviceController');
     $rootScope.$apply();
@@ -56,32 +56,37 @@ describe('Controller: TrialDeviceController', function () {
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
       var devices2 = [{
         model: 'CISCO_SX10',
         enabled: true,
         quantity: 5,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
       var devices3 = [{
         model: 'CISCO_SX10',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }, {
         model: 'CISCO_8865',
         enabled: false,
         quantity: 2,
-        readonly: false
+        readonly: false,
+        valid: true
 
       }];
 
@@ -119,6 +124,65 @@ describe('Controller: TrialDeviceController', function () {
       expect(deviceModel.quantity).toBe(2);
       expect(deviceModel.enabled).toBe(true);
       expect(deviceModel.readonly).toBe(true);
+    });
+
+    it('should set device trial limits', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(17);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(false);
+    });
+
+    it('should set limitReached', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 20,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(20);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should set limitsError', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.reject()
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.limitsError).toBe(true);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should notify limit approaching', function () {
+      spyOn(Notification, 'warning');
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(Notification.warning).toHaveBeenCalled();
     });
   });
 
@@ -265,6 +329,65 @@ describe('Controller: TrialDeviceController', function () {
         }
       });
       expect(valid).toBe(true);
+    });
+  });
+
+  describe('checkbox validation', function () {
+    it('should validate when model valid is true', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          valid: true
+        }
+      });
+      expect(valid).toBe(true);
+    });
+
+    it('should validate when one or more checkboxes are enabled true', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          enabled: true,
+          valid: true
+        }
+      });
+      expect(valid).toBe(true);
+    });
+
+    it('should not validate when all checkboxes are enabled false', function () {
+      var valid = controller.validateChecks(null, null, {
+        model: {
+          enabled: false,
+          valid: false
+        }
+      });
+      expect(valid).toBe(false);
+    });
+  });
+
+  describe('shipping address fields', function () {
+    it('should be readonly when quantity is not valid', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 8, 0, 1);
+      controller.toggleShipFields();
+
+      expect(controller.shippingFields[0].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[1].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[2].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[3].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[4].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[5].templateOptions.disabled).toBe(true);
+      expect(controller.shippingFields[6].templateOptions.disabled).toBe(true);
+    });
+
+    it('should be enabled when quantity is valid', function () {
+      spyOn(controller, 'calcQuantity').and.returnValues(0, 2, 0, 7);
+      controller.toggleShipFields();
+
+      expect(controller.shippingFields[0].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[1].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[2].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[3].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[4].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[5].templateOptions.disabled).toBe(false);
+      expect(controller.shippingFields[6].templateOptions.disabled).toBe(false);
     });
   });
 });

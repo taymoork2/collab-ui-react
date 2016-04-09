@@ -11,20 +11,6 @@ describe('Controller: Overview Reports', function () {
     getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
   };
 
-  var reportStatusRefresh = {
-    entitlements: REFRESH,
-    avgCalls: REFRESH,
-    activeUsers: REFRESH,
-    contentShared: REFRESH
-  };
-
-  var reportStatusReady = {
-    entitlements: READY,
-    avgCalls: READY,
-    activeUsers: READY,
-    contentShared: READY
-  };
-
   var allCustomers = {
     value: 0,
     label: 'reports.allCustomers'
@@ -81,7 +67,8 @@ describe('Controller: Overview Reports', function () {
       };
 
       ReportsService = {
-        getPartnerMetrics: jasmine.createSpy('getPartnerMetrics').and.callFake(emptyFunction)
+        getPartnerMetrics: jasmine.createSpy('getPartnerMetrics').and.callFake(emptyFunction),
+        getTotalPartnerCounts: jasmine.createSpy('getTotalPartnerCounts').and.callFake(emptyFunction)
       };
 
       CannedDataService = {
@@ -104,38 +91,18 @@ describe('Controller: Overview Reports', function () {
     }));
 
     it('should instantiate all variables', function () {
-      expect($scope.counts).toEqual({});
-      expect($scope.reportStatus).toEqual(reportStatusRefresh);
+      expect($scope.entCount).toEqual(0);
+      expect($scope.entitlementStatus).toEqual(REFRESH);
       expect($scope.totalOrgsData).toEqual(customerList);
       expect($scope.currentSelection).toEqual(allCustomers);
-      expect($scope.$on.calls.count()).toEqual(8);
+      expect($scope.$on.calls.count()).toEqual(2);
     });
 
     it('getCustomerReports should set all reports status to refresh', function () {
-      $scope.reportStatus = reportStatusReady;
-      expect($scope.reportStatus).toEqual(reportStatusReady);
+      $scope.entitlementStatus = READY;
+      expect($scope.entitlementStatus).toEqual(READY);
       $scope.getCustomerReports();
-      expect($scope.reportStatus).toEqual(reportStatusRefresh);
-    });
-
-    it('isRefresh should return true', function () {
-      expect($scope.isRefresh('entitlements')).toBeTruthy();
-    });
-
-    it('isRefresh should return false', function () {
-      $scope.reportStatus['entitlements'] = READY;
-      expect($scope.isRefresh('entitlements')).toBeFalsy();
-    });
-
-    it('reloadReports should return the currentSelection to default and set all reports status to refresh', function () {
-      $scope.currentSelection = customerList[2];
-      $scope.reportStatus = reportStatusReady;
-      expect($scope.currentSelection).toEqual(customerList[2]);
-      expect($scope.reportStatus).toEqual(reportStatusReady);
-
-      $scope.reloadReports();
-      expect($scope.currentSelection).toEqual(allCustomers);
-      expect($scope.reportStatus).toEqual(reportStatusRefresh);
+      expect($scope.entitlementStatus).toEqual(REFRESH);
     });
   });
 });

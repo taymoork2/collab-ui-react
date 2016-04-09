@@ -49,6 +49,10 @@ angular.module('Squared')
         return Authinfo.isDeviceMgmt();
       };
 
+      vm.isEntitledToHuron = function () {
+        return Authinfo.isSquaredUC();
+      };
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
@@ -66,6 +70,10 @@ angular.module('Squared')
           currentDevice: device,
           huronDeviceService: csdmHuronOrgDeviceService
         });
+      };
+
+      vm.clickUsers = function () {
+        $state.go('users.list');
       };
 
       vm.gridOptions = {

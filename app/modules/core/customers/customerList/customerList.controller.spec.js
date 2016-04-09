@@ -55,7 +55,7 @@ describe('Controller: CustomerListCtrl', function () {
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.when());
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
+    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);

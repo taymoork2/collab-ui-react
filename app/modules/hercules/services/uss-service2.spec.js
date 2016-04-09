@@ -1,7 +1,8 @@
 'use strict';
 
 describe('Service: USSService2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Squared')); // because we use CsdmPoller
+  beforeEach(module('Hercules'));
 
   var $httpBackend, Authinfo, CsdmHubFactory, USSService2, hubOn;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
@@ -23,10 +24,6 @@ describe('Service: USSService2', function () {
 
     $httpBackend = _$httpBackend_;
     USSService2 = _USSService2_;
-
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('should fetch and return data from the correct backend', function () {
@@ -108,10 +105,6 @@ describe('Service: USSService2', function () {
   });
 
   describe('decorateWithStatus', function () {
-    afterEach(function () {
-      $httpBackend.flush();
-    });
-
     describe('when not entitled', function () {
       it('error state is not entitled', function () {
         var status = USSService2.decorateWithStatus({

@@ -8,9 +8,9 @@
       <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
         <div ng-if="!lineExportCtrl.exportBusy">
           <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
-            <span id="export-icon" class="export export-lines icon-export" tooltip-placement="left" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
-            <i class="icon icon-content-share"></i>
-          </span>
+            <span id="export-icon" class="export export-lines" tooltip-placement="left" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+              <i class="icon icon-content-share"></i>
+            </span>
           </a>
         </div>
         <div ng-if="lineExportCtrl.exportBusy" ng-show="Utils.isAdminPage()" ng-controller="LineExportCtrl as lineExportCtrl">
