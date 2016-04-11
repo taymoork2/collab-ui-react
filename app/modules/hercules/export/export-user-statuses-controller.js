@@ -66,10 +66,11 @@
           // Here is a good place to amit an updateProgress
           UserDetails.getUsers(statusesList, orgId, function (response) {
             result = result.concat(response);
-            if (offset > totalStatuses) {
+            var newOffset = offset + limit;
+            if (newOffset > totalStatuses) {
               callback(result);
             } else {
-              getDetails(offset + limit, limit, callback);
+              getDetails(newOffset, limit, callback);
             }
           });
         }
