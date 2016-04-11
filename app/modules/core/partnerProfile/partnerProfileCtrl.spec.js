@@ -53,7 +53,7 @@ describe('Controller: PartnerProfileCtrl', function () {
         $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
         $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
         $scope.supportUrl = 'supportUrl';
-        $scope.supportText = 'this is support text';  
+        $scope.supportText = 'this is support text';
         $scope.allowReadOnlyAccess = false;
         $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
         $scope.helpUrl = 'helpUrl';
