@@ -16,6 +16,7 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
 
@@ -62,7 +63,7 @@ module.exports = function () {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
       compiledTestSuffix: tsSpecSuffix,
-      compiledTestFiles: app + '/**/*' + tsSpecSuffix
+      compiledTestFiles: compiledTestFiles,
     },
 
     unsupported: {
@@ -256,6 +257,7 @@ module.exports = function () {
       test + '/**/*.js',
       test + '/**/*.json',
       gulpFiles,
+      '!' + compiledTestFiles,
       '!test/karma-unit.js',
       '!karma.conf.js'
     ]
