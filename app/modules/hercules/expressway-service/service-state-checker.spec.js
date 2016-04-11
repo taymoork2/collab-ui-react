@@ -4,7 +4,7 @@ describe('ServiceStateChecker', function () {
   beforeEach(module('Hercules'));
   beforeEach(module('Huron')); // Because FeatureToggle is used
 
-  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService;
+  var $q, $rootScope, $httpBackend, ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2, ScheduleUpgradeService, ServiceDescriptor, DomainManagementService, FeatureToggleService, Orgservice;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -56,6 +56,11 @@ describe('ServiceStateChecker', function () {
       getOrg: sinon.stub(),
       getOrgId: sinon.stub()
     };
+
+    Orgservice = {
+      getOrg: sinon.stub()
+    };
+
     ScheduleUpgradeService = {
       get: sinon.stub()
     };
@@ -80,6 +85,7 @@ describe('ServiceStateChecker', function () {
     $provide.value('ServiceDescriptor', ServiceDescriptor);
     $provide.value('DomainManagementService', DomainManagementService);
     $provide.value('FeatureToggleService', FeatureToggleService);
+    $provide.value('Orgservice', Orgservice);
   }));
 
   beforeEach(inject(function (_$q_, _$rootScope_, $injector, _ServiceStateChecker_, _NotificationService_) {
@@ -329,7 +335,6 @@ describe('ServiceStateChecker', function () {
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('noDomains');
 
-    // now lets prented the user adds a domain
     DomainManagementService.domainList = [{
       "domain": "some domain"
     }];
@@ -346,33 +351,13 @@ describe('ServiceStateChecker', function () {
       error: 0,
       notActivated: 0
     }]);
-
     USSService2.getOrgId.returns('orgId');
-    USSService2.getOrg.returns($q.when({}));
-
+    USSService2.getOrg.returns($q.when({
+      'sipDomain': 'somedomain'
+    }));
     ServiceDescriptor.isServiceEnabled = function (type, cb) {
       cb(null, true);
     };
-
-    ServiceDescriptor.services = function (cb) {
-      cb(null, [{
-        id: 'squared-fusion-ec',
-        enabled: false, // will spawn a 'connect available' notification,
-        acknowledged: false
-      }]);
-    };
-
-    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
-    ScheduleUpgradeService.get.returns($q.when({
-      isAdminAcknowledged: true
-    }));
-
-    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
-
-    expect(NotificationService.getNotificationLength()).toEqual(1);
-    expect(NotificationService.getNotifications()[0].id).toEqual('callServiceConnectAvailable');
-
-    // this should remove the connect notifications
     ServiceDescriptor.services = function (cb) {
       cb(null, [{
         id: 'squared-fusion-ec',
@@ -380,9 +365,70 @@ describe('ServiceStateChecker', function () {
         acknowledged: false
       }]);
     };
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
+    FeatureToggleService.supports.returns($q.resolve(true));
+    Orgservice.getOrg = function (cb) {
+      cb({}, 200);
+    };
 
     ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
 
-    expect(NotificationService.getNotificationLength()).toEqual(0);
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    expect(NotificationService.getNotifications()[0].id).toEqual('sipUriDomainEnterpriseNotConfigured');
+  });
+
+  it('should remove sip uri domain notification when sip uri domain is set', function () {
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-uc',
+      activated: 1,
+      error: 0,
+      notActivated: 0
+    }]);
+    USSService2.getOrgId.returns('orgId');
+    USSService2.getOrg.returns($q.when({
+      'sipDomain': 'somedomain'
+    }));
+    ServiceDescriptor.isServiceEnabled = function (type, cb) {
+      cb(null, true);
+    };
+    ServiceDescriptor.services = function (cb) {
+      cb(null, [{
+        id: 'squared-fusion-ec',
+        enabled: true,
+        acknowledged: false
+      }]);
+    };
+    ClusterService.getClustersByConnectorType.returns([okClusterMockData]);
+    ScheduleUpgradeService.get.returns($q.when({
+      isAdminAcknowledged: true
+    }));
+    FeatureToggleService.supports.returns($q.resolve(true));
+    Orgservice.getOrg = function (cb) {
+      cb({}, 200);
+    };
+
+    ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+    $rootScope.$digest();
+
+    expect(NotificationService.getNotificationLength()).toEqual(1);
+    expect(NotificationService.getNotifications()[0].id).toEqual('sipUriDomainEnterpriseNotConfigured');
+
+    // now we set the value in CI
+    Orgservice.getOrg = function (cb) {
+      cb({
+        'orgSettings': {
+          'sipCloudDomain': 'sipCloudDomain'
+        }
+      }, 200);
+
+      ServiceStateChecker.checkState('c_mgmt', 'squared-fusion-uc');
+      $rootScope.$digest();
+
+      expect(NotificationService.getNotificationLength()).toEqual(0);
+    };
   });
 });

@@ -105,10 +105,10 @@
       vm.isSipUriAcknowledged = true;
     }
 
-    function addNotification(noUsersActivatedId, serviceId, notification) {
+    function addNotification(notificationId, serviceId, notification) {
       NotificationService.addNotification(
         NotificationService.types.TODO,
-        noUsersActivatedId,
+        notificationId,
         4,
         notification, [serviceId]);
     }
@@ -166,13 +166,9 @@
                 if (status === 200) {
                   if (data && data.orgSettings && data.orgSettings.sipCloudDomain) {
                     NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
+                  } else {
+                    addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
                   }
-                } else {
-                  NotificationService.addNotification(
-                    NotificationService.types.TODO,
-                    'sipUriDomainEnterpriseNotConfigured',
-                    5,
-                    'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html', [serviceId]);
                 }
               });
             } else {
