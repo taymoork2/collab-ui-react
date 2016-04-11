@@ -18,6 +18,7 @@
     var PORT_ORDERS = 'portOrders';
     var ADVANCED_ORDERS = 'advancedOrders';
     var NEW_ORDERS = 'newOrders';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
 
     var service = {
       createCustomer: createCustomer,
@@ -262,16 +263,26 @@
       return listPendingOrders(customerId).then(function (orders) {
         var promises = [];
         _.forEach(orders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
-            _.forEach(orderNumbers, function (orderNumber) {
-              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
-                pendingNumbers.push({
-                  pattern: orderNumber.number
-                });
-              }
+          if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
+            var areaCode = getAreaCode(carrierOrder);
+            var json = JSON.parse(carrierOrder.response);
+            var orderQuantity = json[carrierOrder.carrierOrderId].length;
+            pendingNumbers.push({
+              pattern: '(' + areaCode + ') XXX-XXXX',
+              quantity: orderQuantity
             });
-          });
-          promises.push(promise);
+          } else {
+            var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+              _.forEach(orderNumbers, function (orderNumber) {
+                if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
+                  pendingNumbers.push({
+                    pattern: orderNumber.number
+                  });
+                }
+              });
+            });
+            promises.push(promise);
+          }
         });
 
         return $q.all(promises).then(function () {
@@ -285,6 +296,11 @@
         customerId: customerId,
         did: number
       }).$promise;
+    }
+
+    function getAreaCode(order) {
+      var description = _.get(order, 'description');
+      return parseInt(description.slice(-3), 10);
     }
 
   }
