@@ -3062,7 +3062,10 @@
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
-    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application."
+    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
+    "supportAccessTitle": "Support Access",
+    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization."
   },
   "fileUpload": {
     "uploading": "Uploading File",
