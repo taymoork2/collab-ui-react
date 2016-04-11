@@ -2959,14 +2959,14 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "CI-SiteUsers.csv",
+    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "CI-ImportErr.csv",
+    "csvImportErrFilename": "WebEx-ImportErr.tsv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
