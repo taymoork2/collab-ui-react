@@ -1405,7 +1405,7 @@
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
     "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
     "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
