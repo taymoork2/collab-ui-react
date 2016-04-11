@@ -273,6 +273,22 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('When atlasTelstraCsb is enabled', function () {
+    beforeEach(function () {
+      FeatureToggleService.supports.and.callFake(function (val) {
+        if (val === FeatureToggleService.features.atlasTelstraCsb) {
+          return $q.when(true);
+        }
+        return $q.when(false);
+      });
+      initController();
+    });
+
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
   describe('When everything is true', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);

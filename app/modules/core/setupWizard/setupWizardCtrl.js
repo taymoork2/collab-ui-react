@@ -37,63 +37,18 @@
       title: 'firstTimeWizard.enterpriseSettings',
       controller: 'EnterpriseSettingsCtrl',
       steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
-        }, {
-          name: 'exportMetadata',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
-        }, {
-          name: 'importIdp',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
-        }, {
-          name: 'testSSO',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
-        }]
-        // }, {
-        //   name: 'addUsers',
-        //   label: 'firstTimeWizard.addUsers',
-        //   description: 'firstTimeWizard.addUsersSubDescription',
-        //   icon: 'icon-add-users',
-        //   title: 'firstTimeWizard.addUsers',
-        //   controller: 'AddUserCtrl',
-        // subTabs: [{
-        //   name: 'csv',
-        //   controller: 'OnboardCtrl',
-        //   steps: [{
-        //     name: 'init',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-        //   }, {
-        //     name: 'csvDownload',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
-        //   }, {
-        //     name: 'csvUpload',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
-        //   }, {
-        //     name: 'csvProcessing',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-        //     buttons: false
-        //   }, {
-        //     name: 'csvResult',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-        //     buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
-        //   }]
-        // }, {
-        //   name: 'advanced',
-        //   controller: 'OnboardCtrl',
-        //   steps: [{
-        //     name: 'init',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-        //   }, {
-        //     name: 'domainEntry',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
-        //   }, {
-        //     name: 'installConnector',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
-        //   }, {
-        //     name: 'syncStatus',
-        //     template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-        //   }],
-        // }],
+        name: 'init',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html'
+      }, {
+        name: 'exportMetadata',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html'
+      }, {
+        name: 'importIdp',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html'
+      }, {
+        name: 'testSSO',
+        template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html'
+      }]
     }];
 
     $scope.isDirSyncEnabled = false;
@@ -106,9 +61,61 @@
       });
     }
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+      if (!result) {
+        $scope.tabs.push({
+          name: 'addUsers',
+          label: 'firstTimeWizard.addUsers',
+          description: 'firstTimeWizard.addUsersSubDescription',
+          icon: 'icon-add-users',
+          title: 'firstTimeWizard.addUsers',
+          controller: 'AddUserCtrl',
+          subTabs: [{
+            name: 'csv',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+            }, {
+              name: 'csvDownload',
+              template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
+            }, {
+              name: 'csvUpload',
+              template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
+            }, {
+              name: 'csvProcessing',
+              template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
+              buttons: false
+            }, {
+              name: 'csvResult',
+              template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
+              buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
+            }]
+          }, {
+            name: 'advanced',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
+            }, {
+              name: 'domainEntry',
+              template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
+            }, {
+              name: 'installConnector',
+              template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
+            }, {
+              name: 'syncStatus',
+              template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
+            }],
+          }]
+        });
+      }
+    }).finally(function () {
+      init();
+    });
+
     function init() {
       $scope.tabs = tabs;
-      setupAddUserTabs();
       setupAddUserSubTabs();
 
       if (Authinfo.isSquaredUC()) {
@@ -159,59 +166,6 @@
       _.forEach($scope.tabs, function (tab, index) {
         if (tab.steps.length === 0) {
           $scope.tabs.splice(index, 1);
-        }
-      });
-    }
-
-    function setupAddUserTabs() {
-      return FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-        if (result) {
-          $scope.tabs.push({
-            name: 'addUsers',
-            label: 'firstTimeWizard.addUsers',
-            description: 'firstTimeWizard.addUsersSubDescription',
-            icon: 'icon-add-users',
-            title: 'firstTimeWizard.addUsers',
-            controller: 'AddUserCtrl',
-            subTabs: [{
-              name: 'csv',
-              controller: 'OnboardCtrl',
-              steps: [{
-                name: 'init',
-                template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-              }, {
-                name: 'csvDownload',
-                template: 'modules/core/setupWizard/addUsers/addUsers.downloadCsv.tpl.html'
-              }, {
-                name: 'csvUpload',
-                template: 'modules/core/setupWizard/addUsers/addUsers.uploadCsv.tpl.html'
-              }, {
-                name: 'csvProcessing',
-                template: 'modules/core/setupWizard/addUsers/addUsers.processCsv.tpl.html',
-                buttons: false
-              }, {
-                name: 'csvResult',
-                template: 'modules/core/setupWizard/addUsers/addUsers.uploadResult.tpl.html',
-                buttons: 'modules/core/setupWizard/addUsers/addUsers.csvResultButtons.tpl.html'
-              }]
-            }, {
-              name: 'advanced',
-              controller: 'OnboardCtrl',
-              steps: [{
-                name: 'init',
-                template: 'modules/core/setupWizard/addUsers/addUsers.init.tpl.html'
-              }, {
-                name: 'domainEntry',
-                template: 'modules/core/setupWizard/addUsers/addUsers.domainEntry.tpl.html'
-              }, {
-                name: 'installConnector',
-                template: 'modules/core/setupWizard/addUsers/addUsers.installConnector.tpl.html'
-              }, {
-                name: 'syncStatus',
-                template: 'modules/core/setupWizard/addUsers/addUsers.syncStatus.tpl.html'
-              }],
-            }]
-          });
         }
       });
     }
