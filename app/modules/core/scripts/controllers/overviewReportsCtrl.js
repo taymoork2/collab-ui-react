@@ -22,8 +22,6 @@
     var dummyChartVals = [];
     var orgNameMap = {};
     var customerList = [];
-    var dayFormat = "MMM DD, YYYY";
-    var timezone = "Etc/GMT";
     var allCustomers = {
       value: 0,
       label: $translate.instant('reports.allCustomers')
