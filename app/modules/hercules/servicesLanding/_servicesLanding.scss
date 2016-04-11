@@ -1,8 +1,8 @@
-.servicesLanding{
-  .hidden{
+.servicesLanding {
+  .hidden {
     display: none;
   }
-  h1{
+  h1 {
     color: #14a792;
     font-size: 2.25rem;
     line-height: 1;
@@ -10,12 +10,12 @@
     margin-left: 0.4rem;
   }
 
-  h5{
+  h5 {
     position: relative;
-    i{
+    i {
       cursor: pointer;
     }
-    .dropdown{
+    .dropdown {
       position: absolute;
       top: 1.5rem;
       right: 0rem;
@@ -32,18 +32,18 @@
       text-transform: initial;
       font-size: 0.7rem !important;
       color: black !important;
-      li{
+      li {
         padding: 0.5rem;
         color: $gray-dark-1 !important;
         cursor: pointer;
       }
-      li:hover{
+      li:hover {
         background-color: $gray-light-3;
       }
     }
   }
 
-  .servicesBlock{
+  .servicesBlock {
     background-color: rgb(255, 255, 255);
 
     padding-left: 1.5rem;
@@ -59,7 +59,7 @@
     width: 100%;
     width: calc(100% + 2rem);
 
-    h5{
+    h5 {
       margin-bottom: 1rem;
       margin-bottom: 0;
       margin-left: 0.5rem;
@@ -72,20 +72,20 @@
       text-transform: uppercase;
 
       border-bottom: 1px solid $gray-light-1;
-      span{
+      span {
         color: $gray-light-1;
       }
     }
-    .cs-card-layout{
+    .cs-card-layout {
       padding-bottom: 2rem;
       z-index: 1;
-      .cs-card{
+      .cs-card {
         padding-bottom: 2rem;
         display: block;
         height: 350px;
         min-height: 320px;
         position: relative;
-        .cardLink{
+        .cardLink {
           position: absolute;
           top: 0;
           left: 0;
@@ -93,21 +93,21 @@
           width: 100%;
           height: 100%;
         }
-        article{
-          height:100%;
+        article {
+          height: 100%;
         }
-        h4{
+        h4 {
           font-size: 1.75rem;
           padding-top: 0.5rem;
           text-align: center;
         }
-        button{
+        button {
           width: 100%;
           margin-left: 0;
           background-color: $gray-light-3;
-          color:$gray-dark-2;
+          color: $gray-dark-2;
           text-overflow: ellipsis;
-          a{
+          a {
             color: $gray-dark-2;
             white-space: nowrap;
             overflow: hidden;
@@ -117,22 +117,23 @@
             padding-bottom: 1px;
           }
         }
-        .cta-btn{
+        .cta-btn {
           background-color: $color-cta-base !important;
-          color:white;
+          color: white;
         }
       }
-      .cs-card.header-bar.cta-bar header:after{
+      .cs-card.header-bar.cta-bar header:after {
         border-top-color: $color-cta-base !important;
       }
     }
   }
 }
-@media only screen  and (max-width: 1200px) {
-  .servicesLanding{
-    .servicesBlock{
-      .cs-card-layout{
-        .cs-card{
+
+@media only screen and (max-width: 1200px) {
+  .servicesLanding {
+    .servicesBlock {
+      .cs-card-layout {
+        .cs-card {
           height: 350px;
         }
       }

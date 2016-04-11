@@ -11,15 +11,16 @@
       <cs-card class="large-3 medium-6 small-12 header-bar">
         <article>
           <header>
-              <h4><i class="icon icon-circle-message"></i> Message</h4>
+            <h4><i class="icon icon-circle-message"></i> Message</h4>
           </header>
           <section>
-              <p>
-                Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille et terris iactatus et alto vi superum saevae memorem Iunonis.
-              </p>
-              <div class="card-button">
-                <button>Webex Messenger</button>
-              </div>
+            <p>
+              Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille
+              et terris iactatus et alto vi superum saevae memorem Iunonis.
+            </p>
+            <div class="card-button">
+              <button>Webex Messenger</button>
+            </div>
           </section>
         </article>
       </cs-card>
@@ -29,18 +30,18 @@
         <article>
 
           <header>
-              <h4><i class="icon icon-circle-group"></i> Meeting</h4>
+            <h4><i class="icon icon-circle-group"></i> Meeting</h4>
           </header>
           <section>
-              <p>
-                Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.
-              </p>
-              <div class="card-button">
-                <button><a href="#">Site_Name1.webex.com</a></button>
-                <button><a href="#">Site_Name2.webex.com</a></button>
-                <button><a href="#">Site_Name3.webex.com</a></button>
-                <a ng-href="#/site-list" href="#/site-list">View all</a>
-              </div>
+            <p>
+              Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.
+            </p>
+            <div class="card-button">
+              <button><a href="#">Site_Name1.webex.com</a></button>
+              <button><a href="#">Site_Name2.webex.com</a></button>
+              <button><a href="#">Site_Name3.webex.com</a></button>
+              <a ng-href="#/site-list" href="#/site-list">View all</a>
+            </div>
           </section>
         </article>
       </cs-card>
@@ -49,17 +50,19 @@
       <cs-card class="large-3 medium-6 small-12 header-bar people">
         <article>
           <header>
-              <h4><i class="icon icon-circle-call"></i> Call</h4>
+            <h4><i class="icon icon-circle-call"></i> Call</h4>
           </header>
           <section>
-              <p>
-                Basic external calling and full Unified Communications enabled for your organization.
-              </p>
-              <div class="card-button">
-                <a ng-href="#hurondetails/lines" href="#hurondetails/lines"><button>Numbers</button></a>
-                <button>Features</button>
-                <button><a ng-href="#hurondetails/settings" href="#hurondetails/settings">Settings</a></button>
-              </div>
+            <p>
+              Basic external calling and full Unified Communications enabled for your organization.
+            </p>
+            <div class="card-button">
+              <a ng-href="#hurondetails/lines" href="#hurondetails/lines">
+                <button>Numbers</button>
+              </a>
+              <button>Features</button>
+              <button><a ng-href="#hurondetails/settings" href="#hurondetails/settings">Settings</a></button>
+            </div>
           </section>
         </article>
       </cs-card>
@@ -76,22 +79,29 @@
     </h5>
 
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
-      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards | filter: {active:true}" ng-if="showLayout=='active'">
+      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards | filter: {active:true}"
+               ng-if="showLayout=='active'">
         <article>
           <header>
-              <h4><i class="icon card.icon"></i> {{card.title}}</h4>
+            <h4><i class="icon card.icon"></i> {{card.title}}</h4>
           </header>
           <section>
-              <p>
-                {{card.descr}}
-              </p>
-              <div class="card-button" ng-if="card.active != true">
-                <a ng-href="#/{{card.link}}"><button class="cta-btn">Enable</button></a>
-              </div>
-              <div class="card-button" ng-if="card.active == true">
-                <a ng-href="#/{{card.link}}"><button>Resources</button></a>
-                <a ng-href="#/{{card.link}}/settings"><button>Settings</button></a>
-              </div>
+            <p>
+              {{card.descr}}
+            </p>
+            <div class="card-button" ng-if="card.active != true">
+              <a ng-href="#/{{card.link}}">
+                <button class="cta-btn">Enable</button>
+              </a>
+            </div>
+            <div class="card-button" ng-if="card.active == true">
+              <a ng-href="#/{{card.link}}">
+                <button>Resources</button>
+              </a>
+              <a ng-href="#/{{card.link}}/settings">
+                <button>Settings</button>
+              </a>
+            </div>
           </section>
         </article>
       </cs-card>
@@ -99,19 +109,25 @@
       <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards" ng-if="showLayout=='all'">
         <article>
           <header>
-              <h4><i class="icon card.icon"></i> {{card.title}}</h4>
+            <h4><i class="icon card.icon"></i> {{card.title}}</h4>
           </header>
           <section>
-              <p>
-                {{card.descr}}
-              </p>
-              <div class="card-button" ng-if="card.active != true">
-                <a ng-href="#/{{card.link}}"><button class="cta-btn">Enable</button></a>
-              </div>
-              <div class="card-button" ng-if="card.active == true">
-                <a ng-href="#/{{card.link}}"><button>Resources</button></a>
-                <a ng-href="#/{{card.link}}/settings"><button>Settings</button></a>
-              </div>
+            <p>
+              {{card.descr}}
+            </p>
+            <div class="card-button" ng-if="card.active != true">
+              <a ng-href="#/{{card.link}}">
+                <button class="cta-btn">Enable</button>
+              </a>
+            </div>
+            <div class="card-button" ng-if="card.active == true">
+              <a ng-href="#/{{card.link}}">
+                <button>Resources</button>
+              </a>
+              <a ng-href="#/{{card.link}}/settings">
+                <button>Settings</button>
+              </a>
+            </div>
           </section>
         </article>
       </cs-card>
