@@ -279,7 +279,11 @@
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false);
 
           if (results[1]) {
-            managed.unshift(results[1]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (_.isArray(results[1])) {
+              managed.unshift(results[1][0]);
+            }
           }
 
           $scope.managedOrgsList = managed;
