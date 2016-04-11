@@ -229,7 +229,6 @@
       if (data.success && usableData(data.data)) {
         $scope.entitlementStatus = READY;
 
-
         var formattedData = null;
         if ($scope.currentSelection.value === allCustomers.value) {
           formattedData = formatMultipleOrgData(response.data.data);
