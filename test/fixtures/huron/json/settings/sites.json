@@ -3,5 +3,6 @@
   "siteSteeringDigit": "8",
   "vmCluster": null,
   "uuid": "70b8d459-7f58-487a-afc8-02c0a82d53ca",
-  "steeringDigit": "9"
+  "steeringDigit": "9",
+  "timeZone": "America/Los_Angeles"
 }]

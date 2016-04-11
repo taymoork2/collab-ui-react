@@ -250,6 +250,13 @@ describe('Controller: HuronSettingsCtrl', function () {
       "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
 
+    controller.model.site.timeZone = {
+      "value": "Pacific/Honolulu",
+      "label": "(GMT-10:00) Hawaii",
+      "timezoneid": "2"
+
+    };
+
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
 
     controller.hasVoicemailService = false;
@@ -725,6 +732,29 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       expect(controller.model.callerId.callerIdNumber).toEqual(expectedValue);
       expect(controller.model.callerId.callerIdName).toEqual('Cisco Org Name');
+    });
+
+    it('should update timezone when timezone selection changes and feature toggle is ON', function () {
+      controller.atlasHuronDeviceTimeZone = true;
+      controller.model.site.timeZone = {
+        "value": "Pacific/Honolulu",
+        "label": "(GMT-10:00) Hawaii",
+        "timezoneid": "2"
+
+      };
+      controller.init();
+      $scope.$apply();
+      controller.model.site.timeZone = {
+        "value": "America/Anchorage",
+        "label": "(GMT-09:00) Alaska",
+        "timezoneid": "3"
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
   });
 
