@@ -154,7 +154,6 @@
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
       supports: supports,
-      supportsPstnSetup: supportsPstnSetup,
       supportsDirSync: supportsDirSync,
       features: features
     };
@@ -285,10 +284,6 @@
           });
         }
       });
-    }
-
-    function supportsPstnSetup() {
-      return supports(features.pstnSetup);
     }
 
     function supportsDirSync() {
