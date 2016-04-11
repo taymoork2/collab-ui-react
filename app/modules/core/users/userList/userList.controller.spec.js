@@ -47,6 +47,7 @@ describe('UserListCtrl: Ctrl', function () {
       callback(getOrgJson, 200);
     });
     spyOn($scope, '$emit').and.callThrough();
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }));
 
   function initController() {
