@@ -13,9 +13,6 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.mockService(LogMetricsService, {});
-  });
-
-  beforeEach(function () {
     bard.mockService(Authinfo, {
       getOrgId: '1',
       getLicenses: [{
@@ -25,6 +22,10 @@ describe('Service: Trial Service:', function () {
       }, {
         'trialId': 'fake-uuid-value-2'
       }]
+    });
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond({
+      activeDeviceTrials: 17,
+      maxDeviceTrials: 20
     });
   });
 
@@ -40,6 +41,7 @@ describe('Service: Trial Service:', function () {
 
     beforeEach(function () {
       TrialService.getData();
+      $httpBackend.flush();
     });
 
     afterEach(function () {

@@ -295,7 +295,7 @@
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
     function getTrialsList() {
-      return PartnerService.getTrialsList()
+      return TrialService.getTrialsList()
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {

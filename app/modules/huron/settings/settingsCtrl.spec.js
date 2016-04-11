@@ -344,6 +344,14 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
+  it('should update site if there is a new outbound steering digit', function () {
+    controller.model.site.steeringDigit = '7';
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateSite).toHaveBeenCalled();
+  });
+
   it('should show international dialing when feature toggle is ON', function () {
     InternationalDialing.isDisableInternationalDialing.and.returnValue($q.when(false));
 
@@ -367,6 +375,15 @@ describe('Controller: HuronSettingsCtrl', function () {
     $scope.$apply();
 
     expect($scope.to.options).toEqual(controller.timeZoneOptions);
+  });
+
+  it('outbound dial digit should not be equal to site steering digit', function () {
+    expect(site.siteSteeringDigit).not.toEqual(controller.model.steeringDigit);
+  });
+
+  it('should have site steering digit removed from the steeringDigits array', function () {
+    var index = _.indexOf(controller.steeringDigits, site.siteSteeringDigit);
+    expect(index).toEqual(-1);
   });
 
   describe('formly watcher functions: ', function () {

@@ -893,6 +893,7 @@
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
     "siteCode": "Site Code",
+    "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
     "internalExtensionRange": "Internal Extension Range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
@@ -1310,6 +1311,10 @@
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
         "action": "Next, configure the Connector on the Expressway."
+      },
+      "no-domain-verified": {
+        "title": "Verify a Domain",
+        "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
     }
   },
@@ -1583,6 +1588,7 @@
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
+    "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -2052,6 +2058,12 @@
     },
     "call": {
       "title": "Trial Setup - Ship Devices",
+      "deviceTrialCapacityHeader": "Unable to Add Devices",
+      "remainingDeviceTrials": "You have {{number}} remaining out of 20 concurrent active device trials.",
+      "deviceTrialLimitReached": "Your organization has reached its concurrent active device trial limit of {{number}}. You can add more device trials once you convert existing trials.",
+      "deviceTrialLimitHelp": "If you have questions about this limit, please contact the Partner Help Desk: webexpartnerhelp@cisco.com or 1-800-553-6387",
+      "deviceTrialTip": "Ongoing trial with devices shipped",
+      "deviceTrialUnavailable": "The system is temporarily unable to add devices, please try later.",
       "selectDevicesHeader": "Select Devices",
       "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",

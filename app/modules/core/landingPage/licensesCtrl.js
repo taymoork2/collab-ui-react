@@ -1,9 +1,11 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular.module('Core')
+    .controller('LicensesCtrl', LicenseCtrl);
 
-.controller('LicensesCtrl', ['$scope', 'Authinfo', '$state', 'PartnerService', 'Orgservice', 'Log', 'Notification', '$modal',
-  function ($scope, Authinfo, $state, PartnerService, Orgservice, Log, Notification, $modal) {
+  /* @ngInject */
+  function LicenseCtrl($modal, $scope, $state, Authinfo, Log, Notification, Orgservice, TrialService) {
 
     $scope.packageInfo = {
       name: '&nbsp;',
@@ -56,7 +58,7 @@ angular.module('Core')
     };
 
     var getTrials = function () {
-      PartnerService.getTrialsList(function (data, status) {
+      TrialService.getTrialsList(function (data, status) {
         if (data.success) {
           Log.debug('trial records found:' + data.trials.length);
           if (data.trials.length > 0) {
@@ -157,4 +159,4 @@ angular.module('Core')
     };
 
   }
-]);
+})();

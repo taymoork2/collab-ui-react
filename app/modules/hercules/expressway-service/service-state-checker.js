@@ -6,15 +6,17 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice) {
+  function ServiceStateChecker($rootScope, NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo, ScheduleUpgradeService, FeatureToggleService, Orgservice, DomainManagementService) {
     var vm = this;
 
     vm.isSipUriAcknowledged = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
+    var initialized = false;
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
         if (checkIfConnectorsConfigured(connectorType)) {
+          checkDomainVerified(serviceId);
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
           if (checkIfSomeConnectorsOk(connectorType)) {
@@ -24,6 +26,26 @@
           // When connector state changes back to i.e. "not_configure", clean up the service notifications
           removeAllServiceAndUserNotifications();
         }
+      }
+    }
+
+    function checkDomainVerified(serviceId) {
+      if (!initialized) {
+        DomainManagementService.getVerifiedDomains().then(function () {
+          domainList = DomainManagementService.domainList;
+          initialized = true;
+        });
+      }
+      var domainList = DomainManagementService.domainList;
+      if (initialized && domainList.length < 1) {
+        NotificationService.addNotification(
+          NotificationService.types.TODO,
+          'noDomains',
+          1,
+          'modules/hercules/notifications/no-domains.html', [serviceId]
+        );
+      } else {
+        NotificationService.removeNotification('noDomains');
       }
     }
 
@@ -103,22 +125,22 @@
         0;
       if (needsUserActivation) {
         switch (serviceId) {
-          case "squared-fusion-cal":
-            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
-            break;
-          case "squared-fusion-uc":
-            ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
-              if (!error) {
-                if (enabled) {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
-                } else {
-                  addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
-                }
+        case "squared-fusion-cal":
+          addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+          break;
+        case "squared-fusion-uc":
+          ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (error, enabled) {
+            if (!error) {
+              if (enabled) {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+              } else {
+                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
               }
-            });
-            break;
-          default:
-            break;
+            }
+          });
+          break;
+        default:
+          break;
         }
       } else {
         NotificationService.removeNotification(noUsersActivatedId);

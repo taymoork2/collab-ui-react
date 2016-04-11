@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $translate, $rootScope, PartnerService, Authinfo, Config;
+  var $httpBackend, $translate, $rootScope, PartnerService, TrialService, Authinfo, Config;
 
   var testData;
 
@@ -20,10 +20,11 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _TrialService_, _Config_, _Authinfo_) {
     $httpBackend = _$httpBackend_;
     $translate = _$translate_;
     PartnerService = _PartnerService_;
+    TrialService = _TrialService_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
@@ -52,7 +53,7 @@ describe('Partner Service -', function () {
   it('should successfully return an array of 3 customers from calling getTrialsList', function () {
     $httpBackend.whenGET(PartnerService.trialsUrl).respond(testData.trialsResponse.status, testData.trialsResponse.data);
 
-    PartnerService.getTrialsList(function (data, status) {
+    TrialService.getTrialsList(function (data, status) {
       expect(status).toBe(200);
       expect(data.trials.length).toBe(3);
       expect(data.trials).toEqual(testData.trialsResponse.data.trials);
