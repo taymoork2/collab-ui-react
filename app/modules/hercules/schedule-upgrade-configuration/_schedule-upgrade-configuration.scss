@@ -7,21 +7,25 @@ schedule-upgrade-configuration {
 }
 
 .schedule-upgrade-form {
+  max-width: 350px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .schedule-upgrade-time {
-  flex: 0 1 auto;
-  width: 90px;
+  margin-right: 20px;
+  flex: 1 0 100px;
 }
 
 .schedule-upgrade-day {
-  flex: 0 1 auto;
-  width: 200px;
+  flex: 1 0 200px;
 }
 
 .schedule-upgrade-timezone {
-  flex: 0 1 auto;
-  width: 250px;
+  margin-top: 20px;
+  flex: 1 0 250px;
+}
+
+.schedule-upgrade-next-time {
+  margin-right: 20px;
 }

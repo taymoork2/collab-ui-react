@@ -1,13 +1,16 @@
-<cs-card id='media-quality-card' class="large report-card">
+<cs-card id='media-quality-card' class="large report-card" ng-class="{'hideCard': !nav.displayQuality}">
   <article>
-    <header>
-      <h4 class='report-section-header' translate='mediaQuality.mediaQuality'></h4>
+    <header class="customer-media">
+      <span class='report-section-header'>
+        <span class='report-section-header' translate='mediaQuality.mediaQuality'></span>
+        <i class='icon icon-information' tooltip="{{::nav.mediaQualityPopover}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true"></i>
+      </span>
     </header>
     <section>
       <div class="customer-media">
         <p class="report-description" translate='mediaQuality.descriptionCustomer'></p>
-        <cs-select id="mediaFilter" name="mediaFilter" class='customer-report-filter media-filter' ng-model="nav.mediaSelected" options="nav.mediaOptions" on-change-fn="nav.mediaUpdate()"></cs-select>
-        <div id="mediaQualityDiv" class="barchart"></div>
+        <cs-select id="mediaFilter" name="mediaFilter" class='customer-report-filter media-filter' ng-model="nav.mediaSelected" options="nav.mediaOptions" on-change-fn="nav.mediaUpdate()" is-disabled="nav.isEmpty(nav.mediaQualityStatus) || nav.isRefresh(nav.mediaQualityStatus)"></cs-select>
+        <div id="mediaQualityDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.mediaQualityStatus) && !nav.isRefresh(nav.mediaQualityStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

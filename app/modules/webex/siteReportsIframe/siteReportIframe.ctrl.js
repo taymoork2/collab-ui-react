@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('ReportIframe').controller('ReportsIframeCtrl', [
+  angular.module('WebExApp').controller('ReportsIframeCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -15,6 +15,9 @@
     'Authinfo',
     'Notification',
     'Config',
+    'Storage',
+    'WebExUtilsFact',
+
     function reportsIframeCtrl(
       $scope,
       $rootScope,
@@ -28,7 +31,9 @@
       $window,
       Authinfo,
       Notification,
-      Config
+      Config,
+      Storage,
+      WebExUtilsFact
     ) {
 
       var _this = this;
@@ -49,11 +54,10 @@
         $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
-      $scope.authToken = $rootScope.token;
+      $scope.authToken = Storage.get('accessToken');
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
-      var index = $stateParams.siteUrl.indexOf(".");
-      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
       $scope.fullSparkDNS = window.location.origin;
 
       _this.logMsg = _this.funcName + ": " + "\n" +

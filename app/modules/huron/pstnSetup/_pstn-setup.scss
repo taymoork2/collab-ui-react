@@ -113,30 +113,69 @@
     }
   }
 
-  .modal-body {
-    margin: 0;
-    .formly-field {
-      padding-bottom: 0;
-    }
-    + .modal-body {
-      margin-top: rem-calc(10);
-    }
+  > .modal-body {
+    padding: 0;
+    background-color: $white;
+  }
+
+  .tab-content {
+    padding: 2rem;
+  }
+
+  .tokenfield {
+    margin-top: 1rem;
   }
 
   .search-results {
     margin-top: rem-calc(15);
   }
 
-  .form-inline.formly-field-select {
-    flex: 1;
-  }
-
   .formly-field-inline {
     align-items: flex-start;
   }
 
+  .form-inline {
+    &.formly-field-select {
+      flex: 2;
+    }
+    &.formly-field-cs-input, &.formly-field-input {
+      flex: 1;
+    }
+    .form-control {
+      width: 100%;
+    }
+    .control-label {
+      @extend label;
+    }
+  }
+
   .search-button {
-    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base}) / 2);
+    margin-top: calc(#{$form-label-line-height}em + 10px - (50px - #{$input-height-base}) / 2);
+  }
+  
+  .tooltip {
+    top: rem(-44px);
+    .tooltip-inner {
+        min-width: rem(150px);
+    }
+  }
+  .no-pad {
+    padding-bottom: 0;
+  }
+  .pad-top {
+      padding-top: rem(20px);
+  }
+  .pad-bottom {
+      padding-bottom: 1rem;
+  }
+  .order-inline {
+      display: inline-block;
+  }
+  .input-width {
+      max-width: rem(60px);
+  }
+  .right-margin {
+      margin-right:rem(10px);
   }
 }
 

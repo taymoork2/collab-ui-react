@@ -3,22 +3,26 @@
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 var request = require('request');
+var Promise = require('promise');
 
-exports.deleteUser = function (email) {
-  return utils.getToken().then(function (token) {
-    var options = {
-      method: 'delete',
-      url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-    };
+exports.deleteUser = function (email, token) {
+  return new Promise(function (resolve, reject) {
+      resolve(token || utils.getToken());
+    })
+    .then(function (token) {
+      var options = {
+        method: 'delete',
+        url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+      };
 
-    return utils.sendRequest(options).then(function () {
-      return 200;
+      return utils.sendRequest(options).then(function () {
+        return 200;
+      });
     });
-  });
 };
 
 exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
@@ -63,13 +67,44 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     }
   };
   return utils.sendRequest(options).then(function () {
+    return 200;
+  });
+};
+
+exports.extractUUID = function (ceURL) {
+  var uuidPos = ceURL.lastIndexOf("/");
+  if (uuidPos === -1) {
+    return '';
+  }
+  return ceURL.substr(uuidPos + 1);
+};
+
+// deleteNumberAssignments - Delete AA CMI number assignments
+//
+// Called by deleteTestAA below.
+exports.deleteNumberAssignments = function (aaUrl, token) {
+
+  var ceId = exports.extractUUID(aaUrl);
+
+  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['huron-int1'].org + '/features/autoattendants/' + ceId + '/numbers';
+
+  var options = {
+    method: 'delete',
+    url: cmiUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  };
+  return utils.sendRequest(options).then(function () {
     return 204;
   });
 };
 
 // Save the test AA name here, this is also accessed from
 // auto-attendant_spec.js
-exports.testAAName = 'e2e AA Test Name';
+exports.testAAName = 'AA for Atlas e2e Tests';
+exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 // deleteTestAA - Delete the Test AA via the CES API
 //
 // Check all of the autoattendants eturned for this
@@ -81,9 +116,15 @@ exports.testAAName = 'e2e AA Test Name';
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAA = function (bearer, data) {
+  var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
-    if (data[i].callExperienceName === this.testAAName) {
-      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer);
+    if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
+
+      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
+
+        return exports.deleteNumberAssignments(data[i].callExperienceURL, bearer);
+
+      });
     }
   }
 };
@@ -94,29 +135,30 @@ exports.deleteTestAA = function (bearer, data) {
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
 
-  helper.getBearerToken('huron-int1', function (bearer) {
-    var options = {
-      url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
-      headers: {
-        Authorization: 'Bearer ' + bearer
-      }
-    };
-
-    var defer = protractor.promise.defer();
-    request(options,
-      function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          defer.fulfill(JSON.parse(body));
-        } else {
-          defer.reject({
-            error: error,
-            message: body
-          });
+  helper.getBearerToken('huron-int1')
+    .then(function (bearer) {
+      var options = {
+        url: config.getAutoAttendantsUrl(helper.auth['huron-int1'].org),
+        headers: {
+          Authorization: 'Bearer ' + bearer
         }
-      });
-    return defer.promise.then(function (data) {
-      return exports.deleteTestAA(bearer, data);
-    });
+      };
 
-  });
+      var defer = protractor.promise.defer();
+      request(options,
+        function (error, response, body) {
+          if (!error && response.statusCode === 200) {
+            defer.fulfill(JSON.parse(body));
+          } else {
+            defer.reject({
+              error: error,
+              message: body
+            });
+          }
+        });
+      return defer.promise.then(function (data) {
+        return exports.deleteTestAA(bearer, data);
+      });
+
+    });
 };

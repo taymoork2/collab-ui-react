@@ -6,19 +6,33 @@
     .controller('CdrOverviewCtrl', CdrOverviewCtrl);
 
   /* @ngInject */
-  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, Config, CdrService) {
+  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, CdrService, chartColors) {
     var vm = this;
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
+    var logstashPath = $stateParams.logstashPath;
 
-    vm.cdr = formatCdr($stateParams.cdrData);
+    var cdrData = formatCdr($stateParams.cdrData);
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
     vm.searchField = "";
     vm.cdrTable = [];
     vm.jsonUrl = "";
 
+    vm.localSessionID = cdrData.localSessionID;
+    vm.remoteSessionID = cdrData.remoteSessionID;
+    vm.cdr = [];
+    // build an array to use with angular filter.
+    angular.forEach(cdrData, function (value, key) {
+      if (key.toLowerCase() !== '$$hashkey') {
+        vm.cdr.push({
+          'key': key,
+          'value': value
+        });
+      }
+    });
+
     vm.tableOptions = {
-      cursorcolor: Config.chartColors.gray,
+      cursorcolor: chartColors.gray,
       cursorborder: "0px",
       cursorwidth: "7px",
       railpadding: {
@@ -30,23 +44,17 @@
       autohidemode: "leave"
     };
 
-    vm.filter = filter;
+    vm.openLadderDiagram = function () {
+      $state.go('cdrladderdiagram', {
+        call: $stateParams.call,
+        uniqueIds: $stateParams.uniqueIds,
+        events: $stateParams.events,
+        logstashPath: logstashPath
+      });
+    };
 
     function init() {
       vm.jsonUrl = CdrService.createDownload(call);
-    }
-
-    function filter() {
-      var result = {};
-      angular.forEach(vm.cdr, function (value, key) {
-        if (vm.searchField === undefined || vm.searchField === '' || (value.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1 || (key.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
-          result[key] = value;
-        }
-      });
-      $timeout(function () {
-        $('#cdrDisplayTable').getNiceScroll().resize();
-      });
-      return result;
     }
 
     function formatCdr(cdrRawJson) {

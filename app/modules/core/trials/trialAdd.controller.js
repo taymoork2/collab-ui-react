@@ -5,11 +5,12 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialPstnService, TrialService, ValidationService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
     var messageTemplateOptionId = 'messageTrial';
     var meetingTemplateOptionId = 'meetingTrial';
+    var webexTemplateOptionId = 'webexTrial';
     var callTemplateOptionId = 'callTrial';
     var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
@@ -22,29 +23,37 @@
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
+    vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.trialStates = [{
-      'name': 'trialAdd.meeting',
-      'trials': [vm.meetingTrial],
-      'enabled': true,
+      name: 'trialAdd.webex',
+      trials: [vm.webexTrial],
+      enabled: true,
     }, {
-      'name': 'trialAdd.call',
-      'trials': [vm.callTrial, vm.roomSystemTrial],
-      'enabled': true,
+      name: 'trialAdd.call',
+      trials: [vm.callTrial, vm.roomSystemTrial],
+      enabled: true,
     }, {
-      'name': 'trialAdd.addNumbers',
-      'trials': [vm.callTrial],
-      'enabled': true,
+      name: 'trialAdd.addNumbers',
+      trials: [vm.callTrial],
+      enabled: true,
+    }, {
+      name: 'trialAdd.pstn',
+      trials: [vm.pstnTrial],
+      enabled: true,
+    }, {
+      name: 'trialAdd.emergAddress',
+      trials: [vm.pstnTrial],
+      enabled: true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
     // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
+    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
-    vm.showMeeting = false;
-    vm.canEditMessage = true;
-    vm.canEditMeeting = true;
+    vm.showWebex = false;
     vm.startTrial = startTrial;
 
     vm.custInfoFields = [{
@@ -101,16 +110,11 @@
       model: vm.messageTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns medium-12',
+      className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.messageAndMeeting'),
+        label: $translate.instant('trials.message'),
         id: messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.canEditMessage;
-        },
       },
     }, {
       // Meeting Trial
@@ -121,15 +125,21 @@
       templateOptions: {
         label: $translate.instant('trials.meeting'),
         id: meetingTemplateOptionId,
+        class: 'columns medium-12 checkbox-group',
+      },
+    }, {
+      // Webex Trial
+      model: vm.webexTrial,
+      key: 'enabled',
+      type: 'checkbox',
+      className: 'columns medium-12 checkbox-group',
+      templateOptions: {
+        label: $translate.instant('trials.webex'),
+        id: webexTemplateOptionId,
         class: 'columns medium-12',
       },
       hideExpression: function () {
-        return !vm.showMeeting;
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return !vm.canEditMeeting;
-        },
+        return !vm.showWebex;
       },
     }, {
       // Call Trial
@@ -143,7 +153,7 @@
         class: 'columns medium-12',
       },
       hideExpression: function () {
-        return !vm.hasCallEntitlement();
+        return !vm.hasCallEntitlement;
       }
     }];
 
@@ -212,7 +222,7 @@
       },
     }];
 
-    vm.hasCallEntitlement = Authinfo.isSquaredUC;
+    vm.hasCallEntitlement = Authinfo.isSquaredUC();
     vm.hasTrial = hasTrial;
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
@@ -220,6 +230,8 @@
     vm.finishSetup = finishSetup;
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
+    vm.showDefaultFinish = showDefaultFinish;
+    vm.getNextState = getNextState;
 
     init();
 
@@ -230,30 +242,42 @@
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
         FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials),
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0];
-        vm.meetingTrial.enabled = results[1];
+        vm.webexTrial.enabled = results[1];
         vm.supportsPstnSetup = results[2];
-        vm.callTrial.enabled = vm.hasCallEntitlement();
+        vm.callTrial.enabled = vm.hasCallEntitlement;
+        vm.supportsHuronCallTrials = results[4];
+        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
-        if (vm.meetingTrial.enabled) {
-          vm.showMeeting = true;
+        vm.meetingTrial.enabled = true;
+        if (vm.webexTrial.enabled) {
+          vm.showWebex = true;
           updateTrialService(messageTemplateOptionId);
         }
 
         var devicesModal = _.find(vm.trialStates, {
-          'name': 'trialAdd.call'
+          name: 'trialAdd.call'
         });
         var meetingModal = _.find(vm.trialStates, {
-          'name': 'trialAdd.meeting'
+          name: 'trialAdd.webex'
         });
         var addNumbersModal = _.find(vm.trialStates, {
-          'name': 'trialAdd.addNumbers'
+          name: 'trialAdd.addNumbers'
+        });
+        var pstnModal = _.find(vm.trialStates, {
+          name: 'trialAdd.pstn'
+        });
+        var emergAddressModal = _.find(vm.trialStates, {
+          name: 'trialAdd.emergAddress'
         });
 
-        devicesModal.enabled = results[3] && results[1];
+        pstnModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
+        emergAddressModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
+        devicesModal.enabled = results[3];
         meetingModal.enabled = results[1];
         addNumbersModal.enabled = !vm.supportsPstnSetup;
 
@@ -294,17 +318,13 @@
     }
 
     function toggleTrial() {
-      if (vm.callTrial.enabled || vm.roomSystemTrial.enabled) {
-        vm.canEditMessage = false;
-        vm.canEditMeeting = false;
-        if (vm.showMeeting) {
-          vm.meetingTrial.enabled = true;
-        }
-        vm.messageTrial.enabled = true;
-      } else {
-        vm.canEditMessage = true;
-        vm.canEditMeeting = true;
+      if (!vm.callTrial.enabled) {
+        vm.pstnTrial.enabled = false;
       }
+      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+        vm.pstnTrial.enabled = true;
+      }
+
       addRemoveStates();
     }
 
@@ -361,15 +381,20 @@
       }
     }
 
+    /**
+     * Changed to chain and slice the navOrder instead of navStates
+     * so that if you choose to skip a step that you are on
+     * and that state gets removed from the order, the fucntion can
+     * still find the next state and index won't find -1
+     * when trying to find the next one
+     */
     function getNextState() {
-      return _.chain(vm.navStates)
+      return _.chain(vm.navOrder)
         .indexOf($state.current.name)
         .thru(function (index) {
-          return _.slice(vm.navStates, index + 1);
+          return _.slice(vm.navOrder, index + 1);
         })
-        .find(function (state) {
-          return !_.isUndefined(state);
-        })
+        .find(_.partial(_.includes, vm.navStates))
         .value();
     }
 
@@ -385,11 +410,11 @@
     function startTrial(addNumbersCallback) {
       vm.nameError = false;
       vm.emailError = false;
-      vm.startTrialButtonLoad = true;
+      vm.loading = true;
 
       return TrialService.startTrial()
         .catch(function (response) {
-          vm.startTrialButtonLoad = false;
+          vm.loading = false;
           Notification.notify([response.data.message], 'error');
           if ((response.data.message).indexOf('Org') > -1) {
             vm.nameError = true;
@@ -400,21 +425,36 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-              vm.details.licenseDuration, vm.customerOrgId)
-            .catch(function (response) {
-              Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-            })
-            .then(function () {
-              if (vm.callTrial.enabled) {
-                return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
-                  .catch(function (response) {
-                    vm.startTrialButtonLoad = false;
-                    Notification.errorResponse(response, 'trialModal.squareducError');
-                    return $q.reject(response);
-                  });
-              }
-            });
+          return response;
+        })
+        .then(function (response) {
+          // suppress email if 'atlas-webex-trial' feature-toggle is enabled (more appropriately
+          // handled by the backend process once provisioning is complete)
+          if (!vm.webexTrial.enabled) {
+            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
+                vm.details.licenseDuration, Authinfo.getOrgId())
+              .catch(function (response) {
+                Notification.error('didManageModal.emailFailText');
+              })
+              .then(function () {
+                return response;
+              });
+          }
+          return response;
+        })
+        .then(function (response) {
+          if (vm.callTrial.enabled) {
+            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
+              .catch(function (response) {
+                vm.loading = false;
+                Notification.errorResponse(response, 'trialModal.squareducError');
+                return $q.reject(response);
+              }).then(function () {
+                if (vm.pstnTrial.enabled) {
+                  return TrialPstnService.createPstnEntity(vm.customerOrgId);
+                }
+              });
+          }
         })
         .then(function () {
           var successMessage = [$translate.instant('trialModal.addSuccess', {
@@ -428,11 +468,12 @@
           }
         })
         .then(function () {
-          vm.startTrialButtonLoad = false;
           vm.finishSetup();
           return {
-            'customerOrgId': vm.customerOrgId
+            customerOrgId: vm.customerOrgId
           };
+        }).finally(function () {
+          vm.loading = false;
         });
     }
 
@@ -441,13 +482,15 @@
     }
 
     function launchCustomerPortal() {
-      if (angular.isDefined($scope.trial)) {
-        $window.open($state.href('login_swap', {
-          'customerOrgId': vm.customerOrgId,
-          'customerOrgName': vm.details.customerName
-        }));
-        $state.modal.close();
-      }
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.details.customerName
+      }));
+      $state.modal.close();
+    }
+
+    function showDefaultFinish() {
+      return !vm.webexTrial.enabled;
     }
   }
 })();

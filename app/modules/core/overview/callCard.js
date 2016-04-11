@@ -14,7 +14,7 @@
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';
-        card.cardClass = 'cs-card header-bar people';
+        card.cardClass = 'cs-card header-bar cta-base';
         card.trial = false;
         card.enabled = false;
         card.notEnabledText = 'overview.cards.call.notEnabledText';
@@ -33,7 +33,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.id === card.helper.statusIds.SparkCall || component.id === card.helper.statusIds.huronPhoneCalls) {
+            if (component.id === card.helper.statusIds.SparkCall) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });

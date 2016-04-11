@@ -1,12 +1,14 @@
 'use strict';
 
 describe('Service: AALanguageService', function () {
+  var enUs = loadEnUs();
+
   var AALanguageService;
   var $translate;
 
   var en_USVoice = "Veronica";
   var en_US = "en_US";
-  var fr_FRVoice = "Juliette";
+  var fr_FRVoice = "Audrey";
   var fr_FR = "fr_FR";
   var pt_BRVoice = "Felipe";
   var pt_BR = "pt_BR";
@@ -24,14 +26,24 @@ describe('Service: AALanguageService', function () {
     $translate = _$translate_;
   }));
 
-  afterEach(function () {});
+  describe('localizations', function () {
+    it('should have localized all languages', function () {
+      var count = 0;
+      AALanguageService.getLanguageOptions().forEach(function (lang) {
+        var translation = _.get(enUs, lang.label);
+        if (!translation) throw new Error('Translation not found for ' + lang.label);
+        count++;
+      });
+      expect(count).toBe(25);
+    });
+  });
 
   describe('getLanguageOptions', function () {
 
     it('should return all language options', function () {
       var languageOptions = AALanguageService.getLanguageOptions();
       expect(languageOptions).toBeDefined();
-      expect(languageOptions.length).toEqual(26);
+      expect(languageOptions.length).toEqual(25);
 
       var languageOptions2 = AALanguageService.getLanguageOptions();
       expect(languageOptions2).toBeDefined();
@@ -113,13 +125,13 @@ describe('Service: AALanguageService', function () {
         "value": en_US
       });
       expect(voiceOptions).toBeDefined();
-      expect(voiceOptions.length).toEqual(7);
+      expect(voiceOptions.length).toEqual(8);
 
       var voiceOptions2 = AALanguageService.getVoiceOptions({
         "value": pt_BR
       });
       expect(voiceOptions2).toBeDefined();
-      expect(voiceOptions2.length).toEqual(3);
+      expect(voiceOptions2.length).toEqual(2);
 
       var voiceOptions3 = AALanguageService.getVoiceOptions({
         "value": fr_FR
@@ -185,5 +197,12 @@ describe('Service: AALanguageService', function () {
     });
 
   });
+
+  function loadEnUs() {
+    jasmine.getJSONFixtures().fixturesPath = 'base/app';
+    var data = getJSONFixture('l10n/en_US.json');
+    jasmine.getJSONFixtures().fixturesPath = 'base/test/fixtures';
+    return data;
+  }
 
 });

@@ -1,10 +1,12 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
-var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var remote = require('selenium-webdriver/remote');
 var fs = require('fs');
 
 exports.getDateTimeString = function () {
@@ -76,9 +78,9 @@ exports.sendRequest = function (options) {
     request(options, function (error, response, body) {
       var status = response && response.statusCode ? response.statusCode : 'unknown';
       if (error) {
-        defer.reject('Send request failed with status ' + status + '. Error: ' + error);
+        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Error: ' + error);
       } else if (response && response.statusCode >= 400) {
-        defer.reject('Send request failed with status ' + status + '. Body: ' + body);
+        defer.reject('Send request to ' + options.url + ' failed with status ' + status + '. Body: ' + body);
       } else {
         defer.fulfill(body);
       }
@@ -105,13 +107,6 @@ exports.getToken = function () {
   return this.sendRequest(options).then(function (data) {
     var resp = JSON.parse(data);
     return resp.access_token;
-  });
-};
-
-exports.retrieveToken = function () {
-  return element(by.tagName('body')).evaluate('token').then(function (token) {
-    expect(token).not.toBeNull();
-    return token;
   });
 };
 
@@ -146,6 +141,7 @@ exports.wait = function (elem, timeout) {
     log('Waiting for element to be visible: ' + elem.locator());
     return EC.visibilityOf(elem)().thenCatch(function () {
       // handle a possible stale element
+      log('Possible stale element: ' + elem.locator());
       return false;
     });;
   }
@@ -271,7 +267,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
 exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
-      log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
+      log('Waiting for element (' + elem.locator() + ').getText() to contain "' + text + '" currently "' + result + '"');
       return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
       return false;
@@ -279,16 +275,15 @@ exports.expectTextToBeSet = function (elem, text, timeout) {
   }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
-exports.expectValueToBeSet = function (elem, value) {
-  this.wait(elem);
+exports.expectValueToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
-      log('Waiting for element to have value set: ' + elem.locator() + ' ' + value);
-      return result !== undefined && result !== null && result === value;
+      log('Waiting for element (' + elem.locator() + ') to have value "' + text + '" currently "' + result + '"');
+      return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToContain = function (elem, value) {
@@ -341,8 +336,7 @@ exports.click = function (elem, maxRetry) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
       return elem.click().then(deferred.fulfill, function (e) {
-        log('Failed to click element: ' + elem.locator());
-        log(e);
+        log('Failed to click element: ' + elem.locator() + ' Error: ' + (e && e.message || e));
         return exports.click(elem, --maxRetry);
       });
     }
@@ -376,17 +370,6 @@ exports.isSelected = function (elem) {
   });
 };
 
-exports.expectSelected = function (selected, state) {
-  if (state === undefined) {
-    state = true;
-  }
-  if (state) {
-    expect(selected).toBeTruthy();
-  } else {
-    expect(selected).toBeFalsy();
-  }
-};
-
 exports.clear = function (elem) {
   this.wait(elem).then(function () {
     log('Clear element: ' + elem.locator());
@@ -415,12 +398,16 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value, value2) {
+exports.expectText = function (elem) {
+  var values = [].slice.call(arguments, 1);
   return this.wait(elem).then(function () {
-    expect(elem.getText()).toContain(value);
-    if (value2) {
-      expect(elem.getText()).toContain(value2);
-    }
+    var text = elem.getText();
+    var locator = elem.locator();
+    values.forEach(function (value) {
+      log('Expecting element ' + locator + ' to contain text: ' + value);
+      expect(text).toContain(value);
+    });
+    return true;
   });
 };
 
@@ -478,10 +465,8 @@ exports.expectSwitchState = function (elem, value) {
 exports.expectCheckbox = function (elem, value) {
   return this.wait(elem).then(function () {
     log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
-    var input = elem.element(by.tagName('input'));
-    return input.isSelected().then(function (isSelected) {
-      return value === isSelected;
-    });
+    var input = elem.element(by.xpath('..')).element(by.tagName('input'));
+    expect(input.isSelected()).toBe(value);
   });
 };
 
@@ -532,7 +517,11 @@ exports.search = function (query, _searchCount) {
   exports.clear(exports.searchField);
   if (query) {
     exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
-    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+    exports.expectValueToBeSet(exports.searchField, query, TIMEOUT);
+    for (var i = 0; i < 3; i++) {
+      // Spinner may bounce repeatedly
+      exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+    }
   }
 
   if (searchCount > -1) {
@@ -711,4 +700,9 @@ exports.quickDeleteUser = function (bFirst, name) {
 
 exports.waitForModal = function () {
   return this.wait(element(by.css('.modal-dialog')));
+};
+
+exports.selectDropdown = function (dropdown, option) {
+  this.click(element(by.css(dropdown + ' a.select-toggle')));
+  this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
 };

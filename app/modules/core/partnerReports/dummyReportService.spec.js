@@ -91,7 +91,7 @@ describe('Controller: Dummy Reports', function () {
     });
 
     it('dummyEndpointData should return the expected response', function () {
-      expect(DummyReportService.dummyEndpointData(customer)).toEqual([angular.copy(dummyData.endpoints)]);
+      expect(DummyReportService.dummyEndpointData()).toEqual([angular.copy(dummyData.endpoints)]);
     });
   });
 });

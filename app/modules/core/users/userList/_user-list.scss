@@ -4,28 +4,63 @@
 
   .ui-grid-cell:first-child ,
   .ui-grid-header-cell:first-child  {
-   border-right: 0px;
+   border-right: 0;
   }
-}
 
-
-.export-users i {
-  color: $gray;
-  font-size: 1.5rem;
-  padding-right: .5rem;
-  margin-right: .5rem;
-  cursor: pointer;
-  &:hover {
-    color: $brand-primary;
-    text-decoration: none;
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite.first,
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.delete.first,
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite.delete.first {
+    top: rem-calc(30) !important;
   }
-}
 
-.too-many-users {
-  position: absolute;
-  top: 150px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: $gray-darker;
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite,
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.delete {
+    top: rem-calc(-30);
+  }
+
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite.delete {
+    top: rem-calc(-60);
+  }
+
+  .user-status {
+    font-size: 0.6rem;
+    padding-right: rem(3);
+    &-yellow {
+      color: $brand-warning;
+    }
+    &-green {
+      color: $brand-success;
+    }
+  }
+
+  .action-panel {
+    .icon {
+      color: $color-people-base;
+      font-size: 2.2rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    .add-users-button {
+      margin-top: 0.6rem;
+    }
+  }
+
+  .export-users {
+    .icon {
+      color: $gray-dark-1;
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+  }
+
+  .too-many-users {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: $gray-darker;
+  }
 }

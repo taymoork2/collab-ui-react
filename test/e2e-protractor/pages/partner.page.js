@@ -70,25 +70,16 @@ var PartnerHomePage = function () {
   this.newTrialName = element(by.binding('trial.'));
   this.saveSendButton = element(by.id('saveSendButton'));
   this.saveUpdateButton = element(by.id('saveUpdateButton'));
-  this.newTrialRow = element(by.id(this.newTrial.customerName));
-  this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
+  this.newTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newTrial.customerName));
+  this.newSqUCTrialRow = element(by.cssContainingText('.ui-grid-cell', this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
   this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
   this.customerNameForm = element(by.id('customerNameForm'));
   this.customerEmailForm = element(by.id('customerEmailForm'));
   this.refreshButton = element(by.id('partnerRefreshData'));
-  this.entitlementsChart = element(by.id('avgEntitlementsdiv'));
-  this.entitlementsCount = element(by.binding('counts.entitlements'));
-  this.activeUsersTab = element(by.cssContainingText('li a', 'Daily Active Users'));
-  this.activeUsersChart = element(by.id('activeUsersdiv'));
-  this.activeUsersCount = element(by.binding('counts.activeUsers'));
-  this.averageCallsTab = element(by.cssContainingText('li a', 'Average Calls Per User'));
-  this.averageCallsChart = element(by.id('avgCallsdiv'));
-  this.averageCallsCount = element(by.binding('counts.averageCalls'));
-  this.contentSharedTab = element(by.cssContainingText('li a', 'Files Shared'));
-  this.contentSharedChart = element(by.id('contentShareddiv'));
-  this.contentSharedCount = element(by.binding('counts.contentShared'));
+  this.entitlementsChart = element(by.id('entitlementsdiv'));
+  this.entitlementsCount = element(by.binding('entCount'));
   this.noResultsAvailable = element(by.cssContainingText('span', 'No results available'));
   this.errorProcessing = element(by.cssContainingText('span', 'Error processing request'));
   this.selectRow = element(by.binding('row.entity'));
@@ -103,7 +94,7 @@ var PartnerHomePage = function () {
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
-  this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
+  this.messageTrialCheckbox = element(by.css('label[for="messageTrial"]'));
   this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
@@ -111,6 +102,8 @@ var PartnerHomePage = function () {
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
   this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
+  this.closeBtnOnModal = element(by.id('btnCloseModal'));
+  this.videoModal = element(by.id('videoId'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
@@ -137,10 +130,6 @@ var PartnerHomePage = function () {
   this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
   this.deleteNumberYes = element(by.buttonText('Yes'));
 
-  this.assertDisabled = function (id) {
-    expect(element(by.id(id)).isEnabled()).toBeFalsy();
-  };
-
   this.assertResultsLength = function () {
     element.all(by.binding('row.entity')).then(function (rows) {
       expect(rows.length).toBeGreaterThan(1);
@@ -148,11 +137,40 @@ var PartnerHomePage = function () {
   };
 
   this.retrieveOrgId = function (trialRow) {
-    return trialRow.getAttribute('orgId').then(function (orgId) {
+    return trialRow.evaluate('row.entity.customerOrgId').then(function (orgId) {
       expect(orgId).not.toBeNull();
       return orgId;
     });
   };
+
+  this.isPaused = function () {
+    return browser.executeScript(function () {
+      return document.getElementById('videoId').paused;
+    });
+  };
+
+  this.isPlay = function () {
+    expect(partner.isPaused()).toBe(false);
+  };
+
+  this.playVideo = function () {
+    browser.executeScript(function () {
+      document.getElementById('videoId').play();
+    });
+  };
+
+  this.videoLoads = function () {
+    expect(partner.waitForVideo()).not.toBe(0);
+  };
+
+  this.waitForVideo = function () {
+    return browser.wait(function () {
+      return browser.executeScript(function () {
+        return document.getElementById('videoId').readyState;
+      });
+    }, 5000, 'Waiting for video to load');
+  };
+
 };
 
 module.exports = PartnerHomePage;

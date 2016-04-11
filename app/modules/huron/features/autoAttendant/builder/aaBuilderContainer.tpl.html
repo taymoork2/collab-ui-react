@@ -5,10 +5,10 @@
   <div name="topLane2" class="small-4 columns aa-container">
     <div class="aa-flex-container">
       <div class="aa-flex-vertical-line"></div>
-      <div ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderNumbers.tpl.html'"></div>
+      <div ng-include="'modules/huron/features/autoAttendant/numbers/aaNumbers.tpl.html'"></div>
       <div class="aa-flex-vertical-line"></div>
-      <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']" ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderSchedule.tpl.html'"></div>
-      <div class="aa-flex-vertical-line"></div>
+      <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']" ng-include="'modules/huron/features/autoAttendant/schedule/aaSchedule.tpl.html'"></div>
+      <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-flex-vertical-line"></div>
     </div>
   </div>
   <div name="topLane3" class="small-4 columns aa-container">
@@ -22,7 +22,7 @@
     <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-flex-container">
       <div class="aa-flex-horizontal-line-right"></div>
       <div class="aa-flex-vertical-line"></div>
-      <aa-builder-schedule-info class="aa-flex-container" schedule="openHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+      <aa-schedule-info class="aa-flex-container" schedule="openHours"></aa-schedule-info>
       <aa-builder-lane aa-schedule="openHours"></aa-builder-lane>
       <div class="aa-flex-vertical-spacer"></div>
     </div>
@@ -43,7 +43,7 @@
     <div ng-if="aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays">
       <div class="aa-flex-container">
         <div class="aa-flex-vertical-line"></div>
-        <aa-builder-schedule-info schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <aa-schedule-info schedule="closedHours"></aa-schedule-info>
         <aa-builder-lane aa-schedule="closedHours"></aa-builder-lane>
       </div>
     </div>
@@ -59,13 +59,13 @@
 
       <!-- holiday hours: open/closed/holiday or open/holiday -->
       <div ng-if="aaBuilder.ui.isHolidays">
-        <aa-builder-schedule-info schedule="holidays" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <aa-schedule-info schedule="holidays"></aa-schedule-info>
         <aa-builder-lane aa-schedule="holidays"></aa-builder-lane>
       </div>
 
       <!-- closed hours: open/closed -->
       <div ng-if="aaBuilder.ui.isClosedHours && !aaBuilder.ui.isHolidays">
-        <aa-builder-schedule-info schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <aa-schedule-info schedule="closedHours"></aa-schedule-info>
         <aa-builder-lane aa-schedule="closedHours"></aa-builder-lane>
       </div>
 

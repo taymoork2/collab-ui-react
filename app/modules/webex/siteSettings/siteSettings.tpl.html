@@ -1,20 +1,25 @@
 <div id="webexSiteSettings" name="webexSiteSettings" class="webex-site-settings">
   <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
-  <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
+  <cs-page-sub-header>
     <!-- start of breadcrumbs -->
     <cs-page-sub-header-left>
+     <img src="/images/webex_logo_16px.png"
+                   class="webexlogo"
+                   id="webexLogo"
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
+
       <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
         <li>
           <a id="siteListCrumb" name="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing">
           </a>
         </li>
-        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">
-          {{siteSettingsObj.pageTitleFull}}
-        </li>
+        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">{{siteSettingsObj.pageTitleFull}}</li>
       </ul>
     </cs-page-sub-header-left>
     <!-- end of breadcrumbs -->
-    <cs-page-sub-header-right>
+    
+    <cs-page-sub-header-right ng-if="siteSettingsObj.viewReady">
       <button id="{{siteSettingsObj.emailAllHostsBtnObj.id}}" name="{{siteSettingsObj.emailAllHostsBtnObj.id}}" ui-sref="{{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}" class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
       </button>
     </cs-page-sub-header-right>
@@ -41,8 +46,7 @@
     </div>
     <!-- end of loading info -->
     <!-- start of card containers -->
-    <div ng-if="siteSettingsObj.viewReady" id="cardsSection" name="cardsSection">
-      <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
+    <div ng-if="siteSettingsObj.viewReady" id="{{siteSettingsObj.cardsSectionId}}" name="cardsSection-{{siteSettingsObj.cardsSectionId}}">
       <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
     </div>
     <!-- end of card containers -->

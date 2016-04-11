@@ -7,6 +7,9 @@ var args = require('yargs').argv;
 var util = require('gulp-util');
 var log = util.log;
 var colors = util.colors;
+var $ = require('gulp-load-plugins')({
+  lazy: true
+});
 
 function errorLogger(error) {
   log($.util.colors.red('*** Start of Error ***'));
@@ -15,6 +18,6 @@ function errorLogger(error) {
   this.emit('end');
 }
 
-module.exports = function() {
+module.exports = function () {
   return errorLogger;
-}
+};

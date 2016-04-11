@@ -8,7 +8,7 @@ $features-header-height : 83px;
 
 .huron-features{
   @extend %content-subheader;
-  @extend %card-container-padding;
+  @extend %card-container;
 }
 
 .features-reload {
@@ -38,11 +38,9 @@ $features-header-height : 83px;
   color: $gray-dark-2;
 }
 
-.new-feature-button {
-  @include vr-spacing(mr, 0.25)
-}
 
 .features-content {
+  padding-bottom: rem-calc(16);
 
   .cs-card article {
     height : rem-calc(170);
@@ -94,10 +92,15 @@ $features-header-height : 83px;
     align-items: flex-end;
     @include vr-spacing(ph, 1);
     @include vr-spacing(pv, .5);
+    .card-icons {
+      display: flex;
+    }
 
     a {
       font-size: rem-calc(24);
       color: $gray-light-2;
+      top: -2px;
+      padding-left: 8px;
       &:hover,
       &:focus {
         color: $color-primary;
@@ -149,6 +152,8 @@ $features-header-height : 83px;
   background: $brand-white;
   align-items: center;
   justify-content: center;
+  padding: 0 32px;
+  text-align: center;
 
   .nothing-to-see {
     color: $gray-dark;

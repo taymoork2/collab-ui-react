@@ -6,9 +6,9 @@
 .save-section {
   position: absolute;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
-  padding: 0.5rem 1.5rem;
+  padding: 5px 25px;
   z-index: $zindex-popover;
   border-bottom: 1px solid $gray-light;
   background-color: $white;
@@ -16,10 +16,8 @@
   p {
     flex: 1;
   }
-  .right {
-    button:first-child {
-      @include vr-spacing(mr, 0.5);
-    }
+  button {
+    @include vr-spacing(ml, 0.5);
   }
 }
 

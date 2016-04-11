@@ -9,20 +9,8 @@ namespace domainManagement {
       isPartner: false
     };
 
-    private _feature = false;
-
     /* @ngInject */
-    constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
-
-      FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
-        .then(dmEnabled => {
-            if (dmEnabled) {
-              this._feature = true;
-            } else {
-              this.$state.go('unauthorized');
-            }
-          }
-        );
+    constructor(Authinfo, CiService, private DomainManagementService) {
 
       CiService.getUser().then(curUser => {
 
@@ -41,7 +29,7 @@ namespace domainManagement {
         this._loggedOnUser.isLoaded = true;
       });
 
-      this.DomainManagementService.getVerifiedDomains().then(DomainManagementService.getVerificationTokens.bind(DomainManagementService));
+      this.DomainManagementService.getVerifiedDomains();
     }
 
     get domains() {
@@ -52,9 +40,6 @@ namespace domainManagement {
       return this._loggedOnUser;
     }
 
-    get feature() {
-      return this._feature;
-    }
   }
   angular
     .module('Core')

@@ -5,13 +5,24 @@
     .controller('AddDeviceController',
 
       /* @ngInject */
-      function ($scope, $q, Notification, CsdmCodeService, XhrNotificationService, $timeout) {
+      function ($scope, $q, $state, $modalInstance, Notification, CsdmCodeService, XhrNotificationService, $timeout, activationCode) {
         var adc = this;
 
-        adc.showAdd = true;
-        adc.deviceName = '';
-        adc.activationCode = '';
-        adc.expiryTime = '';
+        var formatActivationCode = function (activationCode) {
+          return activationCode ? activationCode.match(/.{4}/g).join(' ') : '';
+        };
+
+        if (activationCode) {
+          adc.showAdd = false;
+          adc.deviceName = activationCode.displayName;
+          adc.activationCode = formatActivationCode(activationCode.activationCode);
+          adc.expiryTime = activationCode.expiryTime;
+        } else {
+          adc.showAdd = true;
+          adc.deviceName = '';
+          adc.activationCode = '';
+          adc.expiryTime = '';
+        }
 
         $scope.$watch('adc.showAdd', function (shown) {
           if (shown) {
@@ -20,10 +31,6 @@
             });
           }
         });
-
-        var formatActivationCode = function (activationCode) {
-          return activationCode ? activationCode.match(/.{4}/g).join(' ') : '';
-        };
 
         adc.resetAddDevice = function () {
           adc.showAdd = true;
@@ -57,16 +64,24 @@
         adc.isNameValid = function () {
           return adc.deviceName && adc.deviceName.length < 128;
         };
+
+        adc.clickUsers = function () {
+          $state.go('users.list');
+          $modalInstance.dismiss();
+        };
       }
     )
     .service('AddDeviceModal',
       /* @ngInject */
       function ($modal) {
-        function open() {
+        function open(activationCode) {
           return $modal.open({
             controllerAs: 'adc',
             controller: 'AddDeviceController',
-            templateUrl: 'modules/squared/devices/addDevice/addDevice.html'
+            templateUrl: 'modules/squared/devices/addDevice/addDevice.html',
+            resolve: {
+              activationCode: _.constant(activationCode)
+            }
           }).result;
         }
 

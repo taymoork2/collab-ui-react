@@ -1,18 +1,13 @@
 'use strict';
 
 describe('Service: USSService2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Squared')); // because we use CsdmPoller
+  beforeEach(module('Hercules'));
 
   var $httpBackend, Authinfo, CsdmHubFactory, USSService2, hubOn;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
   beforeEach(module(function ($provide) {
-    Authinfo = {
-      getOrgId: sinon.stub()
-    };
-    Authinfo.getOrgId.returns('456');
-    $provide.value('Authinfo', Authinfo);
-
     hubOn = sinon.spy();
     CsdmHubFactory = {
       create: sinon.stub()
@@ -23,13 +18,12 @@ describe('Service: USSService2', function () {
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
-  beforeEach(inject(function (_$httpBackend_, _USSService2_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService2_, _Authinfo_) {
+    Authinfo = _Authinfo_;
+    Authinfo.getOrgId = sinon.stub().returns("456");
+
     $httpBackend = _$httpBackend_;
     USSService2 = _USSService2_;
-
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('should fetch and return data from the correct backend', function () {
@@ -111,10 +105,6 @@ describe('Service: USSService2', function () {
   });
 
   describe('decorateWithStatus', function () {
-    afterEach(function () {
-      $httpBackend.flush();
-    });
-
     describe('when not entitled', function () {
       it('error state is not entitled', function () {
         var status = USSService2.decorateWithStatus({

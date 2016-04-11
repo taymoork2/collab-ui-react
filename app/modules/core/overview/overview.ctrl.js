@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -29,9 +29,13 @@
       });
     }
 
+    function init() {
+      setSipUriNotification();
+    }
+
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
-    vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
     _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
@@ -44,13 +48,16 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-    ReportsService.huronHealthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     vm.isCalendarAcknowledged = true;
     vm.isCallAwareAcknowledged = true;
     vm.isCallConnectAcknowledged = true;
+    vm.isCloudSipUriSet = false;
+    vm.isSipUriAcknowledged = false;
+    init();
+    vm.setSipUriNotification = setSipUriNotification;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -68,6 +75,19 @@
       }
     });
 
+    function setSipUriNotification() {
+      Orgservice.getOrg(function (data, status) {
+        if (status === 200) {
+          if (data.orgSettings.sipCloudDomain) {
+            vm.isCloudSipUriSet = true;
+          }
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+        }
+      });
+    }
+
     vm.setHybridAcknowledged = function (serviceName) {
       if (serviceName === 'calendar-service') {
         vm.isCalendarAcknowledged = true;
@@ -78,6 +98,12 @@
       }
       Orgservice.setHybridServiceAcknowledged(serviceName);
     };
+
+    vm.setSipUriNotificationAcknowledged = function () {
+      vm.isSipUriAcknowledged = true;
+    };
+
+    $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
 
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {
@@ -90,12 +116,22 @@
       vm.setHybridAcknowledged(serviceName);
     };
 
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
+    };
+
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
 
     vm.openFirstTimeSetupWiz = function () {
       $state.go('firsttimewizard');
+    };
+
+    vm.displayNotifications = function () {
+      return (vm.setupNotDone() || !(vm.isCalendarAcknowledged && vm.isCallAwareAcknowledged && vm.isCallConnectAcknowledged && (vm.isSipUriAcknowledged || vm.isCloudSipUriSet)));
     };
   }
 })();

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExSiteSetting').controller('WebExSiteSettingCtrl', [
+  angular.module('WebExApp').controller('WebExSiteSettingCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -14,6 +14,9 @@
     '$window',
     'Authinfo',
     'Config',
+    'Storage',
+    'WebExUtilsFact',
+
     function webexSiteSettingCtrl(
       $scope,
       $rootScope,
@@ -26,7 +29,9 @@
       $timeout,
       $window,
       Authinfo,
-      Config
+      Config,
+      Storage,
+      WebExUtilsFact
     ) {
 
       var _this = this;
@@ -73,10 +78,9 @@
         iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
-      $scope.authToken = $rootScope.token;
+      $scope.authToken = Storage.get('accessToken');
       $scope.siteName = $stateParams.siteUrl;
-      var index = $stateParams.siteUrl.indexOf(".");
-      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
       $scope.fullSparkDNS = window.location.origin;
 
       $scope.locale = (

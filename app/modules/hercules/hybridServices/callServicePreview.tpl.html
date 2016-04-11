@@ -10,7 +10,7 @@
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
       <cs-toggle-switch toggle-id="callServiceAwareEntitledToggle" ng-model="callServiceAware.entitled"
-                        size="small"></cs-toggle-switch>
+                        size="small" ng-click="checkIfDomainIsVerified(callServiceAware.entitled)"></cs-toggle-switch>
     </div>
     <div>
       <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' |
@@ -23,6 +23,7 @@
               translate="hercules.activationStatus.{{getStatus(callServiceAware.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceAware.status && callServiceAware.entitled"
               ng-class="callServiceAware.entitled && callServiceAware.status ? 'status-' + callServiceAware.status.state : 'disabled'"
+              id="callServiceAwareStatus"
               translate="common.{{callServiceAware.entitled ? 'on' : 'off'}}"></span>
       </div>
       <div ng-if="callServiceAware.entitled && callServiceAware.homedConnector">
@@ -34,6 +35,18 @@
       <div ng-if="callServiceAware.sipUri && callServiceAware.entitled">
         <span class="cloud-extension-label">{{'cloudExtensions.sipUri' | translate}}:</span>
         <span class="cloud-extension-label status-notActivated">{{callServiceAware.sipUri}}</span>
+      </div>
+      <div ng-if="domainVerificationError" class="dv-error">
+        <table>
+          <tr>
+            <td><span class="icon icon-error" style="color:red;"></span></td>
+            <td><span class="extension-description" style="color:red"
+                      translate="hercules.domain-verification.domain-not-verified"/>
+              <span class="extension-description" style="color:red"
+                    translate="hercules.domain-verification.navigateToCallSettings"
+                    translate-value-onclick="navigateToCallSettings()" translate-compile></span></td>
+          </tr>
+        </table>
       </div>
       <span
         ng-if="callServiceAware.entitled
@@ -47,7 +60,7 @@
 
   </cs-sp-section>
   <cs-sp-section class="cloud-extensions"
-                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS && !callServiceConnect.huronEntitled">
+                 ng-if="callServiceAware.entitled && callServiceConnect.orgEntitled && callServiceConnect.enabledInFMS">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
       <cs-toggle-switch toggle-id="callServiceConnectEntitledToggle" ng-model="callServiceConnect.entitled"
@@ -55,7 +68,6 @@
     </div>
     <p class="extension-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec' |
       translate}}</p>
-
     <div>
       <span class="cloud-extension-label">{{'cloudExtensions.status' | translate}}:</span>
         <span class="cloud-extension-label" ng-if="callServiceConnect.entitled && callServiceConnect.status"
@@ -63,12 +75,20 @@
               translate="hercules.activationStatus.{{getStatus(callServiceConnect.status)}}"></span>
         <span class="cloud-extension-label" ng-hide="callServiceConnect.status && callServiceConnect.entitled"
               ng-class="callServiceConnect.entitled && callServiceConnect.status ? 'status-' + callServiceConnect.status.state : 'disabled'"
+              id="callServiceConnectStatus"
               translate="common.{{callServiceConnect.entitled ? 'on' : 'off'}}"></span>
     </div>
     <div ng-if="callServiceConnect.enterpriseDn && callServiceConnect.entitled">
       <span class="cloud-extension-label">{{'cloudExtensions.enterpriseDn' | translate}}:</span>
       <span class="cloud-extension-label status-notActivated">{{callServiceConnect.enterpriseDn}}</span>
     </div>
+
+    <span
+      ng-if="callServiceConnect.entitled
+      && callServiceConnect.status.state === 'error'"
+      class="cloud-extension-label status-error">
+      {{callServiceConnect.status.description.defaultMessage}}
+    </span>
+
   </cs-sp-section>
 </cs-sp-container>
-

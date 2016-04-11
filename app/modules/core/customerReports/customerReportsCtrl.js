@@ -6,13 +6,14 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExApiGatewayService, Storage) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
 
+    vm.pageTitle = $translate.instant('reportsPage.pageTitle');
     vm.allReports = 'all';
     vm.engagement = 'engagement';
     vm.quality = 'quality';
@@ -21,33 +22,36 @@
     vm.displayEngagement = true;
     vm.displayQuality = true;
 
-    var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+    var activeUsersSort = ['userName', 'numCalls', 'sparkMessages', 'totalActivity'];
     var activeUsersChart = null;
-    var activeUserCard = null;
+    var previousSearch = "";
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
+    vm.searchPlaceholder = $translate.instant('activeUsers.search');
+    vm.searchField = "";
     vm.mostActiveUsers = [];
+    vm.showMostActiveUsers = false;
+    vm.displayMostActive = false;
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
     vm.activeUserCurrentPage = 0;
-    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeUserPredicate = activeUsersSort[3];
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
-    var avgRoomsCard = null;
     vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
 
     var filesSharedChart = null;
-    var filesSharedCard = null;
     vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
     var mediaChart = null;
-    var mediaCard = null;
+    var mediaData = [];
     vm.mediaQualityStatus = REFRESH;
+    vm.mediaQualityPopover = $translate.instant('mediaQuality.packetLossDefinition');
     vm.mediaOptions = [{
       value: 0,
       label: $translate.instant('reportsPage.allCalls')
@@ -61,19 +65,25 @@
     vm.mediaSelected = vm.mediaOptions[0];
 
     var deviceChart = null;
-    var deviceCard = null;
+    var currentDeviceGraphs = [];
+    var defaultDeviceFilter = {
+      value: 0,
+      label: $translate.instant('registeredEndpoints.allDevices')
+    };
     vm.deviceStatus = REFRESH;
+    vm.isDevicesEmpty = true;
     vm.deviceDescription = '';
+    vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+    vm.selectedDevice = vm.deviceFilter[0];
 
     var metricsChart = null;
-    var metricsCard = null;
     vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
     vm.metrics = {};
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
-      state: 'devReports'
+      state: 'reports'
     }];
 
     vm.timeOptions = [{
@@ -93,9 +103,11 @@
 
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
-    vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
+    vm.searchMostActive = searchMostActive;
+    vm.deviceUpdate = deviceUpdate;
 
+    // Graph data status checks
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
     };
@@ -104,12 +116,14 @@
       return tab === EMPTY;
     };
 
-    vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.floor((num + 1) / 5);
+    // Controls for Most Active Users Table
+    vm.mostActiveUserSwitch = function () {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resizeCards();
     };
 
-    vm.changePage = function (num) {
-      vm.activeUserCurrentPage = num;
+    vm.activePage = function (num) {
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.mostActiveSort = function (num) {
@@ -125,24 +139,24 @@
       }
     };
 
-    vm.pageForward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
-        vm.activeButton[0] += 1;
-        vm.activeButton[1] += 1;
-        vm.activeButton[2] += 1;
+    vm.changePage = function (num) {
+      if ((num > 1) && (num < vm.activeUsersTotalPages)) {
+        vm.activeButton[0] = (num - 1);
+        vm.activeButton[1] = num;
+        vm.activeButton[2] = (num + 1);
       }
-      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
+      vm.activeUserCurrentPage = num;
+      resizeCards();
+    };
+
+    vm.pageForward = function () {
+      if (vm.activeUserCurrentPage < vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
     };
 
     vm.pageBackward = function () {
-      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
-        vm.activeButton[0] -= 1;
-        vm.activeButton[1] -= 1;
-        vm.activeButton[2] -= 1;
-      }
-      if (vm.activeUserCurrentPage !== 1) {
+      if (vm.activeUserCurrentPage > 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
     };
@@ -152,63 +166,75 @@
         setFilterBasedText();
         $timeout(function () {
           setDummyData();
-
-          setActiveUserData();
-          setAvgRoomData();
-          setFilesSharedData();
-          setMediaData();
-          setCallMetricsData();
+          setAllGraphs();
         }, 30);
       }
     }
 
-    function resizeCards() {
-      setTimeout(function () {
-        $('.cs-card-layout').masonry('layout');
-      }, 300);
+    function timeUpdate() {
+      vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
+      vm.avgRoomStatus = REFRESH;
+      vm.filesSharedStatus = REFRESH;
+      vm.mediaQualityStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
+      vm.metricStatus = REFRESH;
+      vm.metrics = {};
+      vm.mediaSelected = vm.mediaOptions[0];
+
+      setFilterBasedText();
+      setDummyData();
+      setAllGraphs();
     }
 
-    function mostActiveUserSwitch() {
-      vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resizeCards();
+    function mediaUpdate() {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, vm.mediaSelected);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+    }
+
+    function setAllGraphs() {
+      setActiveUserData();
+      setAvgRoomData();
+      setFilesSharedData();
+      setMediaData();
+      setCallMetricsData();
+      setDeviceData();
+    }
+
+    function resizeCards() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
+
+    function delayedResize() {
+      // delayed resize necessary to fix any overlapping cards on smaller screens
+      $timeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 500);
     }
 
     function resetCards(filter) {
       if (currentFilter !== filter) {
-        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
-        var qualityElems = [mediaCard, metricsCard];
-
-        if (filter === vm.allReports) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
-          }
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
+        vm.displayEngagement = false;
+        vm.displayQuality = false;
+        if (filter === vm.allReports || filter === vm.engagement) {
           vm.displayEngagement = true;
-          vm.displayQuality = true;
-        } else if (filter === vm.engagement) {
-          if (!vm.displayEngagement) {
-            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-          }
-          if (vm.displayQuality) {
-            $('.cs-card-layout').masonry('remove', qualityElems);
-          }
-          vm.displayEngagement = true;
-          vm.displayQuality = false;
-        } else if (filter === vm.quality) {
-          if (!vm.displayQuality) {
-            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-          }
-          if (vm.displayEngagement) {
-            $('.cs-card-layout').masonry('remove', engagementElems);
-          }
-          vm.displayEngagement = false;
+        }
+        if (filter === vm.allReports || filter === vm.quality) {
           vm.displayQuality = true;
         }
-
-        currentFilter = filter;
         resizeCards();
+        delayedResize();
+        currentFilter = filter;
       }
     }
 
@@ -237,107 +263,91 @@
         time: vm.timeSelected.description
       });
 
-      vm.deviceDescription = $translate.instant("registeredEndpoints.description", {
+      vm.deviceDescription = $translate.instant("registeredEndpoints.customerDescription", {
         time: vm.timeSelected.description
       });
     }
 
     function setDummyData() {
-      var activeUserData = DummyCustomerReportService.dummyActiveUserData(vm.timeSelected);
-      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(activeUserData, activeUsersChart);
-      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
-        activeUsersChart = tempActiveUserChart;
-      }
-
-      var avgRoomData = DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected);
-      var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(avgRoomData, avgRoomsChart);
-      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
-        avgRoomsChart = tempAvgRoomsChart;
-      }
-
-      var filesSharedData = DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected);
-      var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(filesSharedData, filesSharedChart);
-      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
-        filesSharedChart = tempFilesSharedChart;
-      }
-
-      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+      setActiveGraph(DummyCustomerReportService.dummyActiveUserData(vm.timeSelected));
+      setAverageGraph(DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected));
+      setFilesGraph(DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected));
+      setMetricGraph(DummyCustomerReportService.dummyMetricsData());
+      setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected));
+      setMediaGraph(DummyCustomerReportService.dummyMediaData(vm.timeSelected), {
         value: 0
       });
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
-      }
-
-      var metricsData = DummyCustomerReportService.dummyMetricsData();
-      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
-      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
-        metricsChart = tempMetricsChart;
-      }
 
       resizeCards();
     }
 
-    function timeUpdate() {
-      vm.activeUserStatus = REFRESH;
-      vm.mostActiveUserStatus = REFRESH;
-      vm.avgRoomStatus = REFRESH;
-      vm.filesSharedStatus = REFRESH;
-      vm.mediaQualityStatus = REFRESH;
-      vm.deviceStatus = REFRESH;
-      vm.metricStatus = REFRESH;
-      vm.metrics = {};
-      vm.mediaSelected = vm.mediaOptions[0];
-
-      setFilterBasedText();
-      setDummyData();
-
-      setActiveUserData();
-      setAvgRoomData();
-      setFilesSharedData();
-      setMediaData();
-      setCallMetricsData();
-    }
-
-    function mediaUpdate() {
-      vm.mediaQualityStatus = REFRESH;
-
-      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
-        value: 0
-      });
-      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-        mediaChart = tempMediaChart;
+    function setActiveGraph(data) {
+      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(data, activeUsersChart);
+      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
+        activeUsersChart = tempActiveUserChart;
       }
-
-      setMediaData();
     }
 
     function setActiveUserData() {
+      vm.activeUsersTotalPages = 0;
+      vm.activeUserCurrentPage = 0;
+      vm.searchField = "";
+      previousSearch = "";
+      vm.showMostActiveUsers = false;
+      vm.displayMostActive = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.graphData.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
-          if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
-            activeUsersChart = tempActiveUserChart;
-          }
+          setActiveGraph(response.graphData);
           vm.activeUserStatus = SET;
-          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
-            if (response === ABORT) {
-              return;
-            } else if (response.length === 0) {
-              vm.mostActiveUserStatus = EMPTY;
-            } else {
-              vm.mostActiveUserStatus = SET;
-            }
-            activeUserCard = document.getElementById('active-user-card');
-          });
+          vm.displayMostActive = response.isActiveUsers;
         }
         resizeCards();
       });
+      CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.mostActiveUserStatus = EMPTY;
+        } else {
+          vm.activeUserPredicate = activeUsersSort[3];
+          vm.mostActiveUsers = response;
+          vm.activeUserCurrentPage = 1;
+          vm.activeButton = [1, 2, 3];
+          vm.mostActiveUserStatus = SET;
+        }
+        resizeCards();
+      });
+    }
+
+    function searchMostActive() {
+      var returnArray = [];
+      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+        var userName = item.userName;
+        if (vm.searchField === undefined || vm.searchField === '' || (angular.isDefined(userName) && (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1)) {
+          returnArray.push(item);
+        }
+      });
+      if (vm.activeUsersTotalPages !== Math.ceil(returnArray.length / 5) || previousSearch !== vm.searchField) {
+        vm.activeUserCurrentPage = 1;
+        vm.activeButton = [1, 2, 3];
+        vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+        previousSearch = vm.searchField;
+      }
+      $timeout(function () {
+        resizeCards();
+      }, 10);
+      return returnArray;
+    }
+
+    function setAverageGraph(data) {
+      var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(data, avgRoomsChart);
+      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
+        avgRoomsChart = tempAvgRoomsChart;
+      }
     }
 
     function setAvgRoomData() {
@@ -347,14 +357,17 @@
         } else if (response.length === 0) {
           vm.avgRoomStatus = EMPTY;
         } else {
-          var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(response, avgRoomsChart);
-          if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
-            avgRoomsChart = tempAvgRoomsChart;
-          }
+          setAverageGraph(response);
           vm.avgRoomStatus = SET;
         }
-        avgRoomsCard = document.getElementById('avg-room-card');
       });
+    }
+
+    function setFilesGraph(data) {
+      var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(data, filesSharedChart);
+      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
+        filesSharedChart = tempFilesSharedChart;
+      }
     }
 
     function setFilesSharedData() {
@@ -364,31 +377,39 @@
         } else if (response.length === 0) {
           vm.filesSharedStatus = EMPTY;
         } else {
-          var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(response, filesSharedChart);
-          if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
-            filesSharedChart = tempFilesSharedChart;
-          }
+          setFilesGraph(response);
           vm.filesSharedStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
       });
     }
 
+    function setMediaGraph(data, mediaFilter) {
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(data, mediaChart, mediaFilter);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+    }
+
     function setMediaData() {
+      mediaData = [];
       CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart, vm.mediaSelected);
-          if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
-            mediaChart = tempMediaChart;
-          }
+          mediaData = response;
+          setMediaGraph(mediaData, vm.mediaSelected);
           vm.mediaQualityStatus = SET;
         }
-        mediaCard = document.getElementById('media-quality-card');
       });
+    }
+
+    function setMetricGraph(data) {
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(data, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
     }
 
     function setCallMetricsData() {
@@ -398,32 +419,62 @@
         } else if (response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
-          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
-          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
-            metricsChart = tempMetricsChart;
-          }
+          setMetricGraph(response);
           vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
-        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
+    function setDeviceGraph(data, deviceFilter) {
+      var tempDevicesChart = CustomerGraphService.setDeviceGraph(data, deviceChart, deviceFilter);
+      if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+        deviceChart = tempDevicesChart;
+      }
+    }
+
     function setDeviceData() {
+      vm.deviceFilter = [angular.copy(defaultDeviceFilter)];
+      vm.selectedDevice = vm.deviceFilter[0];
+      currentDeviceGraphs = [];
+      vm.isDevicesEmpty = true;
       CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
+        } else if (response.filterArray.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
-          // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
-          //   deviceChart = tempDeviceChart;
-          // }
-          vm.deviceStatus = SET;
+          vm.deviceFilter = response.filterArray.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          });
+          vm.selectedDevice = vm.deviceFilter[0];
+          currentDeviceGraphs = response.graphData;
+
+          if (!currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
+            setDeviceGraph(currentDeviceGraphs, vm.selectedDevice);
+            vm.deviceStatus = SET;
+            vm.isDevicesEmpty = false;
+          } else {
+            vm.deviceStatus = EMPTY;
+          }
         }
-        deviceCard = document.getElementById('device-card');
       });
+    }
+
+    function deviceUpdate() {
+      if (currentDeviceGraphs.length > 0 && !currentDeviceGraphs[vm.selectedDevice.value].emptyGraph) {
+        var tempDevicesChart = CustomerGraphService.setDeviceGraph(currentDeviceGraphs, deviceChart, vm.selectedDevice);
+        if (tempDevicesChart !== null && angular.isDefined(tempDevicesChart)) {
+          deviceChart = tempDevicesChart;
+        }
+        vm.deviceStatus = SET;
+      } else {
+        var tempDeviceChart = CustomerGraphService.setDeviceGraph(DummyCustomerReportService.dummyDeviceData(vm.timeSelected), deviceChart);
+        if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
+          deviceChart = tempDeviceChart;
+        }
+        vm.deviceStatus = EMPTY;
+      }
     }
 
     // WEBEX side of the page has been copied from the existing reports page
@@ -463,7 +514,7 @@
       webexSiteUrls.forEach(
         function chkWebexSiteUrl(url) {
           promiseChain.push(
-            WebExUtilsFact.isSiteSupportsIframe(url).then(
+            WebExApiGatewayService.isSiteSupportsIframe(url).then(
               function getSiteSupportsIframeSuccess(result) {
                 if (result.isAdminReportEnabled && result.isIframeSupported) {
                   $scope.webexOptions.push(result.siteUrl);
@@ -492,7 +543,7 @@
           var funcName = "promisChainDone()";
           var logMsg = "";
 
-          // if we are displaying the webex reports index page then go ahead with the rest of the code 
+          // if we are displaying the webex reports index page then go ahead with the rest of the code
           if (vm.showWebexReports) {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
@@ -536,7 +587,7 @@
         function (data, status) {
           if (data.success) {
             if (data.emails) {
-              Authinfo.setEmail(data.emails);
+              Authinfo.setEmails(data.emails);
               generateWebexReportsUrl();
             }
           }

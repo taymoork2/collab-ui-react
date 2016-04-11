@@ -6,49 +6,82 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService) {
+  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
-    var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
     vm.currentCustomer = $stateParams.currentCustomer;
+    vm.customerName = vm.currentCustomer.customerName;
+    vm.customerOrgId = vm.currentCustomer.customerOrgId;
 
+    vm.reset = reset;
+    vm.saveLogoSettings = saveLogoSettings;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.isOrgSetup = isOrgSetup;
+    vm.isOwnOrg = isOwnOrg;
+    vm.deleteTestOrg = deleteTestOrg;
+
+    vm.logoOverride = false;
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
-    vm.logoOverride = false;
-    vm.isOrgSetup = isOrgSetup;
-    vm.isOwnOrg = isOwnOrg;
+    vm.allowCustomerLogoOrig = false;
+    vm.isTest = false;
+
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
-    vm.offer = vm.currentCustomer.offer = getAtlasStormBrandingOffer();
+
+    var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer);
+    vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       if (result) {
         if (_.find(vm.currentCustomer.offers, {
-            id: Config.trials.roomSystems
+            id: Config.offerTypes.roomSystems
           })) {
           vm.showRoomSystems = result;
         }
       }
     });
 
-    initCustomer();
-    getLogoSettings();
+    init();
 
     vm.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
-        BrandService.enableCustomerLogos(customerOrgId);
+        BrandService.enableCustomerLogos(vm.customerOrgId);
       } else {
-        BrandService.disableCustomerLogos(customerOrgId);
+        BrandService.disableCustomerLogos(vm.customerOrgId);
       }
     }, 2000, {
       'leading': true,
       'trailing': false
     });
+
+    function init() {
+      initCustomer();
+      getLogoSettings();
+      getIsTestOrg();
+    }
+
+    function resetForm() {
+      if (vm.form) {
+        vm.allowCustomerLogos = vm.allowCustomerLogoOrig;
+        vm.form.$setPristine();
+        vm.form.$setUntouched();
+      }
+    }
+
+    function reset() {
+      resetForm();
+    }
+
+    function saveLogoSettings() {
+      vm.toggleAllowCustomerLogos(vm.allowCustomerLogos);
+      vm.form.$setPristine();
+      vm.form.$setUntouched();
+    }
 
     function initCustomer() {
       if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
@@ -61,10 +94,11 @@
         .then(function (settings) {
           vm.logoOverride = settings.allowCustomerLogos;
         });
-      BrandService.getSettings($stateParams.currentCustomer.customerOrgId)
+      BrandService.getSettings(vm.customerOrgId)
         .then(function (settings) {
           vm.usePartnerLogo = settings.usePartnerLogo;
           vm.allowCustomerLogos = settings.allowCustomerLogos;
+          vm.allowCustomerLogoOrig = settings.allowCustomerLogos;
         });
     }
 
@@ -102,7 +136,7 @@
       if (licIds.length > 0) {
         Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
       } else {
-        AccountOrgService.getAccount(vm.currentCustomer.customerOrgId).success(function (data) {
+        AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
           var d = data;
           var len = d.accounts.length;
           var i = 0;
@@ -115,23 +149,25 @@
         });
       }
       $window.open($state.href('login_swap', {
-        customerOrgId: vm.currentCustomer.customerOrgId,
-        customerOrgName: vm.currentCustomer.customerName
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.customerName
       }));
     }
 
     function openEditTrialModal() {
-      $state.go('trialEdit.info', {
-          showPartnerEdit: true,
-          currentTrial: vm.currentCustomer
-        })
-        .then(function () {
-          $state.modal.result.then(function () {
-            $state.go('partnercustomers.list', {}, {
-              reload: true
+      TrialService.getTrial(vm.currentCustomer.trialId).then(function (response) {
+        $state.go('trialEdit.info', {
+            currentTrial: vm.currentCustomer,
+            details: response
+          })
+          .then(function () {
+            $state.modal.result.then(function () {
+              $state.go('partnercustomers.list', {}, {
+                reload: true
+              });
             });
           });
-        });
+      });
     }
 
     function getDaysLeft(daysLeft) {
@@ -158,44 +194,34 @@
     }
 
     function isOwnOrg() {
-      return vm.currentCustomer.customerName === Authinfo.getOrgName();
+      return vm.customerName === Authinfo.getOrgName();
     }
 
-    function getAtlasStormBrandingOffer() {
-      var offerUserServices = [];
-      var offerDeviceBasedServices = [];
-      var offerCodes = _.pluck(vm.currentCustomer.licenseList, 'offerName');
-      for (var index in offerCodes) {
-        var offerCode = offerCodes[index];
-        if (!offerCode) {
-          continue;
+    function getIsTestOrg() {
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          vm.isTest = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
         }
-        switch (offerCode) {
-        case Config.offerCodes.MS:
-          offerUserServices.push($translate.instant('customerPage.MS'));
-          break;
-        case Config.offerCodes.CF:
-          offerUserServices.push($translate.instant('customerPage.CF'));
-          break;
-        case Config.offerCodes.CO:
-          offerUserServices.push($translate.instant('customerPage.CO'));
-          break;
-        case Config.offerCodes.EE:
-          offerUserServices.push($translate.instant('customerPage.EE'));
-          break;
-        case Config.offerCodes.CMR:
-          offerUserServices.push($translate.instant('customerPage.CMR'));
-          break;
-        case Config.offerCodes.SD:
-          offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
-          break;
+      }, vm.customerOrgId);
+    }
+
+    function deleteTestOrg() {
+      if (vm.isTest) {
+        if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+            Notification.success('customerPage.deleteOrgSuccess', {
+              orgName: vm.customerName
+            });
+          }).catch(function (error) {
+            Notification.error('customerPage.deleteOrgError', {
+              orgName: vm.customerName
+            });
+          });
         }
       }
-
-      return {
-        'userServices': offerUserServices.sort().join(', '),
-        'deviceBasedServices': offerDeviceBasedServices.sort().join(', ')
-      };
     }
+
   }
 })();

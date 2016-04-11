@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -30,7 +30,13 @@
 
     function init() {
       setCountryCode()
-        .then(listPhoneNumbers);
+        .then(function () {
+          listPhoneNumbers();
+          var interval = $interval(listPhoneNumbers, 10000);
+          $scope.$on('$destroy', function () {
+            $interval.cancel(interval);
+          });
+        });
     }
 
     function listPhoneNumbers() {
@@ -59,11 +65,11 @@
       ModalService.open({
         title: $translate.instant('externalNumberPanel.deleteNumber'),
         message: $translate.instant('externalNumberPanel.deleteConfirmation', {
-          pattern: number.pattern
+          pattern: number.label
         }) + '<br>' + $translate.instant('externalNumberPanel.deleteWarning'),
         close: $translate.instant('common.yes'),
         dismiss: $translate.instant('common.no'),
-        type: 'danger'
+        type: 'negative'
       }).result.then(function () {
         return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {
@@ -84,7 +90,7 @@
     function getNumbers() {
       vm.allNumbers = ExternalNumberService.getAllNumbers();
       vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
-      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbers();
+      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
   }

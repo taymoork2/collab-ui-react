@@ -1,32 +1,22 @@
+if [ -z "$WX2_ADMIN_WEB_CLIENT_HOME" ]; then
+    echo "Error: no env var 'WX2_ADMIN_WEB_CLIENT_HOME' defined, please run './setup.sh'"
+    return 1
+fi
+
 # TODO: get these static urls from common source that can be shared with other nodejs scripts
 atlas_api_url=${atlas_api_url:-https://atlas-integration.wbx2.com/admin/api/v1}
 wdm_api_url=${wdm_api_url:-https://wdm-integration.wbx2.com/wdm/api/v1}
-ci_api_url=https://idbroker.webex.com
+huron_api_url=${huron_api_url:-https://cmi.huron-int.com/api/v1}
+ci_scim_api_url=${ci_scim_api_url:-https://identity.webex.com/organization/scim/v1}
+ci_auth_api_url=${ci_auth_api_url:-https://idbroker.webex.com}
 
 ci_cookie_name=cisPRODiPlanetDirectoryPro
 client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
 client_secret=c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857
-oauth_token_metadata_dir=.oauth_token_metadata
+oauth_token_metadata_dir=.cache/oauth_token_metadata
 tmp_file=/tmp/http-header.$$
-top_dir=${top_dir}
-auth_src=
-
-if [ -z "$top_dir" ]; then
-    cwd=`pwd`
-
-    # get project top-level dir (look for 'fabfile.py')
-    while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
-        cd ..
-    done
-    top_dir=`pwd`
-    cd $cwd
-    if [ "${top_dir}" = "/" ]; then
-        >&2 echo "Error: traversed to '/' while trying to find top-level dir"
-        exit 1
-    fi
-fi
-
-auth_src=${top_dir}/test/api_sanity/test_helper.coffee
+top_dir=${WX2_ADMIN_WEB_CLIENT_HOME}
+auth_src=${top_dir}/test/api_sanity/test_helper.js
 
 # get list of org ids reflecting the list of orgs that we should *never* delete.
 function get_blacklisted_orgs {
@@ -135,7 +125,7 @@ function curl_get_sso_token {
     curl -s -k \
       --data-urlencode "IDToken1=${user_id}" \
       --data-urlencode "IDToken2=${passwd}" \
-      ${ci_api_url}/idb/UI/Login?org=${org_id} \
+      ${ci_auth_api_url}/idb/UI/Login?org=${org_id} \
       -D ${tmp_file} > /dev/null
 
     sso_token="`get_sso_token_from_header_dump ${tmp_file}`"
@@ -175,7 +165,7 @@ function curl_get_authz_token {
       --data-urlencode 'scope=${scope}' \
       --data-urlencode 'realm=/${org_id}' \
       --data-urlencode 'state=${randstr}' \
-      ${ci_api_url}/idb/oauth2/v1/authorize 2>/dev/null"
+      ${ci_auth_api_url}/idb/oauth2/v1/authorize 2>/dev/null"
 
     # parse out authorization token from the 'title' element
     authz_code=`eval ${cmd} | grep '<title>' | cut -d'>' -f2 | cut -d'<' -f1`
@@ -202,7 +192,7 @@ function curl_get_bearer_token {
       --data-urlencode 'grant_type=authorization_code' \
       --data-urlencode 'code=${authz_code}' \
       --data-urlencode 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
-      ${ci_api_url}/idb/oauth2/v1/access_token 2>/dev/null | tee ${oauth_token_metadata_file}"
+      ${ci_auth_api_url}/idb/oauth2/v1/access_token 2>/dev/null | tee ${oauth_token_metadata_file}"
 
     bearer_token=`eval ${cmd} | parse_json_print_access_token`
     echo ${bearer_token}
@@ -246,10 +236,10 @@ function mk_token_metadata_file {
 # search for a JSON payload still within expiration window (<120-ish min.)
 # - if one exists, print its bearer token
 function get_last_active_bearer_token {
-    local usr_label=${1}
+    local user=${1}
     local expiration_in_min=119  # expiration is 7199 sec., but err on conservative side
     local payloads_list="`mktemp tmp.XXXXX`"
-    find ${top_dir}/${oauth_token_metadata_dir}/${usr_label} -type f -iname \*.json -mmin -${expiration_in_min} > ${payloads_list} 2>/dev/null
+    find ${top_dir}/${oauth_token_metadata_dir}/${user} -type f -iname \*.json -mmin -${expiration_in_min} > ${payloads_list} 2>/dev/null
     local last_active_payload=
     if [ -s "${payloads_list}" ]; then
         last_active_payload=`cat ${payloads_list} | xargs ls -1tr | tail -1`
@@ -322,7 +312,9 @@ function is_safe_atlas_operation {
 # print the endpoint url prefix based on the script-name invoked
 # - ex. 'curl-atlas' => prints the default atlas api url prefix
 # - ex. 'curl-wdm' => prints the default wdm api url prefix
-# - ex. 'curl-ci' => prints the default CI api url prefix
+# - ex. 'curl-huron' => prints the default huron api url prefix
+# - ex. 'curl-ci' => prints the default CI SCIM api url prefix
+# - ex. 'curl-cca' => prints empty string (no prefix, as it is assumed the whole url is being provided)
 function get_url_endpoint_prefix {
     local cmd_basename=${1}
     case "${cmd_basename}" in
@@ -332,8 +324,14 @@ function get_url_endpoint_prefix {
         "curl-wdm" )
             echo "${wdm_api_url}"
             ;;
+        "curl-huron" )
+            echo "${huron_api_url}"
+            ;;
         "curl-ci" )
-            echo "${ci_api_url}"
+            echo "${ci_scim_api_url}"
+            ;;
+        "curl-cca" )
+            echo ""
             ;;
         *)
             >&2 echo "Error: unrecognized command: ${cmd_basename}"

@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -49,6 +49,7 @@
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
+    vm.helpUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
@@ -216,6 +217,7 @@
 
     function nextTab() {
       var tabs = getTabs();
+      vm.wizardNextLoad = false;
       if (angular.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
@@ -248,6 +250,15 @@
         } else if ((getTab().name === 'communications' || getTab().name === 'serviceSetup') && getStep().name === 'claimSipUrl') {
           $rootScope.$broadcast('wizard-claim-sip-uri-event');
           updateStep();
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'importIdp') {
+          updateStep();
+          vm.isNextDisabled = true;
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'testSSO') {
+          $rootScope.$broadcast('wizard-set-sso-event');
+          vm.nextText = $translate.instant('common.save');
+        } else if (getTab().name === 'enterpriseSettings' && getStep().name === 'enterpriseSipUrl') {
+          $rootScope.$broadcast('wizard-enterprise-sip-url-event');
+          updateStep();
         } else {
           updateStep();
         }
@@ -255,9 +266,6 @@
         vm.wizardNextLoad = false;
       });
 
-      //if(getTab()==='enterpriseSetting'){
-      //call service setup.
-      //}
     }
 
     function updateStep() {

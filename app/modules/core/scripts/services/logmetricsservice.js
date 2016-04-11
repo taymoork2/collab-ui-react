@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',
-    function ($rootScope, $http, Authinfo, Config, Log, Storage, Auth) {
+  .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth', 'UrlConfig',
+    function ($rootScope, $http, Authinfo, Config, Log, Storage, Auth, UrlConfig) {
 
       function LogMetricEvent(eventAction, eventType, status, elapsedTime, units, data) {
         this.logStatus = status;
@@ -45,7 +45,13 @@ angular.module('Core')
           convertUsers: 'CONVERTUSERS',
           bulkUsers: 'BULKUSERS',
           bulkCsvUsers: 'BULKCSVUSERS',
-          bulkDirSyncUsers: 'BULKDIRSYNCUSERS'
+          bulkDirSyncUsers: 'BULKDIRSYNCUSERS',
+          domainManageAdd: 'DOMAINADD',
+          domainManageRemove: 'DOMAINREM',
+          domainManageVerify: 'DOMAINVER',
+          domainManageInstructions: 'DOMAININST',
+          helpdeskSearch: 'HELPDESKSEARCH',
+          helpdeskOperation: 'HELPDESKOPERATION'
         },
 
         getEventAction: function (eAction) {
@@ -57,7 +63,7 @@ angular.module('Core')
         },
 
         logMetrics: function (msg, eType, eAction, status, startLog, units, data) {
-          var metricUrl = Config.getLogMetricsUrl();
+          var metricUrl = UrlConfig.getLogMetricsUrl();
           var events = [];
           Log.debug(msg);
 

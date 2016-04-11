@@ -1,0 +1,77 @@
+.form-inline .choose-file {
+  margin-bottom: 2px;
+}
+
+.enterprise-settings {
+
+  .file-drop {
+    border: 1px dashed $gray-light;
+    @include vr-spacing(pt, 2);
+    @include vr-spacing(ph, 2);
+    @include vr-spacing(pb, 1);
+    &.dragover {
+      border-color: $link-hover-color;
+      background: $gray-lightest;
+    }
+    .sso-container {
+      @include vr-spacing(mt, 0);
+      @include vr-spacing(mb, 1);      
+    }
+    label {
+      cursor: pointer;
+      color: $link-color;
+      display: inline;
+      &:hover {
+        color: $link-hover-color;
+      }
+    }
+  }
+
+  .file-drop-inactive {
+    @extend .file-drop;
+    border: 1px solid $gray-light;
+  }
+  input {
+    display: none;
+  }
+}
+
+// SSO
+
+.sso-container {
+  margin: 2rem auto;
+  max-width: rem-calc(592);
+  text-align: center;
+  
+  .btn.btn--people {
+    @include vr-spacing(mt, .5);
+  }
+  
+  .icon {
+    font-size: 7rem;
+    margin-bottom: 2rem;
+    display: block;
+  }
+}
+
+.signingMetaDiv {
+  @extend .sso-container;
+  @include vr-spacing(mt, 2);
+  max-width: rem-calc(528);
+  
+  .SSOSelfSigned {
+    text-align: left;
+  }
+}
+
+.final-SSO {
+  @include vr-spacing(mt, 2);
+  
+  .finalSSO {
+    text-align: left;
+    fieldset {
+      @include vr-spacing(ml, 7);
+    }
+  }
+}
+

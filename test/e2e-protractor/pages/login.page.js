@@ -1,7 +1,11 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var LoginPage = function () {
 
+  var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
+  this.emailField = element(by.css('[name="email"]'));
   this.setLoginUsername = function (username) {
     browser.driver.findElement(by.id('IDToken1')).sendKeys(username);
   };
@@ -39,66 +43,65 @@ var LoginPage = function () {
     expect(browser.driver.findElement(by.css('.generic-error')).getText()).toContain(msg);
   };
 
-  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Login'));
+  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Sign In'));
 
-  function getLoginUrl(expectedUrl) {
-    var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'backend=production';
-    }
-    return url;
-  }
+  this.clickLoginButton = function () {
+    this.loginButton.click();
+  };
 
-  this.login = function (username, expectedUrl) {
+  this.login = function (username, expectedUrl, opts) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+    var method = opts && opts.navigateToUsingIntegrationForTesting ? 'navigateToUsingIntegrationForTesting' : 'navigateTo';
+    navigation[method](expectedUrl);
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
+  this.loginUsingIntegrationForTesting = function (username, expectedUrl) {
+    return this.login(username, expectedUrl, {
+      navigateToUsingIntegrationForTesting: true
+    });
+  };
+
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
+    navigation.navigateTo(expectedUrl);
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          utils.expectIsDisplayed(unauthorizedTitle);
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
   this.loginThroughGui = function (username, password, expectedUrl) {
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    navigation.navigateToUsingIntegrationForTesting(expectedUrl || '#/login');
+    utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
-    browser.driver.wait(this.isLoginUsernamePresent, TIMEOUT);
-    this.setLoginUsername(username);
-    this.clickLoginNext();
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
   };
+
 };
 
 module.exports = LoginPage;

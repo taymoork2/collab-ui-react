@@ -55,17 +55,19 @@ body {
 
 @media print {
   body * {
-    display: none;
+    visibility: hidden !important;
+    height: 0;
   }
 
   #printSection, #printSection * {
-    display: block;
+    visibility: visible !important;
+    height: auto !important;
   }
 
   #printSection {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 1rem;
   }
 
   .modal {
@@ -93,7 +95,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
   visibility: hidden;
 }
 
-.indent-checkbox {
+.indent-checkbox .cs-input-checkbox {
   margin-left: 30px;
 }
 
@@ -106,4 +108,8 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 .messagebox,
 .messagebox-backdrop {
   background-image: url(../images/bg_3515.jpg);
+}
+
+.actions-menu.open .dropdown-menu, .actions-menu.open .dropdown-menu .sub-menu, .dropdown-menu .actions-menu.open .sub-menu {
+  top: 34px;
 }

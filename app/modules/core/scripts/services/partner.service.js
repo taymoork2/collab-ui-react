@@ -5,10 +5,8 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth) {
-
-    var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
-    var managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, TrialService, UrlConfig) {
+    var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
       FREE: 0,
@@ -24,10 +22,7 @@
     };
 
     var factory = {
-      trialsUrl: trialsUrl,
-      managedOrgsUrl: managedOrgsUrl,
       customerStatus: customerStatus,
-      getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -37,43 +32,17 @@
       setServiceSortOrder: setServiceSortOrder,
       setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
-      exportCSV: exportCSV
+      exportCSV: exportCSV,
+      parseLicensesAndOffers: parseLicensesAndOffers
     };
 
     return factory;
 
-    function getTrialsList(callback) {
-      $http.get(trialsUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Retrieved trials list');
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+    function getManagedOrgsList() {
+      return $http.get(managedOrgsUrl);
     }
 
-    function getManagedOrgsList(callback) {
-      $http.get(managedOrgsUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Retrieved managed orgs list');
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
-    }
-
+    // Series of fns dont make any sense, unless isTrial = null means something...
     function isLicenseATrial(license) {
       return license && license.isTrial === true;
     }
@@ -85,14 +54,12 @@
     function isLicenseFree(license) {
       return angular.isUndefined(license.isTrial);
     }
+    // end series of fn's
 
     function getLicense(licenses, offerCode) {
-      if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
-        return _.find(licenses, {
-          offerName: offerCode
-        }) || {};
-      }
-      return {};
+      return _.find(licenses, {
+        offerName: offerCode
+      }) || {};
     }
 
     function isLicenseInfoAvailable(licenses) {
@@ -145,153 +112,94 @@
       }
     }
 
-    function loadRetrievedDataToList(retrievedData, basicList, isTrialData) {
-      var list = basicList || [];
+    function loadRetrievedDataToList(list, isTrialData) {
+      return _.map(list, function (customer) {
+        return massageDataForCustomer(customer, isTrialData);
+      });
+    }
 
-      for (var index in retrievedData) {
-        var data = retrievedData[index];
-        var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
-        var dataObj = {
-          trialId: data.trialId,
-          customerOrgId: data.customerOrgId || data.id,
-          customerName: data.customerName || data.displayName,
-          customerEmail: data.customerEmail || data.email,
-          endDate: edate,
-          numUsers: data.licenseCount,
-          daysLeft: 0,
-          usage: 0,
-          licenses: 0,
-          deviceLicenses: 0,
-          licenseList: [],
-          messaging: null,
-          conferencing: null,
-          communications: null,
-          roomSystems: null,
-          sparkConferencing: null,
-          webexEEConferencing: null,
-          webexCMR: null,
-          daysUsed: 0,
-          percentUsed: 0,
-          duration: data.trialPeriod,
-          offer: {},
-          offers: data.offers,
-          status: data.state,
-          state: data.state,
-          isAllowedToManage: true,
-          isSquaredUcOffer: false
-        };
+    function massageDataForCustomer(customer, isTrialData) {
+      var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
+      var dataObj = {
+        trialId: customer.trialId,
+        customerOrgId: customer.customerOrgId,
+        customerName: customer.customerName,
+        customerEmail: customer.customerEmail,
+        endDate: edate,
+        numUsers: customer.licenseCount,
+        daysLeft: 0,
+        usage: 0,
+        licenses: 0,
+        deviceLicenses: 0,
+        licenseList: [],
+        messaging: null,
+        conferencing: null,
+        communications: null,
+        roomSystems: null,
+        sparkConferencing: null,
+        webexEEConferencing: null,
+        webexCMR: null,
+        daysUsed: 0,
+        percentUsed: 0,
+        duration: customer.trialPeriod,
+        offer: {},
+        offers: customer.offers,
+        status: customer.state,
+        state: customer.state,
+        isAllowedToManage: true,
+        isSquaredUcOffer: false,
+        notes: {}
+      };
 
-        dataObj.isAllowedToManage = isTrialData || data.isAllowedToManage;
+      var licensesAndOffersData = parseLicensesAndOffers(customer);
+      angular.extend(dataObj, licensesAndOffersData);
 
-        if (data.licenses) {
-          var offerUserServices = [];
-          var offerDeviceBasedServices = [];
-          var offerCodes = _.pluck(data.licenses, 'offerName');
-          var offer = {};
-          for (var cnt in offerCodes) {
-            var offerCode = offerCodes[cnt];
-            if (!offerCode) {
-              continue;
-            }
-            switch (offerCode) {
-            case Config.offerCodes.MS:
-              offerUserServices.push($translate.instant('trials.collab'));
-              offer = _.find(data.offers, {
-                id: Config.trials.message
-              });
-              break;
-            case Config.offerCodes.CO:
-              dataObj.isSquaredUcOffer = true;
-              offerUserServices.push($translate.instant('trials.squaredUC'));
-              offer = _.find(data.offers, {
-                id: Config.trials.call
-              });
-              break;
-            case Config.offerCodes.EE:
-              offerUserServices.push($translate.instant('customerPage.EE'));
-              offer = _.find(data.offers, {
-                id: Config.trials.webex
-              });
-              break;
-            case Config.offerCodes.SD:
-              offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
-              offer = _.find(data.offers, {
-                id: Config.trials.roomSystems
-              });
-              break;
-            }
+      dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
+      dataObj.licenseList = customer.licenses;
 
-            if (offer) {
-              dataObj.usage = offer.usageCount;
-              if (offer.id === Config.trials.roomSystems) {
-                dataObj.deviceLicenses = offer.licenseCount;
-              } else {
-                dataObj.licenses = offer.licenseCount;
-              }
-            }
-          }
+      var daysDone = TrialService.calcDaysUsed(customer.startDate);
+      dataObj.daysUsed = daysDone;
+      dataObj.percentUsed = Math.round((daysDone / customer.trialPeriod) * 100);
 
-          dataObj.offer.userServices = offerUserServices.sort().join(', ');
-          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.sort().join(', ');
+      var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
+      dataObj.daysLeft = daysLeft;
+      if (isTrialData) {
+        if (daysLeft < 0) {
+          dataObj.status = $translate.instant('customerPage.expired');
+          dataObj.state = "EXPIRED";
         }
-
-        dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);
-        dataObj.licenseList = data.licenses;
-        dataObj.messaging = getLicense(data.licenses, Config.offerCodes.MS);
-        dataObj.communications = getLicense(data.licenses, Config.offerCodes.CO);
-        dataObj.roomSystems = getLicense(data.licenses, Config.offerCodes.SD);
-        dataObj.sparkConferencing = getLicense(data.licenses, Config.offerCodes.CF);
-        dataObj.webexEEConferencing = getLicense(data.licenses, Config.offerCodes.EE);
-        dataObj.webexCMR = getLicense(data.licenses, Config.offerCodes.CMR);
-
-        var now = moment().format('MMM D, YYYY');
-        var then = edate;
-        var start = moment(data.startDate).format('MMM D, YYYY');
-
-        var daysDone = moment(now).diff(start, 'days');
-        dataObj.daysUsed = daysDone;
-        dataObj.percentUsed = Math.round((daysDone / data.trialPeriod) * 100);
-
-        var daysLeft = moment(then).diff(now, 'days');
-        dataObj.daysLeft = daysLeft;
-        if (isTrialData) {
-          if (daysLeft < 0) {
-            dataObj.status = $translate.instant('customerPage.expired');
-            dataObj.state = "EXPIRED";
-          }
-        }
-
-        var tmpServiceObj = {
-          status: dataObj.status,
-          daysLeft: daysLeft,
-          customerName: dataObj.customerName
-        };
-        angular.extend(dataObj.messaging, tmpServiceObj);
-        angular.extend(dataObj.communications, tmpServiceObj);
-        angular.extend(dataObj.roomSystems, tmpServiceObj);
-        angular.extend(dataObj.sparkConferencing, tmpServiceObj);
-        angular.extend(dataObj.webexEEConferencing, tmpServiceObj);
-        angular.extend(dataObj.webexCMR, tmpServiceObj);
-
-        // 12/17/2015 - Timothy Trinh
-        // setting conferencing to sparkConferencing for now to preserve how
-        // the customer list page currently works.
-        dataObj.conferencing = dataObj.sparkConferencing;
-
-        setServiceSortOrder(dataObj.messaging);
-        setServiceSortOrder(dataObj.communications);
-        setServiceSortOrder(dataObj.roomSystems);
-        setServiceSortOrder(dataObj.sparkConferencing);
-        setServiceSortOrder(dataObj.webexEEConferencing);
-        setServiceSortOrder(dataObj.conferencing);
-        setServiceSortOrder(dataObj.webexCMR);
-
-        dataObj.notes = {};
-        setNotesSortOrder(dataObj);
-        list.push(dataObj);
       }
 
-      return list;
+      var serviceEntry = {
+        status: dataObj.status,
+        daysLeft: daysLeft,
+        customerName: dataObj.customerName
+      };
+
+      // havent figured out what this is doing yet...
+      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
+      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
+      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
+      dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
+      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
+
+      // 12/17/2015 - Timothy Trinh
+      // setting conferencing to sparkConferencing for now to preserve how
+      // the customer list page currently works.
+      dataObj.conferencing = dataObj.sparkConferencing;
+
+      setNotesSortOrder(dataObj);
+      return dataObj;
+    }
+
+    function initializeService(licenses, offerCode, serviceEntry) {
+      var licensesGotten = getLicense(licenses, offerCode);
+      angular.extend(licensesGotten, serviceEntry);
+      setServiceSortOrder(licensesGotten);
+
+      return licensesGotten;
     }
 
     function exportCSV() {
@@ -302,79 +210,118 @@
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
-      getManagedOrgsList(function (data, status) {
-        if (data.success && data.organizations) {
-          if (data.organizations.length > 0) {
-            customers = data.organizations;
-            Log.debug('total managed orgs records found:' + customers.length);
-          } else {
-            Log.debug('No managed orgs records found');
-          }
+      // dont catch exception, if there was a problem, throw it
+      // (this is preexisting behavior)
+      return getManagedOrgsList()
+        .then(function (response) {
+          // data to export for CSV file customer.conferencing.features[j]
+          var exportedCustomers = _.map(response.data.organizations, function (customer) {
+            var exportedCustomer = {};
 
-          //var exportedCustomers = formatCustomerList(customerList);
-          var exportedCustomers = [];
+            exportedCustomer.customerName = customer.customerName;
+            exportedCustomer.adminEmail = customer.customerEmail;
+            exportedCustomer.messagingEntitlements = '';
+            exportedCustomer.conferenceEntitlements = '';
+            exportedCustomer.communicationsEntitlements = '';
+            exportedCustomer.roomSystemsEntitlements = '';
 
-          if (customers.length === 0) {
-            Log.debug('No lines found.');
-          } else {
-            // header line for CSV file
-            // 12/17/2015 - Timothy Trinh
-            // Did not bother to add webex entitlements to this section because it may change.
-            var header = {};
-            header.customerName = $translate.instant('customerPage.csvHeaderCustomerName');
-            header.adminEmail = $translate.instant('customerPage.csvHeaderAdminEmail');
-            header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
-            header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
-            header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
-            header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
-            exportedCustomers.push(header);
+            var messagingLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.MESSAGING
+            });
+            var conferenceLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.CONFERENCING
+            });
+            var communicationsLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.COMMUNICATIONS
+            });
+            var roomSystemsLicense = _.find(customer.licenses, {
+              licenseType: Config.licenseTypes.SHARED_DEVICES
+            });
 
-            // data to export for CSV file customer.conferencing.features[j]
-            for (var i = 0; i < customers.length; i++) {
-              var exportedCustomer = {};
-
-              exportedCustomer.customerName = customers[i].customerName;
-              exportedCustomer.adminEmail = customers[i].customerEmail;
-              exportedCustomer.messagingEntitlements = '';
-              exportedCustomer.conferenceEntitlements = '';
-              exportedCustomer.communicationsEntitlements = '';
-              exportedCustomer.roomSystemsEntitlements = '';
-
-              var messagingLicense = _.find(customers[i].licenses, {
-                licenseType: "MESSAGING"
-              });
-              var conferenceLicense = _.find(customers[i].licenses, {
-                licenseType: "CONFERENCING"
-              });
-              var communicationsLicense = _.find(customers[i].licenses, {
-                licenseType: "COMMUNICATIONS"
-              });
-              var roomSystemsLicense = _.find(customers[i].licenses, {
-                licenseType: "SHARED_DEVICES"
-              });
-              if (messagingLicense && angular.isArray(messagingLicense.features)) {
-                exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
-              }
-              if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
-                exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
-              }
-              if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
-                exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
-              }
-              if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
-                exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
-              }
-              exportedCustomers.push(exportedCustomer);
+            if (messagingLicense && angular.isArray(messagingLicense.features)) {
+              exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
             }
-          }
+            if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+              exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
+            }
+            if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+              exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
+            }
+            if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+              exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
+            }
+            return exportedCustomer;
+          });
 
-          deferred.resolve(exportedCustomers);
-        } else {
-          deferred.reject('Failed to retrieve managed orgs information. Status: ' + status);
+          // header line for CSV file
+          // 12/17/2015 - Timothy Trinh
+          // Did not bother to add webex entitlements to this section because it may change.
+          var header = {};
+          header.customerName = $translate.instant('customerPage.csvHeaderCustomerName');
+          header.adminEmail = $translate.instant('customerPage.csvHeaderAdminEmail');
+          header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
+          header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
+          header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
+          header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
+
+          exportedCustomers.unshift(header);
+          return exportedCustomers;
+        });
+    }
+
+    function parseLicensesAndOffers(customer) {
+      var partial = {
+        licenses: 0,
+        deviceLicenses: 0,
+        isSquaredUcOffer: false,
+        usage: 0,
+        offer: {}
+      };
+
+      var deviceServiceText = [];
+      var userServices = [];
+
+      for (var offer in _.get(customer, 'offers', [])) {
+        var offerInfo = customer.offers[offer];
+        if (!offerInfo) {
+          continue;
         }
-      });
 
-      return deferred.promise;
+        partial.usage = offerInfo.usageCount;
+        if (offerInfo.id === Config.offerTypes.roomSystems) {
+          partial.deviceLicenses = offerInfo.licenseCount;
+        } else {
+          partial.licenses = offerInfo.licenseCount;
+        }
+
+        switch (offerInfo.id) {
+        case Config.offerTypes.spark1:
+        case Config.offerTypes.message:
+        case Config.offerTypes.collab:
+          userServices.push($translate.instant('trials.message'));
+          break;
+        case Config.offerTypes.call:
+        case Config.offerTypes.squaredUC:
+          partial.isSquaredUcOffer = true;
+          userServices.push($translate.instant('trials.call'));
+          break;
+        case Config.offerTypes.webex:
+        case Config.offerTypes.meetings:
+          userServices.push($translate.instant('customerPage.EE'));
+          break;
+        case Config.offerTypes.meeting:
+          userServices.push($translate.instant('trials.meeting'));
+          break;
+        case Config.offerTypes.roomSystems:
+          deviceServiceText.push($translate.instant('trials.roomSystem'));
+          break;
+        }
+      }
+
+      partial.offer.deviceBasedServices = _.uniq(deviceServiceText).join(', ');
+      partial.offer.userServices = _.uniq(userServices).join(', ');
+
+      return partial;
     }
   }
 })();

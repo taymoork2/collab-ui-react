@@ -16,7 +16,9 @@
     </ul>
   </div>
 </section>
-<footer class="footer-menu ng-isolate-scope overview-footer-content-trial" ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }" ng-if="card.enabled">
+<footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
+        ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
+        ng-if="card.enabled">
   <span class="footer-content">
     <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
     <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
@@ -25,15 +27,17 @@
     </a>
   </span>
   <span class="footer-icons">
-<a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true">
-&nbsp;<i class="icon icon-tools"></i>
+<a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true" ng-if="card.settingsUrl">
+  &nbsp;<i class="icon icon-tools"></i>
 </a>
 </span>
 </footer>
-<section ng-if="card.enabled" class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
+<section ng-if="card.enabled" class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }"
+         menutitle="card.name">
   <div class="card-menu-heading">
     <span class="ng-binding">SETTINGS</span>
-    <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span class="sr-only">Close</span>
+    <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span
+      class="sr-only">Close</span>
     </button>
   </div>
   <div>
@@ -61,8 +65,9 @@
   </div>
 </section>
 <section ng-if="!card.enabled" class="disabled-section">
-  <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
-  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
+  <p>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</p>
+  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{card.notEnabledActionText |
+    translate}}</a>
 </section>
 <footer ng-if="!card.enabled"><!-- && card.notEnabledFooter">-->
   <span>{{card.notEnabledFooter | translate}}</span>

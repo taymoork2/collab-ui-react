@@ -6,15 +6,13 @@
     .controller('GenerateActivationCodeCtrl', GenerateActivationCodeCtrl);
 
   /* @ngInject */
-  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification, HttpUtils) {
+  function GenerateActivationCodeCtrl($stateParams, $state, $translate, $window, OtpService, ActivationCodeEmailService, Notification) {
     var vm = this;
     vm.showEmail = false;
     vm.userName = $stateParams.currentUser.userName;
     vm.otp = $stateParams.activationCode;
     vm.email = {
       to: vm.userName
-        // subject: $translate.instant('generateActivationCodeModal.subjectContent'),
-        // message: ''
     };
     vm.qrCode = '';
     vm.timeLeft = '';
@@ -23,18 +21,18 @@
     vm.clipboardFallback = clipboardFallback;
 
     function activate() {
-      HttpUtils.setTrackingID().then(function () {
-        if (vm.otp === 'new') {
-          return OtpService.generateOtp(vm.userName).then(function (otpObj) {
-            vm.otp = otpObj;
-            vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-            setQRCode(vm.otp.code);
-          });
-        } else {
+      if (vm.otp === 'new') {
+        return OtpService.generateOtp(vm.userName).then(function (otpObj) {
+          vm.otp = otpObj;
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
           setQRCode(vm.otp.code);
-        }
-      });
+        });
+      } else if (vm.otp.code) {
+        vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
+        setQRCode(vm.otp.code);
+      } else {
+        $state.go('users.list');
+      }
     }
 
     function setQRCode(code) {
@@ -68,10 +66,12 @@
       var expiresOn = moment(vm.otp.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
 
       var emailInfo = {
-        'email': vm.email.to,
-        'firstName': vm.email.to,
-        'oneTimePassword': vm.otp.code,
-        'expiresOn': expiresOn
+        email: vm.email.to,
+        firstName: vm.email.to,
+        oneTimePassword: vm.otp.code,
+        expiresOn: expiresOn,
+        userId: _.get($stateParams.currentUser, 'id'),
+        customerId: _.get($stateParams.currentUser, 'meta.organizationID')
       };
 
       ActivationCodeEmailService.save({}, emailInfo, function () {

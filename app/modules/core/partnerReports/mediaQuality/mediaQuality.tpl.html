@@ -1,11 +1,14 @@
-<cs-card id="mediaQuality" class="large report-box media-quality">
+<cs-card id="mediaQuality" class="large report-box media-quality" ng-class="{'hideCard': !nav.showQuality}">
 <article>
     <header>
-      <h4 translate="mediaQuality.mediaQuality"></h4>
+      <span class='report-section-header'>
+        <span class='report-section-header' translate='mediaQuality.mediaQuality'></span>
+        <i class='icon icon-information' tooltip="{{::nav.mediaQualityPopover}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="true"></i>
+      </span>
     </header>
   <section>
       <p translate="mediaQuality.description"></p>
-      <div id="mediaQualityDiv" class="barchart"></div>
+      <div id="mediaQualityDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.mediaQualityRefresh) && !nav.isRefresh(nav.mediaQualityRefresh)}"></div>
       <div id="mediaQualityRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityRefresh)">
         <i class='icon icon-spinner icon-2x'></i>
       </div>

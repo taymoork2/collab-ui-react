@@ -2,12 +2,12 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('MetricsService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('MetricsService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
-      var baseUrl = Config.getMetricsServiceUrl();
+      var baseUrl = UrlConfig.getMetricsServiceUrl();
 
       var metricsService = {
 
@@ -30,8 +30,6 @@ angular.module('Mediafusion')
             callback(data, true);*/
 
           var metricsListUrl = Utils.sprintf(baseUrl + '/threshold/metrics', [Authinfo.getOrgId()]);
-
-          $http.defaults.headers.common.Authorization = 'Bearer ' + $rootScope.token;
 
           //Actual rest call to get meeting info from server and also error case is handeled.
           $http.get(metricsListUrl)

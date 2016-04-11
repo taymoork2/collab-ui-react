@@ -1,0 +1,168 @@
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
+}
+
+.aa-schedule-modal {
+  width: 785px;
+  background: #FFF none repeat scroll 0% 0%;
+  .aa-schedule-days {
+    padding: 4px;
+    label {
+      @include vr-spacing(mb, 0);
+    }
+  }
+  .aa-schedule-subtitle {
+    font-size: 20px
+  }
+  .aa-schedule-trash {
+    font-size: 35px;
+    color: #858688;
+    float: right;
+  }
+}
+
+.aa-schedule-container {
+  h3{
+    display: inline-block;
+  }
+}
+
+.aa-schedule-info-item {
+  @include vr-spacing(pb, .5);
+  line-height: 1rem;
+  text-align: left;
+}
+
+.aa-column {
+  @include vr-spacing(pl, 1.0);
+  white-space: normal;
+}
+
+.aa-schedule-info-day{
+  @include vr-spacing(pt, 1.0);
+  @include vr-spacing(pr, 0.3);
+}
+
+.aa-schedule-info-hours {
+ color: $gray-light-1;
+ text-align: left;
+}
+
+.aa-trim-padding {
+  @include vr-spacing(pl, 0);
+}
+
+.aa-holidays {
+	background: $gray-light-4;
+	@include vr-spacing(mh, 1.875);
+	.aa-schedule-subtitle {
+		@include vr-spacing(p, 1.25);
+	}
+	.aa-recur-annually-box {
+		@include vr-spacing(pt, 1.75);
+	}
+}
+
+.left-margin-20 {
+	@include vr-spacing(ml, 1.25);
+}
+
+#addHoliday {
+	padding-bottom: 10px;
+	padding-left: 10px;
+  display: block;
+  i {
+  	padding: 10px;
+  }
+}
+.simple-accordion {
+	font-size: 14px;
+	.icon-trash {
+		cursor: pointer;
+		color: $gray;
+		&:hover {
+			color: $gray-dark-1
+		}
+	}
+	.collapse {
+		@include vr-spacing(mt, -1.5);
+	}
+	.accordion {
+		border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+		.accordion--navigation {
+			> a {
+				background: transparent;
+				border: none;
+				border-top: 1px solid $gray;
+				border-radius: 0;
+				margin-top: 0;
+				color: $gray;
+				padding: 0;
+				> .row {
+					padding: .5rem 1rem;
+					.aa-holidays-name-collapse {
+						width: 30%;
+						float: left;
+						@include vr-spacing(pl, .5);
+					}
+					div {
+						display: inline-block;
+					}
+				}
+				&:before {
+					content: initial;
+				}
+				&.active {
+					display: none;
+				}
+				&:hover {
+					background: transparent;
+				}
+				&:focus {
+					box-shadow: none;
+				}
+			}
+			.content {
+				margin-top: 0;
+				border-radius: 0;
+				background: transparent;
+				border: none;
+				border-top: 1px solid $gray;
+				@include vr-spacing(pb, 1.5);
+			}
+			&:first-child {
+				> a {
+					border-top: none;
+				}
+				.content {
+					border-top: none;
+				}
+			}
+		}
+		.cs-checkbox {
+			@include vr-spacing(mb, 1.75);
+		}
+	}
+}
+
+.aa-holidays-recur-select-container {
+	@include vr-spacing(mb, 6);
+}
+
+/* Should go in toolkit for timepicker error state */
+
+.error .cs-datapicker-normal {
+	border-color: $color-alerts-base;
+	background-color: $color-alerts-lighter;
+	input[type="text"][readonly].cs-datepicker-input {
+		background-color: $color-alerts-lighter;
+	}
+}
+
+/* Should go in toolkit for cs-select error state */
+.error .select-toggle {
+	border-color: $color-alerts-base;
+	background-color: $color-alerts-lighter;
+}

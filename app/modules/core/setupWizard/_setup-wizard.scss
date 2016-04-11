@@ -1,338 +1,17 @@
-// TODO: Move this to a common location (Shared by Plan review and Assign Services)
-%plan-container {
-  min-height: 515px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  .indentedCheckbox {
-    margin: 0;
-    padding-left: rem-calc(28);
-    .cs-checkbox {
-      padding-right: 1.5rem;
-    }
-  }
-  .multiSub {
-    margin: 0px 0px 0px auto;
-    padding-bottom: 16px;
-    .multiText {
-      float: left;
-      padding-top: 5px;
-    }
-    .multiSelect {
-      width: 60%;
-      float: right;
-    }
-  }
-  .flex-row {
-    @extend .row;
-    display: flex;
-    .columns {
-      padding: 1.5rem;
-    }
-    .small-4 {
-      &:not(:last-of-type) {
-        margin-right: 3px;
-      }
-    }
-    .column-title {
-      background: $gray-light-4;
-      padding: 12px 0 14px 0;
-      line-height: 30px;
-    }
-    .column-free {
-      background: $gray-light-4;
-      min-height: 50px;
-      line-height: 24px;
-      font-size: 14px;
-    }
-    .column-mtg {
-      padding-bottom: 0;
-    }
-    .column-trial {
-      background: $gray-light-4;
-    }
-    .column-trial-header {
-      @extend .h5;
-      padding: 1.5rem;
-      background: $color-attention;
-      color: $white;
-    }
-    &.row-licenses {
-      flex: 1;
-      .columns {
-        padding: 0;
-        background: $gray-light-4;
-        font-size: 14px;
-      }
-      .column-trial,
-      .column-paid,
-      .column-mtg {
-        padding: 1.5rem;
-      }
-    }
-  }
-  .row-room {
-    margin-top: 3px;
-    background: $gray-light-4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .column-header {
-      padding: 0;
-      border-right: solid 1px $gray-light-2;
-    }
-  }
-  .column-room {
-    padding-top: 12px;
-    line-height: 32px;
-    text-align: center;
-  }
-  .room-systems {
-    text-align: left;
-    padding: 1.5rem;
-  }
-  .item-sparkRoom {
-    color: $color-primary-base;
-    font-family: $brand-font-light;
-    font-size: 14px;
-    line-height: 24px;
-  }
-  .spark-quantity {
-    font-size: 14px;
-    font-family: $brand-font-light;
-    color: $gray-base;
-    line-height: 24px;
-  }
-  .badge-trial {
-    @extend .badge.badge-warning;
-    display: inline-block;
-  }
-  .column-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    h3 {
-      color: $gray-dark-2;
-      margin-top: 2px;
-    }
-    .icon {
-      font-size: 32px;
-      margin-right: .75rem;
-    }
-  }
-  .column-subsription-header {
-    font-family: $brand-font-regular;
-    font-size: 12px;
-    color: $gray-dark-1;
-    text-align: center;
-    padding: 4px 0 2px;
-    border-top: 1px solid $white;
-    border-bottom: 1px solid $white;
+@import "planReview/plan-review";
+@import "addUsers/add-users";
+@import "messageSettings/message-settings";
+@import "sipUriSettings/sip-uri";
+@import "enterpriseSettings/enterprise-settings";
+@import "finish/finish";
 
-    &.free {
-      background-color: $color-cta-lighter;
-    }
-    &.paid {
-      background-color: $color-primary-lighter;
-    }
-    &.trial {
-      background-color: $color-attention-lighter;
-    }
-  }
-  .item-free {
-    color: $text-color;
-    font-family: $brand-font-light;
-    line-height: 24px;
-  }
-  .item-paid {
-    padding: 0 0 24px 0;
-    line-height: 24px;
-    .sub-item {
-      font-family: $brand-font-light;
-      font-size: 14px;
-      color: $gray-darker;
-    }
-    .quantity {
-      font-family: $brand-font-light;
-      font-size: 14px;
-      color: $gray-base;
-      display: inline-block;
-      .quantity-padding {
-        padding-right: 0;
-        font-size: 14px;
-        color: $gray-base;
-      }
-      .badge {
-        padding: 3px 9px 3px;
-      }
-      .badge.badge-warning {
-        background: $brand-warning-dark;
-      }
-    }
-  }
-  .item-license {
-    color: $color-primary-base;
-    font-family: $brand-font-light;
-    font-size: 14px;
-    line-height: 24px;
-  }
-  .item-mtg {
-    color: $color-primary-base;
-    font-family: $brand-font-light;
-    font-size: 14px;
-    line-height: 24px;
-    .sub-item {
-      padding-bottom: 24px;
-      font-family: $brand-font-light;
-      font-size: 14px;
-      color: $gray-base;
-      margin-bottom: 0;
-    }
-    .item-webex {
-      color: $gray-dark-2;
-      margin-right: 24px;
-    }
-    .quantity-mtg {
-      font-family: $brand-font-light;
-      font-size: 14px;
-      color: $gray-base;
-      display: inline-block;
-      .badge {
-        padding: 3px 9px 3px;
-      }
-      .badge.badge-warning {
-        background: $brand-warning-dark;
-      }
-    }
-  }
-  .sub-line {
-    border-bottom: 1px solid #ccc;
-    padding-top: 5px;
-    margin-bottom: 20px;
-  }
-}
-
-.wizard-plan-review {
-  @extend %plan-container;
-}
-
-.wizard-trial-progress {
-  .small-12 {
-    @include vr-spacing(mv, .25);
-  }
-  .progress {
-    margin-bottom: 5px;
-  }
-  .progress-bar-warning {
-    background-color: $brand-warning-dark;
-  }
-}
-
-.onboard-label {
-  width: 700px;
-  margin-top: 15px;
-}
-
-.wiz-onboard-btn {
-  margin-left: 5px !important;
-  margin-right: 5px !important;
-}
-
-.messaging-setup {
-  margin-left: 3px;
-  .title {
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-  .dr-content {
-    margin-bottom: 20px;
-    margin-top: 40px;
-  }
-  .dr-selector {
-    padding: 0;
-    margin-left: 3px;
-  }
-  .data-share {
-    margin-top: 100px;
-  }
-}
-
-.sipurl-setup {
-  .title {
-    margin-bottom: 40px;
-    margin-top: 20px;
-    font-size: 16px;
-  }
-  .warning {
-    margin-bottom: 40px;
-  }
-  .sip-field {
-    padding-left: 2px;
-  }
-  .sip-input {
-    width: 250px;
-    display: inline;
-  }
-  .domain {
-    margin-left: 15px;
-  }
-}
-
-.msgrsync-desc {
-  color: $gray-darker;
-  font-size: 18px;
-  background-color: $brand-warning-light;
-  margin-right: 200px;
-  padding-bottom: 5px;
-}
-
-.msgrsync-input {
-  margin-top: 24px;
-}
-
-.add-user-container {
-  .title-desc {
-    color: $gray-darker;
-    font-size: 16px;
-    padding-bottom: 5px;
-  }
-  .form-group {
-    margin-top: 15px;
-    label {
-      color: $gray-darkest;
-      font-size: 18px;
-      line-height: 24px;
-      padding-top: 20px;
-    }
-    p {
-      color: $gray-darker;
-      font-size: 14px;
-    }
-  }
-  .wizard-inline-block {
-    display: inline-block;
-  }
-  .installStepHead {
-    margin-top: rem(15);
-    margin-bottom: rem(15);
-  }
-  .installStep {
-    margin-bottom: rem(1);
-  }
-  .installStepLast {
-    margin-bottom: rem(25);
-  }
-  .installStepWarning {
-    margin-bottom: rem(25);
-    .alert-text {
-      color: $color-alerts-base;
-      font-weight: bold;
-    }
+.wizard-main-wrapper {
+  .row {
+    @extend .full;
   }
 }
 
 .service-setup-container {
-  padding-left: 20px;
   .form-group {
     margin-left: 0;
     margin-right: 0;
@@ -340,18 +19,41 @@
   .service-setup {
     label {
       font-size: 24px;
+      line-height: 1;
+      margin-bottom: 0;
+      padding-bottom: 11px;
+      padding-top: 28px;
+      &.toggle-switch {
+        margin-bottom: -2px;
+        padding-bottom: 0;
+        padding-top: 0;
+      }
+    }
+    .description-block {
+      margin-top: 0;
+    }
+    .formly-field-group {
+      margin-bottom: 0;
+    }
+    .form-group {
+      margin-bottom: 0;
     }
     .hide-delete {
       visibility: hidden;
     }
+    a.select-toggle {
+      margin-bottom: 0;
+    }
     .service-setup-timezone {
+      margin-bottom: -2px;
       .formly-input-wrapper {
-        width: 50%
+        width: 50%;
       }
     }
     .service-setup-steering-digit {
+      margin-bottom: rem(2);
       .formly-input-wrapper {
-        width: 100px;
+        width: 50%;
       }
     }
     .service-setup-site-code {
@@ -371,269 +73,19 @@
       }
     }
     .service-setup-extension-range-to {
-      margin-right: 30px;
-      margin-left: 30px;
+      margin-left: 10px;
+      margin-right: 13px;
     }
     .service-setup-company-voicemail ng-form {
-      width: 100%
+      width: 100%;
     }
     .service-setup-company-voicemail-number {
-        width: 50%
+      padding-bottom: 1rem;
+      padding-top: 1rem;
+      width: 50%;
     }
     .service-setup-moh {
       width: 50%;
     }
   }
-}
-
-.users-upload-csv {
-  label {
-    cursor: pointer;
-    color: $link-color;
-    &:hover {
-      color: $link-hover-color;
-    }
-  }
-  .file-drop {
-    border: 1px dashed $gray-light;
-    height: 300px;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    &.dragover {
-      border-color: $link-hover-color;
-      background: $gray-lightest;
-    }
-  }
-  .file-drop-content {
-    align-self: center;
-    .icon-circle-attachment {
-      font-size: 100px;
-      margin-bottom: 20px;
-      color: $gray-light;
-    }
-  }
-  .file-drop-inactive {
-    @extend .file-drop;
-    border: 1px solid $gray-light;
-    .file-drop-content {
-      width: 50%;
-    }
-    .close {
-      align-self: center;
-      margin-left: 5px;
-    }
-    .file-name {
-      margin-top: -15px;
-    }
-  }
-  .download-link {
-    margin-top: 10px;
-  }
-  input {
-    display: none;
-  }
-}
-
-.users-process-csv {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .icon-circle-group {
-    font-size: 100px;
-    margin-bottom: 100px;
-    color: $gray-light;
-  }
-  .users-process-content {
-    width: 50%;
-    display: flex;
-    .progressbar {
-      flex: 1;
-    }
-    .close {
-      align-self: center;
-      margin-left: 5px;
-    }
-  }
-  .time-duration {
-    margin-top: -15px;
-  }
-}
-
-.users-upload-results {
-  display: flex;
-  min-height: 600px;
-  flex-direction: column;
-  justify-content: center;
-  .icon-check-mark-success {
-    font-size: 100px;
-    color: $gray-light;
-    align-self: center;
-    margin-bottom: 25px;
-  }
-  .results-container {
-    display: inline-flex;
-    min-height: 150px;
-    .result {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-lightest;
-      min-height: 150px;
-      position: relative;
-      .action-link {
-        position: absolute;
-        left: 0;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        .icon-error {
-          color: $brand-danger;
-          margin-right: 5px;
-        }
-      }
-      & + .result {
-        margin-left: 3px;
-      }
-      .total {
-        font-size: 64px;
-        line-height: 1;
-        font-family: "CiscoSansTT Thin";
-      }
-      .total-title {
-        margin: 0 0 5px;
-      }
-      &.disabled {
-        color: $gray-light;
-      }
-      &.new-users:not(.disabled) .total {
-        color: $brand-success;
-      }
-      &.existing-users:not(.disabled) .total {
-        color: $brand-info;
-      }
-      &.error-users:not(.disabled) .total {
-        color: $brand-danger;
-      }
-    }
-  }
-  .results-total {
-    align-self: center;
-    margin: 20px 0;
-  }
-  .table-header {
-    border: $gray-light solid 1px;
-    border-bottom: 0;
-    .table {
-      border-color: $gray-lightest;
-    }
-    .table-bordered > thead > tr > th {
-      background-color: $gray-lightest;
-      color: $gray-darker;
-      height: 44px;
-      padding: 14px;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-  .table-body {
-    border: $gray-light solid 1px;
-    border-top: 0;
-    position: relative;
-    top: -1px;
-    .table {
-      border-width: 0;
-    }
-    .center {
-      text-align: center;
-    }
-    .table-bordered > tbody > tr > td {
-      color: $brand-danger;
-      height: 44px;
-      padding: 14px;
-    }
-    .table-bordered > tbody > tr {
-      border-top: none;
-      border-bottom: $gray-lighter solid 1px;
-    }
-    .table-bordered > tbody > tr:last-of-type {
-      border-bottom: none;
-    }
-  }
-  .error-table {
-    min-height: 46px;
-    max-height: 360px;
-    min-width: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    .table {
-      margin-bottom: 0;
-    }
-    .table-bordered > thead > tr > th,
-    .table-bordered > thead > tr > td,
-    .table-bordered > tbody > tr > th,
-    .table-bordered > tbody > tr > td {
-      border-bottom-width: 1px;
-      border-right: $gray-light solid 1px;
-      font-size: 15px;
-    }
-    .table-bordered > thead > tr > th:last-of-type,
-    .table-bordered > tbody > tr > td:last-of-type {
-      border-right: none;
-    }
-    .table-bordered > thead > tr:last-of-type > th,
-    .table-bordered > tbody > tr:last-of-type > td {
-      border-bottom-width: 0;
-    }
-    .table-bordered > thead > tr > th,
-    .table-bordered > tbody > tr > td {
-      border-right: $gray-light solid 1px;
-      border-left: none;
-      border-top: none;
-    }
-  }
-}
- input#dirDomainText {
-    width: 25%;
-    left: 2px;
-    position: relative;
-  }
-.dirsync-info {
-  margin-top: 16px;
-  width: 550px;
-  display: flex;
-  flex-direction: column;
-  .ftwdirgridStyle {
-    margin-top: 10px;
-    height: 200px;
-    border: 1px solid lightgray;
-    & >:nth-child(2) {
-      overflow-x: hidden;
-    }
-  }
-  .sync-dirsync-refresh-button {
-      font-size: 12px;
-     //font-size: $body-small-font-size;
-  }
-}
-.finish-page {
-    text-align: center;
-    width: 25rem;
-    margin: 0 auto;
-    margin-top: 10rem;
-    i {
-      font-size: 8rem;
-      color: $color-cta-base;
-    }
-    h3, p {
-      margin-top: 1.5rem
-    }
-    p {
-      font-size: 1rem
-    }
 }

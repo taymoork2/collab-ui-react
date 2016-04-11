@@ -3,34 +3,30 @@
 angular.module('Squared').service('DeviceFilter',
 
   /* @ngInject  */
-  function () {
+  function ($translate) {
 
     var currentSearch, currentFilter, arr = [];
 
     var filters = [{
       count: 0,
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
       count: 0,
-      name: 'Needs Activation',
-      filterValue: 'codes'
-    }, {
-      count: 0,
-      name: 'Has Issues',
+      name: $translate.instant('CsdmStatus.OnlineWithIssues'),
       filterValue: 'issues'
     }, {
       count: 0,
-      name: 'Offline',
+      name: $translate.instant('CsdmStatus.Offline'),
       filterValue: 'offline'
     }, {
       count: 0,
-      name: 'Online',
-      filterValue: 'online'
+      name: $translate.instant('CsdmStatus.RequiresActivation'),
+      filterValue: 'codes'
     }, {
       count: 0,
-      name: 'Inactive',
-      filterValue: 'inactive'
+      name: $translate.instant('CsdmStatus.Online'),
+      filterValue: 'online'
     }];
 
     var getFilters = function () {
@@ -67,13 +63,6 @@ angular.module('Squared').service('DeviceFilter',
         .value().length;
 
       _.find(filters, {
-          filterValue: 'inactive'
-        }).count = _.chain(list)
-        .filter(isUnused)
-        .filter(matchesSearch)
-        .value().length;
-
-      _.find(filters, {
         filterValue: 'all'
       }).count = _.filter(list, matchesSearch).length;
     };
@@ -83,7 +72,7 @@ angular.module('Squared').service('DeviceFilter',
     }
 
     function hasIssues(item) {
-      return item.hasIssues;
+      return item.hasIssues && item.isOnline && !item.isUnused;
     }
 
     function isOnline(item) {
@@ -92,10 +81,6 @@ angular.module('Squared').service('DeviceFilter',
 
     function isOffline(item) {
       return !item.isOnline && !item.needsActivation && !item.isUnused;
-    }
-
-    function isUnused(item) {
-      return item.isUnused;
     }
 
     function setCurrentSearch(search) {
@@ -122,14 +107,33 @@ angular.module('Squared').service('DeviceFilter',
     function matchesSearch(item) {
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
-        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || (item.tags || []).some(function (tag) {
-          return (tag || '').toLowerCase().indexOf(term || '') != -1;
-        }) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        var matchesAnyFieldOfItem = termMatchesAnyFieldOfItem(term, item);
+        var matchesState = termMatchesState(item.state, term);
+        var matchesAnyTag = termMatchesAnyTag(item.tags, term);
+        var matchesAnyIssue = termMatchesAnyIssue(item.diagnosticsEvents, term);
+        var matchesFormattedMac = (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
+        return matchesAnyFieldOfItem || matchesState || matchesAnyTag || matchesAnyIssue || matchesFormattedMac;
       });
     }
 
-    function termMatchesAnyFieldOfItem(term, item, fields) {
-      return (fields || []).some(function (field) {
+    function termMatchesAnyTag(tags, term) {
+      return (tags || []).some(function (tag) {
+        return (tag || '').toLowerCase().indexOf(term || '') != -1;
+      });
+    }
+
+    function termMatchesAnyIssue(issues, term) {
+      return (issues || []).some(function (issue) {
+        return (issue.type || '').toLowerCase().indexOf(term || '') != -1 || (issue.message || '').toLowerCase().indexOf(term || '') != -1;
+      });
+    }
+
+    function termMatchesState(state, term) {
+      return state && (state.readableState || '').toLowerCase().indexOf(term || '') != -1;
+    }
+
+    function termMatchesAnyFieldOfItem(term, item) {
+      return ['displayName', 'product', 'ip', 'mac', 'serial', 'upgradeChannel'].some(function (field) {
         return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
       });
     }
@@ -146,8 +150,6 @@ angular.module('Squared').service('DeviceFilter',
         return isOnline(item);
       case 'offline':
         return isOffline(item);
-      case 'inactive':
-        return isUnused(item);
       default:
         return true;
       }

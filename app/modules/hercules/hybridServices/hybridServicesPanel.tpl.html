@@ -1,4 +1,4 @@
-<div class="cloud-extensions hybrid-services-panel" ng-if="vm.isEnabled">
+<div class="cloud-extensions hybrid-services-panel" ng-if="hybridServicesPanelCtrl.isEnabled">
 
     <div class="row-hybrid">
       <div id="hybrid" class="column-header">
@@ -7,14 +7,18 @@
       </div>
 
       <div class="hs-extension-list">
-        <span class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
-          <label class="cs-checkbox" for="{{extension.id}}">
-              <input type="checkbox" id="{{extension.id}}" ng-model="extension.entitlementState"
-                     ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
-                     ng-change="vm.setEntitlements()">
-              <span translate="hercules.serviceNames.{{extension.id}}"></span>
+        <div class="hs-extension" ng-repeat="extension in hybridServicesPanelCtrl.extensions | filter: { enabled: true }">
+          <input type="checkbox"
+                  ng-model="extension.entitlementState"
+                  id="{{extension.id}}"
+                  ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
+                  ng-change="hybridServicesPanelCtrl.setEntitlements(extension)"
+                  ng-disabled="hybridServicesPanelCtrl.huronCallEntitlement(extension.id)" />
+          <label class="cs-checkbox"
+                  ng-class="{'indentedCB':hybridServicesPanelCtrl.shouldAddIndent(extension.id,'squared-fusion-ec'), 'disabled':hybridServicesPanelCtrl.huronCallEntitlement(extension.id)}"
+                  for="{{extension.id}}">
+            <span translate="hercules.serviceNames.{{extension.id == 'squared-fusion-uc' ? 'squared-fusion-uc.full' : extension.id}}"></span>
           </label>
-        </span>      
-      </div>
+        </div>
   </div>
 </div>

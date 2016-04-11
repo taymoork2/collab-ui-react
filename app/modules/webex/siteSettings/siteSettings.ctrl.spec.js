@@ -10,16 +10,16 @@ describe('WebExSiteSettingsCtrl Test', function () {
   var siteUrl = 'go.webex.com';
   var email = "mojoco@webex.com";
 
-  beforeEach(module('WebExSiteSettings'));
-  beforeEach(module('WebExUtils'));
-  beforeEach(module('WebExXmlApi'));
+  beforeEach(module('WebExApp'));
 
   beforeEach(inject(function (
     _Authinfo_,
-    _$controller_
+    _$controller_,
+    _WebExSiteSettingsFact_
   ) {
 
     Authinfo = _Authinfo_;
+    WebExSiteSettingsFact = _WebExSiteSettingsFact_;
 
     $scope = {};
     $controller = _$controller_;
@@ -29,11 +29,13 @@ describe('WebExSiteSettingsCtrl Test', function () {
     };
 
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
+    spyOn(WebExSiteSettingsFact, 'initSiteSettingsObj').and.returnValue({});
 
     var controller = $controller('WebExSiteSettingsCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       Authinfo: Authinfo,
+      WebExSiteSettingsFact: WebExSiteSettingsFact,
     });
   }));
 

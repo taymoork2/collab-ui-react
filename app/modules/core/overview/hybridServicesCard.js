@@ -11,10 +11,9 @@
       createCard: function createCard() {
         var card = {};
         card.name = 'overview.cards.hybrid.title';
-        card.cardClass = 'header-bar cta-base hybrid-card';
+        card.cardClass = 'header-bar gray-light hybrid-card';
         card.template = 'modules/core/overview/hybridServicesCard.tpl.html';
         card.icon = 'icon-circle-data';
-        card.settingsUrl = '#/services/expressway-management';
         card.enabled = false;
         card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
         card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';

@@ -2,14 +2,12 @@
 
 describe('Service: TelephonyInfoService', function () {
   var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
+  var $rootScope, FeatureToggleService, Authinfo;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
+  var cosRestrictions;
 
   beforeEach(module('Huron'));
-
-  var authInfo = {
-    getOrgId: sinon.stub().returns('1')
-  };
 
   var customer = {
     "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -27,18 +25,17 @@ describe('Service: TelephonyInfoService', function () {
     }]
   };
 
-  beforeEach(module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
-  }));
-
-  beforeEach(inject(function (_$httpBackend_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _HuronConfig_, _TelephonyInfoService_, _ServiceSetup_, _DirectoryNumber_, _HuronCustomer_, _Authinfo_, _InternationalDialing_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $rootScope = _$rootScope_;
     HuronConfig = _HuronConfig_;
     TelephonyInfoService = _TelephonyInfoService_;
     ServiceSetup = _ServiceSetup_;
     DirectoryNumber = _DirectoryNumber_;
     HuronCustomer = _HuronCustomer_;
+    Authinfo = _Authinfo_;
+    InternationalDialing = _InternationalDialing_;
 
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
@@ -47,15 +44,46 @@ describe('Service: TelephonyInfoService', function () {
       "uuid": "none",
       "pattern": "directoryNumberPanel.none"
     });
+    cosRestrictions = getJSONFixture('huron/json/telephonyInfo/userCosRestrictions.json');
 
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(DirectoryNumber, 'getAlternateNumbers').and.returnValue($q.when([]));
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1');
+    spyOn(InternationalDialing, 'listCosRestrictions');
+    spyOn(InternationalDialing, 'isDisableInternationalDialing');
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('getInternationalDialing():', function () {
+    it('should call get COS restrictions when NOT hiding international dialing', function () {
+      InternationalDialing.isDisableInternationalDialing.and.returnValue(false);
+      InternationalDialing.listCosRestrictions.and.returnValue($q.when(cosRestrictions));
+
+      TelephonyInfoService.getInternationalDialing();
+      $rootScope.$apply();
+      expect(InternationalDialing.isDisableInternationalDialing).toHaveBeenCalled();
+      expect(InternationalDialing.listCosRestrictions).toHaveBeenCalled();
+
+      var telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
+      expect(telephonyInfo.hideInternationalDialing).toBe(false);
+    });
+
+    it('should NOT call get COS restrictions when hiding international dialing', function () {
+      InternationalDialing.isDisableInternationalDialing.and.returnValue(true);
+
+      TelephonyInfoService.getInternationalDialing();
+      $rootScope.$apply();
+      expect(InternationalDialing.isDisableInternationalDialing).toHaveBeenCalled();
+      expect(InternationalDialing.listCosRestrictions).not.toHaveBeenCalled();
+
+      var telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
+      expect(telephonyInfo.hideInternationalDialing).toBe(true);
+    });
   });
 
   it('should be registered', function () {

@@ -97,9 +97,7 @@
     //
     // properties:
     this.description = '';
-    this.isConfigured = true;
     this.type = '';
-    this.isTouched = false;
 
     //
     // welcome menu entry
@@ -125,8 +123,6 @@
     var newObj = new CeMenuEntry();
     newObj.setDescription(this.description);
     newObj.setType(this.type);
-    newObj.setIsConfigured(this.isConfigured);
-    newObj.setIsTouched(this.isTouched);
 
     newObj.setKey(this.key);
     for (var i = 0; i < this.actions.length; i++) {
@@ -157,18 +153,6 @@
 
   CeMenuEntry.prototype.getType = function () {
     return this.type;
-  };
-
-  CeMenuEntry.prototype.setIsConfigured = function (isConfigured) {
-    this.isConfigured = isConfigured;
-  };
-
-  CeMenuEntry.prototype.setIsTouched = function (isTouched) {
-    this.isTouched = isTouched;
-  };
-
-  CeMenuEntry.prototype.isTouched = function () {
-    return this.isTouched;
   };
 
   CeMenuEntry.prototype.setKey = function (key) {
@@ -290,10 +274,12 @@
       getCustomMenu: getCustomMenu,
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
+      updateScheduleActionSetMap: updateScheduleActionSetMap,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
       deleteCombinedMenu: deleteCombinedMenu,
+      deleteScheduleActionSetMap: deleteScheduleActionSetMap,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -366,16 +352,24 @@
         setDescription(action, inAction.route);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToExtension)) {
+
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
+
         setDescription(action, inAction.routeToExtension);
+
         menuEntry.addAction(action);
+
       } else if (angular.isDefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
         menuEntry.addAction(action);
-      } else if (angular.isDefined(inAction.routeToMailbox)) {
-        action = new Action('routeToMailbox', inAction.routeToMailbox.mailbox);
-        setDescription(action, inAction.routeToMailbox);
+      } else if (angular.isDefined(inAction.routeToUser)) {
+        action = new Action('routeToUser', inAction.routeToUser.id);
+        setDescription(action, inAction.routeToUser);
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToVoiceMail)) {
+        action = new Action('routeToVoiceMail', inAction.routeToVoiceMail.id);
+        setDescription(action, inAction.routeToVoiceMail);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
@@ -414,15 +408,21 @@
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+              action.voice = inAction.runActionsOnInput.voice;
+              menuEntry.voice = inAction.runActionsOnInput.voice;
+              menuEntry.language = inAction.runActionsOnInput.language;
+              menuEntry.attempts = inAction.runActionsOnInput.attempts;
+              menuEntry.addAction(action);
+
             }
           }
         }
-        menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.goto)) {
         action = new Action('goto', inAction.goto.ceid);
         if (angular.isDefined(inAction.goto.description)) {
           setDescription(action, inAction.goto.description);
         }
+
         menuEntry.addAction(action);
       } else {
         // insert an empty action
@@ -455,16 +455,36 @@
         return undefined;
       }
       var ceActionArray = actionSet.actions;
+      var menuEntry;
 
       var menu = new CeMenu();
       menu.setType('MENU_WELCOME');
 
       for (var i = 0; i < ceActionArray.length; i++) {
+        // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
+        // if inputType is 2 then dial by extension, else make an option menu.
+
         if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
-          var menuEntry = new CeMenuEntry();
+
+          menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
           if (menuEntry.actions.length > 0) {
             menu.addEntry(menuEntry);
+          }
+        } else {
+          // check for dial by extension - inputType is only 2 for now.
+          if (_.has(ceActionArray[i], 'runActionsOnInput.inputType') &&
+            ceActionArray[i].runActionsOnInput.inputType === 2) {
+            menuEntry = new CeMenuEntry();
+            parseAction(menuEntry, ceActionArray[i]);
+            if (menuEntry.actions.length > 0) {
+              menu.addEntry(menuEntry);
+            }
+          } else {
+            var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
+            if (angular.isDefined(optionMenu)) {
+              menu.addEntry(optionMenu);
+            }
           }
         }
       }
@@ -494,11 +514,26 @@
       // makes up of welcome menu's action objects, main menu object and custom menu object.
       // mainMenu is refered to as OPTION menu in the UI.
       //
+
+      // returns only the first menu it finds
       var i = getActionIndex(ceActionArray, 'runActionsOnInput');
       if (i >= 0) {
         var menu = new CeMenu();
         menu.setType('MENU_OPTION');
         var ceActionsOnInput = ceActionArray[i].runActionsOnInput;
+        if (angular.isDefined(ceActionArray[i]['runActionsOnInput'])) {
+          return getOptionMenuFromAction(ceActionArray[i]);
+        }
+      }
+      return undefined;
+    }
+
+    function getOptionMenuFromAction(optionMenuAction) {
+
+      if (angular.isDefined(optionMenuAction) && angular.isDefined(optionMenuAction.runActionsOnInput)) {
+        var menu = new CeMenu();
+        menu.setType('MENU_OPTION');
+        var ceActionsOnInput = optionMenuAction.runActionsOnInput;
         var menuEntry;
 
         // Collect the accouncement header
@@ -559,7 +594,6 @@
           return menu;
         }
       }
-
       return undefined;
     }
 
@@ -614,12 +648,6 @@
           }
         }
       }
-      var optionMenu = getOptionMenu(ceRecord, actionSetName);
-      if (angular.isDefined(welcomeMenu)) {
-        if (angular.isDefined(optionMenu)) {
-          welcomeMenu.addEntry(optionMenu);
-        }
-      }
       return welcomeMenu;
     }
 
@@ -630,7 +658,30 @@
       };
     }
 
+    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+      if (!ceRecord.scheduleEventTypeMap) {
+        ceRecord['scheduleEventTypeMap'] = {};
+      }
+      if (actionSetName === 'openHours') {
+        ceRecord.scheduleEventTypeMap['open'] = actionSetName;
+        if (!ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'openHours';
+        }
+      } else if (actionSetName === 'closedHours') {
+        ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
+        ceRecord.defaultActionSet = 'closedHours';
+      } else if (actionSetName === 'holidays') {
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
+        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'holidays';
+        }
+      }
+    }
+
     function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+
+      updateScheduleActionSetMap(ceRecord, actionSetName);
+
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
         if (aaCombinedMenu[aaCombinedMenu.length - 1].getType() === 'MENU_OPTION') {
@@ -747,16 +798,15 @@
       return true;
     }
 
-    function createWelcomeMenu(aaActionArray, aaMenu) {
+    function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
-      var foundOptionMenu = false;
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
+        newActionArray[i] = {};
         if (menuEntry.type === 'MENU_OPTION') {
-          // the option menu will be added down below
-          foundOptionMenu = true;
+          newActionArray[i].runActionsOnInput = new MainMenu();
+          createOptionMenu(newActionArray[i].runActionsOnInput, menuEntry);
         } else {
-          newActionArray[i] = {};
           if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
             var actionName = menuEntry.actions[0].getName();
             newActionArray[i][actionName] = {};
@@ -771,24 +821,27 @@
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
-            } else if (actionName === 'routeToMailbox') {
-              newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToVoiceMail') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToUser') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
               }
+            } else if (actionName === 'goto') {
+              newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToHuntGroup') {
+              newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'runActionsOnInput') {
+              if (menuEntry.actions[0].inputType === 2) {
+                newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
+                newActionArray[i][actionName].attempts = menuEntry.attempts;
+                newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+                newActionArray[i][actionName].language = menuEntry.actions[0].language;
+              }
             }
-          }
-        }
-      }
-      var len = aaActionArray.length;
-      if (len > 0) {
-        // if there is a custom menu or a main menu at the end of the action array,
-        // retain it and copy over.
-        for (var j = 0; j < len; j++) {
-          if (angular.isDefined(aaActionArray[j].runCustomActions) ||
-            (foundOptionMenu && angular.isDefined(aaActionArray[j].runActionsOnInput))) {
-            newActionArray.push(aaActionArray[j]);
+
           }
         }
       }
@@ -805,7 +858,7 @@
       }
 
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
-      actionSet.actions = createWelcomeMenu(actionSet.actions, aaMenu);
+      actionSet.actions = createWelcomeMenu(aaMenu);
 
       return true;
     }
@@ -828,9 +881,11 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToExtension') {
           newActionArray[i][actionName].destination = val;
-        } else if (actionName === 'routeToMailbox') {
-          newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'routeToVoiceMail') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToHuntGroup') {
+          newActionArray[i][actionName].id = val;
+        } else if (actionName === 'routeToUser') {
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
@@ -969,22 +1024,11 @@
       if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
-      for (var i = 0; i < aaMenu.entries.length; i++) {
-        var menu = aaMenu.entries[i];
-        if (menu.type === 'MENU_CUSTOM' && menu.entries) {
-          updateCustomMenu(ceRecord, actionSetName, menu);
-        }
-        if (menu.type == 'MENU_OPTION' && menu.entries) {
-          updateOptionMenu(ceRecord, actionSetName, menu);
-        }
-      }
-      if (aaMenu.type == 'MENU_WELCOME') {
+      if (aaMenu.type === 'MENU_WELCOME') {
         updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
-      }
-      if (aaMenu.type == 'MENU_OPTION') {
+      } else if (aaMenu.type === 'MENU_OPTION') {
         updateOptionMenu(ceRecord, actionSetName, aaMenu);
-      }
-      if (aaMenu.type == 'MENU_CUSTOM') {
+      } else if (aaMenu.type === 'MENU_CUSTOM') {
         updateCustomMenu(ceRecord, actionSetName, aaMenu);
       }
       return true;
@@ -1037,6 +1081,34 @@
       return false;
     }
 
+    function deleteScheduleActionSetMap(ceRecord, actionSetName) {
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      if (!ceRecord.scheduleEventTypeMap) {
+        return;
+      }
+      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
+        return this.scheduleEventTypeMap[prop] === this.actionSetName;
+      }, {
+        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
+        actionSetName: actionSetName
+      });
+      if (prop) {
+        delete ceRecord.scheduleEventTypeMap[prop];
+        if (ceRecord.scheduleEventTypeMap) {
+          if (ceRecord.scheduleEventTypeMap.closed) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
+          } else if (ceRecord.scheduleEventTypeMap.open) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
+          } else if (ceRecord.scheduleEventTypeMap.holiday) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
+          } else {
+            delete ceRecord.defaultActionSet;
+          }
+        }
+      }
+    }
+
     /*
      * actionSetName: 'regularOpenActions'
      * ceRecord: a customer AA record
@@ -1050,6 +1122,10 @@
       if (angular.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
+
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      deleteScheduleActionSetMap(ceRecord, actionSetName);
 
       // get the action object of actionSetName
       //

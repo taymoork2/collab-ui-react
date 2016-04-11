@@ -1,0 +1,28 @@
+<div id="site-license-types">
+	<div ng-if="!row.entity.showLicenseTypes">
+		<p class="ui-grid-cell-contents">
+			<i class="icon-spinner icon"></i>
+		</p>
+	</div>
+	<div ng-if="row.entity.showLicenseTypes">
+		<div ng-if="row.entity.multipleWebexServicesLicensed">
+			<p id="{{row.entity.license.siteUrl}}_licenseType" 
+			   class="ui-grid-cell-contents multi-center-license" 
+			   tooltip-placement="top" 
+			   tooltip-html-unsafe="{{row.entity.licenseTooltipDisplay}}" 
+			   tooltip-animation="false"  
+			   tooltip-append-to-body="true">
+			   
+			  {{row.entity.licenseTypeContentDisplay}}
+	        </p>
+		</div>
+		
+		<div ng-if="!row.entity.multipleWebexServicesLicensed">
+			<p id="{{row.entity.license.siteUrl}}_licenseType" 
+			   class="ui-grid-cell-contents">
+			   
+			  {{row.entity.licenseTypeContentDisplay}}
+			</p>
+		</div>
+	</div>
+</div>

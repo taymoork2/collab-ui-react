@@ -49,13 +49,15 @@
     <div class="text-center fallback-container-item">
       <cs-checkbox ng-if="huntGroupSA.selectedFallbackMember" ckid="checkbox"
                    ng-model="huntGroupSA.selectedFallbackMember.sendToVoicemail"
-                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}">
+                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"
+                   isdisabled="huntGroupSA.disableVoicemail">
       </cs-checkbox>
     </div>
     <div class="text-center fallback-container-item">
       <button class="btn" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{'btn--success': (huntGroupSA.isFallbackValid()), 'disabled': (!huntGroupSA.isFallbackValid())}">
+              ng-class="{'btn--success': (huntGroupSA.isFallbackValid())}""
+              ng-disabled="!huntGroupSA.isFallbackValid()">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>

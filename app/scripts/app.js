@@ -9,8 +9,21 @@
  * Main module of the application.
  */
 
+(function (l, y, t, i, c, s) {
+  l['LocalyticsGlobal'] = i;
+  l[i] = function () {
+    (l[i].q = l[i].q || []).push(arguments);
+  };
+  l[i].t = +new Date();
+  (s = y.createElement(t)).type = 'text/javascript';
+  s.src = '//web.localytics.com/v3/localytics.min.js';
+  (c = y.getElementsByTagName(t)[0]).parentNode.insertBefore(s, c);
+  window.ll('init', 'f725f885fe2646751d3c8a3-075b0c4e-a82c-11e5-c7e0-00d0fea82624', {});
+}(window, document, 'script', 'll'));
+
 angular.module('Core', [
   'core.trial',
+  'core.onboard',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',
@@ -45,6 +58,8 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
+angular.module('DigitalRiver', ['Core']);
+
 angular.module('Huron', [
   'Core',
   'uc.moh',
@@ -53,24 +68,15 @@ angular.module('Huron', [
   'uc.didadd',
   'uc.overview',
   'uc.hurondetails',
-  'uc.cdrlogsupport'
+  'uc.cdrlogsupport',
+  'ngIcal'
 ]);
 
-angular.module('Hercules', ['Core', 'ngTagsInput']);
+angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
 
 angular.module('Mediafusion', ['Core']);
 
-angular.module('WebExUtils', ['Core']);
-angular.module('WebExXmlApi', ['Core']);
-
-angular.module('WebExSiteSettings', ['Core']);
-angular.module('WebExSiteSetting', ['Core']);
-
-angular.module('WebExReports', ['Core']);
-angular.module('ReportIframe', ['Core']);
-
-angular.module('WebExUserSettings', ['Core']);
-angular.module('WebExUserSettings2', ['Core']);
+angular.module('WebExApp', ['Core']);
 
 angular.module('Messenger', ['Core']);
 
@@ -79,17 +85,11 @@ angular.module('Sunlight', ['Core']);
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
+  'DigitalRiver',
   'Huron',
   'Hercules',
   'Mediafusion',
-  'WebExUtils',
-  'WebExXmlApi',
-  'WebExSiteSettings',
-  'WebExSiteSetting',
-  'WebExUserSettings',
-  'WebExUserSettings2',
-  'WebExReports',
-  'ReportIframe',
+  'WebExApp',
   'Messenger',
   'Sunlight'
 ]);

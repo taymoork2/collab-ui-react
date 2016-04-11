@@ -47,6 +47,7 @@
     vm.checkFallbackDirtiness = checkFallbackDirtiness;
     vm.selectedFallbackNumber = undefined;
     vm.selectedFallbackMember = undefined;
+    vm.disableVoicemail = false;
 
     vm.showDisableSave = showDisableSave;
 
@@ -102,7 +103,9 @@
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
         vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
         vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
-
+        HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(pristineData, 'fallbackDestination.numberUuid')).then(function (isVoicemailDisabled) {
+          vm.disableVoicemail = isVoicemailDisabled;
+        });
         if (resetFromBackend) {
           initializeFields();
         }
@@ -198,6 +201,9 @@
       HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(vm.selectedFallbackMember, 'member.selectableNumber.uuid')).then(function (isVoicemailDisabled) {
+            vm.disableVoicemail = isVoicemailDisabled;
+          });
         });
     }
 
@@ -231,6 +237,11 @@
       return {
         name: vm.model.name,
         numbers: vm.model.numbers.map(function (numberObj) {
+          if (numberObj.type === 'internal') {
+            numberObj.type = 'NUMBER_FORMAT_EXTENSION';
+          } else if (numberObj.type === 'external') {
+            numberObj.type = 'NUMBER_FORMAT_DIRECT_LINE';
+          }
           return {
             type: numberObj.type,
             number: numberObj.number

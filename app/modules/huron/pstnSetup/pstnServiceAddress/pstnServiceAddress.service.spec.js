@@ -103,14 +103,45 @@ describe('Service: PstnServiceAddressService', function () {
     $httpBackend.flush();
   });
 
-  it('should update address', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId).respond(customerSite);
-    $httpBackend.expectPUT(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId, {
-      serviceAddress: serviceAddress
-    }).respond(200);
-    PstnServiceAddressService.updateAddress(customerId, address);
-    $httpBackend.flush();
+  describe('update street address', function () {
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites').respond(customerSiteList);
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId).respond(customerSite);
+      $httpBackend.expectPUT(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites/' + siteId, {
+        serviceAddress: serviceAddress
+      }).respond(200);
+    });
+    afterEach(function () {
+      PstnServiceAddressService.updateAddress(customerId, address);
+      $httpBackend.flush();
+    });
+
+    it('should update address with a nondescript address and no suffix', function () {
+      address.streetAddress = '123 Lexi Petal';
+
+      // Expected values
+      serviceAddress.serviceStreetNumber = '123';
+      serviceAddress.serviceStreetName = 'Lexi Petal';
+      serviceAddress.serviceStreetSuffix = '';
+    });
+
+    it('should update address with a street address containing possible suffix', function () {
+      address.streetAddress = '123 My Street';
+
+      // Expected values
+      serviceAddress.serviceStreetNumber = '123';
+      serviceAddress.serviceStreetName = 'My';
+      serviceAddress.serviceStreetSuffix = 'Street';
+    });
+
+    it('should update address with a suffix', function () {
+      address.streetAddress = '123 My Street Drive';
+
+      // Expected values
+      serviceAddress.serviceStreetNumber = '123';
+      serviceAddress.serviceStreetName = 'My Street';
+      serviceAddress.serviceStreetSuffix = 'Drive';
+    });
   });
 
 });

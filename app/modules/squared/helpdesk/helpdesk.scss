@@ -2,9 +2,32 @@
   @extend %page-background-white;
 }
 
+
 .helpdesk-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
+
+  .top-bar {
+    .sparkstatus-info {
+      @extend .user-info;
+    }
+    .btn-sparkstatus {
+      @extend .btn--user;
+      border-left: 1px solid $gray-light !important;
+    }
+    .history-info {
+      @extend .user-info;
+    }
+    .btn-history {
+      @extend .btn--user;
+      border-left: 1px solid $gray-light !important;
+      color: $gray-light-1;
+      font-size: 1.2rem;
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+  }
 }
 .helpdesk-content-view {
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -28,12 +51,11 @@
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
-      margin-bottom: 1rem;
-      overflow-wrap: break-word;
+      margin-bottom: 1.0rem;
       word-wrap: break-word;
     }
     h4 {
-      margin-top: 1rem;
+      margin-top: 0;
       margin-bottom: 1rem;
     }
     .head {
@@ -91,7 +113,7 @@
     }
     .cs-card-layout.cs-card-block {
       padding-right: 0;
-      padding-left: 0.5rem;
+      padding-left: 1.5rem;
     }
     .text-align-center {
       text-align:center;
@@ -101,13 +123,18 @@
       color: $color-primary-base;
       margin-top: 0.4rem;
     }
-    button {
-      padding-top: 0.1rem;
-      padding-bottom: 0.1rem;
+    .details-button {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .launch-button {
+      margin-top: 1.5rem;
+      margin-bottom: 1.0rem;
     }
     .user-img {
       height: 35px;
       width: 35px;
+      margin-right: 0.5rem;
     }
     .icon-user {
       color: white;
@@ -141,8 +168,28 @@
       }
     }
   }
+  .main-heading {
+    display: inline-block;
+    text-align: right;
+    .help {
+      color: $gray-light-1;
+      position: relative;
+      top: -0.6rem;
+      padding-right: 2px;
+      font-size: 1.0rem;
+      cursor: pointer;
+      i {
+        top: 2px;
+        left: 3px;
+      }
+    }
+    @media only screen and (max-width: 500px) {
+      .help {
+        font-size: 0.7rem;
+      }
+    }
+  }
   h1 {
-    margin-bottom: 1rem;
     color: $color-primary-base;
   }
   h2 {
@@ -169,14 +216,19 @@
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    .searchInputForm {
+      margin-bottom: 0px;
+    }
+    input {
+      font-size: 34px;
+    }
     form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
-      margin-bottom: 0rem;
       max-width: 100%;
       display: block;
       height: auto;
       position: relative;
       z-index: 1;
-      padding: 0;
+      border: 0px;
     }
     .icon-search {
       position: absolute;
@@ -240,8 +292,8 @@
     .cs-card {
       header {
         h5 {
-          color: $gray-dark-3;
-          font-size: 0.875rem;
+          color: $gray-dark-2;
+          font-size: 1rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
       }
@@ -297,9 +349,78 @@
         }
       }
     }
+    .search-user-results{
+      .cs-card {
+        article{
+          //min-height: 2rem;
+        }
+        header {
+          margin-bottom: -0.2rem;
+          padding-top: 0.75rem;
+        }
+        section{
+          div{
+            margin-bottom: -0.3rem !important;
+          }
+        }
+        .user-org{
+          margin-top: -0.2rem;
+          margin-bottom: -0.1rem !important;
+        }
+      }
+
+      .search-result-picture{
+        position: absolute;
+        top:0.8rem;
+        left:1rem;
+
+        div{
+          display: block;
+          width: 2rem;
+          height: 2rem;
+          background-size: cover;
+          background-position: center;
+          border-radius: 50%;
+          background-color: $gray-light-2;
+          color: $gray-dark-2;
+          .icon{
+            top: 0.5rem;
+            font-size: 1.75rem;
+            color: white !important;
+          }
+        }
+      }
+      .search-result-info{
+        padding-left:3rem;
+      }
+    }
   }
   .show-more-results {
     margin-bottom: 1rem;
+  }
+  .search-device-results{
+    .cs-card {
+      article{
+        min-height: 11rem;
+      }
+    }
+    .device-result-picture{
+      position: absolute;
+      top:0.8rem;
+      left:1rem;
+
+      div{
+        display: block;
+        width: 3.5rem;
+        height: 3.5rem;
+        background-size: contain;
+        background-position: top center;
+      }
+    }
+    .device-result-info{
+      position: absolute;
+      left:5rem;
+    }
   }
 }
 .helpdesk-cards {
@@ -364,6 +485,9 @@
 .helpdesk-ok {
   color: $color-cta-base;
 }
+.helpdesk-warn {
+  color: $color-attention-base;
+}
 .helpdesk-warning {
   color: $color-attention-base;
 }
@@ -384,23 +508,41 @@
   }
 }
 
-.helpdesk-history-dropdown-menu {
+.helpdesk-header-dropdown-menu {
   max-height: none;
   width: 10rem;
-  li {  
+  li {
+    font-size:0.75rem;
     padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
-  } 
+  }
   .clear-history {
     color: $color-primary-base;
   }
+  .search-result {
+    word-wrap: break-word;
+  }
 }
 
-.helpdesk-history-dropdown-menu.dropdown-menu:before {
-  left: 80% !important;
+
+
+.helpdesk-history-dropdown-menu {
+  @extend .helpdesk-header-dropdown-menu;
+  width: 10rem;
 }
 
-.helpdesk-history-dropdown-menu.dropdown-menu:after {
-  left: 80% !important;
+.helpdesk-spark-status-dropdown-menu {
+  @extend .helpdesk-header-dropdown-menu;
+  width: 18rem;
+  .header {
+    padding: 1rem;
+    border-bottom:1px solid $gray-light-4;
+  }
+  .content {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 1rem;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -422,24 +564,41 @@
     }
   }
 }
-@media only screen and (max-width: 960px) {
-  .helpdesk-app-container {
-    .fixed.top-bar- {     
-      .dropdown-menu:before {
-        left: 80% !important;
-      }
-      .dropdown-menu:after {
-        left: 80% !important;
-      }        
-    }  
-  }
-}
+
 @media only screen and (max-width: 800px) {
   .helpdesk-cards {
     .cs-card-layout {
       width: 100%;
       .cs-card {
         width: 100%;
+      }
+    }
+  }
+  .helpdesk-content-view .helpdesk-details .cs-card-layout.cs-card-block {
+    padding-right: 0;
+    padding-left: 0.5rem;
+  }
+
+  /*
+   * TODO: This has to move to 640px when the new horizontal layout comes.
+   */
+  .helpdesk-search{
+    .search-results {
+      margin-top: 0.5rem;
+      .cs-card{
+        .search-result-picture{
+          display: none;
+        }
+        .search-result-info{
+          position: static;
+        }
+
+        .device-result-picture{
+          display: none;
+        }
+        .device-result-info{
+          position: static;
+        }
       }
     }
   }
@@ -454,14 +613,8 @@
         position: fixed !important;
         right: 0;
         top: 52px;
-      }      
-      .dropdown-menu:before {
-        display: none;
       }
-      .dropdown-menu:after {
-        display: none;
-      }        
-    }  
+    }
   }
   .helpdesk-search {
     padding-top: 0;

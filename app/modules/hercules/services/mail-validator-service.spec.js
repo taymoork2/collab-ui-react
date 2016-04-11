@@ -1,7 +1,7 @@
 'use strict';
 
 describe('MailValidatorService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var Service;
 

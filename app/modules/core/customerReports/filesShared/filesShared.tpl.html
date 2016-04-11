@@ -1,4 +1,4 @@
-<cs-card id='files-shared-card' class="large report-card">
+<cs-card id='files-shared-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
   <article>
     <header>
       <h4 class='report-section-header' translate='filesShared.filesShared'></h4>
@@ -6,7 +6,7 @@
     <section>
       <div class="customer-files-shared">
         <p class="report-description">{{nav.filesSharedDescription}}</p>
-        <div id="filesSharedDiv" class="barchart"></div>
+        <div id="filesSharedDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.filesSharedStatus) && !nav.isRefresh(nav.filesSharedStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.filesSharedStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

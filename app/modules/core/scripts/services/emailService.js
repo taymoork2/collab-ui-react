@@ -5,38 +5,65 @@
     .factory('EmailService', EmailService);
 
   /* @ngInject */
-  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService) {
+  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService, UrlConfig) {
 
-    var emailUrl = Config.getAdminServiceUrl() + 'email';
+    var _types = {
+      CUSTOMER_TRIAL: '1',
+      NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST: '15'
+    };
+    var _helpers = {
+      mkTrialPayload: mkTrialPayload,
+      mkTrialConversionReqPayload: mkTrialConversionReqPayload
+    };
+    var emailUrl = UrlConfig.getAdminServiceUrl() + 'email';
 
     var factory = {
       emailNotifyTrialCustomer: emailNotifyTrialCustomer,
-      emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer
+      emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer,
+      emailNotifyPartnerTrialConversionRequest: emailNotifyPartnerTrialConversionRequest,
+      _types: _types,
+      _helpers: _helpers
     };
 
     return factory;
 
-    function emailNotifyTrialCustomer(customerEmail, trialPeriod, organizationId) {
-      var emailData = {
-        'type': '1',
-        'properties': {
-          'CustomerEmail': customerEmail,
-          'TrialPeriod': trialPeriod,
-          'OrganizationId': organizationId
+    function mkTrialPayload(customerEmail, trialPeriod, organizationId) {
+      return {
+        type: _types.CUSTOMER_TRIAL,
+        properties: {
+          CustomerEmail: customerEmail,
+          TrialPeriod: trialPeriod,
+          OrganizationId: organizationId
         }
       };
+    }
+
+    // TODO: one of these is a dupe method, figure out which one makes sense to nuke and nuke it
+    function emailNotifyTrialCustomer(customerEmail, trialPeriod, organizationId) {
+      var emailData = mkTrialPayload(customerEmail, trialPeriod, organizationId);
       return email(emailData);
     }
 
     function emailNotifyOrganizationCustomer(customerAdminEmail, duration, organizationId) {
-      var emailData = {
-        'type': '1',
-        'properties': {
-          'CustomerEmail': customerAdminEmail,
-          'TrialPeriod': duration,
-          'OrganizationId': organizationId
+      var emailData = mkTrialPayload(customerAdminEmail, duration, organizationId);
+      return email(emailData);
+    }
+
+    function mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail) {
+      return {
+        type: _types.NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST,
+        properties: {
+          CUSTOMER_NAME: customerName,
+          CUSTOMER_EMAIL: customerEmail,
+          PARTNER_EMAIL: partnerEmail,
+          SUBJECT: customerName + ' wants to order or extend their trial'
         }
       };
+    }
+
+    // TODO: mv implemention to backend, front-end should shouldn't need this many properties
+    function emailNotifyPartnerTrialConversionRequest(customerName, customerEmail, partnerEmail) {
+      var emailData = mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail);
       return email(emailData);
     }
 

@@ -1,4 +1,4 @@
-<cs-card id='avg-room-card' class="large report-card">
+<cs-card id='avg-room-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
   <article>
     <header>
       <h4 class='report-section-header' translate='avgRooms.avgRooms'></h4>
@@ -6,7 +6,7 @@
     <section>
       <div class="customer-avg-rooms">
         <p class="report-description">{{nav.avgRoomsDescription}}</p>
-        <div id="avgRoomsdiv" class="barchart"></div>
+        <div id="avgRoomsdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.avgRoomStatus) && !nav.isRefresh(nav.avgRoomStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.avgRoomStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

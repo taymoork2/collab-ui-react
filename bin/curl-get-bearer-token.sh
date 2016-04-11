@@ -1,32 +1,22 @@
 #!/bin/sh
 
-function abort {
-    >&2 echo "Aborting '`basename $0`'"
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
-}
-
-cwd=`pwd`
-# get project top-level dir (look for 'fabfile.py')
-while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
-  cd ..
-done
-top_dir=`pwd`
-cd $cwd
-if [ "${top_dir}" = "/" ]; then
-    >&2 echo "Error: traversed to '/' while trying to find top-level dir"
-    abort
 fi
+
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/curl-api-helpers
 
 usr_label=${1}
 if [ $# -lt 1 ]; then
-  echo "usage: `basename $0` <usr_label>  # see: 'test_helper.coffee'"
+  echo "usage: `basename $0` <usr_label>"
+  echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.js' for user labels available for use"
   echo ""
   echo "ex."
   echo "  `basename $0` partner-admin"
   exit 1
 fi
-
-source ${top_dir}/bin/include/curl-api-helpers
 
 # early out if we already have an active bearer token
 bearer_token=`get_last_active_bearer_token ${usr_label}`

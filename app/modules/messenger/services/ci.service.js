@@ -51,7 +51,7 @@
         value: Authinfo.getOrgId()
       }, {
         key: 'Email',
-        value: Authinfo.getEmail()
+        value: Authinfo.getEmails()
       }, {
         key: 'User ID',
         value: Authinfo.getUserId()
@@ -88,9 +88,6 @@
       }, {
         key: 'User Name',
         value: Authinfo.getUserName()
-      }, {
-        key: 'OAuth2 Token',
-        value: $rootScope.token
       }];
     }
 

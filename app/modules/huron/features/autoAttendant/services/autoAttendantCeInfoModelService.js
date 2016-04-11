@@ -87,6 +87,14 @@
     this.name = name;
   };
 
+  CeInfo.prototype.getSchedule = function () {
+    return this.scheduleId;
+  };
+
+  CeInfo.prototype.setSchedule = function (scheduleId) {
+    this.scheduleId = scheduleId;
+  };
+
   CeInfo.prototype.addResource = function (resource) {
     this.resources[this.resources.length] = resource;
   };
@@ -141,39 +149,33 @@
     function getCeInfosList() {
       var aaModel = {};
       aaModel.ceInfos = [];
-      var promises = [];
 
-      var listPromise = AutoAttendantCeService.listCes().then(function (aaRecords) {
+      return AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (angular.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
-          _.forEach(aaModel.aaRecords, function (aaRecord) {
-            _.forEach(aaRecord.assignedResources, function (assignedResource) {
-              setDirectoryNumber(assignedResource);
-            });
-          });
+
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
         }
-      }).then(AACeDependenciesService.readCeDependencies).then(function (depends) {
-        aaModel.dependsIds = depends.dependencies;
-      });
-
-      promises.push(listPromise);
-
-      return $q.all(promises).then(function () {
-        return aaModel;
-      }).catch(function (response) {
+        return AACeDependenciesService.readCeDependencies();
+      }, function (response) {
+        // init the model and move the chain the forward
         aaModel = AAModelService.newAAModel();
         aaModel.ceInfos = [];
-
+        return $q.reject(response);
+      }).then(function (depends) {
+        aaModel.dependsIds = depends.dependencies;
+        return aaModel;
+      }, function (response) {
+        aaModel.dependsIds = {};
         if (response.status === 404) {
+          // there are no CEs or no dependencies between CEs; this is OK
           return aaModel;
         }
-
-        AAModelService.setAAModel(aaModel);
-
         return $q.reject(response);
+      }).finally(function () {
+        // always set the aaModel for UI access, even if empty
+        AAModelService.setAAModel(aaModel);
       });
-
     }
 
     /*
@@ -200,6 +202,9 @@
           ceInfo.addResource(resource);
         }
       }
+      if (angular.isDefined(aaResourceRecord.scheduleId)) {
+        ceInfo.setSchedule(aaResourceRecord.scheduleId);
+      }
       return ceInfo;
     }
 
@@ -216,6 +221,7 @@
       }
       aaRecord.assignedResources = resources;
       aaRecord.callExperienceName = ceInfo.getName();
+      aaRecord.scheduleId = ceInfo.getSchedule();
     }
 
     function deleteCeInfo(aaResourceRecords, ceInfo) {
@@ -236,20 +242,6 @@
         return '';
       }
       return ceURL.substr(uuidPos + 1);
-    }
-
-    ////////////
-
-    function setDirectoryNumber(resource) {
-      resource.number = resource.id;
-      /* workaround for Tropo-AA integraiton
-      return DirectoryNumberService.get({
-        customerId: Authinfo.getOrgId(),
-        directoryNumberId: resource.id
-      }).$promise.then(function (data) {
-        resource.number = data.pattern;
-      });
-      */
     }
 
   }

@@ -2,16 +2,25 @@
 <cs-sp-container>
   <cs-sp-section>
   <div class="row">
-     <div class="small-6 columns" translate="organizationsPage.dirSync"></div>
-     <div class="small-6 columns">
-        <label for="{{svc}}">{{currentOrganization.dirsyncEnabled}}</label>
-      </div>
+    <div class="small-6 columns" translate="organizationsPage.dirSync"></div>
+    <div class="small-6 columns">
+      <label for="{{svc}}">{{currentOrganization.dirsyncEnabled}}</label>
     </div>
-    <div class="row">
-     <div class="small-6 columns" translate="organizationsPage.sso"></div>
-     <div class="small-6 columns">
-        <label for="{{svc}}">{{currentOrganization.ssoEnabled}}</label>
-      </div>
+  </div>
+  <div class="row">
+    <div class="small-6 columns" translate="organizationsPage.sso"></div>
+    <div class="small-6 columns">
+      <label for="{{svc}}">{{currentOrganization.ssoEnabled}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-6 columns" translate="organizationsPage.isEFT"></div>
+    <div class="small-6 columns">
+      <span ng-if="eftToggleLoading">
+        <i class="icon icon-spinner"></i>
+      </span>
+      <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="currentOrganization.isEFT" toggle-id="eftToggle" size="small" ng-click="setEftToggle(currentOrganization.isEFT)"></cs-toggle-switch>
+    </div>
   </div>
   </cs-sp-section>
   <cs-sp-section>
@@ -20,7 +29,7 @@
         <div class="form-group profile-text-input">
           <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.services"></label>
           <div class="profile-input org-overview-list">
-            <ul ng-repeat="svc in currentOrganization.selfSubscribeServices">
+            <ul ng-repeat="svc in currentOrganization.services">
               <li>{{svc}}</li>
             </ul>
           </div>

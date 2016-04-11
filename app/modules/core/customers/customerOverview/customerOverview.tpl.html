@@ -2,14 +2,21 @@
   <cs-sp-header>
     <div class="header-info" id="customer-info">
       <div class="header-info-wrap">
-        <div class="header-title">{{customerOverview.currentCustomer.customerName}}</div>
+        <div class="header-title">
+          <span>{{customerOverview.currentCustomer.customerName}}</span>
+        </div>
         <div class="header-sub-info">
           <span translate="customerPage.contactEmail"></span> {{customerOverview.currentCustomer.customerEmail}}
         </div>
       </div>
     </div>
   </cs-sp-header>
-  <cs-sp-container>
+ <cs-sp-container>
+  <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+    <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
+    <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
+  </cs-sp-buttons>
+
     <cs-sp-section>
       <button id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people" ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" ng-click="customerOverview.launchCustomerPortal()">
         <span ng-if="customerOverview.isOrgSetup()" translate="customerPage.launchButton"></span>
@@ -59,6 +66,7 @@
         </ul>
       </div>
     </cs-sp-section>
+    <trial-webex-overview></trial-webex-overview>
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
     <cs-sp-section>
       <div class="section-title-row">
@@ -74,23 +82,19 @@
             <span class="feature-details" ng-if="!customerOverview.usePartnerLogo" translate="common.disabled">
             </span>
           </li>
+          <form ng-if="customerOverview.logoOverride" novalidate name="customerOverview.form" novalidate role="form">
           <li class="feature">
             <span class="feature-name" translate="customerPage.logoOverride"></span>
-            <span class="feature-details" ng-if="customerOverview.logoOverride" translate="common.enabled">
-            </span>
-            <span class="feature-details" ng-if="!customerOverview.logoOverride" translate="common.disabled">
-            </span>
+            <cs-toggle-switch ng-model="customerOverview.allowCustomerLogos" toggle-id="allowCustomerLogo" name="allowCustomerLogo" size="small"></cs-toggle-switch>
           </li>
-          <li class="feature" ng-if="!customerOverview.logoOverride">
-            <label class="cs-checkbox" for="allowCustomerLogo">
-              <input type="checkbox" ng-model="customerOverview.allowCustomerLogos" id="allowCustomerLogo" ng-change="customerOverview.toggleAllowCustomerLogos(customerOverview.allowCustomerLogos)">
-              <span></span>
-            </label>
-            <span translate="customerPage.allowCustomerLogo" translate-value-customer="{{customerOverview.currentCustomer.customerName}}">
-            </span>
-          </li>
+           </form>
         </ul>
       </div>
     </cs-sp-section>
+    <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
+    ng-click="customerOverview.deleteTestOrg()"
+    translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}">
+    </button>
   </cs-sp-container>
+
 </div>

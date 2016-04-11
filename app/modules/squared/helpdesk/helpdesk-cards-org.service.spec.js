@@ -146,24 +146,6 @@ describe('HelpdeskCardsService', function () {
 
     });
 
-    it('should return correct user card for org', function () {
-      sinon.stub(LicenseService, 'getUnlicensedUsersCount');
-      var deferred = q.defer();
-      deferred.resolve("42");
-      LicenseService.getUnlicensedUsersCount.returns(deferred.promise);
-
-      org.ssoEnabled = true;
-      org.dirsyncEnabled = true;
-      var card = HelpdeskCardsOrgService.getUserCardForOrg(org);
-
-      $scope.$apply();
-
-      expect(card.ssoEnabled).toBeTruthy();
-      expect(card.dirsyncEnabled).toBeTruthy();
-      expect(card.unlicensedUserCount).toEqual('42');
-
-    });
-
   });
 
 });

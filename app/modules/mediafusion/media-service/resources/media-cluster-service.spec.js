@@ -11,16 +11,14 @@ describe('Service: MediaClusterService', function () {
       converter = {
         convertClusters: sinon.stub()
       };
-      authinfo = {
-        getOrgId: sinon.stub()
-      };
-      authinfo.getOrgId.returns("orgId");
       $provide.value('MediaConverterService', converter);
-      $provide.value('Authinfo', authinfo);
     });
   });
 
-  beforeEach(inject(function ($injector, _$location_, _MediaClusterService_) {
+  beforeEach(inject(function ($injector, _$location_, _MediaClusterService_, _Authinfo_) {
+    authinfo = _Authinfo_;
+    authinfo.getOrgId = sinon.stub().returns("orgId");
+
     Service = _MediaClusterService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend
@@ -102,6 +100,96 @@ describe('Service: MediaClusterService', function () {
 
     var callback = sinon.stub();
     Service.deleteHost('clusterid', 'serial').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should delete a group', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/property_sets/propertysetid'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.deleteGroup('propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle faliures in deleting a group', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/property_sets/propertysetid'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.deleteGroup('propertysetid').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should update a group assignment', function () {
+    $httpBackend
+      .when(
+        'POST',
+        rootPath + '/clusters/clusterid/assigned_property_sets'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.updateGroupAssignment('clusterid', 'propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle failures in updating a group assignment', function () {
+    $httpBackend
+      .when(
+        'POST',
+        rootPath + '/clusters/clusterid/assigned_property_sets'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.updateGroupAssignment('clusterid', 'propertysetid').then(undefined, callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should delete group assignment', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/clusters/clusterid/assigned_property_sets/propertysetid'
+      )
+      .respond(204);
+
+    var callback = sinon.stub();
+    Service.removeGroupAssignment('clusterid', 'propertysetid').then(callback);
+    $httpBackend.flush();
+
+    expect(callback.callCount).toBe(1);
+  });
+
+  it('should handle failures in deleting group assignment', function () {
+    $httpBackend
+      .when(
+        'DELETE',
+        rootPath + '/clusters/clusterid/assigned_property_sets/propertysetid'
+      )
+      .respond(500);
+
+    var callback = sinon.stub();
+    Service.removeGroupAssignment('clusterid', 'propertysetid').then(undefined, callback);
     $httpBackend.flush();
 
     expect(callback.callCount).toBe(1);

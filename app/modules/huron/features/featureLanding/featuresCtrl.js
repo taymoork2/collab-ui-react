@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -28,8 +28,14 @@
       'name': 'Search'
     };
     vm.filters = [{
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
+    }, {
+      name: $translate.instant('huronHuntGroup.modalTitle'),
+      filterValue: 'HG'
+    }, {
+      name: $translate.instant('autoAttendant.title'),
+      filterValue: 'AA'
     }];
     /* LIST OF FEATURES
      *
@@ -39,78 +45,52 @@
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
      *  4. Define the formatter
      * */
-    vm.features = [];
+    vm.features = [{
+      name: 'HG',
+      getFeature: HuntGroupService.getListOfHuntGroups,
+      formatter: HuronFeaturesListService.huntGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.hgName',
+      color: 'alerts'
+    }, {
+      name: 'AA',
+      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+      formatter: HuronFeaturesListService.autoAttendants,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.aaName',
+      color: 'primary'
+    }];
 
     init();
 
     function init() {
+      vm.loading = false;
 
-      var aaPromise = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
-
-      var hgPromise = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
-
-      $q.all([aaPromise, hgPromise]).then(function (toggles) {
-        vm.loading = false;
-
-        if (toggles[0]) {
-          vm.filters.push({
-            name: 'Auto Attendant',
-            filterValue: 'AA'
-          });
-          vm.features.push({
-            name: 'AA',
-            getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
-            formatter: HuronFeaturesListService.autoAttendants,
-            isEmpty: false,
-            i18n: 'huronFeatureDetails.aaName',
-            color: 'primary'
-          });
-        }
-
-        if (toggles[1]) {
-          vm.filters.push({
-            name: 'Hunt Group',
-            filterValue: 'HG'
-          });
-          vm.features.push({
-            name: 'HG',
-            getFeature: HuntGroupService.getListOfHuntGroups,
-            formatter: HuronFeaturesListService.huntGroups,
-            isEmpty: false,
-            i18n: 'huronFeatureDetails.hgName',
-            color: 'alerts'
-          });
-        }
-
-        if (!toggles[0] && !toggles[1]) {
-          vm.noFeatures = true;
-        }
-
-        _.forEach(vm.features, function (feature) {
-          vm.cardColor[feature.name] = feature.color;
-        });
-
-        vm.pageState = 'Loading';
-        var featuresPromises = getListOfFeatures();
-
-        handleFeaturePromises(featuresPromises);
-
-        $q.all(featuresPromises).then(function (responses) {
-          showNewFeaturePageIfNeeded();
-        });
+      _.forEach(vm.features, function (feature) {
+        vm.cardColor[feature.name] = feature.color;
       });
 
+      vm.pageState = 'Loading';
+      var featuresPromises = getListOfFeatures();
+
+      handleFeaturePromises(featuresPromises);
+
+      $q.all(featuresPromises).then(function (responses) {
+        showNewFeaturePageIfNeeded();
+      });
     }
 
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
       vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      reInstantiateMasonry();
     }
 
     function reload() {
@@ -153,7 +133,6 @@
 
       if (feature.name === 'AA') {
         vm.aaModel = data;
-        AAModelService.setAAModel(vm.aaModel);
       }
 
       var list = feature.formatter(data);
@@ -220,7 +199,21 @@
 
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
+      } else {
+        reInstantiateMasonry();
       }
+    }
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
     }
 
     function showReloadPageIfNeeded() {

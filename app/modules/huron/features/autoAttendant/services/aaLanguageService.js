@@ -48,12 +48,16 @@
         "voice": "Veronica",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.dave",
-        "voice": "Dave",
-        "gender": "autoAttendant.voices.male"
+        "label": "autoAttendant.voices.ava",
+        "voice": "Ava",
+        "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.steven",
-        "voice": "Steven",
+        "label": "autoAttendant.voices.samantha",
+        "voice": "Samantha",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.tom",
+        "voice": "Tom",
         "gender": "autoAttendant.voices.male"
       }, {
         "label": "autoAttendant.voices.victor",
@@ -64,28 +68,32 @@
       "code": "en_GB",
       "label": "languages.englishBritish",
       "voices": [{
-        "label": "autoAttendant.voices.elizabeth",
-        "voice": "Elizabeth",
+        "label": "autoAttendant.voices.serena",
+        "voice": "Serena",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.kate",
         "voice": "Kate",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.simon",
-        "voice": "Simon",
+        "label": "autoAttendant.voices.daniel",
+        "voice": "Daniel",
+        "gender": "autoAttendant.voices.male"
+      }, {
+        "label": "autoAttendant.voices.oliver",
+        "voice": "Oliver",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "en_AU",
       "label": "languages.englishAustralian",
       "voices": [{
-        "label": "autoAttendant.voices.grace",
-        "voice": "Grace",
+        "label": "autoAttendant.voices.karen",
+        "voice": "Karen",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.alan",
-        "voice": "Alan",
+        "label": "autoAttendant.voices.lee",
+        "voice": "Lee",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
@@ -104,8 +112,8 @@
       "code": "da_DK",
       "label": "languages.danish",
       "voices": [{
-        "label": "autoAttendant.voices.frida",
-        "voice": "Frida",
+        "label": "autoAttendant.voices.sara",
+        "voice": "Sara",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.magnus",
@@ -116,57 +124,61 @@
       "code": "nl_NL",
       "label": "languages.dutch",
       "voices": [{
-        "label": "autoAttendant.voices.saskia",
-        "voice": "Saskia",
+        "label": "autoAttendant.voices.claire",
+        "voice": "Claire",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.willem",
-        "voice": "Willem",
+        "label": "autoAttendant.voices.xander",
+        "voice": "Xander",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "fi_FI",
       "label": "languages.finnish",
       "voices": [{
-        "label": "autoAttendant.voices.milla",
-        "voice": "Milla",
+        "label": "autoAttendant.voices.satu",
+        "voice": "Satu",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.mikko",
-        "voice": "Mikko",
+        "label": "autoAttendant.voices.onni",
+        "voice": "Onni",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "fr_FR",
       "label": "languages.french",
       "voices": [{
-        "label": "autoAttendant.voices.florence",
-        "voice": "Florence",
+        "label": "autoAttendant.voices.audrey",
+        "voice": "Audrey",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.juliette",
-        "voice": "Juliette",
+        "label": "autoAttendant.voices.aurelie",
+        "voice": "Aurelie",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.bernard",
-        "voice": "Bernard",
+        "label": "autoAttendant.voices.thomas",
+        "voice": "Thomas",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "fr_CA",
       "label": "languages.frenchCanadian",
       "voices": [{
-        "label": "autoAttendant.voices.charlotte",
-        "voice": "Charlotte",
+        "label": "autoAttendant.voices.amelie",
+        "voice": "Amelie",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.olivier",
-        "voice": "Olivier",
+        "label": "autoAttendant.voices.chantal",
+        "voice": "Chantal",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.nicolas",
+        "voice": "Nicolas",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "gl_ES",
-      "label": "languages.galacian",
+      "label": "languages.galician",
       "voices": [{
         "label": "autoAttendant.voices.carmela",
         "voice": "Carmela",
@@ -176,20 +188,28 @@
       "code": "de_DE",
       "label": "languages.german",
       "voices": [{
-        "label": "autoAttendant.voices.katrin",
-        "voice": "Katrin",
+        "label": "autoAttendant.voices.anna",
+        "voice": "Anna",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.stefan",
-        "voice": "Stefan",
+        "label": "autoAttendant.voices.petra",
+        "voice": "Petra",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.markus",
+        "voice": "Markus",
+        "gender": "autoAttendant.voices.male"
+      }, {
+        "label": "autoAttendant.voices.yannick",
+        "voice": "Yannick",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "el_GR",
       "label": "languages.greek",
       "voices": [{
-        "label": "autoAttendant.voices.afroditi",
-        "voice": "Afroditi",
+        "label": "autoAttendant.voices.melina",
+        "voice": "Melina",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.nikos",
@@ -200,56 +220,36 @@
       "code": "it_IT",
       "label": "languages.italian",
       "voices": [{
-        "label": "autoAttendant.voices.giulia",
-        "voice": "Giulia",
+        "label": "autoAttendant.voices.alice",
+        "voice": "Alice",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.federica",
+        "voice": "Federica",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.paola",
         "voice": "Paola",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.silvana",
-        "voice": "Silvana",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.valentina",
-        "voice": "Valentina",
-        "gender": "autoAttendant.voices.female"
+        "gender": "autoAttendant.voices.male"
       }, {
         "label": "autoAttendant.voices.luca",
         "voice": "Luca",
-        "gender": "autoAttendant.voices.male"
-      }, {
-        "label": "autoAttendant.voices.marcello",
-        "voice": "Marcello",
-        "gender": "autoAttendant.voices.male"
-      }, {
-        "label": "autoAttendant.voices.matteo",
-        "voice": "Matteo",
-        "gender": "autoAttendant.voices.male"
-      }, {
-        "label": "autoAttendant.voices.roberto",
-        "voice": "Roberto",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "zh_CN",
       "label": "languages.chineseMandarin",
       "voices": [{
-        "label": "autoAttendant.voices.linlin",
-        "voice": "Linlin",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.lisheng",
-        "voice": "Lisheng",
+        "label": "autoAttendant.voices.tiantian",
+        "voice": "Tian-tian",
         "gender": "autoAttendant.voices.female"
       }]
     }, {
       "code": "no_NO",
       "label": "languages.norwegian",
       "voices": [{
-        "label": "autoAttendant.voices.vilde",
-        "voice": "Vilde",
+        "label": "autoAttendant.voices.nora",
+        "voice": "Nora",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.henrik",
@@ -260,6 +260,10 @@
       "code": "pl_Pl",
       "label": "languages.polish",
       "voices": [{
+        "label": "autoAttendant.voices.ewa",
+        "voice": "Ewa",
+        "gender": "autoAttendant.voices.female"
+      }, {
         "label": "autoAttendant.voices.zosia",
         "voice": "Zosia",
         "gender": "autoAttendant.voices.female"
@@ -272,32 +276,28 @@
       "code": "ru_RU",
       "label": "languages.russian",
       "voices": [{
-        "label": "autoAttendant.voices.olga",
-        "voice": "Olga",
+        "label": "autoAttendant.voices.katya",
+        "voice": "Katya",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.dmitri",
-        "voice": "Dmitri",
+        "label": "autoAttendant.voices.milena",
+        "voice": "Milena",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.yuri",
+        "voice": "Yuri",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "es_ES",
       "label": "languages.spanishSpain",
       "voices": [{
-        "label": "autoAttendant.voices.carmen",
-        "voice": "Carmen",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.leonor",
-        "voice": "Leonor",
+        "label": "autoAttendant.voices.monica",
+        "voice": "Monica",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.jorge",
         "voice": "Jorge",
-        "gender": "autoAttendant.voices.male"
-      }, {
-        "label": "autoAttendant.voices.juan",
-        "voice": "Juan",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
@@ -309,31 +309,11 @@
         "gender": "autoAttendant.voices.male"
       }]
     }, {
-      "code": "es_CO@Chilean",
-      "label": "languages.spanishChilean",
-      "voices": [{
-        "label": "autoAttendant.voices.francisca",
-        "voice": "Francisca",
-        "gender": "autoAttendant.voices.female"
-      }]
-    }, {
       "code": "es_CO@Columbia",
       "label": "languages.spanishColumbian",
       "voices": [{
         "label": "autoAttendant.voices.soledad",
         "voice": "Soledad",
-        "gender": "autoAttendant.voices.female"
-      }]
-    }, {
-      "code": "es_MX",
-      "label": "languages.spanishMexican",
-      "voices": [{
-        "label": "autoAttendant.voices.ximena",
-        "voice": "Ximena",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.esperanza",
-        "voice": "Esperanza",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.carlos",
@@ -341,27 +321,43 @@
         "gender": "autoAttendant.voices.male"
       }]
     }, {
-      "code": "pt_PT",
-      "label": "languages.portugese",
+      "code": "es_MX",
+      "label": "languages.spanishMexican",
       "voices": [{
-        "label": "autoAttendant.voices.amalia",
-        "voice": "Amalia",
+        "label": "autoAttendant.voices.angelica",
+        "voice": "Angelica",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.eusebio",
-        "voice": "Eusebio",
+        "label": "autoAttendant.voices.paulina",
+        "voice": "Paulina",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.juan",
+        "voice": "Juan",
+        "gender": "autoAttendant.voices.male"
+      }]
+    }, {
+      "code": "pt_PT",
+      "label": "languages.portuguese",
+      "voices": [{
+        "label": "autoAttendant.voices.catarina",
+        "voice": "Catarina",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.joana",
+        "voice": "Joana",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.joaquim",
+        "voice": "Joaquim",
         "gender": "autoAttendant.voices.male"
       }]
     }, {
       "code": "pt_BR",
-      "label": "languages.portugeseBrazillian",
+      "label": "languages.portugueseBrazillian",
       "voices": [{
-        "label": "autoAttendant.voices.fernanda",
-        "voice": "Fernanda",
-        "gender": "autoAttendant.voices.female"
-      }, {
-        "label": "autoAttendant.voices.gabriela",
-        "voice": "Gabriela",
+        "label": "autoAttendant.voices.luciana",
+        "voice": "Luciana",
         "gender": "autoAttendant.voices.female"
       }, {
         "label": "autoAttendant.voices.felipe",
@@ -372,12 +368,16 @@
       "code": "sv_SE",
       "label": "languages.swedish",
       "voices": [{
-        "label": "autoAttendant.voices.annika",
-        "voice": "Annika",
+        "label": "autoAttendant.voices.alva",
+        "voice": "Alva",
         "gender": "autoAttendant.voices.female"
       }, {
-        "label": "autoAttendant.voices.sven",
-        "voice": "Sven",
+        "label": "autoAttendant.voices.klara",
+        "voice": "Klara",
+        "gender": "autoAttendant.voices.female"
+      }, {
+        "label": "autoAttendant.voices.oskar",
+        "voice": "Oskar",
         "gender": "autoAttendant.voices.male"
       }]
     }, {

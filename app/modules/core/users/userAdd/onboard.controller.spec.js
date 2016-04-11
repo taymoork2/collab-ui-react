@@ -1,9 +1,7 @@
-/* global installPromiseMatchers */
-
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService;
+  var controller, $scope, $timeout, $q, $state, $stateParams, GroupService, Notification, Userservice, TelephonyInfoService, Orgservice, FeatureToggleService, DialPlanService, Authinfo, CsvDownloadService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -12,15 +10,24 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMigrateUsers;
   var getMyFeatureToggles;
   var sites;
+  var fusionServices;
+  var headers;
+  var getMessageServices;
+  var getLicensesUsage;
+  var getLicensesUsageSpy;
+  var $controller;
   beforeEach(module('Core'));
+  beforeEach(module('Hercules'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$timeout_, _$q_, _$state_, _$stateParams_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _Authinfo_, _CsvDownloadService_) {
     $scope = $rootScope.$new();
+    $controller = _$controller_;
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
+    $stateParams = _$stateParams_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     DialPlanService = _DialPlanService_;
@@ -28,7 +35,8 @@ describe('OnboardCtrl: Ctrl', function () {
     Orgservice = _Orgservice_;
     TelephonyInfoService = _TelephonyInfoService_;
     FeatureToggleService = _FeatureToggleService_;
-    SyncService = _SyncService_;
+    Authinfo = _Authinfo_;
+    CsvDownloadService = _CsvDownloadService_;
     var current = {
       step: {
         name: 'fakeStep'
@@ -50,11 +58,23 @@ describe('OnboardCtrl: Ctrl', function () {
     getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     sites = getJSONFixture('huron/json/settings/sites.json');
+    fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
+    headers = getJSONFixture('core/json/users/headers.json');
+    getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
+
+    spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
+    spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
+      if (type === 'headers') {
+        return $q.when(headers);
+      } else {
+        return $q.when({});
+      }
+    });
 
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardUsers');
+    spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
-    spyOn(SyncService, 'isMessengerSync');
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
@@ -67,41 +87,45 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
+  }));
+
+  function initController() {
     controller = $controller('OnboardCtrl', {
       $scope: $scope,
       $state: $state
     });
 
     $scope.$apply();
-  }));
+  }
 
-  it('should be defined', function () {
-    expect(controller).toBeDefined();
-  });
+  function onBoardUsersResponse(statusCode, responseMessage) {
+    return {
+      data: {
+        userResponse: [{
+          status: statusCode,
+          httpStatus: statusCode,
+          message: responseMessage,
+          email: 'blah@example.com'
+        }, {
+          status: statusCode,
+          httpStatus: statusCode,
+          message: responseMessage,
+          email: 'blah@example.com'
+        }]
+      }
+    };
+  }
 
   describe('Bulk Users CSV', function () {
-    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001,1-555-555-5001\nJane,Doe,Jane Doe,janedoe@example.com,5002,1-555-555-5002";
-    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001\nJane,Doe,Jane Doe,janedoe@example.com,5002";
+    beforeEach(function () {
+      initController();
+    });
+    var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,f,f,f,f";
+    var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
 
-    function fakeOnboardUsers(successFlag, statusCode, responseMessage) {
-      return function (userArray, entitleList, licenseList, callback) {
-        var data = {
-          success: successFlag,
-          userResponse: [{
-            status: statusCode,
-            message: responseMessage,
-            email: 'blah@example.com'
-          }, {
-            status: statusCode,
-            message: responseMessage,
-            email: 'blah@example.com'
-          }]
-        };
-        callback(data);
-      };
-    }
     beforeEach(installPromiseMatchers);
 
     describe('Upload CSV', function () {
@@ -159,7 +183,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $timeout.flush();
       });
       it('should report new users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -171,7 +195,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200, 'User Patched'));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(200)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -184,7 +208,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 500));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -197,7 +221,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users when API fails', function () {
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(false));
+        Userservice.bulkOnboardUsers.and.returnValue($q.reject(onBoardUsersResponse(500)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -214,7 +238,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.$apply();
         $timeout.flush();
 
-        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -227,16 +251,16 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should stop processing when cancelled', function () {
-        Userservice.onboardUsers.and.stub();
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(-1)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
-        expect(promise).not.toBeResolved();
-        expect($scope.model.processProgress).toEqual(0);
-        expect($scope.model.numTotalUsers).toEqual(0);
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
         expect($scope.model.numNewUsers).toEqual(0);
         expect($scope.model.numExistingUsers).toEqual(0);
-        expect($scope.model.userErrorArray.length).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(2);
 
         $scope.cancelProcessCsv();
         $scope.$apply();
@@ -245,7 +269,8 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('With Assigning Users', function () {
+  describe('With assigning meeting licenses', function () {
+    beforeEach(initController);
     beforeEach(function () {
       $scope.allLicenses = [{
         billing: 'testOrg1',
@@ -280,7 +305,47 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('With assigning message licenses', function () {
+    describe('Check if single licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.singleLicense);
+        $stateParams.currentUser = {
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+        };
+        initController();
+      });
+
+      it('should define licenses model', function () {
+        expect($scope.messageFeatures[1].licenses[0].model).toBeTruthy();
+        expect($scope.radioStates.msgRadio).toEqual(false);
+      });
+    });
+
+    describe('Check if multiple licenses get assigned correctly', function () {
+      beforeEach(function () {
+        spyOn(Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(Authinfo, 'getMessageServices').and.returnValue(getMessageServices.multipleLicenses);
+        $stateParams.currentUser = {
+          licenseID: ['MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0']
+        };
+        initController();
+      });
+
+      it('should call getAccountLicenses correctly', function () {
+        var licenseFeatures = $scope.getAccountLicenses();
+        expect(licenseFeatures[0].id).toEqual('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
+        expect(licenseFeatures[0].idOperation).toEqual('ADD');
+        expect($scope.messageFeatures[1].licenses[0].model).toEqual(true);
+        expect($scope.radioStates.msgRadio).toEqual(true);
+      });
+    });
+
+  });
+
   describe('UserAdd DID and DN assignment', function () {
+    beforeEach(initController);
     beforeEach(function () {
       $scope.usrlist = [{
         "name": "dntodid",
@@ -335,7 +400,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     it('assignDNForUserList', function () {
 
-      var promise = $scope.assignDNForUserList();
+      $scope.assignDNForUserList();
       $scope.$apply();
       expect($scope.usrlist[0].externalNumber.pattern).toEqual('null');
       expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
@@ -372,5 +437,32 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
   });
+  describe('status errors during onboarding', function () {
+    beforeEach(initController);
 
+    it('checkClaimedDomain', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400084')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkOutsideClaimedDomain', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400091')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExists', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400081')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('checkUserExistsInDiffOrg', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400090')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('check hybrid services without paid licenses', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(400, '400087')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+  });
 });

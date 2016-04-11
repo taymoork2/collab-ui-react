@@ -1,214 +1,227 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config', '$log', 'Userservice', 'WebExUtilsFact',
-    function ($translate, Authinfo, Config, $log, Userservice, WebExUtilsFact) {
-      var funcName = "siteListCtrl()";
-      var logMsg = "";
+  angular.module('Core').controller('SiteListCtrl', SiteListCtrl);
 
-      var vm = this;
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+  /*@ngInject*/
+  function SiteListCtrl(
+    $translate,
+    $log,
+    $scope,
+    $interval,
+    Authinfo,
+    Userservice,
+    SiteListService,
+    WebExApiGatewayService,
+    Notification
+  ) {
 
-      vm.gridData = [];
+    var funcName = "SiteListCtrl()";
+    var logMsg = "";
 
-      conferenceServices.forEach(
-        function checkConferenceService(conferenceService) {
-          var newSiteUrl = conferenceService.license.siteUrl;
-          var isNewSiteUrl = true;
+    var vm = this;
 
-          vm.gridData.forEach(
-            function checkGrid(grid) {
-              if (newSiteUrl == grid.license.siteUrl) {
-                isNewSiteUrl = false;
+    vm.showGridData = false;
+    vm.gridData = [];
+    vm.allSitesWebexLicensesArray = [];
 
-                logMsg = funcName + ": " + "\n" +
-                  "Duplicate webex site url detected and skipped." + "\n" +
-                  "newSiteUrl=" + newSiteUrl;
-                $log.log(logMsg);
-              }
-            }
-          );
+    var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
-          if (isNewSiteUrl) {
-            conferenceService.showSiteLinks = false;
-            conferenceService.isIframeSupported = false;
-            conferenceService.isAdminReportEnabled = false;
-            conferenceService.webExSessionTicket = null;
+    logMsg = funcName + "\n" +
+      "conferenceServices=\n" + JSON.stringify(conferenceServices);
+    // $log.log(logMsg);
 
-            conferenceService.adminEmailParam = null;
-            conferenceService.advancedSettings = null;
-            conferenceService.userEmailParam = null;
-            conferenceService.webexAdvancedUrl = null;
+    conferenceServices.forEach(
+      function checkConferenceService(conferenceService) {
+        var newSiteUrl = conferenceService.license.siteUrl;
+        var isNewSiteUrl = true;
 
-            vm.gridData.push(conferenceService);
-          }
-        }
-      );
-
-      // Start of grid set up
-      var siteConfigColumn =
-        '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ui-grid-cell-contents">' + '\n' +
-        '    <i class="icon-spinner icon"></i>' + '\n' +
-        '  </p>' + '\n' +
-        '</div>' + '\n' +
-        '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
-        '    <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
-        '                 advanced-settings={{row.entity.advancedSettings}}' + '\n' +
-        '                 user-email-param={{row.entity.userEmailParam}}' + '\n' +
-        '                 webex-advanced-url={{row.entity.webexAdvancedUrl}}' + '\n' +
-        '                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings' + '\n' +
-        '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
-        '    </launch-site>' + '\n' +
-        '  </div>' + '\n' +
-        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
-        '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
-        '      <p class="ui-grid-cell-contents">' + '\n' +
-        '        <i class="icon-settings icon"></i>' + '\n' +
-        '      </p>' + '\n' +
-        '    </a>' + '\n' +
-        '  </div>' + '\n' +
-        '</div>' + '\n';
-
-      var siteReportsColumn =
-        '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ui-grid-cell-contents">' + '\n' +
-        '    <i class="icon-spinner icon"></i>' + '\n' +
-        '  </p>' + '\n' +
-        '</div>' + '\n' +
-        '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="row.entity.isAdminReportEnabled">' + '\n' +
-        '    <div ng-if="!row.entity.isIframeSupported">' + '\n' +
-        '      <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
-        '                   advanced-settings={{row.entity.advancedSettings}}' + '\n' +
-        '                   user-email-param={{row.entity.userEmailParam}}' + '\n' +
-        '                   webex-advanced-url={{row.entity.webexAdvancedUrl}}' + '\n' +
-        '                   id={{row.entity.license.siteUrl}}_xlaunch-webex-site-reports' + '\n' +
-        '                   name={{row.entity.license.siteUrl}}_xlaunch-webex-site-reports>' + '\n' +
-        '      </launch-site>' + '\n' +
-        '    </div>' + '\n' +
-        '    <div ng-if="row.entity.isIframeSupported">' + '\n' +
-        '       <a id="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
-        '          name="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
-        '          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
-        '        <p class="ui-grid-cell-contents">' + '\n' +
-        '          <i class="icon-settings icon"></i>' + '\n' +
-        '        </p>' + '\n' +
-        '       </a>' + '\n' +
-        '    </div>' + '\n' +
-        '  </div>' + '\n' +
-        '</div>' + '\n';
-
-      vm.gridOptions = {
-        data: 'siteList.gridData',
-        multiSelect: false,
-        enableRowSelection: false,
-        enableColumnMenus: false,
-        rowHeight: 44,
-        columnDefs: [],
-      };
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.siteUrl',
-        displayName: $translate.instant('siteList.siteName'),
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.capacity',
-        displayName: $translate.instant('siteList.type'),
-        cellFilter: 'capacityFilter:row.entity.label',
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.volume',
-        displayName: $translate.instant('siteList.licenseCount'),
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.siteUrl',
-        displayName: $translate.instant('siteList.siteSettings'),
-        cellTemplate: siteConfigColumn,
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.siteReports',
-        displayName: $translate.instant('siteList.siteReports'),
-        cellTemplate: siteReportsColumn,
-        sortable: false
-      });
-      // End of grid set up
-
-      if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        initConfigAndReportColumns();
-      } else {
-        Userservice.getUser('me', function (data, status) {
-          if (data.success) {
-            if (data.emails) {
-              Authinfo.setEmail(data.emails);
-              initConfigAndReportColumns();
-            }
-          }
-        });
-      }
-
-      function initConfigAndReportColumns() {
         vm.gridData.forEach(
-          function processGrid(grid) {
-            var funcName = "processGrid()";
-            var logMsg = "";
+          function checkGrid(siteRow) {
+            if (newSiteUrl == siteRow.license.siteUrl) {
+              isNewSiteUrl = false;
 
-            var siteUrl = grid.license.siteUrl;
+              logMsg = funcName + ": " + "\n" +
+                "Duplicate webex site url detected and skipped." + "\n" +
+                "newSiteUrl=" + newSiteUrl;
+              $log.log(logMsg);
+            }
+          }
+        );
 
-            grid.adminEmailParam = Authinfo.getPrimaryEmail();
-            grid.userEmailParam = Authinfo.getPrimaryEmail();
-            grid.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
-            grid.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
+        if (isNewSiteUrl) {
+          conferenceService.showCSVInfo = false;
+          conferenceService.showSiteLinks = false;
+          conferenceService.showLicenseTypes = false;
 
-            WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
-              function isSiteSupportsIframeSuccess(result) {
-                var funcName = "isSiteSupportsIframeSuccess()";
-                var logMsg = "";
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isError = false;
+          conferenceService.isWarn = false;
 
-                logMsg = funcName + ": " + "\n" +
-                  "result=" + JSON.stringify(result);
-                $log.log(logMsg);
+          conferenceService.webExSessionTicket = null;
+          conferenceService.adminEmailParam = null;
+          conferenceService.advancedSettings = null;
+          conferenceService.userEmailParam = null;
+          conferenceService.webexAdvancedUrl = null;
 
-                grid.isIframeSupported = result.isIframeSupported;
-                grid.isAdminReportEnabled = result.isAdminReportEnabled;
-                grid.showSiteLinks = true;
+          conferenceService.isIframeSupported = false;
+          conferenceService.isAdminReportEnabled = false;
+          conferenceService.isCSVSupported = false;
 
-                logMsg = funcName + ": " + "\n" +
-                  "siteUrl=" + siteUrl + "\n" +
-                  "isIframeSupported=" + grid.isIframeSupported + "\n" +
-                  "isAdminReportEnabled=" + grid.isAdminReportEnabled + "\n" +
-                  "showSiteLinks=" + grid.showSiteLinks;
-                $log.log(logMsg);
-              }, // isSiteSupportsIframeSuccess()
+          // define the range of csv states to mock
+          // list of states are in the file apiGatewayConsts.svc.js
+          conferenceService.csvMock = {
+            mockExport: false,
+            mockImport: true,
+            mockFileDownload: false,
+            mockStatus: false,
 
-              function isSiteSupportsIframeError(response) {
-                var funcName = "isSiteSupportsIframeError()";
-                var logMsg = "";
+            // change mockStatusStartIndex and mockStatusEndIndex to mock specific csv state(s)
+            // reference WebExApiGatewayConstsService.csvStatusTypes to know which index value is for which status 
+            mockStatusStartIndex: 0,
+            mockStatusEndIndex: 0,
+            mockStatusCurrentIndex: null,
+          };
 
-                grid.isIframeSupported = false;
-                grid.isAdminReportEnabled = false;
-                grid.showSiteLinks = true;
+          conferenceService.csvStatusObj = null;
+          conferenceService.csvPollIntervalObj = null;
 
-                logMsg = funcName + ": " + "\n" +
-                  "response=" + JSON.stringify(response);
-                $log.log(logMsg);
-              } // isSiteSupportsIframeError()
-            ); // WebExUtilsFact.isSiteSupportsIframe().then
-          } // processGrid()
-        ); // vm.gridData.forEach()
-      } // initConfigAndReportColumns()
+          vm.gridData.push(conferenceService);
+        }
+      }
+    );
 
-      // End of site links set up
+    // Start of grid set up
+    vm.gridOptions = {
+      data: 'siteList.gridData',
+      multiSelect: false,
+      enableRowSelection: false,
+      enableColumnMenus: false,
+      rowHeight: 44,
+      columnDefs: [],
+    };
+
+    vm.gridOptions.columnDefs.push({
+      field: 'license.siteUrl',
+      displayName: $translate.instant('siteList.siteName'),
+      sortable: false
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteConfLicenses',
+      displayName: $translate.instant('siteList.licenseTypes'),
+      cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
+      sortable: false
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteCSV',
+      displayName: $translate.instant('siteList.siteCsvColumnHeader'),
+      cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
+      headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
+      sortable: false,
+      width: '30%'
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteSettings',
+      displayName: $translate.instant('siteList.siteSettings'),
+      cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
+      sortable: false,
+      width: '10%'
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteReports',
+      displayName: $translate.instant('siteList.siteReports'),
+      cellTemplate: 'modules/core/siteList/siteReportsColumn.tpl.html',
+      sortable: false,
+      width: '10%'
+    });
+
+    // make sure that we have the signed in admin user email before we update the columns
+    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
+      SiteListService.updateGrid(vm);
+    } else {
+      Userservice.getUser('me', function (data, status) {
+        if (
+          (data.success) &&
+          (data.emails)
+        ) {
+          Authinfo.setEmails(data.emails);
+          SiteListService.updateGrid(vm);
+        }
+      });
     }
-  ]);
+
+    $scope.csvExport = function (siteRow) {
+      var funcName = "csvExport()";
+      var logMsg = "";
+      var siteUrl = siteRow.license.siteUrl;
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
+
+      logMsg = funcName + "\n" +
+        "siteUrl=" + siteUrl;
+      //$log.log(logMsg);
+
+      WebExApiGatewayService.csvExport(
+        siteUrl,
+        siteRow.csvMock.mockExport
+      ).then(
+
+        function success(response) {
+          var funcName = "WebExApiGatewayService.csvExport.success()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
+          Notification.success($translate.instant('siteList.exportStartedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        },
+
+        function error(response) {
+          var funcName = "WebExApiGatewayService.csvExport.error()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
+          //TBD: Actual error result handling
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+        }
+      ).catch(
+        function catchError(response) {
+          var funcName = "WebExApiGatewayService.csvExport.catchError()";
+          var logMsg = "";
+
+          $log.log(logMsg);
+
+          Notification.error($translate.instant('siteList.exportRejectedToast'));
+          SiteListService.updateCSVColumnInRow(siteRow);
+        }
+      ); // WebExApiGatewayService.csvExport()
+
+    }; // csvExport()
+
+    // kill the csv poll when navigating away from the site list page
+    $scope.$on('$destroy', function () {
+      vm.gridData.forEach(
+        function cancelCsvPollInterval(siteRow) {
+          var funcName = "cancelCsvPollInterval()";
+          var logMsg = "";
+
+          if (null != siteRow.csvPollIntervalObj) {
+            logMsg = funcName + "\n" +
+              "siteUrl=" + siteRow.license.siteUrl;
+            $log.log(logMsg);
+
+            $interval.cancel(siteRow.csvPollIntervalObj);
+          }
+        } // cancelCsvPollInterval()
+      ); // vm.gridData.forEach()
+    });
+  } // SiteListCtrl()
+})(); // top level function

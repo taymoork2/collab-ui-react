@@ -1,6 +1,11 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .directive('herculesNotifications', herculesNotificationsDirective);
+
+  /* @ngInject */
   function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
     var vm = this;
     vm.notificationsLength = function () {
@@ -69,6 +74,20 @@
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
     };
+
+    vm.addResourceButtonClicked = function () {
+      $modal.open({
+        controller: 'RedirectTargetController',
+        controllerAs: 'redirectTarget',
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+      });
+    };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
+    };
   }
 
   function herculesNotificationsDirective() {
@@ -85,7 +104,4 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
 })();

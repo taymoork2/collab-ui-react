@@ -1,5 +1,9 @@
 .customer-overview {
 
+  .button-container {
+    left: -1px;
+  }
+
   .trial-bar {
     margin-bottom: 1.5rem;
   }
@@ -15,6 +19,23 @@
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: 13px;
     color: $brand-danger;
+  }
+
+  .status {
+    i {
+      padding-right: 0.5em;
+      font-size: 0.75em;
+    }
+
+    i.icon-circle {
+      &.trial-pending {
+        color: $color-attention-base;
+      }
+    }
+
+    span {
+      font-size: 0.875em;
+    }
   }
 
   // .progress {

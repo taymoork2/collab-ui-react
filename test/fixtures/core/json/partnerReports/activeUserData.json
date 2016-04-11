@@ -1,0 +1,287 @@
+{
+  "detailedAPI": {
+    "data": [{
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "orgName": "Test Org One",
+      "data": [{
+        "date": "2016-02-25T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-02-26T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-02-27T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-02-28T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-02-29T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-03-01T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }, {
+        "date": "2016-03-02T00:00:00.000Z",
+        "details": {
+          "activeUsers": "3",
+          "totalRegisteredUsers": "5"
+        }
+      }]
+    }, {
+      "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+      "orgName": "Test Org 2",
+      "data": [{
+        "date": "2016-02-25T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-02-26T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-02-27T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-02-28T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-02-29T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-03-01T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }, {
+        "date": "2016-03-02T00:00:00.000Z",
+        "details": {
+          "activeUsers": "0",
+          "totalRegisteredUsers": "4"
+        }
+      }]
+    }],
+    "type": "activeUsers",
+    "date": "2016-03-03T21:23:21.890Z",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day"
+  },
+  "mostActiveAPI": {
+    "data": [{
+      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+      "orgName": "Test Org One",
+      "data": [{
+        "details": {
+          "numCalls": "14",
+          "totalActivity": "14",
+          "userId": "6f85ef2b-a83a-4c58-9d26-842a6567faaa",
+          "userName": "sparkucreportfunctionaltest+3@gmail.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "7",
+          "totalActivity": "7",
+          "userId": "afb4b084-6b6c-4392-9889-d2f2741347e5",
+          "userName": "sparkucreportfunctionaltest@gmail.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "7",
+          "totalActivity": "7",
+          "userId": "d06b5c55-4d29-4e35-922e-3ec495d7e5e9",
+          "userName": "sparkucreportfunctionaltest+2@gmail.com"
+        }
+      }]
+    }, {
+      "orgId": "80a642d9-1949-43e8-bdc8-29c2d24dbfd6",
+      "orgName": "Test Org Three"
+    }, {
+      "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+      "orgName": "Test Org Two",
+      "data": [{
+        "details": {
+          "numCalls": "14",
+          "totalActivity": "14",
+          "userId": "6f85ef2b-a83a-4c58-9d26-842a6567faaa",
+          "userName": "sparkucreportfunctionaltest+3@gmail.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "7",
+          "totalActivity": "7",
+          "userId": "afb4b084-6b6c-4392-9889-d2f2741347e5",
+          "userName": "sparkucreportfunctionaltest@gmail.com"
+        }
+      }, {
+        "details": {
+          "numCalls": "7",
+          "totalActivity": "7",
+          "userId": "d06b5c55-4d29-4e35-922e-3ec495d7e5e9",
+          "userName": "sparkucreportfunctionaltest+2@gmail.com"
+        }
+      }]
+    }, {
+      "orgId": "1",
+      "orgName": "Test Partner"
+    }],
+    "type": "activeUsers",
+    "date": "2016-03-03T21:48:00.146Z",
+    "spanCount": 7,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day"
+  },
+  "detailedResponse": [{
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Feb 25"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Feb 26"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Feb 27"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Feb 28"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Feb 29"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Mar 01"
+  }, {
+    "totalRegisteredUsers": 9,
+    "activeUsers": 3,
+    "percentage": 33,
+    "colorOne": "#99cf78",
+    "colorTwo": "#6ab140",
+    "balloon": true,
+    "modifiedDate": "Mar 02"
+  }],
+  "mostActiveResponse": [{
+    "orgName": "Test Org One",
+    "numCalls": 14,
+    "totalActivity": 14,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest+3@gmail.com"
+  }, {
+    "orgName": "Test Org One",
+    "numCalls": 7,
+    "totalActivity": 7,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest@gmail.com"
+  }, {
+    "orgName": "Test Org One",
+    "numCalls": 7,
+    "totalActivity": 7,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest+2@gmail.com"
+  }, {
+    "orgName": "Test Org Two",
+    "numCalls": 14,
+    "totalActivity": 14,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest+3@gmail.com"
+  }, {
+    "orgName": "Test Org Two",
+    "numCalls": 7,
+    "totalActivity": 7,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest@gmail.com"
+  }, {
+    "orgName": "Test Org Two",
+    "numCalls": 7,
+    "totalActivity": 7,
+    "sparkMessages": 0,
+    "userName": "sparkucreportfunctionaltest+2@gmail.com"
+  }],
+  "activePopResponse": [{
+    "customerId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "percentage": 60,
+    "balloon": true,
+    "labelColorField": "#444",
+    "customerName": "Test Org One"
+  }, {
+    "customerName": "Test Org Three",
+    "customerId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+    "percentage": 0,
+    "balloon": true,
+    "labelColorField": "#444"
+  }, {
+    "customerId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+    "percentage": 0,
+    "balloon": true,
+    "labelColorField": "#444",
+    "customerName": "Test Org Two"
+  }, {
+    "customerName": "Test Partner",
+    "customerId": "1",
+    "percentage": 0,
+    "balloon": true,
+    "labelColorField": "#444"
+  }]
+}

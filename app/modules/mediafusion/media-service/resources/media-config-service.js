@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediaConfigService', ['$window', 'Config',
-    function MediaConfigService($window, Config) {
+  .service('MediaConfigService', ['$window', 'UrlConfig',
+    function MediaConfigService($window, UrlConfig) {
 
-      var baseHerculesUrl = Config.getHerculesUrl();
-      var baseUssUrl = Config.getUssUrl();
-      var baseCalliopeUrl = Config.getCalliopeUrl();
+      var baseHerculesUrl = UrlConfig.getHerculesUrl();
+      var baseUssUrl = UrlConfig.getUssUrl();
+      var baseCalliopeUrl = UrlConfig.getCalliopeUrl();
 
       var getUrl = function () {
         return baseHerculesUrl;

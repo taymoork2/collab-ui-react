@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-unreachable:0 */
+
   angular
     .module('Huron')
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
@@ -63,6 +65,7 @@
     vm.removeFallbackDest = removeFallbackDest;
     vm.isErrorFallbackInput = isErrorFallbackInput;
     vm.fallbackSuggestionsAvailable = false;
+    vm.disableVoicemail = false;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -268,6 +271,9 @@
     function selectFallback($item) {
       vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
+      HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get($item, 'selectableNumber.uuid')).then(function (isVoicemailDisabled) {
+        vm.disableVoicemail = isVoicemailDisabled;
+      });
     }
 
     function isFallbackValid() {
@@ -296,6 +302,9 @@
       HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+          HuntGroupFallbackDataService.isVoicemailDisabled(customerId, _.get(vm.selectedFallbackMember, 'member.selectableNumber.uuid')).then(function (isVoicemailDisabled) {
+            vm.disableVoicemail = isVoicemailDisabled;
+          });
         });
     }
 

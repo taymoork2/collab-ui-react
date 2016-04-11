@@ -74,13 +74,7 @@
     }
 
     function getMessageLabel() {
-      switch (vm.sayMessageType) {
-      case sayMessageType.ACTION:
-        return 'autoAttendant.actionSayMessage';
-      case sayMessageType.MENUKEY:
-      case sayMessageType.MENUHEADER:
-        return 'autoAttendant.sayMessage';
-      }
+      return 'autoAttendant.sayMessage';
     }
 
     function isMessageInputOnly() {
@@ -194,12 +188,16 @@
       switch (vm.sayMessageType) {
       case sayMessageType.MENUHEADER:
         {
-          var action = getSayAction(getSayActionHeader(vm.menuEntry));
+          var actionHeader = getSayActionHeader(vm.menuEntry);
+          var action = getSayAction(actionHeader);
           if (action) {
+            // existing say action from the existing header
             vm.actionEntry = action;
           } else {
+            // reset the headers and add new entry with say action
             var headerEntry = createMenuEntry();
             headerEntry.setType(properties.HEADER_TYPE);
+            vm.menuEntry.headers = [];
             vm.menuEntry.headers.push(headerEntry);
             vm.actionEntry = headerEntry.actions[0];
           }
@@ -222,8 +220,11 @@
 
           // set the voice from the menu header as needed
           if (!vm.actionEntry.getVoice()) {
-            var headerSayAction = getSayAction(getSayActionHeader(vm.menuEntry));
-            vm.actionEntry.setVoice(headerSayAction.getVoice());
+            var sayHeader = getSayActionHeader(vm.menuEntry);
+            var headerSayAction = getSayAction(sayHeader);
+            if (angular.isDefined(headerSayAction)) {
+              vm.actionEntry.setVoice(headerSayAction.getVoice());
+            }
           }
           return;
         }

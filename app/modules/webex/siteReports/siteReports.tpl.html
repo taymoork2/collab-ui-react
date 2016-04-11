@@ -17,8 +17,7 @@
       </div>
     </div>
   </div>
-  <div ng-if="webexReportsObject.viewReady">
-    <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
+  <div ng-if="webexReportsObject.viewReady" id="{{webexReportsObject.cardsSectionId}}" name="{{webexReportsObject.cardsSectionId}}">
     <div class="cs-card-container multiple-layouts">
       <cs-card-layout class="third">
         <div ng-repeat="sec in webexReportsObject.reports.sections">

@@ -6,7 +6,7 @@
     .factory('BrandService', BrandService);
 
   /* @ngInject */
-  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload) {
+  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload, UrlConfig) {
 
     var service = {
       'getSettings': getSettings,
@@ -45,7 +45,7 @@
     }
 
     function getLogoUrl(orgId) {
-      var downloadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/downloadUrl';
+      var downloadUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/downloadUrl';
 
       return $http.get(downloadUrl).then(function (response) {
         return response.data.tempURL;
@@ -57,7 +57,7 @@
         'usePartnerLogo': true
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function useCustomLogo(orgId) {
@@ -65,7 +65,7 @@
         'usePartnerLogo': false
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function enableCustomerLogos(orgId) {
@@ -73,7 +73,7 @@
         'allowCustomerLogos': true
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
     }
 
     function disableCustomerLogos(orgId) {
@@ -81,17 +81,23 @@
         'allowCustomerLogos': false
       };
 
-      Orgservice.setOrgSettings(orgId, settings, notify);
+      return setOrgSetting(orgId, settings);
+    }
+
+    function setOrgSetting(orgId, settings) {
+      return Orgservice.setOrgSettings(orgId, settings)
+        .then(notifySuccess)
+        .catch(notifyError);
     }
 
     function resetCdnLogo(orgId) {
-      var purgeCDNUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
+      var purgeCDNUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
 
       return $http.post(purgeCDNUrl);
     }
 
     function upload(orgId, file) {
-      var uploadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
+      var uploadUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
 
       return $http.get(uploadUrl).then(function (response) {
         return Upload.http({
@@ -105,16 +111,14 @@
       });
     }
 
-    function notify(data, status) {
-      if (data.success) {
-        Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
-      } else {
-        var error = $translate.instant('errors.statusError', {
-          status: status
-        });
+    function notifySuccess() {
+      Notification.success('partnerProfile.processing');
+    }
 
-        Notification.notify(error, 'error');
-      }
+    function notifyError(response) {
+      Notification.errorResponse(response, 'errors.statusError', {
+        status: status
+      });
     }
   }
 })();

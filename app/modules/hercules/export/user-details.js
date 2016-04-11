@@ -1,9 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules').service('UserDetails',
+  angular
+    .module('Hercules')
+    .service('UserDetails', UserDetails);
 
   /* @ngInject  */
-  function (Utils, Config, Authinfo, $http, Log) {
+  function UserDetails(Utils, Config, Authinfo, $http, Log, UrlConfig) {
 
     var multipleUserFilter = function (userIds) {
       var filter = "";
@@ -15,7 +18,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var userUrl = function (userIds, orgId) {
-      return Config.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
+      return UrlConfig.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
     };
 
     var getCSVColumnHeaders = function () {
@@ -72,6 +75,6 @@ angular.module('Hercules').service('UserDetails',
       userUrl: userUrl,
       getCSVColumnHeaders: getCSVColumnHeaders
     };
-
   }
-);
+
+})();

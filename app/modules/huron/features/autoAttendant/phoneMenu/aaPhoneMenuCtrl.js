@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService, Config) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -33,44 +33,8 @@
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
     vm.keyActionChanged = keyActionChanged;
-    vm.timeoutInvalidChanged = timeoutInvalidChanged;
     vm.populateOptionMenu = populateOptionMenu;
     vm.createOptionMenu = createOptionMenu;
-
-    vm.repeatOptions = [{
-      label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
-      name: 'phoneMenuRepeatOnce',
-      value: 2
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatTwice'),
-      name: 'phoneMenuRepeatTwice',
-      value: 3
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatThree'),
-      name: 'phoneMenuRepeatThree',
-      value: 4
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatFour'),
-      name: 'phoneMenuRepeatFour',
-      value: 5
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatFive'),
-      name: 'phoneMenuRepeatFive',
-      value: 6
-    }];
-
-    vm.timeoutActions = [{
-      label: $translate.instant('autoAttendant.phoneMenuContinue'),
-      name: 'phoneMenuContinue',
-      action: 'repeatActionsOnInput',
-      value: 1
-    }, {
-      label: $translate.instant('autoAttendant.repeatMenu'),
-      name: 'repeatMenu',
-      action: 'repeatActionsOnInput',
-      value: 2,
-      childOptions: vm.repeatOptions
-    }];
 
     // TBD means the action isn't supported in the backend yet
     vm.keyActions = [
@@ -93,27 +57,24 @@
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
         inputType: 2
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      //   name: 'phoneMenuRouteUser',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
         name: 'phoneMenuRouteHunt',
         action: 'routeToHuntGroup'
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      //   name: 'phoneMenuRouteVM',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+        name: 'phoneMenuRouteUser',
+        action: 'routeToUser'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+        name: 'phoneMenuRouteMailbox',
+        action: 'routeToVoiceMail'
       }
+
     ];
 
     // search for a key action by its name
@@ -129,6 +90,7 @@
     function addKeyAction() {
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
+      keyAction.key = _.head(keyAction.keys);
       vm.selectedActions.push(keyAction);
 
       // update global UI Model
@@ -136,7 +98,11 @@
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
       menuEntry.addAction(action);
       menuEntry.setType('MENU_OPTION');
+      menuEntry.key = keyAction.key;
       vm.menuEntry.entries.push(menuEntry);
+
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
       setPhonemenuFormDirty();
     }
 
@@ -216,46 +182,18 @@
       }
     }
 
-    function timeoutInvalidChanged() {
-      var entry = vm.menuEntry;
-      if (entry.type == "MENU_OPTION") {
-        setPhonemenuFormDirty();
-        // this is number of times to repeat the timeout/invalid menu
-        if (vm.selectedTimeout.value === 1) {
-          entry.attempts = vm.selectedTimeout.value;
-        } else if (vm.selectedTimeout.value === 2) {
-          if (angular.isDefined(vm.selectedTimeout.selectedChild)) {
-            entry.attempts = vm.selectedTimeout.selectedChild.value;
-          }
-        }
-      }
-    }
-
     function populateOptionMenu() {
       // populate with data from an existing AA
       var entry = vm.menuEntry;
+
       if (entry.type == "MENU_OPTION") {
-        if (angular.isDefined(entry.attempts)) {
-          // both timeout options have the same action name so
-          // we distinguish by the number of attempts allowed
-          if (entry.attempts === 1) {
-            vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
-          } else {
-            vm.selectedTimeout = angular.copy(vm.timeoutActions[1]);
-            vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
-            if (entry.attempts >= 2 && entry.attempts <= 6) {
-              vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[entry.attempts - 2]);
-            } else {
-              // this case should never happens.
-              vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[0]);
-            }
-          }
-        }
+
         var entries = entry.entries;
         if (entries.length > 0) {
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
+
             if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
@@ -285,19 +223,31 @@
 
       var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       keyEntry.type = "MENU_OPTION";
+      keyEntry.key = _.head(getAvailableKeys(''));
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
 
-      menu.attempts = 4;
-      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
-      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
-      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
+      // remove key that is in use from creating the new key entry
+      setAvailableKeys();
     }
 
     function setPhonemenuFormDirty() {
       AACommonService.setPhoneMenuStatus(true);
     }
+
+    function addAvailableFeatures() {
+      if (Config.isDev() || Config.isIntegration()) {
+
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+          name: 'phoneMenuRouteToExtNum',
+          action: 'route'
+        });
+
+      }
+    }
+
     /////////////////////
 
     function activate() {
@@ -306,6 +256,8 @@
       vm.uiMenu = ui[vm.schedule];
       vm.entries = vm.uiMenu.entries;
       vm.menuEntry = vm.entries[$scope.index];
+
+      addAvailableFeatures();
 
       if (vm.menuEntry.type === '') {
         createOptionMenu();

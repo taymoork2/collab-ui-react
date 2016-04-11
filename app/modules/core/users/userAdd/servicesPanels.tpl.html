@@ -1,5 +1,6 @@
 <div>
   <div class="license-wrapper">
+    <multiple-subscriptions></multiple-subscriptions>
     <div class="flex-row">
       <div class="small-4 columns column-title">
         <div class="column-header">
@@ -47,13 +48,12 @@
               </cs-checkbox>
             </div>
             <div ng-if="msgFeature.licenses.length > 1">
-                <fieldset class="onboard-fieldset">
-                    <label class="cs-radio" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">                                 
-                        <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
-                        ng-model="$parent.$parent.radioStates.subLicense" ng-value="license" />
-                        <span>{{license.billingServiceId}} ({{license.volume}})</span>
-                    </label>
-                </fieldset>
+                <div class="onboard-fieldset"
+                  ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
+                  ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
+                  <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
+                  label="{{license.billingServiceId}}"></cs-checkbox>
+                </div>
             </div>
           </div>
         </div>
@@ -61,29 +61,33 @@
       <div id="conference" class="small-4 columns column-paid">
         <div ng-if="confChk" class="item-license" translate="onboardModal.meeting"></div>
         <div class="entitle-check-grp" ng-repeat="lic in allLicenses">
-          <div class="ckbx" ng-if="!lic.site">
+          <div class="ckbx" id="paidMtg" ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)" ng-if="!lic.site">
             <cs-checkbox ckid="{{lic.licenseId}}" ng-model="lic.confModel" label="{{lic.label}}"></cs-checkbox>
           </div>
           <div class="item-mtg">
-            {{lic.site}}
-            <div ng-repeat="cfLic in lic.confLic">
-              <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" label="WebEx {{cfLic.label}}"></cs-checkbox>
-              <div ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
+            <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
+              <div class="sub-line" ng-if="lic.site"></div>
+              {{lic.site}}
+            </div>
+            <div ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
+              <input type="checkbox" cs-input id="{{cfLic.licenseId}}" ng-model="cfLic.confModel" ng-click="checkCMR(cfLic.confModel, lic.cmrLic)" cs-input-label="WebEx {{cfLic.label}}">
+              <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                 <div ng-repeat="cmrLic in lic.cmrLic">
-                  <cs-checkbox ckid="{{cmrLic.licenseId}}" class="indentedCheckbox" ng-click="licenseHandler(cmrLic.licenseId); cfLic.confModel = true; cmrLic.cmrModel = !cmrLic.cmrModel" ng-model="cmrLic.cmrModel" label="WebEx {{cmrLic.label}}" isdisabled="false"></cs-checkbox>
+                  <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel = true;" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
                 </div>
               </div>
             </div>
           </div>
-          <div ng-class="{'sub-line':!$last}"></div>
         </div>
       </div>
       <div id="communication" class="small-4 columns column-paid">
-        <div class="entitle-check-grp" ng-repeat="commFeature in communicationFeatures" ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
-          <div ng-if="isStormBranding" class="item-license" translate="onboardModal.call"></div>
-          <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.communication"></div>
+        <div class="item-license" translate="onboardModal.call"></div>
+        <div class="entitle-check-grp" 
+        ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)" 
+        ng-repeat="commFeature in communicationFeatures" 
+        ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
           <div class="ckbx">
-            <cs-checkbox ckid="{{commFeature.license.licenseId}}" ng-if="!disableCommFeatureAssignment()" ng-model="radioStates.commRadio" label="{{commFeature.label}}"></cs-checkbox>
+            <cs-checkbox ckid="{{commFeature.license.licenseId}}" ng-if="!disableCommFeatureAssignment()" ng-model="radioStates.commRadio" label="{{commFeature.label}}" isDisabled="hybridCallServiceAware"></cs-checkbox>
             <div ng-if="disableCommFeatureAssignment()">
               <div>
                 <span class="warning-icon"></span>

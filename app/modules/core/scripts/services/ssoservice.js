@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('Core')
-  .service('SSOService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
+  .service('SSOService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo', 'UrlConfig',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
 
       return {
         getMetaInfo: function (callback) {
-          var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
+          var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
 
           $http.get(remoteIdpUrl)
             .success(function (data, status) {
@@ -23,15 +23,15 @@ angular.module('Core')
             });
         },
 
-        importRemoteIdp: function (metadataXmlContent, selfSigned, callback) {
-          var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
+        importRemoteIdp: function (metadataXmlContent, selfSigned, ssoEnabled, callback) {
+          var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
             attributeMapping: ['uid=uid', 'mail=mail'],
             autofedAttribute: 'uid',
             ignoreSignatureVerification: selfSigned,
-            ssoEnabled: true
+            ssoEnabled: ssoEnabled
           };
 
           $http.post(remoteIdpUrl, payload)
@@ -49,11 +49,11 @@ angular.module('Core')
             });
         },
 
-        patchRemoteIdp: function (metaUrl, metadataXmlContent, callback) {
+        patchRemoteIdp: function (metaUrl, metadataXmlContent, ssoEnabled, callback) {
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
-            ssoEnabled: true
+            ssoEnabled: ssoEnabled
           };
 
           $http({
@@ -65,30 +65,6 @@ angular.module('Core')
               data = data || {};
               data.success = true;
               Log.debug('Posted metadataXml: ' + metadataXmlContent);
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
-        },
-
-        patchDisableSSO: function (metaUrl, callback) {
-          var payload = {
-            schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
-            ssoEnabled: false
-          };
-
-          $http({
-              method: 'PATCH',
-              url: metaUrl,
-              data: payload
-            })
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
               callback(data, status);
             })
             .error(function (data, status) {
@@ -113,7 +89,7 @@ angular.module('Core')
         },
 
         downloadHostedSp: function (callback) {
-          var hostedSpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
+          var hostedSpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
           $http.get(hostedSpUrl)
             .success(function (data, status) {
               data = data || {};

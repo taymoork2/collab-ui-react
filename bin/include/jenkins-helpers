@@ -1,0 +1,34 @@
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    return 1
+fi
+
+function get_last_retry_dir {
+    find ${WX2_ADMIN_WEB_CLIENT_HOME}/test/e2e-protractor/reports -type d -iname run-\* | xargs ls -1trd | tail -1
+}
+
+function grep_for_failures {
+    grep \<testsuite\  $@
+}
+
+function filter_out_failures {
+    sed -E 's/.*(failures=".*").*/\1/'
+}
+
+function grep_out_zero_failures {
+    grep -v 'failures="0"'
+}
+
+function e2e_tests_succeeded {
+    failures_count="$(grep_for_failures `get_last_retry_dir`/junitresults-*.xml | filter_out_failures | grep_out_zero_failures | wc -l)"
+    [ $failures_count -eq 0 ] && return 0 || return 1
+}
+
+function print_last_triggered_job_url {
+    # otherwise fall back to parsing out the results url from jenkins environment
+    local results_url=`echo $JOB_URL | sed -E 's,(.*job/).*,\1,'`
+    local results_job_name="$E2E_TEST_RESULTS_JOB_NAME"
+    local results_build_number="`env | grep TRIGGERED_BUILD_NUMBER_ | grep ${LAST_TRIGGERED_JOB_NAME} | cut -d= -f2`"
+
+    echo "${results_url}${results_job_name}/${results_build_number}/"
+}

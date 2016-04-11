@@ -8,56 +8,47 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": false,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
         "enabled": false,
-        "details": {
-          "siteUrl": "now.istomorrow.org",
-          "timeZone": {
-            "label": "(GMT -8:00) Los Angeles",
-            "timeZoneId": "4",
-            "timeZoneName": "Los Angeles",
-            "DCName": "SJC",
-            "DCID": "PM"
-          }
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
+        "enabled": false,
+        "siteUrl": "now.istomorrow.org",
+        "timeZone": {
+          "label": "(GMT -8:00) Los Angeles",
+          "timeZoneId": "4",
+          "timeZoneName": "Los Angeles",
+          "DCName": "SJC",
+          "DCID": "PM"
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": false,
         "details": {
-          "roomSystems": [{
-            "model": "sx10",
-            "enabled": false,
-            "quantity": 0
-          }],
           "phones": [{
-            "model": "8865",
+            "model": "CISCO_8865",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8845",
+            "model": "CISCO_8845",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8841",
+            "model": "CISCO_8841",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "7841",
+            "model": "CISCO_7841",
             "enabled": false,
             "quantity": 0
-          }],
-          "shippingInfo": [{
-            "isPrimary": true,
-            "name": "John Connors",
-            "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
           }]
         }
       },
@@ -65,7 +56,23 @@
         "type": "ROOMSYSTEMS",
         "enabled": false,
         "details": {
-          "quantity": 0
+          "roomSystems": [{
+            "model": "CISCO_SX10",
+            "enabled": false,
+            "quantity": 0
+          }]
+        }
+      },
+      "deviceTrial": {
+        "skipDevices": false,
+        "shippingInfo": {
+          "country": "USA",
+          "state": "WA",
+          "name": "John Connors",
+          "phoneNumber": "+1 206 256 3000",
+          "address": "2901 3rd Ave Seattle",
+          "postalCode": " 98121",
+          "type": "CUSTOMER"
         }
       }
     }
@@ -79,12 +86,17 @@
     },
     "trials": {
       "messageTrial": {
-        "type": "COLLAB",
+        "type": "MESSAGE",
         "enabled": true,
         "details": {}
       },
       "meetingTrial": {
-        "type": "MEETINGS",
+        "type": "MEETING",
+        "enabled": true,
+        "details": {}
+      },
+      "webexTrial": {
+        "type": "WEBEX",
         "enabled": true,
         "details": {
           "siteUrl": "now.istomorrow.org",
@@ -98,45 +110,61 @@
         }
       },
       "callTrial": {
-        "type": "SQUAREDUC",
+        "type": "CALL",
         "enabled": true,
         "details": {
-          "roomSystems": [{
-            "model": "sx10",
-            "enabled": true,
-            "quantity": 2
-          }],
           "phones": [{
-            "model": "8865",
+            "model": "CISCO_8865",
             "enabled": true,
             "quantity": 3
           }, {
-            "model": "8845",
+            "model": "CISCO_8845",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "8841",
+            "model": "CISCO_8841",
             "enabled": false,
             "quantity": 0
           }, {
-            "model": "7841",
+            "model": "CISCO_7841",
             "enabled": false,
             "quantity": 0
-          }],
-          "shippingInfo": [{
-            "isPrimary": true,
-            "name": "John Connors",
-            "phoneNumber": "+1 206 256 3000",
-            "address": "2901 3rd Ave Seattle WA 98121",
-            "recipientType": "CUSTOMER"
           }]
         }
       },
       "roomSystemTrial": {
         "type": "ROOMSYSTEMS",
-        "enabled": false,
+        "enabled": true,
         "details": {
-          "quantity": 0
+          "roomSystems": [{
+            "model": "CISCO_SX10",
+            "enabled": true,
+            "quantity": 2
+          }]
+        }
+      },
+      "skipDeviceTrial": {
+        "skipDevices": true,
+        "shippingInfo": {
+          "country": "USA",
+          "state": "WA",
+          "name": "John Connors",
+          "phoneNumber": "+1 206 256 3000",
+          "address": "2901 3rd Ave Seattle",
+          "postalCode": " 98121",
+          "type": "CUSTOMER"
+        }
+      },
+      "deviceTrial": {
+        "skipDevices": false,
+        "shippingInfo": {
+          "country": "USA",
+          "state": "WA",
+          "name": "John Connors",
+          "phoneNumber": "+1 206 256 3000",
+          "address": "2901 3rd Ave Seattle",
+          "postalCode": " 98121",
+          "type": "CUSTOMER"
         }
       }
     }
