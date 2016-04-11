@@ -280,7 +280,7 @@
 
           if (results[1]) {
             // 4/11/2016 admolla
-            // for some reason if I refactor this to not need an array, karma acts up....
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
             if (_.isArray(results[1])) {
               managed.unshift(results[1][0]);
             }
