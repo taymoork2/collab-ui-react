@@ -56,7 +56,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       url: 'https://test.site.com/meetingsapi/v1/users/importexportstatus',
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json;charset=utf-8',
+        'Content-Type': 'multipart/form-data;charset=utf-8',
         'Authorization': 'Bearer someFakeBearer'
       }
     };
@@ -94,8 +94,8 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
       url: 'https://test.site.com/meetingsapi/v1/users/import',
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': 'Bearer someFakeBearer'
+        'Content-Type': 'multipart/form-data;charset=utf-8',
+        'Authorization': 'Bearer '
       }
     };
 
@@ -106,6 +106,7 @@ describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
 
     expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
     expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
+    expect(csvConstructHttpsObj.headers).toEqual(expectedCsvHttpsObj.headers);
   }));
 });
 
