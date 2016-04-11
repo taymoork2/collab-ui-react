@@ -5,7 +5,7 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, Localytics, Log, Notification, NumberSearchServiceV2, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
@@ -387,31 +387,20 @@
     }
 
     function addNumbers(org) {
-      PstnSetupService.getCustomer(org.customerOrgId)
-        .catch(_.partial(getExternalNumbers, org))
-        .then(_.partial(goToPstnSetup, org));
-    }
-
-    function getExternalNumbers(org) {
-      return NumberSearchServiceV2.get({
-        customerId: org.customerOrgId,
-        type: 'external'
-      }).$promise.then(function (response) {
-        if (_.get(response, 'numbers.length') !== 0) {
-          $state.go('didadd', {
-            currentOrg: org
-          });
-          return $q.reject(false);
-        }
-      });
-    }
-
-    function goToPstnSetup(org) {
-      return $state.go('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail
-      });
+      return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
+        .then(function (response) {
+          if (response) {
+            return $state.go('pstnSetup', {
+              customerId: org.customerOrgId,
+              customerName: org.customerName,
+              customerEmail: org.customerEmail
+            });
+          } else {
+            return $state.go('didadd', {
+              currentOrg: org
+            });
+          }
+        });
     }
   }
 })();
