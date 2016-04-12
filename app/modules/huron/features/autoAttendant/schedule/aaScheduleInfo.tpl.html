@@ -8,7 +8,7 @@
           <div class="aa-schedule-info-hours aa-schedule-info-item"> {{hour.starttime}}  -  {{hour.endtime}}</div>
         </div>
       </div>
-      <div ng-if="scheduleInfo.isHolidays()">
+      <div ng-if="scheduleInfo.isHolidays()" ng-class="{'closed-holiday': scheduleInfo.isOpenClosed()}">
         <!-- <h3 class="text-info-left" translate="autoAttendant.scheduleHolidays"></h3> -->
          <div ng-repeat="holiday in scheduleInfo.holidays | orderBy:'date'">
          <div class="row aa-schedule-info-item">
