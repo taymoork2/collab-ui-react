@@ -122,9 +122,9 @@
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
-        customerOrgId: customer.customerOrgId,
-        customerName: customer.customerName,
-        customerEmail: customer.customerEmail,
+        customerOrgId: customer.customerOrgId || customer.id,
+        customerName: customer.customerName || customer.displayName,
+        customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         numUsers: customer.licenseCount,
         daysLeft: 0,

@@ -194,6 +194,15 @@ describe('Partner Service -', function () {
     expect(activeList[1].messaging.features.length).toBe(4);
   });
 
+  it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
+    var myOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false);
+
+    expect(returnList[0].customerOrgId).toBe(myOrg.id);
+    expect(returnList[0].customerName).toBe(myOrg.displayName);
+    expect(returnList[0].customerEmail).toBe(myOrg.email);
+  });
+
   it('should verify that every org has a list of offers', function () {
     var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
     var offers = _.pluck(returnList, 'offers');

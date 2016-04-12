@@ -25,7 +25,6 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
     spyOn(TrialService, 'getDeviceTrialsLimit');
 
     controller = $controller('TrialAddCtrl', {
@@ -58,7 +57,7 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have correct navigation state order', function () {
-    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call']);
   });
 
   it('should transition state', function () {
@@ -87,7 +86,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and not skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;
@@ -97,7 +95,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;
