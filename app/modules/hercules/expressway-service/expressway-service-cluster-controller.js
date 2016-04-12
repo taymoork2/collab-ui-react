@@ -57,15 +57,18 @@
 
     vm.showDeregisterDialog = function () {
       $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          }
-        },
-        controller: 'ClusterDeregisterController',
-        controllerAs: 'clusterDeregister',
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
-      });
+          resolve: {
+            cluster: function () {
+              return vm.cluster;
+            }
+          },
+          controller: 'ClusterDeregisterController',
+          controllerAs: 'clusterDeregister',
+          templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+        })
+        .result.then(function (data) {
+          $state.sidepanel.close();
+        });
     };
 
     vm.upgrade = function () {
