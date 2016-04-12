@@ -3789,5 +3789,11 @@
     "csvDownloadIsRunning": "An export task is already running. Please try again later.",
     "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+  },
+  "readOnlyModal": {
+    "banner": "You are in read-only mode",
+    "title": "Read Only",
+    "okButton": "OK",
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
   }
 }
