@@ -108,11 +108,9 @@
 
     $scope.isTelstraCsbEnabled = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+    $q.all(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
       $scope.isTelstraCsbEnabled = result;
-    }).finally(function () {
-      init();
-    });
+    }).finally(init);
 
     function init() {
       $scope.tabs = tabs;
@@ -151,10 +149,9 @@
       }
 
       if ($scope.isTelstraCsbEnabled) {
-        var userTab = _.findWhere($scope.tabs, {
+        _.remove($scope.tabs, {
           name: 'addUsers'
         });
-        $scope.tabs.remove(userTab);
       }
 
       var enterpriseSipUrlStep = {
