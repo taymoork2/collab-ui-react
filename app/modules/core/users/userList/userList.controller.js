@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser, FeatureToggleService) {
+  function UserListCtrl($dialogs, $location, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config,  FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -50,6 +50,7 @@
       count: 0
     }];
     $scope.dirsyncEnabled = false;
+    $scope.isTelstraCsbEnabled = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
     $scope.USER_EXPORT_THRESHOLD = 10000;
