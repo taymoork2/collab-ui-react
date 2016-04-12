@@ -260,11 +260,13 @@
     function getScheduleTitle() {
       if (vm.schedule === 'openHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleOpen');
+      } else if (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours') {
+        vm.laneTitle = 'Closed / Holidays'
       } else if (vm.schedule === 'closedHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleClosed');
       } else if (vm.schedule === 'holidays') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleHolidays');
-      }
+      } 
     }
 
     function isOpenClosed() {
@@ -276,7 +278,7 @@
     }
 
     function isHolidays() {
-      return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length);
+      return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
     }
 
     function formatTime(tt) {
@@ -300,6 +302,7 @@
     function activate() {
       vm.schedule = $scope.schedule;
       vm.aaModel = AAModelService.getAAModel();
+      vm.ui = AAUiModelService.getUiModel();
       populateHours();
     }
 

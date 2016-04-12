@@ -127,21 +127,24 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
+      
+      if (angular.isDefined(vm.ui.holidays) || vm.ui.holidaysValue === 'holidays') {
+        vm.ui.isHolidays = true;
+        vm.ui.holidaysValue = vm.aaModel.aaRecord.scheduleEventTypeMap.holiday;
+      } else {
+        vm.ui.isHolidays = false;
+        vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
+        vm.ui.holidays.setType('MENU_WELCOME');
+      }
 
-      if (angular.isDefined(vm.ui.closedHours)) {
+      if (angular.isDefined(vm.ui.closedHours) || vm.ui.holidaysValue === 'closedHours') {
         vm.ui.isClosedHours = true;
       } else {
         vm.ui.isClosedHours = false;
         vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.closedHours.setType('MENU_WELCOME');
       }
-      if (angular.isDefined(vm.ui.holidays)) {
-        vm.ui.isHolidays = true;
-      } else {
-        vm.ui.isHolidays = false;
-        vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.holidays.setType('MENU_WELCOME');
-      }
+      
     }
 
     function saveUiModel() {

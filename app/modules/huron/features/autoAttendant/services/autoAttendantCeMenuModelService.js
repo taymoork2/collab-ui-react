@@ -658,7 +658,7 @@
       };
     }
 
-    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+    function updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
       if (!ceRecord.scheduleEventTypeMap) {
         ceRecord['scheduleEventTypeMap'] = {};
       }
@@ -671,16 +671,16 @@
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
         ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
-        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
         if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
           ceRecord.defaultActionSet = 'holidays';
         }
       }
     }
 
-    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
 
-      updateScheduleActionSetMap(ceRecord, actionSetName);
+      updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
 
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
@@ -1081,14 +1081,15 @@
       return false;
     }
 
-    function deleteScheduleActionSetMap(ceRecord, actionSetName) {
+    function deleteScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
       // remove associated schedule to actionSet map, e.g.,
       // scheduleEventTypeMap.open = 'openHours'
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
+      actionSetValue = actionSetValue ? actionSetValue: actionSetName;
       var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
-        return this.scheduleEventTypeMap[prop] === this.actionSetName;
+        return this.scheduleEventTypeMap[prop] === actionSetValue;
       }, {
         scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
         actionSetName: actionSetName
@@ -1113,7 +1114,7 @@
      * actionSetName: 'regularOpenActions'
      * ceRecord: a customer AA record
      */
-    function deleteCombinedMenu(ceRecord, actionSetName) {
+    function deleteCombinedMenu(ceRecord, actionSetName, actionSetValue) {
 
       if (angular.isUndefined(actionSetName) || actionSetName === null) {
         return false;

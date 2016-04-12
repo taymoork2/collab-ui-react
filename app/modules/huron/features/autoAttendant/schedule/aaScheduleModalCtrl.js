@@ -31,6 +31,7 @@
     vm.toggleHolidays = true;
     vm.toggleHours = false;
     vm.holidays = [];
+    vm.holidayBehavior = false;
     vm.oneAtATime = true;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
@@ -258,7 +259,13 @@
         var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-        vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
+        vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
+        if(vm.holidayBehavior && vm.holidays.length > 0) {
+          vm.ui.holidaysValue = 'closedHours';
+        } else {
+          vm.ui.holidaysValue = 'holidays';
+        }
+        
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = updateSchedule(calName);
@@ -282,7 +289,7 @@
             });
             vm.isDeleted = false;
             vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-            vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
+            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length)) ? true : false;
             $modalInstance.close(response);
           },
           function (response) {
@@ -428,6 +435,8 @@
           label: moment.weekdays(index)
         };
       });
+      
+      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours'? true: false;
     }
 
     function openImportModal() {
