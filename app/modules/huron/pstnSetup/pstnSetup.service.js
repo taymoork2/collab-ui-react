@@ -265,7 +265,15 @@
         _.forEach(orders, function (carrierOrder) {
           if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
             var areaCode = getAreaCode(carrierOrder);
-            var json = JSON.parse(carrierOrder.response);
+            try {
+              var json = JSON.parse(carrierOrder.response);
+            } catch (error) {
+              //if parsing fails, give order number to reference possible malformed order
+              pendingNumbers.push({
+                orderNumber: carrierOrder.carrierOrderId
+              });
+              return;
+            }
             var orderQuantity = json[carrierOrder.carrierOrderId].length;
             pendingNumbers.push({
               pattern: '(' + areaCode + ') XXX-XXXX',
@@ -299,8 +307,7 @@
     }
 
     function getAreaCode(order) {
-      var description = _.get(order, 'description');
-      return parseInt(description.slice(-3), 10);
+      return _.chain(order).get('description').slice(-3).join('').value();
     }
 
   }

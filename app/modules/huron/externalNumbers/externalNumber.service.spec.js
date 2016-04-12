@@ -2,7 +2,7 @@
 
 describe('Service: ExternalNumberService', function () {
   var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
-  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingAdvanceOrder;
+  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
   var customerId, externalNumber;
 
   beforeEach(module('Huron'));
@@ -63,7 +63,13 @@ describe('Service: ExternalNumberService', function () {
       numbers: []
     };
 
+    malformedAdvanceOrder = {
+      orderNumber: 654987
+    };
+
     pendingAdvanceOrder = '(123) XXX-XXXX Quantity: 1';
+
+    malformedAdvanceOrderLabel = 'Order Number 654987';
 
     externalNumbers = unassignedNumbers.concat(assignedNumbers);
     allNumbers = pendingNumbers.concat(externalNumbers);
@@ -99,6 +105,17 @@ describe('Service: ExternalNumberService', function () {
     expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedNumbers);
     expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
       label: pendingAdvanceOrder
+    }));
+  });
+
+  it('should refresh numbers and get order number for malformed advance order', function () {
+    pendingNumbers.push(malformedAdvanceOrder);
+    $translate.instant.and.returnValue('Order Number');
+    ExternalNumberService.refreshNumbers();
+
+    $rootScope.$apply();
+    expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
+      label: malformedAdvanceOrderLabel
     }));
   });
 

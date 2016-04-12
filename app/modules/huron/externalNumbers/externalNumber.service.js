@@ -76,6 +76,8 @@
       _.forEach(numbers, function (number) {
         if (_.has(number, 'quantity')) {
           number.label = number.pattern + ' ' + $translate.instant('pstnSetup.quantity') + ': ' + number.quantity;
+        } else if (_.has(number, 'orderNumber')) {
+          number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
         } else {
           number.label = TelephoneNumberService.getDIDLabel(number.pattern);
         }
