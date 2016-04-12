@@ -21,10 +21,12 @@
       fetch: fetch,
       getCluster: getCluster,
       getClustersByConnectorType: getClustersByConnectorType,
+      getAll: getAll,
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
-      upgradeSoftware: upgradeSoftware
+      upgradeSoftware: upgradeSoftware,
+      mergeRunningState: mergeRunningState
     };
 
     return service;
@@ -110,7 +112,7 @@
         .reduce(getMostSevereRunningState, {
           stateSeverityValue: -1
         })
-        .get('state')
+        // .get('state')
         .value();
     }
 
@@ -124,7 +126,7 @@
         .value();
       return {
         alarms: mergeAllAlarms(connectors),
-        state: mergeRunningState(connectors),
+        state: mergeRunningState(connectors).state,
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
         upgradeAvailable: upgradeAvailable,
@@ -200,6 +202,16 @@
           CsdmCacheUpdater.update(clusterCache.c_ucmc, clusters.c_ucmc);
           CsdmCacheUpdater.update(clusterCache.c_cal, clusters.c_cal);
           return clusterCache;
+        });
+    }
+
+    function getAll() {
+      return $http
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          // only keep fused clusters
+          return _.filter(data.clusters, 'state', 'fused');
         });
     }
 

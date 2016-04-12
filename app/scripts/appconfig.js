@@ -1704,6 +1704,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('landing-page', {
+          url: '/services/resource',
+          templateUrl: 'modules/hercules/landing-page/resource-list.html',
+          controller: 'FusionResourceListController',
+          controllerAs: 'resourceList',
+          parent: 'main'
+        })
         .state('calendar-service', {
           templateUrl: 'modules/hercules/expressway-service/overview.html',
           controller: 'ExpresswayServiceController',

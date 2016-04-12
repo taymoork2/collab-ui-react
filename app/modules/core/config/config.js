@@ -293,9 +293,11 @@
         'devices-redux'
       ],
       'squared-fusion-uc': [
+        'landing-page',
         'call-service'
       ],
       'squared-fusion-cal': [
+        'landing-page',
         'calendar-service'
       ],
       'squared-team-member': [
@@ -335,6 +337,7 @@
         'media-service',
         'hurondetails',
         'huronsettings',
+        'landing-page',
         'calendar-service',
         'call-service',
         'management-service'
