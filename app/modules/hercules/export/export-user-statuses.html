@@ -8,20 +8,35 @@
   <div class="modal-body">
     <p translate="hercules.export.modalText1"></p>
     <p translate="hercules.export.modalText2"></p>
-    <div class="hercules-modal-checkboxes" ng-repeat="item in exportUserStatusesCtrl.statusTypes" ng-hide="item.unselectable">
-      <cs-checkbox ng-click="exportUserStatusesCtrl.selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label="{{item.count + ' ' + item.text}}"></cs-checkbox>
-    </div>
+    <form name="userStatusesExport">
+      <div class="cs-checkbox-group">
+        <div ng-hide="item.unselectable" ng-repeat="item in exportUserStatusesCtrl.statusTypes">
+          <input
+            cs-input
+            type="checkbox"
+            id="{{'ckid_' + item.stateType}}"
+            name="{{item.stateType}}"
+            ng-model="exportUserStatusesCtrl.statusTypes[$index].selected"
+            cs-input-label="{{item.count + ' ' + item.text}}">
+        </div>
+      </div>
+    </form>
     <p translate="hercules.export.modalNote"></p>
   </div>
   <div class="modal-footer">
-    <button ng-csv="exportUserStatusesCtrl.exportCSV()" filename="{{'hercules.export.csvFilename' | translate}}" ng-disabled="exportUserStatusesCtrl.loading || exportUserStatusesCtrl.exportingUserStatusReport || exportUserStatusesCtrl.nothingToExport" class="btn btn--primary pull-right" ng-class="{'hercules-button-exporting': exportUserStatusesCtrl.exportingUserStatusReport}">
-      <span ng-hide="exportUserStatusesCtrl.exportingUserStatusReport" translate="hercules.export.modalCTA"></span>
-      <span ng-show="exportUserStatusesCtrl.exportingUserStatusReport">
-        <i class="icon icon-spinner"></i>
-      </span>
+    <button class="btn"
+      ng-click="exportUserStatusesCtrl.cancelExport();$close()"
+      translate="common.close">
+    <button cs-btn
+      cs-btn
+      ng-disabled="exportUserStatusesCtrl.nothingToExport()"
+      loading="exportUserStatusesCtrl.exportingUserStatusReport"
+      class="btn btn--primary pull-right">
+      <div ng-csv="exportUserStatusesCtrl.exportCSV()"
+        filename="{{'hercules.export.csvFilename' | translate}}">
+        <span translate="hercules.export.modalCTA"></span>
+      </div>
     </button>
-    <button class="btn pull-right" ng-click="exportUserStatusesCtrl.cancelExport();$close()" style="margin-right: 10px">
-      <span translate="common.close"></span>
     </button>
   </div>
 </div>
