@@ -80,7 +80,10 @@ angular.module('WebExApp', ['Core']);
 
 angular.module('Messenger', ['Core']);
 
-angular.module('Sunlight', ['Core']);
+angular.module('Sunlight', [
+  'Core',
+  'sunlight.careDetails'
+]);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
