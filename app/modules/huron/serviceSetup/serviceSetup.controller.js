@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService, ModalService) {
+    ExternalNumberService, ModalService, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -73,6 +73,15 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
+    vm.timeZoneToggle = function ($viewValue, $modelValue, scope) {
+      FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
+        if (result) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    };
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -199,7 +208,11 @@
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+            if (!vm.timeZoneToggle) {
+              return !vm.firstTimeSetup;
+            } else {
+              return false;
+            }
           }
         }
       }, {
@@ -569,6 +582,7 @@
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
+              vm.model.site.timeZone = site.timeZone;
             });
           }
         });
@@ -861,6 +875,11 @@
           return createSite(vm.model.site);
         } else {
           var siteData = {};
+          //this value is not gonna change when timezone select combo is disabled
+          // so no need to check for timeZoneToggle here
+          if (_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) {
+            siteData.timeZone = vm.model.site.timeZone.value;
+          }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
