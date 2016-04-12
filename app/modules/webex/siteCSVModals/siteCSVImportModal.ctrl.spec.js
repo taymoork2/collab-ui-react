@@ -107,4 +107,15 @@ describe('SiteCSVImportModalCtrl test', function () {
     expect($scope.$close).toHaveBeenCalled();
   });
 
+  it('should be able to reject import when import file is null', function () {
+    $rootScope.$apply();
+
+    expect(fakeSiteRow).not.toBe(null);
+
+    SiteCSVImportModalCtrl.modal.file = null;
+    SiteCSVImportModalCtrl.startImport();
+
+    expect(Notification.error).toHaveBeenCalled();
+    expect($scope.$close).not.toHaveBeenCalled();
+  });
 }); // describe()

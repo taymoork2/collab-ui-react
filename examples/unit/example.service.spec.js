@@ -45,5 +45,4 @@ describe('Service: ExampleService', function () {
       $httpBackend.flush();
     });
   });
-
 });

@@ -1420,6 +1420,11 @@ angular
               controller: 'TrialAddCtrl',
               controllerAs: 'trial'
             }
+          },
+          params: {
+            isEditing: false,
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialAdd.info', {
@@ -1468,6 +1473,7 @@ angular
             }
           },
           params: {
+            isEditing: true,
             currentTrial: {},
             details: {}
           }

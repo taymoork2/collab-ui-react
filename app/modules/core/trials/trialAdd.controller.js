@@ -36,10 +36,6 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
-      name: 'trialAdd.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
-    }, {
       name: 'trialAdd.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -49,9 +45,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers'];
+    vm.navOrder = ['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call'];
     vm.navStates = ['trialAdd.info'];
     vm.showWebex = false;
     vm.startTrial = startTrial;
@@ -241,17 +235,13 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0];
         vm.webexTrial.enabled = results[1];
-        vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement;
-        vm.supportsHuronCallTrials = results[4];
-        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
+        vm.pstnTrial.enabled = vm.hasCallEntitlement;
         vm.messageTrial.enabled = true;
         vm.meetingTrial.enabled = true;
         if (vm.webexTrial.enabled) {
@@ -265,9 +255,6 @@
         var meetingModal = _.find(vm.trialStates, {
           name: 'trialAdd.webex'
         });
-        var addNumbersModal = _.find(vm.trialStates, {
-          name: 'trialAdd.addNumbers'
-        });
         var pstnModal = _.find(vm.trialStates, {
           name: 'trialAdd.pstn'
         });
@@ -275,11 +262,10 @@
           name: 'trialAdd.emergAddress'
         });
 
-        pstnModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
-        emergAddressModal.enabled = vm.supportsPstnSetup && vm.supportsHuronCallTrials;
-        devicesModal.enabled = results[3];
+        pstnModal.enabled = vm.pstnTrial.enabled;
+        emergAddressModal.enabled = vm.pstnTrial.enabled;
+        devicesModal.enabled = results[2];
         meetingModal.enabled = results[1];
-        addNumbersModal.enabled = !vm.supportsPstnSetup;
 
       }).finally(function () {
         $scope.$watch(function () {
@@ -321,7 +307,7 @@
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
 

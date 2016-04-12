@@ -52,10 +52,6 @@
       trials: [vm.callTrial, vm.roomSystemTrial],
       enabled: true,
     }, {
-      name: 'trialEdit.addNumbers',
-      trials: [vm.callTrial],
-      enabled: true,
-    }, {
       name: 'trialEdit.pstn',
       trials: [vm.pstnTrial],
       enabled: true,
@@ -65,10 +61,7 @@
       enabled: true,
     }];
     // Navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-
-    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call', 'trialEdit.addNumbers'];
+    vm.navOrder = ['trialEdit.info', 'trialEdit.webex', 'trialEdit.pstn', 'trialEdit.emergAddress', 'trialEdit.call'];
     vm.navStates = ['trialEdit.info'];
 
     vm.individualServices = [{
@@ -265,22 +258,18 @@
       $q.all([
         FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
         FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-        FeatureToggleService.supportsPstnSetup(),
-        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials),
-        FeatureToggleService.supports(FeatureToggleService.features.huronCallTrials)
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
       ]).then(function (results) {
         vm.showRoomSystems = results[0];
         vm.roomSystemTrial.enabled = results[0] && vm.preset.roomSystems;
         vm.webexTrial.enabled = results[1] && vm.preset.webex;
         vm.meetingTrial.enabled = vm.preset.meeting;
         vm.showWebex = results[1];
-        vm.supportsPstnSetup = results[2];
         vm.callTrial.enabled = vm.hasCallEntitlement && vm.preset.call;
         vm.messageTrial.enabled = vm.preset.message;
-        vm.supportsHuronCallTrials = results[4];
-        vm.pstnTrial.enabled = vm.supportsHuronCallTrials && vm.hasCallEntitlement;
+        vm.pstnTrial.enabled = vm.hasCallEntitlement;
 
-        vm.canSeeDevicePage = results[3];
+        vm.canSeeDevicePage = results[2];
 
         if (vm.showWebex) {
           updateTrialService(_messageTemplateOptionId);
@@ -327,11 +316,10 @@
       if (!vm.callTrial.enabled) {
         vm.pstnTrial.enabled = false;
       }
-      if (vm.callTrial.enabled && vm.supportsHuronCallTrials && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
+      if (vm.callTrial.enabled && vm.hasCallEntitlement && !vm.pstnTrial.skipped) {
         vm.pstnTrial.enabled = true;
       }
       setViewState('trialEdit.call', canAddDevice());
-      setViewState('trialEdit.addNumbers', (hasEnabledCallTrial() && !vm.supportsPstnSetup)); //only show step if not supportsPstnSetup
       setViewState('trialEdit.webex', hasEnabledWebexTrial());
       setViewState('trialEdit.pstn', vm.pstnTrial.enabled);
       setViewState('trialEdit.emergAddress', vm.pstnTrial.enabled);
