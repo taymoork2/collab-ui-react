@@ -29,15 +29,17 @@
     }
 
     function Ctrl() {
-      var vm = this;
-      if (!modalShown) {
-        modalShown = true;
-        vm.modal = $modal.open({
-          size: 'sm',
-          controller: ReadOnlyModalController,
-          controllerAs: 'readOnlyCtrl',
-          templateUrl: 'modules/core/scripts/directives/views/read-only-modal.html'
-        });
+      if (Authinfo.isReadOnlyAdmin()) {
+        var vm = this;
+        if (!modalShown) {
+          modalShown = true;
+          vm.modal = $modal.open({
+            size: 'sm',
+            controller: ReadOnlyModalController,
+            controllerAs: 'readOnlyCtrl',
+            templateUrl: 'modules/core/scripts/directives/views/read-only-modal.html'
+          });
+        }
       }
     }
 
