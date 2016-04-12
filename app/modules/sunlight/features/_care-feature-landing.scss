@@ -1,4 +1,8 @@
-.care-feature-landing {
+.care-features {
+  @extend %content-header;
+}
+
+.noFeatures {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -12,7 +16,7 @@
     font-size: 10rem
   }
   .ct-desc {
-    max-width: 330px;
+    max-width: rem-calc(330);
   }
 
   .new-btn {

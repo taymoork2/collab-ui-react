@@ -3300,7 +3300,7 @@
     "featuresNotYetConfiguredPage": {
       "createChatTemplate": "Create a Chat Template",
       "createChatTemplateDesc": "A chat template is what your customer will see when chatting with an agent.",
-      "getStarted": "Get Started"
+      "new": "New"
     }
   },
 
