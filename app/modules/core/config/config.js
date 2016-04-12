@@ -322,7 +322,8 @@
         // add back them to 'ccc_config' serviceState
         'careDetails',
         'careSettings',
-        'careFeatures'
+        'careFeatures',
+        'careChatSA'
       ]
     };
 

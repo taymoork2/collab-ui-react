@@ -2066,6 +2066,16 @@ angular
           url: '/features',
           parent: 'careDetails',
           templateUrl: 'modules/sunlight/features/features.tpl.html'
+        })
+        .state('careChatSA', {
+          url: '/careChat',
+          views: {
+            'main@': {
+              templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+              controller: 'CareChatSetupAssistantCtrl',
+              controllerAs: 'careChatSA'
+            }
+          }
         });
     }
   ]);

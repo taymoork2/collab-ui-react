@@ -1,0 +1,32 @@
+@import "setupAssistantPages/setup-assistant-pages";
+
+.careChatSetup {
+  @extend %content-header;
+}
+.care-chat {
+  &.overlay-panel {
+    & cs-setup-assistant {
+      width: 100%;
+    }
+  }
+  .panel-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.ct-confirmation-body {
+  .warning-icon {
+    @extend .icon;
+    @extend .icon-warning;
+    font-size: 2rem;
+    color: $brand-warning;
+    float: left;
+  }
+  .ct-confirmation-message {
+    @include vr-spacing(mt, 0.75);
+  }
+}
