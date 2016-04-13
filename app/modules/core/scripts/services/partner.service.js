@@ -38,8 +38,12 @@
 
     return factory;
 
-    function getManagedOrgsList() {
-      return $http.get(managedOrgsUrl);
+    function getManagedOrgsList(searchText) {
+      return $http.get(managedOrgsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
     }
 
     // Series of fns dont make any sense, unless isTrial = null means something...

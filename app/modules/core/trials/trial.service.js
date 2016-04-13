@@ -43,8 +43,12 @@
       }).$promise;
     }
 
-    function getTrialsList() {
-      return $http.get(trialsUrl);
+    function getTrialsList(searchText) {
+      return $http.get(trialsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
     }
 
     function getDeviceTrialsLimit() {
