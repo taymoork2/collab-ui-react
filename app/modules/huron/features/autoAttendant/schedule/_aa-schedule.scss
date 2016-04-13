@@ -1,10 +1,5 @@
-.aa-flex-item.schedule {
-  @include vr-spacing(pv, .25);
-  @include vr-spacing(ph, 2);
-}
-
-.aa-schedule-modal {
-  .aa-schedule-subtitle {
+.aa-schedule {
+  .modal-body &-subtitle {
     font-size: 1.25rem;
     line-height: 1;
     font-family: $brand-font-thin;
@@ -20,7 +15,7 @@
     color: $aa-builder-icon-click-color;
     transform: rotate(90deg);
   }
-  .aa-schedule-hour {
+  &-hour {
     @include vr-spacing(pt, 1);
     border-bottom: 1px solid $gray;
     &:nth-of-type(1) {
@@ -28,38 +23,38 @@
       border-top: 1px solid $gray;
     }
   }
-  .aa-schedule-time {
+  &-time {
     display: inline-block;
     vertical-align: text-top;
     @include vr-spacing(mr, 2);
   }
-  .aa-schedule-trash {
+  &-trash {
     font-size: 1.25rem;
     float: right;
   }
-  .aa-schedule-days {
+  &-days {
     display: flex;
     justify-content: space-between;
   }
-  .aa-schedule-add {
+  &-add {
     i {
       @include vr-spacing(pr, 0.5);
       color: $color-primary-base;
     }
   }
-  .aa-schedule-holidays-behavior {
+  &-holidays-behavior {
     @include vr-spacing(mt, 1);
   }
-  .aa-recur-annually-box {
+  &-recur-annually-box {
     @include vr-spacing(pt, 1.75);
   }
-  .aa-holidays-recur-select-container {
+  &-holidays-recur-select-container {
     @include vr-spacing(mb, 6);
   }
-  .aa-schedule-holidays-time {
+  &-holidays-time {
     display: inline-block;
     float: right;
-    width: 10.75rem;
+    width: vr-adjust(170);
     &:last-of-type {
       @include vr-spacing(mr, 2);
     }
@@ -78,7 +73,7 @@
         color: $gray;
         > .row {
           @include vr-spacing(pv, .5);
-          .aa-holidays-name-collapse {
+          .aa-schedule-holidays-name-collapse {
             width: 30%;
             float: left;
             @include vr-spacing(pl, .5);
@@ -141,11 +136,6 @@
   text-align: left;
 }
 
-.aa-column {
-  @include vr-spacing(pl, 1.0);
-  white-space: normal;
-}
-
 .aa-schedule-info-day {
   @include vr-spacing(pt, 1.0);
   @include vr-spacing(pr, 0.3);
@@ -156,8 +146,18 @@
   text-align: left;
 }
 
+.aa-column {
+  @include vr-spacing(pl, 1.0);
+  white-space: normal;
+}
+
 .aa-trim-padding {
   @include vr-spacing(pl, 0);
+}
+
+.aa-flex-item.schedule {
+  @include vr-spacing(pv, .25);
+  @include vr-spacing(ph, 2);
 }
 
 /* Should go in toolkit for timepicker error state */
