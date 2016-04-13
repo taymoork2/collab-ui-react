@@ -128,7 +128,7 @@
     function exactDateChanged() {
       _.each(vm.holidays, function (holiday) {
         // If exactDate unselected, auto select recurAnnually
-        if (holiday.exactDate == false) {
+        if (holiday.exactDate === false) {
           holiday.recurAnnually = true;
         } else {
           holiday.recurAnnually = false;
