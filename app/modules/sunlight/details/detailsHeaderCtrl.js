@@ -1,14 +1,10 @@
-/**
- * Created by sjalipar on 4/11/16.
- */
 (function () {
   'use strict';
 
   angular
     .module('CareDetails')
     .controller('DetailsHeaderCtrl', DetailsHeaderCtrl);
-
-  /* @ngInject */
+  
   function DetailsHeaderCtrl() {
     var vm = this;
     vm.title = 'sunlightDetails.title';

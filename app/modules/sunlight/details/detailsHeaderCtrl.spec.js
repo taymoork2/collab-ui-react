@@ -1,11 +1,8 @@
-/**
- * Created by sjalipar on 4/13/16.
- */
 describe('Care details ctrl', function () {
   var detailsCtrl;
   beforeEach(module('Sunlight'));
   beforeEach(inject(function ($controller) {
-    detailsCtrl = $controller('DetailsHeaderCtrl', function () {});
+    detailsCtrl = $controller('DetailsHeaderCtrl');
   }));
 
   it('should define header title and tabs', function () {
