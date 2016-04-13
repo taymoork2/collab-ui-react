@@ -140,8 +140,6 @@
     }
 
     function forceStartBeforeEndCheck() {
-
-      console.log(document.getElementsByName('toggleHolidays'));
       var index = _.findLastIndex(vm.holidays, {
         isOpen: true
       });

@@ -35,7 +35,7 @@
                      required>
               <div class="cs-input__messages" role="alert"
                    ng-show="aaScheduleModalCtrl.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)">
-                <div class="message">{{'autoAttendant.scheduleClosedTimeCheck' | translate}}
+                <div class="message">{{ :: 'autoAttendant.scheduleClosedTimeCheck' | translate}}
                 </div>
               </div>
             </div>
@@ -61,8 +61,10 @@
 
   <div class="modal-body">
     <p class="aa-schedule-subtitle">{{'autoAttendant.scheduleHolidays' | translate}} <a id="toggleHolidays"
-      ng-click="aaScheduleModalCtrl.toggleSection('holidays')" class="icon icon-right-arrow pull-right"
-      ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a></p>
+                                                                                        ng-click="aaScheduleModalCtrl.toggleSection('holidays')"
+                                                                                        class="icon icon-right-arrow pull-right"
+                                                                                        ng-class="{'down': !aaScheduleModalCtrl.toggleHolidays}"></a>
+    </p>
     <div collapse="aaScheduleModalCtrl.toggleHolidays">
       <div class="aa-schedule-holidays-behavior">
         <input

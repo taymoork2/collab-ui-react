@@ -4,24 +4,20 @@
 }
 
 .aa-schedule-modal {
-  position: relative;
-  width: 130%;
-  left: -15%;
-  background: #FFF none repeat scroll 0% 0%;
   .aa-schedule-subtitle {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1;
     font-family: $brand-font-thin;
     font-weight: normal;
   }
   .icon {
-    color: $gray-light-1;
+    color: $aa-builder-icon-color;
     &:hover {
-      color: $color-primary-base;
+      color: $aa-builder-icon-click-color;
     }
   }
   .down {
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
     transform: rotate(90deg);
   }
   .aa-schedule-hour {
