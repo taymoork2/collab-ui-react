@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($dialogs, $location, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config,  FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
+  function UserListCtrl($dialogs, $location, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -73,6 +73,10 @@
     $scope.isValidThumbnail = isValidThumbnail;
     $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+      $scope.isTelstraCsbEnabled = result;
+    });
 
     init();
 
