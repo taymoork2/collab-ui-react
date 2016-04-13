@@ -1624,6 +1624,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",

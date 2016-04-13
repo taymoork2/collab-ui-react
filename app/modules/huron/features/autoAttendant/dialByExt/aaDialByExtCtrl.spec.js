@@ -2,7 +2,7 @@
 
 describe('Controller: AADialByExtCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, Notification;
   var $rootScope, $scope, $translate;
 
   var aaModel = {
@@ -36,7 +36,7 @@ describe('Controller: AADialByExtCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _Notification_) {
     $translate = _$translate_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -46,6 +46,7 @@ describe('Controller: AADialByExtCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    Notification = _Notification_;
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -223,6 +224,66 @@ describe('Controller: AADialByExtCtrl', function () {
       controller.setVoiceOptions();
       expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
       expect(controller.languageOption.value).toEqual('nl_NL');
+
+    });
+  });
+
+  describe('should test dial by extension message for chars not allowed', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller, _$rootScope_) {
+      $scope = $rootScope;
+
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
+
+      describe('keyPress', function () {
+      it('should display error message when < or > are entered', function () {
+        var errorSpy;
+
+
+        errorSpy = jasmine.createSpy('error');
+        Notification.error = errorSpy;
+
+        var event = {};
+
+        event.keyCode = 60;
+        event.preventDefault = function(){};
+
+        expect(controller).toBeDefined();
+
+        controller.keyPress(event);
+
+        expect(errorSpy).toHaveBeenCalled();
+
+        event.keyCode = 62;
+
+        controller.keyPress(event);
+
+        expect(errorSpy).toHaveBeenCalled();
+
+      });
+
+      it('should not display error message when valid char is entered', function () {
+        var errorSpy;
+
+        errorSpy = jasmine.createSpy('error');
+        Notification.error = errorSpy;
+
+        var event = {};
+
+        event.keyCode = 97;
+
+        expect(controller).toBeDefined();
+
+        controller.keyPress(event);
+
+        expect(errorSpy).not.toHaveBeenCalled();
+
+      });
 
     });
   });
