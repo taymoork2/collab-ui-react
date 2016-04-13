@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  angular.module('Hercules')
+  angular
+    .module('Hercules')
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
@@ -31,15 +32,19 @@
     vm.setFilter = setFilter;
     vm.searchData = searchData;
 
-    ClusterService.getAll()
-      .then(function (clusters) {
-        clustersCache = clusters;
-        updateFilters();
-        vm.displayedClusters = addServicesStatusesTo(clusters);
-      }, XhrNotificationService.notify)
-      .finally(function () {
-        vm.loading = false;
-      });
+    loadClusters();
+
+    function loadClusters() {
+      ClusterService.getAll()
+        .then(function (clusters) {
+          clustersCache = clusters;
+          updateFilters();
+          vm.displayedClusters = addServicesStatusesTo(clusters);
+        }, XhrNotificationService.notify)
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
 
     function addResource() {
       $window.alert('yo');
