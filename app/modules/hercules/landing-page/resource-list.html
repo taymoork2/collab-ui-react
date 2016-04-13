@@ -29,8 +29,8 @@
             <div>Connectors status</div>
             <ul class="service-list">
               <li ng-repeat="service in cluster.servicesStatuses">
-                <div ng-hide="service.status.total === 0">
-                  <a href="#"><i class="fa fa-circle hercules-state-{{service.status.stateSeverity}}"></i> <span>{{service.name}}</span></a>
+                <div ng-hide="service.total === 0">
+                  <a href="#"><i class="fa fa-circle hercules-state-{{service.state.label}}"></i> <span>{{'overview.cards.hybrid.services.' + service.serviceId | translate}}</span></a>
                 </div>
               </li>
             </ul>

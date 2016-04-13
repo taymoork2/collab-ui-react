@@ -42,15 +42,15 @@
         var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
         var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
         cluster.servicesStatuses = [{
-          connectorType: 'c_mgmt',
+          serviceId: 'squared-fusion-mgmt',
           state: FusionClusterStatesService.getMergedStateSeverity(mgmtConnectors),
           total: mgmtConnectors.length
         }, {
-          connectorType: 'c_ucmc',
+          serviceId: 'squared-fusion-uc',
           state: FusionClusterStatesService.getMergedStateSeverity(ucmcConnectors),
           total: ucmcConnectors.length
         }, {
-          connectorType: 'c_cal',
+          serviceId: 'squared-fusion-cal',
           state: FusionClusterStatesService.getMergedStateSeverity(calConnectors),
           total: calConnectors.length
         }];

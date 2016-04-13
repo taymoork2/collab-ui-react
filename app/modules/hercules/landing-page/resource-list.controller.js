@@ -6,7 +6,7 @@
     .controller('FusionResourceListController', FusionResourceListController);
 
   /* @ngInject */
-  function FusionResourceListController($window, $filter, ClusterService, XhrNotificationService, $log) {
+  function FusionResourceListController($window, $filter, FusionClusterService, XhrNotificationService, $log) {
     var vm = this;
     var clustersCache = [];
 
@@ -35,11 +35,11 @@
     loadClusters();
 
     function loadClusters() {
-      ClusterService.getAll()
+      FusionClusterService.getAll()
         .then(function (clusters) {
           clustersCache = clusters;
           updateFilters();
-          vm.displayedClusters = addServicesStatusesTo(clusters);
+          vm.displayedClusters = clusters;
         }, XhrNotificationService.notify)
         .finally(function () {
           vm.loading = false;
@@ -56,28 +56,6 @@
         .uniq()
         .size()
         .value();
-    }
-
-    function addServicesStatusesTo(clusters) {
-      return _.map(clusters, function (cluster) {
-        var mgmtConnectors = _.filter(cluster.connectors, 'connectorType', 'c_mgmt');
-        var ucmcConnectors = _.filter(cluster.connectors, 'connectorType', 'c_ucmc');
-        var calConnectors = _.filter(cluster.connectors, 'connectorType', 'c_cal');
-        cluster.servicesStatuses = [{
-          name: 'Management',
-          status: ClusterService.mergeRunningState(mgmtConnectors),
-          total: mgmtConnectors.length
-        }, {
-          name: 'Call',
-          status: ClusterService.mergeRunningState(ucmcConnectors),
-          total: ucmcConnectors.length
-        }, {
-          name: 'Calendar',
-          status: ClusterService.mergeRunningState(calConnectors),
-          total: calConnectors.length
-        }];
-        return cluster;
-      });
     }
 
     function updateFilters() {
