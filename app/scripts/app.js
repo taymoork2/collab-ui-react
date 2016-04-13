@@ -82,7 +82,7 @@ angular.module('Messenger', ['Core']);
 
 angular.module('Sunlight', [
   'Core',
-  'sunlight.careDetails'
+  'CareDetails'
 ]);
 
 angular.module('wx2AdminWebClientApp', [

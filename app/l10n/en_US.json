@@ -3293,13 +3293,10 @@
   "sunlightDetails": {
     "title": "Care",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features"
-  },
-
-  "sunlightFeatureDetails": {
+    "featuresTitle": "Features",
     "featuresNotYetConfiguredPage": {
-      "createChatTemplate": "Create a Chat Template",
-      "createChatTemplateDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "createCT": "Create a Chat Template",
+      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
       "new": "New"
     }
   },

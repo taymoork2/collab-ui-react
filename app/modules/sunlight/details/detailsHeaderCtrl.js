@@ -5,7 +5,7 @@
   'use strict';
 
   angular
-    .module('sunlight.careDetails')
+    .module('CareDetails')
     .controller('DetailsHeaderCtrl', DetailsHeaderCtrl);
 
   /* @ngInject */

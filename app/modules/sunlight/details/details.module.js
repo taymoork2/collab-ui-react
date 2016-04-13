@@ -4,5 +4,5 @@
 (function () {
   'use strict';
 
-  angular.module('sunlight.careDetails', []);
+  angular.module('CareDetails', []);
 })();
