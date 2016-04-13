@@ -40,7 +40,7 @@
         scomUrl = scomUrl + '?disableCache=true';
       }
 
-      $http.get(scomUrl)
+      return $http.get(scomUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -184,31 +184,20 @@
     /**
      * Get the latest orgSettings, merge with new settings, and PATCH the org
      */
-    function setOrgSettings(orgId, settings, callback) {
+    function setOrgSettings(orgId, settings) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
 
-      getOrg(function (orgData, orgStatus) {
-        var orgSettings = orgData.orgSettings;
-        _.assign(orgSettings, settings);
+      return getOrg(_.noop, orgId, true)
+        .then(function (response) {
+          var orgSettings = _.get(response, 'data.orgSettings', {});
+          _.assign(orgSettings, settings);
 
-        $http({
+          return $http({
             method: 'PATCH',
             url: orgUrl,
             data: orgSettings
-          })
-          .success(function (data, status) {
-            data = data || {};
-            data.success = true;
-            Log.debug('PATCHed orgSettings: ' + orgSettings);
-            callback(data, status);
-          })
-          .error(function (data, status) {
-            data = data || {};
-            data.success = false;
-            data.status = status;
-            callback(data, status);
           });
-      }, orgId, true);
+        });
     }
 
     function createOrg(enc, callback) {

@@ -30,7 +30,9 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         api: 'import',
         method: 'POST',
         contentType: 'multipart/form-data;charset=utf-8',
-        data: {}
+        data: {
+          file: null
+        }
       },
 
       {

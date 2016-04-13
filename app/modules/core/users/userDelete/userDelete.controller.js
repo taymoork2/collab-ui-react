@@ -5,13 +5,12 @@
     .controller('UserDeleteCtrl', UserDeleteCtrl);
 
   /* @ngInject */
-  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Log, Userservice, Notification, Config, $translate, HuronUser, SyncService) {
+  function UserDeleteCtrl($scope, $rootScope, $stateParams, $q, $timeout, Log, Userservice, Notification, Config, $translate, HuronUser) {
     var vm = this;
 
     vm.deleteUserOrgId = $stateParams.deleteUserOrgId;
     vm.deleteUserUuId = $stateParams.deleteUserUuId;
     vm.deleteUsername = $stateParams.deleteUsername;
-    vm.isMsgrSyncEnabled = false;
 
     vm.confirmation = '';
     var confirmationMatch = $translate.instant('usersPage.yes');
@@ -21,17 +20,7 @@
 
     init();
 
-    function init() {
-      getMessengerSyncStatus();
-    }
-
-    function getMessengerSyncStatus() {
-      SyncService.isMessengerSyncEnabled()
-        .then(function (isEnabled) {
-          vm.isMsgrSyncEnabled = isEnabled;
-        })
-        .catch(Log.error);
-    }
+    function init() {}
 
     function deleteCheck() {
       return vm.confirmation.toUpperCase() !== confirmationMatch;

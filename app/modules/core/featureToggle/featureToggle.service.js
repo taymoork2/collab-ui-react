@@ -11,6 +11,7 @@
     var features = {
       pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
+      csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
@@ -21,10 +22,9 @@
       atlasDeviceTrials: 'atlas-device-trials',
       atlasHuronDeviceTimeZone: 'atlas-huron-device-timezone',
       atlasTrialConversion: 'atlas-trial-conversion',
+      atlasTelstraCsb: 'atlas-telstra-csb',
       huronClassOfService: 'COS',
       huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-      csdmHuron: 'csdm-huron',
-      useCsdmDeviceSidepanel: 'csdm-devicesidepanel',
       androidAddGuestRelease: 'android-add-guest-release',
       androidDirectUpload: 'android-direct-upload',
       androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
@@ -155,7 +155,6 @@
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
       supports: supports,
-      supportsPstnSetup: supportsPstnSetup,
       supportsDirSync: supportsDirSync,
       features: features
     };
@@ -286,10 +285,6 @@
           });
         }
       });
-    }
-
-    function supportsPstnSetup() {
-      return supports(features.pstnSetup);
     }
 
     function supportsDirSync() {

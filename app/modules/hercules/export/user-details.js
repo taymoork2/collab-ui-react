@@ -1,9 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules').service('UserDetails',
+  angular
+    .module('Hercules')
+    .service('UserDetails', UserDetails);
 
   /* @ngInject  */
-  function (Utils, Config, Authinfo, $http, Log, UrlConfig) {
+  function UserDetails(Utils, Config, Authinfo, $http, Log, UrlConfig) {
 
     var multipleUserFilter = function (userIds) {
       var filter = "";
@@ -72,6 +75,6 @@ angular.module('Hercules').service('UserDetails',
       userUrl: userUrl,
       getCSVColumnHeaders: getCSVColumnHeaders
     };
-
   }
-);
+
+})();

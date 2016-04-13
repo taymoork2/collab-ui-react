@@ -9,7 +9,7 @@
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
     "inviteModalBtn": "Add Users",
-    "manageUsers": "Users",
+    "pageTitle": "Users",
     "subTitleAdd": "Manage users",
     "subTitleEnable": "Entitle users",
     "email": "Email",
@@ -63,6 +63,10 @@
     "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
+    "manageUsers": "Manage Users",
+    "exportUserList": "Export User List",
+    "importUserList": "Import User List",
+    "viewLastImport": "View Last Import",
     "partners": "Partner Administrators",
     "deleteUser": "Delete User",
     "deleteUserConfText": "Are you sure you want to delete {{email}}?",
@@ -550,6 +554,8 @@
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
     "roles": "Roles",
+    "readOnlyHeader": "Read-Only",
+    "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
@@ -692,6 +698,13 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+  "ranks": {
+    "first": "First",
+    "second": "Second",
+    "third": "Third",
+    "fourth": "Fourth",
+    "last": "Last"
   },
   "common": {
     "delete": "Delete",
@@ -882,6 +895,7 @@
     "siteSteeringDigit": "Site-to-Site Dial Digit",
     "siteSteeringDigitDescription": "Specify the number users must dial before placing a call to another site.",
     "siteCode": "Site Code",
+    "steeringDigitChangeWarning": "Changing the outbound dial digit will cause extensions that begin with the same number to experience dialing delays. Ensure that extensions do not begin with the same number as the outbound dial digit.",
     "siteCodeDescription": "Specify a unique number to identify a specific site.",
     "internalExtensionRange": "Internal Extension Range",
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be 4 digits.",
@@ -908,6 +922,7 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
+    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
@@ -1065,7 +1080,9 @@
       "alarms": "Alarms",
       "hosts": "Hosts",
       "goToHost": "Go to Host",
-      "remove": "Remove"
+      "removeButton": "Remove",
+      "removeSectionHeader": "Remove",
+      "removeSectionBody": "Remove this host from Cisco Collaboration Cloud."
     },
     "export": {
       "modalTitle": "User Status Report",
@@ -1297,6 +1314,10 @@
         "title": "Configure and Start the Connector",
         "description": "Your Cisco Expressway is registered for Hybrid Services.",
         "action": "Next, configure the Connector on the Expressway."
+      },
+      "no-domain-verified": {
+        "title": "Verify a Domain",
+        "description": "You need at least one verified domain to use call services. Add domains under settings."
       }
     }
   },
@@ -1387,7 +1408,7 @@
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
     "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
     "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
@@ -1413,7 +1434,6 @@
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1571,6 +1591,7 @@
     "scheduleOpenTime": "Open Time",
     "scheduleClosedTime": "Closed Time",
     "scheduleClosedTimeCheck": "Closed Time must be after Open Time",
+    "holidayScheduleEndTimeCheck": "End Time must be after Start Time",
     "scheduleAddHours": "Add Hours",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
@@ -1613,6 +1634,11 @@
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
+    "recurAnnually": "Recur Annually",
+    "exactDate": "Exact Date",
+    "every": "Every",
+    "on": "On",
+    "day": "Day",
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
@@ -1688,7 +1714,7 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
-    "errorReadCMI": "Unable to load assigned phone numbers",
+    "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s).",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
@@ -2035,6 +2061,12 @@
     },
     "call": {
       "title": "Trial Setup - Ship Devices",
+      "deviceTrialCapacityHeader": "Unable to Add Devices",
+      "remainingDeviceTrials": "You have {{number}} remaining out of 20 concurrent active device trials.",
+      "deviceTrialLimitReached": "Your organization has reached its concurrent active device trial limit of {{number}}. You can add more device trials once you convert existing trials.",
+      "deviceTrialLimitHelp": "If you have questions about this limit, please contact the Partner Help Desk: webexpartnerhelp@cisco.com or 1-800-553-6387",
+      "deviceTrialTip": "Ongoing trial with devices shipped",
+      "deviceTrialUnavailable": "The system is temporarily unable to add devices, please try later.",
       "selectDevicesHeader": "Select Devices",
       "deviceLimitDescription": "Choose up to 7 total devices (between 2 and 5 devices per type)",
       "meetingRoomCamera": "Spark Room System",
@@ -2300,7 +2332,7 @@
     "macAddr": "MAC Address",
     "sipUrl": "Sip Address",
     "issues": "Issues",
-    "lastSeen": "Offline since:",
+    "lastSeen": "since:",
     "notYetActivated": "No device has been activated for this location.",
     "deleteLocation": "Delete Location",
     "codeExpires": "This activation code expires {{inXDays}}",
@@ -2929,6 +2961,24 @@
     "pageId_xxxx": "Undefined",
     "pageId_underDevelopment": "Under Development"
   },
+  "webexCSVResultsModal": {
+    "csvExportTitle": "Export Results",
+    "csvExportRecordsAvailable": "Total records available:",
+    "csvExportRecordsSuccessful": "Records successfully exported:",
+    "csvExportDownloadFile": "Download CSV file:",
+    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
+
+    "csvImportTitle": "Import Results",
+    "csvImportFileName": "File Name:",
+    "csvImportRecordsRequested": "Total records requested:",
+    "csvImportRecordsUpdated": "Records successfully updated:",
+    "csvImportDownloadErr": "Download error log:",
+    "csvImportErrFilename": "WebEx-ImportErr.tsv",
+
+    "csvStarted": "Started:",
+    "csvFinished": "Finished:",
+    "csvRecordsFailed": "Records failed:"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
@@ -3015,7 +3065,10 @@
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
-    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application."
+    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
+    "supportAccessTitle": "Support Access",
+    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3100,12 +3153,12 @@
     "siteReports": "Reports",
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
-    "siteCsvExportInProgressLinkLabel": "Export in progress...",
-    "siteCsvExportResultsLinkLabel": "Export results",
+    "siteCsvExportInProgressLinkLabel": "Exporting...",
+    "siteCsvExportResultsLinkLabel": "Export Results",
     "siteCsvImportLinkLabel": "Import",
-    "siteCsvImportInProgressLinkLabel": "Import in progress...",
+    "siteCsvImportInProgressLinkLabel": "Importing...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvImportResultsLinkLabel": "Import results",
+    "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3122,6 +3175,7 @@
     "importFailedTooltip": "Import failed",
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importRejectedToast": "Import failed, try again.",
+    "importInvalidFileToast": "Choose a file for import.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3661,7 +3715,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "viewPortal": "View Customer"
+    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "view": "View"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3733,5 +3789,20 @@
       "howto": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token.",
       "beforeVerify": "Before you verify"
     }
+  },
+  "csvDownload": {
+    "csvDownloadConfirmTitle": "Are you sure?",
+    "confirmCsvDownloadMsg": "Gathering your data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will not complete.",
+    "confirmCsvDownload": "Do you want to continue?",
+    "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
+    "csvDownloadIsRunning": "An export task is already running. Please try again later.",
+    "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
+    "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+  },
+  "readOnlyModal": {
+    "banner": "You are in read-only mode",
+    "title": "Read Only",
+    "okButton": "OK",
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
   }
 }

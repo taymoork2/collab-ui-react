@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerListCtrl', function () {
-  var $scope, $httpBackend, HuronConfig, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, $window, TrialService, Orgservice, Log, Notification, $q;
+  var $rootScope, $scope, $httpBackend, HuronConfig, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, $window, TrialService, Orgservice, Log, Notification, $q;
   var controller, $controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -38,6 +38,10 @@ describe('Controller: CustomerListCtrl', function () {
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
+    $rootScope.typeOfExport = {
+      USER: 1,
+      CUSTOMER: 2
+    };
 
     $controller = _$controller_;
     $q = _$q_;
@@ -51,16 +55,22 @@ describe('Controller: CustomerListCtrl', function () {
 
     spyOn(TrialService, 'getTrial').and.returnValue($q.when());
     spyOn(PartnerService, 'getManagedOrgsList').and.returnValue($q.when(managedOrgsResponse));
-    spyOn(PartnerService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
+    spyOn(TrialService, 'getTrialsList').and.returnValue($q.when(trialsResponse));
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
+    });
+    spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
+      callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
   }));
 
   function initController() {
     controller = $controller('CustomerListCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $state: $state,
+      Authinfo: Authinfo,
+      Config: Config
     });
 
     $scope.$apply();

@@ -6,9 +6,7 @@
 var gulp = require('gulp');
 var config = require('../gulp.config')();
 var processEnvUtil = require('../utils/processEnvUtil.gulp')();
-var $ = require('gulp-load-plugins')({
-  lazy: true
-});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var jsonImporter = require('node-sass-json-importer');

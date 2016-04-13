@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, TelephoneNumberService, FeatureToggleService, Notification) {
+  function ExternalNumberService($q, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -14,16 +14,18 @@
       getPendingNumbers: getPendingNumbers,
       getUnassignedNumbers: getUnassignedNumbers,
       getUnassignedNumbersWithoutPending: getUnassignedNumbersWithoutPending,
-      deleteNumber: deleteNumber
+      deleteNumber: deleteNumber,
+      isTerminusCustomer: isTerminusCustomer
     };
     var allNumbers = [];
     var pendingNumbers = [];
     var unassignedNumbers = [];
+    var terminusDetails = [];
 
     return service;
 
     function refreshNumbers(customerId) {
-      return FeatureToggleService.supportsPstnSetup()
+      return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.listPendingNumbers(customerId)
@@ -54,7 +56,7 @@
     }
 
     function deleteNumber(customerId, number) {
-      return FeatureToggleService.supportsPstnSetup()
+      return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.deleteNumber(customerId, number.pattern);
@@ -116,6 +118,35 @@
           pattern: numberObj.pattern
         });
       });
+    }
+
+    function isTerminusCustomer(customerId) {
+      if (_.find(terminusDetails, 'customerId', customerId)) {
+        return $q.resolve(true);
+      }
+      return PstnSetupService.getCustomer(customerId)
+        .then(_.partial(allowPstnSetup, customerId))
+        .catch(_.partial(hasExternalNumbers, customerId));
+    }
+
+    function hasExternalNumbers(customerId) {
+      return NumberSearchServiceV2.get({
+        customerId: customerId,
+        type: 'external'
+      }).$promise.then(function (response) {
+        if (_.get(response, 'numbers.length') !== 0) {
+          return false;
+        } else {
+          return allowPstnSetup(customerId);
+        }
+      });
+    }
+
+    function allowPstnSetup(customerId) {
+      terminusDetails.push({
+        customerId: customerId
+      });
+      return true;
     }
   }
 })();

@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('SWUpgradeController', SWUpgradeController);
+
   /* @ngInject */
   function SWUpgradeController($scope, ClusterService, XhrNotificationService) {
     $scope.saving = false;
@@ -18,9 +22,5 @@
       return false;
     };
   }
-
-  angular
-    .module('Hercules')
-    .controller('SWUpgradeController', SWUpgradeController);
 
 }());

@@ -1,27 +1,22 @@
-<span cs-dropdown>
+<span cs-dropdown class="actions-menu">
   <button cs-dropdown-toggle id="{{row.entity.customerName}}ActionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">
     <i class="icon icon-three-dots"></i>
   </button>
   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
-  	<li ng-show="grid.appScope.isOwnOrg(row.entity)">
-  		<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
-  			<span translate="customerPage.myOrgButton"></span>
-  		</a>		
-  	</li>
+    <li ng-show="grid.appScope.isOwnOrg(row.entity)">
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="launch_partner_org({partnerOrgId: customerOverview.partnerOrgId, partnerOrgName: customerOverview.partnerOrgName, launchPartner: true})" target="_blank">
+        <span translate="customerPage.myOrgButton"></span>
+      </a>
+    </li>
     <li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton">
-    	<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank">
-    		<span ng-if="grid.appScope.isOrgSetup(row.entity)" translate="customerPage.launchButton"></span>
-        	<span ng-if="!grid.appScope.isOrgSetup(row.entity)" translate="customerPage.setupButton"></span>
-    	</a>
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank">
+        <span ng-if="grid.appScope.isOrgSetup(row.entity)" translate="customerPage.launchButton"></span>
+        <span ng-if="!grid.appScope.isOrgSetup(row.entity)" translate="customerPage.setupButton"></span>
+      </a>
     </li>
-    <li cr-feature-toggle feature-show="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup">
-    	<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.addNumbers(row.entity)">	
-            <span translate="pstnSetup.setupPstn"></span>
-    	</a>
-    </li>
-    <li cr-feature-toggle feature-hide="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers">
-    	<a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})">
-    		<span translate="didManageModal.buttonText"></span>
+    <li ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup">
+      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.addNumbers(row.entity)">
+        <span translate="pstnSetup.setupPstn"></span>
     	</a>
     </li>
   </ul>

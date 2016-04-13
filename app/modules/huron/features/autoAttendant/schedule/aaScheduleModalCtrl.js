@@ -15,37 +15,43 @@
 
     vm.save = save;
     vm.isSavable = isSavable;
-    vm.isHoursSavable = isHoursSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
+    vm.isHolidaysSavable = isHolidaysSavable;
+    vm.forceCheckHoliday = forceCheckHoliday;
+    vm.changeAllDay = changeAllDay;
+    vm.openImportModal = openImportModal;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = false;
     vm.holidays = [];
     vm.oneAtATime = true;
-    vm.isDisabled = isDisabled;
-    vm.changeAllDay = changeAllDay;
-    vm.openImportModal = openImportModal;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
-      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
+      compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
     };
-
+    vm.monthOptions = [];
+    vm.dayOptions = [];
+    vm.rankOptions = [];
+    vm.monthPlaceholder = $translate.instant('autoAttendant.every');
+    vm.rankPlaceholder = $translate.instant('autoAttendant.on');
+    vm.dayPlaceholder = $translate.instant('autoAttendant.day');
     vm.openhours = [];
-    vm.getCalendar = getCalendar;
 
     function addRange() {
       vm.openhours.push(angular.copy(AAICalService.getDefaultRange()));
     }
 
     function deleteRange(index) {
-      vm.openhours.splice(index, 1);
-      vm.isDeleted = true;
-      vm.hoursForm.$setDirty();
+      if (index < vm.openhours.length) {
+        vm.openhours.splice(index, 1);
+        vm.isDeleted = true;
+        vm.hoursForm.$setDirty();
+      }
     }
 
     function changeAllDay(form) {
@@ -58,17 +64,25 @@
     function addHoliday() {
       var canAdd = false;
       if (vm.holidays.length > 0) {
-        canAdd = !vm.holidaysForm.$invalid;
+        canAdd = isHolidaysSavable();
       } else {
         canAdd = true;
       }
       if (canAdd) {
         vm.holidays.push({
           isOpen: true,
-          allDay: true
+          allDay: true,
+          exactDate: true,
+          recurAnnually: false,
+          month: '',
+          rank: '',
+          day: '',
+          monthError: false,
+          rankError: false,
+          dayError: false
         });
       } else {
-        forceCheckHoliday();
+        vm.forceCheckHoliday();
       }
     }
 
@@ -76,43 +90,72 @@
       var index = _.findLastIndex(vm.holidays, {
         isOpen: true
       });
-      if (vm.holidaysForm.$invalid && index !== -1) {
-        index = 'holidayForm' + index;
-        vm.holidaysForm[index].holidayName.$setDirty();
-        vm.holidaysForm[index].holidayDate.$setDirty();
-        vm.holidaysForm[index].holidayStart.$setDirty();
-        vm.holidaysForm[index].holidayEnd.$setDirty();
+      if (index >= 0) {
+        var indexForm = 'holidayForm' + index;
+        if (!isHolidaysSavable()) {
+          vm.holidaysForm[indexForm].holidayName.$setDirty();
+          vm.holidaysForm[indexForm].holidayDate.$setDirty();
+          vm.holidaysForm[indexForm].holidayStart.$setDirty();
+          vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+        }
+        if (!vm.holidays[index].exactDate) {
+          if (vm.holidays[index].month == '') {
+            vm.holidaysForm[indexForm].month.$error.required = true;
+          }
+          if (vm.holidays[index].rank == '') {
+            vm.holidaysForm[indexForm].rank.$error.required = true;
+          }
+          if (vm.holidays[index].day == '') {
+            vm.holidaysForm[indexForm].day.$error.required = true;
+          }
+        }
       }
     }
 
     function removeHoliday(index) {
       vm.holidays.splice(index, 1);
+      vm.isDeleted = true;
       vm.holidaysForm.$setDirty();
     }
 
-    function isDisabled() {
-      return vm.holidaysForm.$invalid;
-    }
-
-    vm.openSection = function () {
-      forceCheckHoliday();
-    };
-
     function isOpenHoursAfterCloseHours(hours) {
       if (hours.starttime && hours.endtime) {
-        if (hours.starttime <= hours.endtime) {
-          return false;
-        }
-        return true;
+        return hours.starttime > hours.endtime;
       }
     }
 
     function isSavable() {
-      if (isHoursSavable()) {
-        return vm.holidaysForm.$valid;
-      } else if (!vm.openhours.length) {
-        return vm.holidaysForm.$valid;
-      }
+      return (vm.openhours.length == 0 || isHoursSavable()) && (vm.holidays.length == 0 || isHolidaysSavable());
+    }
+
+    function isHolidaysSavable() {
+      var flag = false;
+      _.each(vm.holidays, function (holiday) {
+        flag = false;
+        if (holiday.name === undefined || holiday.name == '') {
+          return flag;
+        }
+        if (holiday.exactDate) {
+          if (holiday.date === undefined || holiday.date == '') {
+            return flag;
+          }
+        } else {
+          if (holiday.month === undefined || holiday.month == '') {
+            return flag;
+          }
+          if (holiday.rank === undefined || holiday.rank == '') {
+            return flag;
+          }
+          if (holiday.day === undefined || holiday.day == '') {
+            return flag;
+          }
+        }
+        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined)) {
+          return flag;
+        }
+        flag = true;
+      });
+      return flag;
     }
 
     function isHoursSavable() {
@@ -153,7 +196,7 @@
           vm.toggleHolidays = !vm.toggleHolidays;
         }
       } else {
-        forceCheckHoliday();
+        vm.forceCheckHoliday();
       }
     }
 
@@ -172,8 +215,7 @@
       if (vm.isSavable()) {
         // create calendar
         // even on update we are just re-creating the calendar, otherwise the events accumulate
-        vm.calendar = vm.getCalendar();
-
+        vm.calendar = getCalendar();
         // save calendar to CES
         var calName = vm.aaModel.aaRecord.callExperienceName;
         var savePromise;
@@ -181,7 +223,6 @@
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
         vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
-
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = updateSchedule(calName);
@@ -193,7 +234,6 @@
         } else {
           savePromise = createSchedule(calName);
         }
-
         savePromise.then(
           function (response) {
             if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId) && !vm.isDeleted) {
@@ -317,8 +357,36 @@
           var allHours = AAICalService.getHoursRanges(data);
           vm.openhours = allHours.hours;
           vm.holidays = allHours.holidays;
+          _.each(vm.holidays, function (holiday) {
+            if (!holiday.exactDate) {
+              holiday.month.label = moment.months(holiday.month.index);
+              holiday.rank.labelTranslate = $translate.instant(holiday.rank.label);
+              holiday.day.label = moment.weekdays(holiday.day.index);
+            }
+          });
         });
       }
+
+      vm.monthOptions = [];
+      _.times(12, function (i) {
+        vm.monthOptions.push({
+          index: i,
+          number: i + 1,
+          label: moment.months(i)
+        });
+      });
+      vm.rankOptions = AAICalService.getRanks();
+      _.each(vm.rankOptions, function (rank) {
+        rank.labelTranslate = $translate.instant(rank.label);
+      });
+      vm.dayOptions = [];
+      _.each(AAICalService.getTwoLetterDays(), function (value, index) {
+        vm.dayOptions.push({
+          index: index,
+          abbr: value,
+          label: moment.weekdays(index)
+        });
+      });
     }
 
     function openImportModal() {
@@ -338,6 +406,11 @@
             vm.openhours.unshift(value);
           });
           allHours.holidays.forEach(function (value) {
+            if (!value.exactDate) {
+              value.month.label = moment.months(value.month.index);
+              value.rank.labelTranslate = $translate.instant(value.rank.label);
+              value.day.label = moment.weekdays(value.day.index);
+            }
             vm.holidays.unshift(value);
           });
           vm.holidaysForm.$setDirty();

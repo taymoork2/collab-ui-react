@@ -53,7 +53,7 @@ describe('Partner Reports', function () {
       utils.expectIsNotDisplayed(reports.partnermostActiveHeader);
       utils.expectIsNotDisplayed(reports.partnerMostActiveDescription);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-      reports.showHideActiveVisibility(true, false, true);
+      //reports.showHideActiveVisibility(true, false, true);
 
       // active user population
       utils.expectIsDisplayed(reports.activePopulationHeader);

@@ -112,7 +112,7 @@ angular.module('Mediafusion')
       var statusTemplate = '<i class="fa fa-circle device-status-icon ui-grid-cell-contents" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
-      var actionsTemplate = '<span cs-dropdown class="device-align-ellipses">' +
+      var actionsTemplate = '<span cs-dropdown class="actions-menu device-align-ellipses">' +
         '<button cs-dropdown-toggle id="actionlink" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +

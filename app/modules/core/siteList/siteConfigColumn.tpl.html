@@ -8,11 +8,11 @@
   <div ng-if="!row.entity.isError">
     <div ng-if="!row.entity.isIframeSupported">
       <launch-site admin-email-param={{row.entity.adminEmailParam}}
-                 advanced-settings={{row.entity.advancedSettings}}
-                 user-email-param={{row.entity.userEmailParam}}
-                 webex-advanced-url={{row.entity.webexAdvancedUrl}}
-                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings
-                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings></launch-site>
+                   advanced-settings={{row.entity.advancedSettings}}
+                   user-email-param={{row.entity.userEmailParam}}
+                   webex-advanced-url={{row.entity.webexAdvancedUrl}}
+                   id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings
+                   name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings></launch-site>
     </div>
   
     <div ng-if="row.entity.isIframeSupported">

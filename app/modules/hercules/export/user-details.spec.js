@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: UserDetails', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var UserDetails, $httpBackend;
 
@@ -10,9 +10,6 @@ describe('Service: UserDetails', function () {
     beforeEach(inject(function (_UserDetails_, _$httpBackend_) {
       UserDetails = _UserDetails_;
       $httpBackend = _$httpBackend_;
-      $httpBackend
-        .when('GET', 'l10n/en_US.json')
-        .respond({});
     }));
 
     afterEach(function () {

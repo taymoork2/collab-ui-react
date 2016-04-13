@@ -8,7 +8,6 @@ describe('Controller: UserRolesCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Squared'));
-  beforeEach(module('Messenger'));
 
   beforeEach(inject(function ($rootScope, _$stateParams_, _$controller_, _Authinfo_, _Orgservice_) {
     $scope = $rootScope.$new();

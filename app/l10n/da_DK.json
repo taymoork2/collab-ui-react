@@ -1327,7 +1327,6 @@
     "addUsers": "Tilføj brugere",
     "addUsersSubDescription": "Inviter brugere, og tildel tjenesteydelser",
     "addUsersDescription": "Vælg en metode til at overføre dine brugere.",
-    "msgrSyncDesc": "Din organisation har brugeroplysninger, der synkroniseres fra WebEx Messenger Service. Hvis du vil tilføje, fjerne eller redigere brugeroplysninger, skal du bruge WebEx Messenger administrationsværktøj.",
     "getStarted": "Kom i gang",
     "startTrial": "Start prøveversion",
     "doLater": "Gør det senere",

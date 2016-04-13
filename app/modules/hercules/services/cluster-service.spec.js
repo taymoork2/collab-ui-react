@@ -12,11 +12,11 @@ describe('ClusterService', function () {
       getOrgId: sinon.stub().returns('orgId')
     };
     $provide.value('Authinfo', Authinfo);
-    var ConfigService = {
-      getUrl: sinon.stub().returns('http://ulv.no'),
-      getUrlV2: sinon.stub().returns('http://elg.no')
+    var UrlConfig = {
+      getHerculesUrl: sinon.stub().returns('http://ulv.no'),
+      getHerculesUrlV2: sinon.stub().returns('http://elg.no')
     };
-    $provide.value('ConfigService', ConfigService);
+    $provide.value('UrlConfig', UrlConfig);
     forceAction = sinon.stub();
     CsdmPoller = {
       create: sinon.stub().returns({

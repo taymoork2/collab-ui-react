@@ -9,40 +9,37 @@
     var LINE = 'line';
     var AXIS = 'axis';
     var NUMFORMAT = 'numFormat';
-    var REFRESH = 'refresh';
     var READY = 'ready';
+    var REFRESH = 'refresh';
 
-    var activeUsersChart, avgCallsChart, entitlementsChart, contentSharedChart;
-    var chartRefreshProperties = ['entitlements', 'avgCalls', 'activeUsers', 'contentShared'];
-    var partnerCharts = ['entitlements', 'activeUsers', 'avgCallsPerUser', 'contentShared', 'activeUserCount', 'averageCallCount', 'entitlementCount', 'contentSharedCount'];
-    var refreshDivs = ['avg-entitlements-refresh', 'calls-refresh', 'active-users-refresh', 'content-shared-refresh'];
-    var weekOf = $translate.instant('reports.weekOf');
+    var entitlementsChart;
+    var entId = 'entitlementsdiv';
+    var entTitle = $translate.instant('reports.UsersOnboarded');
+    var entitlementRefresh = 'entitlements';
+    var partnerCharts = ['entitlements', 'entitlementCount'];
+    var entRefreshDiv = 'entitlements-refresh';
     var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
     var dummyChartVals = [];
     var orgNameMap = {};
-
-    $scope.counts = {};
-    $scope.reportStatus = {};
-
+    var customerList = [];
     var allCustomers = {
       value: 0,
       label: $translate.instant('reports.allCustomers')
     };
+
+    $scope.entCount = 0;
+    $scope.entitlementStatus = REFRESH;
     $scope.totalOrgsData = [angular.copy(allCustomers)];
     $scope.currentSelection = angular.copy(allCustomers);
 
     $scope.getCustomerReports = function () {
-      for (var property in chartRefreshProperties) {
-        $scope.reportStatus[chartRefreshProperties[property]] = REFRESH;
-      }
-
-      angular.forEach(refreshDivs, function (name) {
-        angular.element('#' + name).html('<i class=\'icon icon-spinner icon-2x\'/>');
-      });
+      $scope.entitlementStatus = REFRESH;
+      angular.element('#' + entRefreshDiv).html('<i class=\'icon icon-spinner icon-2x\'/>');
 
       if (!CannedDataService.isDemoAccount(Authinfo.getOrgId())) {
         if ($scope.currentSelection.value === allCustomers.value) {
-          ReportsService.getPartnerMetrics(cacheValue, null, partnerCharts);
+          ReportsService.getPartnerMetrics(cacheValue, null, [partnerCharts[0]]);
+          ReportsService.getTotalPartnerCounts(cacheValue, customerList, [partnerCharts[1]]);
         } else {
           ReportsService.getPartnerMetrics(cacheValue, $scope.currentSelection.value, partnerCharts);
         }
@@ -56,18 +53,8 @@
     };
     $scope.getCustomerReports();
 
-    $scope.isRefresh = function (property) {
-      return $scope.reportStatus[property] === REFRESH;
-    };
-
-    $scope.reloadReports = function () {
-      $scope.currentSelection = angular.copy(allCustomers);
-      $scope.getCustomerReports();
-    };
-
     function getManagedOrgs() {
       $scope.totalOrgsData = [angular.copy(allCustomers)];
-      var customerList = [];
       PartnerService.getManagedOrgsList()
         .then(function (reponse) {
           customerList = _.map(_.get(reponse, 'data.organizations'), function (org) {
@@ -88,6 +75,7 @@
           angular.forEach(customerList, function (item) {
             $scope.totalOrgsData.push(item);
           });
+          $scope.getCustomerReports();
         });
     }
     getManagedOrgs();
@@ -96,84 +84,59 @@
       var currentDate = moment();
       for (var i = 0; i < 5; i++) {
         currentDate = currentDate.subtract(7, 'days');
-        var isoDate = currentDate.toISOString();
-        var dummyObj = {
-          data: [{
-            'date': isoDate,
-            'count': ''
-          }],
-          orgName: ''
-        };
 
-        dummyChartVals.push(dummyObj);
+        dummyChartVals.push({
+          data: [{
+            'date': currentDate.toISOString(),
+            'count': 0
+          }]
+        });
       }
-      dummyChartVals = dummyChartVals.reverse();
+      dummyChartVals = formatMultipleOrgData(dummyChartVals.reverse());
     }
     createDummyVals();
 
-    function makeChart(id, colors, data, title, yAxisTitle, shouldShowCursor) {
-      if (angular.element('#' + id).length > 0) {
-        if ($scope.currentSelection.value === allCustomers.value) {
-          var orgCount = Object.keys(orgNameMap).length;
-          var aggregatedData = [];
-          for (var i = 0; i < data.length; i++) {
-            var obj = data[i];
-            var date = obj.date;
-            var sum = 0;
-            Object.keys(obj).forEach(function (k) {
-              if (k.indexOf('count') > -1) {
-                sum += obj[k];
-              }
-            });
-            var dataSection = {};
-            dataSection.date = date;
-            dataSection.count = sum;
-            aggregatedData.push(dataSection);
-          }
-          data = aggregatedData;
-        }
+    function makeChart(colors, data, showCursor) {
+      var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+      valueAxes[0].title = $translate.instant('reports.numberUsersAxis');
 
-        var valueAxes = [CommonGraphService.getBaseVariable(AXIS)];
-        valueAxes[0].integersOnly = true;
-        valueAxes[0].minimum = 0;
-        valueAxes[0].title = yAxisTitle;
+      var catAxis = CommonGraphService.getBaseVariable(AXIS);
+      catAxis.gridPosition = 'start';
+      catAxis.title = $translate.instant('reports.weekOf');
+      catAxis.gridColor = chartColors.grayLight;
+      catAxis.gridAlpha = 1;
 
-        var catAxis = CommonGraphService.getBaseVariable(AXIS);
-        catAxis.gridPosition = 'start';
-        catAxis.title = weekOf;
-        catAxis.gridColor = chartColors.grayLight;
-        catAxis.gridAlpha = 1;
+      var graphs = [];
+      graphs.push(CommonGraphService.getBaseVariable(LINE));
+      graphs[0].lineColor = colors;
+      graphs[0].valueField = 'count';
+      graphs[0].title = entTitle;
+      graphs[0].balloonText = '[[value]]';
 
-        var graphs = [];
-        graphs.push(CommonGraphService.getBaseVariable(LINE));
-        graphs[0].lineColor = colors;
-        graphs[0].valueField = 'count';
-        graphs[0].title = title;
-        graphs[0].balloonText = '[[value]]';
+      var chartObject = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, graphs, 'date', catAxis);
+      chartObject.marginTop = 20;
+      chartObject.marginLeft = 70;
+      chartObject.marginRight = 20;
+      chartObject.marginBottom = 55;
+      chartObject.export = undefined;
+      chartObject.colors = [colors];
+      chartObject.plotAreaBorderAlpha = 0;
+      chartObject.plotAreaBorderColor = chartColors.grayDarkest;
+      chartObject.balloon.borderThickness = 2;
+      chartObject.balloon.fillAlpha = 0.8;
+      chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
+      chartObject.chartCursor = {
+        'enabled': showCursor,
+        'valueLineEnabled': true,
+        'valueLineBalloonEnabled': true,
+        'cursorColor': chartColors.grayDarkest,
+        'valueBalloonsEnabled': false,
+        'cursorPosition': 'mouse'
+      };
 
-        var chartObject = CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, graphs, 'date', catAxis);
-        chartObject.marginTop = 20;
-        chartObject.marginLeft = 70;
-        chartObject.marginRight = 20;
-        chartObject.marginBottom = 55;
-        chartObject.export = undefined;
-        chartObject.colors = [colors];
-        chartObject.plotAreaBorderAlpha = 0;
-        chartObject.plotAreaBorderColor = chartColors.grayDarkest;
-        chartObject.balloon.borderThickness = 2;
-        chartObject.balloon.fillAlpha = 0.8;
-        chartObject.numberFormatter = CommonGraphService.getBaseVariable(NUMFORMAT);
-        chartObject.chartCursor = {
-          'enabled': shouldShowCursor,
-          'valueLineEnabled': true,
-          'valueLineBalloonEnabled': true,
-          'cursorColor': '#666',
-          'valueBalloonsEnabled': false,
-          'cursorPosition': 'mouse'
-        };
-
-        return AmCharts.makeChart(id, chartObject);
-      }
+      return AmCharts.makeChart(entId, chartObject);
     }
 
     function formatMultipleOrgData(data) {
@@ -183,25 +146,17 @@
       var dataId = 0;
       for (var i = 0; i < data.length; i++) {
         var obj = data[i];
-        var currentOrgName = obj.orgName;
         var countData = obj.data;
-        var customerNameKey = 'customerName' + dataId;
-        var countKey = 'count' + dataId;
+        var countKey = 'count';
         dataId++;
-
-        if (!orgNameMap[customerNameKey]) {
-          orgNameMap[customerNameKey] = currentOrgName;
-        }
 
         for (var j = 0; j < countData.length; j++) {
           var date = new Date(countData[j].date);
           date = date.toUTCString().split(' ').slice(1, 4).join(' ');
           if (dateMap[date]) {
-            dateMap[date][customerNameKey] = currentOrgName;
-            dateMap[date][countKey] = countData[j].count;
+            dateMap[date][countKey] += countData[j].count;
           } else {
             dateMap[date] = [];
-            dateMap[date][customerNameKey] = currentOrgName;
             dateMap[date][countKey] = countData[j].count;
           }
         }
@@ -229,16 +184,8 @@
       return data;
     }
 
-    function updateChart(data, color, id, title, yAxisTitle, shouldShowCursor) {
-      var formattedData = null;
-      if ($scope.currentSelection.value === allCustomers.value) {
-        formattedData = formatMultipleOrgData(data);
-      } else {
-        formattedData = formatTimeChartData(data);
-      }
-
-      var chart = makeChart(id, color, formattedData, title, yAxisTitle, shouldShowCursor);
-
+    function updateChart(data, color, shouldShowCursor) {
+      var chart = makeChart(color, data, shouldShowCursor);
       if (chart) {
         chart.validateData();
       }
@@ -265,27 +212,6 @@
       return returnVar;
     }
 
-    function getCharts(response, property, id, title, yAxisTitle, refreshDivName) {
-      var chartObj;
-      if (response.data.success && usableData(response.data.data)) {
-        $scope.reportStatus[property] = READY;
-        chartObj = updateChart(response.data.data, chartColors.blue, id, title, yAxisTitle, true);
-      } else {
-        if (!response.data.success) {
-          errorMessage(title, response);
-        }
-
-        $scope.reportStatus[property] = REFRESH;
-        angular.element('#' + id).addClass('dummy-data');
-        angular.element('#' + refreshDivName).html('<h3 class="dummy-data-message">' + $translate.instant('reportsPage.noData') + '</h3>');
-
-        chartObj = updateChart(dummyChartVals, chartColors.grayLight, id, title, yAxisTitle, false);
-      }
-
-      $scope.refreshTime = response.data.date;
-      return chartObj;
-    }
-
     function errorMessage(title, error) {
       var errorMessage = $translate.instant('reports.error', {
         graph: title.toLowerCase()
@@ -299,53 +225,33 @@
     }
 
     $scope.$on('entitlementsLoaded', function (event, response) {
-      entitlementsChart = getCharts(response, chartRefreshProperties[0], 'avgEntitlementsdiv', $translate.instant('reports.UsersOnboarded'), $translate.instant('reports.numberUsersAxis'), refreshDivs[0]);
-    });
+      var data = _.get(response, 'data', {});
+      if (data.success && usableData(data.data)) {
+        $scope.entitlementStatus = READY;
 
-    $scope.$on('avgCallsPerUserLoaded', function (event, response) {
-      avgCallsChart = getCharts(response, chartRefreshProperties[1], 'avgCallsdiv', $translate.instant('reports.AvgCallsPerUser'), $translate.instant('reports.numberCallsAxis'), refreshDivs[1]);
-    });
+        var formattedData = null;
+        if ($scope.currentSelection.value === allCustomers.value) {
+          formattedData = formatMultipleOrgData(response.data.data);
+        } else {
+          formattedData = formatTimeChartData(response.data.data);
+        }
 
-    $scope.$on('activeUsersLoaded', function (event, response) {
-      activeUsersChart = getCharts(response, chartRefreshProperties[2], 'activeUsersdiv', $translate.instant('reports.ActiveUsers'), $translate.instant('reports.numberActiveAxis'), refreshDivs[2]);
-    });
-
-    $scope.$on('contentSharedLoaded', function (event, response) {
-      contentSharedChart = getCharts(response, chartRefreshProperties[3], 'contentShareddiv', $translate.instant('reports.ContentShared'), $translate.instant('reports.filesSharedAxis'), refreshDivs[3]);
-    });
-
-    $scope.$on('activeUserCountLoaded', function (event, response) {
-      if (response.data.success) {
-        $scope.counts.activeUsers = Math.round(response.data.data);
+        entitlementsChart = updateChart(formattedData, chartColors.blue, true);
       } else {
-        $scope.counts.activeUsers = 0;
-        errorMessage($translate.instant('partnerHomePage.activeUsersTitle'), response);
-      }
-    });
+        if (!response.data.success) {
+          errorMessage(entTitle, response);
+        }
 
-    $scope.$on('averageCallCountLoaded', function (event, response) {
-      if (response.data.success) {
-        $scope.counts.averageCalls = Math.round(response.data.data);
-      } else {
-        $scope.counts.averageCalls = 0;
-        errorMessage($translate.instant('partnerHomePage.averageCallsTitle'), response);
-      }
-    });
-
-    $scope.$on('contentSharedCountLoaded', function (event, response) {
-      if (response.data.success) {
-        $scope.counts.contentShared = Math.round(response.data.data);
-      } else {
-        $scope.counts.contentShared = 0;
-        errorMessage($translate.instant('partnerHomePage.contentSharedTitle'), response);
+        angular.element('#' + entRefreshDiv).html('<h3 class="dummy-data-message">' + $translate.instant('reportsPage.noData') + '</h3>');
+        entitlementsChart = updateChart(dummyChartVals, chartColors.grayLight, false);
       }
     });
 
     $scope.$on('entitlementCountLoaded', function (event, response) {
       if (response.data.success) {
-        $scope.counts.entitlements = Math.round(response.data.data);
+        $scope.entCount = Math.round(response.data.data);
       } else {
-        $scope.counts.entitlements = 0;
+        $scope.entCount = 0;
         errorMessage($translate.instant('partnerHomePage.entitlementsTitle'), response);
       }
     });

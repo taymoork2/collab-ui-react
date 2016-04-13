@@ -11,6 +11,7 @@
     var service = {
       getData: getData,
       reset: reset,
+      getLimitsPromise: getLimitsPromise,
       getStates: getStates,
       getCountries: getCountries,
       canAddDevice: canAddDevice,
@@ -46,6 +47,10 @@
 
       _trialData = angular.copy(defaults);
       return _trialData;
+    }
+
+    function getLimitsPromise() {
+      return _trialData.limitsPromise;
     }
 
     function getCountries() {

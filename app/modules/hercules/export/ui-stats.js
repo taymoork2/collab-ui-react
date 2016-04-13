@@ -1,9 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Hercules').service('UiStats',
+  angular
+    .module('Hercules')
+    .service('UiStats', UiStats);
 
   /* @ngInject  */
-  function (Log) {
+  function UiStats(Log) {
 
     var statuses = [];
 
@@ -19,14 +22,14 @@ angular.module('Hercules').service('UiStats',
         "stateType": "error",
         "text": "errors",
         "count": serviceInfo.error.toString(),
-        "selected": false,
+        "selected": true,
         "unselectable": serviceInfo.error === 0 ? true : false,
         "progress": 0
       }, {
         "stateType": "notActivated",
         "text": "pending activation",
         "count": serviceInfo.notActivated.toString(),
-        "selected": false,
+        "selected": true,
         "unselectable": serviceInfo.notActivated === 0 ? true : false,
         "progress": 0
       }];
@@ -79,6 +82,6 @@ angular.module('Hercules').service('UiStats',
       initStats: initStats,
       updateProgress: updateProgress
     };
-
   }
-);
+
+})();

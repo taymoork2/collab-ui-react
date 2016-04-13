@@ -6,10 +6,10 @@
     .service("RedirectTargetService", RedirectTargetService);
 
   /* @ngInject */
-  function RedirectTargetService($http, Authinfo, ConfigService) {
+  function RedirectTargetService($http, Authinfo, UrlConfig) {
     return {
       addRedirectTarget: function (hostName) {
-        var url = ConfigService.getUrl() + "/organizations/" + Authinfo.getOrgId() + "/allowedRedirectTargets";
+        var url = UrlConfig.getHerculesUrl() + "/organizations/" + Authinfo.getOrgId() + "/allowedRedirectTargets";
         var body = {
           hostname: hostName,
           ttlInSeconds: 60 * 60

@@ -1,6 +1,12 @@
 .site-list {
   @extend %grid-header;
-  
+
+  .ui-grid-row {
+     &:hover {
+       background-color: transparent;
+     }
+   }
+        
   .multi-center-license{
     .tooltip-inner {
        max-width: 400px;
@@ -11,6 +17,7 @@
    }
 }
 
+
 .csv-text:hover {
     color: #D03D35;
 }
@@ -19,3 +26,4 @@
     background-color: #C9EBE6;
     padding: 5px 10px;
 }
+

@@ -592,26 +592,6 @@ angular
             displayName: 'Line Configuration'
           }
         })
-        .state('user-overview.device', {
-          params: {
-            device: {}
-          },
-          data: {
-            displayName: 'Device Configuration'
-          },
-          views: {
-            'header@user-overview': {
-              templateUrl: 'modules/huron/device/deviceHeader.tpl.html',
-              controller: 'DeviceHeaderCtrl',
-              controllerAs: 'device'
-            },
-            '': {
-              templateUrl: 'modules/huron/device/deviceDetail.tpl.html',
-              controller: 'DeviceDetailCtrl',
-              controllerAs: 'ucDeviceDetail'
-            }
-          }
-        })
         .state('user-overview.csdmDevice', {
           views: {
             '': {
@@ -1440,6 +1420,11 @@ angular
               controller: 'TrialAddCtrl',
               controllerAs: 'trial'
             }
+          },
+          params: {
+            isEditing: false,
+            currentTrial: {},
+            details: {}
           }
         })
         .state('trialAdd.info', {
@@ -1488,6 +1473,7 @@ angular
             }
           },
           params: {
+            isEditing: true,
             currentTrial: {},
             details: {}
           }

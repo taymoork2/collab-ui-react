@@ -58,7 +58,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -70,7 +70,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -85,7 +85,7 @@ describe('Huron Auto Attendant', function () {
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -107,7 +107,7 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
     }, 60000);
@@ -163,7 +163,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -202,7 +202,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -322,7 +322,7 @@ describe('Huron Auto Attendant', function () {
       // and save
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
@@ -340,14 +340,14 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.day1);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
     it('should add a Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHoliday, 12000);
-      utils.click(autoattendant.toggleHoliday);
+      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
+      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
@@ -355,13 +355,35 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 
-    it('verify open/closed lanes are visible', function () {
+    it('should add a Recurring Holiday Schedule to AA', function () {
+      utils.click(autoattendant.schedule);
+      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
+      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.click(autoattendant.addholiday);
+      utils.sendKeys(autoattendant.recurAnnually, 'Recur Annually');
+      utils.sendKeys(autoattendant.exactDate, 'Exact Date');
+      utils.sendKeys(autoattendant.holidayName2, 'Some Holiday');
+      utils.expectIsDisabled(autoattendant.modalsave);
+      utils.click(autoattendant.selectEvery);
+      utils.click(autoattendant.selectEveryJanuary);
+      utils.click(autoattendant.selectRank);
+      utils.click(autoattendant.selectRankFirst);
+      utils.click(autoattendant.selectDay);
+      utils.click(autoattendant.selectDayMonday);
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
+    }, 60000);
+
+    it('verify open/closed/holidays lanes are visible', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
       utils.expectIsDisplayed(autoattendant.scheduleInfoClosedHours);
+      utils.expectIsDisplayed(autoattendant.scheduleInfoHolidayHours);
     }, 60000); 
 
     it('should update a AA Schedule', function () {
@@ -372,7 +394,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.starttime, '2:30AM');
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     }, 60000);
 
     it('should delete a AA Schedule', function () {
@@ -382,7 +404,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
 
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
     }, 60000);
 

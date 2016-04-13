@@ -1,14 +1,14 @@
 <div class="csv-download">
   <div>
-    <a id="download-csv-{{csvDownload.type}}" href="" ng-click="csvDownload.downloadCsv()">
-      <i ng-show="!csvDownload.downloading" id="download-icon" class="icon icon-circle-download">
+    <a href="" ng-click="downloadCsv()">
+      <i ng-show="!downloading" class="icon icon-circle-download">
         <span class="sr-only" translate="common.download"></span>
       </i>
     </a>
   </div>
   <div>
-    <a tooltip-placement="top" cs-tooltip="{{::'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
-      <i ng-show="csvDownload.downloading" class="icon icon-spinner">
+    <a tooltip-placement="bottom" cs-tooltip="{{downloadingMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
+      <i ng-show="downloading" class="icon icon-spinner">
         <span class="sr-only" translate="common.downloading"></span>
       </i>
     </a>

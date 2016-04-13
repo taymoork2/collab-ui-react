@@ -61,7 +61,7 @@
       numbers = [];
       orders = [];
       singleCarrierReseller = false;
-      isTrial = false;
+      isTrial = true;
     }
 
     function clearProviderSpecificData() {

@@ -9,14 +9,12 @@
     <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
   </a>
 </script>
-<div class="save-section clearfix hg-save" ng-if="hge.form.$dirty">
-  <p class="left">{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
-  <div class="right">
-    <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
-    <button class="btn btn--primary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()"
-            ng-disabled="hge.showDisableSave()">{{:: 'usersPage.save' | translate}}
-    </button>
-  </div>
+<div class="save-section hg-save" ng-if="hge.form.$dirty">
+  <p>{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
+  <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
+  <button class="btn btn--primary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()"
+          ng-disabled="hge.showDisableSave()">{{:: 'usersPage.save' | translate}}
+  </button>
 </div>
 <div class="hg-edit">
   <div ng-if="!hge.isLoadingCompleted" class="load">

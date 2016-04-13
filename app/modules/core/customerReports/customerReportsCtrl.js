@@ -215,6 +215,13 @@
       }, 0);
     }
 
+    function delayedResize() {
+      // delayed resize necessary to fix any overlapping cards on smaller screens
+      $timeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 500);
+    }
+
     function resetCards(filter) {
       if (currentFilter !== filter) {
         vm.displayEngagement = false;
@@ -226,6 +233,7 @@
           vm.displayQuality = true;
         }
         resizeCards();
+        delayedResize();
         currentFilter = filter;
       }
     }

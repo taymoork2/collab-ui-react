@@ -8,7 +8,6 @@ describe('Template: userDelete', function () {
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
-  beforeEach(module('Messenger'));
 
   beforeEach(inject(dependencies));
   beforeEach(compileView);
@@ -44,12 +43,5 @@ describe('Template: userDelete', function () {
   it('clicking button should call delete', function () {
     view.find(DELETE_BUTTON).click();
     expect(controller.deactivateUser).toHaveBeenCalled();
-  });
-
-  it('should have disabled button with isMsgrSyncEnabled enabled', function () {
-    controller.isMsgrSyncEnabled = true;
-    $scope.$apply();
-
-    expect(view.find(DELETE_BUTTON).attr(DISABLED)).toEqual(DISABLED);
   });
 });

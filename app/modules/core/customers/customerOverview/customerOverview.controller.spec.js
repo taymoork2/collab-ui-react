@@ -76,6 +76,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, orgId) {
       callback(getJSONFixture('core/json/organizations/Orgservice.json').getOrg, 200);
     });
+    spyOn($window, 'confirm').and.returnValue(true);
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
@@ -138,6 +139,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
   describe('should call isTestOrg successfully', function () {
     it('should identify as a test org', function () {
       expect(controller.isTest).toBe(true);
+    });
+  });
+
+  describe('should call deleteOrg successfully', function () {
+    it('should call deleteTestOrg', function () {
+      controller.deleteTestOrg();
+      expect($window.confirm).toHaveBeenCalled();
     });
   });
 

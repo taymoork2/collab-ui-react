@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
+
   /* @ngInject */
   function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, ScheduleUpgradeService) {
     var vm = this;
@@ -186,8 +190,4 @@
       $modalInstance.dismiss();
     };
   }
-
-  angular
-    .module('Hercules')
-    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 }());

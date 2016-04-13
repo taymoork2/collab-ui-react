@@ -7,6 +7,7 @@ describe('SiteCSVImportModalCtrl test', function () {
 
   var $q;
   var $rootScope;
+  var $scope;
   var $controller;
 
   var Authinfo;
@@ -18,7 +19,7 @@ describe('SiteCSVImportModalCtrl test', function () {
   var WebExApiGatewayConstsService;
 
   var fakeSiteRow, fakeCSVImportFileContents;
-  var deferredCsvStatus;
+  var deferredCSVImport;
 
   beforeEach(inject(function (
     _$q_,
@@ -34,6 +35,7 @@ describe('SiteCSVImportModalCtrl test', function () {
 
     $q = _$q_;
     $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
     $controller = _$controller_;
 
     Authinfo = _Authinfo_;
@@ -43,36 +45,42 @@ describe('SiteCSVImportModalCtrl test', function () {
     Notification = _Notification_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
 
-    deferredCsvStatus = $q.defer();
+    deferredCSVImport = $q.defer();
+
+    fakeCSVImportFileContents = "First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,cisjsite031.webex.com - WebEx Meeting Center,sjsite04.webex.com - WebEx Meeting Center,sjsite14.webex.com - WebEx Collaboration Meeting Room,sjsite14.webex.com - WebEx Meeting Center,t30citestprov9.webex.com - WebEx Meeting Center John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false";
 
     fakeSiteRow = {
       license: {
         siteUrl: "fake.webex.com"
       },
 
-      csvStatusCheckMode: {
-        isOn: true,
-        checkStart: 0,
-        checkEnd: 0,
-        checkIndex: 0
-      },
+      csvMock: {
+        mockStatus: true,
+        mockExport: true,
+        mockImport: true,
+        mockFileDownload: true,
 
-      csvPollIntervalObj: null
+        mockStatusStartIndex: 0,
+        mockStatusEndIndex: 0,
+        mockStatusCurrentIndex: null,
+      },
     };
 
-    fakeCSVImportFileContents = "First Name,Last Name,Display Name,User ID/Email (Required),Calendar Service,Call Service Aware,Call Service Connect,Meeting 25 Party,Spark Message,cisjsite031.webex.com - WebEx Meeting Center,sjsite04.webex.com - WebEx Meeting Center,sjsite14.webex.com - WebEx Collaboration Meeting Room,sjsite14.webex.com - WebEx Meeting Center,t30citestprov9.webex.com - WebEx Meeting Center John,Doe,John Doe,johndoe@example.com,true,true,true,true,true,true,true,true,true,true Jane,Doe,Jane Doe,janedoe@example.com,false,false,false,false,false,false,false,false,false,false";
-
     SiteCSVImportModalCtrl = $controller('SiteCSVImportModalCtrl', {
+      $scope: $scope,
       $stateParams: {
         csvImportObj: fakeSiteRow
       }
     });
 
+    $scope.$apply();
+
     //Create spies
-    spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCsvStatus.promise);
+    spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCSVImport.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
 
+    $scope.$close = jasmine.createSpy('$close');
   })); // beforeEach(inject())
 
   it('should have valid import modal', function () {
@@ -82,23 +90,32 @@ describe('SiteCSVImportModalCtrl test', function () {
     expect(SiteCSVImportModalCtrl.siteUrl).toEqual(fakeSiteRow.license.siteUrl);
   });
 
-  it('should have started import (trigger: import button click)', function () {
-
-    WebExApiGatewayService.csvImport(fakeSiteRow.license.siteUrl, fakeCSVImportFileContents);
-
-    deferredCsvStatus.resolve({
-      siteUrl: 'fake.webex.com',
-      isTestResult: true,
-      status: WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
-      completionDetails: {},
-    });
-
+  it('should be able to start import (trigger: import button click)', function () {
     $rootScope.$apply();
-    expect(WebExApiGatewayService).toBeDefined();
-    expect(fakeSiteRow).not.toBe(null);
-    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
-    //expect(Notification.success).toHaveBeenCalled();
 
+    expect(fakeSiteRow).not.toBe(null);
+
+    SiteCSVImportModalCtrl.modal.file = fakeCSVImportFileContents;
+    SiteCSVImportModalCtrl.startImport();
+
+    expect(WebExApiGatewayService.csvImport).toHaveBeenCalled();
+
+    deferredCSVImport.resolve({});
+    $rootScope.$apply();
+
+    expect(Notification.success).toHaveBeenCalled();
+    expect($scope.$close).toHaveBeenCalled();
   });
 
+  it('should be able to reject import when import file is null', function () {
+    $rootScope.$apply();
+
+    expect(fakeSiteRow).not.toBe(null);
+
+    SiteCSVImportModalCtrl.modal.file = null;
+    SiteCSVImportModalCtrl.startImport();
+
+    expect(Notification.error).toHaveBeenCalled();
+    expect($scope.$close).not.toHaveBeenCalled();
+  });
 }); // describe()

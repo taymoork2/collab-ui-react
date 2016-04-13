@@ -1327,7 +1327,6 @@
     "addUsers": "ユーザーの追加",
     "addUsersSubDescription": "ユーザーを招待し、サービスを割り当てる",
     "addUsersDescription": "ユーザーをアップロードする方法を選択します",
-    "msgrSyncDesc": "あなたの組織には、WebEx メッセンジャー サービスから同期されているユーザー情報があります。ユーザー情報を追加、削除、または編集するには、WebEx メッセンジャー ツールを使用する必要があります。",
     "getStarted": "開始",
     "startTrial": "トライヤルの開始",
     "doLater": "後で実行",

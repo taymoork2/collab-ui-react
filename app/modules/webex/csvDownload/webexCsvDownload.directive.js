@@ -36,10 +36,7 @@
           ).then(
 
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(
-                csvData.content,
-                vm.type
-              );
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }
@@ -50,16 +47,10 @@
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
             }
           );
-        } else if (vm.type == WebExCsvDownloadService.typeUser) {
-          WebExCsvDownloadService.getCsv(
-            vm.type
-          ).then(
-
+        } else {
+          WebExCsvDownloadService.getCsv(vm.type).then(
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(
-                csvData.content,
-                vm.type
-              );
+              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }

@@ -9,8 +9,7 @@
             id="closeCSVResultsModal">
             
       <span class="sr-only" 
-            translate="common.close">
-      </span>
+            translate="common.close"></span>
     </button>
     
     <h3 class="modal-title">
@@ -21,20 +20,15 @@
       &nbsp;
     </p>
     
-    <table class="wx-table">
-      <tr class="wx-tr"
-          valign="top"
+    <table class="wx-csv-results-table">
+      <tr class="wx-csv-results-tr"
           ng-repeat="gridRow in siteCSVResult.gridRows">
         
-        <td class="wx-csv-modal-td"
-            width="50%">
-            
+        <td class="wx-csv-results-td-lt">
           {{gridRow.title}}
         </td>
       
-        <td class="wx-td"
-            width="50%">
-            
+        <td class="wx-csv-results-td-rt">
           <span ng-if="( gridRow.id != 'export-records-failed' ) &&
                        ( gridRow.id != 'import-records-failed' ) &&
                        ( gridRow.id != 'export-download-csv-file' ) &&
@@ -59,24 +53,21 @@
           
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
                               type='webexexport'
-                              filedownloadurl={{gridRow.fileDownloadUrl}}
-                              filename="SiteUsers.csv">
-          </webex-csv-download>
+                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
           <webex-csv-download ng-if="(gridRow.id == 'import-download-err-file')"
                               type='webeximport'
-                              filedownloadurl={{gridRow.fileDownloadUrl}}
-                              filename="importErr.csv">
-          </webex-csv-download>
+                              filedownloadurl={{siteCSVResult.downloadFileUrl}}
+                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
           <!-- 
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
             
-            <webex-csv-download type="user" 
-                                filename="{{::'usersPage.csvFilename' | translate}}"> 
-            </webex-csv-download>
-          
+            <webex-csv-download type="export" 
+                                filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
+                                
             <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
               <font color=#049FD9>
                 <i class="icon icon-content-share"></i>

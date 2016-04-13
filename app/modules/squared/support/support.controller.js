@@ -28,6 +28,9 @@
     $scope.gotoHelpdesk = gotoHelpdesk;
     $scope.gotoCdrSupport = gotoCdrSupport;
 
+    var vm = this;
+    vm.masonryRefreshed = false;
+
     function gotoHelpdesk() {
       var url = $state.href('helpdesk.search');
       window.open(url, '_blank');
@@ -61,6 +64,7 @@
           percentPosition: true
         });
       }, 0);
+      vm.masonryRefreshed = true;
     }
 
     function isCiscoDevRole(roleArray) {
@@ -85,7 +89,8 @@
     $scope.showToolsCard = function () {
       // Preliminary hack to fix rendering problem for small width screens.
       // Without it, small screens may initially render card(s) partly on top of each other
-      reInstantiateMasonry();
+      if (!vm.masonryRefreshed)
+        reInstantiateMasonry();
       return $scope.showCdrCallFlowLink || $scope.showHelpdeskLink();
     };
 

@@ -115,9 +115,19 @@ var AutoAttendantPage = function () {
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
   this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
+  this.toggleHolidayWhenOpenCloseExpanded = element(by.css('div.simple-accordion.aa-holidays a.icon-right-arrow.pull-right'));
   this.addholiday = element(by.css('#addHoliday'));
   this.holidayName = element(by.css('#holidayName'));
-  this.selectdate = element(by.css('.calendar span:nth-child(5) .day'));
+  this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
+  this.recurAnnually = element(by.name('recurAnnually1'));
+  this.exactDate = element(by.name('exactDate1'));
+  this.selectEvery = element(by.css('div.content.active')).element(by.css('select[name="month"] + div a.select-toggle'));
+  this.selectEveryJanuary = element(by.css('div.content.active')).element(by.css('select[name="month"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectRank = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div a.select-toggle'));
+  this.selectRankFirst = element(by.css('div.content.active')).element(by.css('select[name="rank"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectDay = element(by.css('div.content.active')).element(by.css('select[name="day"] + div a.select-toggle'));
+  this.selectDayMonday = element(by.css('div.content.active')).element(by.css('select[name="day"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.selectdate = element(by.css('.calendar span:nth-child(15) .day'));
   this.date = element(by.css('cs-datepicker input'));
   this.starttime = element(by.id('starttime'));
   this.endtime = element(by.id('endtime'));
@@ -142,6 +152,7 @@ var AutoAttendantPage = function () {
   this.closedHoursEndCall = element(by.name('bottomLane3')).element(by.name('endCall'));
   this.scheduleInfoOpenHours = element(by.css('aa-schedule-info[schedule="openHours"]'));
   this.scheduleInfoClosedHours = element(by.css('aa-schedule-info[schedule="closedHours"]'));
+  this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
   this.importSchedule = element(by.id('importSchedule'));

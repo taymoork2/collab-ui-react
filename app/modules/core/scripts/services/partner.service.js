@@ -6,8 +6,6 @@
 
   /* @ngInject */
   function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, TrialService, UrlConfig) {
-
-    var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -25,7 +23,6 @@
 
     var factory = {
       customerStatus: customerStatus,
-      getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -40,10 +37,6 @@
     };
 
     return factory;
-
-    function getTrialsList() {
-      return $http.get(trialsUrl);
-    }
 
     function getManagedOrgsList() {
       return $http.get(managedOrgsUrl);
@@ -129,9 +122,9 @@
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
-        customerOrgId: customer.customerOrgId,
-        customerName: customer.customerName,
-        customerEmail: customer.customerEmail,
+        customerOrgId: customer.customerOrgId || customer.id,
+        customerName: customer.customerName || customer.displayName,
+        customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         numUsers: customer.licenseCount,
         daysLeft: 0,

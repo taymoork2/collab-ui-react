@@ -1,7 +1,12 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
+  angular
+    .module('Hercules')
+    .directive('herculesNotifications', herculesNotificationsDirective);
+
+  /* @ngInject */
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor, ServiceStateChecker) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -83,6 +88,10 @@
         currentTab: 'enterpriseSettings'
       });
     };
+
+    vm.setSipUriNotificationAcknowledged = function () {
+      ServiceStateChecker.setSipUriNotificationAcknowledgedAndRemoveNotification();
+    };
   }
 
   function herculesNotificationsDirective() {
@@ -99,7 +108,4 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
 })();

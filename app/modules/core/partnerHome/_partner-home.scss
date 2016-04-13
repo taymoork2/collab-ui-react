@@ -22,16 +22,6 @@
     bottom: 125px;
     float: left;
   }
-  .tab-report {
-    height: 300px;
-  }
-  .tab-report + .report-status {
-    text-align: center;
-    width: 100%;
-    position: relative;
-    bottom: 150px;
-    float: left;
-  }
   .large section {
     padding: 0 1.5rem;
     .onboarded {
@@ -40,6 +30,9 @@
     .largetabs {
       padding: 0;
     }
+  }
+  section.onboarded {
+    margin-bottom: rem-calc(24);
   }
   .cstabs > li {
     & > a {
@@ -79,16 +72,13 @@
   .tab-reports .nav-tabs li .total {
     font-size: 24px;
   }
+  .report-status-partner {
+    height: 0;
+  }
   #customerDropdown {
     width: rem-calc(250);
     .select-options {
       padding: 0;
     }
-  }
-}
-
-.report-cards {
-  article {
-    padding: 1rem;
   }
 }

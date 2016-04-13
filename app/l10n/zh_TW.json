@@ -1327,7 +1327,6 @@
     "addUsers": "新增使用者",
     "addUsersSubDescription": "邀請使用者並指派服務",
     "addUsersDescription": "選取方法來上傳使用者。",
-    "msgrSyncDesc": "您的組織從「WebEx Messenger 服務」同步使用者資訊。若要新增、移除或編輯使用者資訊，則必須使用「WebEx Messenger 管理工具」。",
     "getStarted": "入門",
     "startTrial": "開始試用",
     "doLater": "稍後執行此動作",

@@ -83,7 +83,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -94,7 +94,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
@@ -108,7 +108,7 @@ describe('Huron Auto Attendant', function () {
 
       // save and assert we see successful save message and save is disabled
       utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess();
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);

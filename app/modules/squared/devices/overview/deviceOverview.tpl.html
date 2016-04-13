@@ -41,7 +41,7 @@
               ng-class="deviceOverview.currentDevice.cssColorClass">
           </i>
           <span>{{deviceOverview.currentDevice.state.readableState}}</span>
-          <p ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</p>
+          <span ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</span>
         </div>
       </div>
       <div ng-show="deviceOverview.currentDevice.supportsCustomTags">

@@ -5,9 +5,10 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, Config, Authinfo, $stateParams, $translate, $state, $templateCache, PartnerService, PstnSetupService, $window, TrialService, Orgservice, Log, Notification, NumberSearchServiceV2) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
+    $scope.isTestOrg = false;
 
     $scope.setFilter = setFilter;
     $scope.openAddTrialModal = openAddTrialModal;
@@ -23,6 +24,9 @@
     $scope.setTrial = setTrial;
     $scope.showCustomerDetails = showCustomerDetails;
     $scope.addNumbers = addNumbers;
+    $scope.isOrgSetup = isOrgSetup;
+    $scope.isOwnOrg = isOwnOrg;
+    $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -45,19 +49,6 @@
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
     var serviceTemplate = $templateCache.get('modules/core/customers/customerList/grid/serviceColumn.tpl.html');
     var noteTemplate = $templateCache.get('modules/core/customers/customerList/grid/noteColumn.tpl.html');
-
-    $scope.isOrgSetup = isOrgSetup;
-    $scope.isOwnOrg = isOwnOrg;
-
-    function isOrgSetup(customer) {
-      return _.every(customer.unmodifiedLicenses, {
-        status: 'ACTIVE'
-      });
-    }
-
-    function isOwnOrg(customer) {
-      return customer.customerName === Authinfo.getOrgName();
-    }
 
     $scope.gridOptions = {
       data: 'gridData',
@@ -142,6 +133,23 @@
       resetLists().then(function () {
         setFilter($stateParams.filter);
       });
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          $scope.isTestOrg = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      });
+    }
+
+    function isOrgSetup(customer) {
+      return _.every(customer.unmodifiedLicenses, {
+        status: 'ACTIVE'
+      });
+    }
+
+    function isOwnOrg(customer) {
+      return customer.customerName === Authinfo.getOrgName();
     }
 
     function serviceSort(a, b) {
@@ -271,7 +279,11 @@
           var managed = PartnerService.loadRetrievedDataToList(_.get(results, '[0].data.organizations', []), false);
 
           if (results[1]) {
-            managed.unshift(results[1]);
+            // 4/11/2016 admolla
+            // TODO: for some reason if I refactor this to not need an array, karma acts up....
+            if (_.isArray(results[1])) {
+              managed.unshift(results[1][0]);
+            }
           }
 
           $scope.managedOrgsList = managed;
@@ -287,7 +299,7 @@
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
     function getTrialsList() {
-      return PartnerService.getTrialsList()
+      return TrialService.getTrialsList()
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -301,6 +313,11 @@
     }
 
     function openAddTrialModal() {
+      if ($scope.isTestOrg) {
+        Localytics.tagEvent('Start Trial Button Click', {
+          from: $state.current.name
+        });
+      }
       $state.go('trialAdd.info').then(function () {
         $state.modal.result.finally(resetLists);
       });
@@ -374,31 +391,20 @@
     }
 
     function addNumbers(org) {
-      PstnSetupService.getCustomer(org.customerOrgId)
-        .catch(_.partial(getExternalNumbers, org))
-        .then(_.partial(goToPstnSetup, org));
-    }
-
-    function getExternalNumbers(org) {
-      return NumberSearchServiceV2.get({
-        customerId: org.customerOrgId,
-        type: 'external'
-      }).$promise.then(function (response) {
-        if (_.get(response, 'numbers.length') !== 0) {
-          $state.go('didadd', {
-            currentOrg: org
-          });
-          return $q.reject(false);
-        }
-      });
-    }
-
-    function goToPstnSetup(org) {
-      return $state.go('pstnSetup', {
-        customerId: org.customerOrgId,
-        customerName: org.customerName,
-        customerEmail: org.customerEmail
-      });
+      return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
+        .then(function (response) {
+          if (response) {
+            return $state.go('pstnSetup', {
+              customerId: org.customerOrgId,
+              customerName: org.customerName,
+              customerEmail: org.customerEmail
+            });
+          } else {
+            return $state.go('didadd', {
+              currentOrg: org
+            });
+          }
+        });
     }
   }
 })();

@@ -54,34 +54,48 @@
         getScheduleHours(hour, dayhour);
         var start = dayhour.starttime;
         var end = dayhour.endtime;
-        _.forEach(hour.days, function (wday, windex) {
+        _.forEach(hour.days, function (wday, index) {
           if (wday.active) {
-            _.each(vm.days, function (day, index) {
-              if (day.label === wday.label) {
-                if (vm.schedule === 'closedHours') {
-                  //Determine closed hours by getting hours not included in Openhours
-                  dayhour.starttime = hh;
-                  dayhour.endtime = start;
-                  vm.days[index].hours.push(angular.copy(dayhour));
-                  dayhour.starttime = end;
-                  dayhour.endtime = endhh;
-                }
-                vm.days[index].hours.push(angular.copy(dayhour));
-              }
-            });
-          }
-          if (!wday.active && vm.schedule === 'closedHours') {
-            //Inactive days will have all day closed 12:00am  - 11:59pm
-            _.each(vm.days, function (day, index) {
-              if (!vm.days[index].hours.length && day.label === wday.label) {
-                dayhour.starttime = hh;
+            if (vm.schedule !== 'closedHours') {
+              //Add only unique hours entry
+              addUniqueHours(vm.days[index], dayhour);
+            } else if (!is24HoursOpen(hour)) {
+              //Determine closed hours by getting hours not included in Openhours
+              if (moment(hour.starttime).format('hh:mm a') === '12:00 am') {
+                dayhour.starttime = end;
                 dayhour.endtime = endhh;
-                vm.days[index].hours.push(angular.copy(dayhour));
+              } else {
+                dayhour.starttime = hh;
+                dayhour.endtime = start;
+                //Add only unique hours entry
+                addUniqueHours(vm.days[index], dayhour);
+                dayhour.starttime = end;
+                dayhour.endtime = endhh;
               }
-            });
+              //Add only unique hours entry
+              addUniqueHours(vm.days[index], dayhour);
+            } //end ClosedHours && active
+          } else if (!isDayClosedAllHours(index) && vm.schedule === 'closedHours') {
+            //Inactive days will have all day closed 12:00am  - 11:59pm
+            if (!vm.days[index].hours.length && vm.days[index].label === wday.label) {
+              dayhour.starttime = hh;
+              dayhour.endtime = endhh;
+              vm.days[index].hours.push(angular.copy(dayhour));
+            }
           }
         });
       });
+    }
+
+    function addUniqueHours(day, dayhour) {
+      if (!_.where(day.hours, dayhour).length) {
+        day.hours.push(angular.copy(dayhour));
+      }
+    }
+
+    function is24HoursOpen(hour) {
+      return (moment(hour.starttime).format('hh:mm a') === '12:00 am' &&
+        moment(hour.endtime).format('hh:mm a') === '11:59 pm');
     }
 
     function getScheduleHours(hour, dayhour) {
@@ -94,16 +108,26 @@
       }
     }
 
+    function isDayClosedAllHours(dayIndex) {
+      for (var i = 0; i < vm.openhours.length; i++) {
+        if (vm.openhours[i].days[dayIndex].active) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     function prepareDayHourReport() {
 
       //Groups the days together in a range if the hours are same.
       vm.dayGroup = [];
       var indices = [];
       var indexListed = [];
+      var numberofdays = 1;
       _.forEach(vm.days, function (wday, index) {
         var hour1 = wday.hours;
         var isIndexPresent = _.contains(indexListed, index);
-        if (hour1.length && !isIndexPresent) {
+        if (hour1.length && hour1[0].starttime && hour1[0].endtime && !isIndexPresent) {
           var range = {
             hours: [],
             label: ''
@@ -130,6 +154,7 @@
               _.each(indices, function (index) {
                 if (dayLabel !== '') {
                   dayLabel = dayLabel + ',';
+                  numberofdays = numberofdays++;
                 }
                 dayLabel = dayLabel + (vm.days[index].label);
               });
@@ -140,6 +165,10 @@
         }
 
       });
+      if (numberofdays >= 2) {
+        vm.scheduleClass = 'aa-schedule-body';
+      }
+
     }
 
     function populateHours() {
@@ -148,12 +177,12 @@
           var calhours = AAICalService.getHoursRanges(data);
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
+          vm.scheduleClass = (angular.isDefined(vm.holidays) && vm.holidays.length) ? 'aa-schedule-body' : 'aa-panel-body';
           if (angular.isDefined(vm.openhours) && vm.openhours.length || angular.isDefined(vm.holidays) && vm.holidays.length) {
             vm.isStartTimeSet = isStartTimePresent();
             getScheduleTitle();
             getHoursInfo();
             prepareDayHourReport();
-            vm.scheduleClass = (vm.isStartTimeSet) ? 'aa-schedule-body' : 'aa-panel-body';
           }
         });
       }

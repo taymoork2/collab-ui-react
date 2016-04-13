@@ -2,7 +2,7 @@
 
 describe('ServiceDescriptor', function () {
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   // instantiate service
   var Service, $httpBackend, authinfo;
@@ -20,9 +20,6 @@ describe('ServiceDescriptor', function () {
   beforeEach(inject(function ($injector, _ServiceDescriptor_) {
     Service = _ServiceDescriptor_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {

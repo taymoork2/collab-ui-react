@@ -209,29 +209,10 @@ describe('Partner flow', function () {
   });
 
   describe('Partner landing page reports', function () {
-
     it('should show the reports', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
       utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-
-    it('should show active users chart', function () {
-      utils.click(partner.activeUsersTab);
-      utils.expectIsDisplayed(partner.activeUsersChart);
-      utils.expectIsDisplayed(partner.activeUsersCount);
-    });
-
-    it('should show average calls chart', function () {
-      utils.click(partner.averageCallsTab);
-      utils.expectIsDisplayed(partner.averageCallsChart);
-      utils.expectIsDisplayed(partner.averageCallsCount);
-    });
-
-    it('should show content shared chart', function () {
-      utils.click(partner.contentSharedTab);
-      utils.expectIsDisplayed(partner.contentSharedChart);
-      utils.expectIsDisplayed(partner.contentSharedCount);
     });
   });
 });

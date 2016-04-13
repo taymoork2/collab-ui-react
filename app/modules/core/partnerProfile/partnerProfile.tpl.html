@@ -1,17 +1,15 @@
 <div class="profile">
   <!-- support form -->
-  <form name="supportForm" novalidate>
+  <form name="partnerProfileForm" novalidate>
     <!-- page title -->
     <cs-page-header id="orgProfilePageTitle" title="{{::'partnerProfile.title' | translate}}">
     </cs-page-header>
-    <div class="save-section clearfix" ng-class="{invisible: isBtnDisabled()}">
-        <p class="left" translate="callerIdPanel.saveConfirmation"></p>
-        <div class="right">
-          <button translate="common.cancel" ng-disabled="isBtnDisabled()" ng-click="init()" id="orgProfileCancelBtn"></button>
-          <button class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="isBtnDisabled()" id="orgProfileSaveBtn">
-            <span translate="common.save"></span>
-          </button>
-        </div>
+    <div class="save-section" ng-class="{invisible: !partnerProfileForm.$dirty}">
+      <p translate="callerIdPanel.saveConfirmation"></p>
+      <button type="button" translate="common.cancel" ng-click="init()" id="orgProfileCancelBtn"></button>
+      <button type="button" class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="partnerProfileForm.$invalid" id="orgProfileSaveBtn">
+        <span translate="common.save"></span>
+      </button>
     </div>
     <div class="profile-content-container row collapse-both" cs-scroll>
       <div class="partner-profile columns small-12 large-6 xlarge-5">
@@ -53,189 +51,167 @@
               <span class="rep-info">{{partner.userName}}</span>
             </div>
         </div>
-        <!-- branding logo upload -->
-        <div ng-if="isPartner || allowCustomerLogos">
-          <div id="brandingLogoPanel" class="small-12 columns optional-row">
-            <h4 translate="partnerProfile.brandingTitle"></h4>
-            <div class="form-spacing form-group">
-              <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
-              <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
-            </div>
-          </div>
-          <div class="row form-spacing collapse-both">
-            <div class="small-12 columns form-group">
-              <div class="row">
-                <div class="small-12 columns">
-                  <label for="partnerLogoRadio">
-                    <input type="radio" class="float-radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
-                    <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-                    <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
-                  </label>
-                </div>
+
+        <ng-form name="brandingForm" isolate-form="partnerProfileForm">
+          <!-- branding logo upload -->
+          <div ng-if="isPartner || allowCustomerLogos">
+            <div id="brandingLogoPanel" class="small-12 columns optional-row">
+              <h4 translate="partnerProfile.brandingTitle"></h4>
+              <div class="form-spacing form-group">
+                <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
+                <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
               </div>
-              <div class="row">
-                <div class="small-12 columns">
-                  <label for="customLogoRadio">
-                    <input type="radio" class="float-radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
-                    <span>
-                      <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
-                        <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
-                        <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
-                        <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+            </div>
+            <div class="row form-spacing collapse-both">
+              <div class="small-12 columns form-group">
+                <div class="cs-radio-group">
+                  <div class="cs-input-group cs-input-radio">
+                    <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
+                    <label for="partnerLogoRadio">
+                      <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
+                      <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+                    </label>
+                  </div>
+
+                  <div class="cs-input-group cs-input-radio">
+                    <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+                    <label for="customLogoRadio" class="radio-input-spacing">
+                      <div class="radio-input-flex">
+                        <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
+                          <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
+                          <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
+                          <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+                        </div>
+
+                        <button class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                          <span translate="partnerProfile.chooseFile"></span>
+                        </button>
                       </div>
-                    </span>
-
-                    <div class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
-                      <span translate="partnerProfile.chooseFile"></span>
-                    </div>
-                  </label>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="row form-spacing" ng-if="isPartner">
+              <div class="small-12 columns cs-checkbox-group">
+                <input
+                  cs-input
+                  type="checkbox"
+                  id="allowCustomerLogo"
+                  name="allowCustomerLogo"
+                  ng-model="allowCustomerLogos"
+                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)"
+                  cs-input-label="{{::'partnerProfile.allowCustomerLogo' | translate}}">
+              </div>
+            </div>
           </div>
-          <div class="row form-spacing">
-            <div class="small-12 columns">
-              <div class="row collapse" ng-if="isPartner">
+
+          <div>
+            <div ng-if="showClientVersions">
+              <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
                 <div class="small-12 columns">
-                  <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
-                  <label class="cs-checkbox" for="allowCustomerLogo">
-                    <span translate="partnerProfile.allowCustomerLogo"></span>
-                  </label>
+                  <div class="row collapse" ng-if="isPartner">
+                    <p>
+                      <h4 translate="partnerProfile.webexClientVersion"></h4>
+                      <span class="badge"></span>
+                    </p>
+                    <cs-select
+                      id="webex_client_version_drop_down"
+                      ng-model="wbxclientversionselected"
+                      options="wbxclientversions"
+                      placeholder="wbxclientversionplaceholder"
+                      on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
+                      is-disabled="useLatestWbxVersion">
+                    </cs-select>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-spacing" ng-if="isPartner">
+                <div class="small-12 columns cs-checkbox-group">
+                  <input
+                    cs-input
+                    type="checkbox"
+                    id="useLatestWbxVersion"
+                    name="useLatestWbxVersion"
+                    ng-model="useLatestWbxVersion"
+                    ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)"
+                    cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}"
+                    cs-input-help-text="{{::'partnerProfile.WbxClientVersionOnlyOnNewSites' | translate}}">
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-      <div>
-
-
-        <!-- Drop down from : http://collab-ui.cisco.com/#/select -->
-
-        <!--
-ng-model="sel.selected"
-               options="sel.options"
-               placeholder="sel.selectPlaceholder"
-      -->
-
-<!-- <div ng-controller="SelectWbxClientVersion as sel"> -->
-   
-   <!-- <form id="myForm"> -->
-    <div ng-if="showClientVersions">    
-      <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
-        <div class="small-12 columns">
-          <div class="row collapse" ng-if="isPartner">
-           <p><h4 translate="partnerProfile.webexClientVersion"></h4>  
-              <span class="badge"></span>
-            </p>
-            <cs-select
-               id="webex_client_version_drop_down"
-               ng-model="wbxclientversionselected"
-               options="wbxclientversions"
-               placeholder="wbxclientversionplaceholder"
-               on-change-fn="wbxclientversionselectchanged(wbxclientversionselected)"
-               is-disabled="useLatestWbxVersion">
-            </cs-select>
-          </div>
-        </div>
-      </div>
-   <!-- </form> -->
-<!-- </div> -->
-
-
-        <div class="row form-spacing">
-         <div class="small-12 columns">
-           <div class="row collapse" ng-if="isPartner">
-             <div class="small-12 columns">
-               
-               <input type="checkbox" id="useLatestWbxVersion" ng-model="useLatestWbxVersion" 
-                 ng-change="toggleWebexSelectLatestVersionAlways(useLatestWbxVersion)">
-                 <label class="cs-checkbox" for="useLatestWbxVersion">
-                    <span class="client-version-checkbox-label" translate="partnerProfile.alwaysProvisionWithLatest"></span>
-               </label>
-               <p>
-               <span class="client-version-indent" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></span>
-           </div>
-          </div>
-         </div>
-       </div>
-     </div>  
-
-
-
-
+        </ng-form>
       </div>
 
-      </div>
       <div class="partner-profile columns small-12 large-6 xlarge-5 end">
         <!-- support title / description -->
-        <div class="" id="supportTitleAndDescPanel">
-          <div class="column small-12 form-section">
-            <h4 translate="partnerProfile.supportTitle"></h4>
-            <div class="form-spacing">
-              <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
-              <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
-            </div>
+        <div class="form-section" id="supportTitleAndDescPanel">
+          <h4 translate="partnerProfile.supportTitle"></h4>
+          <div class="form-spacing">
+            <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
+            <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
           </div>
         </div>
         <!-- trouble ticket reporting location form -->
-        <div class="column small-12" id="troubleReportingPanel">
+        <div class="cs-radio-group" id="troubleReportingPanel">
           <h4 translate="partnerProfile.supportSetup"></h4>
           <!-- partner problem reporting site form -->
-          <div class="row optional-row collapse-left" id="troubleReportingCiscoPanel" ng-click="setProblemRadio(0)">
-            <div class="columns small-12">
-                <input type="radio" name="collabRadio3" id="collabRadio3" value="0" ng-model="problemSiteRadioValue">
-                <span id="collabRadioLabel2" class="float-radio"></span>
-                <div class="account-link p">
-                  <a href="" ng-click="sendFeedback()">
-                    <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
-                    <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
-                    <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
-                  </a>
-                </div>
-            </div>
+          <div class="cs-input-group cs-input-radio" id="troubleReportingCiscoPanel" ng-click="setProblemRadio(0)">
+            <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0" ng-model="problemSiteRadioValue">
+            <label for="problemSiteRadio0">
+              <a href="" ng-click="sendFeedback()">
+                <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+                <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+                <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
+              </a>
+            </label>
           </div>
-        </div>
-        <!-- trouble reporting site url -->
-        <div class="row form-spacing" id="troubleReportingPartnerPanel">
-          <div class="columns small-12">
-            <input type="radio" name="collabRadio" class="float-radio" value="1" ng-model="problemSiteRadioValue" ng-hide>
-            <span id="troubleReportingPartnerPanelRadio" ng-click="setProblemRadio(1)" class="onboard-radio">
-              <div class="account-link p">
+          <div class="cs-input-group cs-input-radio">
+            <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1" ng-model="problemSiteRadioValue">
+            <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanelRadio">
+              <div class="radio-input-flex">
                 <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
                 <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
                 </textarea>
                 <h6 translate="partnerProfile.matchingTix"></h6>
                 <p class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
               </div>
-            </span>
+            </label>
           </div>
         </div>
-        <div class="row" id="helpPanel">
-          <h4 class="small-12 column" translate="partnerProfile.helpFaq"></h4>
-          <!-- partner help site form -->
-          <div class="column small-12" id="helpCiscoPanel">
-            <input type="radio" value="0" class="float-radio" ng-model="helpSiteRadioValue">
-            <span id="collabRadioLabel2" ng-click="setHelpRadio(0)">
-              <div class="problem-reports">
-                <a ng-href="{{profileHelpUrl}}" target="_blank">
-                  <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
-                  <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
-                  <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
-                </a>
-              </div>
-            </span>
+
+        <div class="cs-radio-group" id="helpPanel">
+          <h4 translate="partnerProfile.helpFaq"></h4>
+          <div class="cs-input-group cs-input-radio" id="helpCiscoPanel">
+            <input type="radio" id="helpSiteRadio0" name="helpSiteRadio" ng-value="0" ng-model="helpSiteRadioValue">
+            <label for="helpSiteRadio0" ng-click="setHelpRadio(0)">
+              <a ng-href="{{profileHelpUrl}}" target="_blank">
+                <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
+              </a>
+            </label>
           </div>
-          <!-- help site url form -->
-          <div class="column small-12" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
-            <input type="radio" class="float-radio" value="1" ng-model="helpSiteRadioValue">
-            <span id="helpPartnerPanelRadio">
-              <div class="problem-reports input-group">
-                  <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl" required>
-              </div>
-            </span>
+          <div class="cs-input-group cs-input-radio" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
+            <input type="radio" id="helpSiteRadio1" name="helpSiteRadio" ng-value="1" ng-model="helpSiteRadioValue">
+            <label for="helpSiteRadio1" class="radio-input-spacing" id="helpPartnerPanelRadio">
+              <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl">
+            </label>
           </div>
         </div>
+
+        <div ng-show="showAllowReadOnlyAccessCheckbox">
+          <h4 translate="customerProfile.supportAccessTitle"></h4>
+          <div class="form-spacing">
+            <span translate="customerProfile.supportAccessInfo"></span>
+          </div>
+          <input id="profileSettingsAllowReadOnlyAccess" type="checkbox" ng-model="allowReadOnlyAccess">
+          <label class="cs-checkbox" for="profileSettingsAllowReadOnlyAccess">
+            <span translate="customerProfile.supportAccessCheckbox"></span>
+          </label>
+        </div>
+
       </div>
     </div>
   </form>

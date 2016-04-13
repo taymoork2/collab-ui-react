@@ -28,9 +28,6 @@
       <a target="_blank" ng-href="https://{{hostDetailsCtrl.host.hostname}}/">
         <button class="btn btn--primary" translate="hercules.connectors.goToHost"></button>
       </a>
-      <a href sq-click-promise="hostDetailsCtrl.deleteHost()" ng-if="hostDetailsCtrl.host.state === 'offline'">
-        <button class="btn btn--negative" translate="hercules.connectors.remove"></button>
-      </a>
     </div>
   </cs-sp-section>
   <cs-sp-section>
@@ -49,4 +46,16 @@
     </div>
     <p ng-if="hostDetailsCtrl.host.alarms.length == 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
+
+  <cs-sp-section ng-if="hostDetailsCtrl.host.state === 'offline'">
+    <div class="section-title-row section-name" translate="hercules.connectors.removeSectionHeader"></div>
+    <span translate="hercules.connectors.removeSectionBody"></span>
+    <div>
+      <button class="btn btn--negative hercules-btn-deregister"
+              translate="hercules.connectors.removeButton"
+              sq-click-promise="hostDetailsCtrl.deleteHost()">
+      </button>
+    </div>
+  </cs-sp-section>
+
 </cs-sp-container>

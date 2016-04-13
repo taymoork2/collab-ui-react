@@ -51,9 +51,9 @@
       }
     }
     .service-setup-steering-digit {
-      margin-bottom: -10px;
+      margin-bottom: rem(2);
       .formly-input-wrapper {
-        width: 100px;
+        width: 50%;
       }
     }
     .service-setup-site-code {

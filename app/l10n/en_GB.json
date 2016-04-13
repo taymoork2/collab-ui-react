@@ -1327,7 +1327,6 @@
     "addUsers": "Add Users",
     "addUsersSubDescription": "Invite users and assign services",
     "addUsersDescription": "Select a method to upload your users.",
-    "msgrSyncDesc": "Your organisation has user information being synced from the WebEx Messenger Service. To add, remove or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",

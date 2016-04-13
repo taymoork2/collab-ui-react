@@ -108,7 +108,7 @@
       var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         "sortedBy": [sortBy],
-        "attributes": ["name", "userName", "entitlements", "roles", "active"]
+        "attributes": ["name", "displayName", "userName", "active"]
       };
 
       $http({
@@ -224,22 +224,19 @@
               } else {
                 // header line for CSV file
                 var header = {};
-                header.name = $translate.instant('usersPage.csvHeaderName');
-                header.email = $translate.instant('usersPage.csvHeaderEmailAddress');
-                header.entitlements = $translate.instant('usersPage.csvHeaderEntitlements');
+                header.firstName = "First Name";
+                header.lastName = "Last Name";
+                header.displayName = "Display Name";
+                header.email = "User ID/Email (Required)";
                 exportedUsers.push(header);
 
                 //formatting the data for export
                 for (var i = 0; i < users.length; i++) {
                   var exportedUser = {};
-                  var entitlements = '';
-                  if (users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '') {
-                    exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
-                  } else {
-                    exportedUser.name = 'N/A';
-                  }
+                  exportedUser.firstName = (users[i].name && users[i].name.givenName) ? users[i].name.givenName : '';
+                  exportedUser.lastName = (users[i].name && users[i].name.familyName) ? users[i].name.familyName : '';
+                  exportedUser.displayName = users[i].displayName || '';
                   exportedUser.email = users[i].userName;
-                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }

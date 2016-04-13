@@ -1,37 +1,39 @@
-<p class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.showCSVInfo">
-    <i class="icon-spinner icon"> </i>
-  </span>
 
-  <span ng-if="!row.entity.isError">
-     <span ng-if="row.entity.showCSVInfo">
-        <span ng-if="!row.entity.isCSVSupported">
-            <span id="{{row.entity.license.siteUrl}}_notAvailable"
-                  translate="siteList.siteCSVNotAvailable"></span> 
+<div ng-if="!row.entity.showCSVInfo">
+  <p class="ui-grid-cell-contents">
+    <i class="icon-spinner icon"></i>
+  </p>
+</div>
+
+<div ng-if="row.entity.showCSVInfo">
+  <div ng-if="!row.entity.isError">
+    <p class="ui-grid-cell-contents">
+      <span ng-if="!row.entity.isCSVSupported">
+        <span id="{{row.entity.license.siteUrl}}_notAvailable"
+              translate="siteList.siteCSVNotAvailable"></span> 
             
-            <span id="{{row.entity.license.siteUrl}}_infoIcon">
-              <i class="icon icon-information icon-lg ng-scope"
-                 tooltip-append-to-body="true" 
-                 tooltip-animation="false"
-                 tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
-                 tooltip-placement="top"></i>
-            </span>
+        <span id="{{row.entity.license.siteUrl}}_infoIcon">
+          <i class="icon icon-information icon-lg ng-scope ui-grid-vcenter"
+             tooltip-append-to-body="true" 
+             tooltip-animation="false"
+             tooltip="{{::'siteList.siteCSVNotAvailableTooltip' | translate}}"
+             tooltip-placement="top"></i>
         </span>
-
-        <span ng-if="row.entity.isCSVSupported">
+      </span>
+        
+      <span ng-if="row.entity.isCSVSupported">
           <!-- export section -->
           <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->
             <span ng-if="row.entity.showExportResultsLink">
-              <span class="csv-results" 
-                    ng-if="row.entity.exportFinishedWithErrors" 
+              <span ng-if="row.entity.exportFinishedWithErrors" 
+                    class="csv-results" 
                     tooltip-append-to-body="true" 
                     tooltip-animation="false"
                     tooltip="{{::'siteList.exportFinishedWithErrorsTooltip' | translate}}"
                     tooltip-placement="top">
                      
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
-                   ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
                    ui-sref="site-csv-results({siteRow:row.entity})">
                    
                   <i id="{{row.entity.license.siteUrl}}_exportResultIcon" 
@@ -41,19 +43,17 @@
                 </a>
               </span>
               
-              <span class="csv-results" 
-                    ng-if="!row.entity.exportFinishedWithErrors">
+              <span ng-if="!row.entity.exportFinishedWithErrors"
+                    class="csv-results">
                     
                 <a id="{{row.entity.license.siteUrl}}_exportResult"
-                   ng-click="grid.appScope.csvExportResult(row.entity.license.siteUrl);"
                    ui-sref="site-csv-results({siteRow:row.entity})">
                    
                   <span translate="siteList.siteCsvExportResultsLinkLabel"></span>
                 </a>
               </span>
                 
-              <!-- Three word spaces -->
-              &nbsp; &nbsp; &nbsp;
+              &nbsp;
             </span> 
 
             <!-- Export -->
@@ -64,13 +64,17 @@
 
             <!-- Export In Progress -->
             <span ng-if="row.entity.showExportInProgressLink" 
-                  id="{{row.entity.license.siteUrl}}_exportInProgress"
+                  id="{{row.entity.license.siteUrl}}_exportInProgress">
+                  
+               <span
                   class="csv-text" style="font-weight: bold;"
                   translate="siteList.siteCsvExportInProgressLinkLabel"
                   tooltip-placement="top"
                   tooltip="{{::'siteList.exportInProgressTooltip' | translate}}"
                   tooltip-animation="false" 
-                  tooltip-append-to-body="true"></span>
+                  tooltip-append-to-body="true">
+               </span>
+            </span>
 
             <!-- Grayed Export -->
             <span ng-if="row.entity.grayedExportLink"
@@ -85,7 +89,7 @@
                 
           <!-- export/import separator -->
           <span>
-            |
+            &nbsp;|&nbsp;
           </span>
           
           <!-- import section -->
@@ -108,20 +112,24 @@
 
             <!-- Import In Progress -->
             <span ng-if="row.entity.showImportInProgressLink"
-                  id="{{row.entity.license.siteUrl}}_importInProgress"
+                  id="{{row.entity.license.siteUrl}}_importInProgress">
+
+               <span
                   class="csv-text" 
                   style="font-weight: bold;"
                   translate="siteList.siteCsvImportInProgressLinkLabel"
                   tooltip-placement="top"
                   tooltip="{{::'siteList.importInProgressTooltip' | translate}}"
                   tooltip-animation="false" 
-                  tooltip-append-to-body="true"></span>
-
-            <!-- Import Results -->              
-            <span ng-if="row.entity.showImportResultsLink">
-              <!-- Three word spaces -->
-              &nbsp; &nbsp; &nbsp;
-                
+                  tooltip-append-to-body="true">
+                </span>
+              </span>
+          </span>
+          
+          <!-- Import Results -->              
+          <span ng-if="row.entity.showImportResultsLink">
+              &nbsp;
+              
               <span class="csv-results" 
                     ng-if="row.entity.importFinishedWithErrors" 
                     tooltip-append-to-body="true" 
@@ -130,7 +138,6 @@
                     tooltip-placement="top">
                      
                 <a id="{{row.entity.license.siteUrl}}_importResult"
-                   ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
                    ui-sref="site-csv-results({siteRow:row.entity})">
                    
                   <i id="{{row.entity.license.siteUrl}}_importResultIcon" 
@@ -144,36 +151,39 @@
                     ng-if="!row.entity.importFinishedWithErrors">
                     
                 <a id="{{row.entity.license.siteUrl}}_importResult"
-                   ng-click="grid.appScope.csvImportResult(row.entity.license.siteUrl);"
                    ui-sref="site-csv-results({siteRow:row.entity})">
                    
                   <span translate="siteList.siteCsvImportResultsLinkLabel"></span>
                 </a>
               </span>
-            </span> 
-          </span>
-        </span>
-    </span>      
-  </span>
+          </span> 
+      </span>
+    </p>
+  </div>
   
-  <span ng-if="row.entity.isError">
-    <span ng-if="!row.entity.isWarn" 
+  <div ng-if="row.entity.isError">   
+    <div ng-if="!row.entity.isWarn"
          popover="{{'siteList.systemError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
-      <span id="{{row.entity.license.siteUrl}}_errorIcon">
-       <i class="icon-error icon err webex-alert-text"></i>
-      </span>
-    </span>
-  
-    <span ng-if="row.entity.isWarn" 
+         
+      <p id="{{row.entity.license.siteUrl}}_errorIcon"
+         class="ui-grid-cell-contents">
+         
+        <i class="icon-error icon err webex-alert-text"></i>
+      </p>
+    </div>
+
+    <div ng-if="row.entity.isWarn"
          popover="{{'siteList.authError' | translate}}" 
          popover-trigger="mouseenter" 
          popover-placement="bottom">
-      <span id="{{row.entity.license.siteUrl}}_warningIcon">
-       <i class="icon-warning icon webex-attention-text"></i>
-      </span>
-    </span>
-  </span>
-   
-</p>
+         
+      <p id="{{row.entity.license.siteUrl}}_warningIcon"
+         class="ui-grid-cell-contents">
+         
+        <i class="icon-warning icon webex-attention-text"></i>
+      </p>
+    </div>
+  </div>
+</div>
