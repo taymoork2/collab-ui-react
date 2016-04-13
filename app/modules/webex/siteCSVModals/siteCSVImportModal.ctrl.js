@@ -57,7 +57,7 @@
       ) {
 
         // TBD: use correct error string
-        Notification.error($translate.instant('siteList.importInvalidFileToast'));
+        Notification.error('siteList.importInvalidFileToast');
 
       } else {
 

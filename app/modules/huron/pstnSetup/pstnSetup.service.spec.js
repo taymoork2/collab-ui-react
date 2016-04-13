@@ -177,6 +177,13 @@ describe('Service: PstnSetupService', function () {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450'
       }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        pattern: '(123) XXX-XXXX',
+        quantity: 1
+      }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        orderNumber: 654987
+      }));
     });
     $httpBackend.flush();
   });
