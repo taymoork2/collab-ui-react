@@ -3289,7 +3289,6 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
-
   "sunlightDetails": {
     "title": "Care",
     "settingsTitle": "Settings",
@@ -3300,7 +3299,6 @@
       "new": "New"
     }
   },
-
   "huronDetails": {
     "title": "Call",
     "linesTitle": "Numbers",

@@ -4,10 +4,9 @@
   angular
     .module('CareDetails')
     .controller('DetailsHeaderCtrl', DetailsHeaderCtrl);
-  
+
   function DetailsHeaderCtrl() {
     var vm = this;
-    vm.title = 'sunlightDetails.title';
     vm.back = false;
 
     vm.tabs = [{
