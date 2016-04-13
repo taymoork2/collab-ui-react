@@ -207,14 +207,6 @@
       return false;
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
-      if (result) {
-        timeZoneToggleEnabled = true;
-      } else {
-        timeZoneToggleEnabled = false;
-      }
-    });
-
     vm.leftPanelFields = [{
       model: vm.model.site,
       key: 'timeZone',
@@ -234,14 +226,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          if (timeZoneToggleEnabled) {
-            return true;
-          }
+          return timeZoneToggleEnabled;
         },
         'templateOptions.disabled': function () {
-          if (!timeZoneToggleEnabled) {
-            return true;
-          }
+          return !timeZoneToggleEnabled;
         }
       }
 
@@ -1196,6 +1184,7 @@
       errors = [];
 
       var promises = [];
+      promises.push(enableTimeZoneFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1464,5 +1453,16 @@
         }
       });
     }
+
+    function enableTimeZoneFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
+        if (result) {
+          timeZoneToggleEnabled = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
+      });
+    }
+
   }
 })();
