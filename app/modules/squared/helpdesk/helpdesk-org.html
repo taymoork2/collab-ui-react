@@ -149,7 +149,14 @@
 
       <div class="row" ng-if="helpdeskOrgCtrl.allowLaunchAtlas">
         <div class="medium-12 columns">
-          <button cs-btn class="btn btn--people centered launch-button" type="button" ng-click="helpdeskOrgCtrl.launchAtlasReadonly()" loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.viewPortal' | translate}}</button>
+          <h4 translate="helpdesk.customerPortalViewHeading"></h4>
+          <div class="details-value">
+            <span>{{'helpdesk.customerPortalViewDetails' | translate}}</span>
+          </div>
+          <button cs-btn class="btn btn--people centered launch-button"
+                  type="button"
+                  ng-click="helpdeskOrgCtrl.launchAtlasReadonly()"
+                  loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.view' | translate}} {{helpdeskOrgCtrl.org.displayName}}</button>
         </div>
       </div>
 

@@ -92,7 +92,7 @@
           }]
         });
       }
-      dummyChartVals = dummyChartVals.reverse();
+      dummyChartVals = formatMultipleOrgData(dummyChartVals.reverse());
     }
     createDummyVals();
 
@@ -185,15 +185,7 @@
     }
 
     function updateChart(data, color, shouldShowCursor) {
-      var formattedData = null;
-      if ($scope.currentSelection.value === allCustomers.value) {
-        formattedData = formatMultipleOrgData(data);
-      } else {
-        formattedData = formatTimeChartData(data);
-      }
-
-      var chart = makeChart(color, formattedData, shouldShowCursor);
-
+      var chart = makeChart(color, data, shouldShowCursor);
       if (chart) {
         chart.validateData();
       }
@@ -236,7 +228,15 @@
       var data = _.get(response, 'data', {});
       if (data.success && usableData(data.data)) {
         $scope.entitlementStatus = READY;
-        entitlementsChart = updateChart(response.data.data, chartColors.blue, true);
+
+        var formattedData = null;
+        if ($scope.currentSelection.value === allCustomers.value) {
+          formattedData = formatMultipleOrgData(response.data.data);
+        } else {
+          formattedData = formatTimeChartData(response.data.data);
+        }
+
+        entitlementsChart = updateChart(formattedData, chartColors.blue, true);
       } else {
         if (!response.data.success) {
           errorMessage(entTitle, response);

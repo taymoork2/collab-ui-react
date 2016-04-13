@@ -223,8 +223,8 @@ describe('LicenseService', function () {
       "trialExpiresInDays": 0
     }, {
       "offerCode": "CO",
-      "type": "COMMUNICATIONS",
-      "name": "Communications",
+      "type": "COMMUNICATION",
+      "name": "Communication",
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": true,

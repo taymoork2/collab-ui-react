@@ -19,6 +19,8 @@ describe('Controller: TrialPstnCtrl', function () {
     PstnSetupService = _PstnSetupService_;
     $q = _$q_;
 
+    spyOn(TrialService, 'getDeviceTrialsLimit');
+
     //Test initialize
     $scope.trial = TrialService.getData();
     $scope.trial.details.customerName = customerName;
