@@ -38,7 +38,7 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
       // assert we see the create successful message
-      autoattendant.assertCreateSuccess();
+      autoattendant.assertCreateSuccess(deleteUtils.testAAName);
     }, 60000);
 
     it('should create an open hours and a closed hours lanes', function () {

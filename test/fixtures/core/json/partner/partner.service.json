@@ -390,7 +390,7 @@
   }, {
     "licenseId": "CO_abdd0d28-a886-452a-b2b0-97861baa2a54",
     "offerName": "CO",
-    "licenseType": "COMMUNICATIONS",
+    "licenseType": "COMMUNICATION",
     "features": [
       "webex-squared",
       "squared-call-initiation",
