@@ -38,7 +38,7 @@ describe('HelpdeskCardsService', function () {
       usage: 50
     }, {
       offerCode: 'CO',
-      type: 'COMMUNICATIONS',
+      type: 'COMMUNICATION',
       volume: 200,
       usage: 100
     }, {
@@ -96,7 +96,7 @@ describe('HelpdeskCardsService', function () {
       expect(aggregatedLicense.totalUsage).toEqual(100);
       expect(aggregatedLicense.displayName).toEqual('helpdesk.licenseDisplayNames.CO');
       var license = _.first(aggregatedLicense.licenses);
-      expect(license.type).toEqual('COMMUNICATIONS');
+      expect(license.type).toEqual('COMMUNICATION');
       expect(license.volume).toEqual(200);
       expect(license.usage).toEqual(100);
     });

@@ -261,7 +261,7 @@ describe('Huron Auto Attendant', function () {
       // middle/2nd menu option is Add Phone Menu
       utils.click(autoattendant.newStepSelectSecond);
 
-      utils.expectCount(autoattendant.phoneMenuAll, 3);
+      utils.expectCount(autoattendant.phoneMenuAll, 2);
 
       // Click on the language for the new (first) Phone Menu we just added
       utils.click(autoattendant.phoneSayMessageLanguageFirst);
@@ -271,7 +271,7 @@ describe('Huron Auto Attendant', function () {
 
       // phone menu has been completely tested elsewhere
 
-    }, 60000);
+    }, 120000);
 
     it('should add Route Call via New Step action selection to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -326,7 +326,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
-    }, 60000);
+    }, 120000);
 
     it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
@@ -378,7 +378,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.modalsave);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
-    }, 60000);
+    }, 120000);
 
     it('verify open/closed/holidays lanes are visible', function () {
       utils.expectIsDisplayed(autoattendant.scheduleInfoOpenHours);
@@ -401,6 +401,12 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.schedule);
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.scheduletrash);
+
+      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
+      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.click(autoattendant.deleteHoliday.first()); // Thanksgiving created above
+      utils.click(autoattendant.deleteHoliday.first()); // Some Holiday created above
+
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
 

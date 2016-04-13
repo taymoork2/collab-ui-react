@@ -348,6 +348,59 @@ describe('Partner Service -', function () {
         expect(data.isSquaredUcOffer).toBe(true);
       });
 
+      it('should set isSquaredUcOffer to true, only if any of the "licenseType" property matches the value for Config.licenseTypes.COMMUNICATION', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: Config.licenseTypes.MESSAGING
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            }, // presence anywhere in this list should set the property to true
+            {
+              licenseType: Config.licenseTypes.CONFERENCING
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+      });
+
+      it('should not throw errors when licenses have undefined values', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [
+            undefined, {
+              licenseType: undefined
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: undefined
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            },
+            undefined
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+      });
+
       it('should return an object with its "offer.userServices" property as a comma separated with the translated "customerPage.EE" l10n key, if the offers "id" property matches `Config.offerTypes.webex` or `Config.offerTypes.meetings`', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
