@@ -782,7 +782,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: true,
         recurAnnually: false
       }];
-      controller.exactDateChanged();
+      controller.exactDateChanged(controller.holidays[0]);
       expect(controller.holidays[0].recurAnnually).toBe(false);
     });
 
@@ -792,7 +792,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         exactDate: false,
         recurAnnually: false
       }];
-      controller.exactDateChanged();
+      controller.exactDateChanged(controller.holidays[0]);
       expect(controller.holidays[0].recurAnnually).toBe(true);
     });
   });
