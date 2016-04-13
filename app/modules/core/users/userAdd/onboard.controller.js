@@ -1283,6 +1283,12 @@
             userResult.message = $translate.instant('onboardModal.result.409');
             userResult.alertType = 'danger';
             isComplete = false;
+          } else if (data.userResponse[i].message === '400094') {
+            userResult.message = $translate.instant('onboardModal.result.400094', {
+              status: userStatus
+            });
+            userResult.alertType = 'danger';
+            isComplete = false;
           } else {
             userResult.message = $translate.instant('onboardModal.result.other', {
               status: userStatus
