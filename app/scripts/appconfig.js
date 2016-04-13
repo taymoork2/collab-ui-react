@@ -1707,7 +1707,8 @@ angular
         .state('services-landing', {
           url: '/services/landing',
           templateUrl: 'modules/hercules/servicesLanding/servicesLanding.html',
-          controller: 'servicesLandingController',
+          controller: 'ServicesLandingCtrl',
+          controllerAs: 'servicesLandingCtrl',
           parent: 'main'
         })
         .state('calendar-service', {

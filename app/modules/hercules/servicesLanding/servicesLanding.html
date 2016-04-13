@@ -8,7 +8,12 @@
   <div class="servicesBlock">
     <h5><span>Cloud services</span></h5>
     <cs-card-layout>
-      <cs-card class="large-3 medium-6 small-12 header-bar">
+
+      <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass" ng-repeat="card in servicesLandingCtrl.cloudCards()">
+        <article ng-include="card.template"></article>
+      </cs-card>
+
+      <!--<cs-card class="large-3 medium-6 small-12 header-bar">
         <article>
           <header>
             <h4><i class="icon icon-circle-message"></i> Message</h4>
@@ -23,7 +28,7 @@
             </div>
           </section>
         </article>
-      </cs-card>
+      </cs-card>-->
 
 
       <cs-card class="large-3 medium-6 small-12 header-bar meetings">
@@ -79,7 +84,7 @@
     </h5>
 
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
-      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards | filter: {active:true}"
+      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in servicesLandingCtrl.hybridCards() | filter: {active:true}"
                ng-if="showLayout=='active'">
         <article>
           <header>
@@ -109,7 +114,7 @@
       <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards" ng-if="showLayout=='all'">
         <article>
           <header>
-            <h4><i class="icon card.icon"></i> {{card.title}}</h4>
+            <h4><i class="icon card.icon"></i> {{card.title | translate}}</h4>
           </header>
           <section>
             <p>

@@ -3789,5 +3789,20 @@
     "csvDownloadIsRunning": "An export task is already running. Please try again later.",
     "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+  },
+  "servicesLanding": {
+    "cards": {
+      "webex": {
+        "title": "Message",
+        "description": "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille et terris iactatus et alto vi superum saevae memorem Iunonis.",
+        "buttons": {
+          "webexMessenger":"Webex Messenger"
+        }
+      },
+      "meeting":{
+        "title":"Meeting",
+        "description":"Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+      }
+    }
   }
 }

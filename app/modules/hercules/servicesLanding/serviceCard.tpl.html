@@ -1,0 +1,31 @@
+<header>
+  <h4><i class="icon" ng-class="card.icon"></i> {{card.name | translate}}</h4>
+</header>
+<section>
+  <p>
+    {{card.description | translate}}
+  </p>
+  <div class="card-button" ng-if="card.active != true">
+    <a ng-href="#/{{card.link}}">
+      <button class="cta-btn">Setup</button>
+    </a>
+  </div>
+  <div class="card-button">
+    <a ng-href="#/{{button.link}}" ng-repeat="button in card.buttons">
+      <button ng-class="button.class">{{button.name | translate}}</button>
+    </a>
+  </div>
+</section>
+
+<!--<header>-->
+<!--<h4><i class="icon icon-circle-message"></i> Message</h4>-->
+<!--</header>-->
+<!--<section>-->
+<!--<p>-->
+<!--Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille-->
+<!--et terris iactatus et alto vi superum saevae memorem Iunonis.-->
+<!--</p>-->
+<!--<div class="card-button">-->
+<!--<button>Webex Messenger</button>-->
+<!--</div>-->
+<!--</section>-->
