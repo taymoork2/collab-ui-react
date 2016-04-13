@@ -194,6 +194,15 @@ describe('Partner Service -', function () {
     expect(activeList[1].messaging.features.length).toBe(4);
   });
 
+  it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
+    var myOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false);
+
+    expect(returnList[0].customerOrgId).toBe(myOrg.id);
+    expect(returnList[0].customerName).toBe(myOrg.displayName);
+    expect(returnList[0].customerEmail).toBe(myOrg.email);
+  });
+
   it('should verify that every org has a list of offers', function () {
     var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
     var offers = _.pluck(returnList, 'offers');
@@ -334,6 +343,59 @@ describe('Partner Service -', function () {
             {
               id: Config.offerTypes.collab
             },
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+      });
+
+      it('should set isSquaredUcOffer to true, only if any of the "licenseType" property matches the value for Config.licenseTypes.COMMUNICATION', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: Config.licenseTypes.MESSAGING
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            }, // presence anywhere in this list should set the property to true
+            {
+              licenseType: Config.licenseTypes.CONFERENCING
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+      });
+
+      it('should not throw errors when licenses have undefined values', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [
+            undefined, {
+              licenseType: undefined
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: undefined
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            },
+            undefined
           ]
         });
         expect(data.isSquaredUcOffer).toBe(true);

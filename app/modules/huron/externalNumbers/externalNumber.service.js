@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -74,7 +74,13 @@
 
     function formatNumberLabels(numbers) {
       _.forEach(numbers, function (number) {
-        number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+        if (_.has(number, 'quantity')) {
+          number.label = number.pattern + ' ' + $translate.instant('pstnSetup.quantity') + ': ' + number.quantity;
+        } else if (_.has(number, 'orderNumber')) {
+          number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
+        } else {
+          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+        }
       });
       return numbers;
     }

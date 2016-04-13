@@ -33,15 +33,17 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     ) {
 
       var httpsObj = null;
+      var csvUrl = null;
+      var accessToken = null;
 
       WebExApiGatewayConstsService.csvAPIs.forEach(
         function checkAPI(csvAPI) {
-          if (csvApi == csvAPI.request) {
-            var csvUrl = (
-              csvApi == WebExApiGatewayConstsService.csvRequests.csvFileDownload
-            ) ? null : 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
 
-            var accessToken = Storage.get('accessToken');
+          if (csvApi == csvAPI.request) {
+
+            csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
+
+            accessToken = Storage.get('accessToken');
 
             httpsObj = {
               url: csvUrl,
@@ -55,6 +57,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             if ("POST" == csvAPI.method) {
               httpsObj.data = csvAPI.data;
             }
+
           }
         } // csvAPI()
       ); // WebExApiGatewayConstsService.csvAPIs.forEach()
@@ -267,15 +270,15 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     }; // csvExport()
 
     this.csvImport = function (
-      siteRow
+      vm
     ) {
 
       var funcName = 'csvImport()';
       var logMsg = '';
 
-      var siteUrl = siteRow.license.siteUrl;
-      var mockFlag = siteRow.csvMock.mockImport;
-      var csvFile = siteRow.modal.file;
+      var siteUrl = vm.siteUrl;
+      var mockFlag = vm.csvImportObj.csvMock.mockImport;
+      var csvFile = vm.modal.file;
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
         'mockFlag=' + mockFlag;
@@ -298,13 +301,14 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         WebExApiGatewayConstsService.csvRequests.csvImport
       );
 
-      // TODO: add the content of csv file to csvHttpsObj
+      csvHttpsObj.data.file = csvFile;
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
       $log.log(logMsg);
 
       var deferredResponse = $q.defer();
+      var mockFlag = false;
 
       WebExRestApiFact.csvApiRequest(
         mockFlag,

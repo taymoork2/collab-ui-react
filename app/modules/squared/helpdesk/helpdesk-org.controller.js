@@ -32,9 +32,30 @@
     vm.usageText = usageText;
     vm.launchAtlasReadonly = launchAtlasReadonly;
     vm.isTrials = isTrials;
-    vm.allowLaunchAtlas = vm.orgId != Authinfo.getOrgId() && Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
-
+    vm.allowLaunchAtlas = false;
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
+    function isMarvelRelatedOrg(orgData) {
+      var isMarvel = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e");
+      var managedByMarvel = _.find(orgData.managedBy, function (mb) {
+        return mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e";
+      });
+      return (isMarvel || managedByMarvel);
+    }
+
+    function setReadOnlyLaunchButtonVisibility(orgData) {
+
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e") {
+        vm.allowLaunchAtlas = false;
+      } else if (orgData.id == Authinfo.getOrgId()) {
+        vm.allowLaunchAtlas = false;
+      } else if (!isMarvelRelatedOrg(orgData)) {
+        vm.allowLaunchAtlas = false;
+      } else {
+        var orgSettings = JSON.parse(_.last(orgData.orgSettings));
+        vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
+      }
+    }
 
     function isTrials(orgSettings) {
       var eft = false;
@@ -55,12 +76,12 @@
         initCards(licenses);
         findLicenseUsage();
       }, XhrNotificationService.notify);
-
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
+      setReadOnlyLaunchButtonVisibility(org);
     }
 
     function initCards(licenses) {

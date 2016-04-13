@@ -67,6 +67,12 @@
             
             <webex-csv-download type="export" 
                                 filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
+                                
+            <a ng-click="siteCSVResult.csvFileDownload(gridRow.fileDownloadUrl);">
+              <font color=#049FD9>
+                <i class="icon icon-content-share"></i>
+              </font>
+            </a>
           </span>
           -->
         </td>

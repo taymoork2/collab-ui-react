@@ -554,6 +554,8 @@
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
     "roles": "Roles",
+    "readOnlyHeader": "Read-Only",
+    "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
@@ -1405,7 +1407,7 @@
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
     "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
     "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
@@ -1713,7 +1715,7 @@
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
-    "errorRemoveCMI": "Unable to remove assigned phone number(s).",
+    "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
     "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
@@ -1945,6 +1947,7 @@
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "orderNumber": "Order Number",
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
@@ -2963,14 +2966,14 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "CI-SiteUsers.csv",
+    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "CI-ImportErr.csv",
+    "csvImportErrFilename": "WebEx-ImportErr.tsv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
@@ -3151,11 +3154,11 @@
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
-    "siteCsvExportResultsLinkLabel": "Exported Results",
+    "siteCsvExportResultsLinkLabel": "Export Results",
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Importing...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvImportResultsLinkLabel": "Imported Results",
+    "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3172,6 +3175,7 @@
     "importFailedTooltip": "Import failed",
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importRejectedToast": "Import failed, try again.",
+    "importInvalidFileToast": "Choose a file for import.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3711,7 +3715,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "viewPortal": "View Customer"
+    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "view": "View"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3792,5 +3798,11 @@
     "csvDownloadIsRunning": "An export task is already running. Please try again later.",
     "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+  },
+  "readOnlyModal": {
+    "banner": "You are in read-only mode",
+    "title": "Read Only",
+    "okButton": "OK",
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
   }
 }

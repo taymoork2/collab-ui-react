@@ -93,7 +93,8 @@
     function createObjectUrl(data) {
       var blob = new Blob([data], {
         // type: 'text/csv'
-        type: 'application/octet-stream'
+        type: 'text/plain'
+          // type: 'application/octet-stream'
       });
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
@@ -147,9 +148,11 @@
               headers
             ) {
 
-              var noTabData = data.replace(/\t/g, ',');
+              // var noTabData = data.replace(/\t/g, ',');
+
               var resultData = {
-                content: noTabData
+                // content: noTabData
+                content: data
               };
 
               return resultData;

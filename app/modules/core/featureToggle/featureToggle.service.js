@@ -11,6 +11,7 @@
     var features = {
       pstnSetup: 'huron-pstn-setup',
       csvUpload: 'atlas-csv-upload',
+      csvEnhancement: 'atlas-csv-enhancement',
       dirSync: 'atlas-dir-sync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasInvitePendingStatus: 'atlas-invite-pending-status',
