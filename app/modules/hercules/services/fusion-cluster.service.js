@@ -23,13 +23,13 @@
     function getAll() {
       return $http
         .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
-        .then(extractDataFromResponse)
+        .then(extractClustersFromResponse)
         .then(onlyKeepFusedClusters)
         .then(addServicesStatuses);
     }
 
-    function extractDataFromResponse(response) {
-      return response.data;
+    function extractClustersFromResponse(response) {
+      return response.data.clusters;
     }
 
     function onlyKeepFusedClusters(clusters) {

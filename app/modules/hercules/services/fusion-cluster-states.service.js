@@ -26,13 +26,13 @@
       // Also note that this function accepts both a connector or just a string
       var value = 0;
       var state = data;
-      if (angular.isString(data.runningState)) {
-        // Duck typing, if it has a runningState it must be a connector!
+      if (angular.isString(data.state)) {
+        // Duck typing, if it has a state it must be a connector!
         // Override the state with 'has_alarms' if necessary
         if (data.alarms.length > 0) {
           state = 'has_alarms';
         } else {
-          state = data.runningState;
+          state = data.state;
         }
       }
 
@@ -102,7 +102,7 @@
         .last()
         .value();
       return {
-        name: mostSevereConnector.runningState,
+        name: mostSevereConnector.state,
         severity: getStateSeverity(mostSevereConnector),
         label: getSeverityLabel(getStateSeverity(mostSevereConnector))
       };

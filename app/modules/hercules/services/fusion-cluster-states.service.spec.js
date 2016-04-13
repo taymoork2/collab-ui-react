@@ -14,7 +14,7 @@ describe('Service: FusionClusterStatesService', function () {
     it('should accept a connector as argument', function () {
       var connector = {
         alarms: [],
-        runningState: 'running'
+        state: 'running'
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(0);
@@ -28,7 +28,7 @@ describe('Service: FusionClusterStatesService', function () {
     it('should return 3 for the \'has_alarms\' state', function () {
       var connector = {
         alarms: [{}],
-        runningState: 'running'
+        state: 'running'
       };
       var severity = FusionClusterStatesService.getStateSeverity(connector);
       expect(severity).toBe(3);
@@ -72,13 +72,13 @@ describe('Service: FusionClusterStatesService', function () {
     it('should return the most severe state', function () {
       var connectors = [{
         alarms: [],
-        runningState: 'running'
+        state: 'running'
       }, {
         alarms: [],
-        runningState: 'not_configured'
+        state: 'not_configured'
       }, {
         alarms: [],
-        runningState: 'stopped'
+        state: 'stopped'
       }];
       var state = FusionClusterStatesService.getMergedStateSeverity(connectors);
       expect(state).toEqual({
