@@ -398,7 +398,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       expect(controller.availablePhoneNums.length).toEqual(3);
       // and the 1234567 should have sorted first
       expect(controller.availablePhoneNums[0].value).toEqual("1234567");
-      
       $httpBackend.flush();
       expect(AACommonService.isFormDirty()).toBe(true);
       var numobj = controller.availablePhoneNums.filter(function (obj) {
