@@ -31,6 +31,7 @@
 
     var savedModel = null;
     var errors = [];
+    var timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -84,7 +85,8 @@
       internationalDialingUuid: null,
       showServiceAddress: false,
       serviceNumber: undefined,
-      serviceNumberWarning: false
+      serviceNumberWarning: false,
+      voicemailTimeZone: undefined
     };
 
     vm.validations = {
@@ -223,10 +225,14 @@
         _buildTimeZoneOptions($scope);
       },
       expressionProperties: {
+        'templateOptions.required': function () {
+          return timeZoneToggleEnabled;
+        },
         'templateOptions.disabled': function () {
-          return true;
+          return !timeZoneToggleEnabled;
         }
       }
+
     }, {
       model: vm.model.site,
       key: 'steeringDigit',
@@ -687,7 +693,7 @@
     function updateVoicemailUserTimeZone() {
       // TODO: This is not a good way to determine when to update the timezone, get site doesn't
       // return the timezone; so update it when ever voicemail service is enabled and it isn't the default.
-      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.timezoneid') !== DEFAULT_TZ.timezoneid)) {
+      if (vm.hasVoicemailService && vm.model.companyVoicemail.companyVoicemailEnabled && (_.get(vm, 'model.site.timeZone.timezoneid') !== _.get(vm, 'model.voicemailTimeZone.timezoneid'))) {
         return $q.when(true)
           .then(function () {
             return updateVoicemailUserTemplate();
@@ -738,6 +744,11 @@
       if (vm.model.site.steeringDigit !== savedModel.site.steeringDigit) {
         siteData.steeringDigit = vm.model.site.steeringDigit;
       }
+
+      if (vm.model.site.timeZone.timezoneid !== savedModel.site.timeZone.timezoneid) {
+        siteData.timeZone = vm.model.site.timeZone.value;
+      }
+
       // Save the existing site voicemail pilot number, before overwritting with the new value
       if (vm.model.companyVoicemail.companyVoicemailEnabled) {
         // When the toggle is ON, update the site if the pilot number changed or wasn't set,
@@ -842,6 +853,9 @@
               _.remove(vm.steeringDigits, function (digit) {
                 return digit === site.siteSteeringDigit;
               });
+              vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
+                return timezone.value === site.timeZone;
+              });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
@@ -898,7 +912,7 @@
                 objectId: userTemplates[0].objectId
               };
 
-              vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
+              vm.model.voicemailTimeZone = _.find(vm.timeZoneOptions, function (timezone) {
                 return timezone.timezoneid === vm.voicemailUserTemplate.timeZone;
               });
             }
@@ -1170,6 +1184,7 @@
       errors = [];
 
       var promises = [];
+      promises.push(enableTimeZoneFeatureToggle());
       promises.push(loadCompanyInfo());
       promises.push(loadServiceAddress());
       promises.push(loadExternalNumbers());
@@ -1438,5 +1453,16 @@
         }
       });
     }
+
+    function enableTimeZoneFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
+        if (result) {
+          timeZoneToggleEnabled = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');
+      });
+    }
+
   }
 })();
