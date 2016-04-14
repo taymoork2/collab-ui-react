@@ -23,7 +23,7 @@ function compile(files, dest, concatOut) {
     .src(files, {
       base: config.app
     })
-    .pipe($.if(true || args.verbose, $.print()))
+    .pipe($.if(args.verbose, $.print()))
     .pipe($.sourcemaps.init())
     .pipe($.typescript({
       "removeComments": false,
