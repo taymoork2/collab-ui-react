@@ -28,43 +28,18 @@
       return calendar;
     }
 
-    function getDefaultRange(type) {
-      if (type !== 'holiday') {
-        return {
-          days: [{
-            label: 'Monday',
-            index: 1,
-            active: false
-          }, {
-            label: 'Tuesday',
-            index: 2,
-            active: false
-          }, {
-            label: 'Wednesday',
-            index: 3,
-            active: false
-          }, {
-            label: 'Thursday',
-            index: 4,
-            active: false
-          }, {
-            label: 'Friday',
-            index: 5,
-            active: false
-          }, {
-            label: 'Saturday',
-            index: 6,
-            active: false
-          }, {
-            label: 'Sunday',
-            index: 0,
-            active: false
-          }]
+    function getDefaultRange() {
+      var hours = {
+        days: []
+      };
+      _.each(getTwoLetterDays(), function (value, index) {
+        hours.days[(index - 1 + 7) % 7] = {
+          abbr: value,
+          index: index,
+          active: false
         };
-      } else {
-        return [];
-      }
-
+      });
+      return hours;
     }
 
     function getTwoLetterDays() {
@@ -111,7 +86,7 @@
         // icalendar uses the first two letters as abbrev for the day
         _.forEach(hoursRange.days, function (day) {
           if (day.active) {
-            days.push(day.label.substring(0, 2).toUpperCase());
+            days.push(day.abbr);
           }
         });
         if ((days.length > 0) || type === 'holiday') {
@@ -129,37 +104,40 @@
             vevent.addPropertyWithValue('summary', 'open');
             vevent.addPropertyWithValue('priority', '10');
             var date = getNextOpenDate(hoursRange.days);
-            date.seconds(0);
-            date.hours(hoursRange.starttime.getHours());
-            date.minutes(hoursRange.starttime.getMinutes());
-            hoursRange.starttime = new Date(date.toDate());
-            date.hours(hoursRange.endtime.getHours());
-            date.minutes(hoursRange.endtime.getMinutes());
-            hoursRange.endtime = new Date(date.toDate());
+            var starttime = moment(hoursRange.starttime);
+            date.hours(starttime.hours());
+            date.minutes(starttime.minutes());
+            hoursRange.starttime = moment(date);
+            var endtime = moment(hoursRange.endtime);
+            date.hours(endtime.hours());
+            date.minutes(endtime.minutes());
+            hoursRange.endtime = moment(date);
           } else if (type === 'holiday') {
             vevent.addPropertyWithValue('summary', 'holiday');
             var startDate, endDate;
             var description = hoursRange.name;
             if (hoursRange.exactDate) {
-              startDate = moment(hoursRange.date, 'YYYY-MM-DD').toDate();
-              endDate = moment(hoursRange.date, 'YYYY-MM-DD').toDate();
+              startDate = moment(hoursRange.date, 'YYYY-MM-DD');
+              endDate = moment(hoursRange.date, 'YYYY-MM-DD');
             } else {
               //Find the first occurrence of the rule
-              startDate = getNextOccurrenceHolidays(hoursRange).toDate();
-              endDate = new Date(startDate);
+              startDate = getNextOccurrenceHolidays(hoursRange);
+              endDate = moment(startDate);
               //Save the rule in the description
               description += ";" + hoursRange.month.number + ";" + hoursRange.rank.number + ";" + hoursRange.day.abbr;
             }
             if (hoursRange.allDay) {
-              startDate.setHours(0);
-              startDate.setMinutes(0);
-              endDate.setHours(23);
-              endDate.setMinutes(59);
+              startDate.hours(0);
+              startDate.minutes(0);
+              endDate.hours(23);
+              endDate.minutes(59);
             } else {
-              startDate.setHours(hoursRange.starttime.getHours());
-              startDate.setMinutes(hoursRange.starttime.getMinutes());
-              endDate.setHours(hoursRange.endtime.getHours());
-              endDate.setMinutes(hoursRange.endtime.getMinutes());
+              var startTime = moment(hoursRange.starttime);
+              startDate.hours(startTime.hours());
+              startDate.minutes(startTime.minutes());
+              var endTime = moment(hoursRange.endtime);
+              endDate.hours(endTime.hours());
+              endDate.minutes(endTime.minutes());
             }
             hoursRange.starttime = startDate;
             hoursRange.endtime = endDate;
@@ -167,7 +145,7 @@
               //Set the rule in the calendar
               strRRule = '';
               if (hoursRange.exactDate) {
-                strRRule = 'FREQ=YEARLY;BYMONTH=' + (startDate.getMonth() + 1) + ';BYMONTHDAY=' + (startDate.getDate());
+                strRRule = 'FREQ=YEARLY;BYMONTH=' + (startDate.month() + 1) + ';BYMONTHDAY=' + (startDate.date());
               } else {
                 strRRule = 'FREQ=YEARLY;BYMONTH=' + hoursRange.month.number + ';BYDAY=' + hoursRange.day.abbr + ';BYSETPOS=' + hoursRange.rank.number;
               }
@@ -309,11 +287,11 @@
       var timezone = getTz(calendar);
       var p = new ical.Property(dateType);
       p.setValue(new ical.Time({
-        year: time.getFullYear(),
-        month: (time.getMonth() + 1),
-        day: time.getDate(),
-        hour: time.getHours(),
-        minute: time.getMinutes(),
+        year: time.year(),
+        month: (time.month() + 1),
+        day: time.date(),
+        hour: time.hours(),
+        minute: time.minutes(),
         second: 0,
         isDate: false
       }));
@@ -338,17 +316,29 @@
         var dtend = vevent.getFirstPropertyValue('dtend');
         var hoursRange = getDefaultRange(summary);
 
-        hoursRange.starttime = new Date(dtstart.year, dtstart.month - 1, dtstart.day, dtstart.hour, dtstart.minute, dtstart.second);
-        hoursRange.endtime = new Date(dtend.year, dtend.month - 1, dtend.day, dtend.hour, dtend.minute, dtend.second);
+        hoursRange.starttime = moment({
+          year: dtstart.year,
+          month: dtstart.month - 1,
+          date: dtstart.day,
+          hour: dtstart.hour,
+          minute: dtstart.minute,
+          second: dtstart.second
+        });
+        hoursRange.endtime = moment({
+          year: dtend.year,
+          month: dtend.month - 1,
+          date: dtend.day,
+          hour: dtend.hour,
+          minute: dtend.minute,
+          second: dtend.second
+        });
         if (summary === 'open') {
           hoursRanges.push(hoursRange);
           var rrule = vevent.getFirstPropertyValue('rrule');
-          var strRule = rrule.toString();
-          var eventDays = strRule.substring(strRule.indexOf('BYDAY=') + 6);
           // icalendar uses the first two letters as abbrev for the day
-          _.forEach(eventDays.split(','), function (eventDay) { //Use object instead?
+          _.forEach(rrule.parts.BYDAY, function (eventDay) {
             _.forEach(hoursRange.days, function (day) {
-              if (eventDay.substring(0, 2).toUpperCase() == day.label.substring(0, 2).toUpperCase()) {
+              if (eventDay == day.abbr) {
                 day.active = true;
               }
             });
