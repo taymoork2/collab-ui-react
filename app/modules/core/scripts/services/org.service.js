@@ -62,12 +62,13 @@
         });
     }
 
-    function getAdminOrg(callback, oid) {
+    function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
+      var adminUrlSuffix = (angular.isUndefined(disableCache) || disableCache == null) ? '' : '?disableCache=true';
       if (oid) {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + '?disableCache=true';
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + adminUrlSuffix;
       } else {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=true';
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + adminUrlSuffix;
       }
 
       $http.get(adminUrl)

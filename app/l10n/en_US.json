@@ -890,8 +890,9 @@
     "ssoEnabledStatus": "Single sign-on is enabled",
     "ssoNotEnabledStatus": "Single sign-on is not enabled",
     "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
-    "idpOverwriteWarning": "SSO is already Enabled. Uploading the new Idp Metadata will overwrite the existing one. Do you wish to continue?",
-    "disableSSOByRadioWarning": "Selecting the built-in identity service will disable your existing SSO configuration. You won't be able to undo this selection. Are you sure you'd like to switch to simple user authentication?"
+    "idpOverwriteWarning": "Your SSO configuration is currently enabled. Importing a new metadata file will change your configuration and could invalidate it. You won't be able to undo this action. Do you want to continue?",
+    "disableSSOByRadioWarning": "Selecting the built-in identity service will disable your existing SSO configuration. You won't be able to undo this selection. Are you sure you'd like to switch to simple user authentication?",
+    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",

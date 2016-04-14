@@ -100,8 +100,10 @@
       }
       var steps = getSteps();
       if (steps.length > 0) {
-        if ($stateParams.currentStep) {
-          vm.current.step = steps[$stateParams.currentStep];
+        if ($stateParams.currentStep && !_.isEmpty($stateParams.currentStep)) {
+          vm.current.step = _.findWhere(steps, {
+            name: $stateParams.currentStep
+          });
         } else {
           vm.current.step = steps[0];
         }

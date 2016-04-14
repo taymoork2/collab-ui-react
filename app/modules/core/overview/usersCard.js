@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($state) {
+  function OverviewUsersCard($state, $rootScope) {
     return {
       createCard: function createCard() {
         var card = {};

@@ -10,6 +10,7 @@
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
     var oldSSOValue = 0;
+    $scope.updateSSO = updateSSO;
 
     //SIP URI Domain Controller code
     $scope.cloudSipUriField = {
@@ -27,9 +28,10 @@
 
     $scope.options = {
       configureSSO: 1,
-      enableSSO: null,
+      enableSSORadioOption: null,
       SSOSelfSigned: 0,
       modifySSO: false,
+      deleteSSOBySwitchingRadio: false
     };
 
     var sipField = $scope.cloudSipUriField;
@@ -191,30 +193,31 @@
       id: 'finalSsoNoProvider'
     }];
 
-    $scope.$watch('options.configureSSO', function (value) {
-      if ($rootScope.ssoEnabled && value === 1) {
+    $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
+      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
         var r = confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
-        if (r == true) {
+        if (r === true) {
           $scope.options.configureSSO = 1;
-          $scope.options.modifySSO = true;
-          $scope.deleteSSOBySwitchingRadio = true;
+          //$scope.options.modifySSO = true;
+          $scope.options.deleteSSOBySwitchingRadio = true;
           deleteSSO();
         } else {
-          $scope.options.modifySSO = false;
+          $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
           $scope.options.configureSSO = 0;
+          $scope.options.deleteSSOBySwitchingRadio = false;
         }
       }
     });
 
-    $scope.$watch('options.enableSSO', function () {
-      var ssoValue = $scope.options.enableSSO;
+    $scope.$watch('options.enableSSORadioOption', function () {
+      var ssoValue = $scope.options.enableSSORadioOption;
       if (ssoValue !== 'null') {
         _.set($scope.wizard, 'isNextDisabled', false);
       }
     });
 
     $scope.$on('wizard-set-sso-event', function () {
-      var ssoValue = $scope.options.enableSSO;
+      var ssoValue = $scope.options.enableSSORadioOption;
       if (ssoValue === 0) {
         deleteSSO();
       } else if (ssoValue === 1) {
@@ -224,13 +227,34 @@
 
     $scope.initNext = function () {
       var deferred = $q.defer();
-      if (($scope.options.configureSSO === 1 && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab) && !$scope.options.modifySSO) ||
-        (angular.isDefined($scope.deleteSSOBySwitchingRadio) && $scope.deleteSSOBySwitchingRadio)) {
-        deferred.reject();
-        $scope.wizard.nextTab();
+      if (angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab) && (angular.isDefined($scope.ssoEnabled) && $scope.ssoEnabled)) {
+        //sso is on and next is clicked without modify
+        if (!$scope.options.modifySSO) {
+          deferred.reject();
+          $scope.wizard.nextTab();
+        } else {
+          //sso is on and modify is clicked
+          if ($scope.options.deleteSSOBySwitchingRadio) {
+            //switch is made from advanced to simple, next should take to next Tab
+            deferred.reject();
+            $scope.wizard.nextTab();
+            $scope.options.modifySSO = false; //reset modify flag
+          } else {
+            //no switch made, user needs to update idp Metadata, next should take to next Step
+            deferred.resolve();
+            $scope.options.modifySSO = false; //reset modify flag
+          }
+        }
       } else {
-        deferred.resolve();
-        $scope.options.modifySSO = false;
+        //sso is disabled, and user clicks next
+        if ($scope.options.configureSSO === 1) {
+          //simple option is chosen, go to nextTab
+          deferred.reject();
+          $scope.wizard.nextTab();
+        } else {
+          //advanced option is chosen, go to next step
+          deferred.resolve();
+        }
       }
       return deferred.promise;
     };
@@ -309,8 +333,8 @@
                     success = false;
                   }
                   if (success === true) {
-                    if (angular.isDefined($scope.deleteSSOBySwitchingRadio) && $scope.deleteSSOBySwitchingRadio) {
-                      Notification.success('SSO is disabled <br/> User authentication configuration is now using simple built-in identity service.');
+                    if ($scope.options.deleteSSOBySwitchingRadio) {
+                      Notification.success($translate.instant('ssoModal.ssoDisableSuccessNotification'));
                       $scope.ssoEnabled = false;
                     } else {
                       Log.debug('Single Sign-On (SSO) successfully disabled for all users');
@@ -374,6 +398,7 @@
             if (data.success) {
               Log.debug('Single Sign-On (SSO) successfully enabled for all users');
               $rootScope.ssoEnabled = true;
+              $scope.ssoEnabled = true;
               $scope.wizard.nextTab();
             } else {
               Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);

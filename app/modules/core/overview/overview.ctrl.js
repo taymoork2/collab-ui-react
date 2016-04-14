@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
+  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -43,7 +43,7 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -106,7 +106,7 @@
     $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
 
     $rootScope.$watch('ssoEnabled', function () {
-      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
+      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
     });
 
     vm.showServiceActivationPage = function (serviceName) {
@@ -129,7 +129,7 @@
     vm.showSSOSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings',
-        currentStep: 1
+        currentStep: 'init'
       });
     };
 

@@ -57,7 +57,7 @@ angular.module('Core')
           };
 
           //for ssoEnabled=false we don't need a metadataXml so remove it if argument is undefined or null
-          if (angular.isUndefined(metadataXmlContent) || metadataXmlContent == null) {
+          if (!ssoEnabled && (angular.isUndefined(metadataXmlContent) || metadataXmlContent == null)) {
             delete payload.metadataXml;
           }
 

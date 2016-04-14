@@ -5,12 +5,12 @@
       <li>
         <div ng-show="!ssoEnabled">
           <i class="icon icon-circle sso-status-circle-disabled"></i>
-          <span>{{'ssoModal.ssoNotEnabledStatus'|translate}}</span>
+          <span translate="ssoModal.ssoNotEnabledStatus"></span>
         </div>
         <div ng-show="ssoEnabled">
           <i class="icon icon-circle sso-status-circle"></i>
-          <span>{{'ssoModal.ssoEnabledStatus'|translate}}</span>
-          <a ng-if="!options.modifySSO" ng-click="handleModify()">{{'ssoModal.modifySSOLabel'|translate}}</a>
+          <span translate="ssoModal.ssoEnabledStatus"></span>
+          <a ng-if="!options.modifySSO" translate="ssoModal.modifySSOLabel" ng-click="handleModify()"></a>
         </div>
       </li>
     </ul>
