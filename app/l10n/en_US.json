@@ -190,6 +190,7 @@
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
+    "editServicesTelstra": "Edit services on Telstra",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
     "siteUris": "WebEx Sites",
     "webex": "Webex",
