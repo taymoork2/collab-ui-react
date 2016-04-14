@@ -76,7 +76,21 @@
           cs-input-label="{{'autoAttendant.closedBehavious' | translate}}">
       </div>
       <form name="aaScheduleModalCtrl.holidaysForm" role="form" novalidate>
-        <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime"
+        <div class="row">
+          <input
+            cs-input
+            type="checkbox"
+            ng-model="aaScheduleModalCtrl.holidayBehavior"
+            id="holidayBehavior"
+            name="holidayBehavior"
+            cs-input-label="{{'autoAttendant.closedBehavious' | translate}}"
+            cs-input-group-size="left-margin-20"
+            ng-disabled="aaScheduleModalCtrl.holidays.length === 0">
+        </div>
+        <div ng-show="aaScheduleModalCtrl.holidays.length === 0" class="left-margin-20">
+          <p translate="autoAttendant.holidaysMissing"></p>
+        </div>
+        <cs-accordion close-others="aaScheduleModalCtrl.oneAtATime" class="simple-accordion"
                       ng-if="aaScheduleModalCtrl.holidays.length > 0">
           <cs-accordion-group ng-repeat="holiday in aaScheduleModalCtrl.holidays"
                               is-disabled="!aaScheduleModalCtrl.isHolidaysSavable()" is-open="holiday.isOpen">

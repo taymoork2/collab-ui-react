@@ -7,7 +7,7 @@
   }],
   "scheduleEventTypeMap": {
     "holiday": "closedHours",
-    "closedHours": "closedHours",
+    "closed": "closedHours",
     "openHours": "openHours"
   },
   "actionSets": [{

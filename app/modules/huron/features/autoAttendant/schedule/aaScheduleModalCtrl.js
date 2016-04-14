@@ -57,7 +57,14 @@
       if (index < vm.openhours.length) {
         vm.openhours.splice(index, 1);
         vm.isDeleted = true;
+        resetHolidayBehavior();
         vm.hoursForm.$setDirty();
+      }
+    }
+    
+    function resetHolidayBehavior() {
+      if (vm.holidays.length === 0) {
+        vm.holidayBehavior = false;
       }
     }
 
@@ -122,6 +129,7 @@
     function removeHoliday(index) {
       vm.holidays.splice(index, 1);
       vm.isDeleted = true;
+      resetHolidayBehavior();
       vm.holidaysForm.$setDirty();
     }
 

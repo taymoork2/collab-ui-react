@@ -364,10 +364,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(_ceRecord.scheduleEventTypeMap.closed).toBe('closedHours');
 
       _ceRecord = {};
-      AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays', 'holidays');
+      AutoAttendantCeMenuModelService.updateScheduleActionSetMap(_ceRecord, 'holidays', 'closedHours');
       expect(_ceRecord.defaultActionSet).toBe('holidays');
       expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
-      expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('holidays');
+      expect(angular.isDefined(_ceRecord.scheduleEventTypeMap)).toBe(true);
+      expect(_ceRecord.scheduleEventTypeMap.holiday).toBe('closedHours');
     });
   });
 

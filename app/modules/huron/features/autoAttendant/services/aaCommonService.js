@@ -94,8 +94,6 @@
           closedHours.setType('MENU_WELCOME');
         }
         AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'closedHours', closedHours);
-      } else if (angular.isDefined(closedHours)) { //Delete
-        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'closedHours');
       } else {
         AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'closedHours');
       }
@@ -109,8 +107,6 @@
 
       } else if (ui.isHolidays) {
         AutoAttendantCeMenuModelService.updateScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
-      } else if (angular.isDefined(holidays)) { //delete
-        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'holidays', ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays');
       }
