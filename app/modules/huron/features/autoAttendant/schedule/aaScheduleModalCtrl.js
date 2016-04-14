@@ -23,6 +23,7 @@
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
+    vm.exactDateChanged = exactDateChanged;
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
@@ -147,6 +148,15 @@
         var indexForm = 'holidayForm' + index;
         vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
         vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+      }
+    }
+
+    function exactDateChanged(holiday) {
+      // If exactDate unselected, auto select recurAnnually
+      if (holiday.exactDate === false) {
+        holiday.recurAnnually = true;
+      } else {
+        holiday.recurAnnually = false;
       }
     }
 

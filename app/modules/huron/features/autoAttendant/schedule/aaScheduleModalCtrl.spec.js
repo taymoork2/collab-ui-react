@@ -819,4 +819,35 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
   });
+
+  describe('exactDateChanged', function () {
+    beforeEach(function () {
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        $modalInstance: $modalInstance
+      });
+    });
+
+    it('selected, recurAnnually should be false', function () {
+      controller.holidays = [{
+        name: "Test",
+        exactDate: true,
+        recurAnnually: false
+      }];
+      controller.exactDateChanged(controller.holidays[0]);
+      expect(controller.holidays[0].recurAnnually).toBe(false);
+    });
+
+    it('unselected, recurAnnually should be true', function () {
+      controller.holidays = [{
+        name: "Test",
+        exactDate: false,
+        recurAnnually: false
+      }];
+      controller.exactDateChanged(controller.holidays[0]);
+      expect(controller.holidays[0].recurAnnually).toBe(true);
+    });
+  });
+
 });

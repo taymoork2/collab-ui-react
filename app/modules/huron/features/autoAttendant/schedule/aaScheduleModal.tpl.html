@@ -115,6 +115,7 @@
                       cs-input
                       type="checkbox"
                       ng-model="holiday.recurAnnually"
+                      ng-disabled="!holiday.exactDate"
                       id="recurAnnually{{$index}}"
                       name="recurAnnually{{$index}}"
                       cs-input-label="{{'autoAttendant.recurAnnually' | translate}}">
@@ -128,6 +129,7 @@
                       cs-input
                       type="checkbox"
                       ng-model="holiday.exactDate"
+                      ng-change="aaScheduleModalCtrl.exactDateChanged(holiday)"
                       id="exactDate{{$index}}"
                       name="exactDate{{$index}}"
                       cs-input-label="{{'autoAttendant.exactDate' | translate}}">
