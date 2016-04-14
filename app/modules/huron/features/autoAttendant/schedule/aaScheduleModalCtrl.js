@@ -27,6 +27,7 @@
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
+    vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = false;
@@ -61,11 +62,15 @@
         vm.hoursForm.$setDirty();
       }
     }
-    
+
     function resetHolidayBehavior() {
       if (vm.holidays.length === 0) {
         vm.holidayBehavior = false;
       }
+    }
+
+    function changeBehaviour() {
+      vm.holidaysForm.$setDirty();
     }
 
     function changeAllDay(form) {
@@ -268,12 +273,12 @@
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
         vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
-        if(vm.holidayBehavior && vm.holidays.length > 0) {
+        if (vm.holidayBehavior && vm.holidays.length > 0) {
           vm.ui.holidaysValue = 'closedHours';
         } else {
           vm.ui.holidaysValue = 'holidays';
         }
-        
+
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = updateSchedule(calName);
@@ -443,8 +448,8 @@
           label: moment.weekdays(index)
         };
       });
-      
-      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours'? true: false;
+
+      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
     }
 
     function openImportModal() {

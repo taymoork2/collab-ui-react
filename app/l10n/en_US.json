@@ -1588,6 +1588,7 @@
     "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
+    "scheduleClosedHolidays": "Closed/Holidays",
     "scheduleHolidays": "Holidays",
     "hoursMissing": "No hours defined.",
     "holidaysMissing": "No holidays defined.",
@@ -1646,7 +1647,7 @@
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
-    "closedBehavious": "Holidays Follow Closed Behavior",
+    "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",

@@ -127,13 +127,13 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
-      
+
       if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.holiday)) {
         vm.ui.isHolidays = true;
         vm.ui.holidaysValue = vm.aaModel.aaRecord.scheduleEventTypeMap.holiday;
       } else {
         vm.ui.isHolidays = false;
-        if(angular.isUndefined(vm.ui.holidays)) {
+        if (angular.isUndefined(vm.ui.holidays)) {
           vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.holidays.setType('MENU_WELCOME');
         }
@@ -143,12 +143,12 @@
         vm.ui.isClosedHours = true;
       } else {
         vm.ui.isClosedHours = false;
-        if(angular.isUndefined(vm.ui.closedHours)) {
+        if (angular.isUndefined(vm.ui.closedHours)) {
           vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           vm.ui.closedHours.setType('MENU_WELCOME');
-        }   
+        }
       }
-      
+
     }
 
     function saveUiModel() {
@@ -268,7 +268,7 @@
     }
 
     function removeNewStep(menu) {
-      if(menu) {
+      if (menu) {
         menu.entries = _.reject(menu.entries, function (entry) {
           // Remove New Step placeholder.  New Step has two respresentation in the UI model:
           // 1) When a New Step is added by an user, it is defined by a menuEntry with an empty

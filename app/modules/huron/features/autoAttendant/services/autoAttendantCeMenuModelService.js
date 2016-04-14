@@ -1087,7 +1087,7 @@
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
-      actionSetValue = actionSetValue ? actionSetValue: actionSetName;
+      actionSetValue = actionSetValue ? actionSetValue : actionSetName;
       var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
         return this.scheduleEventTypeMap[prop] === actionSetValue;
       }, {

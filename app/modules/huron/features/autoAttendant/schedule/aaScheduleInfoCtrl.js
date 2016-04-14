@@ -261,12 +261,12 @@
       if (vm.schedule === 'openHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleOpen');
       } else if (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours') {
-        vm.laneTitle = 'Closed / Holidays'
+        vm.laneTitle = $translate.instant('autoAttendant.scheduleClosedHolidays');
       } else if (vm.schedule === 'closedHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleClosed');
       } else if (vm.schedule === 'holidays') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleHolidays');
-      } 
+      }
     }
 
     function isOpenClosed() {
