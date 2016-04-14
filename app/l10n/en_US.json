@@ -2963,14 +2963,14 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
+    "csvExportResultsFilename": "WebEx-SiteUsers.csv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "WebEx-ImportErr.tsv",
+    "csvImportErrFilename": "WebEx-ImportErr.csv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
