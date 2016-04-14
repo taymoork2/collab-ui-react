@@ -7,7 +7,9 @@ namespace servicesLanding {
     }
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.call.buttons.numbers', link: 'services/expressway-management'}];
+      {name: 'servicesLanding.cards.hybridManagement.buttons.resources', link: 'services/expressway-management'},
+      {name: 'servicesLanding.cards.hybridManagement.buttons.settings', link: 'services/expressway-management'}
+    ];
 
 
     getButtons():Array<servicesLanding.CardButton> {
@@ -16,7 +18,7 @@ namespace servicesLanding {
 
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.hybridManagement.title', 'servicesLanding.cards.hybridManagement.description', 'icon-circle-data', true, 'people', CardType.hybrid);
+        'servicesLanding.cards.hybridManagement.title', 'servicesLanding.cards.hybridManagement.description', 'icon-circle-data', true, '', CardType.hybrid);
     }
   }
 }

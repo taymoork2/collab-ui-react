@@ -1,13 +1,13 @@
 /// <reference path="ServicesLandingCard.ts"/>
 namespace servicesLanding {
 
-  export class ServicesLandingCalendarCard extends ServicesLandingCard {
+  export class ServicesLandingHybridContextCard extends ServicesLandingCard {
     getShowMoreButton():servicesLanding.CardButton {
       return undefined;
     }
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.calendar.buttons.settings', link: 'services/calendar'}];
+      {name: 'servicesLanding.cards.hybridContext.buttons.settings', link: 'services/calendar'}];
 
 
     getButtons():Array<servicesLanding.CardButton> {
@@ -16,7 +16,7 @@ namespace servicesLanding {
 
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.calendar.title', 'servicesLanding.cards.calendar.description', 'icon-circle-calendar', true, 'calendar', CardType.hybrid);
+        'servicesLanding.cards.hybridContext.title', 'servicesLanding.cards.hybridContext.description', 'icon-circle-data', true, 'context', CardType.hybrid);
     }
   }
 }

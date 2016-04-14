@@ -1,8 +1,12 @@
 /// <reference path="ServicesLandingCard.ts"/>
 /// <reference path="webexCard.ts"/>
 /// <reference path="meetingCard.ts"/>
-/// <reference path="callCard.ts"/>
+/// <reference path="cloudCallCard.ts"/>
 /// <reference path="hybridManagementCard.ts"/>
+/// <reference path="calendarCard.ts"/>
+/// <reference path="hybridCallCard.ts"/>
+/// <reference path="hybridMediaCard.ts"/>
+/// <reference path="hybridContextCard.ts"/>
 namespace servicesLanding {
 
   /* @ngInject */
@@ -15,6 +19,10 @@ namespace servicesLanding {
           new ServicesLandingMeetingCard(),
           new ServicesLandingCallCard(),
           new ServicesLandingHybridManagementCard(),
+          new ServicesLandingCalendarCard(),
+          new ServicesLandingHybridCallCard(),
+          new ServicesLandingHybridMediaCard(),
+          new ServicesLandingHybridContextCard()
         ];
       }
     };

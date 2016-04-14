@@ -3812,19 +3812,46 @@
           "settings": "Settings"
         }
       },
-      "hybridManagement":{
+      "hybridManagement": {
         "title": "Management",
         "description": "Management Service is the global configuration service for Calendar and Call Services.",
-        "buttons":{
-          "resources":"Resources",
-          "settings":"Settings"
+        "buttons": {
+          "resources": "Resources",
+          "settings": "Settings"
         }
       },
-      "calendar":{
-        "title":"Calendar",
-        "description":"(Integrate Microsoft Exchange) Collaborate instantly. Just add @webex to attach a WebEx to your invitation. Add @spark to create a Spark room."
+      "calendar": {
+        "title": "Calendar",
+        "description": "(Integrate Microsoft Exchange) Collaborate instantly. Just add @webex to attach a WebEx to your invitation. Add @spark to create a Spark room.",
+        "buttons": {
+          "settings": "Settings"
+        }
+      },
+      "hybridCall": {
+        "title": "Call",
+        "description": "Enables Zero-Touch Meetings, desktop sharing from Cisco Spark clients while on a work phone (Aware).  Place/answer work calls from Cisco Spark clients (Connect).",
+        "buttons": {
+          "settings": "Settings"
+        }
+      },
+      "hybridMedia":{
+        "title": "Media",
+        "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
+        "buttons": {
+          "settings": "Settings"
+        }
+      },
+      "hybridContext":{
+        "title":"Context",
+        "description":"Set up the Media Service to host meetings in the Cloud and On-premise.",
+        "buttons":{
+          "settings": "Settings"
+        }
       }
     },
-    "showMore": "View all"
+    "showMore": "View all",
+    "genericButtons": {
+      "setup": "Setup"
+    }
   }
 }
