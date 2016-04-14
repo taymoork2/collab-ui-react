@@ -1,8 +1,8 @@
 {
-  "accounts": [{
-    "accountId": "1",
-    "accountName": "Atlas_Test_1",
-    "accountOrgId": "1",
+  "customers": [{
+    "customerId": "1",
+    "customerName": "Atlas_Test_1",
+    "customerOrgId": "1",
     "customerAdminEmail": "test@test.com",
     "partnerId": "1",
     "partnerOrgId": "1",
