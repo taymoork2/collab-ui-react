@@ -267,6 +267,8 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
+        } else if (feature === features.csvEnhancement) {
+          resolve(true);
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {

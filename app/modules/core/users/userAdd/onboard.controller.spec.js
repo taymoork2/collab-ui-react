@@ -101,7 +101,7 @@ describe('OnboardCtrl: Ctrl', function () {
     $scope.$apply();
   }
 
-  function onBoardUsersResponse(statusCode, responseMessage) {
+  function onboardUsersResponse(statusCode, responseMessage) {
     return {
       data: {
         userResponse: [{
@@ -123,6 +123,8 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(function () {
       initController();
     });
+    var oneColumnValidUser = "User ID/Email (Required),\njohndoe@example.com,";
+    var oneColumnInvalidUser = "First Name,\nJohn,";
     var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,f,f,f,f";
     var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
 
@@ -174,6 +176,37 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.$apply();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
+      describe('valid one column file content', function () {
+        beforeEach(function () {
+          $scope.model.file = oneColumnValidUser;
+          $scope.$apply();
+          $timeout.flush();
+        });
+        it('should have 100 upload progress', function () {
+          expect($scope.model.uploadProgress).toEqual(100);
+        });
+        it('should go to next step', function () {
+          var promise = $scope.csvUploadNext();
+          $scope.$apply();
+          expect(promise).toBeResolved();
+        });
+      });
+      describe('invalid file content that does not have the required column', function () {
+        beforeEach(function () {
+          $scope.model.file = oneColumnInvalidUser;
+          $scope.$apply();
+          $timeout.flush();
+        });
+        it('should have 100 upload progress', function () {
+          expect($scope.model.uploadProgress).toEqual(100);
+        });
+        it('should not go to the next step', function () {
+          var promise = $scope.csvUploadNext();
+          $scope.$apply();
+          expect(promise).toBeRejected();
+          expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+        });
+      });
     });
 
     describe('Process CSV and Save Users', function () {
@@ -183,7 +216,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $timeout.flush();
       });
       it('should report new users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -195,7 +228,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(200)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(200)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -208,7 +241,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -221,7 +254,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users when API fails', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.reject(onBoardUsersResponse(500)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.reject(onboardUsersResponse(500)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -238,7 +271,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.$apply();
         $timeout.flush();
 
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(201)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -251,7 +284,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should stop processing when cancelled', function () {
-        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(-1)));
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(-1)));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -441,27 +474,27 @@ describe('OnboardCtrl: Ctrl', function () {
     beforeEach(initController);
 
     it('checkClaimedDomain', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400084')));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400084')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkOutsideClaimedDomain', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400091')));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400091')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExists', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400081')));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400081')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('checkUserExistsInDiffOrg', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(403, '400090')));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400090')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('check hybrid services without paid licenses', function () {
-      Userservice.onboardUsers.and.returnValue($q.resolve(onBoardUsersResponse(400, '400087')));
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });

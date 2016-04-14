@@ -2238,8 +2238,11 @@
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (angular.isFunction($scope.getStatus)) {
-              $scope.getStatus();
-              resolve();
+              $scope.loadingDirSyncUsers = true;
+              return $scope.getStatus().then(function () {
+                $scope.loadingDirSyncUsers = false;
+                resolve();
+              });
             } else {
               reject();
             }
@@ -2408,7 +2411,7 @@
 
       // Onboard users in chunks
       // Separate chunks on invalid rows
-      var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
+      var csvChunk = isCommunicationSelected ? 2 : 10; // Rate limit for Huron
       var csvPromise = $q.when();
       var tempUserArray = [];
       var uniqueEmails = [];
