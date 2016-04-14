@@ -3796,14 +3796,23 @@
         "title": "Message",
         "description": "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille et terris iactatus et alto vi superum saevae memorem Iunonis.",
         "buttons": {
-          "webexMessenger":"Webex Messenger"
+          "webexMessenger": "Webex Messenger"
         }
       },
-      "meeting":{
-        "title":"Meeting",
-        "description":"Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+      "meeting": {
+        "title": "Meeting",
+        "description": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+      },
+      "call": {
+        "title": "Call",
+        "description": "Basic external calling and full Unified Communications enabled for your organization.",
+        "buttons": {
+          "numbers": "Numbers",
+          "features": "Features",
+          "settings": "Settings"
+        }
       }
     },
-    "showMore":"View all"
+    "showMore": "View all"
   }
 }

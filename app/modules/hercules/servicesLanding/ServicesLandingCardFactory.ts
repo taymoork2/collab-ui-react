@@ -1,6 +1,7 @@
 /// <reference path="ServicesLandingCard.ts"/>
 /// <reference path="webexCard.ts"/>
 /// <reference path="meetingCard.ts"/>
+/// <reference path="callCard.ts"/>
 namespace servicesLanding {
 
   /* @ngInject */
@@ -10,7 +11,8 @@ namespace servicesLanding {
       createCards: function ():Array<ServicesLandingCard> {
         return [
           new ServicesLandingWebexCard(),
-          new ServicesLandingMeetingCard()
+          new ServicesLandingMeetingCard(),
+          new ServicesLandingCallCard()
         ];
       }
     };
