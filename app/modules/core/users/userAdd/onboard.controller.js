@@ -1778,12 +1778,20 @@
       if ($scope.model.file) {
         setUploadProgress(0);
         userArray = $.csv.toArrays($scope.model.file);
-        if (angular.isArray(userArray) && userArray.length > 0) {
-          if (userArray[0][0] === 'First Name') {
+        if (_.isArray(userArray) && userArray.length > 0 && _.isArray(userArray[0])) {
+          // the email header is required
+          var indexEmail = _.findIndex(userArray[0], function (h) {
+            return h == 'User ID/Email (Required)';
+          });
+          if (indexEmail > -1) {
             csvHeaders = userArray.shift();
-          }
-          if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
-            isCsvValid = true;
+            if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
+              isCsvValid = true;
+            } else {
+              isCsvValid = false;
+            }
+          } else {
+            isCsvValid = false;
           }
         }
         setUploadProgress(100);
