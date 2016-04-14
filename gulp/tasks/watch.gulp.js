@@ -185,7 +185,7 @@ gulp.task('ts:changed-spec-files', function () {
 });
 
 gulp.task('ts:changed-files', function () {
-  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts', false), config.build);
+  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build, false);
 });
 
 function karmaModifiedFiles(event) {
