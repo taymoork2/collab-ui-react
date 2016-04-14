@@ -330,6 +330,92 @@ angular.module('Core').service('SiteListService', [
       ); // WebExApiGatewayService.isSiteSupportsIframe().then
     }; // updateWebExColumnsInRow()
 
+    this.updateDisplayControlFlagsInRow = function (siteRow) {
+
+      var funcName = "updateDisplayControlFlagsInRow()";
+      var logMsg = "";
+
+      logMsg = funcName + "\n" +
+        "siteRow=" + "\n" + JSON.stringify(siteRow);
+      //$log.log(logMsg);
+
+      //initialize display control flags
+      siteRow.showCSVInfo = true;
+      siteRow.showAsyncErr = false;
+
+      siteRow.showExportLink = false;
+      siteRow.showExportInProgressLink = false;
+      siteRow.grayedExportLink = false;
+      siteRow.showExportResultsLink = false;
+      siteRow.exportFinishedWithErrors = false;
+
+      siteRow.showImportLink = false;
+      siteRow.showImportInProgressLink = false;
+      siteRow.grayedImportLink = false;
+      siteRow.showImportResultsLink = false;
+      siteRow.importFinishedWithErrors = false;
+
+      if (siteRow.asyncErr) {
+        siteRow.showAsyncErr = true;
+
+      } else {
+
+        if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
+
+          siteRow.showExportLink = true;
+
+          siteRow.showImportLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
+
+          siteRow.showExportInProgressLink = true;
+
+          siteRow.grayedImportLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
+
+          siteRow.showExportLink = true;
+          siteRow.showExportResultsLink = true;
+
+          siteRow.showImportLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
+
+          siteRow.showExportLink = true;
+          siteRow.showExportResultsLink = true;
+          siteRow.exportFinishedWithErrors = true;
+
+          siteRow.showImportLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
+
+          siteRow.grayedExportLink = true;
+
+          siteRow.showImportInProgressLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
+
+          siteRow.showExportLink = true;
+
+          siteRow.showImportLink = true;
+          siteRow.showImportResultsLink = true;
+
+        } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
+
+          siteRow.showExportLink = true;
+
+          siteRow.showImportLink = true;
+          siteRow.showImportResultsLink = true;
+          siteRow.importFinishedWithErrors = true;
+
+        }
+
+        siteRow.showCSVInfo = true;
+
+      }
+
+    }; //updateDisplayControlFlagsInRow()
+
     this.updateCSVColumnInRow = function (siteRow) {
       var funcName = "updateCSVColumnInRow()";
       var logMsg = "";
@@ -386,71 +472,9 @@ angular.module('Core').service('SiteListService', [
           // save the response obj into the siteRow obj... when get result (for completed job) is clicked,
           // we will need  more information from the response obj
           siteRow.csvStatusObj = response;
+          siteRow.asyncErr = false;
+          _this.updateDisplayControlFlagsInRow(siteRow);
 
-          // initialize display control flags
-          siteRow.showExportLink = false;
-          siteRow.showExportInProgressLink = false;
-          siteRow.grayedExportLink = false;
-          siteRow.showExportResultsLink = false;
-          siteRow.exportFinishedWithErrors = false;
-
-          siteRow.showImportLink = false;
-          siteRow.showImportInProgressLink = false;
-          siteRow.grayedImportLink = false;
-          siteRow.showImportResultsLink = false;
-          siteRow.importFinishedWithErrors = false;
-
-          if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.none) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportInProgress) {
-
-            siteRow.showExportInProgressLink = true;
-
-            siteRow.grayedImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedNoErr) {
-
-            siteRow.showExportLink = true;
-            siteRow.showExportResultsLink = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.exportCompletedWithErr) {
-
-            siteRow.showExportLink = true;
-            siteRow.showExportResultsLink = true;
-            siteRow.exportFinishedWithErrors = true;
-
-            siteRow.showImportLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importInProgress) {
-
-            siteRow.grayedExportLink = true;
-
-            siteRow.showImportInProgressLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedNoErr) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-            siteRow.showImportResultsLink = true;
-
-          } else if (siteRow.csvStatusObj.status == WebExApiGatewayConstsService.csvStates.importCompletedWithErr) {
-
-            siteRow.showExportLink = true;
-
-            siteRow.showImportLink = true;
-            siteRow.showImportResultsLink = true;
-            siteRow.importFinishedWithErrors = true;
-
-          }
-
-          siteRow.showCSVInfo = true;
         }, // csvStatusSuccess()
 
         function error(response) {
@@ -461,6 +485,10 @@ angular.module('Core').service('SiteListService', [
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
           $log.log(logMsg);
+
+          siteRow.csvStatusObj = response;
+          siteRow.asyncErr = true;
+          _this.updateDisplayControlFlagsInRow(siteRow);
 
           // siteRow.showCSVInfo = true;
         } // csvStatusError()

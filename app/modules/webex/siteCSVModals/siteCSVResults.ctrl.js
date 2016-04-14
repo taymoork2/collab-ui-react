@@ -32,6 +32,7 @@
       ("exportCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
+      vm.modalId = "csvExport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvExportTitle");
 
       vm.gridRows.push({
@@ -78,6 +79,7 @@
       ("importCompletedWithErr" === vm.csvStatusObj.status)
     ) {
 
+      vm.modalId = "csvImport";
       vm.modalTitle = $translate.instant("webexCSVResultsModal.csvImportTitle");
 
       vm.gridRows.push({
