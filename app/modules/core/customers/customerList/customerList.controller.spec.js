@@ -36,6 +36,7 @@ describe('Controller: CustomerListCtrl', function () {
     TrialService = _TrialService_;
     Orgservice = _Orgservice_;
     Notification = _Notification_;
+    $scope.timeoutVal = 1;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     $rootScope.typeOfExport = {
@@ -119,6 +120,21 @@ describe('Controller: CustomerListCtrl', function () {
         customerEmail: testOrg.customerEmail
       });
     });
+  });
+
+  describe('filterAction', function () {
+    beforeEach(initController);
+
+    it('a proper query wshould call out to partnerService and trialservice', function () {
+      $scope.filterAction('1234');
+      expect($scope.searchStr).toBe('1234');
+      //this tests that getManagedOrgsList is  called , it is called once at init , so the count is expected to be 2 here
+      expect(PartnerService.getManagedOrgsList.calls.count()).toEqual(2);
+      expect(PartnerService.getManagedOrgsList).toHaveBeenCalledWith('1234');
+      expect(TrialService.getTrialsList.calls.count()).toEqual(2);
+      expect(TrialService.getTrialsList).toHaveBeenCalledWith('1234');
+    });
+
   });
 
 });
