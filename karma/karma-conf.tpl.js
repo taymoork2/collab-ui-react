@@ -17,7 +17,10 @@ module.exports = function (config) {
     /**
      * This is the list of file patterns to load into the browser during testing.
      */
-    files: [, {
+    files: [
+      // inject:unitTestFiles
+      // end-inject:unitTestFiles
+      , {
         pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,
@@ -94,7 +97,10 @@ module.exports = function (config) {
 
     colors: true,
 
-    reporters: ['dots', 'junit', 'coverage', 'html'],
+    reporters: [
+      'dots', 
+      // inject:reporters
+    ],
 
     junitReporter: {
       useBrowserName: false,
