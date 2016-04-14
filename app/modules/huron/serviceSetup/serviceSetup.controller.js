@@ -74,6 +74,7 @@
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
     vm.timeZoneToggleEnabled = false;
+    vm.previousTimeZone = DEFAULT_TZ;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -606,6 +607,7 @@
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
               vm.model.site.timeZone = site.timeZone;
+              vm.previousTimeZone = site.timeZone;
             });
           }
         });
@@ -910,7 +912,7 @@
           var siteData = {};
           //this value is not gonna change when timezone select combo is disabled
           // so no need to check for timeZoneToggle here
-          if (_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) {
+          if (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) {
             siteData.timeZone = vm.model.site.timeZone.value;
           }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
