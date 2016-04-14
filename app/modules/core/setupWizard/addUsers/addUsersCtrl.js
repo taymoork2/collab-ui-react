@@ -307,7 +307,7 @@ angular.module('Core')
           csvData.shift();
           $scope.numUsersInSync = csvData.length;
           $scope.dirsyncUserCountText = $translate.instant('firstTimeWizard.syncAgreementText');
-          _.forEach(csvData, function(row) {
+          _.forEach(csvData, function (row) {
             var userArrObj = {
               Email: null,
               Name: null
