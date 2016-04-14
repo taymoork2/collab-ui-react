@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig', '$log',
-    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig, $log) {
+  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig',
+    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -134,7 +134,6 @@ angular.module('Core')
 
       return {
         initialize: function (data) {
-          $log.log(data);
           authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
           authData.username = data.name;
           authData.orgName = data.orgName;
