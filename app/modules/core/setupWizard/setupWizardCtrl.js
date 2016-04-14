@@ -147,6 +147,9 @@
         _.remove($scope.tabs, {
           name: 'addUsers'
         });
+        _.remove($scope.tabs, {
+          name: 'serviceSetup'
+        });
       }
 
       var enterpriseSipUrlStep = {

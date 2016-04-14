@@ -301,10 +301,9 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings']);
 
       expectSubStepOrder('planReview', ['init']);
-      expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });

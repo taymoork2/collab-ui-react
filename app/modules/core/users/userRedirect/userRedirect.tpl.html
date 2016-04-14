@@ -1,0 +1,12 @@
+<div class="messagebox login-box" ng-class="{loading: loading}">
+  <div class="messagebox-small" ng-class="checkForIeWorkaround()">
+    <i class="icon icon-2x icon-cisco-logo messagebox-heading"></i>
+    <div class="h3" translate="usersPage.telstraAppRedirect"></div>
+    <div ng-show="result">
+      <div class="results alert alert-danger" ng-bind-html="result"></div>
+    </div>
+    <div ng-show="loading">
+      <i class="icon icon-3x icon-spinner"></i>
+    </div>
+  </div>
+</div>

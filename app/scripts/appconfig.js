@@ -542,6 +542,11 @@ angular
             'editServices@editService': {
               templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
             }
+        .state('userRedirect', {
+          views: {
+            controller: 'userRedirectCtrl',
+            controllerAs: 'userRedirect',
+            templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html'
           }
         })
         .state('user-overview', {

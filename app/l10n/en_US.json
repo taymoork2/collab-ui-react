@@ -104,7 +104,8 @@
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
-    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
+    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
