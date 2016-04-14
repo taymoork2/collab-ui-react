@@ -3811,6 +3811,18 @@
           "features": "Features",
           "settings": "Settings"
         }
+      },
+      "hybridManagement":{
+        "title": "Management",
+        "description": "Management Service is the global configuration service for Calendar and Call Services.",
+        "buttons":{
+          "resources":"Resources",
+          "settings":"Settings"
+        }
+      },
+      "calendar":{
+        "title":"Calendar",
+        "description":"(Integrate Microsoft Exchange) Collaborate instantly. Just add @webex to attach a WebEx to your invitation. Add @spark to create a Spark room."
       }
     },
     "showMore": "View all"

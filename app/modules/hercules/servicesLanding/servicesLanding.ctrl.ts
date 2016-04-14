@@ -14,11 +14,11 @@ namespace servicesLanding {
     }
 
     public hybridCards() {
-      return this.cards;
+      return _.filter(this.cards,{cardType:servicesLanding.CardType.hybrid});
     }
 
     public cloudCards() {
-      return this.cards;
+      return _.filter(this.cards,{cardType:servicesLanding.CardType.cloud});
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {

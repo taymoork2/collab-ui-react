@@ -2,6 +2,7 @@
 /// <reference path="webexCard.ts"/>
 /// <reference path="meetingCard.ts"/>
 /// <reference path="callCard.ts"/>
+/// <reference path="hybridManagementCard.ts"/>
 namespace servicesLanding {
 
   /* @ngInject */
@@ -12,7 +13,8 @@ namespace servicesLanding {
         return [
           new ServicesLandingWebexCard(),
           new ServicesLandingMeetingCard(),
-          new ServicesLandingCallCard()
+          new ServicesLandingCallCard(),
+          new ServicesLandingHybridManagementCard(),
         ];
       }
     };

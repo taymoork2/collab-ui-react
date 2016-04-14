@@ -8,69 +8,10 @@
   <div class="servicesBlock">
     <h5><span>Cloud services</span></h5>
     <cs-card-layout>
-
-      <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass" ng-repeat="card in servicesLandingCtrl.cloudCards()">
+      <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
+               ng-repeat="card in servicesLandingCtrl.cloudCards()">
         <article ng-include="card.template"></article>
       </cs-card>
-
-      <!--<cs-card class="large-3 medium-6 small-12 header-bar">
-        <article>
-          <header>
-            <h4><i class="icon icon-circle-message"></i> Message</h4>
-          </header>
-          <section>
-            <p>
-              Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille
-              et terris iactatus et alto vi superum saevae memorem Iunonis.
-            </p>
-            <div class="card-button">
-              <button>Webex Messenger</button>
-            </div>
-          </section>
-        </article>
-      </cs-card>-->
-
-
-      <!--<cs-card class="large-3 medium-6 small-12 header-bar meetings">-->
-        <!--<article>-->
-
-          <!--<header>-->
-            <!--<h4><i class="icon icon-circle-group"></i> Meeting</h4>-->
-          <!--</header>-->
-          <!--<section>-->
-            <!--<p>-->
-              <!--Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.-->
-            <!--</p>-->
-            <!--<div class="card-button">-->
-              <!--<button><a href="#">Site_Name1.webex.com</a></button>-->
-              <!--<button><a href="#">Site_Name2.webex.com</a></button>-->
-              <!--<button><a href="#">Site_Name3.webex.com</a></button>-->
-              <!--<a ng-href="#/site-list" href="#/site-list">View all</a>-->
-            <!--</div>-->
-          <!--</section>-->
-        <!--</article>-->
-      <!--</cs-card>-->
-
-
-      <!--<cs-card class="large-3 medium-6 small-12 header-bar people">-->
-        <!--<article>-->
-          <!--<header>-->
-            <!--<h4><i class="icon icon-circle-call"></i> Call</h4>-->
-          <!--</header>-->
-          <!--<section>-->
-            <!--<p>-->
-              <!--Basic external calling and full Unified Communications enabled for your organization.-->
-            <!--</p>-->
-            <!--<div class="card-button">-->
-              <!--<a ng-href="#hurondetails/lines" href="#hurondetails/lines">-->
-                <!--<button>Numbers</button>-->
-              <!--</a>-->
-              <!--<button>Features</button>-->
-              <!--<button><a ng-href="#hurondetails/settings" href="#hurondetails/settings">Settings</a></button>-->
-            <!--</div>-->
-          <!--</section>-->
-        <!--</article>-->
-      <!--</cs-card>-->
     </cs-card-layout>
 
     <h5><span>Hybrid services</span>
@@ -84,7 +25,16 @@
     </h5>
 
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
-      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in servicesLandingCtrl.hybridCards() | filter: {active:true}"
+      <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
+               ng-repeat="card in servicesLandingCtrl.hybridCards() | filter: {active:true}"
+               ng-if="showLayout=='active'">
+        <article ng-include="card.template"></article>
+      </cs-card>
+    </cs-card-layout>
+
+    <!--<cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
+      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar"
+               ng-repeat="card in servicesLandingCtrl.hybridCards() | filter: {active:true}"
                ng-if="showLayout=='active'">
         <article>
           <header>
@@ -136,6 +86,6 @@
           </section>
         </article>
       </cs-card>
-    </cs-card-layout>
+    </cs-card-layout>-->
   </div>
 </div>
