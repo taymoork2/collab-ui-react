@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* global Uint8Array:false */
+
   angular.module('WebExApp').service('WebExCsvDownloadService', WebExCsvDownloadService);
 
   /* @ngInject */
@@ -91,10 +93,66 @@
     } // getWebExCsv()
 
     function createObjectUrl(data) {
+      /*
+      var someData = '%ff%fe%41%00%09%00%42%00'; // 'A\tB'
+      var byteArray = [];
+
+      someData.replace(/([0-9a-f]{2})/gi, function (byte) {
+        byteArray.push(parseInt(byte, 16));
+      });
+
+      var blob = new Blob([new Uint8Array(byteArray)], {
+        type: 'text/csv;charset=UTF-16LE;'
+      });
+      */
+
+      var byteArray = [];
+      var header = '%ff%fe';
+
+      header.replace(/([0-9a-f]{2})/gi, function (byte) {
+        byteArray.push(parseInt(byte, 16));
+      });
+
+      var newDataArray = [];
+      var newDataCount = 0;
+
+      for (var i = 0; i < data.length; i++) {
+        var hexByte = null;
+
+        if ("\t" == data[i]) {
+          hexByte = "%09";
+        } else if ("\n" == data[i]) {
+          hexByte = "%0A";
+          // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
+        } else {
+          hexByte = data[i].charCodeAt(0).toString(16);
+        }
+
+        newDataArray = newDataArray.concat(hexByte);
+        newDataArray = newDataArray.concat('%00');
+
+        newDataCount = newDataCount + 2;
+      }
+
+      var newDataStr = newDataArray.toString();
+
+      newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
+        byteArray.push(parseInt(byte, 16));
+      });
+
+      var newData = new Uint8Array(byteArray);
+
+      var blob = new Blob([newData], {
+        type: 'text/csv;charset=UTF-16LE;'
+      });
+
+      /*
       var blob = new Blob([data], {
         // type: 'text/csv'
-        type: 'application/octet-stream'
+        type: 'text/plain'
+          // type: 'application/octet-stream'
       });
+      */
 
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
 
@@ -147,9 +205,11 @@
               headers
             ) {
 
-              var noTabData = data.replace(/\t/g, ',');
+              // var noTabData = data.replace(/\t/g, ',');
+
               var resultData = {
-                content: noTabData
+                // content: noTabData
+                content: data
               };
 
               return resultData;

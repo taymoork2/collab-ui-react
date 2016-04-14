@@ -5,7 +5,7 @@
     .controller('PartnerHomeCtrl', PartnerHomeCtrl);
 
   /* @ngInject */
-  function PartnerHomeCtrl($scope, $timeout, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService) {
+  function PartnerHomeCtrl($scope, $timeout, $state, $window, Authinfo, Localytics, Log, Notification, Orgservice, PartnerService, TrialService) {
     $scope.currentDataPosition = 0;
 
     $scope.daysExpired = 5;
@@ -63,7 +63,7 @@
 
     function getTrialsList() {
       $scope.showTrialsRefresh = true;
-      PartnerService.getTrialsList()
+      TrialService.getTrialsList()
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {

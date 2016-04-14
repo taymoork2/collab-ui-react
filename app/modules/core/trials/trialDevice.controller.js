@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($stateParams, $translate, TrialCallService, TrialRoomSystemService, TrialDeviceService) {
+  function TrialDeviceController($stateParams, $translate, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -16,7 +16,10 @@
     // merge is apparently not pass-by-reference
     vm.details = _.merge(_trialCallData.details, _trialRoomSystemData.details);
     vm.skipDevices = _trialDeviceData.skipDevices;
+    vm.deviceTrialTip = $translate.instant('trialModal.call.deviceTrialTip');
+    vm.limitsError = false;
 
+    vm.isEditing = _.get($stateParams, 'isEditing');
     vm.canAddCallDevice = TrialCallService.canAddCallDevice(_.get($stateParams, 'details.details'), _trialCallData.enabled);
     vm.canAddRoomSystemDevice = TrialRoomSystemService.canAddRoomSystemDevice(_.get($stateParams, 'details.details'), _trialRoomSystemData.enabled);
     vm.validateInputQuantity = validateInputQuantity;
@@ -31,6 +34,8 @@
     vm.validateChecks = validateChecks;
     vm.toggleShipFields = toggleShipFields;
     vm.disabledChecks = disabledChecks;
+    vm.hasExistingDevices = hasExistingDevices;
+    vm.notifyLimits = notifyLimits;
 
     if (_.get(_trialDeviceData, 'shippingInfo.country') === '') {
       // always default to USA
@@ -433,7 +438,37 @@
 
     ////////////////
 
-    function init() {}
+    function init() {
+      var limitsPromise = TrialDeviceService.getLimitsPromise();
+      vm.canAddMoreDevices = vm.isEditing && vm.hasExistingDevices();
+
+      if (!_.isUndefined(limitsPromise)) {
+        limitsPromise.then(function (data) {
+            vm.activeTrials = data.activeDeviceTrials;
+            vm.maxTrials = data.maxDeviceTrials;
+            vm.limitReached = vm.activeTrials >= vm.maxTrials;
+          })
+          .catch(function () {
+            vm.limitsError = true;
+            vm.limitReached = true;
+          })
+          .finally(function () {
+            // Only show notification for new device trials
+            if (!vm.canAddMoreDevices) {
+              vm.notifyLimits();
+            }
+          });
+      }
+    }
+
+    function notifyLimits() {
+      var remainingTrials = vm.maxTrials - vm.activeTrials;
+      if (_.inRange(remainingTrials, 1, 4)) {
+        Notification.warning('trialModal.call.remainingDeviceTrials', {
+          number: remainingTrials
+        });
+      }
+    }
 
     function skip(skipped) {
       _trialDeviceData.skipDevices = skipped;
@@ -617,6 +652,13 @@
           return disabledChecks();
         }
       };
+    }
+
+    function hasExistingDevices() {
+      var devices = _.get($stateParams, 'details.details.devices');
+      return !_.every(devices, {
+        quantity: 0
+      });
     }
   }
 })();

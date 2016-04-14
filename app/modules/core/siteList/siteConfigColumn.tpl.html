@@ -1,6 +1,6 @@
 <div ng-if="!row.entity.showSiteLinks">
   <p class="ui-grid-cell-contents">
-    <i class="icon-spinner icon ui-grid-vcenter"></i>
+    <i class="icon-spinner icon"></i>
   </p>
 </div>
 
@@ -8,11 +8,11 @@
   <div ng-if="!row.entity.isError">
     <div ng-if="!row.entity.isIframeSupported">
       <launch-site admin-email-param={{row.entity.adminEmailParam}}
-                 advanced-settings={{row.entity.advancedSettings}}
-                 user-email-param={{row.entity.userEmailParam}}
-                 webex-advanced-url={{row.entity.webexAdvancedUrl}}
-                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings
-                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings></launch-site>
+                   advanced-settings={{row.entity.advancedSettings}}
+                   user-email-param={{row.entity.userEmailParam}}
+                   webex-advanced-url={{row.entity.webexAdvancedUrl}}
+                   id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings
+                   name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings></launch-site>
     </div>
   
     <div ng-if="row.entity.isIframeSupported">
@@ -21,7 +21,7 @@
          ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">
        
         <p class="ui-grid-cell-contents">
-          <i class="icon-settings icon ui-grid-vcenter"></i>
+          <i class="icon-settings icon"></i>
         </p>
       </a>
     </div>
@@ -34,7 +34,7 @@
          popover-placement="bottom">
          
       <p class="ui-grid-cell-contents">
-        <i class="icon-error icon err webex-alert-text ui-grid-vcenter"></i>
+        <i class="icon-error icon err webex-alert-text"></i>
       </p>
     </div>
   
@@ -44,7 +44,7 @@
          popover-placement="bottom">
          
         <p class="ui-grid-cell-contents">
-          <i class="icon-warning icon webex-attention-text ui-grid-vcenter"></i>
+          <i class="icon-warning icon webex-attention-text"></i>
         </p>
     </div>
   </div>

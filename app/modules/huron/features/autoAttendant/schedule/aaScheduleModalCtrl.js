@@ -33,7 +33,7 @@
     vm.oneAtATime = true;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
-      compareTo: $translate.instant('autoAttendant.scheduleClosedTimeCheck')
+      compareTo: $translate.instant('autoAttendant.holidayScheduleEndTimeCheck')
     };
     vm.monthOptions = [];
     vm.dayOptions = [];

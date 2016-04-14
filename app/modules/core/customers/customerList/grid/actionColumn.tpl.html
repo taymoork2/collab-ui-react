@@ -14,15 +14,10 @@
         <span ng-if="!grid.appScope.isOrgSetup(row.entity)" translate="customerPage.setupButton"></span>
       </a>
     </li>
-    <li cr-feature-toggle feature-show="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup">
+    <li ng-show="row.entity.isAllowedToManage && grid.appScope.isOrgSetup(row.entity) && row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup">
       <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown(); grid.appScope.addNumbers(row.entity)">
         <span translate="pstnSetup.setupPstn"></span>
-      </a>
-    </li>
-    <li cr-feature-toggle feature-hide="huron-pstn-setup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers">
-      <a href="" ng-click="$event.stopPropagation(); grid.appScope.closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})">
-        <span translate="didManageModal.buttonText"></span>
-      </a>
+    	</a>
     </li>
   </ul>
 </span>

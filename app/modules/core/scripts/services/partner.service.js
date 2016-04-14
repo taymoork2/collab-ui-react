@@ -6,8 +6,6 @@
 
   /* @ngInject */
   function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, TrialService, UrlConfig) {
-
-    var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
 
     var customerStatus = {
@@ -25,7 +23,6 @@
 
     var factory = {
       customerStatus: customerStatus,
-      getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
@@ -41,12 +38,12 @@
 
     return factory;
 
-    function getTrialsList() {
-      return $http.get(trialsUrl);
-    }
-
-    function getManagedOrgsList() {
-      return $http.get(managedOrgsUrl);
+    function getManagedOrgsList(searchText) {
+      return $http.get(managedOrgsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
     }
 
     // Series of fns dont make any sense, unless isTrial = null means something...
@@ -129,9 +126,9 @@
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
         trialId: customer.trialId,
-        customerOrgId: customer.customerOrgId,
-        customerName: customer.customerName,
-        customerEmail: customer.customerEmail,
+        customerOrgId: customer.customerOrgId || customer.id,
+        customerName: customer.customerName || customer.displayName,
+        customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         numUsers: customer.licenseCount,
         daysLeft: 0,
@@ -239,7 +236,7 @@
               licenseType: Config.licenseTypes.CONFERENCING
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATIONS
+              licenseType: Config.licenseTypes.COMMUNICATION
             });
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
@@ -287,6 +284,17 @@
 
       var deviceServiceText = [];
       var userServices = [];
+
+      _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
+        if (!licenseInfo) {
+          return;
+        }
+        switch (licenseInfo.licenseType) {
+        case Config.licenseTypes.COMMUNICATION:
+          partial.isSquaredUcOffer = true;
+          break;
+        }
+      });
 
       for (var offer in _.get(customer, 'offers', [])) {
         var offerInfo = customer.offers[offer];

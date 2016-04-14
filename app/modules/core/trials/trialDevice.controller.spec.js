@@ -1,15 +1,15 @@
-/* globals $controller, $q, $rootScope, TrialDeviceController, TrialCallService, TrialRoomSystemService*/
+/* globals $controller, $q, $rootScope, Notification, TrialDeviceController, TrialCallService, TrialDeviceService, TrialRoomSystemService*/
 'use strict';
 
 describe('Controller: TrialDeviceController', function () {
-  var controller, $scope, $translate;
+  var controller;
   var trialData = getJSONFixture('core/json/trials/trialData.json');
 
   beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialCallService', 'TrialRoomSystemService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'Notification', 'TrialCallService', 'TrialDeviceService', 'TrialRoomSystemService');
 
     controller = $controller('TrialDeviceController');
     $rootScope.$apply();
@@ -124,6 +124,65 @@ describe('Controller: TrialDeviceController', function () {
       expect(deviceModel.quantity).toBe(2);
       expect(deviceModel.enabled).toBe(true);
       expect(deviceModel.readonly).toBe(true);
+    });
+
+    it('should set device trial limits', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(17);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(false);
+    });
+
+    it('should set limitReached', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 20,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.activeTrials).toEqual(20);
+      expect(controller.maxTrials).toEqual(20);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should set limitsError', function () {
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.reject()
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(controller.limitsError).toBe(true);
+      expect(controller.limitReached).toBe(true);
+    });
+
+    it('should notify limit approaching', function () {
+      spyOn(Notification, 'warning');
+      bard.mockService(TrialDeviceService, {
+        getData: trialData.enabled.trials.deviceTrial,
+        getLimitsPromise: $q.when({
+          activeDeviceTrials: 17,
+          maxDeviceTrials: 20
+        })
+      });
+      controller = $controller('TrialDeviceController');
+      $rootScope.$apply();
+
+      expect(Notification.warning).toHaveBeenCalled();
     });
   });
 

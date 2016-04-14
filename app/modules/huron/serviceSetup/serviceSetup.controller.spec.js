@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService;
+  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer;
 
   var dialPlanDetailsNorthAmerica = [{
@@ -14,10 +14,10 @@ describe('Controller: ServiceSetup', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _ServiceSetup_, _Notification_,
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_,
     _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_) {
     $scope = $rootScope.$new();
-    // $state = _$state_;
+    $controller = _$controller_;
     $q = _$q_;
     ServiceSetup = _ServiceSetup_;
     Notification = _Notification_;
@@ -130,7 +130,9 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
+  }));
 
+  function initController() {
     controller = $controller('ServiceSetupCtrl', {
       $scope: $scope,
       $state: $state,
@@ -139,22 +141,43 @@ describe('Controller: ServiceSetup', function () {
 
     controller.form = form;
     $scope.$apply();
-  }));
+  }
 
-  it('should have customer service info', function () {
-    expect(controller.hasVoicemailService).toEqual(true);
+  describe('initController when is first time setup', function () {
+    beforeEach(function () {
+      $state.current.data.firstTimeSetup = true;
+      initController();
+    });
+
+    it('should have the default site steering digit removed from the steeringDigits array', function () {
+      var index = _.indexOf(controller.steeringDigits, '8');
+      expect(index).toEqual(-1);
+    });
   });
 
-  it('should have internal number ranges', function () {
-    expect(controller.model.numberRanges).toEqual(model.numberRanges);
-  });
+  describe('initController when is not first time setup', function () {
+    beforeEach(function () {
+      initController();
+    });
 
-  it('should have site steering digit removed from the steeringDigits array', function () {
-    var index = _.indexOf(controller.steeringDigits, model.site.siteSteeringDigit);
-    expect(index).toEqual(-1);
+    it('should have customer service info', function () {
+      expect(controller.hasVoicemailService).toEqual(true);
+    });
+
+    it('should have internal number ranges', function () {
+      expect(controller.model.numberRanges).toEqual(model.numberRanges);
+    });
+
+    it('should have site steering digit removed from the steeringDigits array', function () {
+      var index = _.indexOf(controller.steeringDigits, model.site.siteSteeringDigit);
+      expect(index).toEqual(-1);
+    });
   });
 
   describe('deleteInternalNumberRange', function () {
+    beforeEach(function () {
+      initController();
+    });
 
     it('should remove from list and notify success', function () {
       var index = 0;
@@ -203,6 +226,9 @@ describe('Controller: ServiceSetup', function () {
   });
 
   describe('initNext', function () {
+    beforeEach(function () {
+      initController();
+    });
 
     it('customer with voicemail service should create site', function () {
       var selectedPilotNumber = {
@@ -612,6 +638,10 @@ describe('Controller: ServiceSetup', function () {
   });
 
   describe('setServiceValues', function () {
+    beforeEach(function () {
+      initController();
+    });
+
     it('should call DialPlanService()', function () {
       expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
     });

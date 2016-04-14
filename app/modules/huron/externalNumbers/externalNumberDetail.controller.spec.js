@@ -35,6 +35,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
