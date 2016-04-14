@@ -3303,7 +3303,16 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
-
+  "sunlightDetails": {
+    "title": "Care",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features",
+    "featuresNotYetConfiguredPage": {
+      "createCT": "Create a Chat Template",
+      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "new": "New"
+    }
+  },
   "huronDetails": {
     "title": "Call",
     "linesTitle": "Numbers",
