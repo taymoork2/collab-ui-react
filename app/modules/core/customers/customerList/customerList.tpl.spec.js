@@ -5,7 +5,7 @@
     var $rootScope, $scope, $compile, $templateCache, $q, $controller, controller, view;
     var Authinfo, Orgservice, PartnerService, TrialService;
     var ADD_BUTTON = '#addTrial';
-
+    var SEARCH_FILTER = '#searchFilter';
     beforeEach(module('Core'));
     beforeEach(module('Huron'));
 
@@ -19,6 +19,7 @@
       Orgservice = _Orgservice_;
       TrialService = _TrialService_;
       $q = _$q_;
+      $scope.timeoutVal = 1;
       $rootScope.typeOfExport = {
         USER: 1,
         CUSTOMER: 2
@@ -47,6 +48,17 @@
         Authinfo.isCustomerPartner = true;
         initAndCompile();
         expect(view.find(ADD_BUTTON).length).toEqual(0);
+      });
+    });
+
+    describe('Customer name Search filter', function () {
+      it('clicking search box should call filterList', function () {
+        initAndCompile();
+        spyOn($scope, 'filterList').and.callFake(function (val) {
+
+        });
+        view.find(SEARCH_FILTER).val('customerName').change();
+        expect($scope.filterList).toHaveBeenCalledWith('customerName');
       });
     });
 

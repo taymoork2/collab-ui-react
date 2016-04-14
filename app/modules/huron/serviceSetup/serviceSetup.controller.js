@@ -316,9 +316,8 @@
               required: true,
               maxlength: 4,
               minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              })
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
+              isWarn: false
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -372,9 +371,8 @@
             templateOptions: {
               maxlength: 4,
               minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              }),
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
+              isWarn: false,
               required: true
             },
             expressionProperties: {

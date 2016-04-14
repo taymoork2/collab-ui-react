@@ -1622,6 +1622,7 @@
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1781,7 +1782,7 @@
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
     "siteError": "Failed to load site information.",
-    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -2269,7 +2270,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3303,7 +3305,16 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
-
+  "sunlightDetails": {
+    "title": "Care",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features",
+    "featuresNotYetConfiguredPage": {
+      "createCT": "Create a Chat Template",
+      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "new": "New"
+    }
+  },
   "huronDetails": {
     "title": "Call",
     "linesTitle": "Numbers",
