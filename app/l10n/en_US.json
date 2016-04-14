@@ -3834,17 +3834,17 @@
           "settings": "Settings"
         }
       },
-      "hybridMedia":{
+      "hybridMedia": {
         "title": "Media",
         "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
         "buttons": {
           "settings": "Settings"
         }
       },
-      "hybridContext":{
-        "title":"Context",
-        "description":"Set up the Media Service to host meetings in the Cloud and On-premise.",
-        "buttons":{
+      "hybridContext": {
+        "title": "Context",
+        "description": "Set up the Media Service to host meetings in the Cloud and On-premise.",
+        "buttons": {
           "settings": "Settings"
         }
       }
