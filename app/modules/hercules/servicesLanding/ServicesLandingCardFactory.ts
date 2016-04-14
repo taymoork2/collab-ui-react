@@ -10,7 +10,7 @@ namespace servicesLanding {
       createCards: function ():Array<ServicesLandingCard> {
         return [
           new ServicesLandingWebexCard(),
-          // new ServicesLandingMeetingCard()
+          new ServicesLandingMeetingCard()
         ];
       }
     };

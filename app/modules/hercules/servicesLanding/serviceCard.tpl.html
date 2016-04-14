@@ -11,9 +11,10 @@
     </a>
   </div>
   <div class="card-button">
-    <a ng-href="#/{{button.link}}" ng-repeat="button in card.buttons">
+    <a ng-href="#/{{button.link}}" ng-repeat="button in card.getButtons()">
       <button ng-class="button.class">{{button.name | translate}}</button>
     </a>
+    <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">{{card.getShowMoreButton().name | translate}}</a>
   </div>
 </section>
 

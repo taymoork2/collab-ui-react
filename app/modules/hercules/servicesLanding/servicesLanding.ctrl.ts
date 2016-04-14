@@ -9,13 +9,15 @@ namespace servicesLanding {
     constructor(Orgservice, private ServicesLandingCardFactory) {
 
       this.cards = ServicesLandingCardFactory.createCards();
+
+      this.loadWebexSiteList();
     }
 
     public hybridCards() {
       return this.cards;
     }
-    
-    public cloudCards(){
+
+    public cloudCards() {
       return this.cards;
     }
 
@@ -25,6 +27,10 @@ namespace servicesLanding {
           card[handlerName].apply(card, eventArgs);
         }
       });
+    }
+
+    private loadWebexSiteList() {
+      this.forwardEvent('updateWebexSiteList', [{}]);
     }
   }
   angular
