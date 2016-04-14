@@ -543,10 +543,13 @@ angular
               templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
             }
         .state('userRedirect', {
+          url: '/userRedirect',
           views: {
-            controller: 'userRedirectCtrl',
-            controllerAs: 'userRedirect',
-            templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html'
+            'main@': {
+              controller: 'userRedirectCtrl',
+              controllerAs: 'userRedirect',
+              templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html'
+            }
           }
         })
         .state('user-overview', {

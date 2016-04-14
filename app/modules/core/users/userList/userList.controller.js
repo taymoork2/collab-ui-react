@@ -76,9 +76,7 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
       $scope.isTelstraCsbEnabled = result;
-    });
-
-    init();
+    }).finally(init);
 
     ////////////////
 
