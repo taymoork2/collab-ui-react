@@ -23,7 +23,7 @@ function compile(files, dest, concatOut) {
     .src(files, {
       base: config.app
     })
-    .pipe($.if(true ||args.verbose, $.print()))
+    .pipe($.if(true || args.verbose, $.print()))
     .pipe($.sourcemaps.init())
     .pipe($.typescript({
       "removeComments": false,
@@ -34,7 +34,7 @@ function compile(files, dest, concatOut) {
       "listFiles": false,
       "sortOutput": true
     }, undefined, reporter))
-    .pipe($.if(!concatOut,$.rename(
+    .pipe($.if(!concatOut, $.rename(
       function (path) {
         if (path.basename.indexOf(SPEC_SUFFIX) > -1) {
           path.basename = path.basename.replace(SPEC_SUFFIX, '');
@@ -42,7 +42,7 @@ function compile(files, dest, concatOut) {
         }
       }
     )))
-    .pipe($.if(concatOut,concat('modules/core/ts-output.js')))
+    .pipe($.if(concatOut, concat('modules/core/ts-output.js')))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
     .pipe(reload({
