@@ -65,9 +65,9 @@
     function getAdminOrg(callback, oid) {
       var adminUrl = null;
       if (oid) {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + '?disableCache=true';
       } else {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '?disableCache=true';
       }
 
       $http.get(adminUrl)

@@ -885,7 +885,13 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
     "disableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to enable Single Sign-On (SSO)."
+    "enableSSOFailure": "Failed to enable Single Sign-On (SSO).",
+    "modifySSOLabel": "Modify",
+    "ssoEnabledStatus": "Single sign-on is enabled",
+    "ssoNotEnabledStatus": "Single sign-on is not enabled",
+    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "idpOverwriteWarning": "SSO is already Enabled. Uploading the new Idp Metadata will overwrite the existing one. Do you wish to continue?",
+    "disableSSOByRadioWarning": "Selecting the built-in identity service will disable your existing SSO configuration. You won't be able to undo this selection. Are you sure you'd like to switch to simple user authentication?"
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",

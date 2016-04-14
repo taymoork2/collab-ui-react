@@ -131,7 +131,7 @@ describe('orgService', function () {
   it('should successfully get an admin organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?disableCache=true').respond(200, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -141,7 +141,7 @@ describe('orgService', function () {
   it('should fail to get an admin organization for a given orgId', function () {
     var orgId = 123;
     var callback = sinon.stub();
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?disableCache=true').respond(500, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -151,7 +151,7 @@ describe('orgService', function () {
   it('should successfully get an admin organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(200, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?disableCache=true').respond(200, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
@@ -161,7 +161,7 @@ describe('orgService', function () {
   it('should fail to get an admin organization for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();
-    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId).respond(500, {});
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '?disableCache=true').respond(500, {});
     Orgservice.getAdminOrg(callback, orgId);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);

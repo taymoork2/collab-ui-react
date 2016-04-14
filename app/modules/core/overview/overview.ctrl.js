@@ -105,6 +105,10 @@
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
 
+    $rootScope.$watch('ssoEnabled', function () {
+      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
+    });
+
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {
         $state.go('calendar-service.list');
@@ -119,6 +123,13 @@
     vm.showEnterpriseSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings'
+      });
+    };
+
+    vm.showSSOSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings',
+        currentStep: 1
       });
     };
 

@@ -45,6 +45,7 @@
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
+    vm.currentStep = $stateParams.currentStep;
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
@@ -99,7 +100,11 @@
       }
       var steps = getSteps();
       if (steps.length > 0) {
-        vm.current.step = steps[0];
+        if ($stateParams.currentStep) {
+          vm.current.step = steps[$stateParams.currentStep];
+        } else {
+          vm.current.step = steps[0];
+        }
       }
     }
 
