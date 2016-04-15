@@ -135,8 +135,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     tests = [].concat(
       config.testFiles.e2e.squared,
       config.testFiles.e2e.hercules,
-      // Sunlight tests currently all disabled so no sense adding it to e2e task list
-      //config.testFiles.e2e.sunlight,
+      config.testFiles.e2e.sunlight,
       config.testFiles.e2e.webex,
       config.testFiles.e2e.mediafusion
     );
