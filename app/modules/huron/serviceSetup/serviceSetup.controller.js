@@ -948,16 +948,9 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) && voicemailToggleEnabled) {
-          if (!vm.hasVoicemailService) {
-            // If the customer doesn't have voicemail service, then get the existing
-            // timezone first before updating since voicemail was just enabled.
-            return listVoicemailTimezone(vm.timeZoneOptions).then(function () {
-              return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-            });
-          } else {
-            return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-          }
+        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+
+          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
         }
       }
 

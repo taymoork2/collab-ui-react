@@ -566,7 +566,7 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
@@ -655,7 +655,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ModalService.open).not.toHaveBeenCalled();
     });
 
-    it('customer without voicemail should update site and change voicemail timezone', function () {
+    it('customer without voicemail should update site and not change voicemail timezone', function () {
       var selectedPilotNumber = {
         pattern: '+19728965000',
         label: '(972) 896-5000'
@@ -677,7 +677,7 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });
