@@ -2269,9 +2269,7 @@
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (angular.isFunction($scope.getStatus)) {
-              $scope.loadingDirSyncUsers = true;
               return $scope.getStatus().then(function () {
-                $scope.loadingDirSyncUsers = false;
                 resolve();
               });
             } else {
