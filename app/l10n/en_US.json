@@ -1717,7 +1717,7 @@
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
-    "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
+    "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).\n{{trackingId}}",
     "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
     "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",

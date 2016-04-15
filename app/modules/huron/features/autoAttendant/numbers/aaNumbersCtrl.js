@@ -142,8 +142,9 @@
       resources.push(resource);
 
       // Assign the number in CMI
-      saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
-
+      // TODO: Remove the force
+      //saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
+      saveAANumberAssignments(Authinfo.getOrgId(), "1", resources).then(
         function (response) {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
@@ -172,7 +173,8 @@
               Notification.error('autoAttendant.errorAddCMI', {
                 phoneNumber: number,
                 statusText: response.statusText,
-                status: response.status
+                status: response.status,
+                trackingId: response.config.headers.TrackingID
               });
 
               resources.pop();
@@ -184,7 +186,8 @@
           Notification.error('autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
-            status: response.status
+            status: response.status,
+            trackingId: response.config.headers.TrackingID
           });
 
           resources.pop();
