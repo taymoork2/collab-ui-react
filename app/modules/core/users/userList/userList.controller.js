@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($dialogs, $location, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
+  function UserListCtrl($dialogs, $location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -74,9 +74,13 @@
     $scope.startExportUserList = startExportUserList;
     $scope.isNotDirSyncOrException = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-      $scope.isTelstraCsbEnabled = result;
-    }).finally(init);
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)
+      ])
+      .then(function (result) {
+        $scope.isCsvEnhancementToggled = result[0];
+        $scope.isTelstraCsbEnabled = result[1];
+      }).finally(init);
 
     ////////////////
 
@@ -88,13 +92,6 @@
     }
 
     function checkOrg() {
-      // Getting Toggles
-      FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement).then(function (toggled) {
-        if (_.isBoolean(toggled)) {
-          $scope.isCsvEnhancementToggled = toggled;
-        }
-      });
-
       // Allow Cisco org to use the Circle Plus button
       // Otherwise, block the DirSync orgs from using it
       if (Authinfo.isCisco()) {
