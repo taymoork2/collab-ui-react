@@ -3791,6 +3791,10 @@
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   },
   "servicesLanding": {
+    "cloudServices":"Cloud services",
+    "hybridServices":"Hybrid services",
+    "showAllCards":"Show all cards",
+    "showActiveCards":"Show active cards only",
     "cards": {
       "webex": {
         "title": "Message",

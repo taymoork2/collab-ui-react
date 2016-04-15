@@ -6,7 +6,7 @@
   <h1>Services</h1>
 
   <div class="servicesBlock">
-    <h5><span>Cloud services</span></h5>
+    <h5><span translate="servicesLanding.cloudServices"></span></h5>
     <cs-card-layout>
       <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
                ng-repeat="card in servicesLandingCtrl.cloudCards()">
@@ -14,78 +14,20 @@
       </cs-card>
     </cs-card-layout>
 
-    <h5><span>Hybrid services</span>
+    <h5><span translate="servicesLanding.hybridServices"></span>
       <cs-header-right>
         <i class="icon icon-three-dots" ng-click="servicesLandingCtrl.toggleDropdown()"></i>
         <ul class="dropdown" ng-if="servicesLandingCtrl.showFilterDropDown">
-          <li ng-click="servicesLandingCtrl.filterHybridCard('all')">Show all cards</li>
-          <li ng-click="servicesLandingCtrl.filterHybridCard('active')">Show active cards only</li>
+          <li ng-click="servicesLandingCtrl.filterHybridCard('all')" translate="servicesLanding.showAllCards"></li>
+          <li ng-click="servicesLandingCtrl.filterHybridCard('active')" translate="servicesLanding.showActiveCards"></li>
         </ul>
       </cs-header-right>
     </h5>
-
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
       <cs-card class="large-3 medium-6 small-12 header-bar" ng-class="card.cardClass"
                ng-repeat="card in servicesLandingCtrl.hybridCards()">
-               <!--ng-if="showLayout=='active'">-->
         <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
-
-    <!--<cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
-      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar"
-               ng-repeat="card in servicesLandingCtrl.hybridCards() | filter: {active:true}"
-               ng-if="showLayout=='active'">
-        <article>
-          <header>
-            <h4><i class="icon card.icon"></i> {{card.title}}</h4>
-          </header>
-          <section>
-            <p>
-              {{card.descr}}
-            </p>
-            <div class="card-button" ng-if="card.active != true">
-              <a ng-href="#/{{card.link}}">
-                <button class="cta-btn">Enable</button>
-              </a>
-            </div>
-            <div class="card-button" ng-if="card.active == true">
-              <a ng-href="#/{{card.link}}">
-                <button>Resources</button>
-              </a>
-              <a ng-href="#/{{card.link}}/settings">
-                <button>Settings</button>
-              </a>
-            </div>
-          </section>
-        </article>
-      </cs-card>
-
-      <cs-card class="large-3 medium-6 small-12 header-bar cta-bar" ng-repeat="card in cards" ng-if="showLayout=='all'">
-        <article>
-          <header>
-            <h4><i class="icon card.icon"></i> {{card.title | translate}}</h4>
-          </header>
-          <section>
-            <p>
-              {{card.descr}}
-            </p>
-            <div class="card-button" ng-if="card.active != true">
-              <a ng-href="#/{{card.link}}">
-                <button class="cta-btn">Enable</button>
-              </a>
-            </div>
-            <div class="card-button" ng-if="card.active == true">
-              <a ng-href="#/{{card.link}}">
-                <button>Resources</button>
-              </a>
-              <a ng-href="#/{{card.link}}/settings">
-                <button>Settings</button>
-              </a>
-            </div>
-          </section>
-        </article>
-      </cs-card>
-    </cs-card-layout>-->
   </div>
 </div>
