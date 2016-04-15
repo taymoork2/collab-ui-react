@@ -26,6 +26,8 @@
     return directive;
 
     function link(scope, element, attrs) {
+      var FILENAME = 'exported_file.csv';
+
       scope.downloading = false;
       scope.downloadingMessage = '';
       scope.type = scope.type || CsvDownloadService.typeAny;
@@ -39,7 +41,7 @@
 
         if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser) {
           startDownload(csvType);
-          CsvDownloadService.getCsv(csvType, tooManyUsers).then(function (url) {
+          CsvDownloadService.getCsv(csvType, tooManyUsers, scope.filename).then(function (url) {
             finishDownload(csvType, url);
           }).catch(function (response) {
             if (response.status !== -1) {
@@ -77,7 +79,10 @@
             if (scope.type === CsvDownloadService.typeAny) {
               downloadingIcon.mouseout();
             }
-            downloadAnchor[0].click();
+            if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
+              // in IE this causes the page to refresh
+              downloadAnchor[0].click();
+            }
             Notification.success('csvDownload.csvDownloadSuccess', {
               type: csvType
             });
@@ -95,14 +100,24 @@
 
       function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          // scope.tempFunction = scope.downloadCsv;
+          scope.tempFunction = scope.downloadCsv;
           scope.downloadCsv = removeFocus;
-          downloadAnchor.attr({
+
+          if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
+            downloadAnchor.attr({
               href: url,
-              download: scope.filename || 'exported_file.csv'
+              download: scope.filename || FILENAME
             })
             .removeAttr('disabled');
+          } else {
+            // IE download option since IE won't download the created url
+            scope.downloadCsv = openInIE;
+          }
         });
+      }
+
+      function openInIE() {
+        CsvDownloadService.openInIE(scope.type, scope.filename || FILENAME);
       }
 
       function changeAnchorAttrToOriginalState() {

@@ -16,13 +16,14 @@
     var userExportUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/%s';
     var downloadInProgress = false;
     var isTooManyUsers = false;
-    var canceler;
+    var canceler, objectBlob, templateBlob;
 
     var service = {
       typeTemplate: typeTemplate,
       typeUser: typeUser,
       typeAny: typeAny,
       getCsv: getCsv,
+      openInIE: openInIE,
       createObjectUrl: createObjectUrl,
       revokeObjectUrl: revokeObjectUrl,
       getObjectUrl: getObjectUrl,
@@ -35,7 +36,7 @@
 
     return service;
 
-    function getCsv(csvType, tooManyUsers) {
+    function getCsv(csvType, tooManyUsers, fileName) {
       tooManyUsers = _.isBoolean(tooManyUsers) ? tooManyUsers : false;
       isTooManyUsers = tooManyUsers;
       var options = null;
@@ -44,7 +45,7 @@
           var csvString = $.csv.fromObjects(csvData, {
             headers: false
           });
-          return createObjectUrl(csvString, csvType);
+          return createObjectUrl(csvString, csvType, fileName);
         });
       } else {
         var url = '';
@@ -54,17 +55,17 @@
           return $http.get(url, {
             timeout: canceler.promise
           }).then(function (csvData) {
-            return createObjectUrl(csvData.data, csvType);
+            return createObjectUrl(csvData.data, csvType, fileName);
           }).finally(function () {
             canceler = undefined;
           });
         } else {
           url = Utils.sprintf(userExportUrl, [csvType]);
           return $http.get(url).then(function (csvData) {
-            if (csvType === typeHeaders) {
-              return csvData.data;
+            if (csvType.data === typeHeaders) {
+              return csvData;
             } else {
-              return createObjectUrl(csvData.data, csvType);
+              return createObjectUrl(csvData.data, csvType, fileName);
             }
           });
         }
@@ -79,16 +80,32 @@
       }
     }
 
-    function createObjectUrl(data, type) {
+    function createObjectUrl(data, type, fileName) {
       var blob = new Blob([data], {
         type: 'text/plain'
       });
       var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+      objectBlob = blob;
       setObjectUrl(oUrl);
       if (type === typeTemplate) {
+        templateBlob = blob;
         setObjectUrlTemplate(oUrl);
       }
+
+      // IE download option since IE won't download the created url
+      if (window.navigator.msSaveOrOpenBlob) {
+        openInIE(type, fileName);
+      }
+
       return oUrl;
+    }
+
+    function openInIE(type, fileName) {
+      if (type === typeTemplate && objectBlob) {
+        window.navigator.msSaveOrOpenBlob(objectBlob, fileName || 'exported_file.csv');
+      } else if (templateBlob) {
+        window.navigator.msSaveOrOpenBlob(templateBlob, fileName || 'exported_file.csv');
+      }
     }
 
     function revokeObjectUrl() {
