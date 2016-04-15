@@ -2,7 +2,6 @@
   'use strict';
 
   var pageDirectiveNames = [
-    'ctName',
     'ctProfile',
     'ctOverview',
     'ctCustomer',
@@ -13,7 +12,7 @@
     'ctEmbedCode'
   ];
 
-  pageDirectiveNames.map(function (directiveName) {
+  pageDirectiveNames.forEach(function (directiveName) {
     angular
       .module('Sunlight')
       .directive(directiveName, function () {

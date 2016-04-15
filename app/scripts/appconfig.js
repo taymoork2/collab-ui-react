@@ -2039,14 +2039,18 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('careDetailsBase', {
+        .state('care', {
+          parent: 'main',
+          abstract: true
+        })
+        .state('care.DetailsBase', {
           parent: 'main',
           abstract: true,
           templateUrl: 'modules/sunlight/details/details.tpl.html'
         })
-        .state('careDetails', {
+        .state('care.Details', {
           url: '/careDetails',
-          parent: 'careDetailsBase',
+          parent: 'care.DetailsBase',
           views: {
             'header': {
               templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
@@ -2058,16 +2062,16 @@ angular
             }
           }
         })
-        .state('careSettings', {
+        .state('care.Settings', {
           url: '/settings',
-          parent: 'careDetails'
+          parent: 'care.Details'
         })
-        .state('careFeatures', {
+        .state('care.Features', {
           url: '/features',
-          parent: 'careDetails',
+          parent: 'care.Details',
           templateUrl: 'modules/sunlight/features/features.tpl.html'
         })
-        .state('careChatSA', {
+        .state('care.ChatSA', {
           url: '/careChat',
           views: {
             'main@': {

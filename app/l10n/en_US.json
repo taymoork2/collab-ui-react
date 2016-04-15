@@ -3394,7 +3394,6 @@
   },
   "careChatTpl": {
     "createTitle": "Create Chat Template",
-    "name": "",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
     "customerInfo": "Customer Info Screen",
@@ -3403,7 +3402,6 @@
     "offHours": "Off-Hours",
     "chatStrings": "Chat Strings Configuration",
     "embedCode": "Embed Code",
-    "nameDesc": "",
     "profileDesc": "Select how your company will be represented",
     "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
     "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",

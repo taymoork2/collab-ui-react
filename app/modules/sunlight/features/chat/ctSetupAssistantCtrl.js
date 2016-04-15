@@ -6,7 +6,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($modal, $timeout) {
+  function CareChatSetupAssistantCtrl($scope, $modal, $timeout) {
     var vm = this;
 
     vm.cancelModal = cancelModal;
@@ -33,11 +33,13 @@
     vm.embedCodePageIndex = 8;
 
     vm.totalPages = 9;
+    $scope.animationTimeout = 10;
 
-    // Event key codes
-    vm.escapeKey = 27;
-    vm.leftArrow = 37;
-    vm.rightArrow = 39;
+    $scope.startPageIndex = 0;
+
+    $scope.escapeKey = 27;
+    $scope.leftArrow = 37;
+    $scope.rightArrow = 39;
 
     function cancelModal() {
       $modal.open({
@@ -45,17 +47,17 @@
       });
     }
 
-    function evalKeyPress($keyCode) {
-      switch ($keyCode) {
-      case vm.escapeKey:
+    function evalKeyPress(keyCode) {
+      switch (keyCode) {
+      case $scope.escapeKey:
         cancelModal();
         break;
-      case vm.rightArrow:
+      case $scope.rightArrow:
         if (nextButton(getPageIndex()) === true) {
           nextPage();
         }
         break;
-      case vm.leftArrow:
+      case $scope.leftArrow:
         if (previousButton(getPageIndex()) === true) {
           previousPage();
         }
@@ -69,15 +71,15 @@
       return vm.pageIndex;
     }
 
-    function nextButton($index) {
-      if ($index === (vm.totalPages - 1)) {
+    function nextButton(index) {
+      if (index === (vm.totalPages - 1)) {
         return 'hidden';
       }
       return true;
     }
 
-    function previousButton($index) {
-      if ($index === 0) {
+    function previousButton(index) {
+      if (index === $scope.startPageIndex) {
         return 'hidden';
       }
       return true;
@@ -87,14 +89,14 @@
       vm.animation = 'slide-left';
       $timeout(function () {
         vm.pageIndex++;
-      }, 10);
+      }, $scope.animationTimeout);
     }
 
     function previousPage() {
       vm.animation = 'slide-right';
       $timeout(function () {
         vm.pageIndex--;
-      }, 10);
+      }, $scope.animationTimeout);
     }
 
   }
