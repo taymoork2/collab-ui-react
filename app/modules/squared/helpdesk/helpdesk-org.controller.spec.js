@@ -91,7 +91,7 @@ describe('Controller: HelpdeskOrgController', function () {
       httpBackend.verifyNoOutstandingExpectation();
     });
 
-    it('allow read only access', function () {
+    it('allow read only access for marvel partners', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
@@ -118,7 +118,7 @@ describe('Controller: HelpdeskOrgController', function () {
       expect(orgController.allowLaunchAtlas).toBeTruthy();
     });
 
-    it('dont allow read only access', function () {
+    it('dont allow read only access for marvel partners', function () {
       sinon.stub(HelpdeskService, 'getOrg');
       var deferredOrgLookupResult = q.defer();
       deferredOrgLookupResult.resolve({
@@ -126,6 +126,59 @@ describe('Controller: HelpdeskOrgController', function () {
         "displayName": "Marvel",
         "managedBy": [{
           "orgId": "ce8d17f8-1734-4a54-8510-fae65acc505e"
+        }],
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}']
+      });
+      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService
+      });
+      httpBackend.flush();
+      expect(orgController.allowLaunchAtlas).toBeFalsy();
+    });
+
+    it('allow read only access for arkadin partners', function () {
+      sinon.stub(HelpdeskService, 'getOrg');
+      var deferredOrgLookupResult = q.defer();
+      deferredOrgLookupResult.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36"
+        }],
+        "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": true}']
+      });
+      HelpdeskService.getOrg.returns(deferredOrgLookupResult.promise);
+
+      orgController = $controller('HelpdeskOrgController', {
+        HelpdeskService: HelpdeskService,
+        $translate: $translate,
+        $scope: $scope,
+        LicenseService: LicenseService,
+        Config: Config,
+        $stateParams: $stateParams,
+        XhrNotificationService: XhrNotificationService,
+        Authinfo: Authinfo
+      });
+      httpBackend.flush();
+      expect(orgController.allowLaunchAtlas).toBeTruthy();
+    });
+
+    it('dont allow read only access for arkadin partners', function () {
+      sinon.stub(HelpdeskService, 'getOrg');
+      var deferredOrgLookupResult = q.defer();
+      deferredOrgLookupResult.resolve({
+        "id": "whatever",
+        "displayName": "Marvel",
+        "managedBy": [{
+          "orgId": "d5235404-6637-4050-9978-e3d0f4338c36"
         }],
         "orgSettings": ['{"isEFT":true, "allowReadOnlyAccess": false}']
       });
