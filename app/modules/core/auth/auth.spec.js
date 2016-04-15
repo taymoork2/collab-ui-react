@@ -48,16 +48,16 @@ describe('Auth Service', function () {
     expect($window.location.href).toBe('oauthURL');
   });
 
-  it('should get account info using correct API', function (done) {
+  it('should get customer account info using correct API', function (done) {
     UrlConfig.getAdminServiceUrl = sinon.stub().returns('foo/');
 
     $httpBackend
-      .expectGET('foo/organization/bar/accounts')
+      .expectGET('foo/customers?orgId=bar')
       .respond(200, {
         foo: 'bar'
       });
 
-    Auth.getAccount('bar').then(function (res) {
+    Auth.getCustomerAccount('bar').then(function (res) {
       expect(res.data.foo).toBe('bar');
       _.defer(done);
     });
@@ -340,7 +340,7 @@ describe('Auth Service', function () {
         Authinfo.updateAccountInfo = sinon.stub();
 
         $httpBackend
-          .expectGET('path/organization/42/accounts')
+          .expectGET('path/customers?orgId=42')
           .respond(200, {});
 
         Auth.authorize().then(function () {

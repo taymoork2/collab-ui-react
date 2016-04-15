@@ -203,18 +203,18 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts || [];
+            var customerAccounts = data.customers || [];
 
-            if (accounts.length > 0) {
+            if (customerAccounts.length > 0) {
               authData.hasAccount = true;
             }
 
-            for (var x = 0; x < accounts.length; x++) {
+            for (var x = 0; x < customerAccounts.length; x++) {
 
-              var account = accounts[x];
+              var customerAccount = customerAccounts[x];
 
-              for (var l = 0; l < account.licenses.length; l++) {
-                var license = account.licenses[l];
+              for (var l = 0; l < customerAccount.licenses.length; l++) {
+                var license = customerAccount.licenses[l];
                 var service = null;
 
                 // Store license before filtering

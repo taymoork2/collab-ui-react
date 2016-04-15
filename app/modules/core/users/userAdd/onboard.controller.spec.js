@@ -72,8 +72,6 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(Notification, 'notify');
-    spyOn(Userservice, 'onboardUsers');
-    spyOn(Userservice, 'bulkOnboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
@@ -84,12 +82,16 @@ describe('OnboardCtrl: Ctrl', function () {
     }));
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
-    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
+
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
     spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
+    spyOn(Userservice, 'onboardUsers');
+    spyOn(Userservice, 'bulkOnboardUsers');
+    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
+    spyOn(Userservice, 'updateUsers');
   }));
 
   function initController() {
@@ -431,6 +433,23 @@ describe('OnboardCtrl: Ctrl', function () {
       expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
     });
 
+    it('editServicesSave', function () {
+      $scope.currentUser = {
+        userName: 'johndoe@example.com'
+      };
+      $scope.editServicesSave();
+      $scope.$apply();
+      expect($scope.usrlist.length).toEqual(1);
+      expect($scope.usrlist[0]).toEqual(jasmine.objectContaining({
+        address: 'johndoe@example.com',
+        assignedDn: internalNumbers[0],
+        externalNumber: externalNumbers[0]
+      }));
+      expect($state.go).toHaveBeenCalledWith('editService.dn');
+      expect($scope.editServicesFlow).toBe(true);
+      expect($scope.convertUsersFlow).toBe(false);
+    });
+
     it('assignDNForUserList', function () {
 
       $scope.assignDNForUserList();
@@ -498,4 +517,175 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
   });
+
+  describe('shouldAddCallService()', function () {
+    describe('current user without call service', function () {
+      beforeEach(initUserWithoutCall);
+      beforeEach(initController);
+
+      describe('should add call service', function () {
+        afterEach(expectShouldAddCallService);
+
+        it('if both commRadio and ciscoUC are enabled', function () {
+          $scope.radioStates.commRadio = true;
+          $scope.entitlements.ciscoUC = true;
+        });
+
+        it('if commRadio is enabled', function () {
+          $scope.radioStates.commRadio = true;
+          $scope.entitlements.ciscoUC = false;
+        });
+
+        it('if ciscoUC is enabled', function () {
+          $scope.radioStates.commRadio = false;
+          $scope.entitlements.ciscoUC = true;
+        });
+      });
+
+      describe('should not add call service', function () {
+        afterEach(expectShouldNotAddCallService);
+
+        it('if neither commRadio or ciscoUC is enabled', function () {
+          $scope.radioStates.commRadio = false;
+          $scope.entitlements.ciscoUC = false;
+        });
+      });
+    });
+
+    describe('current user with call should not add call service', function () {
+      beforeEach(initUserWithCall);
+      beforeEach(initController);
+      afterEach(expectShouldNotAddCallService);
+
+      it('if both commRadio and ciscoUC are enabled', function () {
+        $scope.radioStates.commRadio = true;
+        $scope.entitlements.ciscoUC = true;
+      });
+
+      it('if commRadio is enabled', function () {
+        $scope.radioStates.commRadio = true;
+        $scope.entitlements.ciscoUC = false;
+      });
+
+      it('if ciscoUC is enabled', function () {
+        $scope.radioStates.commRadio = false;
+        $scope.entitlements.ciscoUC = true;
+      });
+
+      it('if neither commRadio or ciscoUC is enabled', function () {
+        $scope.radioStates.commRadio = false;
+        $scope.entitlements.ciscoUC = false;
+      });
+    });
+
+    function expectShouldAddCallService() {
+      expect($scope.shouldAddCallService()).toBe(true);
+    }
+
+    function expectShouldNotAddCallService() {
+      expect($scope.shouldAddCallService()).toBe(false);
+    }
+
+    function initUserWithoutCall() {
+      $stateParams.currentUser = {
+        entitlements: []
+      };
+    }
+
+    function initUserWithCall() {
+      $stateParams.currentUser = {
+        entitlements: ['ciscouc']
+      };
+    }
+  });
+
+  describe('editServicesSave()', function () {
+    describe('if adding call service', function () {
+      beforeEach(initControllerAndEnableCall);
+      beforeEach(editServicesSave);
+
+      it('should activateDID and goto editService.dn state', function () {
+        expect($state.go).toHaveBeenCalledWith('editService.dn');
+      });
+    });
+
+    describe('if not adding call service', function () {
+      beforeEach(initController);
+      beforeEach(initSpy);
+      beforeEach(editServicesSave);
+
+      it('should update user license', function () {
+        expect($scope.updateUserLicense).toHaveBeenCalled();
+      });
+    });
+
+    function editServicesSave() {
+      $scope.editServicesSave();
+      $scope.$apply();
+    }
+
+    function initSpy() {
+      spyOn($scope, 'updateUserLicense');
+    }
+  });
+
+  describe('updateUserLicense()', function () {
+    beforeEach(initCurrentUserAndController);
+
+    describe('with a current user', function () {
+      beforeEach(updateUserLicense);
+
+      it('should call Userservice.updateUsers() with the current user', function () {
+        expect(Userservice.updateUsers).toHaveBeenCalled();
+        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
+          address: $stateParams.currentUser.userName,
+          name: undefined
+        }]);
+      });
+    });
+
+    describe('with an existing usrlist array', function () {
+      beforeEach(initCustomUsrList);
+      beforeEach(updateUserLicense);
+
+      it('should call Userservice.updateUsers() with the custom user list', function () {
+        expect(Userservice.updateUsers).toHaveBeenCalled();
+        expect(Userservice.updateUsers.calls.mostRecent().args[0]).toEqual([{
+          address: $scope.usrlist[0].address
+        }]);
+      });
+    });
+
+    function initCustomUsrList() {
+      $scope.usrlist = [{
+        address: 'customTestUser'
+      }];
+    }
+
+    function updateUserLicense() {
+      $scope.updateUserLicense();
+      $scope.$apply();
+    }
+  });
+
+  function initUserShouldAddCall() {
+    $scope.radioStates.commRadio = true;
+    $scope.$apply();
+  }
+
+  function initCurrentUser() {
+    $stateParams.currentUser = {
+      userName: 'testUser'
+    };
+  }
+
+  function initCurrentUserAndController() {
+    initCurrentUser();
+    initController();
+  }
+
+  function initControllerAndEnableCall() {
+    initCurrentUserAndController();
+    initUserShouldAddCall();
+  }
 });

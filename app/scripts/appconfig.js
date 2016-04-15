@@ -648,11 +648,21 @@ angular
           views: {
             'modal@': {
               controller: 'OnboardCtrl',
+              template: '<div ui-view="editServices"></div>'
+            },
+            'editServices@editService': {
               templateUrl: 'modules/core/users/userPreview/editServices.tpl.html'
             }
           },
           params: {
             currentUser: {}
+          }
+        })
+        .state('editService.dn', {
+          views: {
+            'editServices@editService': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
           }
         })
         .state('user-overview', {

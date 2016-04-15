@@ -10,7 +10,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   var service = {
     logout: logout,
     authorize: authorize,
-    getAccount: getAccount,
+    getCustomerAccount: getCustomerAccount,
     isLoggedIn: isLoggedIn,
     setAccessToken: setAccessToken,
     redirectToLogin: redirectToLogin,
@@ -38,8 +38,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return deferred;
   }
 
-  function getAccount(org) {
-    var url = UrlConfig.getAdminServiceUrl() + 'organization/' + org + '/accounts';
+  function getCustomerAccount(org) {
+    var url = UrlConfig.getAdminServiceUrl() + 'customers?orgId=' + org;
     return httpGET(url);
   }
 
@@ -181,7 +181,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   function initializeAuthinfo(authData) {
     Authinfo.initialize(authData);
     if (Authinfo.isAdmin()) {
-      return getAccount(Authinfo.getOrgId())
+      return getCustomerAccount(Authinfo.getOrgId())
         .then(function (res) {
           Authinfo.updateAccountInfo(res.data);
           Authinfo.initializeTabs();

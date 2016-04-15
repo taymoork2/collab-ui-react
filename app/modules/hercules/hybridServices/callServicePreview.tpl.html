@@ -54,7 +54,7 @@
         && callServiceAware.status.state === 'error'
         && callServiceAware.status.description"
         class="cloud-extension-label status-error">
-      {{callServiceAware.status.description.defaultMessage}}
+      {{callServiceAware.status.description}}
     </span>
     </div>
 
@@ -82,12 +82,11 @@
       <span class="cloud-extension-label">{{'cloudExtensions.enterpriseDn' | translate}}:</span>
       <span class="cloud-extension-label status-notActivated">{{callServiceConnect.enterpriseDn}}</span>
     </div>
-
     <span
       ng-if="callServiceConnect.entitled
       && callServiceConnect.status.state === 'error'"
       class="cloud-extension-label status-error">
-      {{callServiceConnect.status.description.defaultMessage}}
+      {{callServiceConnect.status.description}}
     </span>
 
   </cs-sp-section>
