@@ -130,18 +130,18 @@
       }
 
       function cancelDownload() {
-        var deferred = $q.defer();
-        if (CsvDownloadService.downloadInProgress) {
-          CsvDownloadService.cancelDownload();
-          flagDownloading(false);
-          changeAnchorAttrToOriginalState();
-          $timeout(function () {
-            deferred.resolve();
-          }, 1000);
-        } else {
-          deferred.resolve();
-        }
-        return deferred.promise;
+        return $q(function (resolve, reject) {
+          if (CsvDownloadService.downloadInProgress) {
+            CsvDownloadService.cancelDownload();
+            flagDownloading(false);
+            changeAnchorAttrToOriginalState();
+            $timeout(function () {
+              resolve();
+            }, 1000);
+          } else {
+            resolve();
+          }
+        });
       }
 
       // dynamic CSV download

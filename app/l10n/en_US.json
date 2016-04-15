@@ -1461,6 +1461,7 @@
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
+    "loadingDirSyncUsers": "Loading the synced user list. This may take some time depending on the size of users...",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
@@ -2970,14 +2971,14 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "WebEx-SiteUsers.tsv",
+    "csvExportResultsFilename": "WebEx-SiteUsers.csv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "WebEx-ImportErr.tsv",
+    "csvImportErrFilename": "WebEx-ImportErr.csv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
@@ -3554,7 +3555,7 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Managment"
+          "squared-fusion-mgmt": "Management"
 
         }
       }
