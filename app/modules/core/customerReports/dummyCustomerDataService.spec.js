@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: Dummy Customer Reports', function () {
+describe('Controller: Dummy Customer Reports', function () {
   var DummyCustomerReportService;
   var timeFilter = [{
     value: 0

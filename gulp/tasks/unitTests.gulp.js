@@ -168,7 +168,9 @@ function createGulpKarmaConfigModule(module) {
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(gulp.src(unitTestFiles, { read: false }), {
+        .pipe($.inject(gulp.src(unitTestFiles, {
+          read: false
+        }), {
           addRootSlash: false,
           starttag: '// inject:unitTestFiles',
           endtag: '// end-inject:unitTestFiles',
@@ -176,7 +178,7 @@ function createGulpKarmaConfigModule(module) {
             return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
           }
         }))
-        .pipe($.replace('// inject:reporters', args.fast ? '' : "'junit', 'coverage', 'html'"))
+        .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({
           basename: 'karma-unit-' + module,

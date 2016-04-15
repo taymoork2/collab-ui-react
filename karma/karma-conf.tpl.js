@@ -1,6 +1,3 @@
-// Karma configuration
-// http://karma-runner.github.io/0.13/config/configuration-file.html
-
 module.exports = function (config) {
   'use strict';
 
@@ -98,7 +95,7 @@ module.exports = function (config) {
     colors: true,
 
     reporters: [
-      'dots', 
+      'dots'
       // inject:reporters
     ],
 
