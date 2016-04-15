@@ -42,7 +42,6 @@ describe('Controller: AASayMessageCtrl', function () {
     AALanguageService = _AALanguageService_;
     Notification = _Notification_;
 
-
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 
     $scope.schedule = schedule;
@@ -298,64 +297,4 @@ describe('Controller: AASayMessageCtrl', function () {
       });
     });
   });
-
-   describe('should test sayMessage for chars not allowed', function () {
-    beforeEach(inject(function ($controller, _$rootScope_) {
-      $scope = $rootScope;
-
-      controller = $controller('AASayMessageCtrl', {
-        $scope: $scope
-      });
-      $scope.$apply();
-    }));
-
-    describe('keyPress', function () {
-      it('should display error message when < or > are entered', function () {
-        var errorSpy;
-
-
-        errorSpy = jasmine.createSpy('error');
-        Notification.error = errorSpy;
-
-        var event = {};
-
-        event.keyCode = 60;
-	event.preventDefault = function(){};
-
-        expect(controller).toBeDefined();
-        
-        controller.keyPress(event);
-
-        expect(errorSpy).toHaveBeenCalled();	
-
-        event.keyCode = 62;
-
-        controller.keyPress(event);
-
-        expect(errorSpy).toHaveBeenCalled();	
-
-      });
-
-      it('should not display error message when valid char is entered', function () {
-        var errorSpy;
-
-        errorSpy = jasmine.createSpy('error');
-        Notification.error = errorSpy;
-
-        var event = {};
-
-        event.keyCode = 97;
-
-        expect(controller).toBeDefined();
-        
-        controller.keyPress(event);
-
-        expect(errorSpy).not.toHaveBeenCalled();	
-
-      });
-
-    });
-
-  });
-
 });

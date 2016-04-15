@@ -2,7 +2,7 @@
     <div class="row">
       <div class="small-12 columns">
         <label for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-        <textarea class="aa-message-textarea" ng-keypress="aaSay.keyPress($event)" ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
+        <textarea class="aa-message-textarea" aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
       </div>
     </div>
     <div class="row">
@@ -26,5 +26,5 @@
 </div>
 <div ng-if="aaSay.isMessageInputOnly()">
     <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-    <textarea ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+    <textarea aa-keypress ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
 </div>

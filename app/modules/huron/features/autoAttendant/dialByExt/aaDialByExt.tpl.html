@@ -1,12 +1,12 @@
 <div ng-if="aaDialByExtCtrl.isTextOnly" id="dialByTextOnly">
   <label class= 'control-label' for="dialByMessageInput{{ schedule + index + keyIndex}}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-    <textarea aa-key="$index" ng-keypress="aaDialByExtCtrl.keyPress($event)" ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" maxlength="2000" ></textarea>
+    <textarea aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" maxlength="2000" ></textarea>
 </div>
 
 <div ng-if="!aaDialByExtCtrl.isTextOnly" id="dialBySay" class="aa-dial-by-message-panel">
   <div class="row">
     <label for="dialByMessageInput{{ schedule + index }}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
-      <textarea class="aa-dial-by-message-textarea" aa-key="$index" ng-keypress="aaDialByExtCtrl.keyPress($event)" ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
+      <textarea class="aa-dial-by-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
   </div>
   <div class="row">
     <div class="large-6 small-12 columns aa-dial-by-message-select-list">

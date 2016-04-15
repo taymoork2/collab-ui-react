@@ -32,15 +32,6 @@
       value: ''
     };
 
-    // for now don't allow right/left angle brackets
-    var charsNotAllowed = [{
-      'keyCode': 60,
-      char: '<'
-    }, {
-      'keyCode': 62,
-      char: '>'
-    }];
-
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
 
     vm.menuEntry = {};
@@ -64,25 +55,8 @@
     vm.getFooter = getFooter;
     vm.getMessageLabel = getMessageLabel;
     vm.isMessageInputOnly = isMessageInputOnly;
-    vm.keyPress = keyPress;
 
     /////////////////////
-
-    function keyPress(e) {
-      var keyCode = e.which || e.keyCode;
-
-      if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
-
-        Notification.error('autoAttendant.sayMessageInvalidChar', {
-          char: _.find(charsNotAllowed, {
-            'keyCode': keyCode
-          }).char
-        });
-        e.preventDefault();
-      }
-
-    }
-
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
       setVoiceOption();
