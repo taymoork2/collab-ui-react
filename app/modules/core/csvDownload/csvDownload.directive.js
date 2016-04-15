@@ -100,7 +100,7 @@
 
       function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          scope.tempFunction = scope.downloadCsv;
+          // scope.tempFunction = scope.downloadCsv;
           scope.downloadCsv = removeFocus;
 
           if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
