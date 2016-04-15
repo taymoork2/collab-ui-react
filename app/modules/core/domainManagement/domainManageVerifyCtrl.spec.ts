@@ -3,7 +3,7 @@
 namespace domainManagement {
   declare let sinon:any;
   describe('DomainManagementVerifyCtrl', ()=> {
-      let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementVerifyCtrl, DomainManagementService, verifyDomainInvoked;
+      let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementService, verifyDomainInvoked;
       beforeEach(angular.mock.module('Core'));
       beforeEach(angular.mock.module('Hercules'));
 
