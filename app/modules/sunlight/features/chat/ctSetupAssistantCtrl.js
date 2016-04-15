@@ -6,7 +6,7 @@
     .controller('CareChatSetupAssistantCtrl', CareChatSetupAssistantCtrl);
 
   /* @ngInject */
-  function CareChatSetupAssistantCtrl($scope, $modal, $timeout) {
+  function CareChatSetupAssistantCtrl($modal, $timeout) {
     var vm = this;
 
     vm.cancelModal = cancelModal;
@@ -17,29 +17,28 @@
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
     vm.previousButton = previousButton;
-    vm.pageIndex = 0;
     vm.getPageIndex = getPageIndex;
     vm.animation = 'slide-left';
 
     // Setup Assistant pages with index
-    vm.namePageIndex = 0;
-    vm.profilePageIndex = 1;
-    vm.overviewPageIndex = 2;
-    vm.customerInfoPageIndex = 3;
-    vm.feedbackPageIndex = 4;
-    vm.agentUnavailablePageIndex = 5;
-    vm.offHoursPageIndex = 6;
-    vm.chatStringsPageIndex = 7;
-    vm.embedCodePageIndex = 8;
+    vm.states = ['name',
+      'profile',
+      'overview',
+      'customer',
+      'feedback',
+      'agentUnavailable',
+      'offHours',
+      'chatStrings',
+      'embedCode'
+    ];
 
-    vm.totalPages = 9;
-    $scope.animationTimeout = 10;
+    vm.currentState = vm.states[0];
 
-    $scope.startPageIndex = 0;
+    vm.animationTimeout = 10;
 
-    $scope.escapeKey = 27;
-    $scope.leftArrow = 37;
-    $scope.rightArrow = 39;
+    vm.escapeKey = 27;
+    vm.leftArrow = 37;
+    vm.rightArrow = 39;
 
     function cancelModal() {
       $modal.open({
@@ -49,16 +48,16 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-      case $scope.escapeKey:
+      case vm.escapeKey:
         cancelModal();
         break;
-      case $scope.rightArrow:
-        if (nextButton(getPageIndex()) === true) {
+      case vm.rightArrow:
+        if (nextButton(vm.currentState) === true) {
           nextPage();
         }
         break;
-      case $scope.leftArrow:
-        if (previousButton(getPageIndex()) === true) {
+      case vm.leftArrow:
+        if (previousButton(vm.currentState) === true) {
           previousPage();
         }
         break;
@@ -68,18 +67,18 @@
     }
 
     function getPageIndex() {
-      return vm.pageIndex;
+      return vm.states.indexOf(vm.currentState);
     }
 
-    function nextButton(index) {
-      if (index === (vm.totalPages - 1)) {
+    function nextButton() {
+      if (vm.currentState === vm.states[vm.states.length - 1]) {
         return 'hidden';
       }
       return true;
     }
 
-    function previousButton(index) {
-      if (index === $scope.startPageIndex) {
+    function previousButton() {
+      if (vm.currentState === vm.states[0]) {
         return 'hidden';
       }
       return true;
@@ -88,15 +87,15 @@
     function nextPage() {
       vm.animation = 'slide-left';
       $timeout(function () {
-        vm.pageIndex++;
-      }, $scope.animationTimeout);
+        vm.currentState = vm.states[getPageIndex() + 1];
+      }, vm.animationTimeout);
     }
 
     function previousPage() {
       vm.animation = 'slide-right';
       $timeout(function () {
-        vm.pageIndex--;
-      }, $scope.animationTimeout);
+        vm.currentState = vm.states[getPageIndex() - 1];
+      }, vm.animationTimeout);
     }
 
   }

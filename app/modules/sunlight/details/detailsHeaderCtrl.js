@@ -14,7 +14,7 @@
       state: 'care.Features'
     }, {
       title: 'sunlightDetails.settingsTitle',
-      state: 'careSettings'
+      state: 'care.Settings'
     }];
   }
 })();
