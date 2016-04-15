@@ -6,6 +6,7 @@
 
   /* @ngInject */
   function CsvDownloadService(Authinfo, $http, $q, UrlConfig, Utils, UserListService) {
+    var FILENAME = 'exported_file.csv';
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
@@ -62,8 +63,8 @@
         } else {
           url = Utils.sprintf(userExportUrl, [csvType]);
           return $http.get(url).then(function (csvData) {
-            if (csvType.data === typeHeaders) {
-              return csvData;
+            if (csvType === typeHeaders) {
+              return csvData.data;
             } else {
               return createObjectUrl(csvData.data, csvType, fileName);
             }
@@ -101,10 +102,10 @@
     }
 
     function openInIE(type, fileName) {
-      if (type === typeTemplate && objectBlob) {
-        window.navigator.msSaveOrOpenBlob(objectBlob, fileName || 'exported_file.csv');
-      } else if (templateBlob) {
-        window.navigator.msSaveOrOpenBlob(templateBlob, fileName || 'exported_file.csv');
+      if (type === typeTemplate && templateBlob) {
+        window.navigator.msSaveOrOpenBlob(templateBlob, fileName || FILENAME);
+      } else if (objectBlob) {
+        window.navigator.msSaveOrOpenBlob(objectBlob, fileName || FILENAME);
       }
     }
 
@@ -112,6 +113,7 @@
       if (getObjectUrl()) {
         (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
+        objectBlob = null;
       }
     }
 

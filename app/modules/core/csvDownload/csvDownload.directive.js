@@ -105,10 +105,10 @@
 
           if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
             downloadAnchor.attr({
-              href: url,
-              download: scope.filename || FILENAME
-            })
-            .removeAttr('disabled');
+                href: url,
+                download: scope.filename || FILENAME
+              })
+              .removeAttr('disabled');
           } else {
             // IE download option since IE won't download the created url
             scope.downloadCsv = openInIE;
