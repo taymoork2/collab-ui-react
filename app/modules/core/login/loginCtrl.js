@@ -24,7 +24,6 @@ angular.module('Core')
         SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
 
-      Utils.isIe();
       $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
       $scope.login = function (keyCode) {

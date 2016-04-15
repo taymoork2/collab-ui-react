@@ -17,8 +17,6 @@
       $window.location.href = "https://marketplace.telstra.com/";
     }
 
-    Utils.isIe();
     Utils.checkForIeWorkaround();
-
   }
 })();
