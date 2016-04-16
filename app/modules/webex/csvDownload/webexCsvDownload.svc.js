@@ -105,11 +105,23 @@
         intBytes.push(intByte);
       });
 
-      for (var i = 2; i < data.length; ++i) {
+      for (var i = 0; i < data.length; ++i) {
         var hexByte = data[i].charCodeAt(0).toString(16);
         var intByte = parseInt(hexByte, 16);
 
-        intBytes.push(intByte);
+        /*
+        if (20 > i) {
+          logMsg = funcName + "\n" +
+            "data[" + i + "]=" + data[i] + "\n" +
+            "hexByte=" + hexByte + "\n" +
+            "intByte=" + intByte;
+          $log.log(logMsg);
+        }
+        */
+        
+        if (2 <= i) {
+            intBytes.push(intByte);
+        }
       }
 
       var blobData = [new Uint8Array(intBytes)];
