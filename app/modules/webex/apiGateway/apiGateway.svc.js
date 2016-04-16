@@ -113,7 +113,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
           logMsg = funcName + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           successResult.details = response;
           errorResult.details = response;
