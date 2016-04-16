@@ -118,9 +118,9 @@
           $log.log(logMsg);
         }
         */
-        
+
         if (2 <= i) {
-            intBytes.push(intByte);
+          intBytes.push(intByte);
         }
       }
 
