@@ -109,14 +109,14 @@
         var hexByte = data[i].charCodeAt(0).toString(16);
         var intByte = parseInt(hexByte, 16);
 
-        if (2 > i) {
+        if (2 <= i) {
+          intBytes.push(intByte);
+        } else {
           logMsg = funcName + "\n" +
             "data[" + i + "]=" + data[i] + "\n" +
             "hexByte=" + hexByte + "\n" +
             "intByte=" + intByte;
           $log.log(logMsg);
-        } else {
-          intBytes.push(intByte);
         }
       }
 
