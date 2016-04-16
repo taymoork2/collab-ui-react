@@ -112,7 +112,9 @@
         intBytes.push(intByte);
       }
 
-      var blob = new Blob([new Uint8Array(intBytes)], {
+      var blobData = [new Uint8Array(intBytes)];
+
+      var blob = new Blob(blobData, {
         type: 'text/csv;charset=UTF-16LE;'
       });
 
