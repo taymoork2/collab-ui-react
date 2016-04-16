@@ -527,11 +527,21 @@ angular
           views: {
             'modal@': {
               controller: 'OnboardCtrl',
+              template: '<div ui-view="editServices"></div>'
+            },
+            'editServices@editService': {
               templateUrl: 'modules/core/users/userPreview/editServices.tpl.html'
             }
           },
           params: {
             currentUser: {}
+          }
+        })
+        .state('editService.dn', {
+          views: {
+            'editServices@editService': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
           }
         })
         .state('user-overview', {
@@ -2030,6 +2040,42 @@ angular
           templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
           controller: 'CiSyncCtrl',
           controllerAs: 'sync'
+        });
+    }
+  ]);
+
+angular
+  .module('Sunlight')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('careDetailsBase', {
+          parent: 'main',
+          abstract: true,
+          templateUrl: 'modules/sunlight/details/details.tpl.html'
+        })
+        .state('careDetails', {
+          url: '/careDetails',
+          parent: 'careDetailsBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
+              controller: 'DetailsHeaderCtrl',
+              controllerAs: 'header'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('careSettings', {
+          url: '/settings',
+          parent: 'careDetails'
+        })
+        .state('careFeatures', {
+          url: '/features',
+          parent: 'careDetails',
+          templateUrl: 'modules/sunlight/features/features.tpl.html'
         });
     }
   ]);

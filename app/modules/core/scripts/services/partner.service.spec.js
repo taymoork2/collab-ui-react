@@ -4,7 +4,7 @@ describe('Partner Service -', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $translate, $rootScope, PartnerService, TrialService, Authinfo, Config;
+  var $httpBackend, $translate, $rootScope, PartnerService, TrialService, Authinfo, Config, UrlConfig;
 
   var testData;
 
@@ -20,7 +20,7 @@ describe('Partner Service -', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _TrialService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$translate_, _$rootScope_, _PartnerService_, _TrialService_, _Config_, _Authinfo_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     $translate = _$translate_;
     PartnerService = _PartnerService_;
@@ -28,6 +28,7 @@ describe('Partner Service -', function () {
     Config = _Config_;
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
+    UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
   }));
@@ -71,6 +72,17 @@ describe('Partner Service -', function () {
       expect(data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
     });
 
+    $httpBackend.flush();
+  });
+
+  it('should successfully return an array of 5 customers from calling getManagedOrgsList with customerName search', function () {
+    var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs' + '?customerName=searchStr';
+    $httpBackend.whenGET(url).respond(testData.managedOrgsResponse.data);
+    PartnerService.getManagedOrgsList('searchStr').then(function (response) {
+      expect(response.data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
+      expect(response.data.organizations.length).toBe(5);
+      expect(response.status).toBe(200);
+    });
     $httpBackend.flush();
   });
 
@@ -192,6 +204,15 @@ describe('Partner Service -', function () {
     // Verify additional properties are set to the corresponding license object and added to customer object.
     expect(activeList[1].conferencing.features.length).toBe(3);
     expect(activeList[1].messaging.features.length).toBe(4);
+  });
+
+  it('should successfully return an object containing email, orgid, and orgname from getAdminOrg', function () {
+    var myOrg = getJSONFixture('core/json/organizations/Orgservice.json').getOrg;
+    var returnList = PartnerService.loadRetrievedDataToList([myOrg], false);
+
+    expect(returnList[0].customerOrgId).toBe(myOrg.id);
+    expect(returnList[0].customerName).toBe(myOrg.displayName);
+    expect(returnList[0].customerEmail).toBe(myOrg.email);
   });
 
   it('should verify that every org has a list of offers', function () {
@@ -334,6 +355,59 @@ describe('Partner Service -', function () {
             {
               id: Config.offerTypes.collab
             },
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+      });
+
+      it('should set isSquaredUcOffer to true, only if any of the "licenseType" property matches the value for Config.licenseTypes.COMMUNICATION', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.COMMUNICATION
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: Config.licenseTypes.MESSAGING
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            }, // presence anywhere in this list should set the property to true
+            {
+              licenseType: Config.licenseTypes.CONFERENCING
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(true);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+            licenseType: Config.licenseTypes.MESSAGING
+          }, {
+            licenseType: Config.licenseTypes.CONFERENCING
+          }]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+      });
+
+      it('should not throw errors when licenses have undefined values', function () {
+        var data = PartnerService.parseLicensesAndOffers({
+          licenses: [
+            undefined, {
+              licenseType: undefined
+            }
+          ]
+        });
+        expect(data.isSquaredUcOffer).toBe(false);
+
+        data = PartnerService.parseLicensesAndOffers({
+          licenses: [{
+              licenseType: undefined
+            }, {
+              licenseType: Config.licenseTypes.COMMUNICATION
+            },
+            undefined
           ]
         });
         expect(data.isSquaredUcOffer).toBe(true);

@@ -392,14 +392,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       };
 
       controller.removeNumber(rawCeInfo.assignedResources[0].number);
-
       $scope.$apply();
 
       // we should have 3 numbers now
       expect(controller.availablePhoneNums.length).toEqual(3);
       // and the 1234567 should have sorted first
       expect(controller.availablePhoneNums[0].value).toEqual("1234567");
-
+      $httpBackend.flush();
+      expect(AACommonService.isFormDirty()).toBe(true);
       var numobj = controller.availablePhoneNums.filter(function (obj) {
         return obj.value == rawCeInfo.assignedResources[0].number;
       });
@@ -434,12 +434,10 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       var resources = controller.ui.ceInfo.getResources();
 
       resources.push(resource);
-
       controller.removeNumber(rawCeInfo.assignedResources[0].number);
-
       $scope.$apply();
       $httpBackend.flush();
-
+      expect(AACommonService.isValid()).toBe(false);
       expect(errorSpy).toHaveBeenCalled();
 
     });

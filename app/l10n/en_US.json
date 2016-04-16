@@ -165,6 +165,7 @@
       "200": "entitled successfully",
       "404": "does not exist",
       "409": "entitlement previously updated",
+      "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
       "other": "not entitled, status: {{status}}"
     }
   },
@@ -554,6 +555,8 @@
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
     "roles": "Roles",
+    "readOnlyHeader": "Read-Only",
+    "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
@@ -920,6 +923,7 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
+    "errorGettingTimeZoneToggle": "Failed to get atlasHuronDeviceTimeZone feature toggle",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
@@ -1405,7 +1409,7 @@
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
     "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
     "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
@@ -1453,7 +1457,7 @@
     "defaultPlaceholder": "Default",
     "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Directory Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
-    "installStep3": "3. Test the synchronization agreement.",
+    "installStep3": "3. Test the synchronization agreement. This operation may take some time depending on the number of users being synchronized.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
@@ -1618,6 +1622,7 @@
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1713,7 +1718,7 @@
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
-    "errorRemoveCMI": "Unable to remove assigned phone number(s).",
+    "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
     "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
@@ -1777,7 +1782,7 @@
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
     "siteError": "Failed to load site information.",
-    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1945,6 +1950,7 @@
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "orderNumber": "Order Number",
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
@@ -2264,7 +2270,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -3173,6 +3180,7 @@
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importRejectedToast": "Import failed, try again.",
     "importInvalidFileToast": "Choose a file for import.",
+    "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3297,7 +3305,16 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
-
+  "sunlightDetails": {
+    "title": "Care",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features",
+    "featuresNotYetConfiguredPage": {
+      "createCT": "Create a Chat Template",
+      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "new": "New"
+    }
+  },
   "huronDetails": {
     "title": "Call",
     "linesTitle": "Numbers",
@@ -3537,7 +3554,7 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Managment"
+          "squared-fusion-mgmt": "Management"
 
         }
       }
@@ -3712,7 +3729,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "viewPortal": "View Customer"
+    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "view": "View"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3793,5 +3812,11 @@
     "csvDownloadIsRunning": "An export task is already running. Please try again later.",
     "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+  },
+  "readOnlyModal": {
+    "banner": "You are in read-only mode",
+    "title": "Read Only",
+    "okButton": "OK",
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
   }
 }

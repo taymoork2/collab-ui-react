@@ -55,7 +55,8 @@ describe('Controller: HuronSettingsCtrl', function () {
       ServiceSetup.sites = sites;
       return $q.when();
     });
-    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
@@ -68,7 +69,6 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.when(cosRestrictions));
     spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.when());
     spyOn(InternationalDialing, 'isDisableInternationalDialing').and.returnValue($q.when(true));
-
     spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.when(customerCarriers));
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
@@ -249,6 +249,13 @@ describe('Controller: HuronSettingsCtrl', function () {
       "timeZone": 3,
       "objectId": "d297d451-35f0-420a-a4d5-7db6cd941a72"
     }];
+
+    controller.model.site.timeZone = {
+      "value": "Pacific/Honolulu",
+      "label": "(GMT-10:00) Hawaii",
+      "timezoneid": "2"
+
+    };
 
     ServiceSetup.listVoicemailTimezone.and.returnValue($q.when(userTemplate));
 
@@ -726,6 +733,42 @@ describe('Controller: HuronSettingsCtrl', function () {
       expect(controller.model.callerId.callerIdNumber).toEqual(expectedValue);
       expect(controller.model.callerId.callerIdName).toEqual('Cisco Org Name');
     });
+
+    it('should update timezone when timezone selection changes and feature toggle is ON', function () {
+      controller.init();
+      $scope.$apply();
+      controller.model.site.timeZone = {
+        "value": "America/Anchorage",
+        "label": "(GMT-09:00) Alaska",
+        "timezoneid": "3"
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+
+    it('should not update timezone when timezone selection did not change and Feature toggle is ON', function () {
+      /* the default "timezoneid = 4" is loaded in the beginnig
+        so updating the timezone with same id will not result in any updates
+        being sent to unity and updm */
+      controller.init();
+      $scope.$apply();
+      controller.model.site.timeZone = {
+        "value": "America/Los_Angeles",
+        "label": "(GMT-08:00) Pacific Time (US & Canada)",
+        "timezoneid": "4"
+      };
+      controller.save();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+
   });
 
 });

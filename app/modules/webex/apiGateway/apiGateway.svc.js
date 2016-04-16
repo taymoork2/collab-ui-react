@@ -34,6 +34,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var httpsObj = null;
       var csvUrl = null;
+      var accessToken = null;
 
       WebExApiGatewayConstsService.csvAPIs.forEach(
         function checkAPI(csvAPI) {
@@ -42,7 +43,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
             csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
 
-            var accessToken = Storage.get('accessToken');
+            accessToken = Storage.get('accessToken');
 
             httpsObj = {
               url: csvUrl,

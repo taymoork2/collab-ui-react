@@ -58,7 +58,7 @@
             $scope.text.size = 18;
             $scope.text.y = 6;
           } else if (typeof value === 'undefined' || value.toString().length > 3) {
-            $scope.text.size = 32;
+            $scope.text.size = 25;
             $scope.text.y = 12;
           } else {
             if (tsize) {

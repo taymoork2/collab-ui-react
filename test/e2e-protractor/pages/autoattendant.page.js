@@ -14,8 +14,10 @@ var AutoAttendantPage = function () {
   this.saveButton = element(by.name('saveButton'));
   this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+  this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+  this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
 
   this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
 
@@ -114,9 +116,9 @@ var AutoAttendantPage = function () {
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
-  this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
-  this.toggleHolidayWhenOpenCloseExpanded = element(by.css('div.simple-accordion.aa-holidays a.icon-right-arrow.pull-right'));
+  this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
   this.addholiday = element(by.css('#addHoliday'));
+  this.deleteHoliday = element(by.css('div.simple-accordion.aa-holidays')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));
   this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
   this.recurAnnually = element(by.name('recurAnnually1'));
@@ -155,6 +157,7 @@ var AutoAttendantPage = function () {
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
+  this.assertImportSuccess = assertImportSuccess;
   this.importSchedule = element(by.id('importSchedule'));
   this.importContinue = element(by.id('importCtn'));
   this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
@@ -166,6 +169,11 @@ var AutoAttendantPage = function () {
   function assertCreateSuccess(test) {
     notifications.assertSuccess(test + ' created successfully');
   }
+
+  function assertImportSuccess(hours, holidays) {
+    notifications.assertSuccess("Imported " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
+  }
+
 };
 
 module.exports = AutoAttendantPage;

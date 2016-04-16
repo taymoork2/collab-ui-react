@@ -66,7 +66,8 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
+
+  return utils.sendRequest(options).then(function (result) {
     return 200;
   });
 };
@@ -96,8 +97,9 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
-    return 204;
+
+  return utils.sendRequest(options).then(function (result) {
+    return 200;
   });
 };
 
@@ -118,15 +120,24 @@ exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 exports.deleteTestAA = function (bearer, data) {
   var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
+
+    var AAsToDelete = [];
+
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
 
-      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
+      var delAA = exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
 
         return exports.deleteNumberAssignments(data[i].callExperienceURL, bearer);
 
       });
+
+      AAsToDelete.push(delAA);
     }
+
   }
+
+  return Promise.all(AAsToDelete);
+
 };
 
 //

@@ -16,7 +16,7 @@
 
     function getCallCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'ciscouc');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.COMMUNICATIONS);
+      return new OrgCard(entitled, licenses, Config.licenseTypes.COMMUNICATION);
     }
 
     function getRoomSystemsCardForOrg(org, licenses) {

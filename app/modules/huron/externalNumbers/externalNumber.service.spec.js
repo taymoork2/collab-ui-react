@@ -1,15 +1,16 @@
 'use strict';
 
 describe('Service: ExternalNumberService', function () {
-  var $rootScope, $httpBackend, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
-  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse;
+  var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
+  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
   var customerId, externalNumber;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _PstnSetupService_, _ExternalNumberPool_) {
+  beforeEach(inject(function (_$rootScope_, _$httpBackend_, _$translate_, _$q_, _ExternalNumberService_, _HuronConfig_, _PstnSetupService_, _ExternalNumberPool_) {
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
+    $translate = _$translate_;
     $q = _$q_;
     ExternalNumberService = _ExternalNumberService_;
     PstnSetupService = _PstnSetupService_;
@@ -26,6 +27,9 @@ describe('Service: ExternalNumberService', function () {
       pattern: '123'
     }, {
       pattern: '456'
+    }, {
+      pattern: '(123) XXX-XXXX',
+      quantity: 1
     }];
 
     unassignedNumbers = [{
@@ -59,6 +63,14 @@ describe('Service: ExternalNumberService', function () {
       numbers: []
     };
 
+    malformedAdvanceOrder = {
+      orderNumber: 654987
+    };
+
+    pendingAdvanceOrder = '(123) XXX-XXXX Quantity: 1';
+
+    malformedAdvanceOrderLabel = 'Order Number 654987';
+
     externalNumbers = unassignedNumbers.concat(assignedNumbers);
     allNumbers = pendingNumbers.concat(externalNumbers);
 
@@ -68,6 +80,7 @@ describe('Service: ExternalNumberService', function () {
     spyOn(PstnSetupService, 'deleteNumber');
     spyOn(ExternalNumberPool, 'deletePool');
     spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
+    spyOn($translate, 'instant');
   }));
 
   it('should only retrieve external numbers if not a terminus customer', function () {
@@ -83,12 +96,27 @@ describe('Service: ExternalNumberService', function () {
   });
 
   it('should refresh numbers', function () {
+    $translate.instant.and.returnValue('Quantity');
     ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual(allNumbers);
     expect(ExternalNumberService.getPendingNumbers()).toEqual(pendingNumbers);
     expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedNumbers);
+    expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
+      label: pendingAdvanceOrder
+    }));
+  });
+
+  it('should refresh numbers and get order number for malformed advance order', function () {
+    pendingNumbers.push(malformedAdvanceOrder);
+    $translate.instant.and.returnValue('Order Number');
+    ExternalNumberService.refreshNumbers();
+
+    $rootScope.$apply();
+    expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
+      label: malformedAdvanceOrderLabel
+    }));
   });
 
   it('should get unassigned numbers that aren\'t pending', function () {

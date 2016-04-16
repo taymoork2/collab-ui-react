@@ -9,17 +9,17 @@
   function USSService($http, UrlConfig, Authinfo) {
     var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
     var statusesParameterRequestString = function (serviceId, state, limit) {
-      var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId();
+      var statefilter = state ? '&state=' + state : '';
+      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&entitled=true';
     };
     return {
       getStatusesForUser: function (userId, callback) {
         $http
-          .get(USSUrl + '/userStatuses?userId=' + userId + '&orgId=' + Authinfo.getOrgId())
+          .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
           .success(function (data) {
             callback(null, {
               userStatuses: _.filter(data.userStatuses, function (nugget) {
-                return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
+                return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
               })
             });
           })
@@ -68,7 +68,7 @@
       },
       getStatusesSummary: function (callback) {
         $http
-          .get(USSUrl + '/userStatuses/summary?orgId=' + Authinfo.getOrgId())
+          .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
           .success(function (data) {
             callback(null, data);
           })
@@ -78,7 +78,7 @@
       },
       getStatuses: function (callback, serviceId, state, limit) {
         $http
-          .get(USSUrl + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
+          .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
           .success(function (data) {
             callback(null, data);
           })

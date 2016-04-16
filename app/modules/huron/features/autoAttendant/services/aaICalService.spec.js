@@ -6,31 +6,31 @@ describe('Service: AACalendarService', function () {
   var starttime, endtime;
   var defaultRange = {
     days: [{
-      label: 'Monday',
+      abbr: 'MO',
       index: 1,
       active: false
     }, {
-      label: 'Tuesday',
+      abbr: 'TU',
       index: 2,
       active: false
     }, {
-      label: 'Wednesday',
+      abbr: 'WE',
       index: 3,
       active: false
     }, {
-      label: 'Thursday',
+      abbr: 'TH',
       index: 4,
       active: false
     }, {
-      label: 'Friday',
+      abbr: 'FR',
       index: 5,
       active: false
     }, {
-      label: 'Saturday',
+      abbr: 'SA',
       index: 6,
       active: false
     }, {
-      label: 'Sunday',
+      abbr: 'SU',
       index: 0,
       active: false
     }]
@@ -66,9 +66,23 @@ describe('Service: AACalendarService', function () {
   beforeEach(inject(function (_AAICalService_, _ical_) {
     AAICalService = _AAICalService_;
     ical = _ical_;
-    var date = new Date();
-    starttime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '8', 0, 0);
-    endtime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), '17', 0, 0);
+    var date = moment();
+    starttime = moment({
+      year: date.year(),
+      month: date.month(),
+      date: date.date(),
+      hour: 8,
+      minute: 0,
+      second: 0
+    });
+    endtime = moment({
+      year: date.year(),
+      month: date.month(),
+      date: date.date(),
+      hour: 17,
+      minute: 0,
+      second: 0
+    });
   }));
 
   describe('createCalendar', function () {
@@ -122,8 +136,8 @@ describe('Service: AACalendarService', function () {
       range.days[4].active = true;
       range.days[5].active = true;
       range.days[6].active = true;
-      range.starttime = new Date(starttime);
-      range.endtime = new Date(endtime);
+      range.starttime = moment(starttime);
+      range.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range);
       var calendarRaw = {};
       calendarRaw.scheduleData = calendar.toString();
@@ -146,28 +160,28 @@ describe('Service: AACalendarService', function () {
       range.days[6].active = true;
       //Today is a closed day
       var today = _.find(range.days, function (day) {
-        if (starttime.getDay() == day.index) {
+        if (starttime.day() == day.index) {
           return day;
         }
       });
       today.active = false;
-      range.starttime = new Date(starttime);
-      range.endtime = new Date(endtime);
+      range.starttime = moment(starttime);
+      range.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range);
       var calendarRaw = {};
       calendarRaw.scheduleData = calendar.toString();
       var rangeFromCalendar = AAICalService.getHoursRanges(calendarRaw).hours;
       expect(rangeFromCalendar.length).toEqual(1);
       expect(rangeFromCalendar[0].days).toEqual(range.days);
-      expect(rangeFromCalendar[0].starttime.toString()).toEqual(moment(starttime).add(1, 'day').toDate().toString());
-      expect(rangeFromCalendar[0].endtime.toString()).toEqual(moment(endtime).add(1, 'day').toDate().toString());
+      expect(rangeFromCalendar[0].starttime.toString()).toEqual(moment(starttime).add(1, 'day').toString());
+      expect(rangeFromCalendar[0].endtime.toString()).toEqual(moment(endtime).add(1, 'day').toString());
     });
 
     it('add hours range without days to the calendar and should add nothing to the calendar', function () {
       var calendar = AAICalService.createCalendar();
       var range = AAICalService.getDefaultRange();
-      range.starttime = new Date(starttime);
-      range.endtime = new Date(endtime);
+      range.starttime = moment(starttime);
+      range.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range);
       expect(calendar).toEqual(AAICalService.createCalendar());
     });
@@ -181,7 +195,7 @@ describe('Service: AACalendarService', function () {
       range.days[3].active = true;
       range.days[4].active = true;
 
-      range.endtime = new Date(endtime);
+      range.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range);
       expect(calendar).toEqual(AAICalService.createCalendar());
     });
@@ -194,7 +208,7 @@ describe('Service: AACalendarService', function () {
       range.days[2].active = true;
       range.days[3].active = true;
       range.days[4].active = true;
-      range.starttime = new Date(starttime);
+      range.starttime = moment(starttime);
 
       AAICalService.addHoursRange('open', calendar, range);
       expect(calendar).toEqual(AAICalService.createCalendar());
@@ -208,14 +222,14 @@ describe('Service: AACalendarService', function () {
       range1.days[2].active = true;
       range1.days[3].active = true;
       range1.days[4].active = true;
-      range1.starttime = new Date(starttime);
-      range1.endtime = new Date(endtime);
+      range1.starttime = moment(starttime);
+      range1.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range1);
       var range2 = AAICalService.getDefaultRange();
       range2.days[5].active = true;
       range2.days[6].active = true;
-      range2.starttime = new Date(starttime);
-      range2.endtime = new Date(endtime);
+      range2.starttime = moment(starttime);
+      range2.endtime = moment(endtime);
       AAICalService.addHoursRange('open', calendar, range2);
       var calendarRaw = {};
       calendarRaw.scheduleData = calendar.toString();
