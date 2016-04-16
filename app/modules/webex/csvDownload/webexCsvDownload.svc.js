@@ -74,9 +74,10 @@
       fileDownloadUrl
     ) {
 
+      var funcName = "getWebExCsv)";
       var logMsg = "";
 
-      logMsg = "WebExCsvDownloadService().getWebExCsv()" + "\n" +
+      logMsg = funcName + "\n" +
         "type=" + type + "\n" +
         "fileDownloadUrl=" + fileDownloadUrl;
       // $log.log(logMsg);
@@ -93,22 +94,25 @@
     } // getWebExCsv()
 
     function createObjectUrl(data) {
-      var hexBytes = [];
-      
-      '%ff%fe'.replace(/([0-9a-f]{2})/gi, function (byte) {
-        var hexByte = parseInt(byte, 16);
+      var funcName = "createObjectUrl()";
+      var logMsg = "";
 
-        hexBytes.push(hexByte);
+      var intBytes = [];
+
+      '%ff%fe'.replace(/([0-9a-f]{2})/gi, function (hexByte) {
+        var intByte = parseInt(hexByte, 16);
+
+        intBytes.push(intByte);
       });
 
       for (var i = 2; i < data.length; ++i) {
-        var byte = data[i].charCodeAt(0).toString(16);
-        var hexByte = parseInt(byte, 16);
+        var hexByte = data[i].charCodeAt(0).toString(16);
+        var intByte = parseInt(hexByte, 16);
 
-        hexBytes.push(hexByte);
+        intBytes.push(intByte);
       }
 
-      var blob = new Blob([new Uint8Array(hexBytes)], {
+      var blob = new Blob([new Uint8Array(intBytes)], {
         type: 'text/csv;charset=UTF-16LE;'
       });
 
