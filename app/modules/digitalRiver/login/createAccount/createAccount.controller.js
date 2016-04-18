@@ -18,7 +18,7 @@
     vm.confirmPasswordPlaceholder = confirmPasswordPlaceholder;
     vm.handleCreateAccount = handleCreateAccount;
 
-    vm.email = $stateParams.email;
+    vm.originalEmail = $stateParams.email;
     vm.email1 = $stateParams.email;
 
     function confirmEmailPlaceholder() {

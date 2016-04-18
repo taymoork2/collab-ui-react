@@ -9,6 +9,7 @@
 
     var onlineTrialConfig = {
       amount: '0.0',
+      //TODO use Cisco Partner org ID for prod and a test org ID for dev and integration.
       partnerInternalUUID: {
         dev: '03fbeb02-8df5-4218-a92a-48f014ebc547',
         cfe: '03fbeb02-8df5-4218-a92a-48f014ebc547',
