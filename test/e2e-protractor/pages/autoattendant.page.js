@@ -140,6 +140,7 @@ var AutoAttendantPage = function () {
   this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
   this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
   this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
+  this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
