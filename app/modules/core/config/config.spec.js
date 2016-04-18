@@ -2,15 +2,20 @@
 
 describe('Config', function () {
 
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Core'));
 
-  var Config, $location, tabConfig;
-  beforeEach(inject(function (_$location_, _Config_, _tabConfig_) {
+  var Config, $location, tabConfig, Storage;
+  beforeEach(inject(function (_$location_, _Config_, _tabConfig_, _Storage_) {
     Config = _Config_;
+    Storage = _Storage_;
     tabConfig = _tabConfig_;
     $location = _$location_;
     spyOn($location, 'host');
   }));
+
+  afterEach(function() {
+    Storage.put('TEST_ENV_CONFIG', '');
+  });
 
   var devHost = 'localhost';
   var cfeHost = 'cfe-admin.ciscospark.com';
@@ -20,14 +25,6 @@ describe('Config', function () {
   var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
   var orgId = 'abc123efg456';
   var siteURL = 'webex.com';
-
-  it('should exist', function () {
-    expect(Config).toBeDefined();
-  });
-
-  it('should have roleStates', function () {
-    expect(Config.roleStates).toBeDefined();
-  });
 
   it('partner_sales_admin should have correct roleStates', function () {
     expect(Config.roleStates.PARTNER_SALES_ADMIN).toContain('partneroverview');
@@ -126,4 +123,28 @@ describe('Config', function () {
       expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
     });
   });
+
+  describe('test env config', function(){
+    it('should have a deafult', function() {
+      expect(Config.isE2E()).toBe(false);
+      expect(Config.forceProdForE2E()).toBe(false);
+    });
+    it('should set env to prod', function() {
+      Config.setTestEnvConfig('e2e-prod');
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(true);
+    });
+    it('should set env to int', function() {
+      Config.setTestEnvConfig('e2e-int');
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(false);
+    });
+    it('should not be nulled', function() {
+      Config.setTestEnvConfig('e2e-int');
+      Config.setTestEnvConfig();
+      expect(Config.isE2E()).toBe(true);
+      expect(Config.forceProdForE2E()).toBe(false);
+    });
+  });
+
 });
