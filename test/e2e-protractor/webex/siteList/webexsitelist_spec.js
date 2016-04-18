@@ -101,8 +101,7 @@ describe('Services > Webex page aka Site List page', function () {
       }
     });
 
-    //TODO disabled for failures
-    xit('should detect warning icon due to entitlement authentication failure', function () {
+    it('should detect warning icon due to entitlement authentication failure', function () {
       if (setup) {
         utils.wait(sitelist.siteEntitlementAuthFailure);
       }

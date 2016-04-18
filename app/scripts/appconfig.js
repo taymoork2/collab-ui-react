@@ -527,11 +527,21 @@ angular
           views: {
             'modal@': {
               controller: 'OnboardCtrl',
+              template: '<div ui-view="editServices"></div>'
+            },
+            'editServices@editService': {
               templateUrl: 'modules/core/users/userPreview/editServices.tpl.html'
             }
           },
           params: {
             currentUser: {}
+          }
+        })
+        .state('editService.dn', {
+          views: {
+            'editServices@editService': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
           }
         })
         .state('user-overview', {
@@ -2039,14 +2049,18 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('careDetailsBase', {
+        .state('care', {
+          parent: 'main',
+          abstract: true
+        })
+        .state('care.DetailsBase', {
           parent: 'main',
           abstract: true,
           templateUrl: 'modules/sunlight/details/details.tpl.html'
         })
-        .state('careDetails', {
+        .state('care.Details', {
           url: '/careDetails',
-          parent: 'careDetailsBase',
+          parent: 'care.DetailsBase',
           views: {
             'header': {
               templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
@@ -2058,14 +2072,24 @@ angular
             }
           }
         })
-        .state('careSettings', {
+        .state('care.Settings', {
           url: '/settings',
-          parent: 'careDetails'
+          parent: 'care.Details'
         })
-        .state('careFeatures', {
+        .state('care.Features', {
           url: '/features',
-          parent: 'careDetails',
+          parent: 'care.Details',
           templateUrl: 'modules/sunlight/features/features.tpl.html'
+        })
+        .state('care.ChatSA', {
+          url: '/careChat',
+          views: {
+            'main@': {
+              templateUrl: 'modules/sunlight/features/chat/ctSetupAssistant.tpl.html',
+              controller: 'CareChatSetupAssistantCtrl',
+              controllerAs: 'careChatSA'
+            }
+          }
         });
     }
   ]);

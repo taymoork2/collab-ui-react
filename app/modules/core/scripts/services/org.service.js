@@ -6,7 +6,7 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
+  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -70,7 +70,7 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      $http.get(adminUrl)
+      return $http.get(adminUrl)
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -239,6 +239,17 @@
         return $q.reject('filter does not match requirements');
       }
       var orgUrl = UrlConfig.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
+
+      if (Utils.isUUID(filter)) {
+        return getAdminOrg(_.noop, filter).then(function (result) {
+          // return it in the same manner as listOrgs
+          return {
+            data: {
+              organizations: [result.data]
+            }
+          };
+        });
+      }
 
       return $http.get(orgUrl);
     }

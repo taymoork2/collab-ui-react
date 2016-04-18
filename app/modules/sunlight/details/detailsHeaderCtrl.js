@@ -11,10 +11,10 @@
 
     vm.tabs = [{
       title: 'sunlightDetails.featuresTitle',
-      state: 'careFeatures'
+      state: 'care.Features'
     }, {
       title: 'sunlightDetails.settingsTitle',
-      state: 'careSettings'
+      state: 'care.Settings'
     }];
   }
 })();

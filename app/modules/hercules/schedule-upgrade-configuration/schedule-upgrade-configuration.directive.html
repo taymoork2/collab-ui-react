@@ -40,5 +40,5 @@
 </p>
 <p>
   <span translate="hercules.settings.scheduleUpgrade.postponeLabel"></span><br>
-  <strong class="schedule-upgrade-next-time">{{scheduleUpgrade.nextUpdate | date:'medium'}}</strong> <a href="#" ng-click="scheduleUpgrade.openModal($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="!scheduleUpgrade.postponed"></a>
+  <strong class="schedule-upgrade-next-time">{{scheduleUpgrade.nextUpdate | date:'MMM d, y h:mm a'}}</strong> <a href="#" ng-click="scheduleUpgrade.openModal($event)" translate="hercules.settings.scheduleUpgrade.postponeAction" ng-if="!scheduleUpgrade.postponed"></a>
 </p>
