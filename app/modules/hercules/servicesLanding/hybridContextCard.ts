@@ -17,6 +17,8 @@ namespace servicesLanding {
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
         'servicesLanding.cards.hybridContext.title', 'servicesLanding.cards.hybridContext.description', 'icon-circle-data', true, 'context', CardType.hybrid);
+
+      this._loading = false;
     }
   }
 }
