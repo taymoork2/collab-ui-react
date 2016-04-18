@@ -85,7 +85,7 @@ namespace servicesLanding {
       //   return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
       let callServiceStatus:{status:String} = _.chain(services)
         .filter((service)=> {
-          let found = _.any(serviceIds, service.id);
+          let found = _.indexOf(serviceIds, service.id)>=0;
           console.log("service",service, found);
           return found;
         })
