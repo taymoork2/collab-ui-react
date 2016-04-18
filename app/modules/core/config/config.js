@@ -220,7 +220,8 @@
         'cdrsupport',
         'cdr-overview',
         'cdrladderdiagram',
-        'activateProduct'
+        'activateProduct',
+        'userRedirect'
       ],
       Readonly_Admin: [
         'overview',

@@ -544,6 +544,16 @@ angular
             }
           }
         })
+        .state('userRedirect', {
+          url: '/userRedirect',
+          views: {
+            'main@': {
+              controller: 'userRedirectCtrl',
+              controllerAs: 'userRedirect',
+              templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html'
+            }
+          }
+        })
         .state('user-overview', {
           parent: 'sidepanel',
           views: {
