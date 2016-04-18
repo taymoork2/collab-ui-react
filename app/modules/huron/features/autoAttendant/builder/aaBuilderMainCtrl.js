@@ -169,7 +169,7 @@
         vm.ui.closedHours.setType('MENU_WELCOME');
       }
       if (vm.ui.isHolidays && angular.isDefined(vm.ui.holidays)) {
-        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays);
+        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays, vm.ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'holidays');
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();

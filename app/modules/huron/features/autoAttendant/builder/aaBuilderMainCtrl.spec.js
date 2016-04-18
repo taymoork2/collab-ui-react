@@ -611,9 +611,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui.isClosedHours = false;
       $scope.vm.ui.isHolidays = true;
       $scope.vm.ui.holidays = {};
+      $scope.vm.ui.holidaysValue = 'closedHours';
       controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
+      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays, $scope.vm.ui.holidaysValue);
       expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
     });
 

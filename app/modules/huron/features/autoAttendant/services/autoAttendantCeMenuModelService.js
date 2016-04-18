@@ -1081,19 +1081,20 @@
       return false;
     }
 
-    function deleteScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
+    function deleteScheduleActionSetMap(ceRecord, actionSetName) {
       // remove associated schedule to actionSet map, e.g.,
       // scheduleEventTypeMap.open = 'openHours'
+      var prop;
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
-      actionSetValue = actionSetValue ? actionSetValue : actionSetName;
-      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
-        return this.scheduleEventTypeMap[prop] === actionSetValue;
-      }, {
-        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
-        actionSetName: actionSetName
-      });
+      if (actionSetName === 'holidays') {
+        prop = 'holiday';
+      } else if (actionSetName === 'closedHours') {
+        prop = 'closed';
+      } else {
+        prop = 'open';
+      }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
         if (ceRecord.scheduleEventTypeMap) {
@@ -1114,7 +1115,7 @@
      * actionSetName: 'regularOpenActions'
      * ceRecord: a customer AA record
      */
-    function deleteCombinedMenu(ceRecord, actionSetName, actionSetValue) {
+    function deleteCombinedMenu(ceRecord, actionSetName) {
 
       if (angular.isUndefined(actionSetName) || actionSetName === null) {
         return false;

@@ -108,7 +108,7 @@
       } else if (ui.isHolidays) {
         AutoAttendantCeMenuModelService.updateScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       } else {
-        AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays');
+        AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       }
     }
 

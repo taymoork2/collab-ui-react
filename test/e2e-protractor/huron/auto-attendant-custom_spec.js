@@ -56,7 +56,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.modalsave);
     }, 60000);
 
-    it('should expect a lane with Closed/Holiday Label', function() {
+    it('should expect a lane with Closed/Holiday Label', function () {
       utils.expectIsDisplayed(autoattendant.closedHoursLane);
       utils.click(autoattendant.closeEditButton);
     });
