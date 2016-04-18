@@ -467,7 +467,7 @@ angular.module('Core').service('SiteListService', [
           logMsg = funcName + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           // save the response obj into the siteRow obj... when get result (for completed job) is clicked,
           // we will need  more information from the response obj
