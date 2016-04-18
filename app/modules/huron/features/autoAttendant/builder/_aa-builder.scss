@@ -39,14 +39,17 @@ $aa-builder-text-color: $gray-dark-1;
   .aa-builder-container {
     background-color: $gray-light-4;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 
     $margin-top: 0.125rem;
-
     margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
     @include aa-builder-height($frame-margin-size + 2 * rem($aa-builder-border-size) + $margin-top);
+
+    .aa-builder-wrapper {
+      min-width: vr-adjust(1170);
+    }
   }
 }
 
