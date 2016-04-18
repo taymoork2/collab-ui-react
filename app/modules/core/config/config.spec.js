@@ -13,7 +13,7 @@ describe('Config', function () {
     spyOn($location, 'host');
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     Storage.put('TEST_ENV_CONFIG', '');
   });
 
@@ -124,22 +124,22 @@ describe('Config', function () {
     });
   });
 
-  describe('test env config', function(){
-    it('should have a deafult', function() {
+  describe('test env config', function () {
+    it('should have a deafult', function () {
       expect(Config.isE2E()).toBe(false);
       expect(Config.forceProdForE2E()).toBe(false);
     });
-    it('should set env to prod', function() {
+    it('should set env to prod', function () {
       Config.setTestEnvConfig('e2e-prod');
       expect(Config.isE2E()).toBe(true);
       expect(Config.forceProdForE2E()).toBe(true);
     });
-    it('should set env to int', function() {
+    it('should set env to int', function () {
       Config.setTestEnvConfig('e2e-int');
       expect(Config.isE2E()).toBe(true);
       expect(Config.forceProdForE2E()).toBe(false);
     });
-    it('should not be nulled', function() {
+    it('should not be nulled', function () {
       Config.setTestEnvConfig('e2e-int');
       Config.setTestEnvConfig();
       expect(Config.isE2E()).toBe(true);
