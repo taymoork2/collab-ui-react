@@ -143,7 +143,7 @@
         });
       }
 
-      if ($scope.isTelstraCsbEnabled) {
+      if ($scope.isTelstraCsbEnabled && Authinfo.isCSB()) {
         _.remove($scope.tabs, {
           name: 'addUsers'
         });

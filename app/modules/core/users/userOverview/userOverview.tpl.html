@@ -15,10 +15,10 @@
             <i class="icon icon-three-dots"></i>
           </button>
           <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-            <li ng-if="!userOverview.isTelstraCsbEnabled">
+            <li ng-if="!userOverview.isCSB">
               <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
             </li>
-            <li ng-if="userOverview.isTelstraCsbEnabled">
+            <li ng-if="userOverview.isCSB">
               <a ui-sref="userRedirect" translate="usersPreview.editServices"></a>
             </li>
           </ul>
