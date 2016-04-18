@@ -1216,7 +1216,7 @@ angular
           },
           params: {
             currentTab: {},
-            currentStep: {}
+            currentStep: ''
           },
           data: {
             firstTimeSetup: false

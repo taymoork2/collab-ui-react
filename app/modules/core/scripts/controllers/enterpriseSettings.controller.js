@@ -46,7 +46,7 @@
     function updateSSO() {
       //ssoEnabled should be set already in the userCard.js
       $scope.ssoEnabled = $rootScope.ssoEnabled || false;
-      if ($rootScope.ssoEnabled) {
+      if ($scope.ssoEnabled) {
         $scope.options.configureSSO = 0;
       }
     }
@@ -198,7 +198,6 @@
         var r = confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
         if (r === true) {
           $scope.options.configureSSO = 1;
-          //$scope.options.modifySSO = true;
           $scope.options.deleteSSOBySwitchingRadio = true;
           deleteSSO();
         } else {
@@ -227,7 +226,7 @@
 
     $scope.initNext = function () {
       var deferred = $q.defer();
-      if (angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab) && (angular.isDefined($scope.ssoEnabled) && $scope.ssoEnabled)) {
+      if (_.isFunction(_.get($scope, 'wizard.nextTab')) && $scope.ssoEnabled) {
         //sso is on and next is clicked without modify
         if (!$scope.options.modifySSO) {
           deferred.reject();
@@ -334,7 +333,7 @@
                   }
                   if (success === true) {
                     if ($scope.options.deleteSSOBySwitchingRadio) {
-                      Notification.success($translate.instant('ssoModal.ssoDisableSuccessNotification'));
+                      Notification.success('ssoModal.ssoDisableSuccessNotification');
                       $scope.ssoEnabled = false;
                     } else {
                       Log.debug('Single Sign-On (SSO) successfully disabled for all users');

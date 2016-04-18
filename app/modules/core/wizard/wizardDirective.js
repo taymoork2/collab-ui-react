@@ -99,14 +99,14 @@
         vm.current.tab = getTabs()[0];
       }
       var steps = getSteps();
-      if (steps.length > 0) {
-        if ($stateParams.currentStep && !_.isEmpty($stateParams.currentStep)) {
-          vm.current.step = _.findWhere(steps, {
-            name: $stateParams.currentStep
-          });
-        } else {
-          vm.current.step = steps[0];
+      if (steps.length) {
+        var index = _.findIndex(steps, {
+          name: $stateParams.currentStep
+        });
+        if (index === -1) {
+          index = 0;
         }
+        vm.current.step = steps[index];
       }
     }
 

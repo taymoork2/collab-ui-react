@@ -64,14 +64,18 @@
 
     function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
-      var adminUrlSuffix = (angular.isUndefined(disableCache) || disableCache == null) ? '' : '?disableCache=true';
       if (oid) {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid + adminUrlSuffix;
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
       } else {
-        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + adminUrlSuffix;
+        adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      $http.get(adminUrl)
+      var cacheDisabled = !!disableCache;
+      $http.get(adminUrl, {
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;

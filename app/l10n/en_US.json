@@ -890,8 +890,8 @@
     "ssoEnabledStatus": "Single sign-on is enabled",
     "ssoNotEnabledStatus": "Single sign-on is not enabled",
     "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
-    "idpOverwriteWarning": "Your SSO configuration is currently enabled. Importing a new metadata file will change your configuration and could invalidate it. You won't be able to undo this action. Do you want to continue?",
-    "disableSSOByRadioWarning": "Selecting the built-in identity service will disable your existing SSO configuration. You won't be able to undo this selection. Are you sure you'd like to switch to simple user authentication?",
+    "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
+    "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
     "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
