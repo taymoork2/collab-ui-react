@@ -22,5 +22,11 @@ namespace servicesLanding {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
         'servicesLanding.cards.hybridMedia.title', 'servicesLanding.cards.hybridMedia.description', 'icon-circle-media', false, 'media', CardType.hybrid);
     }
+
+    public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>){
+      this._status = this.filterAndGetCssStatus(services, ['squared-fusion-media']);
+      this._active = this.filterAndGetEnabledService(services,['squared-fusion-media']);
+      this._loading = false;
+    }
   }
 }

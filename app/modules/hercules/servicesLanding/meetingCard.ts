@@ -29,6 +29,7 @@ namespace servicesLanding {
     public updateWebexSiteList(data:{data:Array<{license:{siteUrl:string}}>}) {
       console.log("update site",data);
       if (!data || !data.data) {
+        this._loading = false;
         return
       }
       _.forEach(data.data, (site)=> {
@@ -44,6 +45,9 @@ namespace servicesLanding {
         //TODO pushing all items now, either update list, or replace when getting the data model or test data for this.
         this._buttons.push({name:site.siteUrl,link:site.siteUrl});
       });
+
+      //done loading
+      this._loading = false;
     }
   }
 }

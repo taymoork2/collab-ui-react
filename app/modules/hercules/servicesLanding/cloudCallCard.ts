@@ -23,6 +23,7 @@ namespace servicesLanding {
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
         'servicesLanding.cards.call.title', 'servicesLanding.cards.call.description', 'icon-circle-call', true, 'people');
+      this._loading = false;
     }
   }
 }

@@ -1,5 +1,5 @@
 /// <reference path="ServicesLandingCard.ts"/>
-/// <reference path="webexCard.ts"/>
+/// <reference path="messageCard.ts"/>
 /// <reference path="meetingCard.ts"/>
 /// <reference path="cloudCallCard.ts"/>
 /// <reference path="hybridManagementCard.ts"/>
@@ -15,7 +15,7 @@ namespace servicesLanding {
     return {
       createCards: function ():Array<ServicesLandingCard> {
         return [
-          new ServicesLandingWebexCard(),
+          new ServicesLandingMessageCard(),
           new ServicesLandingMeetingCard(),
           new ServicesLandingCallCard(),
           new ServicesLandingHybridManagementCard(),

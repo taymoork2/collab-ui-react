@@ -24,9 +24,14 @@ namespace servicesLanding {
   export abstract class ServicesLandingCard {
 
     protected _status;
+    protected _loading = true;
 
     get active() {
       return this._active;
+    }
+
+    get loading() {
+      return this._loading;
     }
 
     get cardClass() {
@@ -69,6 +74,11 @@ namespace servicesLanding {
       undefined: 'warning'
     };
 
+    serviceEnabledWeight={
+      'true':2,
+      'false':1,
+      undefined:0
+    };
     serviceStatusWeight = {
       ok: 1,
       warn: 2,
@@ -76,23 +86,38 @@ namespace servicesLanding {
       undefined: 0
     };
 
-    public constructor(private _template:String, private _name:String, private _description, private _icon:String, private _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
+    public constructor(private _template:String, private _name:String, private _description, private _icon:String, protected _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
 
     }
 
-    public filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<String>) {
+    protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
+      let serviceEnabled = _.chain(services)
+        .filter((service)=> {
+          return _.indexOf(serviceIds, service.id) >= 0;
+        })
+        .reduce((result, serv:{enabled:boolean})=> {
+          let enabled =  this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
+          console.log("service enable",serv,enabled);
+          return enabled;
+        },undefined)
+        .value();
+      console.log("service enabled2",serviceEnabled);
+      return serviceEnabled;
+    }
+
+    protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
       // _.reduce(callServices, function (result, serv) {
       //   return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
-      let callServiceStatus:{status:String} = _.chain(services)
+      let callServiceStatus:string = _.chain(services)
         .filter((service)=> {
           let found = _.indexOf(serviceIds, service.id)>=0;
           console.log("service",service, found);
           return found;
         })
-        .reduce((result, serv)=> {
+        .reduce((result, serv:{status:string})=> {
           console.log("service red",result, serv);
           return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
-        })
+        },undefined)
         .value();
       console.log("status ", callServiceStatus);
       if (callServiceStatus) {
