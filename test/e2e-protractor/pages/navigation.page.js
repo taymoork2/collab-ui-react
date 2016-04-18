@@ -296,6 +296,7 @@ var Navigation = function () {
 
   function getUrl(url) {
     var url = url || '#/login';
+    console.error('ispb' + isProductionBackend);
     if (isProductionBackend) {
       if (url.indexOf('?') > -1) {
         url += '&';

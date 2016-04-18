@@ -26,6 +26,7 @@
 
     Auth.setAuthorizationHeader();
 
+    console.error('x -> ' + $location.search()['test-env-config']);
     Config.setTestEnvConfig($location.search()['test-env-config']);
 
     if (Config.isE2E()) {

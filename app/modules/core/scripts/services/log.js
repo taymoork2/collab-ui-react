@@ -2,16 +2,14 @@
 
 /* eslint no-console:0 */
 
-/**
- * Disable logging by appending ?disableLogging=true *after* the hash fragment.
- */
 angular.module('Core')
   .service('Log', ['$rootScope', '$location', 'Config',
     function ($rootScope, $location, Config) {
       var logKeepOnNavigate = Config.logConfig.keepOnNavigate;
       var logLinesToAttach = Config.logConfig.linesToAttach;
 
-      var Log = function (msg, data, type) {
+      var Log = function (type, msg, data) {
+        console.error(Config.isE2E());
         if (enableLogging()) {
           if (!type) {
             type = 'log';
@@ -29,7 +27,7 @@ angular.module('Core')
       }
 
       function enableLogging() {
-        return $rootScope.debug && !$location.search().disableLogging;
+        return $rootScope.debug || Config.isE2E();
       }
 
       Log.keepArchive = function (level, msg, data) {
@@ -75,7 +73,7 @@ angular.module('Core')
       };
 
       _.each(['debug', 'info', 'log', 'warn', 'error'], function (type) {
-        Log[type] = _.partialRight(Log, type);
+        Log[type] = _.partial(Log, type);
       });
 
       return Log;

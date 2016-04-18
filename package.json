@@ -100,5 +100,8 @@
   "scripts": {
     "test": "gulp e2e",
     "postinstall": "gulp tsd"
+  },
+  "dependencies": {
+    "protractor-console-plugin": "^0.1.1"
   }
 }
