@@ -12,12 +12,6 @@
     vm.emailSubscribers = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
-    vm.showScheduleUpgrade = false;
-
-    ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
-      .then(function () {
-        vm.showScheduleUpgrade = true;
-      });
 
     var readCerts = function () {
       CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
