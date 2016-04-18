@@ -6,7 +6,7 @@
     .service('DigitalRiverService', DigitalRiverService);
 
   /* @ngInject */
-  function DigitalRiverService($http, Config, Auth, $q, UrlConfig) {
+  function DigitalRiverService($http, $window, Config, Auth, $q, UrlConfig, Storage, EmailService) {
 
     var service = {
       getUserFromEmail: getUserFromEmail,
@@ -14,7 +14,11 @@
       getDrReferrer: getDrReferrer,
       getUserAuthToken: getUserAuthToken,
       activateUser: activateUser,
-      activateProduct: activateProduct
+      activateProduct: activateProduct,
+      getUserAuthInfo: getUserAuthInfo,
+      submitOrderOnline: submitOrderOnline,
+      sendDRWelcomeEmail: sendDRWelcomeEmail,
+      decrytpUserAuthToken: decrytpUserAuthToken
     };
 
     return service;
@@ -37,6 +41,12 @@
       });
     }
 
+    function decrytpUserAuthToken(token) {
+      return Auth.setAccessToken().then(function () {
+        return $http.post(UrlConfig.getAdminServiceUrl() + "ordertranslator/api/digitalriver/token/validate", token);
+      });
+    }
+
     function activateUser(uuid) {
       if (!uuid) {
         return $q.reject('blank uuid');
@@ -55,10 +65,25 @@
       });
     }
 
-    // TODO: Remove this after the go-live.
     function getDrReferrer() {
       return 'digitalriver-ZGlnaXRhbHJpdmVy';
     }
 
+    function getUserAuthInfo() {
+      return $http.get(Auth.getAuthorizationUrl());
+    }
+
+    // submitOrder call to the Commerce API.
+    function submitOrderOnline(request) {
+      return Auth.setAccessToken().then(function () {
+        return $http.post(UrlConfig.getAdminServiceUrl() + 'online/commerce/orders', request);
+      });
+    }
+
+    function sendDRWelcomeEmail(customerEmail, uuid, orderId) {
+      var token = Storage.get('userToken');
+      Auth.setAuthorizationHeader(token);
+      return EmailService.emailDRWelcomeRequest(customerEmail, uuid, orderId);
+    }
   }
 })();
