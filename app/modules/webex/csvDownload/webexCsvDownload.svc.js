@@ -98,8 +98,9 @@
       var logMsg = "";
 
       var intBytes = [];
+      var littleEndianHeader = '%ff%fe';
 
-      '%ff%fe'.replace(/([0-9a-f]{2})/gi, function (hexByte) {
+      littleEndianHeader.replace(/([0-9a-f]{2})/gi, function (hexByte) {
         var intByte = parseInt(hexByte, 16);
 
         intBytes.push(intByte);
