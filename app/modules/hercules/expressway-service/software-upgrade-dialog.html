@@ -1,5 +1,8 @@
 <div class="modal-header">
-  <div class="modal-title" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h4 class="modal-title" translate="hercules.softwareUpgrade.softwareUpgrade"></h4>
 </div>
 <div class="modal-body hercules-fix-paragraphs hercules-settings-table">
   <p translate="hercules.softwareUpgrade.explanation" translate-values="{connectorType: softwareUpgradeCtrl.connectorName}"></p>
@@ -10,10 +13,6 @@
       <td><span>{{softwareUpgradeCtrl.clusterName}}</span></td>
     </tr>
     <tr>
-      <td translate="hercules.softwareUpgrade.currentVersion"></td>
-      <td><span>{{softwareUpgradeCtrl.provisionedVersion}}</span></td>
-    </tr>
-    <tr>
       <td translate="hercules.softwareUpgrade.newVersion"></td>
       <td><span>{{softwareUpgradeCtrl.availableVersion}}</span></td>
     </tr>
@@ -21,6 +20,15 @@
   </table>
 </div>
 <div class="modal-footer">
-  <button ng-click="softwareUpgradeCtrl.cancel()" translate="common.cancel"></button>
-  <button class="btn btn--primary" ng-click="softwareUpgradeCtrl.ok()"translate="common.confirm"></button>
+  <button class="btn btn-default"
+          ng-click="$dismiss()"
+          type="button"
+          translate="common.cancel"></button>
+  <button class="btn btn--primary"
+          cs-btn
+          loading="clusterDeregister.upgrading"
+          type="button"
+          ng-click="softwareUpgradeCtrl.upgrade()">
+    <span translate="common.confirm"></span>
+  </button>
 </div>
