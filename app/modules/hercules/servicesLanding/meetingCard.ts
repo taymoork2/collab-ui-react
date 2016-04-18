@@ -13,7 +13,7 @@ namespace servicesLanding {
 
     private _buttons:Array<servicesLanding.CardButton> = [
       {name: 'site 1', link: ''},
-      {name: 'site 2',link: ''},
+      {name: 'site 2', link: ''},
       {name: 'site 3', link: ''},
       {name: 'site 4', link: ''}];
 
@@ -26,18 +26,23 @@ namespace servicesLanding {
         'servicesLanding.cards.meeting.title', 'servicesLanding.cards.meeting.description', 'icon-circle-group', true, 'meetings');
     }
 
-    public updateWebexSiteList(data:{data:Array<{name:String,link:String}>}) {
+    public updateWebexSiteList(data:{data:Array<{license:{siteUrl:string}}>}) {
+      console.log("update site",data);
       if (!data || !data.data) {
         return
       }
       _.forEach(data.data, (site)=> {
+        /* the data model isn't yet looked at, a full replace will be used
         let button:CardButton = _.find(this._buttons, {name: site.name});
         if (!button) {
           button = {name: site.name, link: site.link};
           this._buttons.push(button);
         } else {
           button.link = site.link;
-        }
+        }*/
+
+        //TODO pushing all items now, either update list, or replace when getting the data model or test data for this.
+        this._buttons.push({name:site.siteUrl,link:site.siteUrl});
       });
     }
   }

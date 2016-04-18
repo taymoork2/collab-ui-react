@@ -18,10 +18,14 @@ namespace servicesLanding {
 
 
     /* @ngInject */
-    constructor(Orgservice, private ServicesLandingCardFactory) {
+    constructor(Orgservice, private ServicesLandingCardFactory, private $q, private Authinfo, ServiceDescriptor) {
       this.cards = ServicesLandingCardFactory.createCards();
 
       this.loadWebexSiteList();
+
+      ServiceDescriptor.services((err, services)=> {
+        this.forwardEvent('hybridStatusEventHandler', services)
+      }, true);
     }
 
     public hybridCards() {
@@ -42,6 +46,7 @@ namespace servicesLanding {
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
+      console.log("forwarding event", eventArgs,"this",this);
       _.each(this.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);
@@ -50,7 +55,14 @@ namespace servicesLanding {
     }
 
     private loadWebexSiteList() {
-      this.forwardEvent('updateWebexSiteList', [{}]);
+      this.$q((resolve, reject)=> {
+        let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+        resolve(siteList);
+      }).then((siteList)=> {
+        console.log("supersite", siteList);
+        this.forwardEvent('updateWebexSiteList', siteList);
+      });
+
     }
   }
   angular

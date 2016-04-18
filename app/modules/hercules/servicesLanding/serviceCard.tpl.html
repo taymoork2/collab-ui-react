@@ -17,6 +17,10 @@
     <a ng-if="card.getShowMoreButton()" ng-href="#/{{card.getShowMoreButton().link}}">{{card.getShowMoreButton().name | translate}}</a>
   </div>
 </section>
+<footer>
+    <i class="icon icon-circle" ng-class="card.status || 'disabled'"></i>
+    <span>{{card.levelText}}</span><!-- not implemented yet-->
+</footer>
 
 <!--<header>-->
 <!--<h4><i class="icon icon-circle-message"></i> Message</h4>-->

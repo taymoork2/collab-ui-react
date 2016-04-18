@@ -18,5 +18,9 @@ namespace servicesLanding {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
         'servicesLanding.cards.calendar.title', 'servicesLanding.cards.calendar.description', 'icon-circle-calendar', true, 'calendar', CardType.hybrid);
     }
+
+    public hybridStatusEventHandler(services:Array<{id:string,status:string}>){
+      this._status = this.filterAndGetCssStatus(services, ['squared-fusion-cal']);
+    }
   }
 }

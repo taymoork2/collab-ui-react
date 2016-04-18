@@ -24,20 +24,5 @@ namespace servicesLanding {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
         'servicesLanding.cards.call.title', 'servicesLanding.cards.call.description', 'icon-circle-call', true, 'people');
     }
-
-    public updateWebexSiteList(data:{data:Array<{name:String,link:String}>}) {
-      if (!data || !data.data) {
-        return
-      }
-      _.forEach(data.data, (site)=> {
-        let button:CardButton = _.find(this._buttons, {name: site.name});
-        if (!button) {
-          button = {name: site.name, link: site.link};
-          this._buttons.push(button);
-        } else {
-          button.link = site.link;
-        }
-      });
-    }
   }
 }
