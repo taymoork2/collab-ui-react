@@ -3791,12 +3791,12 @@
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   },
   "servicesLanding": {
-    "cloudServices":"Cloud services",
-    "hybridServices":"Hybrid services",
-    "showAllCards":"Show all cards",
-    "showActiveCards":"Show active cards only",
+    "cloudServices": "Cloud services",
+    "hybridServices": "Hybrid services",
+    "showAllCards": "Show all cards",
+    "showActiveCards": "Show active cards only",
     "cards": {
-      "webex": {
+      "message": {
         "title": "Message",
         "description": "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille et terris iactatus et alto vi superum saevae memorem Iunonis.",
         "buttons": {

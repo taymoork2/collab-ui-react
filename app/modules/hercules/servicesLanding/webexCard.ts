@@ -14,9 +14,9 @@ namespace servicesLanding {
 
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.webex.title', 'servicesLanding.cards.webex.description', 'icon-circle-message');
+        'servicesLanding.cards.message.title', 'servicesLanding.cards.message.description', 'icon-circle-message');
       this._buttons = [{
-        name: 'servicesLanding.cards.webex.buttons.webexMessenger',
+        name: 'servicesLanding.cards.message.buttons.webexMessenger',
         link: ''
       }];
     }
