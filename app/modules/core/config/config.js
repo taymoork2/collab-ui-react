@@ -294,11 +294,13 @@
       ],
       'squared-fusion-uc': [
         'landing-page',
-        'call-service'
+        'call-service',
+        'resource-settings-page'
       ],
       'squared-fusion-cal': [
         'landing-page',
-        'calendar-service'
+        'calendar-service',
+        'resource-settings-page'
       ],
       'squared-team-member': [
         'organization'
@@ -338,6 +340,7 @@
         'hurondetails',
         'huronsettings',
         'landing-page',
+        'resource-settings-page',
         'calendar-service',
         'call-service',
         'management-service'

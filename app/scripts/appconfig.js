@@ -1711,6 +1711,13 @@ angular
           controllerAs: 'resourceList',
           parent: 'main'
         })
+        .state('resource-settings-page', {
+          url: '/services/resource/settings/:clusterid',
+          templateUrl: 'modules/hercules/resource-settings/resource-settings.html',
+          controller: 'FusionResourceSettingsController',
+          controllerAs: 'resourceSetting',
+          parent: 'main'
+        })
         .state('calendar-service', {
           templateUrl: 'modules/hercules/expressway-service/overview.html',
           controller: 'ExpresswayServiceController',
