@@ -11,25 +11,25 @@
     return {
       responseError: function (response) {
         if (is20001Error(response)) {
-          Log.warn('Refresh access token due to 20001 response.');
+          Log.warn('Refresh access token due to 20001 response.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isHttpAuthError(response)) {
-          Log.warn('Refresh access token due to HTTP authentication error.');
+          Log.warn('Refresh access token due to HTTP authentication error.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isCIInvalidAccessTokenError(response)) {
-          Log.warn('Refresh access token due to invalid CI error.');
+          Log.warn('Refresh access token due to invalid CI error.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
 
         if (refreshTokenHasExpired(response)) {
-          Log.warn('Refresh-token has expired.');
+          Log.warn('Refresh-token has expired.', response);
           return Auth.logout();
         }
 
         if (refreshTokenIsInvalid(response)) {
-          Log.warn('Refresh-token is invalid.');
+          Log.warn('Refresh-token is invalid.', response);
           return Auth.logout();
         }
 
@@ -54,7 +54,7 @@
     }
 
     function refreshTokenIsInvalid(response) {
-      return true; // response.status == 400 && responseContains(response, "The requested scope is invalid");
+      return response.status == 400 && responseContains(response, "The requested scope is invalid");
     }
 
     function responseContains(response, searchString) {

@@ -291,20 +291,17 @@ var Navigation = function () {
   };
 
   this.navigateToUsingIntegrationForTesting = function (url) {
-    return browser.get(url);
+    return browser.get(getUrl(url, {
+      forceIntegration: true
+    }));
   };
 
-  function getUrl(url) {
+  function getUrl(url, opts) {
+    var forceIntegration = opts && opts.forceIntegration;
     var url = url || '#/login';
-    console.error('ispb' + isProductionBackend);
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'test-env-config=e2e-prod';
-    }
+    url += ~url.indexOf('?') ? '&' : '?';
+    url += 'test-env-config=';
+    url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';
     return url;
   }
 

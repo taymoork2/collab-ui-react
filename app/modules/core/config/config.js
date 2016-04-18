@@ -39,11 +39,6 @@
       alarmsPerPage: 50,
       eventsPerPage: 50,
 
-      logConfig: {
-        linesToAttach: 100,
-        keepOnNavigate: false
-      },
-
       tokenTimers: {
         timeoutTimer: 3000000, // 50 mins
         refreshTimer: 39600000, // 11 hours
@@ -156,19 +151,19 @@
 
       isDev: function () {
         var currentHostname = getCurrentHostname();
-        return !config.isE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+        return !config.forceProdForE2E() && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
       },
 
       isIntegration: function () {
-        return !config.isE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === 'int-admin.ciscospark.com';
       },
 
       isProd: function () {
-        return getCurrentHostname() === 'admin.ciscospark.com';
+        return config.forceProdForE2E() || getCurrentHostname() === 'admin.ciscospark.com';
       },
 
       isCfe: function () {
-        return !config.isE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+        return !config.forceProdForE2E() && getCurrentHostname() === 'cfe-admin.ciscospark.com';
       },
 
       getEnv: function () {
@@ -196,6 +191,10 @@
     };
 
     config.isE2E = function () {
+      return !!~(Storage.get(TEST_ENV_CONFIG) || '').indexOf('e2e');
+    };
+
+    config.forceProdForE2E = function () {
       return Storage.get(TEST_ENV_CONFIG) === 'e2e-prod';
     };
 

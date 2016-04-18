@@ -48,7 +48,11 @@ exports.config = {
     failOnWarning: false, // (Default - false),
     failOnError: false,   // (Default - true),
     logWarnings: true,    // (Default - true),
-    exclude: []           // {Array of strings and regex}   (Default - [])
+    exclude: [            // Array of strings and regex (Default - [])
+      /executionContextId/,
+      /object Object/,
+      /favicon/
+    ]
   }],
 
   // A base URL for your application under test. Calls to protractor.get()
