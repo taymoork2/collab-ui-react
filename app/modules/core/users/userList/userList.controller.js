@@ -80,7 +80,9 @@
       .then(function (result) {
         $scope.isCsvEnhancementToggled = result[0];
         $scope.isTelstraCsbEnabled = result[1];
-      }).finally(init);
+      });
+
+    init();
 
     ////////////////
 
