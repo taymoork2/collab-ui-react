@@ -125,7 +125,7 @@ describe('Config', function () {
   });
 
   describe('test env config', function () {
-    it('should have a deafult', function () {
+    it('should have a default behaviour', function () {
       expect(Config.isE2E()).toBe(false);
       expect(Config.forceProdForE2E()).toBe(false);
     });
