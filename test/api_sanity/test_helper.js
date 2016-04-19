@@ -109,9 +109,9 @@ var auth = {
     org: 'd30a6828-dc35-4753-bab4-f9b468828688'
   },
   'contactcenter-admin': {
-    user: 'sikkimadmn@outlook.com',
-    pass: 'Cisco@123',
-    org: '021fffdc-dd5e-49ca-b9d6-013445e3c3ae'
+    user: 'sunlight-integ-test-admn@outlook.com',
+    pass: 'C1sco123=',
+    org: '676a82cd-64e9-4ebd-933c-4dce087a02bd'
   }
 };
 
