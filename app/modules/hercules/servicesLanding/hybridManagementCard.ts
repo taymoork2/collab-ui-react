@@ -8,7 +8,7 @@ namespace servicesLanding {
 
     private _buttons:Array<servicesLanding.CardButton> = [
       {name: 'servicesLanding.cards.hybridManagement.buttons.resources', link: 'services/expressway-management'},
-      {name: 'servicesLanding.cards.hybridManagement.buttons.settings', link: 'services/expressway-management'}
+      {name: 'servicesLanding.cards.hybridManagement.buttons.settings', link: 'services/expressway-management/settings'}
     ];
 
 

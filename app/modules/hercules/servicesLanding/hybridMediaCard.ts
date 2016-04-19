@@ -6,10 +6,11 @@ namespace servicesLanding {
       return undefined;
     }
 
-    private _setupButton:CardButton = {name: 'servicesLanding.genericButtons.setup', link: 'services/media', buttonClass: 'cta-btn'};
+    private _setupButton:CardButton = {name: 'servicesLanding.genericButtons.setup', link: 'mediaservice', buttonClass: 'cta-btn'};
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.hybridMedia.buttons.settings', link: 'services/media'}];
+      {name: 'servicesLanding.cards.hybridMedia.buttons.resources', link: 'mediaservice'},
+      {name: 'servicesLanding.cards.hybridMedia.buttons.settings', link: 'mediaservice/settings'}];
 
 
     getButtons():Array<servicesLanding.CardButton> {

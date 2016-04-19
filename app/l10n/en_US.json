@@ -3828,6 +3828,7 @@
         "title": "Calendar",
         "description": "(Integrate Microsoft Exchange) Collaborate instantly. Just add @webex to attach a WebEx to your invitation. Add @spark to create a Spark room.",
         "buttons": {
+          "resources": "Resources",
           "settings": "Settings"
         }
       },
@@ -3835,6 +3836,7 @@
         "title": "Call",
         "description": "Enables Zero-Touch Meetings, desktop sharing from Cisco Spark clients while on a work phone (Aware).  Place/answer work calls from Cisco Spark clients (Connect).",
         "buttons": {
+          "resources": "Resources",
           "settings": "Settings"
         }
       },
@@ -3842,6 +3844,7 @@
         "title": "Media",
         "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
         "buttons": {
+          "resources": "Resources",
           "settings": "Settings"
         }
       },

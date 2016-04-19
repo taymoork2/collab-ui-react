@@ -7,7 +7,8 @@ namespace servicesLanding {
     }
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.calendar.buttons.settings', link: 'services/calendar'}];
+      {name: 'servicesLanding.cards.calendar.buttons.resources', link: 'services/calendar'},
+      {name: 'servicesLanding.cards.calendar.buttons.settings', link: 'services/calendar/settings'}];
 
 
     getButtons():Array<servicesLanding.CardButton> {

@@ -12,9 +12,9 @@ namespace servicesLanding {
     }
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.call.buttons.numbers', link: ''},
-      {name: 'servicesLanding.cards.call.buttons.features', link: ''},
-      {name: 'servicesLanding.cards.call.buttons.settings', link: ''}];
+      {name: 'servicesLanding.cards.call.buttons.numbers', link: 'hurondetails/lines'},
+      {name: 'servicesLanding.cards.call.buttons.features', link: 'hurondetails/features'},
+      {name: 'servicesLanding.cards.call.buttons.settings', link: 'hurondetails/settings'}];
 
     getButtons():Array<servicesLanding.CardButton> {
       return _.take(this._buttons, 3);

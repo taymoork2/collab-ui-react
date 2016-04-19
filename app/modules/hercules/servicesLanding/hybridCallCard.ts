@@ -13,7 +13,8 @@ namespace servicesLanding {
     };
 
     private _buttons:Array<servicesLanding.CardButton> = [
-      {name: 'servicesLanding.cards.hybridCall.buttons.settings', link: 'services/call'}];
+      {name: 'servicesLanding.cards.hybridCall.buttons.resources', link: 'services/call'},
+      {name: 'servicesLanding.cards.hybridCall.buttons.settings', link: 'services/call/settings'}];
 
 
     getButtons():Array<servicesLanding.CardButton> {

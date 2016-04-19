@@ -2,7 +2,7 @@
 namespace servicesLanding {
 
   export class ServicesLandingMeetingCard extends ServicesLandingCard {
-    private moreButton:CardButton = {name: 'servicesLanding.showMore', link: ''};
+    private moreButton:CardButton = {name: 'servicesLanding.showMore', link: 'site-list'};
 
     getShowMoreButton():servicesLanding.CardButton {
       if (this._buttons.length > 3) {
