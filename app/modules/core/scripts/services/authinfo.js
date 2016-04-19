@@ -359,7 +359,7 @@ angular.module('Core')
           return this.hasRole('Full_Admin');
         },
         isCSB: function () {
-          var csb = ['CCW','APP_DIRECT'];
+          var csb = ['CCW', 'APP_DIRECT'];
           return csb.indexOf(authData.customerType) > -1;
         },
         isPartner: function () {
