@@ -33,19 +33,13 @@ describe('Services > Webex page aka Site List page', function () {
       }
     });
 
-    it('should detect the Actions column', function () {
-      if (setup) {
-        utils.wait(sitelist.actionsColumnId);
-      }
-    });
-
-    it('should detect the Reports icon', function () {
+    it('should detect the Reports icon in Actions Col', function () {
       if (setup) {
         utils.wait(sitelist.actionReportsLinkID);
       }
     });
 
-    it('should detect the Site Config icon', function () {
+    it('should detect the Site Config icon in Actions Col', function () {
       if (setup) {
         utils.wait(sitelist.actionSiteConfigLinkID);
       }
