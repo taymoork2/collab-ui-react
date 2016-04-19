@@ -213,7 +213,7 @@
             return vm.timeZoneToggleEnabled;
           },
           'templateOptions.disabled': function () {
-            return !vm.timeZoneToggleEnabled;
+            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
           }
         }
       }, {
