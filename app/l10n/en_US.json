@@ -3189,8 +3189,8 @@
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
-    "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site. Contact support.",
+    "authError": "You are not entitled to make changes to this site.",
+    "systemError": "Unable to connect to site.",
     "multipleLicenses": "Multiple..."
   },
   "cloudExtensions": {

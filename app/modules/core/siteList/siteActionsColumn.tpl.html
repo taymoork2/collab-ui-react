@@ -74,13 +74,24 @@
           class="icon-settings icon iconDisabled">
         </span>
         <span>&nbsp;</span>
-        <span
-          id="{{row.entity.license.siteUrl}}_errorIcon"
-          class="icon-error icon err webex-alert-text ui-grid-cell-contents"
-          tooltip-append-to-body="true"
-          tooltip-animation="false"
-          tooltip="{{'siteList.systemError' | translate}}"
-          tooltip-placement="top">
+        <span>
+          <span ng-if="!row.entity.isWarn">
+            <span class="ui-grid-cell-contents"
+              id="{{row.entity.license.siteUrl}}_errorIcon">
+              <i class="icon-error icon err webex-alert-text ui-grid-vcenter"></i>
+              <span>&nbsp;</span>
+              <span translate="siteList.systemError" class="webex-alert-text"></span>
+            </span>
+          </span>
+        
+          <span ng-if="row.entity.isWarn">
+            <span class="ui-grid-cell-contents"
+              id="{{row.entity.license.siteUrl}}_warningIcon">
+              <i class="icon-warning icon webex-attention-text ui-grid-vcenter"></i>
+              <span>&nbsp;</span>
+              <span translate="siteList.authError"></span>
+            </span>
+          </span>
         </span>
       </span>
 
