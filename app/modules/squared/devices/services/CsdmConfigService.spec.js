@@ -7,12 +7,11 @@ describe('CsdmConfigService', function () {
   var rootPath;
 
   beforeEach(function () {
-    module(function ($provide, $document) {
+    module(function ($provide) {
       win = {
         location: {
           search: ''
-        },
-        document: $document
+        }
       };
       $provide.value('$window', win);
     });
