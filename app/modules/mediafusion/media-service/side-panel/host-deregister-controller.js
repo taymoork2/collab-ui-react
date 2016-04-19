@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterController(cluster, orgName, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
+  function HostDeregisterController(cluster, orgName, MediaClusterService, XhrNotificationService, $translate, $modalInstance) {
     var vm = this;
 
     vm.deregisterAreYouSure = $translate.instant(
