@@ -15,7 +15,7 @@
         Authinfo.setSetupDone(true);
       }).then(function () {
         if (Authinfo.isAdmin()) {
-          return Auth.getAccount(Authinfo.getOrgId())
+          return Auth.getCustomerAccount(Authinfo.getOrgId())
             .success(function (data, status) {
               Authinfo.updateAccountInfo(data, status);
             });

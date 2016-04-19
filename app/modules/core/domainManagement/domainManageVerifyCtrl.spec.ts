@@ -3,7 +3,7 @@
 namespace domainManagement {
   declare let sinon:any;
   describe('DomainManagementVerifyCtrl', ()=> {
-      let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagmentVerifyCtrl, DomainManagementService, verifyDomainInvoked;
+      let Config, Controller, $rootScope, $q, Translate, Injector, DomainManagementService, verifyDomainInvoked;
       beforeEach(angular.mock.module('Core'));
       beforeEach(angular.mock.module('Hercules'));
 
@@ -17,7 +17,7 @@ namespace domainManagement {
         DomainManagementService = _DomainManagementService_;
       }));
 
-      let domainManagmentVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true)=> {
+      let domainManagementVerifyCtrlFactory = (domainManageService, user, domain, mockToken = true)=> {
 
         if (mockToken)
           domainManageService.getToken = sinon.stub().returns($q.resolve());
@@ -36,7 +36,7 @@ namespace domainManagement {
 
       it('should return domain provided through state as domain property', ()=> {
         let ctrl, domain = {text: 'anydomain.com'};
-        ctrl = domainManagmentVerifyCtrlFactory(
+        ctrl = domainManagementVerifyCtrlFactory(
           DomainManagementService,
           {
             name: "testuser",
@@ -60,7 +60,7 @@ namespace domainManagement {
         DomainManagementService._domainList = [{text: "superdomain.com", status: 'verified'}];
         DomainManagementService.verifyDomain = sinon.stub().returns(deferred.promise);
         DomainManagementService.getToken = sinon.stub().returns($q.resolve('faketoken'));
-        ctrl = domainManagmentVerifyCtrlFactory(
+        ctrl = domainManagementVerifyCtrlFactory(
           DomainManagementService, user, domain, false
         );
 
@@ -80,7 +80,7 @@ namespace domainManagement {
 
       it('should record metrics on learnMore click', ()=> {
         let ctrl, domain = {text: 'anydomain.com'};
-        ctrl = domainManagmentVerifyCtrlFactory(
+        ctrl = domainManagementVerifyCtrlFactory(
           DomainManagementService,
           {
             name: "testuser",
@@ -100,7 +100,7 @@ namespace domainManagement {
 
         it('should deny domains other than user domain', ()=> {
           let ctrl, domain = {text: 'anydomain.com'};
-          ctrl = domainManagmentVerifyCtrlFactory(
+          ctrl = domainManagementVerifyCtrlFactory(
             DomainManagementService,
             {
               name: "testuser",
@@ -115,7 +115,7 @@ namespace domainManagement {
 
         it('should allow verify of same domain as user if has token', ()=> {
           let ctrl, domain = {text: 'example.com', token: 'thetoken'};
-          ctrl = domainManagmentVerifyCtrlFactory(
+          ctrl = domainManagementVerifyCtrlFactory(
             DomainManagementService,
             {
               name: "testuser",
@@ -130,7 +130,7 @@ namespace domainManagement {
 
         it('should not allow verify of same domain as user if no token', ()=> {
           let ctrl, domain = {text: 'example.com'};
-          ctrl = domainManagmentVerifyCtrlFactory(
+          ctrl = domainManagementVerifyCtrlFactory(
             DomainManagementService,
             {
               name: "testuser",
@@ -148,7 +148,7 @@ namespace domainManagement {
         let ctrl, domain = {text: 'anydomain.com', token: 'sometoken'};
         beforeEach(()=> {
           DomainManagementService.domainList = [{text: "verifieddomain.com", status: 'verified'}];
-          ctrl = domainManagmentVerifyCtrlFactory(
+          ctrl = domainManagementVerifyCtrlFactory(
             DomainManagementService,
             {
               name: "testuser",

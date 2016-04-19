@@ -303,49 +303,32 @@ angular.module('Core')
           }
         });
 
-        UserListService.listUsers(null, null, null, null, function (data, status) {
-          if (data.success) {
-            Log.debug('Retrieved user list successfully. Status: ' + status);
-            if (data) {
-              $scope.numUsersInSync = data.totalResults;
-              $scope.dirsyncUserCountText = $translate.instant('firstTimeWizard.syncAgreementText');
-
-              for (var i = 0; i < data.totalResults; i++) {
-                var userArrObj = {
-                  Email: null,
-                  Name: null
-                };
-                var userNameObj = {
-                  firstName: null,
-                  lastName: null
-                };
-                userArrObj.Email = data.Resources[i].userName;
-                if (data.Resources[i].name) {
-                  if (data.Resources[i].name.givenName) {
-                    userArrObj.Name = data.Resources[i].name.givenName;
-                    userNameObj.firstName = data.Resources[i].name.givenName;
-                  }
-                  if (data.Resources[i].name.familyName) {
-                    userArrObj.Name += ' ' + data.Resources[i].name.familyName;
-                    userNameObj.lastName = data.Resources[i].name.familyName;
-                  }
-                  userArrObj.Name = _.trim(userArrObj.Name);
-                }
-                if (!userArrObj.Name) {
-                  userArrObj.Name = data.Resources[i].displayName;
-                }
-                $scope.userList.push(userArrObj);
-                $scope.useNameList.push(userNameObj);
-              }
+        return UserListService.exportCSV().then(function (csvData) {
+          csvData.shift();
+          $scope.numUsersInSync = csvData.length;
+          $scope.dirsyncUserCountText = $translate.instant('firstTimeWizard.syncAgreementText');
+          _.forEach(csvData, function (row) {
+            var userArrObj = {
+              Email: null,
+              Name: null
+            };
+            var userNameObj = {
+              firstName: null,
+              lastName: null
+            };
+            userArrObj.Email = row.email;
+            userArrObj.Name = _.trim(row.firstName + ' ' + row.lastName);
+            if (!userArrObj.Name) {
+              userArrObj.Name = row.displayName;
             }
-          } else {
-            Log.debug('Failed to retrieve user list. Status: ' + status);
-            Notification.notify([$translate.instant('dirsyncModal.getListFailed', {
-              status: status
-            })], 'error');
-          }
-        });
+            $scope.userList.push(userArrObj);
 
+            userNameObj.firstName = row.firstName;
+            userNameObj.lastName = row.lastName;
+            $scope.useNameList.push(userNameObj);
+          });
+          return $q.resolve();
+        });
       };
 
       $scope.syncNow = function () {

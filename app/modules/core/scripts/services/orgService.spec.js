@@ -5,7 +5,7 @@ describe('orgService', function () {
 
   var q, deferred;
 
-  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig;
+  var httpBackend, Orgservice, Auth, Authinfo, Config, Log, UrlConfig, Utils;
   var eftSettingRegex = /.*\/settings\/eft\.*/;
 
   beforeEach(function () {
@@ -27,6 +27,9 @@ describe('orgService', function () {
         },
         getHerculesUrl: function () {
           return '/hercules';
+        },
+        getProdAdminServiceUrl: function () {
+          return '/prodAdmin';
         }
       };
       Config = {
@@ -379,6 +382,13 @@ describe('orgService', function () {
     Orgservice.setEftSetting(isEFT, currentOrgId).catch(function (response) {
       expect(response.status).toBe(404);
     });
+    httpBackend.flush();
+  });
+
+  it('should successfully call out to getOrg if orgSearch is a UUID', function () {
+    var orgSearch = 'd69426bf-0ace-4c53-bc65-cd5a5c25b610';
+    httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'organizations/' + orgSearch + '?disableCache=false').respond(200, {});
+    Orgservice.listOrgs(orgSearch);
     httpBackend.flush();
   });
 

@@ -34,9 +34,9 @@
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
     vm.setLoadingDone = setLoadingDone;
 
-    vm.save9To5Schedule = save9To5Schedule;
+    vm.save8To5Schedule = save8To5Schedule;
     vm.saveCeDefinition = saveCeDefinition;
-    vm.delete9To5Schedule = delete9To5Schedule;
+    vm.delete8To5Schedule = delete8To5Schedule;
 
     vm.templateDefinitions = [{
       tname: "template1",
@@ -457,8 +457,8 @@
       vm.setupTemplate();
     }
 
-    function save9To5Schedule(aaName) {
-      return AAUiScheduleService.create9To5Schedule(aaName).then(
+    function save8To5Schedule(aaName) {
+      return AAUiScheduleService.create8To5Schedule(aaName).then(
         function (scheduleId) {
           vm.ui.ceInfo.scheduleId = scheduleId;
         },
@@ -485,7 +485,7 @@
       );
     }
 
-    function delete9To5Schedule(error) {
+    function delete8To5Schedule(error) {
       if (error === 'CE_SAVE_FAILURE') {
         AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).catch(
           function () {
@@ -501,7 +501,7 @@
 
     $scope.$on('AANameCreated', function () {
       if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'OpenClosedHoursTemplate') {
-        vm.save9To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete9To5Schedule);
+        vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
         vm.saveAARecords().then(function () {
           // Sucessfully created new CE Definition, time to move from Name-assignment page
