@@ -129,6 +129,7 @@ describe('OnboardCtrl: Ctrl', function () {
     var oneColumnInvalidUser = "First Name,\nJohn,";
     var twoValidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,f,f,f,f";
     var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nJohn,Doe,John Doe,johndoe@example.com,5001,,TREU,true,true,true,true,true\nJane,Doe,Jane Doe,janedoe@example.com,5002,,FASLE,false,false,false";
+    var twoValidUsersWithSpaces = "First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\n , , ,johndoe@example.com, , ,true,true,true,true\n , , ,janedoe@example.com, ,  ,f,f,f,f";
 
     beforeEach(installPromiseMatchers);
 
@@ -300,6 +301,26 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.cancelProcessCsv();
         $scope.$apply();
         expect(promise).toBeResolved();
+      });
+    });
+
+    describe('Process CSV with spaces and Save Users', function () {
+      beforeEach(function () {
+        $scope.model.file = twoValidUsersWithSpaces;
+        $scope.$apply();
+        $timeout.flush();
+      });
+      it('should report new users', function () {
+        Userservice.bulkOnboardUsers.and.returnValue($q.resolve(onboardUsersResponse(201)));
+
+        var promise = $scope.csvProcessingNext();
+        $scope.$apply();
+        expect(promise).toBeResolved();
+        expect($scope.model.processProgress).toEqual(100);
+        expect($scope.model.numTotalUsers).toEqual(2);
+        expect($scope.model.numNewUsers).toEqual(2);
+        expect($scope.model.numExistingUsers).toEqual(0);
+        expect($scope.model.userErrorArray.length).toEqual(0);
       });
     });
   });
