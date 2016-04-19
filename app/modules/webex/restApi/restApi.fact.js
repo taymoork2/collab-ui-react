@@ -37,7 +37,7 @@
 
         logMsg = funcName + "\n" +
           "httpReq.url=" + JSON.stringify(httpReq.url);
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         $http(
           httpReq
@@ -63,7 +63,7 @@
           var funcName = "csvApiRequest()";
           var logMsg = "";
 
-          $log.log(funcName);
+          // $log.log(funcName);
 
           if (!mockFlag) {
             return $q(

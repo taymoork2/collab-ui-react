@@ -132,30 +132,7 @@
 
     logMsg = funcName + "\n" +
       "vm.gridRows=" + JSON.stringify(vm.gridRows);
-    $log.log(logMsg);
-
-    /*
-    vm.gridOptions = {
-      data: 'gridRows',
-      multiSelect: false,
-      enableRowSelection: false,
-      enableColumnMenus: false,
-      rowHeight: 44,
-      columnDefs: [],
-    };
-
-    vm.gridOptions.columnDefs.push({
-      field: 'title',
-      displayName: '',
-      sortable: false
-    });
-
-    vm.gridOptions.columnDefs.push({
-      field: 'value',
-      displayName: '',
-      sortable: false
-    });
-    */
+    // $log.log(logMsg);
 
     vm.viewReady = true;
 

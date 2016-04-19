@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $controller, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, FeatureToggleService, TerminusStateService;
+  var controller, $compile, $controller, $scope, $state, $q, $translate, PstnSetupService, PstnSetup, Notification, TerminusStateService;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
@@ -64,7 +64,7 @@ describe('Controller: PstnNumbersCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _FeatureToggleService_, _TerminusStateService_) {
+  beforeEach(inject(function ($rootScope, _$compile_, _$controller_, _$state_, _$q_, _$translate_, _PstnSetupService_, _PstnSetup_, _Notification_, _TerminusStateService_) {
     $scope = $rootScope.$new();
     $compile = _$compile_;
     $controller = _$controller_;
@@ -74,7 +74,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     PstnSetupService = _PstnSetupService_;
     PstnSetup = _PstnSetup_;
     Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
     TerminusStateService = _TerminusStateService_;
 
     PstnSetup.setCustomerId(customer.uuid);
@@ -84,7 +83,6 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn(PstnSetupService, 'releaseCarrierInventory').and.returnValue($q.when());
     spyOn(Notification, 'error');
     spyOn($state, 'go');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(TerminusStateService, 'query').and.returnValue({
       '$promise': $q.when(states)
     });

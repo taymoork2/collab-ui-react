@@ -28,38 +28,6 @@ angular
           },
           authenticate: false
         })
-        .state('enterEmailAddr', {
-          url: '/enter-email-addr',
-          views: {
-            'main@': {
-              templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
-              controller: 'enterEmailAddrController',
-              controllerAs: 'enterEmailAddrController'
-            }
-          },
-          authenticate: false
-        })
-        .state('dr-login-forward', {
-          url: '/dr-login-forward',
-          views: {
-            'main@': {
-              templateUrl: 'modules/digitalRiver/login/drLoginForward/drLoginForward.tpl.html',
-              controller: 'drLoginForwardController',
-              controllerAs: 'drLoginForwardController'
-            }
-          }
-        })
-        .state('createAccount', {
-          url: '/create-account',
-          views: {
-            'main@': {
-              templateUrl: 'modules/digitalRiver/login/createAccount/createAccount.tpl.html',
-              controller: 'createAccountController',
-              controllerAs: 'createAccountController'
-            }
-          },
-          authenticate: false
-        })
         .state('activateUser', {
           url: '/activate-user',
           views: {
@@ -113,6 +81,159 @@ angular
             }
           }
         })
+        // start online order pages. note: unauthenticated pages are protected by a URL token
+        .state('enterEmailAddr', {
+          url: '/enter-email-addr',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController',
+              controllerAs: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
+        .state('createAccount', {
+          url: '/create-account/',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController',
+              controllerAs: 'createAccountController'
+            }
+          },
+          params: {
+            referrer: null,
+            email: null,
+            params: null
+          },
+          authenticate: false
+        })
+        .state('submitOrder', {
+          url: '/submitOrder',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/submitOrder/submitOrder.tpl.html',
+              controller: 'submitOrderController',
+              controllerAs: 'submitOrderController'
+            }
+          },
+          params: {
+            referrer: null,
+            email: null,
+            params: {
+              sku: null,
+              orderId: null,
+              campaignId: null,
+              uuid: null
+            }
+          },
+          authenticate: false
+        })
+        .state('drLoginForward', {
+          url: '/dr-login-forward',
+          views: {
+            'main@': {
+              template: ' ',
+              controller: 'drLoginForwardController',
+              controllerAs: 'drLoginForwardController'
+            }
+          },
+          params: {
+            email: null,
+            redirect: null,
+            referrer: null,
+            params: null
+          },
+          authenticate: false
+        })
+        .state('drLoginReturn', {
+          url: '/dr-login-return',
+          views: {
+            'main@': {
+              template: ' ',
+              controller: 'drLoginReturnController',
+              controllerAs: 'drLoginReturnController'
+            }
+          },
+          params: {
+            email: null,
+            redirect: null,
+            params: null
+          },
+          authenticate: true
+        })
+        .state('drOnboard', {
+          url: '/dr-onboard',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/drOnboard.tpl.html',
+              controller: 'drOnboardController',
+              controllerAs: 'drOnboardController'
+            }
+          },
+          params: {
+            email: null,
+            params: null
+          },
+          authenticate: true
+        })
+        .state('drConfirmAdminOrg', {
+          url: '/dr-confirm-adminorg',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/confirmAdminOrg/drConfirmAdminOrg.tpl.html',
+              controller: 'drConfirmAdminOrgController',
+              controllerAs: 'drConfirmAdminOrgController'
+            }
+          },
+          params: {
+            org: null,
+            site: null
+          },
+          authenticate: true
+        })
+        .state('drOnboardQuestion', {
+          url: '/dr-onboard-question',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/question/drOnboardQuestion.tpl.html',
+              controller: 'drOnboardQuestionController',
+              controllerAs: 'drOnboardQuestionController'
+            }
+          },
+          params: {
+            email: null,
+            params: null
+          },
+          authenticate: true
+        })
+        .state('drOrgName', {
+          url: '/drOrgName',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/orgName/drOrgName.tpl.html',
+              controller: 'drOrgNameController',
+              controllerAs: 'drOrgNameController'
+            }
+          },
+          params: {
+            email: null
+          },
+          authenticate: true
+        })
+        .state('drOnboardEnterAdminEmail', {
+          url: '/dr-onboard-enter-admin-email',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/enterAdminEmail/drOnboardEnterAdminEmail.tpl.html',
+              controller: 'drOnboardEnterAdminEmailController',
+              controllerAs: 'drOnboardEnterAdminEmailController'
+            }
+          },
+          authenticate: true
+        })
+        // end online order pages
         .state('unauthorized', {
           views: {
             'main@': {
@@ -541,6 +662,16 @@ angular
           views: {
             'editServices@editService': {
               templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
+        .state('userRedirect', {
+          url: '/userRedirect',
+          views: {
+            'main@': {
+              controller: 'userRedirectCtrl',
+              controllerAs: 'userRedirect',
+              templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html'
             }
           }
         })
