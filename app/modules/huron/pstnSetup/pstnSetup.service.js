@@ -54,7 +54,7 @@
 
     return service;
 
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
+    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
       var payload = {
         uuid: uuid,
         name: name,
@@ -63,7 +63,7 @@
         email: email,
         pstnCarrierId: pstnCarrierId,
         numbers: numbers,
-        trial: true
+        trial: trial
       };
 
       if (PstnSetup.isResellerExists()) {
