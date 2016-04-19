@@ -291,7 +291,6 @@ $aa-builder-text-color: $gray-dark-1;
 
   @extend .aa-transition;
 
-  display: inline-block;
   @include vr-spacing(m, 0);
 
   @include vr-spacing(pl, .5);
