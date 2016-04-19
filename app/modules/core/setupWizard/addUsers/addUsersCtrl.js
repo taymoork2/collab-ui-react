@@ -129,7 +129,7 @@ angular.module('Core')
         } else if (syncOption === 'manual') {
           $scope.showStep('manual');
         } else {
-          Notification.notify([$translate.instant('firstTimeWizard.chooseSync')], 'error');
+          Notification.error($translate.instant('firstTimeWizard.chooseSync'));
         }
       };
 

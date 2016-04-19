@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Auth Service', function () {
+fdescribe('Auth Service', function () {
   beforeEach(module('Core'));
 
   var Auth, Authinfo, $httpBackend, Config, Storage, $window, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig;
@@ -10,17 +10,17 @@ describe('Auth Service', function () {
   }));
 
   beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _Config_, _Storage_, _SessionStorage_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_) {
+    $q = _$q_;
     Auth = _Auth_;
     Config = _Config_;
+    $state = _$state_;
     Storage = _Storage_;
+    SessionStorage = {};
     Authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
+    $rootScope = _$rootScope_;
     OAuthConfig = _OAuthConfig_;
     $httpBackend = _$httpBackend_;
-    SessionStorage = _SessionStorage_;
-    $state = _$state_;
-    $q = _$q_;
-    $rootScope = _$rootScope_;
     spyOn($state, 'go').and.returnValue($q.when());
   }));
 

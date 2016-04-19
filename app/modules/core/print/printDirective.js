@@ -5,6 +5,7 @@
     .module('Core')
     .directive('crPrint', crPrint);
 
+  /* @ngInject */
   function crPrint($window) {
     var printSection = $window.document.getElementById('printSection');
     // if there is no printing section, create one
