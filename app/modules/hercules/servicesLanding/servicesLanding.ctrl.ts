@@ -7,7 +7,11 @@ namespace servicesLanding {
   class ServicesLandingCtrl {
 
     private cards:Array<ServicesLandingCard>;
+    private _feature = false;
 
+    get featureEnabled():boolean {
+      return this._feature;
+    }
 
     public hybridCardFilters = {
       all: {cardType: servicesLanding.CardType.hybrid},
@@ -18,7 +22,7 @@ namespace servicesLanding {
 
 
     /* @ngInject */
-    constructor(Orgservice, private ServicesLandingCardFactory, private $q, private Authinfo, ServiceDescriptor) {
+    constructor(Orgservice, private ServicesLandingCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
       this.cards = ServicesLandingCardFactory.createCards();
 
       this.loadWebexSiteList();
@@ -26,6 +30,10 @@ namespace servicesLanding {
       ServiceDescriptor.services((err, services)=> {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
+
+      FeatureToggleService.supports(FeatureToggleService.features.serviceLanding).then((supports)=> {
+        this._feature = !!supports;
+      });
     }
 
     public hybridCards() {
@@ -46,7 +54,7 @@ namespace servicesLanding {
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-      console.log("forwarding event", eventArgs,"this",this);
+      console.log("forwarding event", eventArgs, "this", this);
       _.each(this.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);

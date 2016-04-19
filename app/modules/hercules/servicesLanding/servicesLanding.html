@@ -1,4 +1,4 @@
-<div class="servicesLanding">
+<div class="servicesLanding" ng-if="servicesLandingCtrl.featureEnabled">
   <!--
        Toolkit did not work for cs-page-header here
        FIX
@@ -33,3 +33,4 @@
 
   </div>
 </div>
+<div class="servicesLanding" ng-if="!servicesLandingCtrl.featureEnabled">waiting for feature</div>

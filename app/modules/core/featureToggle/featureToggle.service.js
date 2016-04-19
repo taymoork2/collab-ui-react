@@ -40,7 +40,7 @@
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      domainManagement: 'atlas-domain-management',
+      serviceLanding: 'atlas-service-landing',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',

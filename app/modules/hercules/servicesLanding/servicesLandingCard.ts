@@ -1,16 +1,5 @@
 namespace servicesLanding {
 
-  /* export interface filter {
-   label:String;
-   columns:Array<filterColumn>;
-   columnDefs?:Array<any>;
-   }
-
-   export interface filterColumn {
-   label:String;
-   valueFunction(row):Number;
-   }*/
-
   export interface CardButton {
     name:String;
     buttonClass?:String;
@@ -74,10 +63,10 @@ namespace servicesLanding {
       undefined: 'warning'
     };
 
-    serviceEnabledWeight={
-      'true':2,
-      'false':1,
-      undefined:0
+    serviceEnabledWeight = {
+      'true': 2,
+      'false': 1,
+      undefined: 0
     };
     serviceStatusWeight = {
       ok: 1,
@@ -86,8 +75,8 @@ namespace servicesLanding {
       undefined: 0
     };
 
-    public constructor(private _template:String, private _name:String, private _description, private _icon:String, protected _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
-
+    public constructor(private _template:String, private _name:String, private _description, private _icon:String,
+                       protected _active:boolean = true, private _cardClass:String = 'cs-card', private _cardType:CardType = CardType.cloud) {
     }
 
     protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
@@ -95,13 +84,18 @@ namespace servicesLanding {
         .filter((service)=> {
           return _.indexOf(serviceIds, service.id) >= 0;
         })
-        .reduce((result, serv:{enabled:boolean})=> {
-          let enabled =  this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-          console.log("service enable",serv,enabled);
-          return enabled;
-        },undefined)
+        .transform((result, serv, key)=> {
+          let enabled = this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
+            console.log("service enable", serv, enabled);
+            return enabled;
+        }, undefined)
+        // .reduce((result, serv:{enabled:boolean})=> {
+        //   let enabled = this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
+        //   console.log("service enable", serv, enabled);
+        //   return enabled;
+        // }, undefined)
         .value();
-      console.log("service enabled2",serviceEnabled);
+      console.log("service enabled2", serviceEnabled);
       return serviceEnabled;
     }
 
@@ -110,14 +104,14 @@ namespace servicesLanding {
       //   return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
       let callServiceStatus:string = _.chain(services)
         .filter((service)=> {
-          let found = _.indexOf(serviceIds, service.id)>=0;
-          console.log("service",service, found);
+          let found = _.indexOf(serviceIds, service.id) >= 0;
+          console.log("service", service, found);
           return found;
         })
         .reduce((result, serv:{status:string})=> {
-          console.log("service red",result, serv);
+          console.log("service red", result, serv);
           return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
-        },undefined)
+        }, undefined)
         .value();
       console.log("status ", callServiceStatus);
       if (callServiceStatus) {
