@@ -13,28 +13,28 @@ angular.module('Core')
 
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
-        'username': null,
-        'userId': null,
-        'orgName': null,
-        'orgId': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'managedOrgs': [],
-        'entitlements': null,
-        'services': null,
-        'roles': [],
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false,
-        'licenses': [],
-        'messageServices': null,
-        'conferenceServices': null,
-        'communicationServices': null,
-        'conferenceServicesWithoutSiteUrl': null,
-        'cmrServices': null,
-        'hasAccount': false,
-        'emails': null,
-        'customerType': null
+        username: null,
+        userId: null,
+        orgName: null,
+        orgId: null,
+        addUserEnabled: null,
+        entitleUserEnabled: null,
+        managedOrgs: [],
+        entitlements: null,
+        services: null,
+        roles: [],
+        tabs: [],
+        isInitialized: false,
+        setupDone: false,
+        licenses: [],
+        messageServices: null,
+        conferenceServices: null,
+        communicationServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        cmrServices: null,
+        hasAccount: false,
+        emails: null,
+        customerType: null
       };
 
       var getTabTitle = function (title) {
@@ -359,7 +359,7 @@ angular.module('Core')
           return this.hasRole('Full_Admin');
         },
         isCSB: function () {
-          var csb = ['CCW', 'APPDIRECT'];
+          var csb = ['CCW','APP_DIRECT'];
           return csb.indexOf(authData.customerType) > -1;
         },
         isPartner: function () {
