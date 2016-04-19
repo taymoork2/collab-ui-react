@@ -63,25 +63,20 @@
         .map(function (feature) {
           return {feature: feature, enabled: false};
         }).value();
-      console.log('fadfa',newFeatures,tabs);
 
     _.forEach(newFeatures,function (feature) {
         var existing = _.find(features, {feature: feature.feature});
         if (existing) {
-          console.log('nooop');
           //noop , keep the enabled flag from previous load.
         } else {
-          console.log('push', feature, features);
           features.push(feature);
         }
       });
-      console.log('ff2', features);
     }
 
     function getFeatureToggles(features) {
       _.forEach(features, function (feature) {
         FeatureToggleService.supports(feature.feature).then(function (supports) {
-          console.log('featur toggle support',supports, feature);
           feature.enabled = !!supports;
           updateScopeTabs();
         });
@@ -91,10 +86,8 @@
 
     function initTabs() {
       tc.tabs = Authinfo.getTabs();
-      console.log(tc, tc.tabs);
       updateFeatureTogglesFromTabs(tc.tabs, tc.features);
       getFeatureToggles(tc.features);
-      console.log('after get toglles',tc, tc.features);
       updateScopeTabs();
       // $scope.tabs = filterFeatureToggledTabs(tabs, tc.features);
       // console.log('features', features, filterFeatureToggledTabs(tabs, features));
