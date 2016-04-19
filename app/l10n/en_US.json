@@ -3540,6 +3540,24 @@
       }
     }
   },
+  "settings": {
+    "pageTitle": "Settings",
+    "branding": {
+      "title": "Branding"
+    },
+    "sipDomain": {
+      "title": "SIP Domain"
+    },
+    "domains": {
+      "title": "Domains"
+    },
+    "authentication": {
+      "title": "Authentication"
+    },
+    "support": {
+      "title": "Support"
+    }
+  },
   "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",

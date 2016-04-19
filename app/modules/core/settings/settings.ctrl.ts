@@ -4,8 +4,8 @@ namespace Settings {
 
     public title:string;
 
-    constructor(settingTitle:string) {
-      this.title = settingTitle;
+    constructor(settingKey:string) {
+      this.title = "settings." + settingKey + ".title";
     }
   }
 
@@ -17,9 +17,9 @@ namespace Settings {
     constructor(Orgservice, private $q, private Authinfo) {
 
       this.settings = [
-        new Setting('Branding'),
-        new Setting('SIP Domain'),
-        new Setting('Domains')
+        new Setting('sipDomain'),
+        new Setting('domains'),
+        new Setting('authentication')
       ]
 
     }
