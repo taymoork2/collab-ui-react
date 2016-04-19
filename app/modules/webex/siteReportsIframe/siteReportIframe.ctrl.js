@@ -17,6 +17,7 @@
     'Config',
     'Storage',
     'WebExUtilsFact',
+    '$document',
 
     function reportsIframeCtrl(
       $scope,
@@ -33,7 +34,8 @@
       Notification,
       Config,
       Storage,
-      WebExUtilsFact
+      WebExUtilsFact,
+      $document
     ) {
 
       var _this = this;
@@ -58,7 +60,7 @@
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
       $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
-      $scope.fullSparkDNS = window.location.origin;
+      $scope.fullSparkDNS = $window.location.origin;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
@@ -74,14 +76,14 @@
       $rootScope.lastSite = $stateParams.siteUrl;
       $log.log("last site " + $rootScope.lastSite);
 
-      var parser = document.createElement('a');
+      var parser = $document.createElement('a');
       parser.href = $scope.iframeUrl;
       $rootScope.nginxHost = parser.hostname;
       $log.log("nginxHost " + $rootScope.nginxHost);
 
       $timeout(
         function loadIframe() {
-          var submitFormBtn = document.getElementById('submitFormBtn');
+          var submitFormBtn = $document.getElementById('submitFormBtn');
           submitFormBtn.click();
         }, // loadIframe()
 

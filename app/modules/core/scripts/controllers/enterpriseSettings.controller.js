@@ -481,10 +481,10 @@
         if (data.success) {
           $scope.metaFilename = 'idb-meta-' + Authinfo.getOrgId() + '-SP.xml';
           var content = data.metadataXml;
-          var blob = new Blob([content], {
+          var blob = new $window.Blob([content], {
             type: 'text/xml'
           });
-          $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
+          $scope.url = ($window.URL || $window.webkitURL).createObjectURL(blob);
         } else {
           Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
         }

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskLogService, Authinfo) {
+  function HelpdeskCloudberryDeviceController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskLogService, Authinfo, $window) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -44,13 +44,13 @@
 
     function downloadLog(filename) {
       HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
-        window.location.assign(tempURL);
+        $window.location.assign(tempURL);
       });
     }
 
     function keyPressHandler(event) {
       if (event.keyCode === 27) { // Esc
-        window.history.back();
+        $window.history.back();
       }
     }
   }

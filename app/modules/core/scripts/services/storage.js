@@ -1,27 +1,27 @@
 'use strict';
 
 angular.module('Core')
-  .service('Storage', function Storage() {
+  .service('Storage', function Storage($window) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     return {
       put: function (key, value) {
         if (value !== null) {
-          localStorage.setItem(key, value);
+          $window.localStorage.setItem(key, value);
         }
       },
 
       putObject: function (key, object) {
         if (object !== null) {
-          localStorage.setItem(key, JSON.stringify(object));
+          $window.localStorage.setItem(key, JSON.stringify(object));
         }
       },
 
       get: function (key) {
-        return localStorage.getItem(key);
+        return $window.localStorage.getItem(key);
       },
 
       getObject: function (key) {
-        return JSON.parse(localStorage.getItem(key));
+        return JSON.parse($window.localStorage.getItem(key));
       },
 
       pop: function (key) {
@@ -37,11 +37,11 @@ angular.module('Core')
       },
 
       remove: function (key) {
-        localStorage.removeItem(key);
+        $window.localStorage.removeItem(key);
       },
 
       clear: function () {
-        localStorage.clear();
+        $window.localStorage.clear();
       }
 
     };

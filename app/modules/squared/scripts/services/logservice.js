@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('LogService', LogService);
 
 /* @ngInject */
-function LogService($rootScope, $http, Storage, UrlConfig, Log, Auth) {
+function LogService($rootScope, $http, Storage, UrlConfig, Log, Auth, $window) {
   var service = {
     listLogs: listLogs,
     searchLogs: searchLogs,
@@ -32,7 +32,7 @@ function LogService($rootScope, $http, Storage, UrlConfig, Log, Auth) {
   }
 
   function searchLogs(searchInput, callback) {
-    var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
+    var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + $window.encodeURIComponent(searchInput);
 
     $http.get(logsUrl)
       .success(function (data, status) {

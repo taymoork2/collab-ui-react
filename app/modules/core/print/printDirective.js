@@ -5,8 +5,8 @@
     .module('Core')
     .directive('crPrint', crPrint);
 
-  function crPrint() {
-    var printSection = document.getElementById('printSection');
+  function crPrint($window, $document) {
+    var printSection = $document.getElementById('printSection');
     // if there is no printing section, create one
     if (!printSection) {
       createPrintSection();
@@ -16,22 +16,22 @@
     }
 
     function createPrintSection() {
-      printSection = document.createElement('div');
+      printSection = $document.createElement('div');
       printSection.id = 'printSection';
       printSection.className = 'container';
-      document.body.appendChild(printSection);
+      $document.body.appendChild(printSection);
     }
 
     function link(scope, element, attrs) {
       element.on('click', function () {
-        var elemToPrint = document.getElementById(attrs.printElementId);
+        var elemToPrint = $document.getElementById(attrs.printElementId);
         if (elemToPrint) {
           printElement(elemToPrint);
         }
       });
 
-      if (window.matchMedia) {
-        var mediaQueryList = window.matchMedia('print');
+      if ($window.matchMedia) {
+        var mediaQueryList = $window.matchMedia('print');
         mediaQueryList.addListener(function (mql) {
           if (!mql.matches) {
             afterPrint();
@@ -42,7 +42,7 @@
       //   // clean the print section before adding new content
       //   printSection.innerHTML = '';
       // }
-      window.onafterprint = afterPrint;
+      $window.onafterprint = afterPrint;
     }
 
     function afterPrint() {
@@ -55,7 +55,7 @@
       var domClone = elem.cloneNode(true);
       //console.log(domClone);
       printSection.appendChild(domClone);
-      window.print();
+      $window.print();
     }
     return {
       link: link,

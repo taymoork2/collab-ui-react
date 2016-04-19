@@ -5,7 +5,7 @@
 
 angular.module('WebExApp').directive(
   'iFrameResizable',
-  function iFrameResizableDirective($window) {
+  function iFrameResizableDirective($window, $document) {
     return function iFrameResizable(
       $scope,
       element,
@@ -15,10 +15,10 @@ angular.module('WebExApp').directive(
       $scope.initializeWindowSize = function () {
         var innerHeight = $window.innerHeight;
         var targetElementId = attributes["iFrameResizable"];
-        var targetElement = document.getElementById(targetElementId).getBoundingClientRect();
+        var targetElement = $document.getElementById(targetElementId).getBoundingClientRect();
         var targetElementLocation = {
-          left: targetElement.left + window.pageXOffset,
-          top: targetElement.top + window.pageYOffset
+          left: targetElement.left + $window.pageXOffset,
+          top: targetElement.top + $window.pageYOffset
         };
 
         var iframeTopMargin = targetElementLocation.top;

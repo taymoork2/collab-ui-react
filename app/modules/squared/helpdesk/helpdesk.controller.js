@@ -2,10 +2,10 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
+  function HelpdeskController(HelpdeskSplunkReporterService, $q, HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config, $document) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
-      document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
+      $document.title = $translate.instant("helpdesk.browserTabHeaderTitle");
     });
     var vm = this;
     vm.search = search;
@@ -356,7 +356,7 @@
       var ENTER = 13;
       var S = 83;
 
-      var activeElement = angular.element(document.activeElement);
+      var activeElement = angular.element($document.activeElement);
       var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
       if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
         return; // if not escape and enter, nothing to do

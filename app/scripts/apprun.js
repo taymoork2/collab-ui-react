@@ -68,12 +68,12 @@
 
     if (!Storage.get('accessToken')) {
       var params;
-      if (document.URL.indexOf('access_token') !== -1) {
-        params = getFromGetParams(document.URL);
+      if ($document.URL.indexOf('access_token') !== -1) {
+        params = getFromGetParams($document.URL);
         $rootScope.status = 'loaded';
         Storage.put('accessToken', params.access_token);
-      } else if (document.URL.indexOf('code') !== -1) {
-        params = getFromStandardGetParams(document.URL);
+      } else if ($document.URL.indexOf('code') !== -1) {
+        params = getFromStandardGetParams($document.URL);
         $rootScope.status = 'loading';
         Auth.getNewAccessToken(params)
           .then(function (token) {
