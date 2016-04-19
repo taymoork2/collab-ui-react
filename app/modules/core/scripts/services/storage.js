@@ -2,26 +2,35 @@
 
 angular.module('Core')
   .service('Storage', function Storage($window) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+    
+    function getLocalStorage() {
+      try {
+        return $window.localStorage;
+      } catch (e) {
+        console.error(e);
+        return {};
+      }
+    }
+
     return {
       put: function (key, value) {
         if (value !== null) {
-          $window.localStorage.setItem(key, value);
+          getLocalStorage().setItem(key, value);
         }
       },
 
       putObject: function (key, object) {
         if (object !== null) {
-          $window.localStorage.setItem(key, JSON.stringify(object));
+          getLocalStorage().setItem(key, JSON.stringify(object));
         }
       },
 
       get: function (key) {
-        return $window.localStorage.getItem(key);
+        return getLocalStorage().getItem(key);
       },
 
       getObject: function (key) {
-        return JSON.parse($window.localStorage.getItem(key));
+        return JSON.parse(getLocalStorage().getItem(key));
       },
 
       pop: function (key) {
@@ -37,11 +46,11 @@ angular.module('Core')
       },
 
       remove: function (key) {
-        $window.localStorage.removeItem(key);
+        getLocalStorage().removeItem(key);
       },
 
       clear: function () {
-        $window.localStorage.clear();
+        getLocalStorage().clear();
       }
 
     };

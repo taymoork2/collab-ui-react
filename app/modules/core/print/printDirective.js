@@ -5,8 +5,8 @@
     .module('Core')
     .directive('crPrint', crPrint);
 
-  function crPrint($window, $document) {
-    var printSection = $document.getElementById('printSection');
+  function crPrint($window) {
+    var printSection = $window.document.getElementById('printSection');
     // if there is no printing section, create one
     if (!printSection) {
       createPrintSection();
@@ -16,15 +16,15 @@
     }
 
     function createPrintSection() {
-      printSection = $document.createElement('div');
+      printSection = $window.document.createElement('div');
       printSection.id = 'printSection';
       printSection.className = 'container';
-      $document.body.appendChild(printSection);
+      $window.document.body.appendChild(printSection);
     }
 
     function link(scope, element, attrs) {
       element.on('click', function () {
-        var elemToPrint = $document.getElementById(attrs.printElementId);
+        var elemToPrint = $window.document.getElementById(attrs.printElementId);
         if (elemToPrint) {
           printElement(elemToPrint);
         }

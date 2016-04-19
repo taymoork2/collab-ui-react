@@ -255,7 +255,7 @@ angular.module('Core')
 
         // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).
         isIe: function () {
-          return ($window.$window.navigator.userAgent.indexOf('MSIE') > 0 || $window.$window.navigator.userAgent.indexOf('Trident') > 0);
+          return ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
         },
 
         checkForIeWorkaround: function () {

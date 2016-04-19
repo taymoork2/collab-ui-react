@@ -17,7 +17,6 @@
     'Config',
     'Storage',
     'WebExUtilsFact',
-    '$document',
 
     function reportsIframeCtrl(
       $scope,
@@ -34,8 +33,7 @@
       Notification,
       Config,
       Storage,
-      WebExUtilsFact,
-      $document
+      WebExUtilsFact
     ) {
 
       var _this = this;
@@ -76,14 +74,14 @@
       $rootScope.lastSite = $stateParams.siteUrl;
       $log.log("last site " + $rootScope.lastSite);
 
-      var parser = $document.createElement('a');
+      var parser = $window.document.createElement('a');
       parser.href = $scope.iframeUrl;
       $rootScope.nginxHost = parser.hostname;
       $log.log("nginxHost " + $rootScope.nginxHost);
 
       $timeout(
         function loadIframe() {
-          var submitFormBtn = $document.getElementById('submitFormBtn');
+          var submitFormBtn = $window.document.getElementById('submitFormBtn');
           submitFormBtn.click();
         }, // loadIframe()
 
