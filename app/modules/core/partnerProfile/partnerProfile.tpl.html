@@ -200,6 +200,18 @@
             </label>
           </div>
         </div>
+
+        <div ng-show="showAllowReadOnlyAccessCheckbox">
+          <h4 translate="customerProfile.supportAccessTitle"></h4>
+          <div class="form-spacing">
+            <span translate="customerProfile.supportAccessInfo"></span>
+          </div>
+          <input id="profileSettingsAllowReadOnlyAccess" type="checkbox" ng-model="allowReadOnlyAccess">
+          <label class="cs-checkbox" for="profileSettingsAllowReadOnlyAccess">
+            <span translate="customerProfile.supportAccessCheckbox"></span>
+          </label>
+        </div>
+
       </div>
     </div>
   </form>

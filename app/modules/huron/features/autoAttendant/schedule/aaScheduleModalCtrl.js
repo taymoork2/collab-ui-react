@@ -16,12 +16,14 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
+    vm.exactDateChanged = exactDateChanged;
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
@@ -43,7 +45,11 @@
     vm.openhours = [];
 
     function addRange() {
-      vm.openhours.push(angular.copy(AAICalService.getDefaultRange()));
+      var openhour = AAICalService.getDefaultRange();
+      _.each(openhour.days, function (day) {
+        day.label = moment.weekdays(day.index);
+      });
+      vm.openhours.push(angular.copy(openhour));
     }
 
     function deleteRange(index) {
@@ -118,9 +124,39 @@
       vm.holidaysForm.$setDirty();
     }
 
-    function isOpenHoursAfterCloseHours(hours) {
-      if (hours.starttime && hours.endtime) {
-        return hours.starttime > hours.endtime;
+    function isOpenHoursAfterCloseHours(startTime, endTime) {
+      if (startTime && endTime) {
+        var startTime = moment(startTime);
+        var endTime = moment(endTime);
+        var start = moment({
+          hour: startTime.hour(),
+          minute: startTime.minute()
+        });
+        var end = moment({
+          hour: endTime.hour(),
+          minute: endTime.minute()
+        });
+        return start.isSame(end) || start.isAfter(end);
+      }
+    }
+
+    function forceStartBeforeEndCheck() {
+      var index = _.findLastIndex(vm.holidays, {
+        isOpen: true
+      });
+      if (index >= 0) {
+        var indexForm = 'holidayForm' + index;
+        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+      }
+    }
+
+    function exactDateChanged(holiday) {
+      // If exactDate unselected, auto select recurAnnually
+      if (holiday.exactDate === false) {
+        holiday.recurAnnually = true;
+      } else {
+        holiday.recurAnnually = false;
       }
     }
 
@@ -150,7 +186,7 @@
             return flag;
           }
         }
-        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined)) {
+        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined || isOpenHoursAfterCloseHours(holiday.starttime, holiday.endtime))) {
           return flag;
         }
         flag = true;
@@ -162,7 +198,7 @@
       var flag = false;
       _.each(vm.openhours, function (hours) {
         flag = false; //Verify each OpenHour(time and days) is valid to enable save
-        if (isOpenHoursAfterCloseHours(hours)) {
+        if (isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)) {
           return flag;
         }
         if (hours.starttime && hours.endtime) {
@@ -356,6 +392,11 @@
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
           var allHours = AAICalService.getHoursRanges(data);
           vm.openhours = allHours.hours;
+          _.each(vm.openhours, function (openhour) {
+            _.each(openhour.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
+          });
           vm.holidays = allHours.holidays;
           _.each(vm.holidays, function (holiday) {
             if (!holiday.exactDate) {
@@ -381,11 +422,11 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions.push({
+        vm.dayOptions[(index - 1 + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)
-        });
+        };
       });
     }
 
@@ -403,6 +444,9 @@
             hours: allHours.hours.length
           });
           allHours.hours.forEach(function (value) {
+            _.each(value.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
             vm.openhours.unshift(value);
           });
           allHours.holidays.forEach(function (value) {
@@ -424,7 +468,6 @@
       populateUiModel();
       vm.isDeleted = false;
     }
-
     activate();
   }
 })();

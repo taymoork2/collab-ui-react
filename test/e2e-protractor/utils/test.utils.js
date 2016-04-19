@@ -544,13 +544,7 @@ exports.expectRowIsNotDisplayed = function (text) {
 };
 
 exports.dumpConsoleErrors = function () {
-  browser.manage().logs().get('browser').then(function (browserLogs) {
-    browserLogs.forEach(function (log) {
-      if (log.level.value > 900) {
-        console.log('CONSOLE - ' + log.message);
-      }
-    });
-  });
+  // todo: smu will remove in separate PR as numerous files are changed...
 };
 
 exports.formatPhoneNumbers = function (value) {

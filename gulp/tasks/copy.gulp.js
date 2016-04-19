@@ -101,7 +101,7 @@ gulp.task('copy:build-vendor-images', function () {
 });
 
 gulp.task('copy:build-vendor-js', function () {
-  messageLogger('Copying vendor CSS files', config.vendorFiles.js);
+  messageLogger('Copying vendor JS files', config.vendorFiles.js);
   return gulp
     .src(config.vendorFiles.js, {
       base: config.vendor

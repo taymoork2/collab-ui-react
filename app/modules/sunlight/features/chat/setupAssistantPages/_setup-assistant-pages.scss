@@ -1,0 +1,18 @@
+.ct-title {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  @include vr-spacing(pt, 3);
+}
+
+.ct-title-icon {
+  @include vr-spacing(pr, 0.75);
+  font-size: 3rem;
+}
+
+.ct-title-desc {
+  text-align: center;
+  color: $gray-base;
+}

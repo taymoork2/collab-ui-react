@@ -1,7 +1,12 @@
 'use strict';
 
 describe('Login Page', function () {
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
+    log.verbose = false;
     utils.dumpConsoleErrors();
   });
 

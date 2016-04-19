@@ -104,7 +104,8 @@
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
-    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
+    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -165,6 +166,7 @@
       "200": "entitled successfully",
       "404": "does not exist",
       "409": "entitlement previously updated",
+      "400094": "already has Call Service under Hybrid Services enabled; having both Call Service and Spark Call enabled for a user is unsupported. To enable Spark Call, disable Call Service for this user and try again.",
       "other": "not entitled, status: {{status}}"
     }
   },
@@ -555,6 +557,8 @@
     "sendFeedback": "Cisco Feedback",
     "sso": "SSO",
     "roles": "Roles",
+    "readOnlyHeader": "Read-Only",
+    "readOnlyAccessNotEnabled": "Help Desk Read-Only access is not enabled. You can change this in your account settings",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Spark Status",
@@ -921,6 +925,7 @@
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
+    "errorGettingTimeZoneToggle": "Failed to get atlasHuronDeviceTimeZone feature toggle",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
     "extensionAddError": "Failed to create extension {{extension}}.",
@@ -1239,6 +1244,7 @@
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
+      "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
     },
     "settings": {
@@ -1406,7 +1412,7 @@
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
     "setSipUriDescPartOne": "Create a custom SIP domain for your organization.  Once created, a Spark SIP address will be generated for each user in your organization, which will enable calling between SIP-capable devices and your users.",
-    "setSipUriDescPartTwo": "For example, John Smith works at Acme. His colleague could reach him by dailing jsmith@acme.call.ciscospark.com from a standard SIP device.",
+    "setSipUriDescPartTwo": "For example, John Smith works at the Example company. His colleague can reach him by dialing jsmith@example.call.ciscospark.com from a standard SIP device.",
     "setSipUriDescPartThree": "We’ve provided a suggested name based on your organization’s name.  If you’d prefer, enter a different name and we’ll see if it’s available for your company.",
     "setSipUriDescPartFour": "If you'd prefer, enter your own value and we'll see if it's available for your company:",
     "setSipUriDomainMsg": "Enter a prefix for the SIP domain",
@@ -1454,7 +1460,7 @@
     "defaultPlaceholder": "Default",
     "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Directory Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
-    "installStep3": "3. Test the synchronization agreement.",
+    "installStep3": "3. Test the synchronization agreement. This operation may take some time depending on the number of users being synchronized.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Directory Connector Dry Run Reports to verify that all expected users are present.",
     "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
@@ -1619,6 +1625,7 @@
     "phoneMenuErrorRouteToPhoneNumberTargetMissing": "Key {{key}} is missing a Route To Phone Number target.",
     "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
     "phoneMenuErrorRouteToUserTargetMissing": "Key {{key}} is missing a Route To User target.",
+    "phoneMenuErrorRouteToVoicemailTargetMissing": "Key {{key}} is missing a Route To Voicemail target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -1714,7 +1721,7 @@
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
     "errorReadCMI": "Unable to load assigned phone numbers. Saving is disabled. Please reopen this Auto Attendant.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
-    "errorRemoveCMI": "Unable to remove assigned phone number(s).",
+    "errorRemoveCMI": "Unable to remove assigned phone number(s). Saving is disabled. Please reopen this Auto Attendant.",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
     "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
     "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
@@ -1778,7 +1785,7 @@
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
     "siteError": "Failed to load site information.",
-    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1946,6 +1953,7 @@
     "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
     "serviceAddressConfirmation": "Is this the address?",
     "serviceAddressNotFound": "Unable to find address. Please update and try again.",
+    "orderNumber": "Order Number",
     "advancedOrder": {
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
@@ -2265,7 +2273,8 @@
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
-    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?"
+    "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
+    "errorGettingTimeZoneToggle": "There was a problem getting the atlasHuronDeviceTimeZone feature toggle"
   },
   "settingsServiceAddress": {
     "label": "Emergency Service Address",
@@ -2964,14 +2973,14 @@
     "csvExportRecordsAvailable": "Total records available:",
     "csvExportRecordsSuccessful": "Records successfully exported:",
     "csvExportDownloadFile": "Download CSV file:",
-    "csvExportResultsFilename": "CI-SiteUsers.csv",
+    "csvExportResultsFilename": "WebEx-SiteUsers.csv",
 
     "csvImportTitle": "Import Results",
     "csvImportFileName": "File Name:",
     "csvImportRecordsRequested": "Total records requested:",
     "csvImportRecordsUpdated": "Records successfully updated:",
     "csvImportDownloadErr": "Download error log:",
-    "csvImportErrFilename": "CI-ImportErr.csv",
+    "csvImportErrFilename": "WebEx-ImportErr.csv",
 
     "csvStarted": "Started:",
     "csvFinished": "Finished:",
@@ -3063,7 +3072,10 @@
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
-    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application."
+    "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
+    "supportAccessTitle": "Support Access",
+    "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3149,11 +3161,11 @@
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
-    "siteCsvExportResultsLinkLabel": "Exported Results",
+    "siteCsvExportResultsLinkLabel": "Export Results",
     "siteCsvImportLinkLabel": "Import",
     "siteCsvImportInProgressLinkLabel": "Importing...",
     "siteCsvDownloadLinkLabel": "Download file",
-    "siteCsvImportResultsLinkLabel": "Imported Results",
+    "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
@@ -3170,6 +3182,8 @@
     "importFailedTooltip": "Import failed",
     "importStartedToast": "This import may take a while. The import will continue until completed, even if you log out. You can import or export user attributes on another site if you wish.",
     "importRejectedToast": "Import failed, try again.",
+    "importInvalidFileToast": "Choose a file for import.",
+    "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "Cannot authenticate. Check your entitlement for this site.",
@@ -3294,7 +3308,16 @@
       "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
-
+  "sunlightDetails": {
+    "title": "Care",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features",
+    "featuresNotYetConfiguredPage": {
+      "createCT": "Create a Chat Template",
+      "createCTDesc": "A chat template is what your customer will see when chatting with an agent.",
+      "new": "New"
+    }
+  },
   "huronDetails": {
     "title": "Call",
     "linesTitle": "Numbers",
@@ -3374,7 +3397,29 @@
     "dirsyncStatusHeading": "Common Identity Directory Synchronization",
     "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
-
+  "careChatTpl": {
+    "createTitle": "Create Chat Template",
+    "profile": "Chat Template Profile",
+    "overview": "Chat Template Overview",
+    "customerInfo": "Customer Info Screen",
+    "feedback": "Feedback Screen",
+    "agentUnavailable": "Agent Unavailable",
+    "offHours": "Off-Hours",
+    "chatStrings": "Chat Strings Configuration",
+    "embedCode": "Embed Code",
+    "profileDesc": "Select how your company will be represented",
+    "overviewDesc": "These are the screens customers will see when they use chat to contact customer care",
+    "customerInfoDesc": "This is the screen a customer fills out before they chat with an agent",
+    "feedbackDesc": "This screen is used to collect feedback from the customer after the chat ends",
+    "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
+    "offHoursDesc": "This screen is shown during business off-hours",
+    "chatStringsDesc": "These strings appear in the UI based on different scenarios",
+    "embedCodeDesc": "Use the embed code to add this chat template to your site",
+    "cancelHeader": "Cancel Chat Template Creation",
+    "cancelDialog": "Are you sure you wish to cancel chat template creation? This chat template will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation"
+  },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
     "title": "hunt group",
@@ -3468,29 +3513,61 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "title": "Atlas Portal Shopping Cart Login (APSCL)",
-      "header": "Enter eMail Addr",
-      "emailPlaceholder": "Ex. x@y.com",
+      "startTrial": "To start a Spark trial you must create an account.",
+      "enterEmail": "Please enter account email address",
+      "emailPlaceholder": "Enter email address",
       "validation": {
-        "emptyEmail": "The email address cannot be blank"
+        "emptyEmail": "The email address is missing or invalid."
       }
     },
     "createAccount": {
-      "title": "Create Account",
-      "passwordLabel": "Enter your password:",
-      "confirmPlaceholder": "confirm",
+      "noAccount": "{{email}} does not have an account. Please create one:",
+      "passwordLabel": "Enter your password",
+      "confirmEmailPlaceholder": "Verify email address",
+      "passwordPlaceholder": "Enter password",
+      "confirmPasswordPlaceholder": "Verify password",
+      "createAccount": "Create Account",
       "validation": {
-        "emptyEmail": "Empty email",
-        "emptyPassword": "Empty password",
-        "emailsDontMatch": "Emails do not match",
-        "passwordsDontMatch": "Passwords do not match"
+        "emptyEmail": "An email address is missing or invalid.",
+        "emptyPassword": "A password is missing.",
+        "emailsDontMatch": "The email addresses do not match.",
+        "passwordsDontMatch": "The passwords do not match."
       }
+    },
+    "submitOrder": {
+      "submitting": "Submitting Order...",
+      "activate": "Click the Activate button below to start your subscription and begin using your new service.",
+      "newUser": "Thank you for your purchase. An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
+      "missingEmail": "It has been over 30 minutes and I still have not received the email."
+    },
+    "drOnboardQuestion": {
+      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Spark services?"
+    },
+    "drConfirmAdminOrg": {
+      "useDifferentName": "Use Different Name",
+      "companyAndOrg1": "We have matched your email address to the following organization:",
+      "companyAndOrg2": "Would you like to assign the Spark services to this organization?"
+    },
+    "drOnboardEnterAdminEmail": {
+      "adminEmailLabel": "Please enter the email address of the person who will be managing the Spark services",
+      "validation": {
+        "emptyEmail": "Empty email"
+      }
+    },
+    "orgName": {
+      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Spark services, etc.",
+      "enterOrgName": "Enter Company Name"
     },
     "validation": {
       "unexpectedError": "Unexpected error"
     },
+    "restrictedPage": "Restricted Page",
+    "ciscoSpark": "Cisco Spark",
     "emailLabel": "Enter your email address:",
-    "nextButton": "Next"
+    "nextButton": "Next",
+    "submitButton": "Submit",
+    "activateButton": "Activate",
+    "continue": "Continue"
   },
   "overview": {
     "pageTitle": "Overview",
@@ -3534,7 +3611,7 @@
         "services": {
           "squared-fusion-cal": "Calendar",
           "squared-fusion-uc": "Call",
-          "squared-fusion-mgmt": "Managment"
+          "squared-fusion-mgmt": "Management"
 
         }
       }
@@ -3727,7 +3804,9 @@
     "sparkStatus": "Spark Status",
     "searchHelp": "Search Help",
     "deviceNotFound": "This device no longer exist. Maybe it's been deleted?",
-    "viewPortal": "View Customer"
+    "customerPortalViewHeading": "Customer portal view",
+    "customerPortalViewDetails": "You will be able to view the customer's entire portal, you cannot make any changes.",
+    "view": "View"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3879,5 +3958,11 @@
     "genericButtons": {
       "setup": "Setup"
     }
+  },
+  "readOnlyModal": {
+    "banner": "You are in read-only mode",
+    "title": "Read Only",
+    "okButton": "OK",
+    "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
   }
 }
