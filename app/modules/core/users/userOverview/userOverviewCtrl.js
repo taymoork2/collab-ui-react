@@ -32,10 +32,6 @@
       vm.isTelstraCsbEnabled = result;
     }).finally(init);
 
-    if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
-      vm.isCSB = true;
-    }
-
     function init() {
       vm.services = [];
 
@@ -70,6 +66,10 @@
         detail: $translate.instant('onboardModal.freeContactCenter'),
         actionsAvailable: true
       };
+
+      if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
+        vm.isCSB = true;
+      }
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
