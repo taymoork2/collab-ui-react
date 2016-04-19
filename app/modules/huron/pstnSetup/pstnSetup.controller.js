@@ -10,6 +10,7 @@
     PstnSetup.setCustomerId($stateParams.customerId);
     PstnSetup.setCustomerName($stateParams.customerName);
     PstnSetup.setCustomerEmail($stateParams.customerEmail);
+    PstnSetup.setIsTrial($stateParams.customerCommunicationLicenseIsTrial);
 
     if ($state.modal && $state.modal.result) {
       $state.modal.result.finally(PstnSetup.clear);
