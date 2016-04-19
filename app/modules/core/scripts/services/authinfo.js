@@ -2,7 +2,6 @@
 
 angular.module('Core')
   .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig',
-
     function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
