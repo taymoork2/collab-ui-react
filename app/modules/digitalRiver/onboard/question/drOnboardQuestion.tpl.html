@@ -1,0 +1,16 @@
+<div class="dr-container">
+    <div class="dr-row" ng-hide="drOnboardQuestionController.error == null">
+        <input type="text" ng-model="drOnboardQuestionController.error" readonly="readonly" id="dr-error">
+    </div>
+	<div class="dr-row">
+		<div class="dr-left" id="dr-onboard-question-label" translate="digitalRiver.drOnboardQuestion.adminQuestionLabel" translate-values="{email: drOnboardQuestionController.email}"/>
+		<div class="dr-right"/>
+	</div>
+	<div class="dr-row">
+		<div class="dr-button">
+			<button class="dr-button" ng-click="drOnboardQuestionController.handleYes()" id="dr-onboard-question-yes" translate="common.yes"/>
+			<button class="dr-button" ng-click="drOnboardQuestionController.handleNo()" id="dr-onboard-question-no" translate="common.no"/>
+		</div>
+	</div>
+</div>
+

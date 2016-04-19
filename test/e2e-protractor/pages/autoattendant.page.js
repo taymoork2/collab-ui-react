@@ -116,8 +116,7 @@ var AutoAttendantPage = function () {
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
-  this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
-  this.toggleHolidayWhenOpenCloseExpanded = element(by.css('div.simple-accordion.aa-holidays a.icon-right-arrow.pull-right'));
+  this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
   this.addholiday = element(by.css('#addHoliday'));
   this.deleteHoliday = element(by.css('div.simple-accordion.aa-holidays')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));

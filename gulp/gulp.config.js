@@ -90,7 +90,6 @@ module.exports = function () {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
@@ -196,6 +195,7 @@ module.exports = function () {
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+        vendor + '/moment-range/dist/moment-range.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js',

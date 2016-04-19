@@ -341,13 +341,12 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
     }, 60000);
 
     it('should add a Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
-      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
@@ -361,8 +360,8 @@ describe('Huron Auto Attendant', function () {
 
     it('should add a Recurring Holiday Schedule to AA', function () {
       utils.click(autoattendant.schedule);
-      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
-      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
       utils.sendKeys(autoattendant.recurAnnually, 'Recur Annually');
       utils.sendKeys(autoattendant.exactDate, 'Exact Date');

@@ -20,10 +20,6 @@ describe('Onboard users with Message Service', function () {
     utils.click(users.closeSidePanel);
   }
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users')
       .then(function (bearerToken) {

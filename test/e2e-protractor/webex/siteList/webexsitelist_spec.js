@@ -10,7 +10,6 @@ describe('Services > Webex page aka Site List page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = true;
-    utils.dumpConsoleErrors();
   });
 
   describe(': CSV Export/Import : ', function () {
@@ -101,8 +100,7 @@ describe('Services > Webex page aka Site List page', function () {
       }
     });
 
-    //TODO disabled for failures
-    xit('should detect warning icon due to entitlement authentication failure', function () {
+    it('should detect warning icon due to entitlement authentication failure', function () {
       if (setup) {
         utils.wait(sitelist.siteEntitlementAuthFailure);
       }
