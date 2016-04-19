@@ -191,7 +191,7 @@
     };
 
     config.isE2E = function () {
-      return !!~(Storage.get(TEST_ENV_CONFIG) || '').indexOf('e2e');
+      return _.includes(Storage.get(TEST_ENV_CONFIG), 'e2e');
     };
 
     config.forceProdForE2E = function () {
