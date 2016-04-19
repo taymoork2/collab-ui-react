@@ -7,10 +7,6 @@ describe('Onboard users with Meeting Service', function () {
   var testUser = utils.randomTestGmailwithSalt('meetings');
   var LICENSE = users.paidMtgCheckbox;
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users')
       .then(function (bearerToken) {

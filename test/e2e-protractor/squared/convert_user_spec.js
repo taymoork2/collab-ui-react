@@ -1,9 +1,6 @@
 'use strict';
 
 describe('Convert Users', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   describe('Display the overview page', function () {
     it('should login as pbr org admin', function () {

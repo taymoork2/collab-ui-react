@@ -7,7 +7,6 @@ describe('Login Page', function () {
 
   afterEach(function () {
     log.verbose = false;
-    utils.dumpConsoleErrors();
   });
 
   it('should login and redirect to the requested users page', function () {
