@@ -378,7 +378,7 @@ angular
         })
         .state('settings', {
           url: '/settings',
-          templateUrl: 'modules/core/settings/settings.html',
+          templateUrl: 'modules/core/settings/settings.tpl.html',
           controller: 'SettingsCtrl',
           controllerAs: 'settingsCtrl',
           parent: 'main'

@@ -4,8 +4,11 @@ namespace Settings {
 
     public title:string;
 
+    public template:string;
+
     constructor(settingKey:string) {
-      this.title = "settings." + settingKey + ".title";
+      this.title = 'settings.' + settingKey + '.title';
+      this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
     }
   }
 
@@ -21,7 +24,6 @@ namespace Settings {
         new Setting('domains'),
         new Setting('authentication')
       ]
-
     }
 
     public getSettings():Array<Setting> {
