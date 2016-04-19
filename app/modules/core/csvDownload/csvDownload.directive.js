@@ -12,7 +12,7 @@
    *    - call scope.downloadCsv()
    * /
   /* @ngInject */
-  function csvDownload($rootScope, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
+  function csvDownload($rootScope, $window, $q, $translate, $timeout, $modal, CsvDownloadService, Notification) {
     var directive = {
       restrict: 'E',
       templateUrl: 'modules/core/csvDownload/csvDownload.tpl.html',
@@ -79,7 +79,7 @@
             if (scope.type === CsvDownloadService.typeAny) {
               downloadingIcon.mouseout();
             }
-            if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
+            if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
               // in IE this causes the page to refresh
               downloadAnchor[0].click();
             }
@@ -100,10 +100,8 @@
 
       function changeAnchorAttrToDownloadState(url) {
         $timeout(function () {
-          // scope.tempFunction = scope.downloadCsv;
-          scope.downloadCsv = removeFocus;
-
-          if (angular.isUndefined(window.navigator.msSaveOrOpenBlob)) {
+          if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+            scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
                 href: url,
                 download: scope.filename || FILENAME
@@ -112,6 +110,7 @@
           } else {
             // IE download option since IE won't download the created url
             scope.downloadCsv = openInIE;
+            downloadAnchor.removeAttr('disabled');
           }
         });
       }

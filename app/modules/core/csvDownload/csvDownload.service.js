@@ -5,7 +5,7 @@
     .service('CsvDownloadService', CsvDownloadService);
 
   /* @ngInject */
-  function CsvDownloadService(Authinfo, $http, $q, UrlConfig, Utils, UserListService) {
+  function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService) {
     var FILENAME = 'exported_file.csv';
     var objectUrl;
     var objectUrlTemplate;
@@ -85,16 +85,17 @@
       var blob = new Blob([data], {
         type: 'text/plain'
       });
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-      objectBlob = blob;
-      setObjectUrl(oUrl);
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
       if (type === typeTemplate) {
         templateBlob = blob;
         setObjectUrlTemplate(oUrl);
+      } else {
+        objectBlob = blob;
+        setObjectUrl(oUrl);
       }
 
       // IE download option since IE won't download the created url
-      if (window.navigator.msSaveOrOpenBlob) {
+      if ($window.navigator.msSaveOrOpenBlob) {
         openInIE(type, fileName);
       }
 
@@ -103,15 +104,15 @@
 
     function openInIE(type, fileName) {
       if (type === typeTemplate && templateBlob) {
-        window.navigator.msSaveOrOpenBlob(templateBlob, fileName || FILENAME);
-      } else if (objectBlob) {
-        window.navigator.msSaveOrOpenBlob(objectBlob, fileName || FILENAME);
+        $window.navigator.msSaveOrOpenBlob(templateBlob, fileName || FILENAME);
+      } else if (type !== typeTemplate && objectBlob) {
+        $window.navigator.msSaveOrOpenBlob(objectBlob, fileName || FILENAME);
       }
     }
 
     function revokeObjectUrl() {
       if (getObjectUrl()) {
-        (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
+        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
         objectBlob = null;
       }
