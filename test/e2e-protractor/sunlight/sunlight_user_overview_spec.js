@@ -5,10 +5,6 @@ describe('Configuring Contact Center services per user', function () {
   var testUser = 'kabru.sikkim@outlook.com';
   var userAlias = "SunlightE2EUserAlias";
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   xit('should login as an account admin', function () {
     login.login('contactcenter-admin', '#/users');
   });

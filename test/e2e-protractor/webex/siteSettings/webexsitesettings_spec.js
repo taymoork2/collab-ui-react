@@ -16,9 +16,6 @@ while (1 >= sitesettings.testInfo.describeCount) {
   }
 
   describe(sitesettings.testInfo.describeText, function () {
-    afterEach(function () {
-      utils.dumpConsoleErrors();
-    });
 
     if (sitesettings.testInfo.testType == "T31") {
       it('should signin as ' + sitesettings.t31Info.testAdminUsername + ' for T31 site config test', function () {

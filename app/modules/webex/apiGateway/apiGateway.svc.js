@@ -82,7 +82,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         "mockFlag=" + mockFlag + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var successResult = {
         siteUrl: siteUrl,
@@ -114,7 +114,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
           logMsg = funcName + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           successResult.details = response;
           errorResult.details = response;

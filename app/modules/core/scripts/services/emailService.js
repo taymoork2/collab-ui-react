@@ -21,6 +21,7 @@
       emailNotifyTrialCustomer: emailNotifyTrialCustomer,
       emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer,
       emailNotifyPartnerTrialConversionRequest: emailNotifyPartnerTrialConversionRequest,
+      emailDRWelcomeRequest: emailDRWelcomeRequest,
       _types: _types,
       _helpers: _helpers
     };
@@ -64,6 +65,19 @@
     // TODO: mv implemention to backend, front-end should shouldn't need this many properties
     function emailNotifyPartnerTrialConversionRequest(customerName, customerEmail, partnerEmail) {
       var emailData = mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail);
+      return email(emailData);
+    }
+
+    function emailDRWelcomeRequest(customerEmail, uuid, orderId) {
+      var emailData = {
+        type: _types.NEW_DR_ORDER_WELCOME,
+        properties: {
+          CUSTOMER_EMAIL: customerEmail,
+          BUYER_UUID: uuid,
+          ORDER_ID: orderId,
+          SUBJECT: 'Setup your Cisco Spark Service'
+        }
+      };
       return email(emailData);
     }
 

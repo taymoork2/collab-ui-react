@@ -405,28 +405,16 @@
     }
 
     function getDefaultDayHours() {
-      return [{
-        label: 'Monday',
-        hours: []
-      }, {
-        label: 'Tuesday',
-        hours: []
-      }, {
-        label: 'Wednesday',
-        hours: []
-      }, {
-        label: 'Thursday',
-        hours: []
-      }, {
-        label: 'Friday',
-        hours: []
-      }, {
-        label: 'Saturday',
-        hours: []
-      }, {
-        label: 'Sunday',
-        hours: []
-      }];
+      var days = [];
+      for (var i = 0; i < 7; i++) {
+        var day = {
+          label: '',
+          hours: []
+        };
+        day.label = moment().weekday(i + 1).format('dddd');
+        days.push(day);
+      }
+      return days;
     }
   }
 })();

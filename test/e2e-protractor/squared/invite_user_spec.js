@@ -4,10 +4,6 @@ describe('Squared Add User Flow', function () {
   var token;
   var inviteEmail, inviteEmail2;
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as pbr org admin and view users', function () {
     login.login('pbr-admin', '#/users')
       .then(function (bearerToken) {
