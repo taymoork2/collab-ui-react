@@ -51,7 +51,7 @@
       model: vm.trial.details.emergAddr,
       key: 'city',
       type: 'input',
-      className: 'medium-9 columns no-flex',
+      className: 'medium-9 columns no-flex no-pad',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.pstn.city'),
