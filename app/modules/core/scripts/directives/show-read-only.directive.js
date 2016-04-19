@@ -24,20 +24,11 @@
     function link(scope, element, attributes) {
       if (Authinfo.isReadOnlyAdmin()) {
         var wrapper = angular.element('.wrapper');
-        var wrapperPaddingTop = parseInt(wrapper.css('padding-top'), 10);
-        wrapper.css('padding-top', wrapperPaddingTop + 20 + 'px');
+        wrapper.css('padding-top', '6rem');
         element.prepend('<div class="read-only-banner">' + $translate.instant('readOnlyModal.banner') + '</div>');
-
-        console.log('*** Creating MutationObserver ***');
         var observer = new MutationObserver(function () {
           var sidePanel = angular.element('div.side-panel');
-          if (sidePanel.length == 1) {
-            console.log('sidePanel', sidePanel);
-            console.log('sidePanel.length', sidePanel.length);
-            var sidePanelTop = parseInt(sidePanel.css('top'), 10);
-            console.log('sidePanelTop: ', sidePanelTop);
-            sidePanel.css('top', sidePanelTop + 20 + 'px');
-          }
+          sidePanel.addClass('side-panel-correction');
         });
 
         observer.observe(document.body, {
