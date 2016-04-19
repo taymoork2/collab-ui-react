@@ -32,6 +32,9 @@ var SiteListPage = function () {
   this.siteListPageId = element(by.id('site-list'));
   this.conferencingLink = element(by.css('a[href="#site-list"]'));
   this.csvColumnId = element(by.id('id-siteCsvColumnHeader'));
+  this.actionsColumnId = element(by.id('id-siteActionsColumnHeader'));
+  this.actionReportsLinkID = element(by.id('id-IframeWebexSiteReportsLink'));
+  this.actionSiteConfigLinkID = element(by.id('id-IframeWebexSiteConfigLink'));
   this.licenseTypesColumnId = element(by.id('site-license-types'));
   this.singleLicenseSiteId = element(by.id('t30citestprov44.webex.com_licenseType'));
   this.multiLicenseSiteId = element(by.id('t30citestprov6.webex.com_licenseType'));

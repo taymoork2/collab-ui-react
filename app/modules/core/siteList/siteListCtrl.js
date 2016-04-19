@@ -125,6 +125,15 @@
     });
 
     vm.gridOptions.columnDefs.push({
+      field: 'siteActions',
+      displayName: $translate.instant('siteList.siteActions'),
+      cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
+      headerCellTemplate: 'modules/core/siteList/siteActionsColumnHeader.tpl.html',
+      sortable: false,
+      width: '30%'
+    });
+
+    vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
       displayName: $translate.instant('siteList.siteSettings'),
       cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
