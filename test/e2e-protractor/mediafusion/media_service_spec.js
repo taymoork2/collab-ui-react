@@ -2,10 +2,6 @@
 
 describe('Validate Media Service Managemnt Page', function () {
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   describe('Listing Media Service Clusters on page load', function () {
 
     it('login as media super admin', function () {
