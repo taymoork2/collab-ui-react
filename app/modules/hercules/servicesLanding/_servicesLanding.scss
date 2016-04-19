@@ -62,7 +62,6 @@
 
       text-transform: uppercase;
 
-      border-bottom: 1px solid $gray-light-1;
       span {
         color: $gray-light-1;
       }
@@ -70,6 +69,7 @@
     .cs-card-layout {
       padding-bottom: 2rem;
       z-index: 1;
+      overflow: hidden;
       .cs-card {
         padding-bottom: 2rem;
         display: block;
