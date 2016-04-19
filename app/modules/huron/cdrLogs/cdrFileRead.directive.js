@@ -4,6 +4,7 @@
   angular.module('uc.cdrlogsupport', [])
     .directive('ucFileRead', ucFileRead);
 
+  /* @ngInject */
   function ucFileRead($window) {
     var directive = {
       restrict: 'A',
