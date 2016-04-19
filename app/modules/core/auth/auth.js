@@ -153,7 +153,6 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
         }
         return authData;
       }).catch(function (res) {
-        handleError('Ignore error from Msgr service check.')(res);
         return authData;
       });
   }
