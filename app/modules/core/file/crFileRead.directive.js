@@ -4,6 +4,7 @@
   angular.module('Core')
     .directive('crFileRead', fileRead);
 
+  /* @ngInject */
   function fileRead($window) {
     var directive = {
       restrict: 'A',

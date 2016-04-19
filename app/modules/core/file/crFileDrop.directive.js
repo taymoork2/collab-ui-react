@@ -4,6 +4,7 @@
   angular.module('Core')
     .directive('crFileDrop', fileDrop);
 
+  /* @ngInject */
   function fileDrop($window) {
     var directive = {
       restrict: 'A',
