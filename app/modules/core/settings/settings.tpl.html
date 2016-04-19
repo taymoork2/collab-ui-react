@@ -1,17 +1,16 @@
 <div class="settings">
 
-  <h1 class="settingsHeader" translate="settings.pageTitle"></h1>
+  <h1 class="settingsHeader" translate="globalSettings.pageTitle"></h1>
 
   <form class="cs-form">
     <div class="cs-form__section" ng-repeat="setting in settingsCtrl.getSettings()">
       <div class="section__info">
         <h4 class="section__title" translate="{{setting.title}}"></h4>
-        <p class="section__description">Section Description.</p>
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <h5 class="sub-section__label">Subsection Label</h5>
-          <p class="sub-section__description">Subsection Description</p>
+          <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
+          <p class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>
         </div>
         <article ng-include="setting.template"></article>
       </div>

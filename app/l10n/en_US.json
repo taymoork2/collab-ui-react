@@ -3617,7 +3617,7 @@
       }
     }
   },
-  "settings": {
+  "globalSettings": {
     "pageTitle": "Settings",
     "branding": {
       "title": "Branding"
@@ -3629,7 +3629,8 @@
       "title": "Domains"
     },
     "authentication": {
-      "title": "Authentication"
+      "title": "Authentication",
+      "subsectionLabel": "Single Sign-On"
     },
     "support": {
       "title": "Support"
