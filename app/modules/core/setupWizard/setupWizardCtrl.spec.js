@@ -16,6 +16,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));

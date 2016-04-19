@@ -9,6 +9,7 @@
   "devDependencies": {
     "browser-sync": "^2.7.1",
     "compression": "~1.6.0",
+    "cross-spawn": "^2.2.3",
     "crypto-js": "^3.1.5",
     "del": "^2.2.0",
     "eslint": "^2.6.0",
@@ -82,6 +83,7 @@
     "phantomjs-prebuilt": "~2.1.6",
     "plato": "^1.4.0",
     "promise": "~7.1.1",
+    "protractor-console-plugin": "^0.1.1",
     "request": "^2.69.0",
     "require-dir": "^0.3.0",
     "retire": "^1.1.4",

@@ -10,7 +10,6 @@ describe('Services > Webex page aka Site List page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = true;
-    utils.dumpConsoleErrors();
   });
 
   describe(': CSV Export/Import : ', function () {

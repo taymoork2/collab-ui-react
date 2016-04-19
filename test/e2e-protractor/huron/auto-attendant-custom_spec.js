@@ -47,14 +47,19 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.addschedule, waitTime);
       utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
+      utils.click(autoattendant.holidayBehaviour);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.sendKeys(autoattendant.date, new Date());
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      utils.click(autoattendant.closeEditButton);
     }, 60000);
+
+    it('should expect a lane with Closed/Holiday Label', function () {
+      utils.expectIsDisplayed(autoattendant.closedHoursLane);
+      utils.click(autoattendant.closeEditButton);
+    });
 
     it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 

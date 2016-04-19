@@ -26,17 +26,20 @@
       "name": "regularOpenActions",
       "actions": []
     }];
+    this.scheduleEventTypeMap = {};
   }
 
   function AARecordWithEmptyActionSets() {
     this.callExperienceName = "";
     this.assignedResources = [];
     this.actionSets = [];
+    this.scheduleEventTypeMap = {};
   }
 
   function AAModel() {
     this.aaRecord = new AARecord();
     this.aaRecords = [];
+    this.scheduleEventTypeMap = {};
   }
 
   function AAModelService() {

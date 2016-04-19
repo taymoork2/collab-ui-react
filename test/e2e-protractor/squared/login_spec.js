@@ -1,8 +1,12 @@
 'use strict';
 
 describe('Login Page', function () {
+  beforeEach(function () {
+    log.verbose = true;
+  });
+
   afterEach(function () {
-    utils.dumpConsoleErrors();
+    log.verbose = false;
   });
 
   it('should login and redirect to the requested users page', function () {

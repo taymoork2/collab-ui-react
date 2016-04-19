@@ -13,27 +13,28 @@ angular.module('Core')
 
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
-        'username': null,
-        'userId': null,
-        'orgName': null,
-        'orgId': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'managedOrgs': [],
-        'entitlements': null,
-        'services': null,
-        'roles': [],
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false,
-        'licenses': [],
-        'messageServices': null,
-        'conferenceServices': null,
-        'communicationServices': null,
-        'conferenceServicesWithoutSiteUrl': null,
-        'cmrServices': null,
-        'hasAccount': false,
-        'emails': null
+        username: null,
+        userId: null,
+        orgName: null,
+        orgId: null,
+        addUserEnabled: null,
+        entitleUserEnabled: null,
+        managedOrgs: [],
+        entitlements: null,
+        services: null,
+        roles: [],
+        tabs: [],
+        isInitialized: false,
+        setupDone: false,
+        licenses: [],
+        messageServices: null,
+        conferenceServices: null,
+        communicationServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        cmrServices: null,
+        hasAccount: false,
+        emails: null,
+        customerType: null
       };
 
       var getTabTitle = function (title) {
@@ -209,6 +210,10 @@ angular.module('Core')
               authData.hasAccount = true;
             }
 
+            if (customerAccounts.customerType) {
+              authData.customerType = customerAccounts.customerType;
+            }
+
             for (var x = 0; x < customerAccounts.length; x++) {
 
               var customerAccount = customerAccounts[x];
@@ -352,6 +357,10 @@ angular.module('Core')
         },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
+        },
+        isCSB: function () {
+          var csb = ['CCW', 'APP_DIRECT'];
+          return csb.indexOf(authData.customerType) > -1;
         },
         isPartner: function () {
           return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice, UrlConfig, Orgservice, Log, Notification) {
+  function UserOverviewCtrl($http, $scope, $stateParams, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -19,6 +19,8 @@
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
+    vm.isTelstraCsbEnabled = false;
+    vm.isCSB = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -26,7 +28,13 @@
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
 
-    init();
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+      vm.isTelstraCsbEnabled = result;
+    }).finally(init);
+
+    if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
+      vm.isCSB = true;
+    }
 
     function init() {
       vm.services = [];
