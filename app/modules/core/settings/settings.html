@@ -1,0 +1,23 @@
+<div class="servicesLanding">
+
+  <h1>Settings</h1>
+
+  <form name="formExample" class="cs-form">
+    <div class="cs-form__section" ng-repeat="setting in settingsCtrl.getSettings()">
+      <div class="section__info">
+        <h4 class="section__title">{{setting.title | translate}}</h4>
+        <p class="section__description">Section Description.</p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label">Subsection Label</h5>
+          <p class="sub-section__description">Subsection Description</p>
+        </div>
+        <div class="sub-section">
+          <h5 class="sub-section__label ">Subsection Label</h5>
+          <input type="text">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

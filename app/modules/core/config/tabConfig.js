@@ -103,6 +103,12 @@
     state: 'profile',
     link: '/profile'
   }, {
+    tab: 'settingsTab',
+    icon: 'icon-sliders',
+    title: 'tabs.settingsTab',
+    state: 'settings',
+    link: '/settings'
+  }, {
     tab: 'organizationTab',
     icon: 'icon-admin',
     title: 'tabs.organizationTab',

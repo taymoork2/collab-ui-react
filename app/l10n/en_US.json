@@ -214,6 +214,7 @@
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
+    "settingsTab": "Settings",
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",

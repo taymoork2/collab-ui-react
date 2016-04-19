@@ -220,7 +220,8 @@
         'cdrsupport',
         'cdr-overview',
         'cdrladderdiagram',
-        'activateProduct'
+        'activateProduct',
+        'settings'
       ],
       Readonly_Admin: [
         'overview',
@@ -236,7 +237,8 @@
         'support',
         'editService',
         'trialExtInterest',
-        'activateProduct'
+        'activateProduct',
+        'settings'
       ],
       Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
       WX2_User: ['overview', 'reports', 'support', 'activateProduct'],

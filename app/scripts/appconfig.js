@@ -376,6 +376,13 @@ angular
             loggedOnUser: null
           }
         })
+        .state('settings', {
+          url: '/settings',
+          templateUrl: 'modules/core/settings/settings.html',
+          controller: 'SettingsCtrl',
+          controllerAs: 'settingsCtrl',
+          parent: 'main'
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
