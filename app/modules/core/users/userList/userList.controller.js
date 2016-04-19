@@ -81,11 +81,12 @@
       .then(function (result) {
         $scope.isCsvEnhancementToggled = result[0];
         $scope.isTelstraCsbEnabled = result[1];
+      })
+      .finally(function () {
+        if (Authinfo.isCSB() && $scope.isTelstraCsbEnabled) {
+          $scope.isCSB = true;
+        }
       });
-
-    if (Authinfo.isCSB() && $scope.isTelstraCsbEnabled) {
-      $scope.isCSB = true;
-    }
 
     init();
 
