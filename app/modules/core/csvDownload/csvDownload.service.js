@@ -6,7 +6,6 @@
 
   /* @ngInject */
   function CsvDownloadService(Authinfo, $window, $http, $q, UrlConfig, Utils, UserListService) {
-    var FILENAME = 'exported_file.csv';
     var objectUrl;
     var objectUrlTemplate;
     var typeTemplate = 'template';
@@ -104,9 +103,9 @@
 
     function openInIE(type, fileName) {
       if (type === typeTemplate && templateBlob) {
-        $window.navigator.msSaveOrOpenBlob(templateBlob, fileName || FILENAME);
+        $window.navigator.msSaveOrOpenBlob(templateBlob, fileName);
       } else if (type !== typeTemplate && objectBlob) {
-        $window.navigator.msSaveOrOpenBlob(objectBlob, fileName || FILENAME);
+        $window.navigator.msSaveOrOpenBlob(objectBlob, fileName);
       }
     }
 
