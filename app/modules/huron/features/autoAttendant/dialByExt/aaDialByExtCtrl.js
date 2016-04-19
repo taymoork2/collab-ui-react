@@ -6,7 +6,7 @@
     .controller('AADialByExtCtrl', AADialByExtCtrl);
 
   /* @ngInject */
-  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService, Notification) {
+  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AALanguageService) {
     var vm = this;
 
     var runActionName = 'runActionsOnInput';

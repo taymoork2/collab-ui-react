@@ -2,7 +2,7 @@
 
 describe('Controller: AASayMessageCtrl', function () {
   var controller;
-  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AALanguageService, Notification;
+  var AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AALanguageService;
   var $rootScope, $scope, $translate;
 
   var aaUiModel = {
@@ -30,7 +30,7 @@ describe('Controller: AASayMessageCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_, _Notification_) {
+  beforeEach(inject(function ($controller, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AALanguageService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $translate = _$translate_;
@@ -40,7 +40,6 @@ describe('Controller: AASayMessageCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AALanguageService = _AALanguageService_;
-    Notification = _Notification_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
 

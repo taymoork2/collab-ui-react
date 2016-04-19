@@ -6,7 +6,7 @@
     .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
-  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService, AACommonService, Notification) {
+  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService, AACommonService) {
 
     var vm = this;
     var properties = {

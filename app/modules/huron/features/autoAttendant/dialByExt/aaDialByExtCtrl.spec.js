@@ -2,7 +2,7 @@
 
 describe('Controller: AADialByExtCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, Notification;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
   var $rootScope, $scope, $translate;
 
   var aaModel = {
@@ -36,7 +36,7 @@ describe('Controller: AADialByExtCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _Notification_) {
+  beforeEach(inject(function (_$controller_, _$translate_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $translate = _$translate_;
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -46,7 +46,6 @@ describe('Controller: AADialByExtCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    Notification = _Notification_;
 
     $scope.schedule = schedule;
     $scope.index = index;
