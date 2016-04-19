@@ -1,0 +1,80 @@
+<span ng-if="!row.entity.showSiteLinks">
+  <p class="ui-grid-cell-contents">
+    <i class="icon-spinner icon"></i>
+  </p>
+</span>
+
+<span ng-if="row.entity.showSiteLinks">
+    <p class="ui-grid-cell-contents">
+      <span ng-if="!row.entity.isError">
+
+        <span ng-if="!row.entity.isIframeSupported">
+          <span ng-if="row.entity.isAdminReportEnabled"
+             id="id-nonIframeWebexSiteReportsLink"
+             tooltip-append-to-body="true" 
+             tooltip-animation="false"
+             tooltip="{{::'siteList.siteReports' | translate}}"
+             tooltip-placement="top">
+             <i class="icon-report icon iconEnabled"></i>
+          </span>
+          <span 
+             id="id-nonIframeWebexSiteConfigLink"
+             tooltip-append-to-body="true" 
+             tooltip-animation="false"
+             tooltip="{{::'siteList.siteSettings' | translate}}"
+             tooltip-placement="top">
+             <i class="icon-settings icon iconEnabled"></i>
+          </span>
+        </span>  <!--  end !row.entity.isIframeSupported -->
+
+        <span ng-if="row.entity.isIframeSupported">
+          <span ng-if="!row.entity.isAdminReportEnabled"
+                class="icon-report icon iconDisabled"
+                tooltip-append-to-body="true" 
+                tooltip-animation="false"
+                tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
+                tooltip-placement="top">
+          </span>
+          <span ng-if="row.entity.isAdminReportEnabled"
+             id="id-IframeWebexSiteReportsLink"
+             tooltip-append-to-body="true" 
+             tooltip-animation="false"
+             tooltip="{{::'siteList.siteReports' | translate}}"
+             tooltip-placement="top">
+             <i class="icon-report icon iconEnabled"></i>
+          </span>
+          <span>&nbsp;</span>
+          <span
+            id="id-IframeWebexSiteConfigLink"
+            tooltip-append-to-body="true" 
+            tooltip-animation="false"
+            tooltip="{{::'siteList.siteSettings' | translate}}"
+            tooltip-placement="top">
+            <i class="icon-settings icon iconEnabled"></i>
+          </span>
+        </span>  <!--  end row.entity.isIframeSupported -->
+      </span>  <!-- end !row.entity.isError -->
+
+
+      <span ng-if="row.entity.isError">
+        <span
+          id="id-webexSiteReportsDisabledIcon"
+          class="icon-report icon iconDisabled">
+        </span>
+        <span>&nbsp;</span>
+        <span
+          class="icon-settings icon iconDisabled">
+        </span>
+        <span>&nbsp;</span>
+        <span
+          id="{{row.entity.license.siteUrl}}_errorIcon"
+          class="icon-error icon err webex-alert-text ui-grid-cell-contents"
+          tooltip-append-to-body="true"
+          tooltip-animation="false"
+          tooltip="{{'siteList.systemError' | translate}}"
+          tooltip-placement="top">
+        </span>
+      </span>
+
+    </p>
+</span>
