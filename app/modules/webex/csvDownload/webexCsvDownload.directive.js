@@ -116,10 +116,10 @@
           500
         );
       });
-      
-      scope.$on('download-error', function() {
-          scope.webexCsvDownload.downloading = false;
-          // changeAnchorAttrToOriginalState();
+
+      scope.$on('download-error', function () {
+        scope.webexCsvDownload.downloading = false;
+        // changeAnchorAttrToOriginalState();
       });
 
       if (attrs.filedownloadurl) {
