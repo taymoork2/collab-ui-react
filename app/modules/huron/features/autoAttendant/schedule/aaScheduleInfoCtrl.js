@@ -270,7 +270,7 @@
     }
 
     function isOpenClosed() {
-      return (vm.schedule === 'openHours' || vm.schedule === 'closedHours');
+      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours' && angular.isDefined(vm.openHours) && vm.openhours.length));
     }
 
     function isClosed() {
