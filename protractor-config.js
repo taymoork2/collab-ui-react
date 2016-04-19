@@ -43,6 +43,18 @@ exports.config = {
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
   },
 
+  plugins: [{
+    package: 'protractor-console-plugin',
+    failOnWarning: false, // (Default - false),
+    failOnError: false,   // (Default - true),
+    logWarnings: true,    // (Default - true),
+    exclude: [            // Array of strings and regex (Default - [])
+      /executionContextId/,
+      /object Object/,
+      /favicon/
+    ]
+  }],
+
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
   baseUrl: process.env.LAUNCH_URL || 'http://127.0.0.1:8000',
