@@ -7,10 +7,10 @@
     </cs-page-sub-header-left>
     <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
       <!-- Old buttons -->
-      <div ng-if="!isCsvEnhancementToggled && !isTelstraCsbEnabled">
+      <div ng-if="!isCsvEnhancementToggled && !isCSB">
         <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
       </div>
-      <div ng-if="!isCsvEnhancementToggled && isTelstraCsbEnabled">
+      <div ng-if="!isCsvEnhancementToggled && isCSB">
         <button class="btn btn--people" ui-sref="userRedirect" translate="usersPage.inviteUsers" ></button>
       </div>
       <div ng-if="!isCsvEnhancementToggled" class="export-users">

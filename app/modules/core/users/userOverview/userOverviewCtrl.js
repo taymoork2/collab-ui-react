@@ -20,6 +20,7 @@
     vm.pendingStatus = false;
     vm.dirsyncEnabled = false;
     vm.isTelstraCsbEnabled = false;
+    vm.isCSB = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
@@ -30,6 +31,10 @@
     FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
       vm.isTelstraCsbEnabled = result;
     }).finally(init);
+
+    if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
+      vm.isCSB = true;
+    }
 
     function init() {
       vm.services = [];

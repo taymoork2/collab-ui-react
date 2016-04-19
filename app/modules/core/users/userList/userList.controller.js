@@ -51,6 +51,7 @@
     }];
     $scope.dirsyncEnabled = false;
     $scope.isTelstraCsbEnabled = false;
+    $scope.isCSB = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
     $scope.USER_EXPORT_THRESHOLD = 10000;
@@ -81,6 +82,10 @@
         $scope.isCsvEnhancementToggled = result[0];
         $scope.isTelstraCsbEnabled = result[1];
       });
+
+    if (Authinfo.isCSB() && $scope.isTelstraCsbEnabled) {
+      $scope.isCSB = true;
+    }
 
     init();
 
