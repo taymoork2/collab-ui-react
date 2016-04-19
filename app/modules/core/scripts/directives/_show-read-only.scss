@@ -16,8 +16,12 @@
 .read-only-banner {
   color: white;
   text-align: center;
-  background-color: #F5A623;
-  height: 20px;
-  line-height: 20px;
-  font-size: 14px;
+  background-color: $color-attention-light;
+  height: 2.75rem;
+  line-height: 2.625rem;
+  font-size: 1.0625rem;
+}
+
+.side-panel-correction {
+  top: 97px;
 }
