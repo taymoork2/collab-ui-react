@@ -13,7 +13,6 @@ angular.module('Core')
 
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
-<<<<<<< 412c6871af3f2ebaf296df3715dabe044916e457
         username: null,
         userId: null,
         orgName: null,
@@ -36,30 +35,6 @@ angular.module('Core')
         hasAccount: false,
         emails: null,
         customerType: null
-=======
-        'username': null,
-        'userId': null,
-        'orgName': null,
-        'orgId': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'managedOrgs': [],
-        'entitlements': null,
-        'services': null,
-        'roles': [],
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false,
-        'licenses': [],
-        'messageServices': null,
-        'conferenceServices': null,
-        'communicationServices': null,
-        'conferenceServicesWithoutSiteUrl': null,
-        'cmrServices': null,
-        'hasAccount': false,
-        'emails': null,
-        'customerType': null
->>>>>>> US11931: Handle the Admin Portal UI based on customerType
       };
 
       var getTabTitle = function (title) {
