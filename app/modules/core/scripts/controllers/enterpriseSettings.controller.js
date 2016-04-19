@@ -10,6 +10,7 @@
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
     var oldSSOValue = 0;
+    $scope.updateSSO = updateSSO;
 
     //SIP URI Domain Controller code
     $scope.cloudSipUriField = {
@@ -25,12 +26,29 @@
       errorMsg: $translate.instant('firstTimeWizard.setSipUriErrorMessage')
     };
 
+    $scope.options = {
+      configureSSO: 1,
+      enableSSORadioOption: null,
+      SSOSelfSigned: 0,
+      modifySSO: false,
+      deleteSSOBySwitchingRadio: false
+    };
+
     var sipField = $scope.cloudSipUriField;
     init();
 
     function init() {
       checkRoomLicense();
       setSipUri();
+      updateSSO();
+    }
+
+    function updateSSO() {
+      //ssoEnabled should be set already in the userCard.js
+      $scope.ssoEnabled = $rootScope.ssoEnabled || false;
+      if ($scope.ssoEnabled) {
+        $scope.options.configureSSO = 0;
+      }
     }
 
     function checkRoomLicense() {
@@ -135,10 +153,8 @@
       }
     });
 
-    $scope.options = {
-      configureSSO: 1,
-      enableSSO: null,
-      SSOSelfSigned: 0
+    $scope.handleModify = function () {
+      $scope.options.modifySSO = true;
     };
 
     $scope.configureSSOOptions = [{
@@ -177,15 +193,30 @@
       id: 'finalSsoNoProvider'
     }];
 
-    $scope.$watch('options.enableSSO', function () {
-      var ssoValue = $scope.options.enableSSO;
+    $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
+      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
+        var r = confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
+        if (r === true) {
+          $scope.options.configureSSO = 1;
+          $scope.options.deleteSSOBySwitchingRadio = true;
+          deleteSSO();
+        } else {
+          $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
+          $scope.options.configureSSO = 0;
+          $scope.options.deleteSSOBySwitchingRadio = false;
+        }
+      }
+    });
+
+    $scope.$watch('options.enableSSORadioOption', function () {
+      var ssoValue = $scope.options.enableSSORadioOption;
       if (ssoValue !== 'null') {
         _.set($scope.wizard, 'isNextDisabled', false);
       }
     });
 
     $scope.$on('wizard-set-sso-event', function () {
-      var ssoValue = $scope.options.enableSSO;
+      var ssoValue = $scope.options.enableSSORadioOption;
       if (ssoValue === 0) {
         deleteSSO();
       } else if (ssoValue === 1) {
@@ -195,11 +226,34 @@
 
     $scope.initNext = function () {
       var deferred = $q.defer();
-      if ($scope.options.configureSSO === 1 && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.nextTab)) {
-        deferred.reject();
-        $scope.wizard.nextTab();
+      if (_.isFunction(_.get($scope, 'wizard.nextTab')) && $scope.ssoEnabled) {
+        //sso is on and next is clicked without modify
+        if (!$scope.options.modifySSO) {
+          deferred.reject();
+          $scope.wizard.nextTab();
+        } else {
+          //sso is on and modify is clicked
+          if ($scope.options.deleteSSOBySwitchingRadio) {
+            //switch is made from advanced to simple, next should take to next Tab
+            deferred.reject();
+            $scope.wizard.nextTab();
+            $scope.options.modifySSO = false; //reset modify flag
+          } else {
+            //no switch made, user needs to update idp Metadata, next should take to next Step
+            deferred.resolve();
+            $scope.options.modifySSO = false; //reset modify flag
+          }
+        }
       } else {
-        deferred.resolve();
+        //sso is disabled, and user clicks next
+        if ($scope.options.configureSSO === 1) {
+          //simple option is chosen, go to nextTab
+          deferred.reject();
+          $scope.wizard.nextTab();
+        } else {
+          //advanced option is chosen, go to next step
+          deferred.resolve();
+        }
       }
       return deferred.promise;
     };
@@ -207,7 +261,18 @@
     $scope.idpFile = {};
     $scope.$watch('idpFile.file', function (value) {
       if ($scope.idpFile.file) {
-        $timeout($scope.importRemoteIdp);
+        if ($rootScope.ssoEnabled) {
+          var r = confirm($translate.instant('ssoModal.idpOverwriteWarning'));
+          if (r == true) {
+            $timeout($scope.importRemoteIdp);
+          } else {
+            //reset
+            resetFile();
+          }
+        } else {
+          //sso is not enabled.Import the idp file
+          $timeout($scope.importRemoteIdp);
+        }
       }
     });
 
@@ -258,18 +323,36 @@
           //check if data already exists for this entityId
           metaUrl = _.get(data, 'data[0].url');
           if (metaUrl) {
-            SSOService.deleteMeta(metaUrl, function (status) {
-              if (status !== 204) {
-                success = false;
-              }
-              if (success === true) {
-                Log.debug('Single Sign-On (SSO) successfully disabled for all users');
-                $scope.wizard.nextTab();
+            //call patch with sso false
+            SSOService.patchRemoteIdp(metaUrl, null, false, function (data, status) {
+              if (data.success) {
+                //patch success so delete metadata
+                SSOService.deleteMeta(metaUrl, function (status) {
+                  if (status !== 204) {
+                    success = false;
+                  }
+                  if (success === true) {
+                    if ($scope.options.deleteSSOBySwitchingRadio) {
+                      Notification.success('ssoModal.ssoDisableSuccessNotification');
+                      $scope.ssoEnabled = false;
+                    } else {
+                      Log.debug('Single Sign-On (SSO) successfully disabled for all users');
+                      $scope.wizard.nextTab();
+                    }
+                    $rootScope.ssoEnabled = false;
+                  } else {
+                    Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
+                    Notification.error('ssoModal.disableFailed', {
+                      status: status
+                    });
+                  }
+                });
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
                 Notification.error('ssoModal.disableFailed', {
                   status: status
                 });
+
               }
             });
           }
@@ -279,6 +362,7 @@
             status: status
           });
         }
+        $scope.wizard.wizardNextLoad = false;
       });
     }
 
@@ -297,6 +381,8 @@
             SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, true, function (data, status) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+                $scope.ssoEnabled = true;
+                $rootScope.ssoEnabled = true;
                 $scope.wizard.nextTab();
               } else {
                 Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
@@ -310,6 +396,8 @@
           SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, true, function (data, status) {
             if (data.success) {
               Log.debug('Single Sign-On (SSO) successfully enabled for all users');
+              $rootScope.ssoEnabled = true;
+              $scope.ssoEnabled = true;
               $scope.wizard.nextTab();
             } else {
               Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);

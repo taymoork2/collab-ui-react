@@ -886,7 +886,14 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
     "disableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to enable Single Sign-On (SSO)."
+    "enableSSOFailure": "Failed to enable Single Sign-On (SSO).",
+    "modifySSOLabel": "Modify",
+    "ssoEnabledStatus": "Single sign-on is enabled",
+    "ssoNotEnabledStatus": "Single sign-on is not enabled",
+    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
+    "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
+    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
