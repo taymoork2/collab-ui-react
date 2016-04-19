@@ -49,6 +49,7 @@ ll.tasks(runKarmaParallelModules);
  *
  *   `gulp karma-config`                ->  [karma-config-all]
  *   `gulp karma`                       ->  [karma-all]
+ *   `gulp karma --fast`                ->  [karma-all] but skips html/coverage/junit reporters
  *
  *   `gulp karma-config-parallel`       ->  runs every karma-config-{module} in parallel
  *   `gulp karma-parallel`              ->  [karma-config-parallel] then every run-karma-parallel-{module}
@@ -171,12 +172,13 @@ function createGulpKarmaConfigModule(module) {
           read: false
         }), {
           addRootSlash: false,
-          starttag: 'files: [',
-          endtag: ',',
+          starttag: '// inject:unitTestFiles',
+          endtag: '// end-inject:unitTestFiles',
           transform: function (filepath, file, i, length) {
             return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
           }
         }))
+        .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({
           basename: 'karma-unit-' + module,
