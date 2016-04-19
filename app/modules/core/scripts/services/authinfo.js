@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig', '$log',
+  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig',
 
-    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig, $log) {
+    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -206,7 +206,7 @@ angular.module('Core')
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
             var customerAccounts = data.customers || [];
-            $log.log(customerAccounts[0].customerType);
+
             if (customerAccounts.length > 0) {
               authData.hasAccount = true;
             }
