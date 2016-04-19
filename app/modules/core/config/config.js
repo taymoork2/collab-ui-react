@@ -222,7 +222,7 @@
         'cdr-overview',
         'cdrladderdiagram',
         'activateProduct',
-        'settings'
+        'settings',
         'userRedirect'
       ],
       Readonly_Admin: [
