@@ -26,7 +26,7 @@
     return directive;
 
     function link(scope, element, attrs) {
-      var FILENAME = 'exported_file.csv';
+      var FILENAME = scope.filename || 'exported_file.csv';
 
       scope.downloading = false;
       scope.downloadingMessage = '';
@@ -41,7 +41,7 @@
 
         if (csvType === CsvDownloadService.typeTemplate || csvType === CsvDownloadService.typeUser) {
           startDownload(csvType);
-          CsvDownloadService.getCsv(csvType, tooManyUsers, scope.filename).then(function (url) {
+          CsvDownloadService.getCsv(csvType, tooManyUsers, FILENAME).then(function (url) {
             finishDownload(csvType, url);
           }).catch(function (response) {
             if (response.status !== -1) {
@@ -79,7 +79,7 @@
             if (scope.type === CsvDownloadService.typeAny) {
               downloadingIcon.mouseout();
             }
-            if (angular.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+            if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
               // in IE this causes the page to refresh
               downloadAnchor[0].click();
             }
@@ -104,7 +104,7 @@
             scope.downloadCsv = removeFocus;
             downloadAnchor.attr({
                 href: url,
-                download: scope.filename || FILENAME
+                download: FILENAME
               })
               .removeAttr('disabled');
           } else {
@@ -116,7 +116,7 @@
       }
 
       function openInIE() {
-        CsvDownloadService.openInIE(scope.type, scope.filename || FILENAME);
+        CsvDownloadService.openInIE(scope.type, FILENAME);
       }
 
       function changeAnchorAttrToOriginalState() {
