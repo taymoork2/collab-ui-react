@@ -2129,17 +2129,17 @@
           // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
             // Basic data
-            firstName = userRow[findHeaderIndex('First Name')];
-            lastName = userRow[findHeaderIndex('Last Name')];
-            displayName = userRow[findHeaderIndex('Display Name')];
-            id = userRow[findHeaderIndex('User ID/Email (Required)')];
+            firstName = _.trim(userRow[findHeaderIndex('First Name')]);
+            lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
+            displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
+            id = _.trim(userRow[findHeaderIndex('User ID/Email (Required)')]);
             idxDirectoryNumber = findHeaderIndex('Directory Number');
             if (idxDirectoryNumber !== -1) {
-              directoryNumber = userRow[idxDirectoryNumber];
+              directoryNumber = _.trim(userRow[idxDirectoryNumber]);
             }
             idxDirectLine = findHeaderIndex('Direct Line');
             if (idxDirectLine !== -1) {
-              directLine = userRow[idxDirectLine];
+              directLine = _.trim(userRow[idxDirectLine]);
             }
             licenseList = [];
             entitleList = [];
@@ -2269,9 +2269,7 @@
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (angular.isFunction($scope.getStatus)) {
-              $scope.loadingDirSyncUsers = true;
               return $scope.getStatus().then(function () {
-                $scope.loadingDirSyncUsers = false;
                 resolve();
               });
             } else {
