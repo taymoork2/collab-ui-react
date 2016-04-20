@@ -3200,7 +3200,8 @@
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "You are not entitled to make changes to this site.",
     "systemError": "Unable to connect to site.",
-    "multipleLicenses": "Multiple..."
+    "multipleLicenses": "Multiple...",
+    "checkingServices": "Checking services..."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
