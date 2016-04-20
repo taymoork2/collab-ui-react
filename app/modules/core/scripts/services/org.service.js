@@ -6,7 +6,7 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig) {
+  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage, UrlConfig, Utils) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -62,7 +62,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid) {
+    function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -70,7 +70,12 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      $http.get(adminUrl)
+      var cacheDisabled = !!disableCache;
+      return $http.get(adminUrl, {
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;
@@ -239,6 +244,17 @@
         return $q.reject('filter does not match requirements');
       }
       var orgUrl = UrlConfig.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
+
+      if (Utils.isUUID(filter)) {
+        return getAdminOrg(_.noop, filter).then(function (result) {
+          // return it in the same manner as listOrgs
+          return {
+            data: {
+              organizations: [result.data]
+            }
+          };
+        });
+      }
 
       return $http.get(orgUrl);
     }

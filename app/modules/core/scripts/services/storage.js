@@ -1,49 +1,52 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .service('Storage', function Storage() {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+  angular
+    .module('Core')
+    .service('Storage', Storage);
+
+  /* @ngInject */
+  function Storage($window, $log) {
+    function getLocalStorage() {
+      try {
+        return $window.localStorage;
+      } catch (e) {
+        $log.error(e);
+      }
+    }
     return {
       put: function (key, value) {
         if (value !== null) {
-          localStorage.setItem(key, value);
+          getLocalStorage().setItem(key, value);
         }
       },
-
       putObject: function (key, object) {
         if (object !== null) {
-          localStorage.setItem(key, JSON.stringify(object));
+          getLocalStorage().setItem(key, JSON.stringify(object));
         }
       },
-
       get: function (key) {
-        return localStorage.getItem(key);
+        return getLocalStorage().getItem(key);
       },
-
       getObject: function (key) {
-        return JSON.parse(localStorage.getItem(key));
+        return JSON.parse(getLocalStorage().getItem(key));
       },
-
       pop: function (key) {
         var value = this.get(key);
         this.remove(key);
         return value;
       },
-
       popObject: function (key) {
         var object = this.getObject(key);
         this.remove(key);
         return object;
       },
-
       remove: function (key) {
-        localStorage.removeItem(key);
+        getLocalStorage().removeItem(key);
       },
-
       clear: function () {
-        localStorage.clear();
+        getLocalStorage().clear();
       }
-
     };
-
-  });
+  }
+})();

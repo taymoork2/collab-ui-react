@@ -348,8 +348,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
@@ -422,8 +420,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
       expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('runActionsOnInput');
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
 
     });
 
@@ -442,8 +438,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('play4');
       expect($scope.vm.ui.openHours['entries'][2]['actions'][0]['name']).toEqual('play5');
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
     });
 
     it('should set up a say say open hours - say closed hours template', function () {
@@ -551,8 +545,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.populateUiModel();
 
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
+      expect($scope.vm.ui.isClosedHours).toEqual(true);
+      expect($scope.vm.ui.isHolidays).toEqual(true);
     });
 
     it('should build openHours, closedHours and holidays menus successfully from model', function () {
@@ -617,9 +611,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui.isClosedHours = false;
       $scope.vm.ui.isHolidays = true;
       $scope.vm.ui.holidays = {};
+      $scope.vm.ui.holidaysValue = 'closedHours';
       controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
+      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays, $scope.vm.ui.holidaysValue);
       expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
     });
 
@@ -649,7 +644,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
   });
 
-  describe('save9To5Schedule', function () {
+  describe('save8To5Schedule', function () {
 
     var createScheduleDefer;
     var saveAARecordDefer;
@@ -662,14 +657,14 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       createScheduleDefer = $q.defer();
       saveAARecordDefer = $q.defer();
-      spyOn(AAUiScheduleService, 'create9To5Schedule').and.returnValue(createScheduleDefer.promise);
+      spyOn(AAUiScheduleService, 'create8To5Schedule').and.returnValue(createScheduleDefer.promise);
       spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
       spyOn(Notification, 'error');
     });
 
-    it('should return and resolve a promise when successfully save a 9to5 schedule', function () {
+    it('should return and resolve a promise when successfully save a 8to5 schedule', function () {
 
-      var saveSchedulePromise = controller.save9To5Schedule('AA');
+      var saveSchedulePromise = controller.save8To5Schedule('AA');
 
       var promiseResolved = false;
       saveSchedulePromise.then(function () {
@@ -686,9 +681,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.ceInfo.scheduleId).toBe('12345');
     });
 
-    it('should return and reject a promise when failed to save a 9to5 schedule', function () {
+    it('should return and reject a promise when failed to save a 8to5 schedule', function () {
 
-      var saveSchedulePromise = controller.save9To5Schedule('AA');
+      var saveSchedulePromise = controller.save8To5Schedule('AA');
 
       var errorText = '';
       saveSchedulePromise.catch(function (error) {
@@ -779,7 +774,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
 
-      controller.delete9To5Schedule('CE_SAVE_FAILURE');
+      controller.delete8To5Schedule('CE_SAVE_FAILURE');
       deleteCalendarDefer.resolve();
 
       $rootScope.$apply();
@@ -789,7 +784,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should display an error info when failed to delete a calendar', function () {
-      controller.delete9To5Schedule('CE_SAVE_FAILURE');
+      controller.delete8To5Schedule('CE_SAVE_FAILURE');
       deleteCalendarDefer.reject();
 
       $rootScope.$apply();
@@ -799,7 +794,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
 
     it('should do nothing when there is a SAVE_SCHEDULE_FAILURE', function () {
-      controller.delete9To5Schedule('SAVE_SCHEDULE_FAILURE');
+      controller.delete8To5Schedule('SAVE_SCHEDULE_FAILURE');
 
       $rootScope.$apply();
 
@@ -810,7 +805,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('Received AANameCreated Event', function () {
     var saveAARecordDefer;
-    var save9To5ScheduleDefer;
+    var save8To5ScheduleDefer;
     var saveCeDefinitionDefer;
 
     beforeEach(function () {
@@ -822,26 +817,26 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.isAANameDefined = false;
 
       saveAARecordDefer = $q.defer();
-      save9To5ScheduleDefer = $q.defer();
+      save8To5ScheduleDefer = $q.defer();
       saveCeDefinitionDefer = $q.defer();
 
       spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
 
-      spyOn(controller, 'save9To5Schedule').and.returnValue(save9To5ScheduleDefer.promise);
+      spyOn(controller, 'save8To5Schedule').and.returnValue(save8To5ScheduleDefer.promise);
       spyOn(controller, 'saveCeDefinition').and.returnValue(saveCeDefinitionDefer.promise);
-      spyOn(controller, 'delete9To5Schedule');
+      spyOn(controller, 'delete8To5Schedule');
     });
 
-    it('should save a 9to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
+    it('should save a 8to5 schedule and save current CE definition for OpenClosedHoursTemplate creation.', function () {
       $rootScope.$broadcast('AANameCreated');
-      save9To5ScheduleDefer.resolve();
+      save8To5ScheduleDefer.resolve();
       saveCeDefinitionDefer.resolve();
 
       $rootScope.$apply();
 
-      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.save8To5Schedule).toHaveBeenCalled();
       expect(controller.saveCeDefinition).toHaveBeenCalled();
-      expect(controller.delete9To5Schedule).not.toHaveBeenCalled();
+      expect(controller.delete8To5Schedule).not.toHaveBeenCalled();
     });
 
     it('should invoke saveAARecords for Basic template creation', function () {
@@ -866,27 +861,27 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.isAANameDefined).toBe(true);
     });
 
-    it('should undo the 9to5 schedule save if save current CE definition failed.', function () {
+    it('should undo the 8to5 schedule save if save current CE definition failed.', function () {
       $rootScope.$broadcast('AANameCreated');
-      save9To5ScheduleDefer.resolve();
+      save8To5ScheduleDefer.resolve();
       saveCeDefinitionDefer.reject();
 
       $rootScope.$apply();
 
-      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.save8To5Schedule).toHaveBeenCalled();
       expect(controller.saveCeDefinition).toHaveBeenCalled();
-      expect(controller.delete9To5Schedule).toHaveBeenCalled();
+      expect(controller.delete8To5Schedule).toHaveBeenCalled();
     });
 
-    it('should invoke delete9To5Schedule but do nothing if fail to save the 9 to 5 schedule.', function () {
+    it('should invoke delete8To5Schedule but do nothing if fail to save the 9 to 5 schedule.', function () {
       $rootScope.$broadcast('AANameCreated');
-      save9To5ScheduleDefer.reject();
+      save8To5ScheduleDefer.reject();
 
       $rootScope.$apply();
 
-      expect(controller.save9To5Schedule).toHaveBeenCalled();
+      expect(controller.save8To5Schedule).toHaveBeenCalled();
       expect(controller.saveCeDefinition).not.toHaveBeenCalled();
-      expect(controller.delete9To5Schedule).toHaveBeenCalled();
+      expect(controller.delete8To5Schedule).toHaveBeenCalled();
     });
 
   });

@@ -1,8 +1,10 @@
 <div class="app-container">
   <div ng-controller="HeaderCtrl">
-    <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" >
+    <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" show-read-only>
       <cs-header-left>
-        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="top-bar-title" title="{{orgname}}">{{orgname}}</div></div>
+        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()">
+          <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
+        </div>
       </cs-header-left>
       <cs-header-right>
         <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>

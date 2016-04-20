@@ -1,8 +1,14 @@
 class DomainManagementService {
 
-  private _domainList = [];
+  private _domainList:Array<{
+    text: string,
+    token: string,
+    status: string
+  }> = [];
 
-  private _enforceUsersInVerifiedAndClaimedDomains;
+  private _domainListLoaded:boolean = false;
+
+  private _enforceUsersInVerifiedAndClaimedDomains:boolean;
 
   private _states = {
     pending: 'pending',
@@ -50,7 +56,11 @@ class DomainManagementService {
     return this._states;
   }
 
-  public get domainList() {
+  public get domainList():Array<{
+    text: string,
+    token: string,
+    status: string
+  }> {
     return this._domainList;
   }
 
@@ -155,8 +165,11 @@ class DomainManagementService {
     });
   }
 
-  public getVerifiedDomains(disableCache) {
-    //let deferred = this.$q.defer();
+  public getVerifiedDomains(disableCache:boolean=false) {
+
+    if (!disableCache && this._domainListLoaded)
+      return this._domainList;
+
     let scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
 
     return this.$http.get(scomUrl).then(res => {

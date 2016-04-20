@@ -101,7 +101,7 @@ describe('ClusterService', function () {
       expect(clusterCache.c_cal[clusterId]).not.toBeDefined();
     });
 
-    it('should add aggregates and not touch the other information of the clusters', function () {
+    it('should add aggregates and filter connectors but not touch the other information of the cluster', function () {
       var response = org([
         cluster([
           connector('c_mgmt')
@@ -124,6 +124,10 @@ describe('ClusterService', function () {
       expect(managementCluster.provisioning).toEqual(originalCluster.provisioning);
       expect(managementCluster.connectors[0]).toEqual(originalCluster.connectors[0]);
       expect(managementCluster.aggregates).toBeDefined();
+      expect(managementCluster.aggregates.provisioning).toEqual(jasmine.objectContaining({
+        connectorType: 'c_mgmt',
+        availableVersion: '1.0'
+      }));
     });
 
     it('should merge all alarms and override the state if there are alarms', function () {
@@ -201,13 +205,11 @@ describe('ClusterService', function () {
       expect(managementCluster.aggregates.upgradeState).toBe('upgrading');
     });
 
-    it('should expose that an upgrade is available when there is one', function () {
+    it('should NOT say that an upgrade is available when there is none', function () {
       var response = org([
         cluster([
           connector('c_mgmt')
-        ], {
-          upgradeAvailable: ['c_mgmt']
-        })
+        ])
       ]);
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
@@ -220,37 +222,32 @@ describe('ClusterService', function () {
       var clusterCache = callback.getCall(0).args[0];
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.provisioning).toEqual({
-        connectorType: 'c_mgmt',
-        availableVersion: '2.0',
-        provisionedVersion: '1.0',
-      });
+      expect(managementCluster.aggregates.upgradeAvailable).toBe(false);
+    });
+
+    it('should say that an upgrade is available when a connector is lagging behind', function () {
+      var response = org([
+        cluster([
+          connector('c_mgmt', {
+            runningVersion: 'whatever that is not 1.0 (latest availableVersion)'
+          })
+        ])
+      ]);
+      $httpBackend
+        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
+        .respond(response);
+
+      var callback = sinon.stub();
+      ClusterService.fetch().then(callback);
+      $httpBackend.flush();
+
+      var clusterCache = callback.getCall(0).args[0];
+      var originalCluster = response.clusters[0];
+      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
     });
 
-    it('should say that upgrade is possible when connectors are fine and an upgrade available', function () {
-      var response = org([
-        cluster([
-          connector('c_mgmt')
-        ], {
-          upgradeAvailable: ['c_mgmt']
-        })
-      ]);
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      var callback = sinon.stub();
-      ClusterService.fetch().then(callback);
-      $httpBackend.flush();
-
-      var clusterCache = callback.getCall(0).args[0];
-      var originalCluster = response.clusters[0];
-      var managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.upgradePossible).toBe(true);
-    });
-
-    it('should say that upgrade is not possible when at least a connector is in state not_configured and an upgrade available', function () {
+    it('should say that upgrade is *not possible* when an upgrade available BUT at least one connector is in state not_configured', function () {
       var response = org([
         cluster([
           connector('c_mgmt'),
@@ -273,6 +270,7 @@ describe('ClusterService', function () {
       var clusterCache = callback.getCall(0).args[0];
       var originalCluster = response.clusters[0];
       var managementCluster = clusterCache.c_mgmt[originalCluster.id];
+      expect(managementCluster.aggregates.upgradeAvailable).toBe(true);
       expect(managementCluster.aggregates.upgradePossible).toBe(false);
     });
 
@@ -538,11 +536,14 @@ describe('ClusterService', function () {
 
   function cluster(connectors, options) {
     options = options || {};
-    var provisioning = _.map(options.upgradeAvailable, function (type) {
+    var typesUsed = _.chain(connectors)
+      .pluck('connectorType')
+      .uniq()
+      .value();
+    var provisioning = _.map(typesUsed, function (type) {
       return {
         connectorType: type,
-        availableVersion: '2.0',
-        provisionedVersion: '1.0',
+        availableVersion: _.includes(options.upgradeAvailable, type) ? '2.0' : '1.0'
       };
     });
     return {
@@ -567,7 +568,8 @@ describe('ClusterService', function () {
       hostname: options.hostname || 'host1.example.com',
       state: options.state || 'running',
       upgradeState: options.upgradeState || 'upgraded',
-      connectorType: type || 'c_mgmt'
+      connectorType: type || 'c_mgmt',
+      runningVersion: options.runningVersion || '1.0'
     };
   }
 });

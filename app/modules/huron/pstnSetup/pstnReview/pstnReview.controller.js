@@ -50,7 +50,8 @@
         PstnSetup.getCustomerLastName(),
         PstnSetup.getCustomerEmail(),
         PstnSetup.getProviderId(),
-        getNumbers(vm.newOrders)
+        getNumbers(vm.newOrders),
+        PstnSetup.getIsTrial()
       ).then(function () {
         PstnSetup.setCustomerExists(true);
       }).catch(function (response) {

@@ -28,7 +28,7 @@
         .then(function () {
           if (ClusterService.getCluster($stateParams.serviceType, cluster.id)) {
             $state.go('cluster-details', {
-              clusterId: vm.cluster.id
+              clusterId: cluster.id
             });
           } else {
             $state.sidepanel.close();

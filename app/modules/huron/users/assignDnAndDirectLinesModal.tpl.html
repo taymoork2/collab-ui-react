@@ -1,7 +1,5 @@
-
-
 <div id="modalContent" class="add-users">
-  
+
   <div class="modal-header">
     <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser">
       <span class="sr-only" translate="common.close"></span>
@@ -16,14 +14,20 @@
     <cr-assign-dns-to-users ng-if="!processing"></cr-assign-dns-to-users>
   </div>
 
-  <div class="modal-footer" ng-if="!convertUsersFlow">
+  <div class="modal-footer" ng-if="!convertUsersFlow && !editServicesFlow">
     <button type="button" id="btnBack" class="btn" ui-sref="users.add.services"><span translate="common.back"></span></button>
     <button type="button" cs-btn id="btnOnboard" class="btn btn--primary" ng-disabled="isDnNotAvailable()" ng-click="assignDnAndDirectLinesNext()" loading="btnOnboardLoading"><span translate="common.finish"></span></button>
   </div>
 
-  <div class="modal-footer" ng-if="convertUsersFlow">
+  <div class="modal-footer" ng-if="convertUsersFlow && !editServicesFlow">
     <button type="button" id="btnBack" class="btn" ui-sref="users.convert.services"><span translate="common.back"></span></button>
     <button type="button" id="btnConvert" class="btn btn--primary" cs-btn loading="btnConvertLoad" ng-disabled="isDnNotAvailable()" ng-click="assignDNForConvertUsers()" ><span translate="common.finish"></span></button>
+  </div>
+
+  <!-- Footer for editServicesFlow -->
+  <div class="modal-footer" ng-if="editServicesFlow && !convertUsersFlow">
+    <button type="button" id="btnBack" class="btn" ui-sref="editService"><span translate="common.back"></span></button>
+    <button type="button" id="btnEditServices" class="btn btn--primary" cs-btn loading="btnSaveEntLoad" ng-disabled="isDnNotAvailable()" ng-click="updateUserLicense()" ><span translate="common.finish"></span></button>
   </div>
 
 </div>

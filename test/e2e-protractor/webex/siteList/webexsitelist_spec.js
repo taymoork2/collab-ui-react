@@ -10,7 +10,43 @@ describe('Services > Webex page aka Site List page', function () {
 
   afterEach(function () {
     browser.ignoreSynchronization = true;
-    utils.dumpConsoleErrors();
+  });
+
+  describe(': Actions Col : ', function () {
+    var setup = false;
+
+    beforeAll(function () {
+      var promise = webEx.setup(sitelist.t31CSVToggleUser.testAdminUsername, sitelist.t31CSVToggleUser.testAdminPassword, sitelist.t31CSVToggleUser.siteUrl);
+      promise.then(function (ticket) {
+        if (ticket) {
+          setup = true;
+        }
+      });
+    });
+
+    it('should navigate to webex site list', function () {
+      if (setup) {
+        navigation.clickServicesTab();
+        utils.click(sitelist.conferencingLink);
+        utils.wait(sitelist.siteListPageId);
+      }
+    });
+
+    it('should detect the Reports icon in Actions Col', function () {
+      if (setup) {
+        utils.wait(sitelist.actionReportsLinkID);
+      }
+    });
+
+    it('should detect the Site Config icon in Actions Col', function () {
+      if (setup) {
+        utils.wait(sitelist.actionSiteConfigLinkID);
+      }
+    });
+
+    afterAll(function () {
+      navigation.logout();
+    });
   });
 
   describe(': CSV Export/Import : ', function () {
@@ -51,7 +87,7 @@ describe('Services > Webex page aka Site List page', function () {
     });
   });
 
-  //Start tests to detect 'Not Available' and warning icon conditions 
+  //Start tests to detect 'Not Available' and warning icon conditions
   describe("test CSV 'Not Anavailable' condition : ", function () {
     var setup = false;
 

@@ -1,9 +1,6 @@
 'use strict';
 
 describe('Video play spec', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   describe('Launch video flow', function () {
     it('should login with a partner admin', function () {

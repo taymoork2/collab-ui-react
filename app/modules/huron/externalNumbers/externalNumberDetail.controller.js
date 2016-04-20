@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
+  function ExternalNumberDetail($state, $stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService, $interval, $scope) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -17,14 +17,22 @@
     vm.filteredPendingNumbers = [];
     vm.filteredUnassignedNumbers = [];
 
+    vm.showPstnSetup = false;
+
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
+    vm.addNumbers = addNumbers;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
+
+    var numberPromise = ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId)
+      .then(function (response) {
+        vm.showPstnSetup = response;
+      });
 
     init();
 
@@ -92,6 +100,23 @@
       vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
+    }
+
+    function addNumbers(org) {
+      numberPromise.then(function () {
+        if (vm.showPstnSetup) {
+          return $state.go('pstnSetup', {
+            customerId: org.customerOrgId,
+            customerName: org.customerName,
+            customerEmail: org.customerEmail,
+            customerCommunicationLicenseIsTrial: _.get(org, 'communications.isTrial', org.isTrial)
+          });
+        } else {
+          return $state.go('didadd', {
+            currentOrg: org
+          });
+        }
+      });
     }
   }
 })();

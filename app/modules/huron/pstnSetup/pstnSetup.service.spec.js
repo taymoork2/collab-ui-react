@@ -71,7 +71,8 @@ describe('Service: PstnSetupService', function () {
       customerPayload.lastName,
       customerPayload.email,
       customerPayload.pstnCarrierId,
-      customerPayload.numbers
+      customerPayload.numbers,
+      customerPayload.trial
     );
     $httpBackend.flush();
   }
@@ -176,6 +177,13 @@ describe('Service: PstnSetupService', function () {
     promise.then(function (numbers) {
       expect(numbers).toContain(jasmine.objectContaining({
         pattern: '5125934450'
+      }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        pattern: '(123) XXX-XXXX',
+        quantity: 1
+      }));
+      expect(numbers).toContain(jasmine.objectContaining({
+        orderNumber: 654987
       }));
     });
     $httpBackend.flush();

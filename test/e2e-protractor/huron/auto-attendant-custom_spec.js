@@ -45,16 +45,21 @@ describe('Huron Auto Attendant', function () {
     it('should add a Schedule to AA', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, waitTime);
-      utils.click(autoattendant.toggleHoliday);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.addholiday);
+      utils.click(autoattendant.holidayBehaviour);
       utils.sendKeys(autoattendant.holidayName, 'Thanksgiving');
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.sendKeys(autoattendant.date, new Date());
       utils.click(autoattendant.selectdate);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
-      utils.click(autoattendant.closeEditButton);
     }, 60000);
+
+    it('should expect a lane with Closed/Holiday Label', function () {
+      utils.expectIsDisplayed(autoattendant.closedHoursLane);
+      utils.click(autoattendant.closeEditButton);
+    });
 
     it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -86,6 +91,37 @@ describe('Huron Auto Attendant', function () {
       utils.selectDropdown('.import-schedule-modal', deleteUtils.testAAImportName);
       utils.expectIsEnabled(autoattendant.importContinue);
       utils.click(autoattendant.importContinue);
+
+      utils.expectIsEnabled(autoattendant.modalsave);
+      utils.click(autoattendant.modalsave);
+      autoattendant.assertImportSuccess(0, 1);
+
+    }, 120000);
+
+    it('should close AA edit and return to landing page', function () {
+
+      utils.click(autoattendant.closeEditButton);
+
+    });
+
+    it('should delete new AAs named "' + deleteUtils.testAAName + '" and "' + deleteUtils.testAAImportName + '"', function () {
+
+      // click delete X on the AA card for e2e test AA
+      utils.click(autoattendant.testCardDelete);
+
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+      });
+
+      // click delete X on the AA card for import schedule test AA
+      utils.click(autoattendant.testImportCardDelete);
+
+      // confirm dialog with import schedule test name in it is there, then agree to delete
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAImportName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+      });
+
     }, 60000);
 
   });

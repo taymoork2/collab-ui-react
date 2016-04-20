@@ -11,6 +11,7 @@
     var aaPhoneMenuOptions = false;
     var aaActionStatus = false;
     var aaDialByExtensionStatus = false;
+    var aaCENumberStatus = false;
 
     var invalidList = {};
     var service = {
@@ -19,6 +20,7 @@
       setPhoneMenuStatus: setPhoneMenuStatus,
       setActionStatus: setActionStatus,
       setDialByExtensionStatus: setDialByExtensionStatus,
+      setCENumberStatus: setCENumberStatus,
       isValid: isValid,
       setIsValid: setIsValid,
       resetFormStatus: resetFormStatus,
@@ -30,7 +32,7 @@
     /////////////////////
 
     function isFormDirty() {
-      return aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus;
+      return aaSayMessageForm || aaPhoneMenuOptions || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus;
     }
 
     function isValid() {
@@ -50,7 +52,7 @@
       aaPhoneMenuOptions = false;
       aaActionStatus = false;
       aaDialByExtensionStatus = false;
-
+      aaCENumberStatus = false;
       invalidList = {};
     }
 
@@ -70,6 +72,10 @@
       aaDialByExtensionStatus = status;
     }
 
+    function setCENumberStatus(status) {
+      aaCENumberStatus = status;
+    }
+
     function saveUiModel(ui, aaRecord) {
       var openHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'openHours');
       var closedHours = AutoAttendantCeMenuModelService.getCombinedMenu(aaRecord, 'closedHours');
@@ -82,25 +88,27 @@
         AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'openHours', openHours);
       }
 
-      if (ui.isClosedHours) {
+      if (ui.isClosedHours || (ui.holidaysValue === 'closedHours' && ui.isHolidays)) {
         if (angular.isUndefined(closedHours)) { //New
           closedHours = AutoAttendantCeMenuModelService.newCeMenu();
           closedHours.setType('MENU_WELCOME');
         }
         AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'closedHours', closedHours);
-      } else if (angular.isDefined(closedHours)) { //Delete
-        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'closedHours');
+      } else {
+        AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'closedHours');
       }
 
-      if (ui.isHolidays) {
+      if (ui.isHolidays && ui.holidaysValue !== 'closedHours') {
         if (angular.isUndefined(holidays)) { //New
           holidays = AutoAttendantCeMenuModelService.newCeMenu();
           holidays.setType('MENU_WELCOME');
         }
-        AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'holidays', holidays);
+        AutoAttendantCeMenuModelService.updateCombinedMenu(aaRecord, 'holidays', holidays, ui.holidaysValue);
 
-      } else if (angular.isDefined(holidays)) { //delete
-        AutoAttendantCeMenuModelService.deleteCombinedMenu(aaRecord, 'holidays');
+      } else if (ui.isHolidays) {
+        AutoAttendantCeMenuModelService.updateScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
+      } else {
+        AutoAttendantCeMenuModelService.deleteScheduleActionSetMap(aaRecord, 'holidays', ui.holidaysValue);
       }
     }
 

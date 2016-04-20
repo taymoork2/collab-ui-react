@@ -46,6 +46,31 @@ describe('Controller: PartnerProfileCtrl', function () {
 
   describe('validation()', function () {
 
+    describe('saving org settings data', function () {
+
+      it('saves data via Orgservice', function () {
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.cisco;
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.cisco;
+        $scope.problemSiteRadioValue = $scope.problemSiteInfo.ext;
+        $scope.supportUrl = 'supportUrl';
+        $scope.supportText = 'this is support text';
+        $scope.allowReadOnlyAccess = false;
+        $scope.helpSiteRadioValue = $scope.helpSiteInfo.ext;
+        $scope.helpUrl = 'helpUrl';
+        $scope.validation();
+        var expectedOrgSettings = {
+          reportingSiteUrl: 'supportUrl',
+          reportingSiteDesc: 'this is support text',
+          helpUrl: 'helpUrl',
+          isCiscoHelp: false,
+          isCiscoSupport: false,
+          allowReadOnlyAccess: false
+        };
+        expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
+      });
+
+    });
+
     describe('should save successfully', function () {
       afterEach(saveAndNotifySuccess);
 
@@ -79,7 +104,7 @@ describe('Controller: PartnerProfileCtrl', function () {
       it('when update fails', saveAndNotifyErrorResponse);
 
       function initSpyFailure() {
-        Orgservice.setOrgSettings.and.returnValue($q.reject());
+        Orgservice.setOrgSettings.and.returnValue($q.reject({}));
       }
 
       function saveAndNotifyErrorResponse() {

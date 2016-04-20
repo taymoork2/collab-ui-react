@@ -2,9 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterController(cluster, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
+  function ReassignClusterController(cluster, MediaClusterService, XhrNotificationService, $translate, $modalInstance) {
     var vm = this;
-    window.x = $window;
 
     vm.options = [];
     vm.selectPlaceholder = 'Select a Cluster';

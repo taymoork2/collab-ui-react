@@ -29,9 +29,9 @@
     vm.viewReady = true;
     vm.resetFile = resetFile;
 
-    vm.onFileSizeError = function () {
+    /**vm.onFileSizeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvMaxSizeError'));
-    };
+    };**/
 
     vm.onFileTypeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvFileTypeError'));
@@ -48,30 +48,41 @@
       logMsg = funcName + "\n" +
         "vm.siteUrl=" + JSON.stringify(vm.siteUrl) +
         "vm.csvImportObj=" + JSON.stringify(vm.csvImportObj) +
-        "vm.modal.file=" + JSON.stringify(vm.modal.file);
+        "vm.modal.file=" + vm.modal.file;
       //$log.log(logMsg);
 
-      //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
-      WebExApiGatewayService.csvImport(vm).then(
-        function success(response) {
-          Notification.success($translate.instant('siteList.importStartedToast'));
-          SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+      if (
+        (null == vm.modal.file) ||
+        (0 == vm.modal.file.length)
+      ) {
 
-          if (_.isFunction($scope.$close)) {
-            $scope.$close();
+        // TBD: use correct error string
+        Notification.error('siteList.importInvalidFileToast');
+
+      } else {
+
+        //TBD: Don't use then(successfn,errorfn), its deprecated in some libraries. Instead use promise.catch(errorfn).then(successfn)
+        WebExApiGatewayService.csvImport(vm).then(
+          function success(response) {
+            Notification.success($translate.instant('siteList.importStartedToast'));
+            SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+
+            if (_.isFunction($scope.$close)) {
+              $scope.$close();
+            }
+          },
+
+          function error(response) {
+            // TBD: Actual error result handling
+            Notification.error($translate.instant('siteList.importRejectedToast'));
           }
-        },
-
-        function error(response) {
-          // TBD: Actual error result handling
-          Notification.error($translate.instant('siteList.importRejectedToast'));
-        }
-      ).catch(
-        function catchError(response) {
-          Notification.error($translate.instant('siteList.importRejectedToast'));
-          SiteListService.updateCSVColumnInRow(vm.csvImportObj);
-        }
-      ); // WebExApiGatewayService.csvImport()
+        ).catch(
+          function catchError(response) {
+            Notification.error($translate.instant('siteList.importRejectedToast'));
+            SiteListService.updateCSVColumnInRow(vm.csvImportObj);
+          }
+        ); // WebExApiGatewayService.csvImport()
+      }
     };
   } // SiteCSVImportModalCtrl()
 })(); // top level function

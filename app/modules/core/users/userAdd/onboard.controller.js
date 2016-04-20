@@ -35,6 +35,9 @@
     $scope.showExtensions = true;
     $scope.isResetEnabled = false;
 
+    $scope.convertUsersFlow = false;
+    $scope.editServicesFlow = false;
+
     // model can be removed after switching to controllerAs
     $scope.model = {
       userInputOption: 0,
@@ -60,6 +63,9 @@
     }];
 
     OnboardService.huronCallEntitlement = false;
+
+    $scope.shouldAddCallService = shouldAddCallService;
+    var currentUserHasCall = false;
 
     /****************************** Did to Dn Mapping START *******************************/
     //***
@@ -222,13 +228,31 @@
     };
 
     $scope.assignServicesSave = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
         $state.go('users.add.services.dn');
       } else {
-        onboardUsers(true);
+        $scope.onboardUsers(true);
       }
+    };
+
+    $scope.editServicesSave = function () {
+      if (shouldAddCallService()) {
+        $scope.processing = true;
+        $scope.editServicesFlow = true;
+        $scope.convertUsersFlow = false;
+
+        // Populate list with single user for updateUserLicense()
+        $scope.usrlist = [{
+          address: _.get($scope, 'currentUser.userName', '')
+        }];
+        activateDID();
+        $state.go('editService.dn');
+      } else {
+        $scope.updateUserLicense();
+      }
+
     };
 
     function toggleShowExtensions() {
@@ -375,10 +399,15 @@
       for (var x = 0; x < userEnts.length; x++) {
         if (userEnts[x] === 'ciscouc') {
           $scope.radioStates.commRadio = true;
+          currentUserHasCall = true;
         } else if (userEnts[x] === 'squared-room-moderation') {
           $scope.radioStates.msgRadio = true;
         }
       }
+    }
+
+    function shouldAddCallService() {
+      return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
     }
 
     function createFeatures(obj) {
@@ -648,7 +677,7 @@
 
         // Do not change wizard text when configuring bulk user services
         if (angular.isDefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
-          if ($scope.radioStates.commRadio) {
+          if (shouldAddCallService()) {
             $scope.$emit('wizardNextText', 'next');
           } else {
             $scope.$emit('wizardNextText', 'finish');
@@ -659,7 +688,7 @@
 
     $scope.$watch('wizard.current.step', function (newVal, oldVal) {
       if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
-        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+        if (shouldAddCallService()) {
           $scope.$emit('wizardNextText', 'next');
         } else {
           $scope.$emit('wizardNextText', 'finish');
@@ -838,7 +867,9 @@
 
     $scope.updateUserLicense = function () {
       var user = [];
-      if ($scope.currentUser) {
+      if (_.get($scope, 'usrlist.length')) {
+        user = $scope.usrlist;
+      } else if ($scope.currentUser) {
         usersList = [];
         var userObj = {
           'address': $scope.currentUser.userName,
@@ -1283,6 +1314,12 @@
             userResult.message = $translate.instant('onboardModal.result.409');
             userResult.alertType = 'danger';
             isComplete = false;
+          } else if (data.userResponse[i].message === '400094') {
+            userResult.message = $translate.instant('onboardModal.result.400094', {
+              status: userStatus
+            });
+            userResult.alertType = 'danger';
+            isComplete = false;
           } else {
             userResult.message = $translate.instant('onboardModal.result.other', {
               status: userStatus
@@ -1431,7 +1468,7 @@
     $scope.assignServicesNext = function () {
       var deferred = $q.defer();
 
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
         deferred.resolve();
@@ -1450,7 +1487,7 @@
     };
 
     $scope.getServicesNextText = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         return 'common.next';
       } else {
         return 'common.save';
@@ -1586,7 +1623,7 @@
     };
 
     $scope.convertUsersNext = function () {
-      if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+      if (shouldAddCallService()) {
         $scope.processing = true;
         // Copying selected users to user list
         $scope.usrlist = [];
@@ -1772,12 +1809,20 @@
       if ($scope.model.file) {
         setUploadProgress(0);
         userArray = $.csv.toArrays($scope.model.file);
-        if (angular.isArray(userArray) && userArray.length > 0) {
-          if (userArray[0][0] === 'First Name') {
+        if (_.isArray(userArray) && userArray.length > 0 && _.isArray(userArray[0])) {
+          // the email header is required
+          var indexEmail = _.findIndex(userArray[0], function (h) {
+            return h == 'User ID/Email (Required)';
+          });
+          if (indexEmail > -1) {
             csvHeaders = userArray.shift();
-          }
-          if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
-            isCsvValid = true;
+            if (userArray.length > 0 && userArray.length <= $scope.maxUsers) {
+              isCsvValid = true;
+            } else {
+              isCsvValid = false;
+            }
+          } else {
+            isCsvValid = false;
           }
         }
         setUploadProgress(100);
@@ -2084,17 +2129,17 @@
           // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
             // Basic data
-            firstName = userRow[findHeaderIndex('First Name')];
-            lastName = userRow[findHeaderIndex('Last Name')];
-            displayName = userRow[findHeaderIndex('Display Name')];
-            id = userRow[findHeaderIndex('User ID/Email (Required)')];
+            firstName = _.trim(userRow[findHeaderIndex('First Name')]);
+            lastName = _.trim(userRow[findHeaderIndex('Last Name')]);
+            displayName = _.trim(userRow[findHeaderIndex('Display Name')]);
+            id = _.trim(userRow[findHeaderIndex('User ID/Email (Required)')]);
             idxDirectoryNumber = findHeaderIndex('Directory Number');
             if (idxDirectoryNumber !== -1) {
-              directoryNumber = userRow[idxDirectoryNumber];
+              directoryNumber = _.trim(userRow[idxDirectoryNumber]);
             }
             idxDirectLine = findHeaderIndex('Direct Line');
             if (idxDirectLine !== -1) {
-              directLine = userRow[idxDirectLine];
+              directLine = _.trim(userRow[idxDirectLine]);
             }
             licenseList = [];
             entitleList = [];
@@ -2224,8 +2269,9 @@
           if (dirSyncEnabled) {
             // getStatus() is in the parent scope - AddUserCtrl
             if (angular.isFunction($scope.getStatus)) {
-              $scope.getStatus();
-              resolve();
+              return $scope.getStatus().then(function () {
+                resolve();
+              });
             } else {
               reject();
             }
@@ -2394,7 +2440,7 @@
 
       // Onboard users in chunks
       // Separate chunks on invalid rows
-      var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
+      var csvChunk = isCommunicationSelected ? 2 : 10; // Rate limit for Huron
       var csvPromise = $q.when();
       var tempUserArray = [];
       var uniqueEmails = [];

@@ -3,9 +3,6 @@
 /* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('should login as an admin user', function () {
     login.login('pbr-admin');

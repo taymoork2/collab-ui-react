@@ -6,7 +6,7 @@
     .controller('CallServicePreviewCtrl', CallServicePreviewCtrl);
 
   /*@ngInject*/
-  function CallServicePreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, FeatureToggleService, UriVerificationService) {
+  function CallServicePreviewCtrl($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor, FeatureToggleService, UriVerificationService, DomainManagementService) {
     $scope.currentUser = $stateParams.currentUser;
     var isEntitled = function (ent) {
       return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
@@ -179,23 +179,13 @@
     $scope.domainVerificationError = false; // need to be to be backwards compatible.
     $scope.checkIfDomainIsVerified = function (awareEntitled) {
       if (awareEntitled) {
-        FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
-          .then(function (support) {
-            if (support) {
-              if (!sipUri) {
-                // Hmm.. I dont think it make sense to show the DV error when the Dir SIP URI is not defined...
-                //$scope.domainVerificationError = true;
-              } else {
-                if (!UriVerificationService.isDomainVerified(sipUri.value)) {
-                  $scope.domainVerificationError = true;
-                }
-              }
+        if (sipUri) {
+          DomainManagementService.getVerifiedDomains().then(function (domainList) {
+            if (!UriVerificationService.isDomainVerified(domainList, sipUri.value)) {
+              $scope.domainVerificationError = true;
             }
-          })
-          .catch(function () {
-            // something went wrong, checking if domainManagement is toggled on: do not show error
-            $scope.domainVerificationError = false;
           });
+        }
       } else {
         $scope.domainVerificationError = false;
       }

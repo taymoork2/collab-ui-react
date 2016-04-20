@@ -22,10 +22,6 @@ namespace domainManagement {
           Authinfo: {getOrgId: sinon.stub().returns('org-id')},
           CiService: {
             getUser: sinon.stub().returns($q.resolve({userName: 'logged-on-user'}))
-          },
-          FeatureToggleService: {
-            supports: sinon.stub().returns($q.resolve(true)),
-            features: {domainManagment: 'domainfeature'}
           }
         });
       }));

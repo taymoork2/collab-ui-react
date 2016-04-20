@@ -13,27 +13,28 @@ angular.module('Core')
 
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
-        'username': null,
-        'userId': null,
-        'orgName': null,
-        'orgId': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'managedOrgs': [],
-        'entitlements': null,
-        'services': null,
-        'roles': [],
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false,
-        'licenses': [],
-        'messageServices': null,
-        'conferenceServices': null,
-        'communicationServices': null,
-        'conferenceServicesWithoutSiteUrl': null,
-        'cmrServices': null,
-        'hasAccount': false,
-        'emails': null
+        username: null,
+        userId: null,
+        orgName: null,
+        orgId: null,
+        addUserEnabled: null,
+        entitleUserEnabled: null,
+        managedOrgs: [],
+        entitlements: null,
+        services: null,
+        roles: [],
+        tabs: [],
+        isInitialized: false,
+        setupDone: false,
+        licenses: [],
+        messageServices: null,
+        conferenceServices: null,
+        communicationServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        cmrServices: null,
+        hasAccount: false,
+        emails: null,
+        customerType: null
       };
 
       var getTabTitle = function (title) {
@@ -203,18 +204,22 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts || [];
+            var customerAccounts = data.customers || [];
 
-            if (accounts.length > 0) {
+            if (customerAccounts.length > 0) {
               authData.hasAccount = true;
             }
 
-            for (var x = 0; x < accounts.length; x++) {
+            if (customerAccounts.customerType) {
+              authData.customerType = customerAccounts.customerType;
+            }
 
-              var account = accounts[x];
+            for (var x = 0; x < customerAccounts.length; x++) {
 
-              for (var l = 0; l < account.licenses.length; l++) {
-                var license = account.licenses[l];
+              var customerAccount = customerAccounts[x];
+
+              for (var l = 0; l < customerAccount.licenses.length; l++) {
+                var license = customerAccount.licenses[l];
                 var service = null;
 
                 // Store license before filtering
@@ -352,6 +357,10 @@ angular.module('Core')
         },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
+        },
+        isCSB: function () {
+          var csb = ['CCW', 'APP_DIRECT'];
+          return csb.indexOf(authData.customerType) > -1;
         },
         isPartner: function () {
           return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

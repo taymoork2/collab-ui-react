@@ -10,6 +10,7 @@ angular.module('Core')
       $scope.appType = 'Squared';
       $scope.usePartnerLogo = true;
       $scope.allowCustomerLogos = false;
+      $scope.allowReadOnlyAccess = true;
       $scope.progress = 0;
 
       $scope.profileHelpUrl = 'https://support.ciscospark.com';
@@ -128,6 +129,10 @@ angular.module('Core')
               $scope.allowCustomerLogos = settings.allowCustomerLogos;
             }
 
+            if (!_.isUndefined(settings.allowReadOnlyAccess)) {
+              $scope.allowReadOnlyAccess = settings.allowReadOnlyAccess;
+            }
+
             if (!_.isUndefined(settings.logoUrl)) {
               $scope.logoUrl = settings.logoUrl;
             }
@@ -135,6 +140,7 @@ angular.module('Core')
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
+          readOnlyAccessCheckboxVisibility(data);
         }, orgId, true);
 
         BrandService.getLogoUrl(orgId).then(function (logoUrl) {
@@ -148,6 +154,16 @@ angular.module('Core')
         });
 
       };
+
+      // Currently only allow Marvel related orgs to show read only access checkbox
+      function readOnlyAccessCheckboxVisibility(org) {
+        var marvelOrgId = "ce8d17f8-1734-4a54-8510-fae65acc505e";
+        var isMarvelOrg = (orgId == marvelOrgId);
+        var managedByMarvel = _.find(org.managedBy, function (managedBy) {
+          return managedBy.orgId == marvelOrgId;
+        });
+        $scope.showAllowReadOnlyAccessCheckbox = (isMarvelOrg || managedByMarvel);
+      }
 
       // TODO webex team clean this up and add unit tests
       $scope.initWbxClientVersions = function () {
@@ -210,7 +226,8 @@ angular.module('Core')
             reportingSiteDesc: $scope.supportText || null,
             helpUrl: $scope.helpUrl || null,
             isCiscoHelp: isCiscoHelp,
-            isCiscoSupport: isCiscoSupport
+            isCiscoSupport: isCiscoSupport,
+            allowReadOnlyAccess: $scope.allowReadOnlyAccess
           };
 
           updateOrgSettings(orgId, settings);
@@ -255,7 +272,7 @@ angular.module('Core')
 
       function notifyError(response) {
         Notification.errorResponse(response, 'errors.statusError', {
-          status: status
+          status: response.status
         });
       }
 

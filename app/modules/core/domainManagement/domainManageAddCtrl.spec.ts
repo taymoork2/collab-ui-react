@@ -4,7 +4,7 @@ namespace domainManagement {
 
   describe('DomainManagementAddCtrl', () => {
 
-    let Config, $q, $rootScope, DomainManagmentAddCtrl, DomainManagementService;
+    let Config, $q, $rootScope, DomainManagementAddCtrl, DomainManagementService;
     beforeEach(angular.mock.module('Core'));
     beforeEach(angular.mock.module('Hercules'));
     beforeEach(inject(($injector, _$q_, _$rootScope_, $controller, $translate, _Config_, _DomainManagementService_)=> {
@@ -12,7 +12,7 @@ namespace domainManagement {
       $q = _$q_;
       $rootScope = _$rootScope_;
       DomainManagementService = _DomainManagementService_;
-      DomainManagmentAddCtrl = $controller('DomainManageAddCtrl', {
+      DomainManagementAddCtrl = $controller('DomainManageAddCtrl', {
         $stateParams: {loggedOnUser: ''},
         $previousState: {go: sinon.stub()},
         DomainManagementService: DomainManagementService,
@@ -32,24 +32,24 @@ namespace domainManagement {
     it('should encode IDN (top level and domain)', ()=> {
       let unEncoded = 'løv.no';
       let encoded = 'xn--lv-lka.no';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      expect(DomainManagmentAddCtrl.encodedDomain).toBe(encoded);
+      DomainManagementAddCtrl.domain = unEncoded;
+      expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
     });
     it('should encode IDN (top level and domain)', ()=> {
       let unEncoded = 'Домены.бел';//remark: with uppercase д
       let encoded = 'xn--d1acufc5f.xn--90ais';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      expect(DomainManagmentAddCtrl.encodedDomain).toBe(encoded);
+      DomainManagementAddCtrl.domain = unEncoded;
+      expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
     });
 
     it('should ignore UpperCase Domain names and treath them as valid', ()=> {
       let unEncoded = 'Test.com';
       let encoded = 'test.com';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      expect(DomainManagmentAddCtrl.encodedDomain).toBe(encoded);
-      expect(DomainManagmentAddCtrl.isValid).toBeTruthy();
-      expect(DomainManagmentAddCtrl.intDomain).not.toBeNull();
-      expect(DomainManagmentAddCtrl.intDomain.show).toBeFalsy('punycode should be qual to lowercase version of domain. e.g. no extra encoding');
+      DomainManagementAddCtrl.domain = unEncoded;
+      expect(DomainManagementAddCtrl.encodedDomain).toBe(encoded);
+      expect(DomainManagementAddCtrl.isValid).toBeTruthy();
+      expect(DomainManagementAddCtrl.intDomain).not.toBeNull();
+      expect(DomainManagementAddCtrl.intDomain.show).toBeFalsy('punycode should be qual to lowercase version of domain. e.g. no extra encoding');
 
     });
 
@@ -59,9 +59,9 @@ namespace domainManagement {
       DomainManagementService._domainList = [{text: domain}];
 
       //type domain name.
-      DomainManagmentAddCtrl.domain = domain;
-      expect(DomainManagmentAddCtrl.isValid).toBeFalsy();
-      expect(DomainManagmentAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');
+      DomainManagementAddCtrl.domain = domain;
+      expect(DomainManagementAddCtrl.isValid).toBeFalsy();
+      expect(DomainManagementAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');
     });
 
     it('should dissalow adding an existing IDN', ()=> {
@@ -69,9 +69,9 @@ namespace domainManagement {
       let encoded = 'xn--d1acufc5f.xn--90ais';
       //noinspection TypeScriptUnresolvedVariable
       DomainManagementService._domainList = [{text: encoded}];
-      DomainManagmentAddCtrl.domain = domain;
-      expect(DomainManagmentAddCtrl.isValid).toBeFalsy();
-      expect(DomainManagmentAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');
+      DomainManagementAddCtrl.domain = domain;
+      expect(DomainManagementAddCtrl.isValid).toBeFalsy();
+      expect(DomainManagementAddCtrl.validate().error).toBe('domainManagement.add.invalidDomainAdded');
     });
 
     it('should add the given domain using addDomain on the service', ()=> {
@@ -81,8 +81,8 @@ namespace domainManagement {
 
       let unEncoded = 'test.com';
       //let encoded = 'test.com';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      DomainManagmentAddCtrl.add();
+      DomainManagementAddCtrl.domain = unEncoded;
+      DomainManagementAddCtrl.add();
       $rootScope.$digest();
       expect(DomainManagementService.addDomain.callCount).toBe(1);
     });
@@ -94,10 +94,10 @@ namespace domainManagement {
 
       let unEncoded = 'test.com';
       //let encoded = 'test.com';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      DomainManagmentAddCtrl.add();
+      DomainManagementAddCtrl.domain = unEncoded;
+      DomainManagementAddCtrl.add();
       $rootScope.$digest();
-      expect(DomainManagmentAddCtrl.LogMetricsService.logMetrics.callCount).toBe(1);
+      expect(DomainManagementAddCtrl.LogMetricsService.logMetrics.callCount).toBe(1);
     });
 
     it('should set error if addDomain on the service fails', ()=> {
@@ -107,11 +107,11 @@ namespace domainManagement {
 
       let unEncoded = 'test.com';
       //let encoded = 'test.com';
-      DomainManagmentAddCtrl.domain = unEncoded;
-      DomainManagmentAddCtrl.add();
+      DomainManagementAddCtrl.domain = unEncoded;
+      DomainManagementAddCtrl.add();
       $rootScope.$digest();
       expect(DomainManagementService.addDomain.callCount).toBe(1);
-      expect(DomainManagmentAddCtrl.error).toBe('error-during-add');
+      expect(DomainManagementAddCtrl.error).toBe('error-during-add');
     });
 
 

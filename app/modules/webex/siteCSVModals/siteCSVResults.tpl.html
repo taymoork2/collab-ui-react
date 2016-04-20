@@ -12,7 +12,9 @@
             translate="common.close"></span>
     </button>
     
-    <h3 class="modal-title">
+    <h3 id="siteCSVResult.modalId"
+        class="modal-title">
+        
       {{siteCSVResult.modalTitle}}
     </h3>
     
@@ -22,7 +24,8 @@
     
     <table class="wx-csv-results-table">
       <tr class="wx-csv-results-tr"
-          ng-repeat="gridRow in siteCSVResult.gridRows">
+          ng-repeat="gridRow in siteCSVResult.gridRows"
+          id="gridRow.id">
         
         <td class="wx-csv-results-td-lt">
           {{gridRow.title}}
@@ -51,6 +54,13 @@
             </span>
           </span>
           
+          <!-- 
+          <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
+                              type='webexexport'
+                              filedownloadurl="kttps://dummy.dummy.com"
+                              filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
+          -->
+          
           <webex-csv-download ng-if="(gridRow.id == 'export-download-csv-file')"
                               type='webexexport'
                               filedownloadurl={{siteCSVResult.downloadFileUrl}}
@@ -61,14 +71,22 @@
                               filedownloadurl={{siteCSVResult.downloadFileUrl}}
                               filename={{siteCSVResult.downloadFileName}}></webex-csv-download>
           
-          <!-- 
           <span ng-if="( gridRow.id == 'export-download-csv-file' ) || 
                        ( gridRow.id == 'import-download-err-file' )">
             
+            <!--
             <webex-csv-download type="export" 
                                 filename="{{::'usersPage.csvFilename' | translate}}"></webex-csv-download>
+            -->
+            
+            <!--                    
+            <a ng-click="siteCSVResult.csvFileDownload(siteCSVResult.downloadFileUrl);">
+              <font color=#049FD9>
+                <i class="icon icon-content-share"></i>
+              </font>
+            </a>
+            -->
           </span>
-          -->
         </td>
       </tr>
     </table>

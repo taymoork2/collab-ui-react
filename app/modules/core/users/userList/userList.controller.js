@@ -6,7 +6,7 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($dialogs, $location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
     $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
@@ -50,10 +50,13 @@
       count: 0
     }];
     $scope.dirsyncEnabled = false;
+    $scope.isTelstraCsbEnabled = false;
+    $scope.isCSB = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
     $scope.USER_EXPORT_THRESHOLD = 10000;
     $scope.totalUsers = 0;
+    $scope.isCsvEnhancementToggled = false;
     $scope.obtainedTotalUserCount = false;
 
     // Functions
@@ -70,15 +73,41 @@
     $scope.firstOfType = firstOfType;
     $scope.isValidThumbnail = isValidThumbnail;
     $scope.startExportUserList = startExportUserList;
+    $scope.isNotDirSyncOrException = false;
+
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)
+      ])
+      .then(function (result) {
+        $scope.isCsvEnhancementToggled = result[0];
+        $scope.isTelstraCsbEnabled = result[1];
+      });
+
+    if (Authinfo.isCSB() && $scope.isTelstraCsbEnabled) {
+      $scope.isCSB = true;
+    }
 
     init();
 
     ////////////////
 
     function init() {
+      checkOrg();
       bind();
       configureGrid();
       getUserList();
+    }
+
+    function checkOrg() {
+      // Allow Cisco org to use the Circle Plus button
+      // Otherwise, block the DirSync orgs from using it
+      if (Authinfo.isCisco()) {
+        $scope.isNotDirSyncOrException = true;
+      } else {
+        FeatureToggleService.supportsDirSync().then(function (enabled) {
+          $scope.isNotDirSyncOrException = !enabled;
+        });
+      }
     }
 
     function bind() {

@@ -16,6 +16,7 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
 
@@ -62,7 +63,7 @@ module.exports = function () {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
       compiledTestSuffix: tsSpecSuffix,
-      compiledTestFiles: app + '/**/*' + tsSpecSuffix
+      compiledTestFiles: compiledTestFiles,
     },
 
     unsupported: {
@@ -89,7 +90,6 @@ module.exports = function () {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
@@ -195,6 +195,7 @@ module.exports = function () {
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+        vendor + '/moment-range/dist/moment-range.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js',
@@ -256,6 +257,7 @@ module.exports = function () {
       test + '/**/*.js',
       test + '/**/*.json',
       gulpFiles,
+      '!' + compiledTestFiles,
       '!test/karma-unit.js',
       '!karma.conf.js'
     ]

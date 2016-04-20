@@ -29,7 +29,9 @@ angular.module('WebExApp').service('WebExApiGatewayConstsService', [
         request: this.csvRequests.csvImport,
         api: 'import',
         method: 'POST',
-        contentType: 'multipart/form-data;charset=utf-8',
+        headers: {
+          contentType: 'undefined',
+        },
         data: {}
       },
 
