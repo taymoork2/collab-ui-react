@@ -22,7 +22,7 @@
     <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-flex-container">
       <div class="aa-flex-horizontal-line-right"></div>
       <div class="aa-flex-vertical-line"></div>
-      <aa-builder-schedule-info class="aa-flex-container" schedule="openHours"></aa-builder-schedule-info>
+      <aa-schedule-info class="aa-flex-container" schedule="openHours"></aa-schedule-info>
       <aa-builder-lane aa-schedule="openHours"></aa-builder-lane>
       <div class="aa-flex-vertical-spacer"></div>
     </div>
@@ -40,10 +40,10 @@
     </div>
 
     <!-- closed hours: open/closed/holiday -->
-    <div ng-if="aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays">
+    <div ng-if="aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'">
       <div class="aa-flex-container">
         <div class="aa-flex-vertical-line"></div>
-        <aa-builder-schedule-info schedule="closedHours"></aa-builder-schedule-info>
+        <aa-schedule-info schedule="closedHours"></aa-schedule-info>
         <aa-builder-lane aa-schedule="closedHours"></aa-builder-lane>
       </div>
     </div>
@@ -58,14 +58,14 @@
       <div class="aa-flex-vertical-line"></div>
 
       <!-- holiday hours: open/closed/holiday or open/holiday -->
-      <div ng-if="aaBuilder.ui.isHolidays">
-        <aa-builder-schedule-info schedule="holidays"></aa-builder-schedule-info>
+      <div ng-if="aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'">
+        <aa-schedule-info schedule="holidays"></aa-schedule-info>
         <aa-builder-lane aa-schedule="holidays"></aa-builder-lane>
       </div>
 
       <!-- closed hours: open/closed -->
-      <div ng-if="aaBuilder.ui.isClosedHours && !aaBuilder.ui.isHolidays">
-        <aa-builder-schedule-info schedule="closedHours"></aa-builder-schedule-info>
+      <div ng-if="(aaBuilder.ui.isClosedHours && !aaBuilder.ui.isHolidays) || (aaBuilder.ui.isClosedHours && aaBuilder.ui.holidaysValue === 'closedHours')">
+        <aa-schedule-info schedule="closedHours"></aa-schedule-info>
         <aa-builder-lane aa-schedule="closedHours"></aa-builder-lane>
       </div>
 

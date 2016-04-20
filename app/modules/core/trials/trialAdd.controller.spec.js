@@ -25,7 +25,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
-    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
+    spyOn(TrialService, 'getDeviceTrialsLimit');
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -47,6 +47,7 @@ describe('Controller: TrialAddCtrl', function () {
   it('should have default offers', function () {
     expect(controller.messageTrial.enabled).toBeTruthy();
     expect(controller.meetingTrial.enabled).toBeTruthy();
+    expect(controller.webexTrial.enabled).toBeTruthy();
     expect(controller.roomSystemTrial.enabled).toBeTruthy();
     expect(controller.callTrial.enabled).toBeFalsy();
   });
@@ -56,7 +57,7 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have correct navigation state order', function () {
-    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call', 'trialAdd.addNumbers']);
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.webex', 'trialAdd.pstn', 'trialAdd.emergAddress', 'trialAdd.call']);
   });
 
   it('should transition state', function () {
@@ -85,7 +86,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and not skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;
@@ -95,7 +95,6 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have call trial and skip pstn after watch', function () {
-    controller.supportsHuronCallTrials = true;
     controller.hasCallEntitlement = true;
     controller.pstnTrial.enabled = false;
     controller.callTrial.enabled = true;
@@ -128,7 +127,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle enabled', function () {
       beforeEach(function () {
-        controller.meetingTrial.enabled = true;
+        controller.webexTrial.enabled = true;
         controller.startTrial(callback);
         $scope.$apply();
       });
@@ -140,7 +139,7 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('with atlas-webex-trial feature-toggle disabled', function () {
       beforeEach(function () {
-        controller.meetingTrial.enabled = false;
+        controller.webexTrial.enabled = false;
         controller.startTrial(callback);
         $scope.$apply();
       });

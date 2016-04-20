@@ -5,13 +5,14 @@
     <button class="btn btn--people btn-center" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: 'new'})" translate="usersPreview.generateActivationCode"></button>
     </div>
 </div>
+
 <div class="feature-list">
   <ul>
-    <li class="feature" ng-repeat="device in ucDevices.devices track by device.uuid">
-      <a ui-sref="user-overview.device({device: device})">
-        <span class="icon icon-spinner" ng-if="device.deviceStatus.progressStatus"></span>
-        <span class="default-status" ng-class="{'online-status': device.deviceStatus.status == 'Online'}" ng-if="!device.deviceStatus.progressStatus"></span>
-        <span class="feature-name">{{device.model}}</span>
+
+    <li class="feature" ng-repeat="device in ucDevices.devices">
+        <a ng-click="ucDevices.showDeviceDetails(device)">
+        <i class="fa fa-circle device-status" ng-class="device.cssColorClass"></i>
+        <span class="feature-name">{{device.product}}</span>
         <i class="feature-arrow"></i>
       </a>
     </li>

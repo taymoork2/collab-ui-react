@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('Core')
-  .service('DirSyncService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
+  .service('DirSyncService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo', 'UrlConfig',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
 
-      var dirsyncUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
+      var dirsyncUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/dirsync';
 
       return {
         getDirSyncDomain: function (callback) {

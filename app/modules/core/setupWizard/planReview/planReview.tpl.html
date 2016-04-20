@@ -127,11 +127,13 @@
       </div>
     </div>
   </div>
-  <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
-    <div class="row collapse">
-      <div class="small-12 columns">
-        <progressbar class="progress" value="planReview.trialUsedPercentage" type="warning"></progressbar>
-        <div class="wizard-trial-progress-text p" translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}">
+  <div ng-show="'Trial' === multipleSubscriptions.selectedSubscription">
+    <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
+      <div class="row collapse">
+        <div class="small-12 columns">
+          <progressbar class="progress" value="planReview.trialUsedPercentage" type="warning"></progressbar>
+          <div class="wizard-trial-progress-text p" translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}">
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,9 @@
 'use strict';
+
 describe('Controller: SupportCtrl', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config, $scope;
   var roles = ["ciscouc.devsupport", "atlas-portal.support"];
@@ -48,5 +51,4 @@ describe('Controller: SupportCtrl', function () {
     var isSupportRole = $scope.isCiscoDevRole(roles);
     expect(isSupportRole).toBe(true);
   });
-
 });

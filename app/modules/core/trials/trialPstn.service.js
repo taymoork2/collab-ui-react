@@ -29,10 +29,11 @@
 
     function _makeTrial() {
       var defaults = {
-        type: Config.offerTypes.call,
+        type: Config.offerTypes.pstn,
         enabled: false,
         skipped: false,
         details: {
+          isTrial: true,
           pstnProvider: {},
           swivelNumbers: [],
           pstnContractInfo: {
@@ -88,7 +89,8 @@
         _trialData.details.pstnContractInfo.signeeLastName,
         _trialData.details.pstnContractInfo.email,
         _trialData.details.pstnProvider.uuid,
-        _trialData.details.pstnNumberInfo.numbers
+        _trialData.details.pstnNumberInfo.numbers,
+        _trialData.details.isTrial
       ).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
         return $q.reject(response);

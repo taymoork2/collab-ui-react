@@ -53,7 +53,7 @@ source ./curl-api-helpers
     [ "`echo 'foo?baz=1'          | get_url_path_tail`" = "" ]
 }
 
-@test "is_safe_atlas_operation - should return 1 if trying to DELETE an org identified in 'test_helper.coffee'" {
+@test "is_safe_atlas_operation - should return 1 if trying to DELETE an org identified in 'test_helper.js'" {
     run is_safe_atlas_operation "DELETE" "/organizations/021fffdc-dd5e-49ca-b9d6-013445e3c3ae" && [ "$status" -eq 1 ]
     run is_safe_atlas_operation "DELETE" "/organizations/30fdb01e-0bb2-4ed4-97f4-84a2289bdc79" && [ "$status" -eq 1 ]
     run is_safe_atlas_operation "DELETE" "/organizations/4214d345-7caf-4e32-b015-34de878d1158" && [ "$status" -eq 1 ]

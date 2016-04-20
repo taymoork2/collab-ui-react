@@ -2,7 +2,9 @@
   <cs-sp-header>
     <div class="header-info" id="customer-info">
       <div class="header-info-wrap">
-        <div class="header-title">{{customerOverview.currentCustomer.customerName}}</div>
+        <div class="header-title">
+          <span>{{customerOverview.currentCustomer.customerName}}</span>
+        </div>
         <div class="header-sub-info">
           <span translate="customerPage.contactEmail"></span> {{customerOverview.currentCustomer.customerEmail}}
         </div>
@@ -89,6 +91,10 @@
         </ul>
       </div>
     </cs-sp-section>
+    <button id="launchCustomer" class="btn btn--negative" ng-show="customerOverview.isTest && !customerOverview.isOwnOrg()"
+    ng-click="customerOverview.deleteTestOrg()"
+    translate="customerPage.deleteOrg" translate-values="{orgName: customerOverview.customerName}">
+    </button>
   </cs-sp-container>
 
 </div>

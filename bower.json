@@ -4,7 +4,6 @@
   "dependencies": {
     "addressparser": "~0.1.1",
     "alertify.js": "~0.3.11",
-    "amcharts3": "~3.18.5",
     "angular": "~1.4.0",
     "angular-animate": "~1.4.0",
     "angular-cookie": "~4.0.2",
@@ -22,7 +21,8 @@
     "ui-router-extras": "=0.1.0",
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
-    "cisco-ui": "~2.16.4",
+    "cisco-ui": "~2.19.0",
+    "cisco-amcharts": "~3.19.4",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",
@@ -31,6 +31,7 @@
     "json3": "~3.3.2",
     "lodash": "~3.10.1",
     "moment": "~2.10.0",
+    "moment-range": "^2.2.0",
     "ng-csv": "~0.3.1",
     "nicescroll": "~3.5.6",
     "typeahead.js": "~0.10.2",
@@ -61,7 +62,8 @@
     "angular-scenario": "~1.4.0",
     "sinon-ng": "~0.1.2",
     "bardjs": "~0.1.8",
-    "jasmine-sinon": "~0.4.0"
+    "jasmine-sinon": "~0.4.0",
+    "AngularJS-Toaster": "angularjs-toaster#~1.2.0"
   },
   "resolutions": {
     "angular-sanitize": "~1.4.0",

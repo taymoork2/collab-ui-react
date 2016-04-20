@@ -1,4 +1,4 @@
-<cs-card id='device-card' class="large report-card">
+<cs-card id='device-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
   <article>
     <header>
       <h4 class='report-section-header' translate='registeredEndpoints.registeredEndpoints'></h4>
@@ -6,7 +6,7 @@
     <section>
       <div class="customer-devices">
         <p class="report-description">{{nav.deviceDescription}}</p>
-        <cs-select id="deviceFilter" name="deviceFilter" class='customer-report-filter device-filter' ng-model="nav.selectedDevice" options="nav.deviceFilter" on-change-fn="nav.deviceUpdate()" is-disabled="nav.isEmpty(nav.deviceStatus) || nav.isRefresh(nav.deviceStatus)"></cs-select>
+        <cs-select id="deviceFilter" name="deviceFilter" class='customer-report-filter device-filter' ng-model="nav.selectedDevice" options="nav.deviceFilter" on-change-fn="nav.deviceUpdate()" is-disabled="nav.isDevicesEmpty"></cs-select>
         <div id="devicesDiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.deviceStatus) && !nav.isRefresh(nav.deviceStatus)}"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.deviceStatus)">
           <i class='icon icon-spinner icon-2x'></i>

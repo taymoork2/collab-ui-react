@@ -1,0 +1,18 @@
+.aa-country-select {
+  & .country-list {
+    .dropdown-menu {
+      width: inherit;
+    }
+
+   & .select-toggle > i {
+      &.icon {
+        right: -1rem;
+      }
+    }
+  }
+
+  & cs-country-select {
+    @include vr-spacing(pt, 1);
+    width: 100%;
+  }
+}

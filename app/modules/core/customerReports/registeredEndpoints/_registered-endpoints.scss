@@ -3,7 +3,7 @@
     float: right;
     margin-right: rem-calc(35);
     position: relative;
-    top: rem-calc(-20);
+    top: rem-calc(-15);
     z-index: 1000;
     .select-options {
     	padding: 0;
@@ -19,6 +19,6 @@
   }
   .barchart {
     position: relative;
-    top: rem-calc(-35);
+    top: rem-calc(-30);
   }
 }

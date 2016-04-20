@@ -74,15 +74,21 @@ describe('Controller: AADialByExtCtrl', function () {
         var controller = $controller('AADialByExtCtrl', {
           $scope: $scope
         });
-        expect(controller.message).toEqual('');
+        expect(controller.messageInput).toEqual('');
         controller.saveUiModel(); // GW test
       });
     });
 
     describe('activate', function () {
       it('should read an existing entry', function () {
-        var menuEntry = angular.copy(data.ceMenu);
-        aaUiModel[schedule].entries[0].addEntry(menuEntry.entries[1]);
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionOnInput', '');
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+        menuEntry.setType(data.ceMenu.type);
+        menuEntry.setKey(data.ceMenu.key);
+        menuEntry.addAction(action);
+
+        aaUiModel[schedule].entries[0].addEntry(menuEntry);
 
         var controller = $controller('AADialByExtCtrl', {
           $scope: $scope
@@ -103,10 +109,121 @@ describe('Controller: AADialByExtCtrl', function () {
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
         expect(controller.menuEntry.actions[0].value).toEqual('');
         var message = 'Enter the extension now.';
-        controller.message = message;
+        controller.messageInput = message;
         controller.saveUiModel();
         expect(controller.menuEntry.actions[0].value).toEqual(message);
       });
+    });
+  });
+
+  describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller, _$rootScope_) {
+      $scope = $rootScope;
+      $scope.keyIndex = undefined;
+
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
+
+    it('should initialize values for new Dial by Extension', function () {
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].name).toEqual('runActionsOnInput');
+
+    });
+
+    it('should write voice and language to the model', function () {
+      var voiceOption = {};
+      voiceOption.value = "Claire";
+      var languageOption = {};
+      languageOption.value = "PigLatin";
+
+      expect(controller).toBeDefined();
+
+      controller.voiceOption.value = voiceOption;
+      controller.languageOption.value = languageOption;
+
+      controller.saveUiModel();
+      $scope.$apply();
+
+      expect(controller.menuEntry.actions[0].voice.value).toEqual(voiceOption.value);
+      expect(controller.menuEntry.actions[0].language.value).toEqual(languageOption.value);
+    });
+
+    it('should fetch message label', function () {
+
+      expect(controller).toBeDefined();
+
+      var label = controller.getMessageLabel();
+      $scope.$apply();
+
+      expect(label).toEqual('autoAttendant.sayMessage');
+    });
+
+  });
+
+  describe('create a RUNACTIONONINPUT from Dial By Extension', function () {
+    var controller;
+
+    beforeEach(inject(function ($controller, _$rootScope_) {
+      $scope = $rootScope;
+      $scope.keyIndex = undefined;
+
+      aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('Dummy', '');
+
+      aaUiModel[schedule].entries[0].setVoice('Claire');
+      aaUiModel[schedule].entries[0].setLanguage('Dutch');
+
+      aaUiModel[schedule].entries[0].addAction(actionEntry);
+
+      // setup the options menu
+      controller = $controller('AADialByExtCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+    }));
+
+    it('should alter action type from dummy to runActionsOnInput', function () {
+
+      expect(controller).toBeDefined();
+
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.menuEntry.getVoice()).toEqual('Claire');
+
+    });
+
+    it('should set default language', function () {
+
+      expect(controller).toBeDefined();
+
+      controller.voiceBackup = {};
+      controller.languageOption = {};
+
+      controller.setVoiceOptions();
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.voiceOption.value).toEqual('Vanessa');
+
+    });
+    it('should find language', function () {
+
+      expect(controller).toBeDefined();
+
+      controller.voiceBackup = {};
+
+      controller.setVoiceOptions();
+      expect(controller.menuEntry.actions[0].getName()).toEqual('runActionsOnInput');
+      expect(controller.languageOption.value).toEqual('nl_NL');
+
     });
   });
 });

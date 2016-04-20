@@ -1,4 +1,4 @@
-<cs-card id='active-user-card' class="large report-card">
+<cs-card id='active-user-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
   <article>
     <header>
       <h4 class='report-section-header' translate='activeUsers.activeUsers'></h4>
@@ -50,7 +50,7 @@
               </h3>
             </div>
           </div>
-          <a class="report-sides" ng-click="nav.mostActiveUserSwitch()">
+          <a class="report-sides" ng-click="nav.mostActiveUserSwitch()" ng-if="nav.displayMostActive">
             <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
             <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
           </a>

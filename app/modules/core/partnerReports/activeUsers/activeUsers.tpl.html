@@ -1,4 +1,4 @@
-<cs-card id="activeUser" class="large report-box active-user">
+<cs-card id="activeUser" class="large report-box active-user" ng-class="{'hideCard': !nav.showEngagement}">
 <article>
   <header>
     <h4 translate="activeUsers.activeUsers"></h4>
@@ -6,7 +6,7 @@
   <section>
     <p >{{nav.activeUserDescription}}</p>
     <div id="activeUsersdiv" class="barchart" ng-class="{'active-chart': !nav.isEmpty(nav.activeUsersRefresh) && !nav.isRefresh(nav.activeUsersRefresh)}"></div>
-    <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
+    <div class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
     <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUsersRefresh)">
@@ -15,36 +15,45 @@
         <span translate='reportsPage.noCustomerData'></span>
       </h3>
     </div>
-  <div class="card-section-content" ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
+  <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div ng-show="nav.showMostActiveUsers">
-      <h4 >{{nav.mostActiveTitle}}</h4>
-        <p>{{nav.mostActiveDescription}}</p>
-        <table class="table table-bordered active-users-table">
-          <thead>
-            <tr>
-              <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
-              <th class="vertical-center col-md-4 bold pointer" translate="activeUsers.customer" ng-click="nav.mostActiveSort(1)"></th>
-              <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(2)"></th>
-              <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(3)"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
-              <td class="vertical-center">{{user.userName}}</td>
-              <td class="vertical-center">{{user.orgName}}</td>
-              <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
-              <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <h4 class="box-match">{{nav.mostActiveTitle}}</h4>
+      <p>{{nav.mostActiveDescription}}</p>
+      <table class="table table-bordered active-users-table" ng-show="!nav.isRefresh(nav.mostActiveRefresh) && !nav.isEmpty(nav.mostActiveRefresh)">
+        <thead>
+          <tr>
+            <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
+            <th class="vertical-center col-md-4 bold pointer" translate="activeUsers.customer" ng-click="nav.mostActiveSort(1)"></th>
+            <th class="vertical-center horizontal-center col-md-2 bold pointer"translate="activeUsers.calls" ng-click="nav.mostActiveSort(2)"></th>
+            <th class="vertical-center horizontal-center col-md-2 bold pointer" translate="activeUsers.sparkMessages" ng-click="nav.mostActiveSort(3)"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="user in nav.mostActiveUsers | orderBy:nav.activeUserPredicate:nav.activeUserReverse" ng-show="nav.activePage($index)">
+            <td class="vertical-center">{{user.userName}}</td>
+            <td class="vertical-center">{{user.orgName}}</td>
+            <td class="vertical-center horizontal-center">{{user.numCalls}}</td>
+            <td class="vertical-center horizontal-center">{{user.sparkMessages}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-if="nav.isRefresh(nav.mostActiveRefresh)">
+        <i class='icon icon-spinner icon-2x'></i>
       </div>
-    <div class="card-section-content">
-      <a  ng-click="nav.openCloseMostActive()">
+      <div class="no-data-most-active" ng-if="nav.isEmpty(nav.mostActiveRefresh)">
+        <h3 class="no-data">
+          <i class='icon icon-warning no-data-warning'></i>
+          <span translate='reportsPage.noCustomerData'></span>
+        </h3>
+      </div>
+    </div>
+    <div class="box-match">
+      <a ng-click="nav.openCloseMostActive()">
         <span id="showActiveUsers" ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
         <span id="hideActiveUsrs" ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>
-      <div id="activeCarousel" class="pull-right" ng-show="nav.displayMostActive && (nav.activeUsersTotalPages > 1)">
-        <button type="button" class="actions-button btn--none" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3">
+      <div id="activeCarousel" class="pull-right" ng-show="nav.showMostActiveUsers && (nav.activeUsersTotalPages > 1)">
+        <button type="button" class="carousel-control" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3" ng-disabled="nav.activeUserCurrentPage <= 1">
           <i class='icon icon-chevron-left'></i>
         </button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[0])"
@@ -53,7 +62,7 @@
           ng-class="{'btn--primary': (nav.activeButton[1] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[1] !== nav.activeUserCurrentPage) }">{{nav.activeButton[1]}}</button>
         <button type="button" class="btn" ng-click="nav.changePage(nav.activeButton[2])" ng-show="nav.activeUsersTotalPages > 2"
           ng-class="{'btn--primary': (nav.activeButton[2] === nav.activeUserCurrentPage), 'btn--link carousel-btn': (nav.activeButton[2] !== nav.activeUserCurrentPage) }">{{nav.activeButton[2]}}</button>
-        <button type="button" class="actions-button btn--none" ng-click="nav.pageForward()" ng-show="nav.activeUsersTotalPages > 3">
+        <button type="button" class="carousel-control" ng-click="nav.pageForward()" ng-show="nav.activeUsersTotalPages > 3" ng-disabled="nav.activeUserCurrentPage >= nav.activeUsersTotalPages">
           <i class='icon icon-chevron-right'></i>
         </button>
       </div>

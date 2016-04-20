@@ -15,6 +15,7 @@
     vm.call = $stateParams.call;
     vm.events = $stateParams.events;
     vm.imported = $stateParams.imported;
+    var logstashPath = $stateParams.logstashPath;
 
     vm.diagramXML = "";
     vm.diagramHTML = "";
@@ -97,7 +98,7 @@
       vm.error = '';
       vm.spin = true;
 
-      CdrLadderDiagramService.query(esQuery).then(
+      CdrLadderDiagramService.query(esQuery, logstashPath).then(
         function (response) {
           if (response.hits.hits.length > 0) {
             vm.events = formatEventsResponse(response);

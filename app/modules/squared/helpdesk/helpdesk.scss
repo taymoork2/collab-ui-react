@@ -7,11 +7,25 @@
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
 
-  .helpdesk-history-button {
-    font-size: 1.2rem;
-    color: $gray-light-1;
-    &:hover {
-      color: $color-primary-base;
+  .top-bar {
+    .sparkstatus-info {
+      @extend .user-info;
+    }
+    .btn-sparkstatus {
+      @extend .btn--user;
+      border-left: 1px solid $gray-light !important;
+    }
+    .history-info {
+      @extend .user-info;
+    }
+    .btn-history {
+      @extend .btn--user;
+      border-left: 1px solid $gray-light !important;
+      color: $gray-light-1;
+      font-size: 1.2rem;
+      &:hover {
+        color: $color-primary-base;
+      }
     }
   }
 }
@@ -202,12 +216,19 @@
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    .searchInputForm {
+      margin-bottom: 0px;
+    }
+    input {
+      font-size: 34px;
+    }
     form:not(.form-inline) input[type="search"], form:not(.form-inline) [type="search"].input {
       max-width: 100%;
       display: block;
       height: auto;
       position: relative;
       z-index: 1;
+      border: 0px;
     }
     .icon-search {
       position: absolute;
@@ -370,8 +391,6 @@
         }
       }
       .search-result-info{
-        //position: absolute;
-        //left:3rem;
         padding-left:3rem;
       }
     }
@@ -510,13 +529,6 @@
   @extend .helpdesk-header-dropdown-menu;
   width: 10rem;
 }
-.helpdesk-history-dropdown-menu.dropdown-menu:before {
-  left: 80% !important;
-}
-.helpdesk-history-dropdown-menu.dropdown-menu:after {
-  left: 80% !important;
-}
-
 
 .helpdesk-spark-status-dropdown-menu {
   @extend .helpdesk-header-dropdown-menu;
@@ -531,12 +543,6 @@
     text-overflow: ellipsis;
     margin: 1rem;
   }
-}
-.helpdesk-spark-status-dropdown-menu.dropdown-menu:before {
-  left: 92% !important;
-}
-.helpdesk-spark-status-dropdown-menu.dropdown-menu:after {
-  left: 92% !important;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -558,18 +564,7 @@
     }
   }
 }
-@media only screen and (max-width: 960px) {
-  .helpdesk-app-container {
-    .fixed.top-bar- {
-      .dropdown-menu:before {
-        left: 80% !important;
-      }
-      .dropdown-menu:after {
-        left: 80% !important;
-      }
-    }
-  }
-}
+
 @media only screen and (max-width: 800px) {
   .helpdesk-cards {
     .cs-card-layout {
@@ -618,12 +613,6 @@
         position: fixed !important;
         right: 0;
         top: 52px;
-      }
-      .dropdown-menu:before {
-        display: none;
-      }
-      .dropdown-menu:after {
-        display: none;
       }
     }
   }

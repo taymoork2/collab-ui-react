@@ -7,10 +7,6 @@ describe('Org Entitlement flow', function () {
   var newDisplayName = 'John Doe ' + utils.randomId();
   var searchStr = 'sq-testpaiduser@atlas.test.com';
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as non-sso admin user', function () {
     login.login('partner-admin');
   });
@@ -37,6 +33,7 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisplayed(roles.displayNameInput);
     utils.expectIsDisabled(roles.emailInput);
+    utils.expectIsDisplayed(roles.sipAddressesInput);
   });
 
   it('should edit last name and display name, roles & save', function () {

@@ -35,19 +35,27 @@
           phones: [{
             model: 'CISCO_8865',
             enabled: false,
-            quantity: 0
+            quantity: 0,
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_8845',
             enabled: false,
-            quantity: 0
+            quantity: 0,
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_8841',
             enabled: false,
-            quantity: 0
+            quantity: 0,
+            readonly: false,
+            valid: true
           }, {
             model: 'CISCO_7841',
             enabled: false,
-            quantity: 0
+            quantity: 0,
+            readonly: false,
+            valid: true
           }]
         }
       };

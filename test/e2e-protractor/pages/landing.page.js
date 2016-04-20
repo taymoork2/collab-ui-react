@@ -60,35 +60,10 @@ var LandingPage = function () {
   this.unlicensedUserRow = element(by.css('.ui-grid-selection-row-header-buttons'));
   this.userBtn = element(by.css('.btn--user '));
   this.serviceSetup = element(by.css('.settings-menu'));
-  this.languageSelector = element(by.css('select#languageSelector'));
 
   function convertUsersSearch(query) {
     return element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first();
   }
-
-  var nMaxLangs = 21;
-
-  this.clickLang = function (index) {
-    var list = element.all(by.id('languageSelector option'));
-    expect(list.count()).toBe(nMaxLangs);
-
-    list.get(index).getText().then(function (text) {
-      console.log("Selecting language " + text);
-    });
-
-    utils.click(list.get(index));
-  };
-
-  this.expectSelectLanguageRange = function (nStart, nEnd) {
-    for (var i = nStart; i < nEnd; i++) {
-      utils.click(this.userBtn);
-      utils.click(this.languageSelector);
-
-      this.clickLang(i);
-      utils.wait(this.userBtn);
-    }
-  };
-
 };
 
 module.exports = LandingPage;

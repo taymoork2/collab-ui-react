@@ -8,8 +8,8 @@
  * Controller of the wx2AdminWebClientApp
  */
 angular.module('Squared')
-  .controller('ApplauncherCtrl', ['$window', '$http', '$translate', 'Log', 'Config', 'Utils', '$location',
-    function ($window, $http, $translate, Log, Config, Utils, $location) {
+  .controller('ApplauncherCtrl', ['$window', '$http', '$translate', 'Log', 'UrlConfig', 'Utils', '$location',
+    function ($window, $http, $translate, Log, UrlConfig, Utils, $location) {
 
       if (Utils.isWeb()) {
 
@@ -19,17 +19,17 @@ angular.module('Squared')
           urlParams = '?' + params;
         }
 
-        $window.location.href = Config.getWebClientUrl() + urlParams;
+        $window.location.href = UrlConfig.getWebClientUrl() + urlParams;
 
       } else if (Utils.isIPhone()) {
 
-        $window.location.href = Config.getSquaredAppUrl();
+        $window.location.href = UrlConfig.getSquaredAppUrl();
         setTimeout(function () {
-          $window.location.href = Config.getItunesStoreUrl();
+          $window.location.href = UrlConfig.getItunesStoreUrl();
         }, 25);
 
       } else if (Utils.isAndroid()) {
-        $window.location.href = Config.getAndroidStoreUrl();
+        $window.location.href = UrlConfig.getAndroidStoreUrl();
       }
 
     }

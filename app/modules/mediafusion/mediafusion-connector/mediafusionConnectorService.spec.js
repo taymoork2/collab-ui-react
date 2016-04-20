@@ -12,16 +12,14 @@ describe('Service: MediafusionClusterService', function () {
       converter = {
         convertClusters: sinon.stub()
       };
-      authinfo = {
-        getOrgId: sinon.stub()
-      };
-      authinfo.getOrgId.returns("orgId");
       $provide.value('ConverterService', converter);
-      $provide.value('Authinfo', authinfo);
     });
   });
 
-  beforeEach(inject(function ($injector, _$location_, _MediafusionClusterService_) {
+  beforeEach(inject(function ($injector, _$location_, _MediafusionClusterService_, _Authinfo_) {
+    authinfo = _Authinfo_;
+    authinfo.getOrgId = sinon.stub().returns("orgId");
+
     Service = _MediafusionClusterService_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend

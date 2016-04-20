@@ -39,11 +39,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   };
 
   var headerTabs = [{
-    title: 'reportsPage.engagement',
-    state: 'reports'
-  }, {
     title: 'reportsPage.sparkReports',
-    state: 'devReports'
+    state: 'reports'
   }];
   var timeOptions = [{
     value: 0,
@@ -143,7 +140,6 @@ describe('Controller: Customer Reports Ctrl', function () {
             }
           }];
         },
-
         getOrgId: function () {
           return '1';
         },
@@ -217,6 +213,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.mostActiveTitle).toEqual('activeUsers.mostActiveUsers');
         expect(controller.activeUserStatus).toEqual(REFRESH);
         expect(controller.showMostActiveUsers).toBeFalsy();
+        expect(controller.displayMostActive).toBeFalsy();
         expect(controller.mostActiveUsers).toEqual([]);
         expect(controller.searchField).toEqual('');
         expect(controller.activeUserReverse).toBeTruthy();

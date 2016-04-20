@@ -6,14 +6,24 @@
   tooltip-trigger="mouseenter" 
   class="icon icon-information sip-domain-icon"></i>
 </h6>
-<form ng-submit="expresswayServiceSettings.updateSipDomain()">
-  <input type="text"
-         ng-disabled="expresswayServiceSettings.savingSip"
+<form name="inputSipDestinationForm" ng-submit="expresswayServiceSettings.updateSipDomain()"
+      class="hercules-sip-destination-table">
+  <input ng-disabled="expresswayServiceSettings.savingSip"
          placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
          class="form-control"
          id="sipDomain"
          type="text"
-         ng-model="expresswayServiceSettings.org.sipDomain"/>
+         ng-model="expresswayServiceSettings.org.sipDomain"
+         required/>
+
+  <button type="button"
+          class="btn btn--primary"
+          id="updateSipDomain"
+          ng-click="expresswayServiceSettings.updateSipDomain()"
+          ng-disabled="inputSipDestinationForm.$invalid || expresswayServiceSettings.savingSip">
+    <span translate="common.save"></span>
+  </button>
+
 </form>
 <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
 <span class=right ng-show="expresswayServiceSettings.savingSip">

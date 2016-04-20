@@ -8,15 +8,6 @@ describe('Partner flow', function () {
   var accessToken;
   var appWindow;
 
-  beforeEach(function () {
-    log.verbose = true;
-  });
-
-  afterEach(function () {
-    log.verbose = false;
-    utils.dumpConsoleErrors();
-  });
-
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
@@ -38,6 +29,11 @@ describe('Partner flow', function () {
     it('should display trials list', function () {
       utils.expectIsDisplayed(partner.trialsPanel);
       utils.expectIsDisplayed(partner.viewAllLink);
+    });
+
+    it('should display partner support page', function () {
+      utils.click(navigation.userInfoButton);
+      utils.click(navigation.supportLink).then(navigation.launchSupportPage);
     });
   });
 
@@ -135,6 +131,7 @@ describe('Partner flow', function () {
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
       utils.click(wizard.nextBtn);
+      utils.click(wizard.nextBtn);
 
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Add Users');
       utils.click(wizard.nextBtn);
@@ -203,29 +200,10 @@ describe('Partner flow', function () {
   });
 
   describe('Partner landing page reports', function () {
-
     it('should show the reports', function () {
       navigation.clickHome();
       utils.expectIsDisplayed(partner.entitlementsChart);
       utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-
-    it('should show active users chart', function () {
-      utils.click(partner.activeUsersTab);
-      utils.expectIsDisplayed(partner.activeUsersChart);
-      utils.expectIsDisplayed(partner.activeUsersCount);
-    });
-
-    it('should show average calls chart', function () {
-      utils.click(partner.averageCallsTab);
-      utils.expectIsDisplayed(partner.averageCallsChart);
-      utils.expectIsDisplayed(partner.averageCallsCount);
-    });
-
-    it('should show content shared chart', function () {
-      utils.click(partner.contentSharedTab);
-      utils.expectIsDisplayed(partner.contentSharedChart);
-      utils.expectIsDisplayed(partner.contentSharedCount);
     });
   });
 });

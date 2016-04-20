@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('CallflowService', CallflowService);
 
 /* @ngInject */
-function CallflowService($rootScope, $http, Storage, Config, Log, Auth) {
+function CallflowService($rootScope, $http, Storage, Config, Log, Auth, UrlConfig) {
   var service = {
     getCallflowCharts: getCallflowCharts
   };
@@ -12,7 +12,7 @@ function CallflowService($rootScope, $http, Storage, Config, Log, Auth) {
   return service;
 
   function getCallflowCharts(orgId, userId, locusId, callStart, logfileFullName, isGetCallLogs, callback) {
-    var callflowChartsUrl = Config.getCallflowServiceUrl();
+    var callflowChartsUrl = UrlConfig.getCallflowServiceUrl();
 
     if (isGetCallLogs === true) {
       callflowChartsUrl += 'callflow/logs?orgId=' + orgId + '&userId=' + userId + '&logfileFullName=' + logfileFullName;

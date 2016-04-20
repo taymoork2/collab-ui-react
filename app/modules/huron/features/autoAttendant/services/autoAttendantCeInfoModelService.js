@@ -202,6 +202,9 @@
           ceInfo.addResource(resource);
         }
       }
+      if (angular.isDefined(aaResourceRecord.scheduleId)) {
+        ceInfo.setSchedule(aaResourceRecord.scheduleId);
+      }
       return ceInfo;
     }
 

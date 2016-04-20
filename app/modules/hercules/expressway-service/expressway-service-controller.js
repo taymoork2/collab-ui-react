@@ -7,7 +7,7 @@
     .controller('UserErrorsController', UserErrorsController);
 
   /* @ngInject */
-  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService, ScheduleUpgradeChecker) {
+  function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
@@ -68,8 +68,6 @@
         width: '65%'
       }]
     };
-
-    ScheduleUpgradeChecker.check(vm.currentServiceType, vm.currentServiceId, vm.route + '.settings({serviceType:vm.currentServiceType})');
 
     if (vm.currentServiceId == 'squared-fusion-mgmt') {
       ServiceDescriptor.services(function (error, services) {

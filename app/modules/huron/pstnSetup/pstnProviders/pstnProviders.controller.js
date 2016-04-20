@@ -52,10 +52,15 @@
       }
     }
 
+    function initCustomer(customer) {
+      PstnSetup.setIsTrial(_.get(customer, 'trial', false));
+      PstnSetup.setCustomerExists(true);
+    }
+
     function initCarriers() {
       // lookup customer carriers
       return PstnSetupService.getCustomer(PstnSetup.getCustomerId())
-        .then(_.partial(PstnSetup.setCustomerExists, true))
+        .then(initCustomer)
         .then(_.partial(PstnSetupService.listCustomerCarriers, PstnSetup.getCustomerId()))
         .then(function (carriers) {
           if (_.isArray(carriers) && carriers.length > 0) {
@@ -147,7 +152,7 @@
             $translate.instant('intelepeerFeatures.feature3'),
             $translate.instant('intelepeerFeatures.feature4')
           ],
-          selectFn: goToOrderNumbers
+          selectFn: goToNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TATA) {
         _.extend(carrierObj, {
@@ -160,14 +165,14 @@
             $translate.instant('tataFeatures.feature4'),
             $translate.instant('tataFeatures.feature5')
           ],
-          selectFn: goToSwivelNumbers
+          selectFn: goToNumbers
         });
       } else if (carrier.vendor === PstnSetupService.TELSTRA) {
         _.extend(carrierObj, {
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           features: [],
-          selectFn: goToSwivelNumbers
+          selectFn: goToNumbers
         });
       }
       vm.providers.push(carrierObj);

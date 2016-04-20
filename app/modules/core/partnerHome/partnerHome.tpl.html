@@ -1,0 +1,92 @@
+<!-- Main View -->
+<div id="trialsPanel" class="container partner-container">
+  <cs-page-header title="{{::'overview.pageTitle' | translate}}"></cs-page-header>
+  <div class="content-container row collapse cs-card-container" cs-scroll>
+    <section class="columns medium-12">
+      <cs-card-layout>
+        <cs-card class="large">
+          <article class="trials-card">
+            <header id="activeTrials" class="trialTitle">
+              <span class="h4">{{'partnerHomePage.trialsHeading' | translate}}</span>
+              <button id="trialAddButton" class="btn btn--people btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
+            </header>
+            <section class="trialsPanel">
+              <div class="row collapse h5 trialHeader">
+                <span class="h6 columns small-8" translate="partnerHomePage.trialsCustomerName"></span>
+                <span class="h6 columns small-2" translate="partnerHomePage.trialsEndDate"></span>
+                <span class="h6 columns small-2" translate="partnerHomePage.trialsNumUsers"></span>
+              </div>
+              <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
+                <i class='icon icon-spinner'></i>
+              </div>
+              <div class="trial" ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
+                <div class="row collapse">
+                  <div class="columns small-12">
+                    <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click=" launchCustomerPortal(trial);" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
+                      <a href="">
+                        <span>{{trial.customerName}}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="row trialRow collapse">
+                  <div class="columns small-8">
+                    <div class="trialbar">
+                      <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
+                    </div>
+                  </div>
+                  <div class="columns small-2 trialDays">
+                    <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{trial.daysLeft}}</span>
+                  </div>
+                  <div class="columns small-2 trialLicense">
+                    <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                  </div>
+                </div>
+              </div>
+              <div ng-show="showExpired">
+                <div class="row collapse-both expiredTrials">
+                  <div class="columns small-12">
+                    <span class="trialTitle h6">{{'partnerHomePage.expiredHeading' | translate}}</span>
+                  </div>
+                </div>
+                <div class="row trialRow collapse-both" ng-repeat="trial in expiredList | orderBy: 'daysLeft' | limitTo: expiredRows">
+                  <span class="columns small-8 primary-color">{{trial.customerName}}</span>
+                  <span class="columns small-2 expired" translate="partnerHomePage.daysAgo" translate-values="{ days: getDaysAgo(trial.daysLeft) }"></span>
+                  <div class="columns small-2 expired">
+                    <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <footer>
+              <div class="row collapse viewAll">
+                <span class="small-12 columns"><a id="viewAllLink" ui-sref="partnercustomers.list({filter: 'trials'})">{{'partnerHomePage.viewAll' | translate}}</a></span>
+              </div>
+            </footer>
+          </article>
+        </cs-card>
+        <cs-card class="large">
+          <article ng-controller="OverviewReportsCtrl">
+            <header>
+              <div class="row collapse">
+                <div class="columns small-12 userTitle" cs-dropdown is-open="db.isOpen">
+                  <span class="h4">{{'partnerHomePage.onboardingTitle' | translate}}</span>
+                  <cs-select class="right" id="customerDropdown" name="timeFilter" ng-model="currentSelection" options="totalOrgsData" on-change-fn="getCustomerReports()" filter="true"></cs-select>
+                </div>
+              </div>
+            </header>
+            <section class="onboarded">
+              <div class="onboarded">
+                <div id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> <span class="total">{{entCount}}</span></div>
+                <div id="entitlementsdiv" class="report"></div>
+                <div class="report-status-partner" id="entitlements-refresh" ng-if="entitlementStatus === 'refresh'">
+                  <i class='icon icon-spinner icon-2x'></i>
+                </div>
+              </div>
+            </section>
+          </article>
+        </cs-card>
+      </cs-card-layout>
+    </section>
+  </div>
+</div>

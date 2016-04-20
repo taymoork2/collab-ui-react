@@ -6,10 +6,108 @@ describe('MediaConverterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Service;
-  beforeEach(inject(function (_MediaConverterService_) {
+  var Service, $q;
+  var clusterdata = getJSONFixture('mediafusion/json/mediaservice/clusterdata.json');
+  beforeEach(inject(function (_MediaConverterService_, _$q_) {
     Service = _MediaConverterService_;
+    $q = _$q_;
   }));
+  //Converter Service
+  it('should aggregate cluster based on GroupName ', function () {
+    var mockData = [{
+
+      "cluster_type": "mf_mgmt",
+      "id": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3",
+      "name": "10.196.5.224",
+      "hosts": [{
+        "host_name": "10.196.5.224",
+        "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+      }],
+      "provisioning": [
+
+      ],
+      "provisioning_data": {
+        "approved_packages": [{
+          "service": {
+            "display_name": "Media Connector",
+            "service_type": "mf_mgmt"
+          },
+          "version": "1.0"
+        }],
+        "not_approved_packages": [
+
+        ]
+      },
+      "services": [{
+        "enabled": true,
+        "display_name": "Media Connector",
+        "service_type": "mf_mgmt",
+        "connectors": [{
+          "connector_status": {
+            "operational": false,
+            "services": {
+              "cloud": [
+
+              ],
+              "onprem": [
+
+              ]
+            }
+          },
+          "state": "offline",
+          "version": "ME-11.10.216-1-MG-8.24.94-1",
+          "host": {
+            "host_name": "10.196.5.224",
+            "serial": "e1db20d6-d6ab-422a-b4e6-d278f7a14dc3"
+          },
+          "alarms": [
+
+          ]
+        }]
+      }],
+      "properties": {
+        "mf.group.displayName": "trichy"
+      },
+      "assigned_property_sets": [
+        "5874b1e0-0367-4c40-b28d-6ae430241347"
+      ]
+    }];
+    var converted = Service.aggregateClusters(mockData);
+    expect(converted[0].groupName).toBe('trichy');
+    expect(converted[0].serviceStatus).toBe('offline');
+    expect(converted[0].clusters[0].properties).toBeTruthy();
+    expect(converted[0].clusters[0].name).toBe(converted[0].clusters[0].hosts[0].host_name);
+
+  });
+
+  it('Ensure No duplicate clusters are added', function () {
+
+    var group = Service.aggregateClusters(clusterdata);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(3);
+
+  });
+
+  it('Ensure No duplicate clusters are added', function () {
+    var group = Service.aggregateClusters(clusterdata);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(3);
+
+  });
+
+  it('Ensure No duplicate clusters are added and empty clusters are shown', function () {
+    var grpData = ['bangalore'];
+    var group = Service.aggregateClusters(clusterdata, grpData);
+    expect(group[0].serviceStatus).toBeTruthy();
+    expect(group[0].clusters[0].cluster_type).toBeDefined();
+
+    expect(group.length).toBe(4);
+
+  });
 
   // cluster conversion
 

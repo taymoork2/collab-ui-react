@@ -274,10 +274,12 @@
       getCustomMenu: getCustomMenu,
       getOptionMenu: getOptionMenu,
       getCombinedMenu: getCombinedMenu,
+      updateScheduleActionSetMap: updateScheduleActionSetMap,
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
       deleteCombinedMenu: deleteCombinedMenu,
+      deleteScheduleActionSetMap: deleteScheduleActionSetMap,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -406,10 +408,15 @@
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
               action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+              action.voice = inAction.runActionsOnInput.voice;
+              menuEntry.voice = inAction.runActionsOnInput.voice;
+              menuEntry.language = inAction.runActionsOnInput.language;
+              menuEntry.attempts = inAction.runActionsOnInput.attempts;
+              menuEntry.addAction(action);
+
             }
           }
         }
-        menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.goto)) {
         action = new Action('goto', inAction.goto.ceid);
         if (angular.isDefined(inAction.goto.description)) {
@@ -448,21 +455,36 @@
         return undefined;
       }
       var ceActionArray = actionSet.actions;
+      var menuEntry;
 
       var menu = new CeMenu();
       menu.setType('MENU_WELCOME');
 
       for (var i = 0; i < ceActionArray.length; i++) {
+        // dial by extension(runActionsOnInput) and is now ok in the Welcome menu.
+        // if inputType is 2 then dial by extension, else make an option menu.
+
         if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
-          var menuEntry = new CeMenuEntry();
+
+          menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
           if (menuEntry.actions.length > 0) {
             menu.addEntry(menuEntry);
           }
         } else {
-          var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
-          if (angular.isDefined(optionMenu)) {
-            menu.addEntry(optionMenu);
+          // check for dial by extension - inputType is only 2 for now.
+          if (_.has(ceActionArray[i], 'runActionsOnInput.inputType') &&
+            ceActionArray[i].runActionsOnInput.inputType === 2) {
+            menuEntry = new CeMenuEntry();
+            parseAction(menuEntry, ceActionArray[i]);
+            if (menuEntry.actions.length > 0) {
+              menu.addEntry(menuEntry);
+            }
+          } else {
+            var optionMenu = getOptionMenuFromAction(ceActionArray[i]);
+            if (angular.isDefined(optionMenu)) {
+              menu.addEntry(optionMenu);
+            }
           }
         }
       }
@@ -636,7 +658,30 @@
       };
     }
 
-    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+    function updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
+      if (!ceRecord.scheduleEventTypeMap) {
+        ceRecord['scheduleEventTypeMap'] = {};
+      }
+      if (actionSetName === 'openHours') {
+        ceRecord.scheduleEventTypeMap['open'] = actionSetName;
+        if (!ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'openHours';
+        }
+      } else if (actionSetName === 'closedHours') {
+        ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
+        ceRecord.defaultActionSet = 'closedHours';
+      } else if (actionSetName === 'holidays') {
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
+        if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
+          ceRecord.defaultActionSet = 'holidays';
+        }
+      }
+    }
+
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
+
+      updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
+
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
         if (aaCombinedMenu[aaCombinedMenu.length - 1].getType() === 'MENU_OPTION') {
@@ -788,7 +833,15 @@
               newActionArray[i][actionName].ceid = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToHuntGroup') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+            } else if (actionName === 'runActionsOnInput') {
+              if (menuEntry.actions[0].inputType === 2) {
+                newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
+                newActionArray[i][actionName].attempts = menuEntry.attempts;
+                newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+                newActionArray[i][actionName].language = menuEntry.actions[0].language;
+              }
             }
+
           }
         }
       }
@@ -1028,6 +1081,36 @@
       return false;
     }
 
+    function deleteScheduleActionSetMap(ceRecord, actionSetName) {
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      var prop;
+      if (!ceRecord.scheduleEventTypeMap) {
+        return;
+      }
+      if (actionSetName === 'holidays') {
+        prop = 'holiday';
+      } else if (actionSetName === 'closedHours') {
+        prop = 'closed';
+      } else {
+        prop = 'open';
+      }
+      if (prop) {
+        delete ceRecord.scheduleEventTypeMap[prop];
+        if (ceRecord.scheduleEventTypeMap) {
+          if (ceRecord.scheduleEventTypeMap.closed) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.closed;
+          } else if (ceRecord.scheduleEventTypeMap.open) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.open;
+          } else if (ceRecord.scheduleEventTypeMap.holiday) {
+            ceRecord.defaultActionSet = ceRecord.scheduleEventTypeMap.holiday;
+          } else {
+            delete ceRecord.defaultActionSet;
+          }
+        }
+      }
+    }
+
     /*
      * actionSetName: 'regularOpenActions'
      * ceRecord: a customer AA record
@@ -1041,6 +1124,10 @@
       if (angular.isUndefined(ceRecord) || ceRecord === null) {
         return false;
       }
+
+      // remove associated schedule to actionSet map, e.g.,
+      // scheduleEventTypeMap.open = 'openHours'
+      deleteScheduleActionSetMap(ceRecord, actionSetName);
 
       // get the action object of actionSetName
       //

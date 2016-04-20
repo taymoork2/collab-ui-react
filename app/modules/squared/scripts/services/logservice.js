@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('LogService', LogService);
 
 /* @ngInject */
-function LogService($rootScope, $http, Storage, Config, Log, Auth) {
+function LogService($rootScope, $http, Storage, UrlConfig, Log, Auth) {
   var service = {
     listLogs: listLogs,
     searchLogs: searchLogs,
@@ -14,7 +14,7 @@ function LogService($rootScope, $http, Storage, Config, Log, Auth) {
   return service;
 
   function listLogs(userId, callback) {
-    var logsUrl = Config.getAdminServiceUrl() + 'logs/' + userId;
+    var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs/' + userId;
 
     $http.get(logsUrl)
       .success(function (data, status) {
@@ -32,7 +32,7 @@ function LogService($rootScope, $http, Storage, Config, Log, Auth) {
   }
 
   function searchLogs(searchInput, callback) {
-    var logsUrl = Config.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
+    var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
 
     $http.get(logsUrl)
       .success(function (data, status) {
@@ -47,7 +47,7 @@ function LogService($rootScope, $http, Storage, Config, Log, Auth) {
   }
 
   function downloadLog(filename, callback) {
-    var logsUrl = Config.getAdminServiceUrl() + 'logs/';
+    var logsUrl = UrlConfig.getAdminServiceUrl() + 'logs/';
     var payload = {
       file: filename
     };

@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
-    $translate, LicenseService, $scope, $state, Authinfo, $window) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, $scope, $state, Authinfo, $window, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -12,6 +11,7 @@
     } else {
       vm.orgId = $stateParams.id;
     }
+
     vm.messageCard = {};
     vm.meetingCard = {};
     vm.callCard = {};
@@ -23,7 +23,7 @@
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.licenseUsageReady = false;
     vm.showLicenseToggles = [];
-    vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.statusPageUrl = UrlConfig.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.keyPressHandler = keyPressHandler;
@@ -31,9 +31,42 @@
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
     vm.usageText = usageText;
     vm.launchAtlasReadonly = launchAtlasReadonly;
-    vm.allowLaunchAtlas = vm.orgId != Authinfo.getOrgId() && Authinfo.getOrgId() === "ce8d17f8-1734-4a54-8510-fae65acc505e"; // Only show for help desk users in Marvel org (for testing)
-
+    vm.isTrials = isTrials;
+    vm.allowLaunchAtlas = false;
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+
+    function isWhitelistedOrg(orgData) {
+      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36");
+      var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
+        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36");
+      });
+      return (isWhitelisted || managedByWhitelisted);
+    }
+
+    function setReadOnlyLaunchButtonVisibility(orgData) {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36") {
+        vm.allowLaunchAtlas = false;
+      } else if (orgData.id == Authinfo.getOrgId()) {
+        vm.allowLaunchAtlas = false;
+      } else if (!isWhitelistedOrg(orgData)) {
+        vm.allowLaunchAtlas = false;
+      } else if (!orgData.orgSettings) {
+        vm.allowLaunchAtlas = true;
+      } else {
+        var orgSettings = JSON.parse(_.last(orgData.orgSettings));
+        vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
+      }
+
+    }
+
+    function isTrials(orgSettings) {
+      var eft = false;
+      if (orgSettings) {
+        var orgSettingsJson = JSON.parse(_.last(orgSettings));
+        eft = orgSettingsJson.isEFT;
+      }
+      return eft;
+    }
 
     function initOrgView(org) {
       vm.org = org;
@@ -45,11 +78,12 @@
         initCards(licenses);
         findLicenseUsage();
       }, XhrNotificationService.notify);
-
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
+      vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
       angular.element(".helpdesk-details").focus();
+      setReadOnlyLaunchButtonVisibility(org);
     }
 
     function initCards(licenses) {
@@ -85,7 +119,7 @@
     }
 
     function findAdminUsers(org) {
-      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length

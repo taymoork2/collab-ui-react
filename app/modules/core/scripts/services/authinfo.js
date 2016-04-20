@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics',
-    function Authinfo($rootScope, $translate, Config, Localytics) {
+  .service('Authinfo', ['$rootScope', '$translate', 'Config', 'Localytics', 'tabConfig',
+    function Authinfo($rootScope, $translate, Config, Localytics, tabConfig) {
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -13,27 +13,28 @@ angular.module('Core')
 
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
-        'username': null,
-        'userId': null,
-        'orgName': null,
-        'orgId': null,
-        'addUserEnabled': null,
-        'entitleUserEnabled': null,
-        'managedOrgs': [],
-        'entitlements': null,
-        'services': null,
-        'roles': [],
-        'tabs': [],
-        'isInitialized': false,
-        'setupDone': false,
-        'licenses': [],
-        'messageServices': null,
-        'conferenceServices': null,
-        'communicationServices': null,
-        'conferenceServicesWithoutSiteUrl': null,
-        'cmrServices': null,
-        'hasAccount': false,
-        'emails': null
+        username: null,
+        userId: null,
+        orgName: null,
+        orgId: null,
+        addUserEnabled: null,
+        entitleUserEnabled: null,
+        managedOrgs: [],
+        entitlements: null,
+        services: null,
+        roles: [],
+        tabs: [],
+        isInitialized: false,
+        setupDone: false,
+        licenses: [],
+        messageServices: null,
+        conferenceServices: null,
+        communicationServices: null,
+        conferenceServicesWithoutSiteUrl: null,
+        cmrServices: null,
+        hasAccount: false,
+        emails: null,
+        customerType: null
       };
 
       var getTabTitle = function (title) {
@@ -90,36 +91,34 @@ angular.module('Core')
         return false;
       };
 
-      //update the tabs when Authinfo data has been populated.
-      var initializeTabs = function () {
-        var tabs = angular.copy(Config.tabs);
-        // Remove states out of tab structure that are not allowed or had all their subPages removed
-        for (var i = 0; i < tabs.length; i++) {
-          if (tabs[i] && tabs[i].subPages) {
-            for (var j = 0; j < tabs[i].subPages.length; j++) {
-              if (tabs[i].subPages[j] && !isAllowedState(tabs[i].subPages[j].state)) {
-                tabs[i].subPages.splice(j--, 1);
-              }
-            }
-            if (tabs[i].subPages.length === 0) {
-              tabs.splice(i--, 1);
-            }
-          } else if (tabs[i] && !isAllowedState(tabs[i].state)) {
-            tabs.splice(i--, 1);
-          }
-        }
-        //Localize tabs
-        for (var index in tabs) {
-          tabs[index].title = getTabTitle(tabs[index].title);
-          if (tabs[index].subPages) {
-            for (var k in tabs[index].subPages) {
-              tabs[index].subPages[k].title = $translate.instant(tabs[index].subPages[k].title);
-              tabs[index].subPages[k].desc = $translate.instant(tabs[index].subPages[k].desc);
-            }
-          }
-        }
-        return tabs;
-      };
+      function isAllowedTab(tab) {
+        return isAllowedState(tab.state) && !isHideProdTab(tab);
+      }
+
+      function isHideProdTab(tab) {
+        return tab.hideProd && Config.isProd();
+      }
+
+      function initializeTabs() {
+        var tabs = angular.copy(tabConfig);
+        return _.chain(tabs)
+          .filter(function (tab) {
+            // Remove subPages whose parent tab is hideProd or states that aren't allowed
+            _.remove(tab.subPages, function (subTab) {
+              return isHideProdTab(tab) || !isAllowedTab(subTab);
+            });
+            // Filter allowed states or tabs with subPages
+            return isAllowedTab(tab) || _.size(tab.subPages);
+          })
+          .forEach(function (tab) {
+            tab.title = $translate.instant(tab.title);
+            _.forEach(tab.subPages, function (subTab) {
+              subTab.title = $translate.instant(subTab.title);
+              subTab.desc = $translate.instant(subTab.desc);
+            });
+          })
+          .value();
+      }
 
       var isEntitled = function (entitlement) {
         var services = authData.services;
@@ -162,8 +161,9 @@ angular.module('Core')
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
           $rootScope.$broadcast('AuthinfoUpdated');
-          //org id of user
-          Localytics.customDimension(1, authData.orgName);
+
+          Localytics.setOrgId(authData.orgId);
+          Localytics.setUserId(authData.userId);
         },
         initializeTabs: function () {
           authData.tabs = initializeTabs();
@@ -185,8 +185,6 @@ angular.module('Core')
         },
         setEmails: function (data) {
           authData.emails = data;
-          var msg = this.getPrimaryEmail() || 'No primary email exists for this user';
-          Localytics.customDimension(0, msg);
         },
         getEmails: function () {
           return authData.emails;
@@ -206,18 +204,22 @@ angular.module('Core')
             var commLicenses = [];
             var cmrLicenses = [];
             var confLicensesWithoutSiteUrl = [];
-            var accounts = data.accounts || [];
+            var customerAccounts = data.customers || [];
 
-            if (accounts.length > 0) {
+            if (customerAccounts.length > 0) {
               authData.hasAccount = true;
             }
 
-            for (var x = 0; x < accounts.length; x++) {
+            if (customerAccounts.customerType) {
+              authData.customerType = customerAccounts.customerType;
+            }
 
-              var account = accounts[x];
+            for (var x = 0; x < customerAccounts.length; x++) {
 
-              for (var l = 0; l < account.licenses.length; l++) {
-                var license = account.licenses[l];
+              var customerAccount = customerAccounts[x];
+
+              for (var l = 0; l < customerAccount.licenses.length; l++) {
+                var license = customerAccount.licenses[l];
                 var service = null;
 
                 // Store license before filtering
@@ -355,6 +357,10 @@ angular.module('Core')
         },
         isCustomerAdmin: function () {
           return this.hasRole('Full_Admin');
+        },
+        isCSB: function () {
+          var csb = ['CCW', 'APP_DIRECT'];
+          return csb.indexOf(authData.customerType) > -1;
         },
         isPartner: function () {
           return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

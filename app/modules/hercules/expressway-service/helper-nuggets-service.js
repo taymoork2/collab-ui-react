@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .service('HelperNuggetsService', HelperNuggetsService);
+
   /*@ngInject*/
   function HelperNuggetsService() {
 
@@ -49,9 +53,5 @@
       serviceId2ServiceType: serviceId2ServiceType
     };
   }
-
-  angular
-    .module('Hercules')
-    .service('HelperNuggetsService', HelperNuggetsService);
 
 }());

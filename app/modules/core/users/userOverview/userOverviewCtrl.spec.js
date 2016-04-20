@@ -1,22 +1,25 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
+  var controller, $scope, $httpBackend, $q, $rootScope, Config, Authinfo, Utils, Userservice, FeatureToggleService, Notification;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures;
-
+  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures, UrlConfig;
+  var userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
-    $scope = $rootScope.$new();
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, _$rootScope_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _UrlConfig_, _Notification_) {
+    $scope = _$rootScope_.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
+    $rootScope = _$rootScope_;
     Config = _Config_;
     Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
     Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
+    Notification = _Notification_;
 
     var deferred = $q.defer();
     deferred.resolve('true');
@@ -37,12 +40,14 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
+    spyOn(Userservice, 'resendInvitation').and.returnValue($q.when({}));
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Notification, 'success');
 
     // eww
-    var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
+    var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
     $httpBackend.whenGET(userUrl).respond(updatedUser);
 
     controller = $controller('UserOverviewCtrl', {
@@ -167,17 +172,40 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('AuthCodeLink', function () {
     it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
-      controller.addGenerateAuthCodeLink();
+      controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
       expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
       expect(controller.dropDownItems[0].text).toBe("usersPreview.generateActivationCode");
     });
 
     it('should find existing auth code link when addGenerateAuthCodeLink is called second time', function () {
-      controller.addGenerateAuthCodeLink();
+      controller.enableAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
     });
 
+  });
+
+  describe('getAccountStatus should be called properly', function () {
+    it('should check if status is pending', function () {
+      expect(controller.pendingStatus).toBe(true);
+    });
+  });
+
+  describe('resendInvitation', function () {
+    beforeEach(function () {
+      userEmail = 'testOrg12345@gmail';
+      userName = 'testOrgEmail';
+      uuid = '111112';
+      userStatus = 'pending';
+      dirsyncEnabled = true;
+      entitlements = ["squared-call-initiation", "spark", "webex-squared"];
+    });
+
+    it('should call resendInvitation successfully', function () {
+      controller.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
+      $rootScope.$apply();
+      expect(Notification.success).toHaveBeenCalled();
+    });
   });
 
 });

@@ -6,43 +6,42 @@
     .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrlHuron($scope, $q, $stateParams, DeviceService, OtpService, Config) {
+  function DevicesCtrlHuron($scope, $state, $stateParams, OtpService, Config, CsdmHuronUserDeviceService) {
     var vm = this;
-    vm.devices = [];
+    vm.devices = null;
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
+    var csdmHuronUserDeviceService = null;
     vm.showGenerateOtpButton = false;
-    vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
-    function activate() {
-
-      var promises = [];
-
-      // reset to false when loaded
-      vm.showGenerateOtpButton = false;
-
-      var devicePromise = DeviceService.loadDevices(vm.currentUser.id).then(function (deviceList) {
-        vm.devices = deviceList;
-      });
-      promises.push(devicePromise);
-
-      var otpPromise = OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
-        vm.otps = otpList;
-      });
-      promises.push(otpPromise);
-
-      return $q.all(promises)
-        .then(function () {
-          if (vm.devices.length === 0) {
-            vm.showGenerateOtpButton = true;
-          } else {
-            $scope.userOverview.addGenerateAuthCodeLink();
-          }
-        });
+    function addLinkOrButtonForActivationCode() {
+      if (!vm.deviceListSubscription || vm.deviceListSubscription.eventCount !== 0) {
+        if (_.size(vm.devices)) {
+          $scope.userOverview.enableAuthCodeLink();
+          vm.showGenerateOtpButton = false;
+        } else {
+          $scope.userOverview.disableAuthCodeLink();
+          vm.showGenerateOtpButton = true;
+        }
+      }
     }
 
-    function showDeviceDetailPanel(device) {
-      DeviceService.setCurrentDevice(device);
+    vm.showDeviceDetails = function (device) {
+      $state.go('user-overview.csdmDevice', {
+        currentDevice: device,
+        huronDeviceService: csdmHuronUserDeviceService
+      });
+    };
+
+    function activate() {
+      csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
+      vm.deviceListSubscription = csdmHuronUserDeviceService.on('data', addLinkOrButtonForActivationCode, {
+        scope: $scope
+      });
+      vm.devices = csdmHuronUserDeviceService.getDeviceList();
+      OtpService.loadOtps(vm.currentUser.id).then(function (otpList) {
+        vm.otps = otpList;
+      });
     }
 
     function isHuronEnabled() {
@@ -50,6 +49,7 @@
     }
 
     function isEntitled(ent) {
+      vm.currentUser = $stateParams.currentUser;
       if (vm.currentUser && vm.currentUser.entitlements) {
         for (var i = 0; i < vm.currentUser.entitlements.length; i++) {
           var svc = vm.currentUser.entitlements[i];

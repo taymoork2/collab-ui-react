@@ -1,22 +1,13 @@
 #!/bin/sh
 
-function abort {
-    >&2 echo "Aborting '`basename $0`'"
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
-}
-
-cwd=`pwd`
-# get project top-level dir (look for 'fabfile.py')
-while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
-    cd ..
-done
-top_dir=`pwd`
-cd $cwd
-
-if [ "${top_dir}" = "/" ]; then
-    >&2 echo "Error: traversed to '/' while trying to find top-level dir"
-    abort
 fi
+
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/core-helpers
+source ${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/curl-api-helpers
+
 
 function ex_usage {
     local cmd_basename="`basename $0`"
@@ -61,7 +52,7 @@ if [ $# -lt 3 ]; then
     echo "usage: `basename $0` <usr_label> <method> [...<`basename $0`-options>] [...<curl-options>] <endpoint_uri>"
     echo ""
     echo "A wrapper around curl, to simplify REST calls to Cisco Spark endpoints."
-    echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.coffee' for user labels available for use"
+    echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.js' for user labels available for use"
     echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/atlas-server.html' for Atlas URIs available for use"
     echo "- See 'http://wikicentral.cisco.com/display/IDENTITY/Common+Identity+3.0+RESTFul+APIs' for CI URIs available for use"
     echo "- See 'http://apidocs.cisco.com/apidocs/static/raml/wdm-server-device-mgmt.html' for WDM URIs available for use"
@@ -120,13 +111,11 @@ for arg in "${curl_opts[@]}"; do
     let "i += 1"
 done
 
-source ${top_dir}/bin/include/curl-api-helpers
-
 url_endpoint_prefix="`get_url_endpoint_prefix $( basename $0 )`"
 [ $? -eq 0 ] || abort
 
 # get bearer token
-bearer_token="`${top_dir}/bin/curl-get-bearer-token.sh ${usr_label}`"
+bearer_token="`${WX2_ADMIN_WEB_CLIENT_HOME}/bin/curl-get-bearer-token.sh ${usr_label}`"
 [ $? -eq 0 ] || abort
 
 # check that the pending operation isn't harmful

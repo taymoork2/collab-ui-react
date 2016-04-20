@@ -4,8 +4,8 @@
   /*ngInject*/
 
   function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller) {
-    var urlBase = Config.getAdminServiceUrl();
+    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig) {
+    var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
@@ -119,6 +119,14 @@
           error.timedout = error.config.timeout.timedout;
           return $q.reject(error);
         });
+    }
+
+    function usersWithRole(orgId, role, limit) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.users);
+      }
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .then(extractUsers);
     }
 
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
@@ -358,6 +366,7 @@
     }
 
     return {
+      usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,

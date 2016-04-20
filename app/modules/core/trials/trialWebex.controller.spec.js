@@ -1,0 +1,61 @@
+/* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TimeZoneService*/
+'use strict';
+
+describe('Controller: Trial Webex', function () {
+  var controller;
+  var trialData = getJSONFixture('core/json/trials/trialData.json');
+
+  beforeEach(module('core.trial'));
+  beforeEach(module('Core'));
+
+  beforeEach(function () {
+    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TimeZoneService');
+
+    bard.mockService(TrialWebexService, {
+      getData: trialData.enabled.trials.webexTrial,
+      validateSiteUrl: function (siteUrl) {
+        return $q(function (resolve, reject) {
+          if (siteUrl === 'acmecorp.webex.com') {
+            resolve({
+              isValid: true
+            });
+          } else {
+            resolve({
+              isValid: false
+            });
+          }
+        });
+      }
+    });
+
+    bard.mockService(TimeZoneService, {
+      getTimeZones: $q.when([])
+    });
+
+    controller = $controller('TrialWebexCtrl');
+  });
+
+  it('should resolve siteUrl validation when valid', function (done) {
+    controller.validateSiteUrl('acmecorp.webex.com')
+      .then(function () {
+        expect(true).toBeTruthy();
+        done();
+      })
+      .catch(function () {
+        done.fail('validation promise was rejected');
+      });
+    $rootScope.$apply(); // flush pending promises
+  });
+
+  it('should reject siteUrl validation when invalid', function (done) {
+    controller.validateSiteUrl('invalid.test.com')
+      .then(function () {
+        done.fail('validation promise was resolved');
+      })
+      .catch(function () {
+        expect(true).toBeTruthy();
+        done();
+      });
+    $rootScope.$apply(); // flush pending promises
+  });
+});

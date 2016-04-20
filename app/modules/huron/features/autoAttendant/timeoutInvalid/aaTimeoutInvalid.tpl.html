@@ -1,0 +1,10 @@
+<!-- timeout/invalid action -->
+<div class="row aa-pm-timeout">
+  <div class="small-4 columns">
+    <label class="control-label" for="timeoutSelect{{ schedule + index}}" translate="autoAttendant.phoneMenuTimeout"></label>
+  </div>
+  <div class="small-8 columns">
+    <cs-select  id="timeoutSelect{{ schedule + index}}" name="timeoutSelect" ng-model="aaTimeoutInvalidCtrl.selectedTimeout" options="aaTimeoutInvalidCtrl.timeoutActions" placeholder="aaTimeoutInvalidCtrl.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" on-change-fn="aaTimeoutInvalidCtrl.timeoutInvalidChanged()">
+    </cs-select>
+  </div>
+</div>

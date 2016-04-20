@@ -131,7 +131,7 @@
     }]
   },
   "endpoints": {
-    "customer": "Test Org One",
+    "customer": "activeUserPopulation.loadingCustomer",
     "deviceRegistrationCountTrend": "0",
     "yesterdaysDeviceRegistrationCount": "0",
     "registeredDevicesTrend": "0",
@@ -142,11 +142,13 @@
   },
   "callMetrics": {
     "dataProvider": [{
-      "callCondition": "Fail",
-      "numCalls": "200"
+      "label": "callMetrics.callConditionFail",
+      "value": "200",
+      "color": "#ECECEC"
     }, {
-      "callCondition": "Successful",
-      "numCalls": "800"
+      "label": "callMetrics.callConditionSuccessful",
+      "value": "800",
+      "color": "#F3F3F3"
     }],
     "labelData": {
       "numTotalCalls": 1000,
@@ -297,61 +299,10 @@
       "colorTwo": "#F3F3F3",
       "colorThree": "#FAFAFA",
       "balloon": false
-    }],
-    "four": [{
-      "modifiedDate": "Aug 01",
-      "totalDurationSum": 45,
-      "goodQualityDurationSum": 25,
-      "fairQualityDurationSum": 15,
-      "poorQualityDurationSum": 5,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 02",
-      "totalDurationSum": 75,
-      "goodQualityDurationSum": 40,
-      "fairQualityDurationSum": 25,
-      "poorQualityDurationSum": 10,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 03",
-      "totalDurationSum": 105,
-      "goodQualityDurationSum": 55,
-      "fairQualityDurationSum": 35,
-      "poorQualityDurationSum": 15,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 04",
-      "totalDurationSum": 135,
-      "goodQualityDurationSum": 70,
-      "fairQualityDurationSum": 45,
-      "poorQualityDurationSum": 20,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 05",
-      "totalDurationSum": 165,
-      "goodQualityDurationSum": 85,
-      "fairQualityDurationSum": 55,
-      "poorQualityDurationSum": 25,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 06",
-      "totalDurationSum": 195,
-      "goodQualityDurationSum": 100,
-      "fairQualityDurationSum": 65,
-      "poorQualityDurationSum": 30,
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 07",
-      "totalDurationSum": 225,
-      "goodQualityDurationSum": 115,
-      "fairQualityDurationSum": 75,
-      "poorQualityDurationSum": 35,
-      "balloon": true
     }]
   },
   "activeUserPopulation": [{
-    "customerName": "Test Org One",
-    "customerId": "6f631c7b-04e5-4dfe-b359-47d5fa9f4837",
+    "customerName": "activeUserPopulation.loadingCustomer",
     "percentage": 85,
     "colorOne": "#F3F3F3",
     "colorTwo": "#ECECEC",
@@ -473,63 +424,6 @@
       "colorOne": "#F3F3F3",
       "colorTwo": "#ECECEC",
       "balloon": false
-    }],
-    "four": [{
-      "modifiedDate": "Aug 01",
-      "totalRegisteredUsers": 25,
-      "activeUsers": 0,
-      "percentage": 0,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 02",
-      "totalRegisteredUsers": 50,
-      "activeUsers": 25,
-      "percentage": 50,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 03",
-      "totalRegisteredUsers": 75,
-      "activeUsers": 50,
-      "percentage": 67,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 04",
-      "totalRegisteredUsers": 100,
-      "activeUsers": 75,
-      "percentage": 75,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 05",
-      "totalRegisteredUsers": 125,
-      "activeUsers": 100,
-      "percentage": 80,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 06",
-      "totalRegisteredUsers": 150,
-      "activeUsers": 125,
-      "percentage": 83,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
-    }, {
-      "modifiedDate": "Aug 07",
-      "totalRegisteredUsers": 175,
-      "activeUsers": 150,
-      "percentage": 86,
-      "colorOne": "#b5dc9e",
-      "colorTwo": "#6ab140",
-      "balloon": true
     }]
   },
   "filesShared": {

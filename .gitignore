@@ -5,6 +5,7 @@
 *.rdb
 *.sublime*
 *.swp
+*.ts.spec.js
 
 .DS_Store
 .idea
@@ -13,7 +14,7 @@
 .tmp
 .bower-cache
 .bower-registry
-.e2e-fail-notify
+.e2e-fail-retry
 .oauth_token_metadata
 .vscode
 
@@ -29,6 +30,7 @@ bower_components
 node_modules
 npm-debug.log
 npm-shrinkwrap.json
+build-deps.tar
 
 test/ts/
 test/e2e-protractor/reports

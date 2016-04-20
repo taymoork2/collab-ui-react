@@ -14,13 +14,13 @@
           </header>
 
           <section class="monitoring-panel small-3 medium-12 column"
-                   ng-if="!(setupNotDone() || !(overview.isCalendarAcknowledged && overview.isCallAwareAcknowledged && overview.isCallConnectAcknowledged && (overview.isSipUriAcknowledged || overview.isCloudSipUriSet || !overview.isSipToggleEnabled)))">
+                   ng-if="!overview.displayNotifications()">
             <div class="notification-style">
               <span translate="overview.nonotifications"></span>
             </div>
           </section>
           <section class="monitoring-panel small-3 medium-12 column"
-                   ng-if="setupNotDone() || !(overview.isCalendarAcknowledged && overview.isCallAwareAcknowledged && overview.isCallConnectAcknowledged && (overview.isSipUriAcknowledged || overview.isCloudSipUriSet || !overview.isSipToggleEnabled))">
+                   ng-if="overview.displayNotifications()">
 
             <div class="notification-style" ng-show="overview.setupNotDone()">
               <span class="badge badge-warning" translate="homePage.todo"></span>
@@ -64,7 +64,7 @@
                       ng-click="overview.setHybridAcknowledged('call-connect-service')"></button>
             </div>
             <!--cloud-sip-uri -->
-            <div class="notification-style" ng-if="!overview.isCloudSipUriSet && overview.isSipToggleEnabled && !overview.isSipUriAcknowledged">
+            <div class="notification-style" ng-if="!overview.isCloudSipUriSet && !overview.isSipUriAcknowledged">
               <span class="badge warning" translate="homePage.todo"></span>
               <div class="notification-spacing">
                 <span translate="homePage.setupCloudSipUriMessage"></span>

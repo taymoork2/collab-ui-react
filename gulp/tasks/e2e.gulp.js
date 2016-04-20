@@ -5,7 +5,8 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var processEnvUtil = require('../utils/processEnvUtil.gulp')();
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var del = require('del');
 var fs = require('fs');
@@ -18,6 +19,8 @@ var uuid = require('uuid');
 var _uuid;
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var compression = require('compression');
+var fileListParser = require('../utils/fileListParser.gulp');
+var _ = require('lodash');
 
 /*******************************************************************
  * E2E testing task
@@ -28,31 +31,42 @@ var compression = require('compression');
  * --int                Runs tests against integration atlas
  * --prod               Runs tests against production atlas
  * --nosetup            Runs tests without serving the app
+ * --noretry            Runs tests without retrying failed specs
  * --nofailfast         Runs tests without skipping tests after first failure
  * --specs              Runs tests against specific files or modules
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build              Runs tests against the build directory
  * --verbose            Runs tests with detailed console.log() messages
  ******************************************************************/
 gulp.task('e2e', function (done) {
-  if (args.sauce) {
-    runSeq(
-      'e2e:setup',
+  var e2eTasks = [];
+  var retryTasks = mkRetryTaskList();
+
+  // important: only call 'protractor:clean' before running tests, as jenkins must use the results
+  //   data for further post-build processing
+  e2eTasks = ['e2e:setup',
       'protractor:clean',
       'sauce:start',
-      'protractor',
-      'protractor:clean',
+      'protractor'
+    ]
+    .concat(retryTasks)
+    .concat([
+      'sauce:stop',
+      'connect:stop',
       done
-      );
-  } else {
-    runSeq(
-      'e2e:setup',
-      'protractor:clean',
-      'protractor',
-      'protractor:clean',
-      done
-      );
+    ]);
+
+  if (args.nosetup) {
+    _.pull(e2eTasks, 'e2e:setup');
+    _.pull(e2eTasks, 'connect:stop');
   }
+  if (!args.sauce) {
+    _.pull(e2eTasks, 'sauce:start');
+    _.pull(e2eTasks, 'sauce:stop');
+  }
+  if (args.noretry) {
+    _.pull(e2eTasks, 'protractor:retry');
+  }
+  runSeq.apply(this, e2eTasks);
 });
 
 /*******************************************************************
@@ -66,7 +80,6 @@ gulp.task('e2e', function (done) {
  * --specs=filepath         Runs only tests in specified file
  * --specs=fromfile         Runs only tests from within a file
  * --filename=filepath      Specify the filename
- * --regression         Runs tests in regression folder in addition to any specified tests
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  ******************************************************************/
@@ -96,7 +109,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
           tests = tests.filter(function (test) {
             return test.trim() !== '';
           });
-          messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+          messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(specs));
         } catch (err) {
           messageLogger('Error:: ' + $.util.colors.red(err));
         }
@@ -105,10 +118,18 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       }
     } else if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
-      messageLogger('Running End 2 End tests from module: ' + $.util.colors.red(specs));
+      messageLogger('Running End 2 End tests from module: ' + $.util.colors.gray(specs));
     } else {
       tests = specs.split(',');
-      messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(specs));
+    }
+  } else if (args['files-from']) {
+    var filesFrom = args['files-from'];
+    try {
+      tests = fileListParser.toList(filesFrom);
+      messageLogger('Running End 2 End tests from file: ' + $.util.colors.gray(filesFrom));
+    } catch (err) {
+      messageLogger('Error:: ' + $.util.colors.red(err));
     }
   } else {
     tests = [].concat(
@@ -117,41 +138,39 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.sunlight,
       config.testFiles.e2e.webex,
       config.testFiles.e2e.mediafusion
-      );
+    );
     messageLogger('Running End 2 End tests from all modules.');
   }
 
-  // Extra regression tests that are not gating
-  if (args.regression) {
-    messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
-    tests.push(config.testFiles.e2e.regression);
-  }
-
-  // process.exit() instead of server.close()
-  // $.connect.serverClose() can't be relied on to end sockets
-
-  function exit(exitCode) {
-    if (args.sauce) {
-      $.run('./sauce/stop.sh').exec('', function () {
-        process.nextTick(function () {
-          process.exit(exitCode);
-        });
-      });
-    } else {
-      process.nextTick(function () {
-        process.exit(exitCode);
-      });
-    }
-  }
-
+  messageLogger('#### Starting E2E Run: ' + processEnvUtil.getE2eRunCounter());
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
-      exit(1);
-    })
-    .on('end', function () {
-      exit(0);
+      this.emit('end'); // allows gulp process to continue instead of exiting
     });
+});
+
+gulp.task('protractor:retry', function (done) {
+  var retrySpecList;
+  if (fs.existsSync(config.e2eFailRetry)) {
+    //TODO notify first failures somewhere?
+
+    // mv default retry file to more specific name correlating to its run
+    // ex. './.e2e-fail-retry' -> './cache/e2e-fail-retry-run-0'
+    retrySpecList = config.cache + '/' + _.trimLeft(config.e2eFailRetry, '.') + '-run-' + processEnvUtil.getE2eRunCounter();
+    fs.renameSync(config.e2eFailRetry, retrySpecList);
+
+    // update the source of specs for the next run
+    args['files-from'] = retrySpecList;
+    delete args.specs;
+
+    // now we can increment the run counter and re-run
+    processEnvUtil.setE2eRunCounter(processEnvUtil.getE2eRunCounter() + 1);
+    runSeq('protractor', done);
+  } else {
+    messageLogger('Nothing to retry');
+    done();
+  }
 });
 
 gulp.task('protractor:update', webdriverUpdate);
@@ -167,8 +186,8 @@ gulp.task('set-env', function () {
   }
 });
 
-gulp.task('protractor:clean', function (done) {
-  del('.e2e-fail-notify', done);
+gulp.task('protractor:clean', function () {
+  return del([config.e2eFailRetry, config.e2eFailRetrySpecLists, config.e2eReports]);
 });
 
 /**
@@ -208,7 +227,7 @@ gulp.task('test:api', function () {
   };
 
   return gulp
-    .src(['test/api_sanity/**/*_test.coffee'], {
+    .src(['test/api_sanity/squared_test.js'], {
       read: false
     })
     .pipe($.mocha(opts));
@@ -219,15 +238,15 @@ gulp.task('e2e:setup', function (done) {
   var buildTask = args.build ? 'build' : 'dist';
   if (!args.nosetup) {
     runSeq(
-    // TODO: make mocha not exit on errors
-    // 'test:api',
+      // TODO: make mocha not exit on errors
+      // 'test:api',
       buildTask,
       'eslint:e2e',
       'connect',
       done
-      );
+    );
   } else {
-    log($.util.colors.red('--nosetup **Skipping E2E Setup Tasks.'));
+    log($.util.colors.yellow('--nosetup **Skipping E2E Setup Tasks.'));
     return done();
   }
 });
@@ -246,6 +265,10 @@ gulp.task('connect', function () {
     },
     livereload: false
   });
+});
+
+gulp.task('connect:stop', function () {
+  $.connect.serverClose();
 });
 
 /////////////////////////////
@@ -271,3 +294,7 @@ function sourceProduction() {
   });
 }
 
+function mkRetryTaskList() {
+  var runCounterMax = processEnvUtil.getE2eRunCounterMax();
+  return _.fill(Array(runCounterMax), 'protractor:retry');
+}

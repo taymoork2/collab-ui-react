@@ -390,6 +390,9 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getTags(description) {
+      if (!description) {
+        return [];
+      }
       try {
         var tags = JSON.parse(description);
         return _.unique(tags);

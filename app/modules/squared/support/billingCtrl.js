@@ -58,7 +58,7 @@ angular.module('Squared')
         });
       };
 
-      var actionsTemplate = '<span cs-dropdown>' +
+      var actionsTemplate = '<span cs-dropdown class="actions-menu">' +
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +

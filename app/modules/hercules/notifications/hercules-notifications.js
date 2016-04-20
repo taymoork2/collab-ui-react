@@ -1,7 +1,12 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
+  angular
+    .module('Hercules')
+    .directive('herculesNotifications', herculesNotificationsDirective);
+
+  /* @ngInject */
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor, ServiceStateChecker) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -77,6 +82,16 @@
         templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
       });
     };
+
+    vm.showEnterpriseSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings'
+      });
+    };
+
+    vm.setSipUriNotificationAcknowledged = function () {
+      ServiceStateChecker.setSipUriNotificationAcknowledgedAndRemoveNotification();
+    };
   }
 
   function herculesNotificationsDirective() {
@@ -93,7 +108,4 @@
     };
   }
 
-  angular
-    .module('Hercules')
-    .directive('herculesNotifications', herculesNotificationsDirective);
 })();

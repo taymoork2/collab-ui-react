@@ -5,6 +5,7 @@ describe('WebExSiteSettingsFact Test', function () {
   var locale2 = "es-LA";
   var siteUrl = 'go.webex.com';
   var siteName = "go";
+  var WebExXmlApiFact;
 
   beforeEach(module('WebExApp'));
 
@@ -13,6 +14,21 @@ describe('WebExSiteSettingsFact Test', function () {
       'siteUrl': siteUrl
     };
     $provide.value('$stateParams', $stateParams);
+  }));
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExXmlApiFact_
+  ) {
+
+    var deferred = _$q_.defer();
+    deferred.resolve();
+    _$rootScope_.$apply();
+    WebExXmlApiFact = _WebExXmlApiFact_;
+
+    spyOn(WebExXmlApiFact, 'validateToken').and.returnValue(deferred.promise);
+
   }));
 
   it('can initialize the site settings', inject(function (WebExSiteSettingsFact) {

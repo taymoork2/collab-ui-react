@@ -7,7 +7,7 @@ describe('Controller: CdrLadderDiagramService', function () {
   var $httpBackend, $q, CdrLadderDiagramService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrDiagram/proxyResponse.json');
   var esQuery = getJSONFixture('huron/json/cdrDiagram/esQuery.json');
-  var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty';
+  var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/logstash*/_search?pretty';
 
   // can't find XML fixture to load xml file
   var diagnosticsResponse = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?> ' +
@@ -68,8 +68,9 @@ describe('Controller: CdrLadderDiagramService', function () {
 
   it('should return elastic search data from all servers', function () {
     $httpBackend.whenPOST(proxyUrl).respond(proxyResponse);
+    var logstashPath = 'logstash*';
 
-    CdrLadderDiagramService.query(esQuery).then(function (response) {
+    CdrLadderDiagramService.query(esQuery, logstashPath).then(function (response) {
       var returnValue = proxyResponse.hits.hits[0]._source;
       expect(response.hits.hits[0]._source).toEqual(returnValue);
     });

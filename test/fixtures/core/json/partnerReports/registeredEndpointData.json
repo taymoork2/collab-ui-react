@@ -1,29 +1,72 @@
 {
-  "data": [{
-    "details": {
-      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-      "deviceRegistrationCountTrend": "4",
-      "yesterdaysDeviceRegistrationCount": "2",
-      "registeredDevicesTrend": "5",
-      "yesterdaysRegisteredDevices": "2",
-      "maxRegisteredDevices": "3",
-      "minRegisteredDevices": "2"
-    }
+  "registeredEndpointsAPI": {
+    "data": [{
+      "details": {
+        "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+        "deviceRegistrationCountTrend": "4",
+        "yesterdaysDeviceRegistrationCount": "2",
+        "registeredDevicesTrend": "5",
+        "yesterdaysRegisteredDevices": "2",
+        "maxRegisteredDevices": "3",
+        "minRegisteredDevices": "2"
+      }
+    }, {}, {
+      "details": {
+        "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+        "deviceRegistrationCountTrend": "-4",
+        "yesterdaysDeviceRegistrationCount": "2",
+        "registeredDevicesTrend": "-5",
+        "yesterdaysRegisteredDevices": "2",
+        "maxRegisteredDevices": "3",
+        "minRegisteredDevices": "2"
+      }
+    }, {}],
+    "type": "registeredEndpoints",
+    "date": "2015-04-20",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 1,
+    "intervalType": "month"
+  },
+  "registeredEndpointResponse": [{
+    "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "deviceRegistrationCountTrend": "4",
+    "yesterdaysDeviceRegistrationCount": "2",
+    "registeredDevicesTrend": "+5%",
+    "yesterdaysRegisteredDevices": "2",
+    "maxRegisteredDevices": "3",
+    "minRegisteredDevices": "2",
+    "customer": "Test Org One",
+    "direction": "positive"
   }, {
-    "details": {
-      "orgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-      "deviceRegistrationCountTrend": "-4",
-      "yesterdaysDeviceRegistrationCount": "2",
-      "registeredDevicesTrend": "-5",
-      "yesterdaysRegisteredDevices": "2",
-      "maxRegisteredDevices": "3",
-      "minRegisteredDevices": "2"
-    }
-  }],
-  "type": "registeredEndpoints",
-  "date": "2015-04-20",
-  "spanCount": 1,
-  "spanType": "day",
-  "intervalCount": 1,
-  "intervalType": "month"
+    "orgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+    "deviceRegistrationCountTrend": "-4",
+    "yesterdaysDeviceRegistrationCount": "2",
+    "registeredDevicesTrend": "-5%",
+    "yesterdaysRegisteredDevices": "2",
+    "maxRegisteredDevices": "3",
+    "minRegisteredDevices": "2",
+    "customer": "Test Org Two",
+    "direction": "negative"
+  }, {
+    "orgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+    "deviceRegistrationCountTrend": "-",
+    "yesterdaysDeviceRegistrationCount": "-",
+    "registeredDevicesTrend": "-",
+    "yesterdaysRegisteredDevices": "-",
+    "maxRegisteredDevices": "-",
+    "minRegisteredDevices": "-",
+    "customer": "Test Org Three",
+    "direction": ""
+  }, {
+    "orgId": "1",
+    "deviceRegistrationCountTrend": "-",
+    "yesterdaysDeviceRegistrationCount": "-",
+    "registeredDevicesTrend": "-",
+    "yesterdaysRegisteredDevices": "-",
+    "maxRegisteredDevices": "-",
+    "minRegisteredDevices": "-",
+    "customer": "Test Partner",
+    "direction": ""
+  }]
 }

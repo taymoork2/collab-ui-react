@@ -3,7 +3,7 @@
 describe('User List Service', function () {
   beforeEach(module('Core'));
 
-  var $httpBackend, $rootScope, UserListService, Authinfo, Config;
+  var $httpBackend, $rootScope, UserListService, Authinfo, Config, UrlConfig;
 
   var testData;
 
@@ -19,9 +19,10 @@ describe('User List Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_, _UrlConfig_) {
     $httpBackend = _$httpBackend_;
     UserListService = _UserListService_;
+    UrlConfig = _UrlConfig_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
@@ -35,7 +36,7 @@ describe('User List Service', function () {
   });
 
   it('should successfully return an array of 2 users from calling listUsers', function () {
-    var listUsersUrl = Config.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
       '?' + '&' + testData.listUsers.attributes +
       '&' + testData.listUsers.filter +
       '&count=' + testData.listUsers.count +
@@ -67,7 +68,7 @@ describe('User List Service', function () {
   });
 
   it('should successfully return the user reports ID from calling generateUserReports', function () {
-    var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
+    var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
 
     $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
       id: testData.exportCSV.id,
@@ -84,7 +85,7 @@ describe('User List Service', function () {
   });
 
   it('should successfully return the user reports data from calling getUserReports', function () {
-    var userReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId()) + '/' + testData.exportCSV.id;
+    var userReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId()) + '/' + testData.exportCSV.id;
 
     $httpBackend.whenGET(userReportsUrl).respond(200, {
       report: testData.exportCSV.report,
@@ -112,7 +113,7 @@ describe('User List Service', function () {
   });
 
   it('should successfully return an array of 2 users with headers from calling exportCSV', function () {
-    var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
+    var generateUserReportsUrl = UrlConfig.getUserReportsUrl(Authinfo.getOrgId());
     var getUserReportsUrl = generateUserReportsUrl + '/' + testData.exportCSV.id;
 
     $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
@@ -137,9 +138,28 @@ describe('User List Service', function () {
     $httpBackend.flush();
   });
 
+  it('should successfully return user count 2 from calling getUserCount', function () {
+    var userCountUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day';
+    $httpBackend.whenGET(userCountUrl).respond(200, {
+      data: [{
+        data: [{
+          details: {
+            totalRegisteredUsers: 2
+          }
+        }]
+      }]
+    });
+
+    UserListService.getUserCount().then(function (count) {
+      expect(count).toEqual(2);
+    });
+
+    $httpBackend.flush();
+  });
+
   it('should successfully return an array of 2 partners from calling listPartners', function () {
     var orgId = Authinfo.getOrgId();
-    var adminUrl = Config.getAdminServiceUrl() +
+    var adminUrl = UrlConfig.getAdminServiceUrl() +
       'organization/' + orgId + '/users/partneradmins';
 
     $httpBackend.whenGET(adminUrl).respond(200, {

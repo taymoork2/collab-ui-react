@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Core')
-  .service('AccountService', ['$http', '$rootScope', '$location', 'Config', 'LogMetricsService', 'Log',
-    function ($http, $rootScope, $location, Config, LogMetricsService, Log) {
+  .service('AccountService', ['$http', '$rootScope', '$location', 'Config', 'LogMetricsService', 'Log', 'UrlConfig',
+    function ($http, $rootScope, $location, Config, LogMetricsService, Log, UrlConfig) {
       return {
         createAccount: function (customerOrgName, customerAdminEmail, partnerAdminEmail, isPartner, beId, begeoId, duration, licenseCount, offersList, startDate) {
-          var accountUrl = Config.getAdminServiceUrl() + 'accounts';
+          var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts';
           var accountRequest = {
             'offers': []
           };
@@ -39,7 +39,7 @@ angular.module('Core')
         },
 
         getAccount: function (accountId, callback) {
-          var accountUrl = Config.getAdminServiceUrl() + 'accounts/' + accountId;
+          var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts/' + accountId;
 
           $http.get(accountUrl)
             .success(function (data, status) {
@@ -56,7 +56,7 @@ angular.module('Core')
         },
 
         setOrgDataForAccount: function (accountId, orgId, partnerOrgId, customerErpId, partnerAdminEmail, customerName, callback) {
-          var accountUrl = Config.getAdminServiceUrl() + 'accounts/' + accountId + '/organization/' + orgId;
+          var accountUrl = UrlConfig.getAdminServiceUrl() + 'accounts/' + accountId + '/organization/' + orgId;
 
           var payload = {};
           if (partnerOrgId !== '') {

@@ -65,111 +65,14 @@
           return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
-        checkUserWebExEntitlementOnAtlas: function () {
-          var funcName = "checkUserWebExEntitlementOnAtlas";
+        initUserSettingsModel: function () {
+          var funcName = "initUserSettingsModel()";
           var logMsg = "";
 
           webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.eventCenter.isEntitledOnAtlas = false;
           webExUserSettingsModel.supportCenter.isEntitledOnAtlas = false;
-
-          Orgservice.getValidLicenses().then(
-            function getOrgLicensesSuccess(orgLicenses) {
-              var funcName = "getOrgLicensesSuccess()";
-              var logMsg = "";
-
-              logMsg = funcName + ": " + "\n" +
-                "orgLicenses=" + JSON.stringify(orgLicenses);
-              // $log.log(logMsg);
-
-              var currSite = $stateParams.site;
-              var userName = $stateParams.currentUser.userName;
-              var userLicenses = $stateParams.currentUser.licenseID;
-
-              logMsg = funcName + "\n" +
-                "userLicenses=" + JSON.stringify(userLicenses);
-              // $log.log(logMsg);
-
-              userLicenses.forEach(
-                function checkLicense(userLicense) {
-                  var funcName = "checkLicense()";
-                  var logMsg = "";
-
-                  var userLicenseItems = userLicense.split("_");
-                  var userLicenseType = userLicenseItems[0];
-
-                  // only check for webex center type of license
-                  if (
-                    ("EE" == userLicenseType) ||
-                    ("MC" == userLicenseType) ||
-                    ("EC" == userLicenseType) ||
-                    ("SC" == userLicenseType) ||
-                    ("TC" == userLicenseType) ||
-                    ("CMR" == userLicenseType)
-                  ) {
-
-                    var userLicenseSiteUrl = userLicenseItems[3];
-
-                    logMsg = funcName + "\n" +
-                      "currSite=" + currSite + "\n" +
-                      "userName=" + userName + "\n" +
-                      "userLicense=" + userLicense;
-                    // $log.log(logMsg);
-
-                    // check that the license is for the current site
-                    if (userLicenseSiteUrl == currSite) {
-                      // verify that the user's webex center license is valid for the org
-                      orgLicenses.forEach(
-                        function compareOrgLicense(orgLicense) {
-                          var funcName = "";
-                          var logMsg = "";
-
-                          logMsg = funcName + "\n" +
-                            "orgLicense=" + JSON.stringify(orgLicense) + "\n" +
-                            "userLicense=" + JSON.stringify(userLicense);
-                          // $log.log(logMsg);
-
-                          if (userLicense == orgLicense.licenseId) {
-                            if ("EE" == userLicenseType) {
-                              webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
-                              webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
-                              webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
-                              webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
-                            } else {
-                              if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
-                                webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
-                              } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
-                                webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
-                              } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
-                                webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
-                              } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
-                                webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
-                              }
-                            }
-                          }
-                        } // compareOrgLicense()
-                      ); // orgLicenses.forEach()
-                    }
-                  }
-                } // checkLicense()
-              ); // userLicenses.forEach(()
-            }, // getOrgLicensesSuccess()
-
-            function getOrgLicensesError(response) {
-              var funcName = "getOrgLicensesError()";
-              var logMsg = "";
-
-              logMsg = funcName + ": " + "\n" +
-                "response=" + JSON.stringify(response);
-              $log.log(logMsg);
-            } // getOrgLicensesError()
-          ); // Orgservice.getValidLicenses().then()
-        }, // checkUserWebExEntitlementOnAtlas()
-
-        initUserSettingsModel: function () {
-          var funcName = "initUserSettingsModel()";
-          var logMsg = "";
 
           webExUserSettingsModel.meetingCenter.isEntitledOnWebEx = false;
           webExUserSettingsModel.trainingCenter.isEntitledOnWebEx = false;
@@ -244,7 +147,6 @@
             }
           });
           return hasProOrStdMeetingCenter;
-
         }, //hasProOrStdMeetingCenter
 
         isUserLevelPMREnabled: function () {
@@ -275,16 +177,6 @@
             "eventCenter.isEntitledOnAtlas=" + webExUserSettingsModel.eventCenter.isEntitledOnAtlas + "\n" +
             "supportCenter.isEntitledOnAtlas=" + webExUserSettingsModel.supportCenter.isEntitledOnAtlas;
           $log.log(logMsg);
-
-          // var validLicenseEntitlements = true;
-          var validLicenseEntitlements = (
-            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
-            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
-          ) ? true : false;
-
-          return validLicenseEntitlements;
         }, // updateCenterLicenseEntitlements()
 
         updateUserSettingsModelPart1: function () {
@@ -644,8 +536,105 @@
           });
         }, // getUserSettingsInfoXml()
 
-        initPanel: function () {
-          var funcName = "initPanel()";
+        getUserWebExEntitlementFromAtlas: function () {
+          var funcName = "getUserWebExEntitlementFromAtlas";
+          var logMsg = "";
+
+          Orgservice.getValidLicenses().then(
+            function getOrgLicensesSuccess(orgLicenses) {
+              var funcName = "getOrgLicensesSuccess()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "orgLicenses=" + JSON.stringify(orgLicenses);
+              // $log.log(logMsg);
+
+              var currSite = $stateParams.site;
+              var userName = $stateParams.currentUser.userName;
+              var userLicenses = $stateParams.currentUser.licenseID;
+
+              logMsg = funcName + "\n" +
+                "userLicenses=" + JSON.stringify(userLicenses);
+              // $log.log(logMsg);
+
+              userLicenses.forEach(
+                function checkLicense(userLicense) {
+                  var funcName = "checkLicense()";
+                  var logMsg = "";
+
+                  var userLicenseItems = userLicense.split("_");
+                  var userLicenseType = userLicenseItems[0];
+
+                  // only check for webex center type of license
+                  if (
+                    ("EE" == userLicenseType) ||
+                    ("MC" == userLicenseType) ||
+                    ("EC" == userLicenseType) ||
+                    ("SC" == userLicenseType) ||
+                    ("TC" == userLicenseType) ||
+                    ("CMR" == userLicenseType)
+                  ) {
+
+                    var userLicenseSiteUrl = userLicenseItems[userLicenseItems.length - 1];
+
+                    logMsg = funcName + "\n" +
+                      "currSite=" + currSite + "\n" +
+                      "userName=" + userName + "\n" +
+                      "userLicense=" + userLicense;
+                    // $log.log(logMsg);
+
+                    // check that the license is for the current site
+                    if (userLicenseSiteUrl == currSite) {
+                      // verify that the user's webex center license is valid for the org
+                      orgLicenses.forEach(
+                        function compareOrgLicense(orgLicense) {
+                          var funcName = "";
+                          var logMsg = "";
+
+                          logMsg = funcName + "\n" +
+                            "orgLicense=" + JSON.stringify(orgLicense) + "\n" +
+                            "userLicense=" + JSON.stringify(userLicense);
+                          // $log.log(logMsg);
+
+                          if (userLicense == orgLicense.licenseId) {
+                            if ("EE" == userLicenseType) {
+                              webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
+                              webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
+                            } else {
+                              if (webExUserSettingsModel.meetingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.meetingCenter.isEntitledOnAtlas = true;
+                              } else if (webExUserSettingsModel.trainingCenter.id == userLicenseType) {
+                                webExUserSettingsModel.trainingCenter.isEntitledOnAtlas = true;
+                              } else if (webExUserSettingsModel.eventCenter.id == userLicenseType) {
+                                webExUserSettingsModel.eventCenter.isEntitledOnAtlas = true;
+                              } else if (webExUserSettingsModel.supportCenter.id == userLicenseType) {
+                                webExUserSettingsModel.supportCenter.isEntitledOnAtlas = true;
+                              }
+                            }
+                          }
+                        } // compareOrgLicense()
+                      ); // orgLicenses.forEach()
+                    }
+                  }
+                } // checkLicense()
+              ); // userLicenses.forEach(()
+            }, // getOrgLicensesSuccess()
+
+            function getOrgLicensesError(response) {
+              var funcName = "getOrgLicensesError()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "response=" + JSON.stringify(response);
+              $log.log(logMsg);
+            } // getOrgLicensesError()
+          ); // Orgservice.getValidLicenses().then()
+        }, // getUserWebExEntitlementFromAtlas()
+
+        getUserSettingsFromWebEx: function () {
+          var funcName = "getUserSettingsFromWebEx()";
           var logMsg = "";
 
           angular.element('#reloadBtn').button('loading');
@@ -729,7 +718,7 @@
               $log.log(logMsg);
             } // getSessionTicketError
           ); // WebExUserSettingsFact.getSessionTicket().then()
-        }, // initPanel()
+        }, // getUserSettingsFromWebEx()
 
         getUserSettingsInfo: function (form) {
           var funcName = "getUserSettingsInfo()";
@@ -765,7 +754,15 @@
                 ("" === webExUserSettingsModel.meetingTypesInfo.errId)
               ) {
 
-                var isValidLicenseEntitlement = _self.updateCenterLicenseEntitlements();
+                _self.updateCenterLicenseEntitlements();
+
+                // var validLicenseEntitlements = true;
+                var isValidLicenseEntitlement = (
+                  (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx == webExUserSettingsModel.meetingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx == webExUserSettingsModel.trainingCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.eventCenter.isEntitledOnWebEx == webExUserSettingsModel.eventCenter.isEntitledOnAtlas) &&
+                  (webExUserSettingsModel.supportCenter.isEntitledOnWebEx == webExUserSettingsModel.supportCenter.isEntitledOnAtlas)
+                ) ? true : false;
 
                 if (!isValidLicenseEntitlement) {
                   _self.setLoadingErrorDisplay(
@@ -872,6 +869,7 @@
         updateUserSettings: function (form) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
+          var errMessage = null;
 
           webExUserSettingsModel.disableCancel = true;
 
@@ -904,6 +902,43 @@
             } // chkSessionType()
           ); // webExUserSettingsModel.sessionTypes.forEach()
 
+          // block user from saving changes if any entitled WebEx Center does not have at least one session types selected
+          // once block save flag has been set to true, skip checking other centers and go straight to block save
+          var blockDueToNoSession = false;
+          if (
+            (webExUserSettingsModel.meetingCenter.isEntitledOnWebEx) &&
+            (userSettings.meetingCenter != "true")
+          ) {
+            blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.trainingCenter.isEntitledOnWebEx) &&
+            (userSettings.trainingCenter != "true")
+          ) {
+            blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.eventCenter.isEntitledOnWebEx) &&
+            (userSettings.eventCenter != "true")
+          ) {
+            blockDueToNoSession = true;
+          } else if (
+            (webExUserSettingsModel.supportCenter.isEntitledOnWebEx) &&
+            (userSettings.supportCenter != "true")
+          ) {
+            blockDueToNoSession = true;
+          }
+
+          $log.log("DURE blockDueToNoSession=" + blockDueToNoSession);
+
+          if (blockDueToNoSession) {
+            angular.element('#saveBtn').button('reset');
+            angular.element('#saveBtn2').button('reset');
+            webExUserSettingsModel.disableCancel = false;
+            webExUserSettingsModel.disableCancel2 = false;
+            errMessage = $translate.instant("webexUserSettings.mustHaveAtLeastOneSessionTypeEnabled");
+            Notification.notify([errMessage], 'error');
+            return;
+          }
+
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
             !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
@@ -914,7 +949,7 @@
             angular.element('#saveBtn2').button('reset');
             webExUserSettingsModel.disableCancel = false;
             webExUserSettingsModel.disableCancel2 = false;
-            var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
+            errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
@@ -1011,9 +1046,11 @@
           var okToUpdate = true;
           var notificationMsg;
 
-          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && //if enabling both PMR and CMR
-            (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) { //and if call in is disabled
-            notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges"); //show error
+          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && //if enabling both PM and CMR
+            webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio && //and site is WebEx audio
+            !webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) { //but does not support hybrid audio
+            notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio"); //show an error
+            webExUserSettingsModel.pmr.value = false; //un-check the PMR option
             _self.notifyError(notificationMsg);
             okToUpdate = false;
           }
@@ -1021,18 +1058,15 @@
           if (okToUpdate) {
             if (webExUserSettingsModel.isT31Site) {
               if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && //if enabling PMR and CMR
-                webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio && //and site is WebEx audio
-                (!webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled || webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value === false)) { //require both hybrid audio and integrated voip
+                (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false && webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value === false)) { //require both hybrid audio and integrated voip
                 notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivilegesHybridVOIP");
                 _self.notifyError(notificationMsg);
                 okToUpdate = false;
               }
             } else {
-              if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && //if enabling both PM and CMR
-                webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio && //and site is WebEx audio
-                !webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) { //but does not support hybrid audio
-                notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio"); //show an error
-                webExUserSettingsModel.pmr.value = false; //un-check the PMR option
+              if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && //if enabling both PMR and CMR
+                (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) { //and if call in is disabled
+                notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges"); //show error
                 _self.notifyError(notificationMsg);
                 okToUpdate = false;
               }
@@ -1217,7 +1251,8 @@
         }, // getErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
-          return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
+          var siteName = WebExUtilsFact.getSiteName(webexSiteUrl);
+          return WebExXmlApiFact.getSessionTicket(webexSiteUrl, siteName);
         }, //getSessionTicket()
 
         getSiteUrl: function () {
@@ -1228,8 +1263,7 @@
         }, //getSiteUrl
 
         getSiteName: function (siteUrl) {
-          var index = siteUrl.indexOf(".");
-          return siteUrl.slice(0, index);
+          return WebExUtilsFact.getSiteName(siteUrl);
         }, //getSiteName()
       }; // return
     } //WebExUserSettingsFact

@@ -5,18 +5,17 @@
 "use strict";
 
 describe(' sunlightConfigService', function () {
-  var sunlightConfigService, $httpBackend, $rootScope, Config, sunlightUserConfigUrl, userData, userId, orgId;
+  var sunlightConfigService, $httpBackend, $rootScope, sunlightUserConfigUrl, userData, userId, orgId;
   var errorData = {
     'errorType': 'Internal Server Error'
   };
 
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, _Config_) {
+  beforeEach(inject(function (_SunlightConfigService_, _$httpBackend_, UrlConfig) {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
-    sunlightUserConfigUrl = Config.getSunlightConfigServiceUrl() + "/user/";
+    sunlightUserConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + "/user/";
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     userId = '111';
     orgId = 'deba1221-ab12-cd34-de56-abcdef123456';

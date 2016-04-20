@@ -6,7 +6,7 @@
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log, FeatureToggleService) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, Notification, Log) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -28,11 +28,14 @@
       'name': 'Search'
     };
     vm.filters = [{
-      name: 'All',
+      name: $translate.instant('common.all'),
       filterValue: 'all'
     }, {
-      name: 'Hunt Group',
+      name: $translate.instant('huronHuntGroup.modalTitle'),
       filterValue: 'HG'
+    }, {
+      name: $translate.instant('autoAttendant.title'),
+      filterValue: 'AA'
     }];
     /* LIST OF FEATURES
      *
@@ -49,46 +52,32 @@
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts'
+    }, {
+      name: 'AA',
+      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+      formatter: HuronFeaturesListService.autoAttendants,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.aaName',
+      color: 'primary'
     }];
 
     init();
 
     function init() {
+      vm.loading = false;
 
-      var aaPromise = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
-
-      $q.all([aaPromise]).then(function (toggles) {
-        vm.loading = false;
-
-        if (toggles[0]) {
-          vm.filters.push({
-            name: 'Auto Attendant',
-            filterValue: 'AA'
-          });
-          vm.features.push({
-            name: 'AA',
-            getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
-            formatter: HuronFeaturesListService.autoAttendants,
-            isEmpty: false,
-            i18n: 'huronFeatureDetails.aaName',
-            color: 'primary'
-          });
-        }
-
-        _.forEach(vm.features, function (feature) {
-          vm.cardColor[feature.name] = feature.color;
-        });
-
-        vm.pageState = 'Loading';
-        var featuresPromises = getListOfFeatures();
-
-        handleFeaturePromises(featuresPromises);
-
-        $q.all(featuresPromises).then(function (responses) {
-          showNewFeaturePageIfNeeded();
-        });
+      _.forEach(vm.features, function (feature) {
+        vm.cardColor[feature.name] = feature.color;
       });
 
+      vm.pageState = 'Loading';
+      var featuresPromises = getListOfFeatures();
+
+      handleFeaturePromises(featuresPromises);
+
+      $q.all(featuresPromises).then(function (responses) {
+        showNewFeaturePageIfNeeded();
+      });
     }
 
     //Switches Data that populates the Features tab

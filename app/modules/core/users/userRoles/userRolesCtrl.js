@@ -3,25 +3,12 @@ angular.module('Squared')
   .controller('UserRolesCtrl', UserRolesCtrl);
 
 /* @ngInject */
-function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
+function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice) {
   $scope.currentUser = $stateParams.currentUser;
   $scope.sipAddr = '';
-  if ($scope.currentUser) {
-    $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
-    $scope.roles = $scope.currentUser.roles;
-    if ($scope.currentUser.sipAddresses) {
-      for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
-        if ($scope.currentUser.sipAddresses[x].type == "cloud-calling") {
-          $scope.sipAddr = $scope.currentUser.sipAddresses[x].value;
-        }
-      }
-    }
-  }
   $scope.dirsyncEnabled = false;
-  $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
   $scope.showHelpDeskRole = !Config.isProd() || Authinfo.isCisco() || _.includes(['21cf6a5e-a63d-485f-8d62-b1d9e6f253c4', '0198f08a-3880-4871-b55e-4863ccf723d5', '6c922508-9640-47a1-abd2-66efd1ba6127', '1a2f0924-9986-442f-910a-c10ef8138fd5'], Authinfo.getOrgId());
-  $scope.getMessengerSyncStatus = getMessengerSyncStatus;
   $scope.updateRoles = updateRoles;
   $scope.clearCheckboxes = clearCheckboxes;
   $scope.supportCheckboxes = supportCheckboxes;
@@ -50,7 +37,6 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   initView();
 
   function initView() {
-    setFormValuesToMatchRoles();
     Orgservice.getOrgCacheOption(function (data, status) {
       if (data.success) {
         $scope.dirsyncEnabled = data.dirsyncEnabled;
@@ -61,8 +47,32 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
     }, null, {
       cache: true
     });
-    if (Authinfo.getOrgId()) {
-      getMessengerSyncStatus();
+
+    if ($scope.currentUser) {
+      $scope.isEditingSelf = $scope.currentUser.id === Authinfo.getUserId();
+      $scope.roles = $scope.currentUser.roles;
+    }
+
+    setUserSipAddress();
+    setFormValuesToMatchRoles();
+  }
+
+  function setUserSipAddress() {
+    if (_.isArray(_.get($scope, 'currentUser.sipAddresses'))) {
+      var sipAddrData = _.find($scope.currentUser.sipAddresses, {
+        primary: true,
+        type: 'cloud-calling'
+      });
+
+      if (_.isEmpty(sipAddrData)) {
+        sipAddrData = _.find($scope.currentUser.sipAddresses, {
+          type: 'cloud-calling'
+        });
+      }
+
+      if (_.get(sipAddrData, 'value')) {
+        $scope.sipAddr = sipAddrData.value;
+      }
     }
   }
 
@@ -87,15 +97,6 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
 
   function hasRole(role) {
     return $scope.roles && _.includes($scope.roles, role);
-  }
-
-  function getMessengerSyncStatus() {
-    SyncService.isMessengerSyncEnabled()
-      .then(function (isIt) {
-        $scope.isMsgrSyncEnabled = isIt;
-      }, function (errorMsg) {
-        Log.error(errorMsg);
-      });
   }
 
   function checkPartialRoles(roleEnabled) {

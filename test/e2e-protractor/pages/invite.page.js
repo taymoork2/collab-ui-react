@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var InvitePage = function () {
   var inviteLauncher = element(by.id('invitelauncher'));
   var squaredUrl = 'squared://invitee/?invdata=';

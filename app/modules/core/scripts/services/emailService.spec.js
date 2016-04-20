@@ -3,11 +3,11 @@
 describe('emailService', function () {
   beforeEach(module('Core'));
 
-  var $httpBackend, Config, EmailService, LogMetricsService;
+  var $httpBackend, UrlConfig, EmailService, LogMetricsService;
 
-  beforeEach(inject(function (_$httpBackend_, _Config_, _EmailService_, _LogMetricsService_) {
+  beforeEach(inject(function (_$httpBackend_, _UrlConfig_, _EmailService_, _LogMetricsService_) {
     $httpBackend = _$httpBackend_;
-    Config = _Config_;
+    UrlConfig = _UrlConfig_;
     EmailService = _EmailService_;
     LogMetricsService = _LogMetricsService_;
 
@@ -16,7 +16,7 @@ describe('emailService', function () {
   }));
 
   it('should report success when URL is posted', function () {
-    $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'email').respond(200);
+    $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'email').respond(200);
     EmailService.emailNotifyTrialCustomer('flast@company.com', '90', '0000000000000001');
     $httpBackend.flush();
     expect(LogMetricsService.logMetrics.calls.count()).toEqual(1);
@@ -25,7 +25,7 @@ describe('emailService', function () {
   });
 
   it('should report error when URL is posted', function () {
-    $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'email').respond(500);
+    $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'email').respond(500);
     EmailService.emailNotifyTrialCustomer('flast@company.com', '90', '0000000000000001');
     $httpBackend.flush();
     expect(LogMetricsService.logMetrics.calls.count()).toEqual(1);
@@ -69,7 +69,7 @@ describe('emailService', function () {
               CUSTOMER_NAME: fakeCustName,
               CUSTOMER_EMAIL: fakeCustEmail,
               PARTNER_EMAIL: fakePartnerEmail,
-              SUBJECT: fakeCustName + ' has requested to purchase service or extend their trial'
+              SUBJECT: fakeCustName + ' wants to order or extend their trial'
             }
           });
       });

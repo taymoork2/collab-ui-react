@@ -1,96 +1,81 @@
 'use strict';
 
 describe('Controller: Partner Reports', function () {
-  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService, DummyReportService;
+  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DummyReportService;
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'sparkMessages', 'totalActivity'];
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
-  var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
-  var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
-  var dummyGraphData = angular.copy(dummyData.activeUser.four);
-  var dummyMediaQualityGraphData = angular.copy(dummyData.mediaQuality.four);
-  var dummycallMetricsData = angular.copy(dummyData.callMetrics);
-  dummycallMetricsData.dummy = undefined;
-  var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
-  dummyPopulationData.colorOne = undefined;
-  dummyPopulationData.colorTwo = undefined;
-  dummyPopulationData.balloon = true;
+  var customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
+  var activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
+  var callMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
+  var registeredEndpointsData = getJSONFixture('core/json/partnerReports/registeredEndpointData.json');
+  var mediaQualityData = getJSONFixture('core/json/partnerReports/mediaQualityData.json');
+
+  var timeOptions = [{
+    value: 0,
+    label: 'reportsPage.week',
+    description: 'reportsPage.week2'
+  }, {
+    value: 1,
+    label: 'reportsPage.month',
+    description: 'reportsPage.month2'
+  }, {
+    value: 2,
+    label: 'reportsPage.threeMonths',
+    description: 'reportsPage.threeMonths2'
+  }];
 
   var validateService = {
     invalidate: function () {}
   };
-  var customerOptions = [{
-    value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    label: 'Test Org One',
-    isAllowedToManage: true
-  }, {
-    value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
-    label: 'Test Org Three',
-    isAllowedToManage: true
-  }, {
-    value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
-    label: 'Test Org Two',
-    isAllowedToManage: true
-  }];
-  var endpointResponse = [{
-    orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
-    deviceRegistrationCountTrend: '4',
-    yesterdaysDeviceRegistrationCount: '2',
-    registeredDevicesTrend: '+5',
-    yesterdaysRegisteredDevices: '2',
-    maxRegisteredDevices: '3',
-    minRegisteredDevices: '2',
-    customer: 'Test Org One',
-    direction: 'positive'
-  }];
+
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerData.customerOptions[3].value),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(customerData.customerOptions[3].label)
+  };
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_, _DummyReportService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DummyReportService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
-      DonutChartService = _DonutChartService_;
       DummyReportService = _DummyReportService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
       spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
-        graphData: dummyGraphData,
-        tableData: dummyTableData,
-        populationGraph: dummyPopulationData,
-        overallPopulation: 0
+        graphData: activeUserData.detailedResponse,
+        isActiveUsers: true,
+        popData: activeUserData.activePopResponse,
+        overallPopulation: 33
       }));
-      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
-      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
-      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: dummycallMetricsData
-      }));
-      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(endpointResponse));
+      spyOn(PartnerReportService, 'getActiveTableData').and.returnValue($q.when(activeUserData.mostActiveResponse));
+      spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(customerData.customerResponse));
+      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(mediaQualityData.mediaQualityResponse));
+      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when(callMetricsData.callMetricsResponse));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when(registeredEndpointsData.registeredEndpointResponse));
 
-      spyOn(GraphService, 'updateActiveUsersGraph');
-      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
-        'dataProvider': dummyGraphData,
+      spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
+        'dataProvider': activeUserData.detailedResponse,
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
-        'dataProvider': dummyMediaQualityGraphData,
+      spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
+        'dataProvider': mediaQualityData.mediaQualityResponse,
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(GraphService, 'updateActiveUserPopulationGraph');
-      spyOn(GraphService, 'createActiveUserPopulationGraph').and.returnValue({
+      spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+        'dataProvider': activeUserData.activePopResponse,
         invalidateSize: validateService.invalidate
       });
 
-      spyOn(DonutChartService, 'updateCallMetricsDonutChart');
-      spyOn(DonutChartService, 'createCallMetricsDonutChart').and.returnValue({
-        'dataProvider': dummyPopulationData,
+      spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
+        'dataProvider': callMetricsData.callMetricsResponse,
         invalidateSize: validateService.invalidate
       });
 
@@ -106,8 +91,8 @@ describe('Controller: Partner Reports', function () {
         $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
-        DonutChartService: DonutChartService,
-        DummyReportService: DummyReportService
+        DummyReportService: DummyReportService,
+        Authinfo: Authinfo
       });
       $scope.$apply();
     }));
@@ -116,33 +101,68 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
+        expect(DummyReportService.dummyActiveUserData).toHaveBeenCalled();
+        expect(DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
+        expect(DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
+        expect(DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
+        expect(DummyReportService.dummyEndpointData).toHaveBeenCalled();
+
         expect(PartnerReportService.getOverallActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
+        expect(PartnerReportService.getActiveTableData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
         expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
         expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
 
-        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
-        expect(GraphService.createActiveUserPopulationGraph).toHaveBeenCalled();
-        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
+        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables', function () {
+        expect(controller.showEngagement).toEqual(true);
+        expect(controller.showQuality).toEqual(true);
+
+        expect(controller.customerPlaceholder).toEqual('reportsPage.customerSelect');
+        expect(controller.customerSingular).toEqual('reportsPage.customer');
+        expect(controller.customerPlural).toEqual('reportsPage.customers');
+        expect(controller.customerMax).toEqual(5);
+        expect(controller.customerOptions).toEqual(customerData.customerOptions);
+        expect(controller.customerSelected).toEqual(customerData.customerOptions);
+
         expect(controller.activeUsersRefresh).toEqual('set');
+        expect(controller.mostActiveRefresh).toEqual('set');
+        expect(controller.activeUserPopulationRefresh).toEqual('set');
         expect(controller.showMostActiveUsers).toBeFalsy();
         expect(controller.activeUserReverse).toBeTruthy();
-        expect(controller.activeUsersTotalPages).toEqual(1);
+        expect(controller.activeUsersTotalPages).toEqual(2);
         expect(controller.activeUserCurrentPage).toEqual(1);
         expect(controller.activeUserPredicate).toEqual(activeUsersSort[4]);
         expect(controller.activeButton).toEqual([1, 2, 3]);
-        expect(controller.mostActiveUsers).toEqual(dummyTableData);
+        expect(controller.mostActiveUsers).toEqual(activeUserData.mostActiveResponse);
+        expect(controller.mostActiveTitle).toEqual('activeUsers.mostActiveUsers');
+        expect(controller.displayMostActive).toBeTruthy();
+        expect(controller.showMostActiveUsers).toBeFalsy();
+        expect(controller.mostActiveDescription).toEqual('activeUsers.mostActiveDescription');
+        expect(controller.activeUserDescription).toEqual('activeUsers.description');
+        expect(controller.mostActiveDescription).toEqual('activeUsers.mostActiveDescription');
 
-        expect(controller.customerOptions).toEqual(customerOptions);
-        expect(controller.customerSelected).toEqual(customerOptions[0]);
-        expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
+        expect(controller.mediaQualityPopover).toEqual('mediaQuality.packetLossDefinition');
+        expect(controller.mediaQualityRefresh).toEqual('set');
 
-        expect(controller.registeredEndpoints).toEqual(endpointResponse);
+        expect(controller.callMetricsRefresh).toEqual('set');
+        expect(controller.callMetricsDescription).toEqual('callMetrics.callMetricsDesc');
+
+        expect(controller.endpointRefresh).toEqual('set');
+        expect(controller.registeredEndpoints).toEqual(registeredEndpointsData.registeredEndpointResponse);
+        expect(controller.dummyTable).toBeFalsy();
+        expect(controller.endpointDescription).toEqual('registeredEndpoints.description');
+        expect(controller.trend).toEqual('registeredEndpoints.trend');
+        expect(controller.devices).toEqual('registeredEndpoints.maxRegisteredDevices');
+
+        expect(controller.timeOptions).toEqual(timeOptions);
+        expect(controller.timeSelected).toEqual(timeOptions[0]);
       });
     });
 
@@ -211,68 +231,102 @@ describe('Controller: Partner Reports', function () {
       });
     });
 
-    describe('pageForward', function () {
-      it('should change carousel button numbers', function () {
+    describe('Most Active Paging', function () {
+      it('pageForward should change carousel button numbers', function () {
         controller.activeUsersTotalPages = 4;
-        controller.activeUserCurrentPage = controller.activeButton[2];
+        controller.activeUserCurrentPage = 1;
+
+        controller.pageForward();
+        expect(controller.activeButton[0]).toBe(1);
+        expect(controller.activeButton[1]).toBe(2);
+        expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(2);
+
         controller.pageForward();
         expect(controller.activeButton[0]).toBe(2);
         expect(controller.activeButton[1]).toBe(3);
         expect(controller.activeButton[2]).toBe(4);
+        expect(controller.activeUserCurrentPage).toBe(3);
       });
 
-      it('should not change carousel button numbers', function () {
-        controller.activeUsersTotalPages = 3;
-        controller.activeUserCurrentPage = controller.activeButton[2];
-        controller.pageForward();
-        expect(controller.activeButton[0]).toBe(1);
-        expect(controller.activeButton[1]).toBe(2);
-        expect(controller.activeButton[2]).toBe(3);
-      });
-    });
-
-    describe('pageBackward', function () {
-      it('should change carousel button numbers', function () {
+      it('pageBackward should change carousel button numbers', function () {
+        controller.activeUsersTotalPages = 4;
         controller.activeButton[0] = 2;
         controller.activeButton[1] = 3;
         controller.activeButton[2] = 4;
-        controller.activeUserCurrentPage = 2;
+        controller.activeUserCurrentPage = 3;
 
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
-      });
+        expect(controller.activeUserCurrentPage).toBe(2);
 
-      it('should not change carousel button numbers', function () {
         controller.pageBackward();
         expect(controller.activeButton[0]).toBe(1);
         expect(controller.activeButton[1]).toBe(2);
         expect(controller.activeButton[2]).toBe(3);
+        expect(controller.activeUserCurrentPage).toBe(1);
       });
     });
 
     describe('updateReports', function () {
-      it('should call updateActiveUsersGraph when updateReports is called', function () {
+      it('should update all graphs when updateReports is called', function () {
         controller.updateReports();
         $scope.$apply();
 
-        expect(GraphService.updateActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
       });
     });
   });
 
-  describe('PartnerReportCtrl - loading failed', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_) {
+  describe('PartnerReportCtrl - Expected Empty Responses', function () {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DummyReportService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
-      DonutChartService = _DonutChartService_;
+      DummyReportService = _DummyReportService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
+      spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
+        graphData: [],
+        isActiveUsers: false,
+        popData: [],
+        overallPopulation: 0
+      }));
+      spyOn(PartnerReportService, 'getActiveTableData').and.returnValue($q.when([]));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
+      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when([]));
+      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
+        dataProvider: [],
+        displayData: {}
+      }));
+      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when([]));
+
+      spyOn(GraphService, 'getActiveUsersGraph').and.returnValue({
+        'dataProvider': dummyData.activeUser.one,
+        invalidateSize: validateService.invalidate
+      });
+
+      spyOn(GraphService, 'getMediaQualityGraph').and.returnValue({
+        'dataProvider': dummyData.mediaQuality.one,
+        invalidateSize: validateService.invalidate
+      });
+
+      spyOn(GraphService, 'getActiveUserPopulationGraph').and.returnValue({
+        'dataProvider': dummyData.activeUserPopulation,
+        invalidateSize: validateService.invalidate
+      });
+
+      spyOn(GraphService, 'getCallMetricsDonutChart').and.returnValue({
+        'dataProvider': dummyData.callMetrics,
+        invalidateSize: validateService.invalidate
+      });
 
       spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
@@ -286,7 +340,8 @@ describe('Controller: Partner Reports', function () {
         $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
-        DonutChartService: DonutChartService
+        DummyReportService: DummyReportService,
+        Authinfo: Authinfo
       });
       $scope.$apply();
     }));
@@ -295,21 +350,42 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
+        expect(DummyReportService.dummyActiveUserData).toHaveBeenCalled();
+        expect(DummyReportService.dummyActivePopulationData).toHaveBeenCalled();
+        expect(DummyReportService.dummyMediaQualityData).toHaveBeenCalled();
+        expect(DummyReportService.dummyCallMetricsData).toHaveBeenCalled();
+        expect(DummyReportService.dummyEndpointData).toHaveBeenCalled();
+
         expect(PartnerReportService.getOverallActiveUserData).toHaveBeenCalled();
+        expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
+        expect(PartnerReportService.getActiveTableData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
+        expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
+        expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
+
+        expect(GraphService.getActiveUsersGraph).toHaveBeenCalled();
+        expect(GraphService.getMediaQualityGraph).toHaveBeenCalled();
+        expect(GraphService.getActiveUserPopulationGraph).toHaveBeenCalled();
+        expect(GraphService.getCallMetricsDonutChart).toHaveBeenCalled();
       });
 
-      it('should set all page variables empty defaults', function () {
-        expect(controller.activeUsersRefresh).toEqual('empty');
-        expect(controller.mostActiveUsers).toEqual([]);
+      it('should set all page variables', function () {
+        expect(controller.customerOptions).toEqual([customerData.customerOptions[3]]);
+        expect(controller.customerSelected).toEqual([customerData.customerOptions[3]]);
 
-        expect(controller.customerOptions).toEqual([]);
-        expect(controller.customerSelected).toEqual({
-          value: 0,
-          label: '',
-          isAllowedToManage: false
-        });
-        expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
+        expect(controller.activeUsersRefresh).toEqual('empty');
+        expect(controller.mostActiveRefresh).toEqual('empty');
+        expect(controller.activeUserPopulationRefresh).toEqual('empty');
+        expect(controller.activeUserReverse).toBeTruthy();
+        expect(controller.activeUsersTotalPages).toEqual(0);
+        expect(controller.mostActiveUsers).toEqual([]);
+        expect(controller.displayMostActive).toBeFalsy();
+
+        expect(controller.mediaQualityRefresh).toEqual('empty');
+        expect(controller.callMetricsRefresh).toEqual('empty');
+        expect(controller.endpointRefresh).toEqual('empty');
+        expect(controller.registeredEndpoints).toEqual(dummyData.endpoints);
+        expect(controller.dummyTable).toBeTruthy();
       });
     });
   });

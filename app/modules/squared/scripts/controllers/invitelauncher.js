@@ -8,8 +8,8 @@
  * Controller of the wx2AdminWebClientApp
  */
 angular.module('Squared')
-  .controller('InvitelauncherCtrl', ['$window', 'ipCookie', 'Log', 'Config',
-    function ($window, ipCookie, Log, Config) {
+  .controller('InvitelauncherCtrl', ['$window', 'ipCookie', 'Log', 'UrlConfig',
+    function ($window, ipCookie, Log, UrlConfig) {
 
       var redirect = function () {
 
@@ -21,7 +21,7 @@ angular.module('Squared')
         //console.log(inviteCookie);
 
         // launch app with URL: squared://invitee/?invdata=inviteCookie
-        var redirectUrl = Config.getSquaredAppUrl() + 'invitee/?invdata=' + JSON.stringify(inviteCookie);
+        var redirectUrl = UrlConfig.getSquaredAppUrl() + 'invitee/?invdata=' + JSON.stringify(inviteCookie);
         $window.location.href = redirectUrl;
       };
       redirect();

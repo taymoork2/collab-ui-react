@@ -1,7 +1,14 @@
-<div class="aa-flex-row aa-route-call">
+
+<div class="aa-flex-row aa-route-call aa-help-wrapper">
   <div class="aa-route-call-select">
     <cs-select ng-model="aaRouteCallMenu.selected" options="aaRouteCallMenu.options" labelfield="label" valuefield="value" placeholder="aaRouteCallMenu.actionPlaceholder" icon="icon-chevron-down" filter="false">
     </cs-select>
+  </div>
+  <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+</div>
+
+<div class="aa-flex-row">
+  <div class="aa-route-call-select">
     <div ng-switch="aaRouteCallMenu.selected.label" class="aa-route-action">
       <aa-route-to-aa ng-switch-when="Route to Auto Attendant" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-aa>
       <aa-route-to-hg ng-switch-when="Route to Hunt Group"  aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-hg>
@@ -10,5 +17,4 @@
       <aa-route-to-ext-num ng-switch-when="Route to Phone Number" aa-schedule="{{schedule}}" aa-from-route-call="true" aa-index="index"></aa-route-to-ext-num>
     </div>
   </div>
-  <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.routeCallPopover' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
 </div>

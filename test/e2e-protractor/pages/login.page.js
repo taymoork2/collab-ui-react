@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var LoginPage = function () {
 
   var unauthorizedTitle = element(by.cssContainingText('.message-box__title ', 'Unauthorized'));
@@ -47,55 +49,51 @@ var LoginPage = function () {
     this.loginButton.click();
   };
 
-  function getLoginUrl(expectedUrl) {
-    var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
-    if (isProductionBackend) {
-      if (url.indexOf('?') > -1) {
-        url += '&';
-      } else {
-        url += '?';
-      }
-      url += 'backend=production';
-    }
-    return url;
-  }
-
-  this.login = function (username, expectedUrl) {
+  this.login = function (username, expectedUrl, opts) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+    var method = opts && opts.navigateToUsingIntegrationForTesting ? 'navigateToUsingIntegrationForTesting' : 'navigateTo';
+    navigation[method](expectedUrl);
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
+  this.loginUsingIntegrationForTesting = function (username, expectedUrl) {
+    return this.login(username, expectedUrl, {
+      navigateToUsingIntegrationForTesting: true
+    });
+  };
+
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
-    browser.get(getLoginUrl(expectedUrl));
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-        utils.expectIsDisplayed(unauthorizedTitle);
+    navigation.navigateTo(expectedUrl);
+    helper.getBearerToken(username)
+      .then(function (_bearer) {
+        bearer = _bearer;
+        expect(bearer).toBeDefined();
+        navigation.expectDriverCurrentUrl('/login').then(function () {
+          browser.executeScript("localStorage.accessToken='" + bearer + "'");
+          browser.refresh();
+          utils.expectIsDisplayed(unauthorizedTitle);
+        });
       });
-    });
     return browser.wait(function () {
       return bearer;
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
   this.loginThroughGui = function (username, password, expectedUrl) {
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    navigation.navigateToUsingIntegrationForTesting(expectedUrl || '#/login');
     utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
@@ -103,6 +101,7 @@ var LoginPage = function () {
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
   };
+
 };
 
 module.exports = LoginPage;

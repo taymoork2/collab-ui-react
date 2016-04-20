@@ -174,6 +174,74 @@
         "password": "",
         "type": "MENU_OPTION",
         "url": ""
+      }, {
+        "description": "",
+        "type": "",
+        "key": "3",
+        "language": "",
+        "voice": "",
+        "actions": [{
+          "name": "routeToHuntGroup",
+          "value": "ffbf68c5-864f-45c5-93cb-40639dc2522e",
+          "voice": "",
+          "description": ""
+        }],
+        "timeout": "",
+        "username": "",
+        "password": "",
+        "type": "MENU_OPTION",
+        "url": ""
+      }, {
+        "description": "",
+        "type": "",
+        "key": "4",
+        "language": "",
+        "voice": "",
+        "actions": [{
+          "name": "routeToUser",
+          "value": "ffbf68c5-864f-45c5-93cb-40639dc2522e",
+          "voice": "",
+          "description": ""
+        }],
+        "timeout": "",
+        "username": "",
+        "password": "",
+        "type": "MENU_OPTION",
+        "url": ""
+      }, {
+        "description": "",
+        "type": "",
+        "key": "5",
+        "language": "",
+        "voice": "",
+        "actions": [{
+          "name": "routeToVoiceMail",
+          "value": "ffbf68c5-864f-45c5-93cb-40639dc2522e",
+          "voice": "",
+          "description": ""
+        }],
+        "timeout": "",
+        "username": "",
+        "password": "",
+        "type": "MENU_OPTION",
+        "url": ""
+      }, {
+        "description": "",
+        "type": "",
+        "key": "6",
+        "language": "",
+        "voice": "",
+        "actions": [{
+          "name": "route",
+          "value": "ffbf68c5-864f-45c5-93cb-40639dc2522e",
+          "voice": "",
+          "description": ""
+        }],
+        "timeout": "",
+        "username": "",
+        "password": "",
+        "type": "MENU_OPTION",
+        "url": ""
       }],
       "headers": [{
         "description": "",

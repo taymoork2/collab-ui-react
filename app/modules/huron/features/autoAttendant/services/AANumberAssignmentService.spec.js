@@ -53,34 +53,26 @@ describe('Service: AANumberAssignmentService', function () {
 
     $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
+    // for an external number query, return the number formatted with a +
+    var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=\&order=pattern\&pattern=(.+)/;
+    $httpBackend.whenGET(externalNumberQueryUri)
+      .respond(function (method, url, data, headers) {
+
+        var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
+
+        var response = [{
+          'pattern': '+' + pattern.replace(/\D/g, ''),
+          'uuid': pattern.replace(/\D/g, '') + '-id'
+        }];
+
+        return [200, response];
+      });
+
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  describe('formatAAE164ResourcesBasedOnList', function () {
-    it('should correctly format resources based on passed-in list', function () {
-
-      var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType("externalNumber");
-      resource.setNumber("14084744458");
-      var resources = [];
-      resources.push(resource);
-
-      var externalNumberList = [];
-      externalNumberList.push({
-        id: "268CD1E7-432E-60E2-4342-1DAF1B52C856",
-        number: "+14084744458"
-      });
-
-      var formattedResources = AANumberAssignmentService.formatAAE164ResourcesBasedOnList(resources, externalNumberList);
-
-      expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
-      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
-    });
-
   });
 
   describe('formatAAE164ResourcesBasedOnCMI', function () {
@@ -92,7 +84,7 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
         'uuid': '9999999991-id'
       }, {
@@ -108,6 +100,7 @@ describe('Service: AANumberAssignmentService', function () {
       $httpBackend.flush();
 
       var formattedResources = successSpy.calls.mostRecent().args[0];
+
       expect(angular.equals(formattedResources[0].id, '14084744458')).toEqual(true);
       expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
       expect(failureSpy).not.toHaveBeenCalled();
@@ -124,7 +117,7 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
         'pattern': '+14084744458',
         'uuid': '9999999991-id'
       }, {

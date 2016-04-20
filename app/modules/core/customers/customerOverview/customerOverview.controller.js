@@ -6,25 +6,30 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService, PartnerService, TrialService) {
+  function CustomerOverviewCtrl($state, $stateParams, $translate, $window, AccountOrgService, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialService, Userservice) {
     var vm = this;
-    var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
     vm.currentCustomer = $stateParams.currentCustomer;
+    vm.customerName = vm.currentCustomer.customerName;
+    vm.customerOrgId = vm.currentCustomer.customerOrgId;
 
+    vm.reset = reset;
+    vm.saveLogoSettings = saveLogoSettings;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.isOrgSetup = isOrgSetup;
+    vm.isOwnOrg = isOwnOrg;
+    vm.deleteTestOrg = deleteTestOrg;
+
+    vm.logoOverride = false;
     vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.allowCustomerLogoOrig = false;
-    vm.logoOverride = false;
-    vm.isOrgSetup = isOrgSetup;
-    vm.isOwnOrg = isOwnOrg;
-    vm.reset = reset;
-    vm.saveLogoSettings = saveLogoSettings;
+    vm.isTest = false;
+
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
 
@@ -41,19 +46,24 @@
       }
     });
 
-    initCustomer();
-    getLogoSettings();
+    init();
 
     vm.toggleAllowCustomerLogos = _.debounce(function (value) {
       if (value) {
-        BrandService.enableCustomerLogos(customerOrgId);
+        BrandService.enableCustomerLogos(vm.customerOrgId);
       } else {
-        BrandService.disableCustomerLogos(customerOrgId);
+        BrandService.disableCustomerLogos(vm.customerOrgId);
       }
     }, 2000, {
       'leading': true,
       'trailing': false
     });
+
+    function init() {
+      initCustomer();
+      getLogoSettings();
+      getIsTestOrg();
+    }
 
     function resetForm() {
       if (vm.form) {
@@ -84,7 +94,7 @@
         .then(function (settings) {
           vm.logoOverride = settings.allowCustomerLogos;
         });
-      BrandService.getSettings($stateParams.currentCustomer.customerOrgId)
+      BrandService.getSettings(vm.customerOrgId)
         .then(function (settings) {
           vm.usePartnerLogo = settings.usePartnerLogo;
           vm.allowCustomerLogos = settings.allowCustomerLogos;
@@ -126,7 +136,7 @@
       if (licIds.length > 0) {
         Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
       } else {
-        AccountOrgService.getAccount(vm.currentCustomer.customerOrgId).success(function (data) {
+        AccountOrgService.getAccount(vm.customerOrgId).success(function (data) {
           var d = data;
           var len = d.accounts.length;
           var i = 0;
@@ -139,8 +149,8 @@
         });
       }
       $window.open($state.href('login_swap', {
-        customerOrgId: vm.currentCustomer.customerOrgId,
-        customerOrgName: vm.currentCustomer.customerName
+        customerOrgId: vm.customerOrgId,
+        customerOrgName: vm.customerName
       }));
     }
 
@@ -184,7 +194,34 @@
     }
 
     function isOwnOrg() {
-      return vm.currentCustomer.customerName === Authinfo.getOrgName();
+      return vm.customerName === Authinfo.getOrgName();
     }
+
+    function getIsTestOrg() {
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          vm.isTest = data.isTestOrg;
+        } else {
+          Log.error('Query org info failed. Status: ' + status);
+        }
+      }, vm.customerOrgId);
+    }
+
+    function deleteTestOrg() {
+      if (vm.isTest) {
+        if ($window.confirm("Press OK if you want to Delete " + vm.customerName) === true) {
+          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+            Notification.success('customerPage.deleteOrgSuccess', {
+              orgName: vm.customerName
+            });
+          }).catch(function (error) {
+            Notification.error('customerPage.deleteOrgError', {
+              orgName: vm.customerName
+            });
+          });
+        }
+      }
+    }
+
   }
 })();

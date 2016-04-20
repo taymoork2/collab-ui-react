@@ -6,7 +6,7 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService, $modal, Config) {
     var vm = $scope;
 
     vm.features = [{
@@ -15,15 +15,13 @@
       label: 'huronHuntGroup.modalTitle',
       description: 'huronHuntGroup.modalDescription',
       toggle: 'huronHuntGroup'
-    }];
-
-    vm.autoAttendant = {
+    }, {
       cssClass: 'AA',
       code: 'autoAttendant.code',
       label: 'autoAttendant.title',
       description: 'autoAttendant.modalDescription',
       toggle: 'huronAutoAttendant'
-    };
+    }];
 
     vm.ok = ok;
     vm.cancel = cancel;
@@ -32,27 +30,27 @@
     init();
 
     function init() {
-
-      vm.loading = true;
-
-      var aaToggle = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
-
-      $q.all([aaToggle]).then(function (toggle) {
-        if (toggle[0]) {
-          vm.features.push(vm.autoAttendant);
-        }
-        vm.loading = false;
-      });
+      vm.loading = false;
     }
 
     function ok(featureCode) {
       if (featureCode === 'HG') {
         $state.go('huronHuntGroup');
       } else if (featureCode === 'AA') {
-        $state.go('huronfeatures.aabuilder', {
-          aaName: '',
-          aaTemplate: 'template1'
-        });
+
+        if (Config.isDev() || Config.isIntegration()) {
+          $modal.open({
+            templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
+            controller: 'AATypeSelectCtrl',
+            size: 'lg'
+          });
+        } else {
+          $state.go('huronfeatures.aabuilder', {
+            aaName: '',
+            aaTemplate: 'template1'
+          });
+        }
+
       }
       $modalInstance.close(featureCode);
     }

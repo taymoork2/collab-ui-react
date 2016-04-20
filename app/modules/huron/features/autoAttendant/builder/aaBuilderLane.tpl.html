@@ -3,18 +3,18 @@
   <div class="aa-panel">
     <div ng-if="aaLane.allowStepAddsDeletes" class="aa-panel-round">
       <a ng-click="aaLane.addAction(-1)">
-        <span class="aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="false" popover-placement="bottom" popover-popup-delay="1500" popover-append-to-body="false"></span>
+        <span class="aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="bottom" popover-popup-delay="1500" popover-append-to-body="false"></span>
       </a>
     </div>
   </div>
 </div>
-<div ng-repeat="action in aaLane.ui[aaLane.schedule].entries">
+<div ng-repeat="action in aaLane.ui[aaLane.schedule].entries" class="aa-transition">
   <aa-builder-actions aa-schedule="{{aaLane.schedule}}" aa-index="$index" aa-add-action="aaLane.addAction(index)"></aa-builder-actions>
 </div>
 <div class="aa-flex-container">
   <div class="aa-flex-vertical-line"></div>
   <div class="aa-panel">
-    <div class="aa-panel-body-endcall">
+    <div class="aa-panel-body-endcall" name="endCall">
       <div class="aa-flex-row">
         <span class="aa-endcall-icon"></span>
         <h3 class="text-info" translate="autoAttendant.actionEndCall"></h3>

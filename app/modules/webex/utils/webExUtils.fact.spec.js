@@ -3,6 +3,56 @@
  */
 'use strict';
 
+describe('WebExUtilsFact: getSiteName() test', function () {
+  beforeEach(module('WebExApp'));
+
+  var WebExUtilsFact;
+  var siteName;
+
+  beforeEach(inject(function (
+    _WebExUtilsFact_
+  ) {
+
+    WebExUtilsFact = _WebExUtilsFact_;
+  })); // beforeEach(inject())
+
+  it('can process siteUrl=<blah>.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.webex.com");
+
+    expect(siteName).toEqual("fake");
+  });
+
+  it('can process siteUrl=<blah>.my.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.my.webex.com");
+
+    expect(siteName).toEqual("fake.my");
+  });
+
+  it('can process siteUrl=<blah>.mydmz.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mydmz.webex.com");
+
+    expect(siteName).toEqual("fake.mydmz");
+  });
+
+  it('can process siteUrl=<blah>.mybts.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mybts.webex.com");
+
+    expect(siteName).toEqual("fake.mybts");
+  });
+
+  it('can process siteUrl=<blah>.mydev.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.mydev.webex.com");
+
+    expect(siteName).toEqual("fake.mydev");
+  });
+
+  it('can process siteUrl=<blah>.dmz.webex.com', function () {
+    siteName = WebExUtilsFact.getSiteName("fake.dmz.webex.com");
+
+    expect(siteName).toEqual("fake");
+  });
+}); // describe()
+
 describe('WebExUtilsFact', function () {
 
   var $q;
@@ -10,20 +60,125 @@ describe('WebExUtilsFact', function () {
 
   var WebExXmlApiFact;
   var WebExUtilsFact;
+  var Orgservice;
 
   var hostName = 'aaa.bbb.com';
   var siteName = 'foo';
   var urlPart = 'https://' + hostName + '/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=';
   var url = urlPart + siteName;
+  var deferred_licenseInfo;
 
+  var fake_validLicenses = [{
+    "licenseId": "MC_5b2fe3b2-fff2-4711-9d6e-4e45fe61ce52_200_sjsite14.webex.com",
+    "licenseType": "CONFERENCING",
+    "volume": 3,
+    "capacity": 200,
+    "usage": 0
+  }, {
+    "licenseId": "MS_a6d7016a-478d-4d94-9889-9c37f337a8ce",
+    "licenseType": "MESSAGING",
+    "volume": 10,
+    "usage": 1
+  }, {
+    "licenseId": "MS_970610a0-14fd-433b-a1ee-cd14f4c5ab9c",
+    "licenseType": "MESSAGING",
+    "volume": 5,
+    "usage": 1
+  }, {
+    "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8ea91fa1_200_t30citestprov9.webex.com",
+    "licenseType": "CONFERENCING",
+    "volume": 25,
+    "capacity": 200,
+    "usage": 1
+  }, {
+    "licenseId": "MS_41d0fcfe-4de4-4ce0-abec-ed4d4942898e",
+    "licenseType": "MESSAGING",
+    "volume": 10,
+    "usage": 0
+  }, {
+    "licenseId": "CF_0d98b765-3c43-4996-9320-a5a649a9542f_8",
+    "licenseType": "CONFERENCING",
+    "volume": 8,
+    "capacity": 8,
+    "usage": 0
+  }, {
+    "licenseId": "MC_66e1a7c9-3549-442f-942f-41a53b020689_200_sjsite04.webex.com",
+    "licenseType": "CONFERENCING",
+    "volume": 25,
+    "capacity": 200,
+    "usage": 0
+  }, {
+    "licenseId": "MS_145d46ef-beef-4868-8980-f11812774589",
+    "licenseType": "MESSAGING",
+    "volume": 10,
+    "usage": 0
+  }, {
+    "licenseId": "ST_e1c86f12-5fa4-463e-82f2-b670fcfeca0e_5",
+    "licenseType": "STORAGE",
+    "volume": 0,
+    "capacity": 5,
+    "usage": 0
+  }, {
+    "licenseId": "CMR_1b25c88e-8016-4251-bc81-e1a856a5c0f0_100_sjsite14.webex.com",
+    "licenseType": "CMR",
+    "volume": 100,
+    "capacity": 100,
+    "usage": 1
+  }, {
+    "licenseId": "MS_b700e98c-a109-4e1b-bc6d-6ea5af20598a",
+    "licenseType": "MESSAGING",
+    "volume": 10,
+    "usage": 0
+  }, {
+    "licenseId": "ST_251d6481-7a5f-4f11-ba89-957e7008905f_10",
+    "licenseType": "STORAGE",
+    "volume": 0,
+    "capacity": 10,
+    "usage": 0
+  }, {
+    "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_200_cisjsite031.webex.com",
+    "licenseType": "CONFERENCING",
+    "volume": 25,
+    "capacity": 200,
+    "usage": 1
+  }, {
+    "licenseId": "MC_5f078901-2e59-4129-bba4-b2126d356b61_25_sjsite04.webex.com",
+    "licenseType": "CONFERENCING",
+    "volume": 25,
+    "capacity": 25,
+    "usage": 0
+  }, {
+    "licenseId": "ST_b1f9330b-1a32-43e8-ac3a-e5da0685ebf4_10",
+    "licenseType": "STORAGE",
+    "volume": 0,
+    "capacity": 10,
+    "usage": 0
+  }, {
+    "licenseId": "ST_57f29b75-7df8-4f60-b57e-6f6f4891e73a_10",
+    "licenseType": "STORAGE",
+    "volume": 0,
+    "capacity": 10,
+    "usage": 0
+  }, {
+    "licenseId": "ST_c4d1597d-7c01-4aab-8ce0-11991b2d918c_10",
+    "licenseType": "STORAGE",
+    "volume": 0,
+    "capacity": 10,
+    "usage": 0
+  }];
+
+  beforeEach(module('Core'));
   beforeEach(module('WebExApp'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _WebExUtilsFact_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _WebExXmlApiFact_, _WebExUtilsFact_, _Orgservice_) {
     $q = _$q_;
     $rootScope = _$rootScope_;
 
     WebExXmlApiFact = _WebExXmlApiFact_;
     WebExUtilsFact = _WebExUtilsFact_;
+    Orgservice = _Orgservice_;
+
+    deferred_licenseInfo = $q.defer();
   }));
 
   it('calls correct logout URL', function () {
@@ -78,6 +233,32 @@ describe('WebExUtilsFact', function () {
       done();
     });
     $rootScope.$apply();
+  });
+
+  it('gets webex licenses for sites of current user', function () {
+    spyOn(Orgservice, "getValidLicenses").and.returnValue(deferred_licenseInfo.promise);
+
+    var response = WebExUtilsFact.getAllSitesWebexLicenseInfo();
+    deferred_licenseInfo.resolve(fake_validLicenses);
+
+    $rootScope.$apply();
+
+    expect(response).not.toBe(null);
+    expect(response.$$state.value[0].siteHasMCLicense).toBe(true);
+    expect(response.$$state.value[1].siteHasMCLicense).toBe(true);
+    expect(response.$$state.value[4].siteHasCMRLicense).toBe(true);
+
+    /** This is what response looks like, given the fake input data:
+     * 'response = {"$$state":{"status":1,"value":[
+     *        {"webexSite":"sjsite14.webex.com","siteHasMCLicense":true,"offerCode":"MC","capacity":"200"},
+     *        {"webexSite":"t30citestprov9.webex.com","siteHasMCLicense":true,"offerCode":"MC","capacity":"200"},
+     *        null,
+     *        {"webexSite":"sjsite04.webex.com","siteHasMCLicense":true,"offerCode":"MC","capacity":"200"},
+     *        {"webexSite":"sjsite14.webex.com","siteHasCMRLicense":true,"offerCode":"CMR","capacity":"100"},
+     *        {"webexSite":"cisjsite031.webex.com","siteHasMCLicense":true,"offerCode":"MC","capacity":"200"},
+     *        {"webexSite":"sjsite04.webex.com","siteHasMCLicense":true,"offerCode":"MC","capacity":"25"}]}}'
+     */
+
   });
 
   afterEach(function () {

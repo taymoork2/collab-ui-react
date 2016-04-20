@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Config', 'Log',
-    function ($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Config, Log) {
+  .controller('InviteCtrl', ['$scope', '$location', '$window', '$http', 'ipCookie', 'Utils', 'Inviteservice', 'Config', 'Log', 'UrlConfig',
+    function ($scope, $location, $window, $http, ipCookie, Utils, Inviteservice, Config, Log, UrlConfig) {
 
       var redirect = function () {
         var redirectUrl = null;
 
         if (Utils.isIPhone()) {
-          redirectUrl = Config.getItunesStoreUrl();
+          redirectUrl = UrlConfig.getItunesStoreUrl();
         } else if (Utils.isAndroid()) {
-          redirectUrl = Config.getAndroidStoreUrl();
+          redirectUrl = UrlConfig.getAndroidStoreUrl();
         } else {
-          redirectUrl = Config.getWebClientUrl();
+          redirectUrl = UrlConfig.getWebClientUrl();
         }
         Log.info('Redirect to: ' + redirectUrl);
         $window.location.href = redirectUrl;

@@ -4,7 +4,7 @@ if [ $# -lt 2 ]; then
   echo "usage: `basename $0` <user_label> <org_id> [--force]"
   echo ""
   echo "Remove a test organization in Huron and Atlas."
-  echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.coffee' for user labels available for use"
+  echo "- See 'https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/test/api_sanity/test_helper.js' for user labels available for use"
   echo ""
   echo "ex. Delete from Huron and if successful, then Atlas"
   echo "  `basename $0` seattle-partner <org_id>"

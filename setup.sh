@@ -7,43 +7,40 @@ quick="false"
 if [ -n "$1" ]; then
     case "$1" in
         "-h"|"--help" )
-            echo "useage: `basename $0` [--restore] [--quick]"
+            echo "useage: `basename $0` [--restore|--restore-soft] [--quick]"
             echo ""
             echo "ex. Run with no args to build dependencies"
             echo "  `basename $0`"
             echo ""
-            echo "ex. Use '--restore' to restore from the most recent previously built dependencies (if available)"
+            echo "ex. Use '--restore' to restore the most recently built dependencies (if available)"
             echo "  `basename $0` --restore"
+            echo ""
+            echo "  Same as above, but prevent overwriting manifest files"
+            echo "  `basename $0` --restore-soft"
             echo ""
             echo "ex. Run with '--quick' to skip removing component directores and clearing bower cache"
             echo ""
             exit 1
             ;;
-        "--restore" )
-            last_npm_deps_tar="`get_most_recent .cache/npm-deps-for-*`"
-            last_bower_deps_tar="`get_most_recent .cache/bower-deps-for-*`"
-            if [ -n "${last_npm_deps_tar}" -a -n "${last_bower_deps_tar}" ]; then
-                echo "Restoring previously built dependencies..."
-                rm -rf ./node_modules ./bower_components
-                tar zxf ${last_npm_deps_tar}
-                tar zxf ${last_bower_deps_tar}
-                exit
-            else
-                # no deps exist yet from previous successful build
-                exit 1
-            fi
+
+        "--restore-soft" )
+            # restore deps dirs, but keep manifest files if newer
+            echo "Restoring previously built dependencies, but keeping newer files..."
+            restore_latest_deps --keep-newer-files
+            exit $?
             ;;
+
+        "--restore" )
+            echo "Restoring previously built dependencies..."
+            restore_latest_deps
+            exit $?
+            ;;
+
         "--quick" )
             quick="true"
             ;;
     esac
 fi
-
-# Check NPM local path
-echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
-
-# Check NPM global path
-echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
 # Check if rvm is installed, otherwise install it
 # rvm --version > /dev/null 2>&1

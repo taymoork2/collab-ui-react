@@ -4,8 +4,8 @@ angular.module('Squared')
   .service('Activateservice', ActivateService);
 
 /* @ngInject */
-function ActivateService($http, Config, Auth) {
-  var userUrl = Config.getAdminServiceUrl();
+function ActivateService($http, UrlConfig, Auth) {
+  var userUrl = UrlConfig.getAdminServiceUrl();
 
   var service = {
     userUrl: userUrl,

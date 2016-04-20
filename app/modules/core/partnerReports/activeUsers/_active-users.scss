@@ -12,14 +12,17 @@
       color: $gray-dark;
   }
   .box-match {
-    top: -14px;
-    left: -12px;
-    position: relative;
-    height: 0;
+    padding-left: rem-calc(24);
+    padding-right: rem-calc(24);
+  }
+  .spinner-most-active {
+    height: rem-calc(70);
+    padding-top: rem-calc(25);
   }
   .active-users-table {
-    padding-bottom: 0;
-    margin-bottom: 0;
+    margin-left: rem-calc(24);
+    margin-right: rem-calc(24);
+    width: auto;
   }
   .carousel-btn {
     border: 1px solid $gray-dark-1;
@@ -27,6 +30,28 @@
   }
   .carousel-btn:hover, .btn--none:focus, .btn--none:hover {
     border-color: transparent;
+  }
+  .carousel-control {
+    padding: 9px 16px;
+    background-color: $white;
+    i {
+      color: $color-primary-base;
+    }
+  }
+  .carousel-control:focus {
+    box-shadow: none;
+  }
+  .carousel-control:hover {
+    background-color: $color-primary-base;
+    i {
+      color: $white;
+    }
+  }
+  .carousel-control[disabled] {
+    background-color: $gray-light-2;
+    i {
+      color: $gray-base;
+    }
   }
   #activeUsersdiv{
     margin-top: 16px;

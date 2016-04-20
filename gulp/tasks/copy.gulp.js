@@ -5,7 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')();
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -101,7 +101,7 @@ gulp.task('copy:build-vendor-images', function () {
 });
 
 gulp.task('copy:build-vendor-js', function () {
-  messageLogger('Copying vendor CSS files', config.vendorFiles.js);
+  messageLogger('Copying vendor JS files', config.vendorFiles.js);
   return gulp
     .src(config.vendorFiles.js, {
       base: config.vendor
@@ -150,4 +150,3 @@ gulp.task('copy:dist-vendor-fonts', function () {
     .pipe($.if(args.verbose, $.print()))
     .pipe(gulp.dest(config.dist + '/' + config.fonts));
 });
-

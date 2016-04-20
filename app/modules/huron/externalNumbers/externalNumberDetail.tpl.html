@@ -7,8 +7,12 @@
           <i class="icon icon-three-dots"></i>
         </button>
         <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li cr-feature-toggle feature-show="huron-pstn-setup"><a ui-sref="pstnSetup({customerId: externalNumbers.currentCustomer.customerOrgId, customerName: externalNumbers.currentCustomer.customerName, customerEmail: externalNumbers.currentCustomer.customerEmail})" translate="pstnSetup.setupPstn"></a></li>
-          <li cr-feature-toggle feature-hide="huron-pstn-setup"><a ui-sref="didadd({currentOrg: externalNumbers.currentCustomer})" translate="didManageModal.buttonText"></a></li>
+          <li>
+            <a ng-click="externalNumbers.addNumbers(externalNumbers.currentCustomer)">
+              <span ng-show="externalNumbers.showPstnSetup" translate="pstnSetup.setupPstn"></span>
+              <span ng-hide="externalNumbers.showPstnSetup" translate="didManageModal.buttonText"></span>
+            </a>
+          </li>
         </ul>
       </span>
     </div>
@@ -25,7 +29,9 @@
         <hr-external-number-list
           numbers="externalNumbers.pendingNumbers"
           count-translate-key="externalNumberPanel.pendingNumbers"
-          external-numbers="externalNumbers">
+          external-numbers="externalNumbers"
+          tooltip-text="{{:: 'externalNumberPanel.pendingNumbersTooltip' | translate}}"
+          tooltip-class="icon-information">
         </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.unassignedText}}">

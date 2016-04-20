@@ -1,42 +1,42 @@
-<cs-card id="reg-endpoints" class="large report-card registeredEndpoints">
+<cs-card id="reg-endpoints" class="large report-card registeredEndpoints" ng-class="{'hideCard': !nav.showEngagement}">
 <article>
-    <header>
-      <h4  translate="registeredEndpoints.registeredEndpoints"></h4>
-    </header>
-    <section>
-      <p >{{nav.endpointDescription}}</p>
-      <div class="card-section-content ">
-      <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
-        <thead>
-          <tr>
-            <th class="vertical-center col-md-4 bold customer-data" translate="registeredEndpoints.company"></th>
-            <th class="vertical-center horizontal-center col-md-2 bold">{{nav.devices}}</th>
-            <th class="vertical-center horizontal-center col-md-2 bold">{{nav.trend}}</th>
-            <th class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.totalRegistered"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="customer in nav.registeredEndpoints">
-            <td class="vertical-center customer-data">{{customer.customer}}</td>
-            <td class="table-data">
-              <div class="table-half vertical-center horizontal-center">{{customer.minRegisteredDevices}}</div>
-              <div class="table-half vertical-center horizontal-center">{{customer.maxRegisteredDevices}}</div>
-            </td>
-            <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.registeredDevicesTrend}}%</td>
-            <td class="vertical-center horizontal-center">{{customer.yesterdaysRegisteredDevices}}</td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
-        <i class='icon icon-spinner icon-2x'></i>
-      </div>
-      <div class="no-data-center" ng-if="nav.isEmpty(nav.endpointRefresh)">
-        <h3 class="no-data">
-          <i class='icon icon-warning no-data-warning'></i>
-          <span translate='reportsPage.noCustomerData'></span>
-        </h3>
-      </div>
-    </section>
-    </article>
+  <header>
+    <h4 translate="registeredEndpoints.registeredEndpoints"></h4>
+  </header>
+  <section>
+    <p >{{nav.endpointDescription}}</p>
+    <div class="card-section-content ">
+    <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
+      <thead>
+        <tr>
+          <th class="vertical-center col-md-4 bold customer-data" translate="registeredEndpoints.company"></th>
+          <th class="vertical-center horizontal-center col-md-2 bold">{{nav.devices}}</th>
+          <th class="vertical-center horizontal-center col-md-2 bold">{{nav.trend}}</th>
+          <th class="vertical-center horizontal-center col-md-2 bold" translate="registeredEndpoints.totalRegistered"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="customer in nav.registeredEndpoints | orderBy:'customer'">
+          <td class="vertical-center customer-data">{{customer.customer}}</td>
+          <td class="table-data">
+            <div class="table-half vertical-center horizontal-center">{{customer.minRegisteredDevices}}</div>
+            <div class="table-half vertical-center horizontal-center">{{customer.maxRegisteredDevices}}</div>
+          </td>
+          <td class="vertical-center horizontal-center {{customer.direction}}">{{customer.registeredDevicesTrend}}</td>
+          <td class="vertical-center horizontal-center">{{customer.yesterdaysRegisteredDevices}}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <div class="no-data-center" ng-if="nav.isEmpty(nav.endpointRefresh)">
+      <h3 class="no-data">
+        <i class='icon icon-warning no-data-warning'></i>
+        <span translate='reportsPage.noCustomerData'></span>
+      </h3>
+    </div>
+  </section>
+</article>
 </cs-card>

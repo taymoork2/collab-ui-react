@@ -6,9 +6,9 @@
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($scope, $rootScope, $state, $templateCache, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($dialogs, $location, $q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, HuronUser, Log, LogMetricsService, Notification, Orgservice, Storage, Userservice, UserListService, Utils) {
     //Initialize data variables
-    $scope.pageTitle = $translate.instant('usersPage.manageUsers');
+    $scope.pageTitle = $translate.instant('usersPage.pageTitle');
     $scope.load = true;
     $scope.page = 1;
     $scope.status = null;
@@ -50,30 +50,64 @@
       count: 0
     }];
     $scope.dirsyncEnabled = false;
+    $scope.isTelstraCsbEnabled = false;
+    $scope.isCSB = false;
 
     $scope.exportType = $rootScope.typeOfExport.USER;
+    $scope.USER_EXPORT_THRESHOLD = 10000;
+    $scope.totalUsers = 0;
+    $scope.isCsvEnhancementToggled = false;
+    $scope.obtainedTotalUserCount = false;
 
     // Functions
     $scope.setFilter = setFilter;
     $scope.filterList = filterList;
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
-    $scope.isHuronUser = isHuronUser;
+    $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.showUserDetails = showUserDetails;
     $scope.getUserPhoto = getUserPhoto;
     $scope.firstOfType = firstOfType;
+    $scope.isValidThumbnail = isValidThumbnail;
+    $scope.startExportUserList = startExportUserList;
+    $scope.isNotDirSyncOrException = false;
+
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.csvEnhancement),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)
+      ])
+      .then(function (result) {
+        $scope.isCsvEnhancementToggled = result[0];
+        $scope.isTelstraCsbEnabled = result[1];
+      });
+
+    if (Authinfo.isCSB() && $scope.isTelstraCsbEnabled) {
+      $scope.isCSB = true;
+    }
 
     init();
 
     ////////////////
 
     function init() {
+      checkOrg();
       bind();
       configureGrid();
       getUserList();
+    }
+
+    function checkOrg() {
+      // Allow Cisco org to use the Circle Plus button
+      // Otherwise, block the DirSync orgs from using it
+      if (Authinfo.isCisco()) {
+        $scope.isNotDirSyncOrException = true;
+      } else {
+        FeatureToggleService.supportsDirSync().then(function (enabled) {
+          $scope.isNotDirSyncOrException = !enabled;
+        });
+      }
     }
 
     function bind() {
@@ -87,7 +121,7 @@
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
-          if ($scope.gridApi.selection) {
+          if ($scope.gridApi && $scope.gridApi.selection) {
             $scope.gridApi.selection.clearSelectedRows();
           }
         }
@@ -100,6 +134,8 @@
 
       //list is updated by adding or entitling a user
       $scope.$on('USER_LIST_UPDATED', function () {
+        $scope.currentDataPosition = 0;
+        $scope.gridApi.infiniteScroll.resetScroll();
         getUserList();
       });
     }
@@ -158,6 +194,10 @@
               // data.resources = getUserStatus(data.Resources);
 
               $scope.placeholder.count = data.totalResults;
+              if ($scope.searchStr === '') {
+                $scope.totalUsers = data.totalResults;
+                $scope.obtainedTotalUserCount = true;
+              }
               if (startIndex === 0) {
                 $scope.userList.allUsers = data.Resources;
               } else {
@@ -194,6 +234,21 @@
             } else {
               Log.debug('Query existing users failed. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.userListError')], 'error');
+            }
+          }
+
+          if (!$scope.obtainedTotalUserCount) {
+            if (Authinfo.isCisco()) { // allow Cisco org (even > 10K) to export new CSV format
+              $scope.totalUsers = $scope.USER_EXPORT_THRESHOLD;
+              $scope.obtainedTotalUserCount = true;
+            } else {
+              UserListService.getUserCount().then(function (count) {
+                if (count === -1) {
+                  count = $scope.USER_EXPORT_THRESHOLD + 1;
+                }
+                $scope.totalUsers = count;
+                $scope.obtainedTotalUserCount = true;
+              });
             }
           }
         }, $scope.searchStr);
@@ -278,46 +333,22 @@
       return false;
     }
 
-    function isHuronUser(allEntitlements) {
-      if (allEntitlements) {
-        for (var i = 0; i < allEntitlements.length; i++) {
-          if (Config.entitlements.huron === allEntitlements[i]) {
-            return true;
-          }
-        }
+    // if there is only one Admin in the org, the user should not be able to delete it
+    function isOnlyAdmin(entity) {
+      if ($scope.userList.adminUsers.length === 1) {
+        return $scope.userList.adminUsers[0].userName === entity.userName;
       }
       return false;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
-        sendSparkWelcomeEmail(userEmail, userName);
-      } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
-        HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)
-          .then(function () {
-            Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-          }, function (error) {
-            Notification.errorResponse(error, 'usersPage.emailError');
-          });
-      }
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
       angular.element('.open').removeClass('open');
-    }
-
-    function sendSparkWelcomeEmail(userEmail, userName) {
-      var userData = [{
-        'address': userEmail,
-        'name': userName
-      }];
-
-      Userservice.inviteUsers(userData, null, true, function (data) {
-        if (data.success) {
-          Notification.notify([$translate.instant('usersPage.emailSuccess')], 'success');
-        } else {
-          Log.debug('Resending failed. Status: ' + status);
-          Notification.notify([$translate.instant('usersPage.emailError')], 'error');
-          $scope.btnSaveLoad = false;
-        }
-      });
     }
 
     function setDeactivateUser(deleteUserOrgId, deleteUserUuId, deleteUsername) {
@@ -338,21 +369,22 @@
 
     function configureGrid() {
 
-      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!row.entity.photos" class="user-img">' +
+      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
+        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
 
-      var actionsTemplate = '<span cs-dropdown ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
+      var actionsTemplate = '<span cs-dropdown class="actions-menu" ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
         '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="{\'invite\': (row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)), \'delete\': (!org.dirsyncEnabled && (row.entity.displayName !== grid.appScope.userName || row.entity.displayName === grid.appScope.userName)), \'first\': grid.appScope.firstOfType(row)}">' +
         '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === grid.appScope.userName && !grid.appScope.isOnlyAdmin(row.entity)" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
+
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
@@ -441,8 +473,28 @@
     }
 
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
+    // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
-      return row.entity.id === $scope.gridData[0].id;
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
+    }
+
+    function isValidThumbnail(user) {
+      var photos = _.get(user, 'photos', []);
+      var thumbs = _.filter(photos, {
+        type: 'thumbnail'
+      });
+      var validThumbs = _.filter(thumbs, function (thumb) {
+        return !(_.startsWith(thumb.value, 'file:') || _.isEmpty(thumb.value));
+      });
+      return !_.isEmpty(validThumbs);
+    }
+
+    function startExportUserList() {
+      if ($scope.totalUsers > $scope.USER_EXPORT_THRESHOLD) {
+        $scope.$emit('csv-download-request', 'user', true);
+      } else {
+        $scope.$emit('csv-download-request', 'user');
+      }
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

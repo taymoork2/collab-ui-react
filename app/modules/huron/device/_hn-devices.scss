@@ -21,6 +21,11 @@
   margin-top: 10px;
 }
 
+.device-status {
+  line-height: 3;
+  padding-right: 10px !important;
+}
+
 .default-status::before {
   content: '';
   width: 10px;

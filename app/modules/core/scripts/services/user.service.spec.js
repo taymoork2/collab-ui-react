@@ -1,11 +1,11 @@
-/* globals $httpBackend, $rootScope, Authinfo, Config, Userservice */
+/* globals $httpBackend, $rootScope, Authinfo, Config, Userservice, UrlConfig */
 'use strict';
 
 describe('User Service', function () {
 
   beforeEach(function () {
     bard.appModule('Huron');
-    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice');
+    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice', 'UrlConfig');
     spyOn($rootScope, '$broadcast').and.returnValue({});
     spyOn(Authinfo, 'getOrgId').and.returnValue('abc123efg456');
   });
@@ -19,7 +19,7 @@ describe('User Service', function () {
     var user = {
       email: 'testUser'
     };
-    $httpBackend.expectDELETE(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/user?email=' + user.email).respond(204);
+    $httpBackend.expectDELETE(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/user?email=' + user.email).respond(204);
     Userservice.deactivateUser(user);
     $httpBackend.flush();
   });
@@ -56,7 +56,7 @@ describe('User Service', function () {
         pattern: "None"
       }
     }];
-    $httpBackend.expectPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users').respond(201, {
+    $httpBackend.expectPATCH(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users').respond(201, {
       status: 201,
       userResponse: [{
         email: "dntodid@gmail.com",

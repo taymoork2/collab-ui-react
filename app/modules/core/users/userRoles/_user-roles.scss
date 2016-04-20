@@ -65,6 +65,10 @@
 }
 
 .admin-roles-panel {
+  .admin-options {
+    display: flex;
+  }
+
   .cs-radio {
     cursor: pointer;
     display: inline-block;

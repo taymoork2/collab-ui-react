@@ -380,7 +380,7 @@ angular.module('WebExApp').service('WebexReportService', [
         infoCardObj: infoCardObj
       };
 
-      WebExXmlApiFact.getSessionTicket(siteUrl).then(
+      WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(sessionTicket) {
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";

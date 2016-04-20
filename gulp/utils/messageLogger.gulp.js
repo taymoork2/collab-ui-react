@@ -16,6 +16,6 @@ function messageLogger(message, files) {
   }
 }
 
-module.exports = function() {
+module.exports = function () {
   return messageLogger;
 };

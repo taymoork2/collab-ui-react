@@ -15,9 +15,14 @@
   }
 
   /* @ngInject */
-  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Localytics) {
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService, Config) {
+    var NO_TIMEOUT = 0;
+    var FAILURE_TIMEOUT = NO_TIMEOUT;
+    var SUCCESS_TIMEOUT = Config.isE2E() ? NO_TIMEOUT : 3000;
+
     return {
       success: success,
+      warning: warning,
       error: error,
       notify: notify,
       errorResponse: errorResponse,
@@ -29,11 +34,18 @@
       notify($translate.instant(messageKey, messageParams), 'success');
     }
 
+    function warning(messageKey, messageParams) {
+      notify($translate.instant(messageKey, messageParams), 'warning');
+    }
+
     function error(messageKey, messageParams) {
       notify($translate.instant(messageKey, messageParams), 'error');
     }
 
     function notify(notifications, type) {
+      var types = ['success', 'warning', 'error'];
+      var closeHtml = '<button type="button" class="close toast-close-button"><span class="sr-only">' + $translate.instant('common.close') + '</span></button>';
+
       if (!notifications) {
         return;
       }
@@ -43,11 +55,13 @@
       if (!notifications.length) {
         return;
       }
-      type = (type == 'success') ? type : 'error';
-      if (type === 'error') {
-        Localytics.push('Error Message', notifications);
-      }
-      toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? 3000 : 0);
+      type = _.includes(types, type) ? type : 'error';
+      toaster.pop({
+        type: type,
+        body: notifications.join('<br/>'),
+        timeout: type == 'success' ? SUCCESS_TIMEOUT : FAILURE_TIMEOUT,
+        closeHtml: closeHtml
+      });
     }
 
     function errorResponse(response, errorKey, errorParams) {
@@ -60,17 +74,17 @@
       if (errorKey) {
         errorMsg += $translate.instant(errorKey, errorParams);
       }
-      if (response && response.data && angular.isString(response.data.errorMessage)) {
+      if (_.get(response, 'data.errorMessage')) {
         errorMsg += ' ' + response.data.errorMessage;
-      } else if (response && response.data && angular.isString(response.data.error)) {
+      } else if (_.get(response, 'data.error')) {
         errorMsg += ' ' + response.data.error;
-      } else if (response && response.status === 404) {
+      } else if (_.get(response, 'status') === 404) {
         errorMsg += ' ' + $translate.instant('errors.status404');
-      } else if (angular.isString(response)) {
+      } else if (_.isString(response)) {
         errorMsg += ' ' + response;
       }
 
-      if (response && angular.isFunction(response.headers)) {
+      if (_.isFunction(_.get(response, 'headers'))) {
         var trackingId = response.headers('TrackingID');
         if (trackingId) {
           if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {

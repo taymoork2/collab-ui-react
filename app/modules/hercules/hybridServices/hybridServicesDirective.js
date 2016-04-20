@@ -63,6 +63,10 @@
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
               return extension.id === service.id;
             });
+            // can't have huron (ciscouc) and call service at the same time
+            if (extension.id === 'squared-fusion-uc' && hasHuronEntitlement()) {
+              extension.enabled = false;
+            }
             if (extension.enabled) {
               vm.isEnabled = true;
             }
@@ -128,6 +132,10 @@
       });
       return offerCodes.length > 0;
     }
+
+    var hasHuronEntitlement = function (ent) {
+      return vm.user.entitlements.indexOf('ciscouc') > -1;
+    };
 
     $scope.$on('$destroy', function () {
       stopDelayedUpdates = true;

@@ -12,7 +12,6 @@
 }
 
 .service-setup-container {
-  padding-left: 20px;
   .form-group {
     margin-left: 0;
     margin-right: 0;
@@ -20,18 +19,41 @@
   .service-setup {
     label {
       font-size: 24px;
+      line-height: 1;
+      margin-bottom: 0;
+      padding-bottom: 11px;
+      padding-top: 28px;
+      &.toggle-switch {
+        margin-bottom: -2px;
+        padding-bottom: 0;
+        padding-top: 0;
+      }
+    }
+    .description-block {
+      margin-top: 0;
+    }
+    .formly-field-group {
+      margin-bottom: 0;
+    }
+    .form-group {
+      margin-bottom: 0;
     }
     .hide-delete {
       visibility: hidden;
     }
+    a.select-toggle {
+      margin-bottom: 0;
+    }
     .service-setup-timezone {
+      margin-bottom: -2px;
       .formly-input-wrapper {
         width: 50%;
       }
     }
     .service-setup-steering-digit {
+      margin-bottom: rem(2);
       .formly-input-wrapper {
-        width: 100px;
+        width: 50%;
       }
     }
     .service-setup-site-code {
@@ -51,13 +73,15 @@
       }
     }
     .service-setup-extension-range-to {
-      margin-right: 30px;
-      margin-left: 30px;
+      margin-left: 10px;
+      margin-right: 13px;
     }
     .service-setup-company-voicemail ng-form {
       width: 100%;
     }
     .service-setup-company-voicemail-number {
+      padding-bottom: 1rem;
+      padding-top: 1rem;
       width: 50%;
     }
     .service-setup-moh {

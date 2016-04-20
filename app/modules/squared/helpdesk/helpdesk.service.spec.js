@@ -4,14 +4,14 @@ describe('HelpdeskService', function () {
 
   var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
 
-  beforeEach(inject(function (_$timeout_, _Config_, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_) {
+  beforeEach(inject(function (_$timeout_, UrlConfig, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
     HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
     q = _$q_;
     $timeout = _$timeout_;
-    urlBase = _Config_.getAdminServiceUrl();
+    urlBase = UrlConfig.getAdminServiceUrl();
     HelpdeskMockData = _HelpdeskMockData_;
     CsdmConverter = _CsdmConverter_;
 

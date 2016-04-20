@@ -6,7 +6,7 @@
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <button class="btn btn--people add-button" ng-click="sc.showAddDeviceDialog()">
+      <button class="btn btn--people add-button" ng-if="sc.isEntitledToRoomSystem()" ng-click="sc.showAddDeviceDialog()">
         <span translate="spacesPage.addBtn"></span>
       </button>
     </cs-page-sub-header-right>
@@ -46,14 +46,18 @@
           <span class="h1" translate="spacesPage.noneFound"></span>
         </div>
       </div>
-      <div ng-hide="sc.existsDevices()">
+      <div ng-show="!sc.existsDevices()">
         <div class="none_found">
           <i class="icon icon-circle-telepresence" />
           <span class="h5" translate="spacesPage.nothingHere"></span>
           <span class="h1" translate="spacesPage.noDevices"></span>
-          <button class="btn btn--people btn--large add-button" ng-click="sc.showAddDeviceDialog()">
+          <button class="btn btn--people btn--large add-button" ng-click="sc.showAddDeviceDialog()" ng-show="sc.isEntitledToRoomSystem()">
             <span translate="spacesPage.addBtn"></span>
           </button>
+          <div ng-show="sc.isEntitledToHuron()">
+            <br/>
+            <span translate="spacesPage.addPersonalDeviceDesc" translate-value-onclick="sc.clickUsers()" translate-compile></span>
+          </div>
         </div>
       </div>
     </div>

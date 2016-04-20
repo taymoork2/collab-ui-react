@@ -1,13 +1,19 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
-  function USSService2($http, ConfigService, Authinfo, CsdmPoller, CsdmHubFactory) {
+  angular
+    .module('Hercules')
+    .service('USSService2', USSService2);
+
+  /* @ngInject */
+  function USSService2($http, UrlConfig, Authinfo, CsdmPoller, CsdmHubFactory) {
     var cachedUserStatusSummary = {};
+
+    var USSUrl = UrlConfig.getUssUrl() + 'uss/api/v1';
 
     var fetchStatusesSummary = function () {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId() + '&entitled=true')
+        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses/summary')
         .then(function (res) {
           cachedUserStatusSummary = res.data.summary;
         });
@@ -16,9 +22,9 @@
     var hub = CsdmHubFactory.create();
     var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary, hub);
 
-    var statusesParameterRequestString = function (serviceId, state, limit) {
+    var statusesParameterRequestString = function (serviceId, state, offset, limit) {
       var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId() + '&entitled=true';
+      return 'serviceId=' + serviceId + statefilter + '&offset=' + offset + '&limit=' + limit + '&entitled=true';
     };
 
     function extractData(res) {
@@ -51,23 +57,23 @@
 
     function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId + '&orgId=' + orgId)
+        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?userId=' + userId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
-            return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
+            return nugget.entitled || (nugget.entitled === false && nugget.state != 'deactivated');
           });
         });
     }
 
     function getOrg(orgId) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/orgs/' + orgId)
+        .get(USSUrl + '/orgs/' + orgId)
         .then(extractData);
     }
 
     function updateOrg(org) {
       return $http
-        .patch(ConfigService.getUSSUrl() + '/orgs/' + org.id, org)
+        .patch(USSUrl + '/orgs/' + org.id, org)
         .then(extractData);
     }
 
@@ -75,9 +81,9 @@
       return cachedUserStatusSummary;
     }
 
-    function getStatuses(serviceId, state, limit) {
+    function getStatuses(serviceId, state, offset, limit) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
+        .get(USSUrl + '/orgs/' + Authinfo.getOrgId() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, offset, limit))
         .then(extractData);
     }
 
@@ -93,6 +99,4 @@
     };
   }
 
-  angular.module('Hercules')
-    .service('USSService2', USSService2);
 }());

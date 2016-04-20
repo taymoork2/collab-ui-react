@@ -1,18 +1,13 @@
 'use strict';
 
 describe('Service: USSService2', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Squared')); // because we use CsdmPoller
+  beforeEach(module('Hercules'));
 
   var $httpBackend, Authinfo, CsdmHubFactory, USSService2, hubOn;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
   beforeEach(module(function ($provide) {
-    Authinfo = {
-      getOrgId: sinon.stub()
-    };
-    Authinfo.getOrgId.returns('456');
-    $provide.value('Authinfo', Authinfo);
-
     hubOn = sinon.spy();
     CsdmHubFactory = {
       create: sinon.stub()
@@ -23,18 +18,17 @@ describe('Service: USSService2', function () {
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
-  beforeEach(inject(function (_$httpBackend_, _USSService2_) {
+  beforeEach(inject(function (_$httpBackend_, _USSService2_, _Authinfo_) {
+    Authinfo = _Authinfo_;
+    Authinfo.getOrgId = sinon.stub().returns('456');
+
     $httpBackend = _$httpBackend_;
     USSService2 = _USSService2_;
-
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
       .respond({
         userStatuses: [{
           userId: '123',
@@ -77,7 +71,7 @@ describe('Service: USSService2', function () {
   describe('getStatusesForUser', function () {
     it('should return statuses for a given user', function () {
       $httpBackend
-        .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
         .respond({
           userStatuses: [{
             userId: '123',
@@ -99,7 +93,7 @@ describe('Service: USSService2', function () {
 
     it('should return error status if unable to fetch data from backend', function () {
       $httpBackend
-        .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
         .respond(500);
 
       USSService2.getStatusesForUser('123')
@@ -111,10 +105,6 @@ describe('Service: USSService2', function () {
   });
 
   describe('decorateWithStatus', function () {
-    afterEach(function () {
-      $httpBackend.flush();
-    });
-
     describe('when not entitled', function () {
       it('error state is not entitled', function () {
         var status = USSService2.decorateWithStatus({
@@ -251,9 +241,9 @@ describe('Service: USSService2', function () {
   });
 
   describe('getStatuses', function () {
-    it('should workd', function () {
+    it('should work', function () {
       $httpBackend
-        .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&limit=100&orgId=456&entitled=true')
+        .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&offset=0&limit=100&entitled=true')
         .respond({
           userStatuses: [{
             userId: '123',
@@ -276,7 +266,7 @@ describe('Service: USSService2', function () {
           }]
         });
 
-      USSService2.getStatuses('squared-fusion-cal', null, 100)
+      USSService2.getStatuses('squared-fusion-cal', null, 0, 100)
         .then(function (response) {
           expect(response.userStatuses.length).toEqual(2);
         });
@@ -295,7 +285,7 @@ describe('Service: USSService2', function () {
   describe('getStatusesForUserInOrg', function () {
     it('should return statuses for a given user in org', function () {
       $httpBackend
-        .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+        .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
         .respond({
           userStatuses: [{
             userId: '123',

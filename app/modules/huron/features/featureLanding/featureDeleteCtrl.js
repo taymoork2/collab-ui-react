@@ -8,7 +8,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -23,6 +23,18 @@
     vm.deleteFeature = deleteFeature;
     vm.deleteSuccess = deleteSuccess;
     vm.deleteError = deleteError;
+
+    function reInstantiateMasonry() {
+      $timeout(function () {
+        $('.cs-card-layout').masonry('destroy');
+        $('.cs-card-layout').masonry({
+          itemSelector: '.cs-card',
+          columnWidth: '.cs-card',
+          isResizable: true,
+          percentPosition: true
+        });
+      }, 0);
+    }
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
@@ -48,16 +60,22 @@
           return;
         }
 
-        AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl()).then(
-          function (data) {
-            aaModel.ceInfos.splice(delPosition, 1);
-            AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-            deleteSuccess();
-          },
-          function (response) {
-            deleteError(response);
-          }
-        );
+        AutoAttendantCeService.readCe(ceInfoToDelete.getCeUrl())
+          .then(function (data) {
+            var scheduleId = data.scheduleId;
+            AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl())
+              .then(function (data) {
+                  aaModel.ceInfos.splice(delPosition, 1);
+                  AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
+                  if (angular.isDefined(scheduleId)) {
+                    AACalendarService.deleteCalendar(scheduleId);
+                  }
+                  deleteSuccess();
+                },
+                function (response) {
+                  deleteError(response);
+                });
+          });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(
           function (data) {
@@ -85,6 +103,7 @@
           featureName: vm.featureName,
           featureType: vm.featureType
         });
+        reInstantiateMasonry();
       }, 250);
     }
 

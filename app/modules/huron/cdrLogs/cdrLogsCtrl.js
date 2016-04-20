@@ -6,19 +6,26 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyConfig, CdrService, Notification) {
+  function CdrLogsCtrl($scope, $state, $translate, $timeout, formlyConfig, CdrService, Notification, chartColors) {
     var vm = this;
     var ABORT = 'ABORT';
     vm.SEARCH = 1;
     vm.UPLOAD = 2;
     var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
     var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
+    var MAX_LIMIT = 28;
+    var LOGSTASH_WILDCARD = 'logstash*';
+    var INVALID_DATE = 'Invalid date';
 
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
+    var dateLogstashFormat = 'YYYY.MM.DD';
+    var dateLogstashNodaysFormat = 'YYYY.MM.*';
+
     var filetype = "text/json, application/json";
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
+    vm.logstashPath = '';
 
     formlyConfig.setType({
       name: 'custom-file',
@@ -40,6 +47,7 @@
       'endDate': moment().format(dateFormat),
       'hitSize': 50
     };
+    vm.updateLogstashPath = updateLogstashPath;
 
     //TODO: remove this once the ng-change is availabe with cs-datepicker directive!!
     $scope.cdr = {
@@ -88,7 +96,7 @@
     };
 
     vm.patterns = {
-      number: /^(\+1)?([0-9]+)$/,
+      number: /^(\+[1-9])?([0-9]+)$/,
       time: /^([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?$/
     };
 
@@ -97,7 +105,7 @@
       vm.gridData = null;
       vm.dataState = 1;
       vm.selectedCDR = null;
-      CdrService.query(vm.model).then(function (response) {
+      CdrService.query(vm.model, vm.logstashPath).then(function (response) {
         if (response !== ABORT) {
           vm.gridData = response;
           if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
@@ -127,6 +135,33 @@
       vm.searchAndUploadForm.$setPristine();
     };
 
+    function updateLogstashPath() {
+      vm.logstashPath = "";
+      var startDate = moment(vm.model.startDate);
+      var diffDays = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'days');
+      var diffMonths = moment(vm.model.endDate).diff(moment(vm.model.startDate), 'months');
+
+      if (diffDays < MAX_LIMIT) {
+        for (var i = 0; i <= diffDays; i++) {
+          vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashFormat);
+          startDate.add(1, 'days');
+        }
+      } else {
+        if (diffMonths < MAX_LIMIT) {
+          for (i = 0; i <= diffMonths; i++) {
+            vm.logstashPath += ((i > 0) ? "," : "") + "logstash-" + startDate.format(dateLogstashNodaysFormat);
+            startDate.add(1, 'months');
+          }
+        } else {
+          vm.logstashPath = LOGSTASH_WILDCARD;
+        }
+      }
+
+      if (vm.logstashPath.indexOf(INVALID_DATE) > 0) {
+        vm.logstashPath = LOGSTASH_WILDCARD;
+      }
+    }
+
     vm.validations = {
       callingNumber: function () {
         var isValid = true;
@@ -153,12 +188,18 @@
         vm.searchAndUploadForm.startDate.$setValidity("invalidRange", isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.startDate).format());
         vm.searchAndUploadForm.startDate.$setValidity("invalidDate", isValid);
+        if (isValid) {
+          updateLogstashPath();
+        }
       },
       endDate: function () {
         var isValid = !!(moment(vm.model.endDate).format() >= moment(vm.model.startDate).format());
         vm.searchAndUploadForm.endDate.$setValidity("invalidRange", isValid);
         isValid = !!(moment(today).format() >= moment(vm.model.endDate).format());
         vm.searchAndUploadForm.endDate.$setValidity("invalidDate", isValid);
+        if (isValid) {
+          updateLogstashPath();
+        }
       }
     };
 
@@ -304,7 +345,7 @@
           }
 
           $('#cdrtable' + index).niceScroll({
-            cursorcolor: Config.chartColors.gray,
+            cursorcolor: chartColors.gray,
             cursorborder: "0px",
             cursorwidth: "7px",
             railpadding: {
@@ -335,7 +376,8 @@
         call: callCopy,
         uniqueIds: CdrService.extractUniqueIds(call),
         events: vm.events,
-        imported: vm.imported
+        imported: vm.imported,
+        logstashPath: vm.logstashPath
       });
     }
 

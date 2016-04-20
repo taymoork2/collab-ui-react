@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
+  function UserOverviewCtrl($http, $scope, $stateParams, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -15,13 +15,26 @@
     vm.dropDownItems = [];
     vm.titleCard = '';
     vm.subTitleCard = '';
-    vm.addGenerateAuthCodeLink = addGenerateAuthCodeLink;
+    vm.getAccountStatus = getAccountStatus;
+    vm.resendInvitation = resendInvitation;
+    vm.pendingStatus = false;
+    vm.dirsyncEnabled = false;
+    vm.isTelstraCsbEnabled = false;
+    vm.isCSB = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
+    vm.enableAuthCodeLink = enableAuthCodeLink;
+    vm.disableAuthCodeLink = disableAuthCodeLink;
 
-    init();
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+      vm.isTelstraCsbEnabled = result;
+    }).finally(init);
+
+    if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
+      vm.isCSB = true;
+    }
 
     function init() {
       vm.services = [];
@@ -30,28 +43,32 @@
         name: $translate.instant('onboardModal.message'),
         icon: $translate.instant('onboardModal.message'),
         state: 'user-overview.messaging',
-        detail: $translate.instant('onboardModal.msgFree')
+        detail: $translate.instant('onboardModal.msgFree'),
+        actionsAvailable: getDisplayableServices('MESSAGING')
       };
 
       var commState = {
         name: $translate.instant('onboardModal.call'),
         icon: $translate.instant('onboardModal.call'),
         state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.callFree')
+        detail: $translate.instant('onboardModal.callFree'),
+        actionsAvailable: true
       };
 
       var confState = {
         name: $translate.instant('onboardModal.meeting'),
         icon: $translate.instant('onboardModal.meeting'),
         state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.mtgFree')
+        detail: $translate.instant('onboardModal.mtgFree'),
+        actionsAvailable: getDisplayableServices('CONFERENCING') || angular.isArray(vm.currentUser.trainSiteNames)
       };
 
       var contactCenterState = {
         name: $translate.instant('onboardModal.contactCenter'),
         icon: 'ContactCenter',
         state: 'user-overview.contactCenter',
-        detail: $translate.instant('onboardModal.freeContactCenter')
+        detail: $translate.instant('onboardModal.freeContactCenter'),
+        actionsAvailable: true
       };
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
@@ -84,6 +101,14 @@
       }
 
       updateUserTitleCard();
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus).then(function (result) {
+        if (result) {
+          getAccountStatus();
+        } else {
+          vm.pendingStatus = false;
+        }
+      });
     }
 
     var generateOtpLink = {
@@ -91,6 +116,16 @@
       text: $translate.instant('usersPreview.generateActivationCode'),
       state: 'generateauthcode({currentUser: userOverview.currentUser, activationCode: \'new\'})'
     };
+
+    function getDisplayableServices(serviceName) {
+      var displayableServices = Authinfo.getServices();
+      if (Authinfo.hasAccount()) {
+        displayableServices = displayableServices.filter(function (service) {
+          return service.isConfigurable && service.licenseType === serviceName;
+        });
+      }
+      return angular.isArray(displayableServices) && (displayableServices.length > 0);
+    }
 
     function hasEntitlement(entitlement) {
       var userEntitlements = vm.currentUser.entitlements;
@@ -119,7 +154,7 @@
     }
 
     function getCurrentUser() {
-      var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
+      var userUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
 
       $http.get(userUrl)
         .then(function (response) {
@@ -190,8 +225,45 @@
       }
     }
 
-    function addGenerateAuthCodeLink() {
-      vm.dropDownItems.push(generateOtpLink);
+    function enableAuthCodeLink() {
+      if (!_.includes(vm.dropDownItems, generateOtpLink)) {
+        vm.dropDownItems.push(generateOtpLink);
+      }
+    }
+
+    function disableAuthCodeLink() {
+      _.pull(vm.dropDownItems, generateOtpLink);
+    }
+
+    function getAccountStatus() {
+      var currentUserId = vm.currentUser.id;
+      Userservice.getUser(currentUserId, function (data, status) {
+        if (data.success) {
+          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+        } else {
+          Log.debug('Get existing account info failed. Status: ' + status);
+        }
+      });
+    }
+
+    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
+        .then(function () {
+          Notification.success('usersPage.emailSuccess');
+        }).catch(function (error) {
+          Notification.errorResponse(error, 'usersPage.emailError');
+        });
+      angular.element('.open').removeClass('open');
+    }
+
+    function getOrg() {
+      Orgservice.getOrg(function (data, status) {
+        if (data.success) {
+          vm.dirsyncEnabled = data.dirsyncEnabled;
+        } else {
+          Log.debug('Get existing org failed. Status: ' + status);
+        }
+      });
     }
   }
 })();

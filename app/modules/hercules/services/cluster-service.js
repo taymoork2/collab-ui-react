@@ -6,7 +6,7 @@
     .service('ClusterService', ClusterService);
 
   /* @ngInject */
-  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, ConfigService, Authinfo) {
+  function ClusterService($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
     var clusterCache = {
       c_mgmt: {},
       c_ucmc: {},
@@ -117,6 +117,9 @@
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
       var provisioning = _.find(cluster.provisioning, 'connectorType', type);
+      var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
+        return connector.runningVersion !== provisioning.availableVersion;
+      });
       var hosts = _.chain(connectors)
         .pluck('hostname')
         .uniq()
@@ -126,7 +129,8 @@
         state: mergeRunningState(connectors),
         upgradeState: getUpgradeState(connectors),
         provisioning: provisioning,
-        upgradeAvailable: provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion,
+        upgradeAvailable: upgradeAvailable,
+        upgradePossible: upgradeAvailable && !_.any(cluster.connectors, 'state', 'not_configured'),
         hosts: _.map(hosts, function (host) {
           // 1 host = 1 connector (for a given type)
           var connector = _.find(connectors, 'hostname', host);
@@ -163,7 +167,7 @@
 
     function fetch() {
       return $http
-        .get(ConfigService.getUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
+        .get(UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '?fields=@wide')
         .then(extractDataFromResponse)
         .then(function (response) {
           // only keep fused clusters
@@ -210,7 +214,7 @@
     }
 
     function upgradeSoftware(clusterId, serviceType) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -220,7 +224,7 @@
     }
 
     function deleteCluster(id) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id;
       return $http.delete(url)
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -230,7 +234,7 @@
     }
 
     function deleteHost(id, serial) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + id + '/hosts/' + serial;
       return $http.delete(url)
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -240,7 +244,7 @@
     }
 
     function getConnector(connectorId) {
-      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
     }
   }

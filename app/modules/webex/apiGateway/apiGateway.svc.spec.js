@@ -3,8 +3,438 @@
  */
 'use strict';
 
-describe('WebExApiGatewayService', function () {
+describe('WebExApiGatewayService.csvConstructHttpsObj() test', function () {
+  var expectedCsvHttpsObj;
+  var csvConstructHttpsObj;
 
+  var WebExApiGatewayConstsService, Storage, $log;
+
+  beforeEach(module('WebExApp'));
+
+  beforeEach(inject(function (
+    _WebExApiGatewayConstsService_,
+    _Storage_,
+    _$log_
+  ) {
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    Storage = _Storage_;
+    $log = _$log_;
+
+    WebExApiGatewayConstsService.csvAPIs = [{
+        request: 'csvStatus',
+        api: 'importexportstatus',
+        method: 'GET',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvExport',
+        api: 'export',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvImport',
+        api: 'import',
+        method: 'POST',
+        contentType: 'multipart/form-data;charset=utf-8'
+      },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+    ];
+
+    expectedCsvHttpsObj = null;
+    csvConstructHttpsObj = null;
+
+    spyOn(Storage, 'get').and.returnValue('someFakeBearer');
+  }));
+
+  it('can construct https obj for csvStatus', inject(function (WebExApiGatewayService) {
+    expectedCsvHttpsObj = {
+      url: 'https://test.site.com/meetingsapi/v1/users/importexportstatus',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'multipart/form-data;charset=utf-8',
+        'Authorization': 'Bearer someFakeBearer'
+      }
+    };
+
+    csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
+      "test.site.com",
+      "csvStatus"
+    );
+
+    expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
+    expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
+  }));
+
+  it('can construct https obj for csvExport', inject(function (WebExApiGatewayService) {
+    expectedCsvHttpsObj = {
+      url: 'https://test.site.com/meetingsapi/v1/users/export',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': 'Bearer someFakeBearer'
+      }
+    };
+
+    csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
+      "test.site.com",
+      "csvExport"
+    );
+
+    expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
+    expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
+  }));
+
+  it('can construct https obj for csvImport', inject(function (WebExApiGatewayService) {
+    expectedCsvHttpsObj = {
+      url: 'https://test.site.com/meetingsapi/v1/users/import',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data;charset=utf-8',
+        'Authorization': 'Bearer someFakeBearer'
+      }
+    };
+
+    csvConstructHttpsObj = WebExApiGatewayService.csvConstructHttpsObj(
+      "test.site.com",
+      "csvImport"
+    );
+
+    expect(csvConstructHttpsObj.url).toEqual(expectedCsvHttpsObj.url);
+    expect(csvConstructHttpsObj.method).toEqual(expectedCsvHttpsObj.method);
+    expect(csvConstructHttpsObj.headers).toEqual(expectedCsvHttpsObj.headers);
+  }));
+});
+
+describe('WebExApiGatewayService.csvStatus() test', function () {
+  var $q;
+  var $rootScope;
+
+  var deferredCsvApiRequest;
+
+  var WebExApiGatewayConstsService;
+  var WebExApiGatewayService;
+  var WebExRestApiFact;
+
+  var fakeCsvStatusHttpsObj = {
+    url: 'https://test.site.com/meetingsapi/v1/users/csvStatus',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': 'Bearer someFakeBearer'
+    }
+  };
+
+  beforeEach(module('WebExApp'));
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExRestApiFact_,
+    _WebExApiGatewayService_,
+    _WebExApiGatewayConstsService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    WebExRestApiFact = _WebExRestApiFact_;
+
+    WebExApiGatewayConstsService.csvRequests = {
+      csvStatus: 'csvStatus',
+      csvExport: 'csvExport',
+      csvImport: 'csvImport',
+      csvFileDownload: 'csvFileDownload'
+    };
+
+    WebExApiGatewayConstsService.csvAPIs = [{
+        request: 'csvStatus',
+        api: 'importexportstatus',
+        method: 'GET',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvExport',
+        api: 'export',
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+
+      {
+        request: 'csvImport',
+        api: 'import',
+        method: 'POST',
+        contentType: 'multipart/form-data;charset=utf-8'
+      },
+
+      {
+        request: 'csvFileDownload',
+        api: null,
+        method: 'POST',
+        contentType: 'application/json;charset=utf-8'
+      },
+    ];
+
+    WebExApiGatewayConstsService.csvJobStatus = {
+      statusQueued: 0,
+      statusPreProcess: 1,
+      statusCompleted: 2,
+      statusInProcess: 3
+    };
+
+    WebExApiGatewayConstsService.csvStates = {
+      none: 'none',
+      exportInProgress: 'exportInProgress',
+      exportCompletedNoErr: 'exportCompletedNoErr',
+      exportCompletedWithErr: 'exportCompletedWithErr',
+      importInProgress: 'importInProgress',
+      importCompletedNoErr: 'importCompletedNoErr',
+      importCompletedWithErr: 'importCompletedWithErr'
+    };
+
+    WebExApiGatewayConstsService.csvStatusTypes = [
+      'none',
+      'exportInProgress',
+      'exportCompletedNoErr',
+      'exportCompletedWithErr',
+      'importInProgress',
+      'importCompletedNoErr',
+      'importCompletedWithErr'
+    ]; // csvStatusTypes[]
+
+    deferredCsvApiRequest = $q.defer();
+
+    spyOn(WebExApiGatewayService, 'csvConstructHttpsObj').and.returnValue(fakeCsvStatusHttpsObj);
+    spyOn(WebExRestApiFact, 'csvApiRequest').and.returnValue(deferredCsvApiRequest.promise);
+  }));
+
+  it('can return mock CSV status to be "none"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.none
+    ).then(
+
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    deferredCsvApiRequest.resolve({
+      "jobType": 0,
+    });
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportInProgress"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.exportInProgress
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 2,
+      "request": 0
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportCompletedNoErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.exportCompletedNoErr
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 2,
+      "request": 2,
+      "created": "03/23/16 12:41 AM",
+      "started": "03/23/16 12:41 AM",
+      "finished": "03/23/16 12:41 AM",
+      "totalRecords": 5,
+      "successRecords": 5,
+      "failedRecords": 0,
+      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "exportCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.exportCompletedWithErr
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 2,
+      "request": 2,
+      "created": "03/23/16 12:41 AM",
+      "started": "03/23/16 12:41 AM",
+      "finished": "03/23/16 12:41 AM",
+      "totalRecords": 5,
+      "successRecords": 4,
+      "failedRecords": 1,
+      "exportFileLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl"
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importInProgress"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.importInProgress
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 1,
+      "request": 0,
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importCompletedNoErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.importCompletedNoErr
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 1,
+      "request": 2,
+      "created": "03/23/16 12:41 AM",
+      "started": "03/23/16 12:41 AM",
+      "finished": "03/23/16 12:41 AM",
+      "totalRecords": 5,
+      "successRecords": 5,
+      "failedRecords": 0
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+
+  it('can return mock CSV status to be "importCompletedWithErr"', inject(function (WebExApiGatewayService) {
+    WebExApiGatewayService.csvStatus(
+      "test.site.com",
+      true,
+      WebExApiGatewayConstsService.csvStates.importCompletedWithErr
+    ).then(
+      function csvStatusReqSuccess(response) {
+        expect(response).not.toEqual(null);
+        expect(response.isMockResult).toEqual(true);
+        expect(response.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
+        expect(response.details).not.toEqual(null);
+      }, // csvStatusReqSuccess()
+
+      function csvStatusReqError(response) {
+        var dummy = null;
+      } // csvStatusReqError()
+    ); // WebExApiGatewayService.csvStatusReq().then()
+
+    var fakeResult = {
+      "jobType": 1,
+      "request": 2,
+      "errorLogLink": "http://sjsite14.webex.com/meetingsapi/v1/files/ODAyJSVjdnNmaWxl",
+      "created": "03/23/16 12:41 AM",
+      "started": "03/23/16 12:41 AM",
+      "finished": "03/23/16 12:41 AM",
+      "totalRecords": 5,
+      "successRecords": 3,
+      "failedRecords": 2
+    };
+
+    deferredCsvApiRequest.resolve(fakeResult);
+    $rootScope.$apply();
+  }));
+});
+
+describe('WebExApiGatewayService.isSiteSupportsIframe() test', function () {
   var $q;
   var $rootScope;
 
@@ -34,6 +464,7 @@ describe('WebExApiGatewayService', function () {
       _$rootScope_,
       _WebExXmlApiFact_
     ) {
+
       $q = _$q_;
       $rootScope = _$rootScope_;
       WebExXmlApiFact = _WebExXmlApiFact_;

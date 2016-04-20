@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($rootScope, $translate, $http, $q, Authinfo, Config, Notification, Log) {
+  function CdrService($rootScope, $translate, $http, $q, Authinfo, Config, Notification, Log, UrlConfig) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';
@@ -24,6 +24,7 @@
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var cancelPromise = null;
     var currentJob = null;
+    var cdrUrl = null;
 
     return {
       query: query,
@@ -36,7 +37,7 @@
     function getUser(userName, calltype) {
       var defer = $q.defer();
       var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
-      var url = Config.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
+      var url = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
 
       $http.get(url).success(function (data, status) {
         if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
@@ -79,7 +80,8 @@
       return returnDate.utc();
     }
 
-    function query(model) {
+    function query(model, logstashPath) {
+      cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
       proxyData = [];
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
@@ -216,7 +218,7 @@
       var queryElement = '{"fquery":{"query":{"query_string":{"query":"';
       queries.push(queryElement);
 
-      // break down the queries to a max of twenty local/remote combinations to make the requests small for TX2 
+      // break down the queries to a max of twenty local/remote combinations to make the requests small for TX2
       for (var i = 0; i < sessionIds.length; i++) {
         queries[x] += 'dataParam.localSessionID:(\\"' + sessionIds[i] + '\\") OR dataParam.remoteSessionID:(\\"' + sessionIds[i] + '\\")';
         y++;
@@ -365,7 +367,7 @@
       if (thisJob === currentJob) {
         $http({
           method: "POST",
-          url: Config.getCdrUrl(),
+          url: cdrUrl,
           data: query,
           timeout: cancelPromise.promise
         }).success(function (response) {
@@ -375,7 +377,7 @@
           if (status === 500 && response === retryError) {
             $http({
               method: "POST",
-              url: Config.getCdrUrl(),
+              url: cdrUrl,
               data: query,
               timeout: cancelPromise.promise
             }).success(function (secondaryResponse) {

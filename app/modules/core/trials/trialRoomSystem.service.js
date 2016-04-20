@@ -35,7 +35,9 @@
           roomSystems: [{
             model: 'CISCO_SX10',
             enabled: false,
-            quantity: 0
+            quantity: 0,
+            readonly: false,
+            valid: true
           }],
         }
       };

@@ -3,11 +3,10 @@
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
-      <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user dropdown-toggle" tabindex="0">
-          <div ng-class="{unknown:  'gray', error: 'red', warning: 'orange', partial_outage: 'yellow', operational: 'green', degraded_performance:'yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
-            <span class="icon icon-circle"></span>
-          </div>
+      <div cs-dropdown class="sparkstatus-info dropdown">
+        <button cs-dropdown-toggle class="btn-sparkstatus dropdown-toggle" tabindex="0">
+          <span class="fa fa-circle" ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[helpdeskHeaderCtrl.overallSparkStatus]">
+          </span>
         </button>
         <div cs-dropdown-menu class="helpdesk-spark-status-dropdown-menu" role="menu">
           <div class="header" >
@@ -17,15 +16,15 @@
           <div class="content">
             <div ng-repeat="health in helpdeskHeaderCtrl.healthMetrics">
               <div ng-href="{{helpdeskHeaderCtrl.statusPageUrl}}" target="_blank">
-                <span class="fa fa-circle"  ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[health.status]"></span>&nbsp;&nbsp;
+                <span class="fa fa-circle"  ng-class="{unknown:  'helpdesk-grey', error: 'helpdesk-error', major_outage: 'helpdesk-error', warning: 'helpdesk-warning', partial_outage: 'helpdesk-yellow', operational: 'helpdesk-ok', degraded_performance:'helpdesk-yellow'}[health.status]"></span>&nbsp;&nbsp;
                 {{health.name}}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div cs-dropdown class="user-info dropdown">
-        <button cs-dropdown-toggle class="btn--user dropdown-toggle helpdesk-history-button" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
+      <div cs-dropdown class="history-info dropdown">
+        <button cs-dropdown-toggle class="btn-history dropdown-toggle" ng-click="helpdeskHeaderCtrl.populateHistory()" tabindex="0">
           <i class="icon icon-clock"></i>
         </button>
         <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">

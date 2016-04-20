@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ExportUserStatusesController', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UiStats, UserDetails, USSService2, ClusterService;
 
@@ -20,12 +20,10 @@ describe('ExportUserStatusesController', function () {
     });
   });
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_, _$q_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_, _$q_, _UserDetails_) {
     $q = _$q_;
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
+    UserDetails = _UserDetails_;
     $httpBackend
       .when('GET', '/connectors/')
       .respond({});
@@ -47,14 +45,20 @@ describe('ExportUserStatusesController', function () {
       },
       getStatuses: function () {
         return $q.when({
-          userStatuses: [{
-            userId: 'DEADBEEF',
-            orgId: '0FF1CE',
-            connectorId: 'c_cal@aaa',
-            serviceId: 'squared-fusion-uc',
-            entitled: false,
-            state: 'notActivated'
-          }]
+          // 51 to be over numberOfUsersPrCiRequest (which should be 50)
+          userStatuses: _.range(51).map(function (item, i) {
+            return {
+              userId: 'DEADBEEF' + i,
+              orgId: '0FF1CE',
+              connectorId: 'c_cal@aaa',
+              serviceId: 'squared-fusion-uc',
+              entitled: true,
+              state: 'notActivated'
+            };
+          }),
+          paging: {
+            pages: 1
+          }
         });
       }
     };
@@ -100,15 +104,13 @@ describe('ExportUserStatusesController', function () {
       ClusterService: ClusterService,
       $scope: scope
     });
-
-    sinon.spy(vm, 'getUsersBatch');
   }));
 
   it('should have sane default on init', function () {
     vm.selectedServiceId = 'squared-fusion-cal';
-    expect(vm.nothingToExport).toBe(true);
     expect(vm.exportingUserStatusReport).toBe(false);
     expect(vm.exportCanceled).toBe(false);
+    expect(vm.result).toEqual([]);
   });
 
   it('should cancel exporting when calling cancelExport()', function () {
@@ -117,39 +119,7 @@ describe('ExportUserStatusesController', function () {
     expect(vm.exportCanceled).toBe(true);
   });
 
-  it('should call UiStats.noneSelected() when selectedStateChanged() is called', function () {
-    vm.selectedServiceId = 'squared-fusion-cal';
-    vm.selectedStateChanged();
-    expect(UiStats.noneSelected.called).toBe(true);
-  });
-
-  describe('getUsersBatch', function () {
-    it('should call UserDetails.getUsers', function () {
-      vm.getUsersBatch([], 0);
-      $rootScope.$apply();
-      expect(UserDetails.getUsers.called).toBe(true);
-    });
-
-    it('should call itself when userStatuses.length is bigger than numberOfUsersPrCiRequest', function () {
-      // default numberOfUsersPrCiRequest should be 25
-      var minimumValidArray = _.range(40).map(function () {
-        return {
-          state: 'null',
-          details: 'details'
-        };
-      });
-      vm.getUsersBatch(minimumValidArray, 0);
-      $rootScope.$apply();
-      expect(vm.getUsersBatch.callCount).toEqual(2);
-    });
-  });
-
   describe('exportCSV', function () {
-    it('should call UiStats.initStats', function () {
-      vm.exportCSV();
-      $rootScope.$apply();
-      expect(UiStats.initStats.called).toBe(true);
-    });
     it('should have the default CSV "header"', function (done) {
       var excelSeperator = 'sep=,';
       var columnHeaders = UserDetails.getCSVColumnHeaders();
@@ -161,10 +131,26 @@ describe('ExportUserStatusesController', function () {
         });
       $rootScope.$apply();
     });
-    it('should call USSService2.getStatuses', function () {
+    it('should call get statuses from USSService2.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
       expect(USSService2.getStatuses.called).toBe(true);
+    });
+    it('should call ClusterService.getConnector if there at least one connectorId', function () {
+      vm.exportCSV();
+      $rootScope.$apply();
+      expect(ClusterService.getConnector.called).toBe(true);
+    });
+    it('should call get user details from UserDetails.getUsers as much as it has to', function () {
+      vm.exportCSV();
+      $rootScope.$apply();
+      expect(UserDetails.getUsers.callCount).toBe(2);
+    });
+    it('should populate vm.result', function () {
+      vm.exportCSV();
+      $rootScope.$apply();
+      // 2 lines for CSV headers and 51 statuses
+      expect(vm.result.length).toBe(53);
     });
     it('should not actually finish export when exportCanceled is true', function () {
       vm.exportCanceled = true;
@@ -174,15 +160,11 @@ describe('ExportUserStatusesController', function () {
         });
       $rootScope.$apply();
     });
-    it('should call ClusterService.getConnector if there at least one connectorIds', function () {
+    it('should call set exportingUserStatusReport to false when finished', function () {
       vm.exportCSV();
+      expect(vm.exportingUserStatusReport).toBe(true);
       $rootScope.$apply();
-      expect(ClusterService.getConnector.called).toBe(true);
-    });
-    it('should call vm.getUsersBatch', function () {
-      vm.exportCSV();
-      $rootScope.$apply();
-      expect(vm.getUsersBatch.called).toBe(true);
+      expect(vm.exportingUserStatusReport).toBe(false);
     });
   });
 });

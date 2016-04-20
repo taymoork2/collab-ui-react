@@ -1,4 +1,4 @@
-(function () {
+(function ($log) {
   'use strict';
 
   function Cluster(cluster) {
@@ -186,7 +186,7 @@
     }
   }
 
-  function AggregateClusters(clusters) {
+  function AggregateClusters(clusters, groupList) {
 
     var groups = [];
     var clusterArray = [];
@@ -212,11 +212,12 @@
       });
     }
 
-    function groupBy(attribute) {
+    function groupBy(attribute, groupList) {
       // First sort the clusters/connectors based on group name
       sortOn(clusterArray, attribute);
       var groupName = "_DEFAULT_GROUP_NAME_";
       var group = "_DEFAULT_GROUP";
+      var presentGroupNameList = [];
       // Group the sorted cluster/connector based on group name
       for (var i = 0; i < clusterArray.length; i++) {
         var cluster = clusterArray[i];
@@ -236,11 +237,27 @@
           groups.push(group);
         }
         group.clusters.push(cluster);
+        // console.log("groups value: "+groups);
       }
 
       // Update aggregated service status for each group
       _.each(groups, function (group) {
         group.serviceStatus = clusterAggregatedStatus(group);
+        presentGroupNameList.push(group.groupName);
+      });
+
+      // Adding Empty groups
+      //var groupList = 
+      // console.log("grroup list 5 : ", groupList);
+      _.each(groupList, function (groupName) {
+        if (presentGroupNameList.indexOf(groupName) <= -1) {
+          group = {
+            groupName: groupName,
+            serviceStatus: "nohosts",
+            clusters: []
+          };
+          groups.push(group);
+        }
       });
     }
 
@@ -292,12 +309,11 @@
       return clusterStatus;
     }
 
-    groupBy("groupName");
+    groupBy("groupName", groupList);
     return groups;
-
   }
 
-  function MediaConverterService($log) {
+  function MediaConverterService() {
 
     var convertClusters = function (data) {
       return _.chain(data)
@@ -313,8 +329,8 @@
     // Media Clusters displayed in Media Service UI are basically Groups.
     // Aggregated Service Status is result of aggregation of status of each cluster/connector present in Group.
 
-    var aggregateClusters = function (clusters) {
-      return new AggregateClusters(clusters);
+    var aggregateClusters = function (clusters, groupList) {
+      return new AggregateClusters(clusters, groupList);
     };
 
     return {

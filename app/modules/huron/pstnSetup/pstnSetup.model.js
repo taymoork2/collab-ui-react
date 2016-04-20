@@ -5,7 +5,7 @@
     .factory('PstnSetup', PstnSetup);
 
   function PstnSetup() {
-    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, singleCarrierReseller;
+    var customerId, customerName, customerFirstName, customerLastName, customerEmail, serviceAddress, customerExists, resellerExists, carrierExists, siteExists, provider, numbers, orders, singleCarrierReseller, isTrial;
 
     init();
     var model = {
@@ -36,8 +36,12 @@
       getProviderId: getProviderId,
       setNumbers: setNumbers,
       getNumbers: getNumbers,
+      setOrders: setOrders,
+      getOrders: getOrders,
       isSingleCarrierReseller: isSingleCarrierReseller,
-      setSingleCarrierReseller: setSingleCarrierReseller
+      setSingleCarrierReseller: setSingleCarrierReseller,
+      setIsTrial: setIsTrial,
+      getIsTrial: getIsTrial
     };
 
     return model;
@@ -55,13 +59,16 @@
       siteExists = false;
       provider = {};
       numbers = [];
+      orders = [];
       singleCarrierReseller = false;
+      isTrial = true;
     }
 
     function clearProviderSpecificData() {
       customerFirstName = '';
       customerLastName = '';
       numbers = [];
+      orders = [];
       serviceAddress = {};
     }
 
@@ -165,12 +172,28 @@
       return numbers;
     }
 
+    function setOrders(_orders) {
+      orders = _orders;
+    }
+
+    function getOrders() {
+      return _.cloneDeep(orders);
+    }
+
     function isSingleCarrierReseller() {
       return singleCarrierReseller;
     }
 
     function setSingleCarrierReseller(_singleCarrierReseller) {
       singleCarrierReseller = _singleCarrierReseller;
+    }
+
+    function setIsTrial(_isTrial) {
+      isTrial = _isTrial;
+    }
+
+    function getIsTrial() {
+      return isTrial;
     }
   }
 })();

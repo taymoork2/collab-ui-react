@@ -11,24 +11,25 @@ var runSeq = require('run-sequence');
 gulp.task('build', ['clean'], function (done) {
   var tasks = [];
   var runInParallel = [
-        'template-cache',
-        'scss:build',
-        'copy:build',
-        'ts:build'
-      ];
-  if(!args.nolint){
+    'template-cache',
+    'scss:build',
+    'copy:build',
+    'ts:build'
+  ];
+  if (!args.nolint) {
     tasks.push('analyze');
   }
   tasks.push(runInParallel);
   tasks.push('processHtml:build');
 
-  if(args.karmaSplit){
-    tasks.push('karma-all');
+  // WARNING: dont use with jenkins, the coverage reports dont work properly yet
+  if (args.karmaSplit) {
+    tasks.push('karma-each');
   } else {
     tasks.push('karma-config');
     tasks.push('karma');
   }
   tasks.push(done);
 
-  runSeq.apply(this,tasks);
+  runSeq.apply(this, tasks);
 });

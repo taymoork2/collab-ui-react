@@ -182,6 +182,10 @@
       line-height: 1.5rem;
       flex: 1;
     }
+    button.close, button.close::before {
+      font-size: rem-calc(16);
+      color: $gray-light-2;
+    }
   }
   .fourth {
     .full.side-info-card.cs-card {

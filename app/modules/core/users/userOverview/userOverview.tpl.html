@@ -1,45 +1,50 @@
 <div ui-view="header"></div>
 <cs-sp-container>
   <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.servicesPreview"></span>
-      <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
-        <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-          <i class="icon icon-three-dots"></i>
-        </button>
-        <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-          <li><a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a></li>
+    <div ng-if="userOverview.pendingStatus">
+      <div ui-view="userPending"></div>
+      <div class="editServices">
+        <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
+      </div>
+    </div>
+    <div ng-if="!userOverview.pendingStatus">
+      <div class="section-title-row">
+        <span class="section-name" translate="usersPreview.servicesPreview"></span>
+        <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.hasAccount">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+            <li ng-if="!userOverview.isCSB">
+              <a ui-sref="editService({currentUser:userOverview.currentUser})" translate="usersPreview.editServices"></a>
+            </li>
+            <li ng-if="userOverview.isCSB">
+              <a ui-sref="userRedirect" translate="usersPreview.editServices"></a>
+            </li>
+          </ul>
+        </span>
+      </div>
+      <div class="feature-list">
+        <ul>
+          <li class="feature" ng-repeat="service in userOverview.services">
+            <a id="{{service.icon}}" ui-sref="{{service.state}}" ng-if="service.actionsAvailable">
+              <i class="feature-icon"></i>
+              <span class="feature-name">{{service.name}}</span>
+              <span class="feature-status">{{service.detail}}</span>
+              <i class="feature-arrow"></i>
+            </a>
+            <a id="{{service.icon}}" class="no-services" ng-if="!service.actionsAvailable">
+              <i class="feature-icon"></i>
+              <span class="feature-name">{{service.name}}</span>
+              <span class="feature-status feature-arrow-match">{{service.detail}}</span>
+            </a>
+          </li>
         </ul>
-      </span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="service in userOverview.services">
-          <a id="{{service.icon}}" ui-sref="{{service.state}}">
-            <i class="feature-icon"></i>
-            <span class="feature-name">{{service.name}}</span>
-            <span class="feature-status">{{service.detail}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
+      </div>
     </div>
   </cs-sp-section>
-  <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
-  <cs-sp-section ng-if="userOverview.features.length && false">
-    <div class="section-title-row">
-      <span class="section-name" translate="usersPreview.enabledBetaFeatures"></span>
-    </div>
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="feature in userOverview.features | orderBy:'key'">
-          <span class="feature-name">{{feature.key}}</span>
-          <span class="feature-status">{{feature.val}}</span>
-        </li>
-      </ul>
-    </div>
-  </cs-sp-section>
-  <cs-sp-section ng-if="userOverview.isSquaredUC">
+  <hercules-cloud-extensions user="userOverview.currentUser" ng-if="!userOverview.pendingStatus"></hercules-cloud-extensions>
+  <cs-sp-section ng-if="userOverview.isSquaredUC && !userOverview.pendingStatus">
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.devicesPreview"></span>
       <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="userOverview.dropDownItems.length > 0">

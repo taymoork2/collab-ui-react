@@ -1,6 +1,5 @@
-<p ng-if="isMsgrSyncEnabled" class="msgrsync-desc" translate="firstTimeWizard.msgrSyncDesc"></p>
-<h3 class="msgrsync-input" translate="firstTimeWizard.domainEntry"></h3>
+<h3 translate="firstTimeWizard.domainEntry"></h3>
 <div ng-init="getDefaultDomain()">
   <span class="subheading" translate="firstTimeWizard.domainDesc"></span>
-  <input type="text" id="dirDomainText" placeholder="cisco.com" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
+  <input type="text" id="dirDomainText" placeholder="example.com" ng-model="domain" onchange="angular.element(this).scope().setDomainName(this)"/>
 </div>

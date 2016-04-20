@@ -1,11 +1,12 @@
 'use strict';
 
 describe('Controller: HuronFeatureDeleteCtrl', function () {
-  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, HuronFeatureDeleteCtrl, featDefer;
+  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, HuronFeatureDeleteCtrl, featDefer, AACalendarService;
   var $rootScope, $scope, $stateParams, $q, $timeout, $translate;
 
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var aaModel = {};
+  var callExperience = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -27,7 +28,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$translate_, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$translate_, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -37,10 +38,14 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
     AutoAttendantCeService = _AutoAttendantCeService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
+    AACalendarService = _AACalendarService_;
 
     featDefer = $q.defer();
     spyOn(AutoAttendantCeService, 'deleteCe').and.returnValue(featDefer.promise);
     spyOn(AutoAttendantCeInfoModelService, 'deleteCeInfo');
+    spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(callExperience));
+    spyOn(AACalendarService, 'deleteCalendar').and.returnValue($q.when());
+
     spyOn($rootScope, '$broadcast').and.callThrough();
 
     $stateParams = {

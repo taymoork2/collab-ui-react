@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, $q, Config, Userservice, FeatureToggleService;
+  var $scope, controller, $httpBackend, $q, UrlConfig, Userservice, FeatureToggleService;
   var getUserMe;
 
   beforeEach(module('Core'));
@@ -9,7 +9,7 @@ describe('Controller: PlanReviewCtrl', function () {
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
-    getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json')),
+    getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
     getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
@@ -20,11 +20,11 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _UrlConfig_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = $q;
-    Config = _Config_;
+    UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
@@ -53,7 +53,7 @@ describe('Controller: PlanReviewCtrl', function () {
 
     beforeEach(function () {
       //trial request
-      $httpBackend.whenGET(Config.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials/33e66606-b1b8-4794-a7c5-5bfc5046380f').respond(function () {
+      $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/5632f806-ad09-4a26-a0c0-a49a13f38873/trials/33e66606-b1b8-4794-a7c5-5bfc5046380f').respond(function () {
         var data = getJSONFixture('core/json/trials/trialGetResponse.json');
         // reset the trial.startDate to 100 days in the past.
         data.startDate = moment().subtract(100, 'days');

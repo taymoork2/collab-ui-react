@@ -1,13 +1,11 @@
-.aa-nowrap {
-  white-space: nowrap;
-  margin: 0;
-  padding: 0;
-}
-
 $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light-1;
 $aa-builder-border-size: 1px;
-$aa-builder-icon-color: $gray-base;
+$aa-builder-icon-color: $gray-light-1;
+$aa-builder-icon-hover-color: $gray-base;
+$aa-builder-icon-click-color: $color-primary-base;
+
+$aa-builder-text-color: $gray-dark-1;
 
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
@@ -22,6 +20,13 @@ $aa-builder-icon-color: $gray-base;
   height: calc(100vh - #{$aa-builder-offset});
 }
 
+.aa-nowrap {
+  white-space: nowrap;
+  @include vr-spacing(m, 0);
+  @include vr-spacing(p, 0);
+  color: $aa-builder-text-color;
+}
+
 .aa-builder-frame {
   $frame-margin-size: 2rem;
 
@@ -29,10 +34,7 @@ $aa-builder-icon-color: $gray-base;
   box-shadow: inset 0 0.25rem 0.25rem 0.25rem $gray-light-2;
   border-bottom: $aa-builder-border-size solid $gray-light-3;
   border-left: $aa-builder-border-size solid $gray-light-3;
-  margin-top: 0;
-  margin-bottom: $frame-margin-size;
-  margin-left: $frame-margin-size;
-  margin-right: $frame-margin-size;
+  margin: 0 $frame-margin-size $frame-margin-size $frame-margin-size;
 
   .aa-builder-container {
     background-color: $gray-light-4;
@@ -62,13 +64,6 @@ $aa-builder-icon-color: $gray-base;
   align-items: center;
 }
 
-.aa-flex-item.schedule {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-}
-
 .aa-flex-row-item {
   display: flex;
   flex: 1 1 auto;
@@ -89,11 +84,11 @@ $aa-builder-icon-color: $gray-base;
 }
 
 #aa-header-row-content {
-  padding-left: 7.5rem;
+  @include vr-spacing(pl, 7.5);
 }
 
 #aa-header-row-name {
-  padding-right: 2.5rem;
+  @include vr-spacing(pr, 2.5);
 }
 
 .aa-flex-row-item-right {
@@ -104,7 +99,7 @@ $aa-builder-icon-color: $gray-base;
 }
 
 #aa-header-row-save {
-  padding-right: 1rem;
+  @include vr-spacing(pr, 2);
 }
 
 .aa-edit-icon {
@@ -114,13 +109,13 @@ $aa-builder-icon-color: $gray-base;
 
   font-size: 1.5rem;
   color: $aa-builder-icon-color;
-  padding-left: .25rem;
-  padding-top: .25rem;
-  margin-bottom: .75rem;
+  @include vr-spacing(pl, .25);
+  @include vr-spacing(pt, .25);
+  @include vr-spacing(mb, .75);
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -129,14 +124,14 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-trash;
 
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: $aa-builder-icon-color;
-  padding-left: .25rem;
-  padding-top: .25rem;
+  @include vr-spacing(pl, .25);
+  @include vr-spacing(pt, .25);
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -147,7 +142,8 @@ $aa-builder-icon-color: $gray-base;
 
   font-size: 2.5rem;
   color: $aa-builder-icon-color;
-  padding: .25rem;
+  @include vr-spacing(p, .25);
+
 }
 
 .aa-help-icon {
@@ -155,22 +151,27 @@ $aa-builder-icon-color: $gray-base;
 
   @extend .icon-help;
 
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: $aa-builder-icon-color;
-  padding-left: .25rem;
-  padding-top: .25rem;
+  @include vr-spacing(pl, .25);
+  @include vr-spacing(pt, .25);
 
   &:hover {
-    cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-hover-color;
+  }
+}
+
+.aa-help-wrapper {
+    & .popover {
+    width: 60%;
   }
 }
 
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
-  padding: .5rem;
   margin: .125rem 0;
+  @include vr-spacing(p, .5);
 
   /* set to match the select-box's 3px radius */
   border-radius: .188rem;
@@ -180,13 +181,21 @@ $aa-builder-icon-color: $gray-base;
   vertical-align: top;
   transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: $gray-light-1;
+  .phone-number {
+    position: absolute;
+    @include vr-spacing(pt, .25);
   }
 
-  .icon {
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+
+  & .icon {
     float: right;
     font-size: 1rem;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
@@ -204,8 +213,8 @@ $aa-builder-icon-color: $gray-base;
   #aa-name-detail {
     @extend h2;
 
-    margin-left: 0;
-    margin-right: 0;
+    line-height: 1;
+    @include vr-spacing(mh, 0);
     width: 50vw;
     text-align: center;
     border: none;
@@ -230,6 +239,7 @@ $aa-builder-icon-color: $gray-base;
 
   min-width: 1rem;
   white-space: nowrap;
+  color: $aa-builder-text-color;
 
   &:focus {
     outline-style: solid;
@@ -239,19 +249,19 @@ $aa-builder-icon-color: $gray-base;
 }
 
 .aa-and-more {
-  margin-left: 1rem;
+  @include vr-spacing(ml, 1);
+  color: $aa-builder-text-color;
 }
 
 .aa-selected-phones {
-  margin-top: 1rem;
+  @include vr-spacing(mt, 1);
 }
 
 .aa-panel-numbers {
   @extend .panel;
 
   width: 16rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  @include vr-spacing(mv, 1);
 }
 
 .aa-container {
@@ -276,23 +286,33 @@ $aa-builder-icon-color: $gray-base;
 .aa-panel {
   @extend .panel;
 
+  @extend .aa-transition;
+
   display: inline-block;
-  margin: 0;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  @include vr-spacing(m, 0);
+
+  @include vr-spacing(pl, .5);
+  @include vr-spacing(pr, .5);
   box-shadow: none;
   line-height: .5rem;
 
   .text-info {
-    color: $brand-info;
+    color: $color-people-base;;
     text-align: center;
+  }
+
+  .text-info-left {
+    color: $color-people-base;
+    text-align: left;
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pb, 1);
   }
 
   .aa-panel-body {
     @extend .panel-body;
 
     margin: 0;
-    padding: 1.5rem;
+    @include vr-spacing(p, 1.25);
     background-color: $color-white;
     border: $aa-builder-border-size solid $aa-builder-border-color;
     border-radius: .25rem;
@@ -302,26 +322,68 @@ $aa-builder-icon-color: $gray-base;
     }
   }
 
+  .aa-schedule-body {
+    @extend .aa-panel-body;
+    width: rem-calc(380);
+  }
+
   .aa-panel-body-endcall {
     @extend .aa-panel-body;
 
-    padding-top: .25rem;
-    padding-bottom: .25rem;
+    @include vr-spacing(pv, .25);
 
     .text-info {
-      padding-left: .5rem;
-      padding-top: .25rem;
+      @include vr-spacing(pl, .5);
+      @include vr-spacing(pt, .25);
     }
   }
 
   .aa-panel-round {
     @extend .panel-body;
 
-    margin: 0;
-    padding: 0;
+    @include vr-spacing(m, 0);
+    @include vr-spacing(p, 0);
     text-align: center;
     vertical-align: middle;
+
+    & .popover {
+      background-color: transparent;
+      border: 0;
+      @include vr-spacing(mt, 0);
+      color: $gray-dark-1;
+
+      &.bottom >.arrow {
+        background-color: transparent;
+        border-bottom-color: transparent;
+
+        &:after {
+          border-color: transparent;
+          border-bottom-color: transparent;
+          border-width: 0;
+        }
+      }
+
+      & .popover-content {
+        font-size: $h6-font-size;
+        @include vr-spacing(pt, .25);
+      }
+    }
+
   }
+}
+
+.aa-transition.ng-enter, .aa-transition.ng-leave {
+  transition: .5s ease all;
+}
+
+.aa-transition.ng-enter,
+.aa-transition.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.aa-transition.ng-leave,
+.aa-transition.ng-enter.ng-enter-active {
+  opacity:1;
 }
 
 .aa-add-step-icon {
@@ -335,7 +397,7 @@ $aa-builder-icon-color: $gray-base;
 
   &:hover {
     cursor: pointer;
-    color: $color-primary-base;
+    color: $aa-builder-icon-click-color;
   }
 }
 
@@ -347,12 +409,12 @@ $aa-builder-icon-color: $gray-base;
 
     @extend .icon-close;
 
-    color: transparent;
+    color: $gray-light-2;
     font-size: 1.5rem;
 
     &:hover {
       cursor: pointer;
-      color: $gray-light-1;
+      color: $aa-builder-icon-click-color;
     }
   }
 }
@@ -405,9 +467,19 @@ $aa-builder-icon-color: $gray-base;
 .aa-endcall-icon {
   @extend .icon;
 
-  @extend .icon-phone;
+  @extend .icon-end-call;
 
   font-size: 2.25rem;
-  transform: rotate(125deg);
   color: $aa-builder-icon-color;
+}
+
+.loading-container {
+  @include aa-builder-height($h2-font-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  font-size: 3rem;
 }

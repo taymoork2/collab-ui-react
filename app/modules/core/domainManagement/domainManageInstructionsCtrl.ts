@@ -7,7 +7,7 @@ namespace domainManagement {
     private _loadTime;
 
     /* @ngInject */
-    constructor($stateParams, private $previousState, private LogMetricsService) {
+    constructor($stateParams, private $previousState, private DomainManagementService, private LogMetricsService) {
       this._domain = $stateParams.domain;
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._email = this._loggedOnUser.email;
@@ -17,6 +17,12 @@ namespace domainManagement {
         done: false,
         data: {domain: this.domain.text, action: 'open'}
       });
+
+      if (this._domain && this._domain.text && !this._domain.token) {
+        DomainManagementService.getToken(this._domain.text).then((res) => {
+          this._domain.token = res;
+        })
+      }
     }
 
     public cancel() {

@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# jenkins env vars
+source ./.jenkins-build-env-vars
+
 # import helper functions
 source ./bin/include/pid-helpers
+source ./bin/include/setup-helpers
+
 
 # -----
 # Phase 1: Pre-setup
@@ -14,18 +19,18 @@ for i in $proc_names_to_scan; do
     fi
 done
 
-# - setup a .cache dir
-mkdir -p ./.cache
-
 
 # -----
-# Phase 2: Setup
-source ./bin/include/setup-helpers
+# Phase 2: Dependencies
+if [ -f $BUILD_DEPS_ARCHIVE ]; then
+    # unpack previously built dependencies (but don't overwrite anything newer)
+    echo "Restoring previous deps..."
+    tar --keep-newer-files -xf $BUILD_DEPS_ARCHIVE
+    ./setup.sh --restore-soft
+fi
 
-# ex.
 echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
-
 
 echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
 dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
@@ -45,14 +50,27 @@ if [ "$checksums_ok"    = "true" -a \
         "refresh, skipping 'setup.sh'..."
 else
     # use the '--quick' option to retain existing dependency dirs
+    echo "Running 'setup'..."
     ./setup.sh --quick
 
     # setup succeeded
     if [ $? -eq 0 ]; then
         # - regenerate .manifest-checksums
-        # - regenerate .last-refreshed
+        echo "Generating new manifest checksums file..."
         mk_checksum_file $manifest_checksums_file $manifest_files
+
+        # - regenerate .last-refreshed
+        echo "Generating new last-refreshed file..."
         mk_last_refreshed_file $last_refreshed_file
+
+        # archive dependencies
+        echo "Generating new build deps archive for later re-use..."
+        tar -cpf $BUILD_DEPS_ARCHIVE \
+            $last_refreshed_file \
+            $manifest_checksums_file \
+            .cache/npm-deps-for-*.tar.gz \
+            .cache/bower-deps-for-*.tar.gz \
+            .cache/npm-shrinkwrap-for-*.tar.gz
 
     # setup failed
     else
@@ -74,16 +92,34 @@ else
     fi
 fi
 
+# list our current bower_components for build reference
+echo "Currently installed bower_components:"
+./bin/helpers/list-bower-components.js | sort
+
 
 # -----
 # Phase 3: Build
 gulp clean || exit $?
 gulp jsb:verify || exit $?
-gulp e2e --sauce --production-backend --nolint | tee ./.cache/e2e-sauce-logs || exit $?
+
+# TODO: we can clean this up after enabling the 'atlas-web' job for the team
+# - build - build without default 'karma-all' codepath enabled (see below)
+gulp build --nolint --nounit
+
+# - unit tests - run in parallel
+time gulp karma-parallel || exit $?
+gulp karma-combine-coverage || exit $?
+
+# - e2e tests
+gulp e2e --sauce --production-backend --nobuild | tee ./.cache/e2e-sauce-logs
+e2e_exit_code="${PIPESTATUS[0]}"
 
 # groom logs for cleaner sauce labs output
 source ./bin/include/sauce-results-helpers
 mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
+
+# exit out if 'gulp e2e ...' process exited non-zero
+test $e2e_exit_code -eq 0 || exit $e2e_exit_code
 
 
 # -----
@@ -96,7 +132,10 @@ else
     BUILD_NUMBER=0
 fi
 rm -f wx2-admin-web-client.*.tar.gz
-tar -zcvf wx2-admin-web-client.$BUILD_NUMBER.tar.gz dist/*
-tar -zcvf coverage.tar.gz coverage/unit/*
 
-exit $?
+# important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
+tar -zcvf ${APP_ARCHIVE} dist/*
+tar -zcvf ${COVERAGE_ARCHIVE} ./coverage/unit/* || :
+
+# archive e2e test results
+tar -cf ${E2E_TEST_RESULTS_ARCHIVE} ./test/e2e-protractor/reports/${BUILD_TAG}

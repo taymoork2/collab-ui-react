@@ -11,9 +11,9 @@ describe('LicenseService', function () {
   describe('Fetching data from helpdesk backend', function () {
 
     var $httpBackend, urlBase, q;
-    beforeEach(inject(function (_Config_, _LicenseService_, _$q_, _$httpBackend_) {
+    beforeEach(inject(function (UrlConfig, _LicenseService_, _$q_, _$httpBackend_) {
       q = _$q_;
-      urlBase = _Config_.getAdminServiceUrl();
+      urlBase = UrlConfig.getAdminServiceUrl();
       $httpBackend = _$httpBackend_;
       $httpBackend
         .when('GET', 'l10n/en_US.json')
@@ -223,8 +223,8 @@ describe('LicenseService', function () {
       "trialExpiresInDays": 0
     }, {
       "offerCode": "CO",
-      "type": "COMMUNICATIONS",
-      "name": "Communications",
+      "type": "COMMUNICATION",
+      "name": "Communication",
       "status": "ACTIVE",
       "volume": 1000,
       "isTrial": true,

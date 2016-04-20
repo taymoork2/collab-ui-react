@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Utils', 'Config', 'Activateservice',
+  .controller('ActivateCtrl', ['$scope', '$location', '$http', '$window', 'Log', 'Utils', 'Config', 'Activateservice', 'UrlConfig',
 
-    function ($scope, $location, $http, $window, Log, Utils, Config, Activateservice) {
+    function ($scope, $location, $http, $window, Log, Utils, Config, Activateservice, UrlConfig) {
 
       //initialize ng-show variables
       $scope.result = {
@@ -28,12 +28,12 @@ angular.module('Squared')
 
       var activateMobile = function () {
         // launch app with URL: squared://confirmation_code_verified
-        $window.location.href = Config.getSquaredAppUrl() + 'confirmation_code_verified';
+        $window.location.href = UrlConfig.getSquaredAppUrl() + 'confirmation_code_verified';
       };
 
       var activateErrorMobile = function (errorCode) {
         // launch app with error URL: squared://confirmation_error_code/xxxx
-        $window.location.href = Config.getSquaredAppUrl() + 'confirmation_error_code/' + errorCode;
+        $window.location.href = UrlConfig.getSquaredAppUrl() + 'confirmation_error_code/' + errorCode;
       };
 
       var encryptedParam = $location.search().eqp;

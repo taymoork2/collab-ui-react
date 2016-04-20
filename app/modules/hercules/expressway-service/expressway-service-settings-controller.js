@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  angular
+    .module('Hercules')
+    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
+
   /* @ngInject */
   function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, ScheduleUpgradeService) {
     var vm = this;
@@ -8,12 +12,6 @@
     vm.emailSubscribers = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
-    vm.showScheduleUpgrade = false;
-
-    ScheduleUpgradeService.get(Authinfo.getOrgId(), vm.serviceType)
-      .then(function () {
-        vm.showScheduleUpgrade = true;
-      });
 
     var readCerts = function () {
       CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
@@ -34,15 +32,20 @@
       });
     }
 
-    vm.storeEc = function () {
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
-        function (err) {
-          // TODO: fix this callback crap!
-          if (err) {
-            XhrNotificationService.notify("Failed to enable Aware");
+    vm.storeEc = function (onlyDisable) {
+      if ((onlyDisable && !vm.squaredFusionEc) || !onlyDisable) {
+        // Only store when disabling. The enabling is done in the Save button handler
+        // need this hack because the switch call backs twice, every time the user clicks it:
+        // one time with the old value, one time with the new value
+        ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+          function (err) {
+            // TODO: fix this callback crap!
+            if (err) {
+              XhrNotificationService.notify("Failed to enable Aware");
+            }
           }
-        }
-      );
+        );
+      }
       if (vm.squaredFusionEc) {
         readCerts();
       }
@@ -61,6 +64,7 @@
       vm.savingSip = true;
 
       USSService2.updateOrg(vm.org).then(function (res) {
+        vm.storeEc(false);
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;
@@ -180,8 +184,4 @@
       $modalInstance.dismiss();
     };
   }
-
-  angular
-    .module('Hercules')
-    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 }());

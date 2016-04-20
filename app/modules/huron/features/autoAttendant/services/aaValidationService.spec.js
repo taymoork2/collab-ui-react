@@ -57,6 +57,15 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
     });
 
+    it('report name validation error for uuid undefined', function () {
+      // when aaModel.aaRecord is defined
+      var ceInfo_name = 'AA';
+      var uuid = undefined;
+      var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
+
+      expect(valid).toEqual(false);
+    });
+
     it('report name validation error for an empty string', function () {
       // when aaModel.aaRecord is defined
       var ceInfo_name = '';
@@ -107,7 +116,7 @@ describe('Service: AAValidationService', function () {
       aaModel.aaRecords = [];
     });
 
-    it('report validation success for a normal Route to Auto Attendant configuration', function () {
+    it('report validation success for a phone menu defined', function () {
       var uiCombinedMenu = angular.copy(data.combinedMenu);
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
@@ -130,6 +139,98 @@ describe('Service: AAValidationService', function () {
       var uiCombinedMenu = angular.copy(data.combinedMenu);
       var uiPhoneMenu = uiCombinedMenu.entries[0];
       var uiKey2 = uiPhoneMenu.entries[1];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Hunt Group target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[2];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Hunt Group target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[2];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to User target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[3];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to User target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[3];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Voicemail target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[4];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Voicemail target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[4];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Phone Number target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[5];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Phone Number target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[5];
       uiKey2.key = "";
       uiKey2.actions[0].value = "";
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);

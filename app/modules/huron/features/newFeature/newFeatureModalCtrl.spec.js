@@ -4,18 +4,16 @@ describe('Controller: NewFeatureModalCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  var controller, $scope, FeatureToggleService, $q;
+  var controller, $scope, $q;
   var modalFake = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
 
-  beforeEach(inject(function ($rootScope, $controller, $state, _FeatureToggleService_, _$q_) {
+  beforeEach(inject(function ($rootScope, $controller, $state, _$q_) {
     $scope = $rootScope.$new();
     $q = _$q_;
-    FeatureToggleService = _FeatureToggleService_;
     spyOn($state, 'go');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.defer().promise);
     controller = $controller('NewFeatureModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake

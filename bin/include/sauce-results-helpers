@@ -1,6 +1,6 @@
 if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
-    exit 1
+    return 1
 fi
 
 # keep around scratch files when processing sauce labs results
@@ -47,7 +47,7 @@ function grep_for_test_id {
     local test_id=${1}
     if [ -z "${test_id}" ]; then
       >&2 echo "Error: no test_id passed to grep_for_test_id"
-      exit 1
+      return 1
     fi
     grep "#${test_id}\\b"
 }
@@ -68,7 +68,7 @@ function cut_spec_file_for_test_id {
     local test_id=${1}
     if [ -z "${test_id}" ]; then
       >&2 echo "Error: no test_id passed to cut_spec_file_for_test_id"
-      exit 1
+      return 1
     fi
     grep_for_test_id ${test_id} | grep Specs: | ${SED_CMD} -e 's,.*test/e2e-protractor/,.../,'
 }
@@ -82,10 +82,10 @@ function get_sauce_property {
     local sauce_config_file=${2:-${WX2_ADMIN_WEB_CLIENT_HOME}/test/env/sauce.json}
     if [ -z "${sauce_property}" ]; then
       >&2 echo "Error: no sauce_property passed to get_sauce_property"
-      exit 1
+      return 1
     elif [ ! -r ${sauce_config_file} ]; then
       >&2 echo "Error: sauce_config_file not found: ${sauce_config_file}"
-      exit 1
+      return 1
     fi
     cat $sauce_config_file | python -c "import json,sys; data=json.load(sys.stdin); print data['${sauce_property}']"
 }
@@ -128,15 +128,15 @@ function edit_line_to_add_spec_file {
     local test_results_file=${3}
     if [ -z "${test_id}" ]; then
         >&2 echo "Error: no test_id passed to edit_line_to_add_spec_file"
-        exit 1
+        return 1
     fi
     if [ -z "${spec_file}" ]; then
         >&2 echo "Error: no spec_file passed to edit_line_to_add_spec_file"
-        exit 1
+        return 1
     fi
     if [ -z "${test_results_file}" ]; then
         >&2 echo "Error: no test_results_file passed to edit_line_to_add_spec_file"
-        exit 1
+        return 1
     fi
 
     ${SED_CMD} -i -E "s,(.*#${test_id}\> .*),\1 | ${spec_file}," ${test_results_file}
@@ -148,15 +148,15 @@ function edit_line_to_add_url {
     local test_results_file=${3}
     if [ -z "${test_id}" ]; then
         >&2 echo "Error: no test_id passed to edit_line_to_add_url"
-        exit 1
+        return 1
     fi
     if [ -z "${url}" ]; then
         >&2 echo "Error: no url passed to"
-        exit 1
+        return 1
     fi
     if [ -z "${test_results_file}" ]; then
         >&2 echo "Error: no test_results_file passed to edit_line_to_add_url"
-        exit 1
+        return 1
     fi
 
     ${SED_CMD} -i -E "s,(.*#${test_id}\b .*),\1 | ${url}," ${test_results_file}
@@ -174,7 +174,7 @@ function mk_test_report {
     local input_file=${1}
     if [ -z "${input_file}" ]; then
         >&2 echo "Error: no input_file passed to mk_test_report_files"
-        exit 1
+        return 1
     fi
 
     # run this block in a subshell to suppress the process-background-ing notifications

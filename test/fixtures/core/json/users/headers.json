@@ -1,40 +1,38 @@
 {
-  "data": {
-    "columns": [{
-      "name": "First Name"
-    }, {
-      "name": "Last Name"
-    }, {
-      "name": "Display Name"
-    }, {
-      "name": "User ID/Email (Required)"
-    }, {
-      "name": "Directory Number"
-    }, {
-      "name": "Direct Line"
-    }, {
-      "name": "Calendar Service",
-      "entitlements": [
-        "squaredFusionCal"
-      ]
-    }, {
-      "name": "Meeting 25 Party",
-      "license": "CF_819c7e07-b5d4-4d00-8013-07bab4cacd55",
-      "entitlements": [
-        "squaredSyncUp"
-      ]
-    }, {
-      "name": "Spark Call",
-      "license": "CO_79c25f2d-4da5-4b7a-9f3b-fb49cebc5351",
-      "entitlements": [
-        "ciscoUC"
-      ]
-    }, {
-      "name": "Spark Message",
-      "license": "MS_70e44b6f-94cd-4c49-834f-ec24cb004c89",
-      "entitlements": [
-        "squaredRoomModeration"
-      ]
-    }]
-  }
+  "columns": [{
+    "name": "First Name"
+  }, {
+    "name": "Last Name"
+  }, {
+    "name": "Display Name"
+  }, {
+    "name": "User ID/Email (Required)"
+  }, {
+    "name": "Directory Number"
+  }, {
+    "name": "Direct Line"
+  }, {
+    "name": "Calendar Service",
+    "entitlements": [
+      "squaredFusionCal"
+    ]
+  }, {
+    "name": "Meeting 25 Party",
+    "license": "CF_819c7e07-b5d4-4d00-8013-07bab4cacd55",
+    "entitlements": [
+      "squaredSyncUp"
+    ]
+  }, {
+    "name": "Spark Call",
+    "license": "CO_79c25f2d-4da5-4b7a-9f3b-fb49cebc5351",
+    "entitlements": [
+      "ciscoUC"
+    ]
+  }, {
+    "name": "Spark Message",
+    "license": "MS_70e44b6f-94cd-4c49-834f-ec24cb004c89",
+    "entitlements": [
+      "squaredRoomModeration"
+    ]
+  }]
 }

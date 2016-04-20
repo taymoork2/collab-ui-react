@@ -1,0 +1,11 @@
+.csv-download {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  margin: 0.9rem 0.7rem 0.7rem 0.7rem;
+  .icon {
+    font-size: 1.5rem;
+    color: $gray-dark-1;
+  }
+}

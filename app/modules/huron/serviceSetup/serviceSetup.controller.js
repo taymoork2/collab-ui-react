@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService, ModalService) {
+    ExternalNumberService, ModalService, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -38,7 +38,6 @@
 
     vm.processing = true;
     vm.externalNumberPool = [];
-    vm.externalNumberPoolBeautified = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -52,7 +51,8 @@
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
         voicemailPilotNumber: undefined,
-        vmCluster: undefined
+        vmCluster: undefined,
+        emergencyCallBackNumber: undefined
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
@@ -62,7 +62,8 @@
       ftswCompanyVoicemail: {
         ftswCompanyVoicemailEnabled: false,
         ftswCompanyVoicemailNumber: undefined
-      }
+      },
+      ftswSteeringDigit: undefined
     };
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
@@ -72,6 +73,8 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
+    vm.timeZoneToggleEnabled = false;
+    vm.previousTimeZone = DEFAULT_TZ;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -173,6 +176,15 @@
       return false;
     };
 
+    vm.steeringDigitChangeValidation = function ($viewValue, $modelValue, scope) {
+      if (vm.firstTimeSetup) {
+        return false;
+      } else if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+        return true;
+      }
+      return false;
+    };
+
     vm.fields = [{
       model: vm.model.site,
       className: 'service-setup',
@@ -197,8 +209,11 @@
           });
         },
         expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+          'templateOptions.required': function () {
+            return vm.timeZoneToggleEnabled;
+          },
+          'templateOptions.disabled': function () {
+            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
           }
         }
       }, {
@@ -208,15 +223,15 @@
         templateOptions: {
           label: $translate.instant('serviceSetupModal.steeringDigit'),
           description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+          warnMsg: $translate.instant('serviceSetupModal.steeringDigitChangeWarning'),
+          isWarn: false,
           options: vm.steeringDigits
         },
         hideExpression: function () {
           return vm.hideFieldSteeringDigit;
         },
         expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return vm.hasSites;
-          }
+          'templateOptions.isWarn': vm.steeringDigitChangeValidation
         }
       }, {
         key: 'siteSteeringDigit',
@@ -301,9 +316,8 @@
               required: true,
               maxlength: 4,
               minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              })
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
+              isWarn: false
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -357,9 +371,8 @@
             templateOptions: {
               maxlength: 4,
               minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              }),
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning'),
+              isWarn: false,
               required: true
             },
             expressionProperties: {
@@ -459,7 +472,7 @@
           templateOptions: {
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
-            labelfield: 'pattern',
+            labelfield: 'label',
             valuefield: 'uuid',
             filter: true,
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
@@ -475,19 +488,41 @@
           },
           controller: function ($scope) {
             $scope.$watchCollection(function () {
-              return vm.externalNumberPoolBeautified;
-            }, function (externalNumberPoolBeautified) {
-              $scope.to.options = externalNumberPoolBeautified;
+              return vm.externalNumberPool;
+            }, function (externalNumberPool) {
+              // remove the emergency callback number from the list of options
+              $scope.to.options = _.reject(externalNumberPool, function (externalNumber) {
+                return externalNumber.pattern === _.get(vm, 'model.site.emergencyCallBackNumber.pattern');
+              });
+              // add the existing voicemailPilotNumber back into the list of options
+              if (vm.model.site.voicemailPilotNumber && !_.find($scope.to.options, function (externalNumber) {
+                  return externalNumber.pattern === vm.model.site.voicemailPilotNumber;
+                })) {
+                var tmpExternalNumber = {
+                  pattern: vm.model.site.voicemailPilotNumber,
+                  label: TelephoneNumberService.getDIDLabel(vm.model.site.voicemailPilotNumber)
+                };
+                $scope.to.options.push(tmpExternalNumber);
+              }
+              // if a warning existed, then numbers became available remove the warning
+              if ($scope.to.options.length > 0) {
+                $scope.options.templateOptions.isWarn = false;
+              }
             });
+
             $scope.$watch(function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
             }, function (toggleValue) {
-              if (toggleValue && !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber) {
-                if (vm.externalNumberPoolBeautified.length > 0) {
-                  vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+              if (toggleValue) {
+                var showWarning = false;
+                if ($scope.to.options.length > 0) {
+                  if (_.isUndefined(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber)) {
+                    vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = $scope.to.options[0];
+                  }
                 } else {
-                  $scope.options.templateOptions.isWarn = true;
+                  showWarning = true;
                 }
+                $scope.options.templateOptions.isWarn = showWarning;
               }
             });
           }
@@ -543,6 +578,9 @@
       }).catch(function (response) {
         errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
+        // Get the timezone feature toggle setting
+        return enableTimeZoneFeatureToggle();
+      }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
@@ -558,9 +596,16 @@
               vm.hasSites = true;
 
               vm.model.site.steeringDigit = site.steeringDigit;
+              vm.model.ftswSteeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
+              _.remove(vm.steeringDigits, function (digit) {
+                return digit === site.siteSteeringDigit;
+              });
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
+              vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
+              vm.model.site.timeZone = site.timeZone;
+              vm.previousTimeZone = site.timeZone;
             });
           }
         });
@@ -577,9 +622,10 @@
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
 
-              var existingVoicemailNumber = {};
-              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = existingVoicemailNumber;
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = {
+                pattern: voicemail.pilotNumber,
+                label: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
+              };
             }
           }).catch(function (response) {
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
@@ -593,11 +639,6 @@
     function loadExternalNumberPool(pattern) {
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.externalNumberPool = ExternalNumberService.getUnassignedNumbers();
-        vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
-          var externalNumber = angular.copy(en);
-          externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
-          return externalNumber;
-        });
       }).catch(function (response) {
         vm.externalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
@@ -610,6 +651,16 @@
         if (vm.hasVoicemailService) {
           return listVoicemailTimezone(timezones);
         }
+      });
+    }
+
+    function enableTimeZoneFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
+        if (result) {
+          vm.timeZoneToggleEnabled = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
       });
     }
 
@@ -778,8 +829,6 @@
         voicemailToggleEnabled = true;
       }
 
-      var companyVoicemailNumber = TelephoneNumberService.getDIDValue(_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern'));
-
       function updateCustomer(companyVoicemailNumber) {
         var customer = {};
         if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
@@ -806,8 +855,8 @@
         if (voicemailToggleEnabled) {
           // When the toggle is ON, update the customer if the site voicemail pilot number changed or wasn't set,
           // otherwise, don't update customer since nothing changed.
-          if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-            return updateCustomer(companyVoicemailNumber);
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern')) {
+            return updateCustomer(vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern);
           }
         } else {
           // When the toggle is OFF, update the customer if the customer has the voicemail service package
@@ -823,7 +872,7 @@
         if (voicemailToggleEnabled) {
           // Set the site voicemail pilot number when the
           // toggle is ON, otherwise remove it from the site payload.
-          vm.model.site.voicemailPilotNumber = companyVoicemailNumber;
+          vm.model.site.voicemailPilotNumber = _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern');
         } else {
           delete vm.model.site.voicemailPilotNumber;
         }
@@ -839,22 +888,18 @@
           });
       }
 
-      function updateSite(voicemailNumber) {
-        var site = {};
-        if (voicemailNumber) {
-          site.voicemailPilotNumber = voicemailNumber;
+      function updateSite(siteData) {
+        if (!_.isEmpty(siteData)) {
+          return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, siteData)
+            .catch(function (response) {
+              // unset the site voicemail pilot number
+              vm.model.site.voicemailPilotNumber = undefined;
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteUpdateError'));
+              return $q.reject(response);
+            });
         } else {
-          // Assume disable voicemail when no pilot number is set
-          site.disableVoicemail = true;
+          return $q.when();
         }
-
-        return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, site)
-          .catch(function (response) {
-            // unset the site voicemail pilot number
-            vm.model.site.voicemailPilotNumber = undefined;
-            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-            return $q.reject(response);
-          });
       }
 
       function saveSite() {
@@ -862,20 +907,30 @@
           // Always create the site if one doesn't exist.
           return createSite(vm.model.site);
         } else {
+          var siteData = {};
+          //this value is not gonna change when timezone select combo is disabled
+          // so no need to check for timeZoneToggle here
+          if (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) {
+            siteData.timeZone = vm.model.site.timeZone.value;
+          }
+          if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
+            siteData.steeringDigit = vm.model.site.steeringDigit;
+          }
           if (voicemailToggleEnabled) {
             // When the toggle is ON, update the site if the pilot number changed or wasn't set,
             // otherwise, don't update site since nothing changed.
-            if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
-              return updateSite(companyVoicemailNumber);
+            if (_.get(vm, 'model.site.voicemailPilotNumber') !== _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern')) {
+              siteData.voicemailPilotNumber = vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern;
             }
           } else {
             // When the toggle is OFF, update the site if the customer has voicemail service package
             // to disable voicemail, otherwise they are already voice only and don't
             // require an update.
             if (vm.hasVoicemailService) {
-              return updateSite();
+              siteData.disableVoicemail = true;
             }
           }
+          return updateSite(siteData);
         }
       }
 
@@ -893,16 +948,9 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) && voicemailToggleEnabled) {
-          if (!vm.hasVoicemailService) {
-            // If the customer doesn't have voicemail service, then get the existing
-            // timezone first before updating since voicemail was just enabled.
-            return listVoicemailTimezone(vm.timeZoneOptions).then(function () {
-              return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-            });
-          } else {
-            return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-          }
+        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+
+          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
         }
       }
 
@@ -978,8 +1026,6 @@
         if (errors.length > 0) {
           Notification.notify(errors, 'error');
           return $q.reject('Site/extension create failed.');
-        } else {
-          Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
         }
       }
 
@@ -995,6 +1041,11 @@
 
     $q.all(initServiceSetup()).finally(function () {
       vm.processing = false;
+      if (vm.firstTimeSetup) {
+        _.remove(vm.steeringDigits, function (digit) {
+          return digit === DEFAULT_SITE_SD;
+        });
+      }
     });
   }
 })();

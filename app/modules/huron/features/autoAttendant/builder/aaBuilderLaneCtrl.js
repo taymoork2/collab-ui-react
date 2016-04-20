@@ -28,16 +28,16 @@
       // scroll to the added new step/action form
       $timeout(function () {
         var $target = $("#newStepForm" + vm.schedule + (index + 1));
-        var targetPosition = $target.position().top;
+        var targetPosition = angular.isDefined($target.position()) ? $target.position().top : 0;
         var targetHeight = $target.outerHeight(true);
 
         var $container = $("#builderScrollContainer");
-        var containerPosition = $container.position().top;
+        var containerPosition = angular.isDefined($container.position()) ? $container.position().top : 0;
 
-        var offset = targetPosition + containerPosition + targetHeight;
+        var offset = targetPosition + containerPosition + targetHeight - 40;
         $container.animate({
           scrollTop: offset
-        }, 600);
+        }, 800);
         // todo: focus cs-select nested href
       });
     }

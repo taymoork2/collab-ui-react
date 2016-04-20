@@ -1,13 +1,17 @@
 <cs-overlay-panel overlay-title="{{aaBuilderMain.overlayTitle}}" close="aaBuilderMain.close()">
   <div ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
 
-  <div ng-if="!aaBuilderMain.ui.ceInfo.name">
-    <span ng-include="'modules/huron/features/autoAttendant/name/aaName.tpl.html'"></span>
+  <div class="loading-container" ng-if="aaBuilderMain.loading"> 
+    <i class="icon icon-spinner loading-spinner"></i> 
   </div>
 
-  <div ng-if="aaBuilderMain.ui.ceInfo.getName()" class="aa-builder-frame">
+  <div ng-if="aaBuilderMain.isAANameDefined === false">
+    <span ng-include="'modules/huron/features/autoAttendant/name/aaName.tpl.html'" onload="aaBuilderMain.setLoadingDone()"></span>
+  </div>
+
+  <div ng-if="aaBuilderMain.isAANameDefined" class="aa-builder-frame">
     <div class="aa-builder-container" id="builderScrollContainer">
-      <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
+      <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder" onload="aaBuilderMain.setLoadingDone()"></span>
     </div>
   </div>
 </cs-overlay-panel>

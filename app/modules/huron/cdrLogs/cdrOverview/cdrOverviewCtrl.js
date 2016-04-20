@@ -6,10 +6,11 @@
     .controller('CdrOverviewCtrl', CdrOverviewCtrl);
 
   /* @ngInject */
-  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, Config, CdrService) {
+  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, CdrService, chartColors) {
     var vm = this;
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
+    var logstashPath = $stateParams.logstashPath;
 
     var cdrData = formatCdr($stateParams.cdrData);
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
@@ -31,7 +32,7 @@
     });
 
     vm.tableOptions = {
-      cursorcolor: Config.chartColors.gray,
+      cursorcolor: chartColors.gray,
       cursorborder: "0px",
       cursorwidth: "7px",
       railpadding: {
@@ -47,7 +48,8 @@
       $state.go('cdrladderdiagram', {
         call: $stateParams.call,
         uniqueIds: $stateParams.uniqueIds,
-        events: $stateParams.events
+        events: $stateParams.events,
+        logstashPath: logstashPath
       });
     };
 

@@ -4,13 +4,13 @@ describe('Service: HelpdeskLogService', function () {
 
   var Service, LogService, q, scope, httpBackend, urlBase;
 
-  beforeEach(inject(function (_Config_, $httpBackend, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (UrlConfig, $httpBackend, _HelpdeskLogService_, _LogService_, _$q_, _$rootScope_) {
     Service = _HelpdeskLogService_;
     LogService = _LogService_;
     httpBackend = $httpBackend;
     scope = _$rootScope_.$new();
     q = _$q_;
-    urlBase = _Config_.getAdminServiceUrl();
+    urlBase = UrlConfig.getAdminServiceUrl();
 
     httpBackend
       .when('GET', 'l10n/en_US.json')

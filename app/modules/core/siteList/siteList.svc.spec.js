@@ -1,87 +1,550 @@
 'use strict';
 
-describe('Site List Service', function () {
+describe('SiteListService.updateWebExColumnsInRow() test', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
 
+  var $q;
+  var $rootScope;
+
+  var Authinfo;
+  var UrlConfig;
+  var WebExApiGatewayService;
+  var SiteListService;
+
+  var fakeSiteRow;
+
+  var deferredIsSiteSupportsIframe;
+  var deferredCsvStatus;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _Authinfo_,
+    _UrlConfig_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredIsSiteSupportsIframe = $q.defer();
+    deferredCsvStatus = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      csvMock: {
+        mockStatus: true,
+        mockStatusStartIndex: 0,
+        mockStatusEndIndex: 0,
+        mockStatusCurrentIndex: null,
+        mockExport: true,
+        mockImport: true,
+        mockFileDownload: true
+      },
+
+      csvPollIntervalObj: null
+    };
+
+    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("nobody@nowhere.com");
+    spyOn(UrlConfig, 'getWebexAdvancedEditUrl').and.returnValue("fake.admin.webex.com");
+    spyOn(UrlConfig, 'getWebexAdvancedHomeUrl').and.returnValue("fake.webex.com");
+    spyOn(WebExApiGatewayService, 'isSiteSupportsIframe').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+  })); // beforeEach(inject())
+
+  it('can set up csv status polling', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: true
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvPollIntervalObj).not.toEqual(null);
+  });
+
+  it('can process isIframeSupported=false and isAdminReportEnabled=false', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: false,
+      isAdminReportEnabled: false,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(false);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(false);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=false and isAdminReportEnabled=true', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: false,
+      isAdminReportEnabled: true,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(false);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(true);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=true and isAdminReportEnabled=false', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: false,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(true);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(false);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process isIframeSupported=true and isAdminReportEnabled=true', function () {
+    SiteListService.updateWebExColumnsInRow(fakeSiteRow);
+
+    deferredIsSiteSupportsIframe.resolve({
+      siteUrl: "fake.webex.com",
+      isIframeSupported: true,
+      isAdminReportEnabled: true,
+      isCSVSupported: false
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.isIframeSupported).toEqual(true);
+    expect(fakeSiteRow.isAdminReportEnabled).toEqual(true);
+    expect(fakeSiteRow.isCSVSupported).toEqual(false);
+
+    expect(fakeSiteRow.showSiteLinks).toEqual(true);
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+}); // describe()
+
+describe('SiteListService: csv status tests', function () {
+  beforeEach(module('Core'));
+  beforeEach(module('Huron'));
+  beforeEach(module('WebExApp'));
+
+  var $q;
+  var $rootScope;
+
+  var deferredCsvStatus;
+
+  var SiteListService;
+  var WebExApiGatewayConstsService;
+  var WebExApiGatewayService;
+
+  var fakeSiteRow = null;
+
+  beforeEach(inject(function (
+    _$q_,
+    _$rootScope_,
+    _WebExApiGatewayConstsService_,
+    _WebExApiGatewayService_,
+    _SiteListService_
+  ) {
+
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+
+    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
+    SiteListService = _SiteListService_;
+
+    deferredCsvStatus = $q.defer();
+
+    fakeSiteRow = {
+      license: {
+        siteUrl: "fake.webex.com"
+      },
+
+      showCSVInfo: false,
+
+      checkStart: false,
+      checkEnd: false,
+      checkIndex: false,
+
+      csvStatusObj: null,
+
+      showExportLink: false,
+      showExportInProgressLink: false,
+      grayedExportLink: false,
+      showExportResultsLink: false,
+      exportFinishedWithErrors: false,
+
+      showImportLink: false,
+      showImportInProgressLink: false,
+      grayedImportLink: false,
+      showImportResultsLink: false,
+      importFinishedWithErrors: false,
+
+      csvMock: {
+        mockStatus: true,
+        mockStatusStartIndex: 0,
+        mockStatusEndIndex: 0,
+        mockStatusCurrentIndex: null,
+        mockExport: true,
+        mockImport: true,
+        mockFileDownload: true
+      },
+    };
+
+    WebExApiGatewayConstsService.csvStates = {
+      none: 'none',
+      exportInProgress: 'exportInProgress',
+      exportCompletedNoErr: 'exportCompletedNoErr',
+      exportCompletedWithErr: 'exportCompletedWithErr',
+      importInProgress: 'importInProgress',
+      importCompletedNoErr: 'importCompletedNoErr',
+      importCompletedWithErr: 'importCompletedWithErr'
+    };
+
+    WebExApiGatewayConstsService.csvStatusTypes = [
+      WebExApiGatewayConstsService.csvStates.none,
+      WebExApiGatewayConstsService.csvStates.exportInProgress,
+      WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
+      WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
+      WebExApiGatewayConstsService.csvStates.importInProgress,
+      WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
+      WebExApiGatewayConstsService.csvStates.importCompletedWithErr
+    ];
+
+    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+  })); // beforeEach(inject())
+
+  it('can process csvStatus="none"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 0,
+      checkEnd: 0,
+      checkIndex: 0
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.none,
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportInProgress"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 1,
+      checkEnd: 1,
+      checkIndex: 1
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedNoErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 2,
+      checkEnd: 2,
+      checkIndex: 2
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="exportCompletedWithErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 3,
+      checkEnd: 3,
+      checkIndex: 3
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(true);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importInProgress"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 4,
+      checkEnd: 4,
+      checkIndex: 4
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.importInProgress,
+      completionDetails: null,
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(true);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(false);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedNoErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 5,
+      checkEnd: 5,
+      checkIndex: 5
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+
+  it('can process csvStatus="importCompletedWithErr"', function () {
+    fakeSiteRow.csvStatusCheckMode = {
+      isOn: true,
+      checkStart: 6,
+      checkEnd: 6,
+      checkIndex: 6
+    };
+
+    SiteListService.updateCSVColumnInRow(fakeSiteRow);
+
+    deferredCsvStatus.resolve({
+      siteUrl: 'fake.webex.com',
+      isTestResult: true,
+      status: WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
+      completionDetails: {},
+    });
+
+    $rootScope.$apply();
+
+    expect(fakeSiteRow.csvStatusObj.isTestResult).toEqual(true);
+    expect(fakeSiteRow.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
+    expect(fakeSiteRow.csvStatusObj.completionDetails).not.toEqual(null);
+
+    expect(fakeSiteRow.showExportLink).toEqual(true);
+    expect(fakeSiteRow.showExportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedExportLink).toEqual(false);
+    expect(fakeSiteRow.showExportResultsLink).toEqual(false);
+    expect(fakeSiteRow.exportFinishedWithErrors).toEqual(false);
+
+    expect(fakeSiteRow.showImportLink).toEqual(true);
+    expect(fakeSiteRow.showImportInProgressLink).toEqual(false);
+    expect(fakeSiteRow.grayedImportLink).toEqual(false);
+    expect(fakeSiteRow.showImportResultsLink).toEqual(true);
+    expect(fakeSiteRow.importFinishedWithErrors).toEqual(true);
+
+    expect(fakeSiteRow.showCSVInfo).toEqual(true);
+  });
+}); // describe()
+
+describe('SiteListService: license types tests', function () {
   //Load the required dependent modules
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('WebExApp'));
 
   //Declare the variables
-  var $rootScope, SiteListService, WebExUtilsFact, fake_authInfo, fake_gridData, fake_allSitesLicenseInfo, fake_gridDataWithFinalLicenseInfo;
+  var $q, $rootScope, SiteListService, WebExApiGatewayService, WebExUtilsFact, fake_gridData, fake_allSitesLicenseInfo;
+  var deferred_licenseInfo;
 
   //Inject the required dependent services/factories/data/etc
   beforeEach(inject(function (
+    _$q_,
     _$rootScope_,
     _SiteListService_,
+    _WebExApiGatewayService_,
     _WebExUtilsFact_
   ) {
+    $q = _$q_;
     $rootScope = _$rootScope_;
     SiteListService = _SiteListService_;
+    WebExApiGatewayService = _WebExApiGatewayService_;
     WebExUtilsFact = _WebExUtilsFact_;
 
-    //Define the mock data
-    fake_authInfo = {
-      'getConferenceServicesWithoutSiteUrl': function () {
-        return [{
-          "label": "Meeting Center 200",
-          "value": 1,
-          "name": "confRadio",
-          "license": {
-            "licenseId": "MC_5b2fe3b2-fff2-4711-9d6e-4e45fe61ce52_200_sjsite14.webex.com",
-            "offerName": "MC",
-            "licenseType": "CONFERENCING",
-            "billingServiceId": "SubCt30test201582703",
-            "features": ["webex-squared", "squared-call-initiation", "squared-syncup", "cloudmeetings"],
-            "volume": 25,
-            "isTrial": false,
-            "status": "ACTIVE",
-            "capacity": 200,
-            "siteUrl": "sjsite14.webex.com"
-          },
-          "isCustomerPartner": false
-        }, {
-          "label": "Meeting Center 25",
-          "value": 1,
-          "name": "confRadio",
-          "license": {
-            "licenseId": "MC_5f078901-2e59-4129-bba4-b2126d356b61_25_sjsite04.webex.com",
-            "offerName": "MC",
-            "licenseType": "CONFERENCING",
-            "billingServiceId": "SubCt30test201592302",
-            "features": ["webex-squared", "squared-call-initiation", "squared-syncup", "cloudmeetings"],
-            "volume": 25,
-            "isTrial": false,
-            "status": "PENDING",
-            "capacity": 25,
-            "siteUrl": "sjsite04.webex.com"
-          },
-          "isCustomerPartner": false
-        }, {
-          "label": "Meeting Center 200",
-          "value": 1,
-          "name": "confRadio",
-          "license": {
-            "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8ea91fa1_200_t30citestprov9.webex.com",
-            "offerName": "MC",
-            "licenseType": "CONFERENCING",
-            "billingServiceId": "SubCt30test1443208805",
-            "features": ["webex-squared", "squared-call-initiation", "squared-syncup", "cloudmeetings"],
-            "volume": 25,
-            "isTrial": false,
-            "status": "PENDING",
-            "capacity": 200,
-            "siteUrl": "t30citestprov9.webex.com"
-          },
-          "isCustomerPartner": false
-        }];
-      },
+    deferred_licenseInfo = $q.defer();
 
-      'getPrimaryEmail': function () {
-        return "some@email.com";
-      }
-    };
-
+    //Define the fake data
     fake_gridData = [{
       "label": "Meeting Center 200",
       "value": 1,
@@ -133,213 +596,93 @@ describe('Site List Service', function () {
         "siteUrl": "t30citestprov9.webex.com"
       },
       "isCustomerPartner": false
+    }, {
+      "label": "Meeting Center 200",
+      "value": 1,
+      "name": "confRadio",
+      "license": {
+        "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8da91fa1_200_cisjsite031.webex.com",
+        "offerName": "MC",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "SubCt30test1443208885",
+        "features": ["webex-squared", "squared-call-initiation", "squared-syncup", "cloudmeetings"],
+        "volume": 25,
+        "isTrial": false,
+        "status": "PENDING",
+        "capacity": 200,
+        "siteUrl": "cisjsite031.webex.com"
+      },
+      "isCustomerPartner": false
     }];
 
     fake_allSitesLicenseInfo = [{
       "webexSite": "sjsite14.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "t30citestprov9.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite04.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite14.webex.com",
-      "siteHasMCLicense": false,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": true
+      "siteHasCMRLicense": true,
+      "offerCode": "CMR",
+      "capacity": "100"
     }, {
       "webexSite": "cisjsite031.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
+      "offerCode": "MC",
+      "capacity": "200"
     }, {
       "webexSite": "sjsite04.webex.com",
       "siteHasMCLicense": true,
-      "siteHasECLicense": false,
-      "siteHasSCLicense": false,
-      "siteHasTCLicense": false,
-      "siteHasCMRLicense": false
-    }];
-
-    fake_gridDataWithFinalLicenseInfo = [{
-      "label": "Meeting Center 200",
-      "value": 1,
-      "name": "confRadio",
-      "license": {
-        "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_200_cisjsite031.webex.com",
-        "offerName": "MC",
-        "licenseType": "CONFERENCING",
-        "billingServiceId": "1446768353",
-        "features": ["cloudmeetings"],
-        "volume": 25,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "capacity": 200,
-        "siteUrl": "cisjsite031.webex.com"
-      },
-      "isCustomerPartner": false,
-      "showCSVInfo": false,
-      "showSiteLinks": false,
-      "isIframeSupported": false,
-      "isAdminReportEnabled": false,
-      "isError": false,
-      "isWarn": false,
-      "webExSessionTicket": null,
-      "adminEmailParam": null,
-      "advancedSettings": null,
-      "userEmailParam": null,
-      "webexAdvancedUrl": null,
-      "MCLicensed": true,
-      "licenseTooltipDisplay": "\nMeeting Center 200",
-      "licenseTypeContentDisplay": "Meeting Center 200",
-      "ECLicensed": false,
-      "SCLicensed": false,
-      "TCLicensed": false,
-      "CMRLicensed": false,
-      "multipleWebexServicesLicensed": false
-    }, {
-      "label": "Meeting Center 200",
-      "value": 1,
-      "name": "confRadio",
-      "license": {
-        "licenseId": "MC_66e1a7c9-3549-442f-942f-41a53b020689_200_sjsite04.webex.com",
-        "offerName": "MC",
-        "licenseType": "CONFERENCING",
-        "billingServiceId": "SubCt30test201592301",
-        "features": ["cloudmeetings"],
-        "volume": 25,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "capacity": 200,
-        "siteUrl": "sjsite04.webex.com"
-      },
-      "isCustomerPartner": false,
-      "showCSVInfo": false,
-      "showSiteLinks": false,
-      "isIframeSupported": false,
-      "isAdminReportEnabled": false,
-      "isError": false,
-      "isWarn": false,
-      "webExSessionTicket": null,
-      "adminEmailParam": null,
-      "advancedSettings": null,
-      "userEmailParam": null,
-      "webexAdvancedUrl": null,
-      "MCLicensed": true,
-      "licenseTooltipDisplay": "\nMeeting Center 200\nMeeting Center 25",
-      "licenseTypeContentDisplay": "Multiple...",
-      "ECLicensed": false,
-      "SCLicensed": false,
-      "TCLicensed": false,
-      "CMRLicensed": false,
-      "multipleWebexServicesLicensed": true //NOTE: This record has bad data. In reality, such licensing would not happen.
-    }, {
-      "label": "Meeting Center 200",
-      "value": 1,
-      "name": "confRadio",
-      "license": {
-        "licenseId": "MC_5b2fe3b2-fff2-4711-9d6e-4e45fe61ce52_200_sjsite14.webex.com",
-        "offerName": "MC",
-        "licenseType": "CONFERENCING",
-        "billingServiceId": "SubCt30test201582703",
-        "features": ["cloudmeetings"],
-        "volume": 3,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "capacity": 200,
-        "siteUrl": "sjsite14.webex.com"
-      },
-      "isCustomerPartner": false,
-      "showCSVInfo": false,
-      "showSiteLinks": false,
-      "isIframeSupported": false,
-      "isAdminReportEnabled": false,
-      "isError": false,
-      "isWarn": false,
-      "webExSessionTicket": null,
-      "adminEmailParam": null,
-      "advancedSettings": null,
-      "userEmailParam": null,
-      "webexAdvancedUrl": null,
-      "MCLicensed": true,
-      "licenseTooltipDisplay": "\nMeeting Center 200\nCollaboration Meeting Rooms",
-      "licenseTypeContentDisplay": "Multiple...",
-      "ECLicensed": false,
-      "SCLicensed": false,
-      "TCLicensed": false,
-      "CMRLicensed": true,
-      "multipleWebexServicesLicensed": true
-    }, {
-      "label": "Meeting Center 200",
-      "value": 1,
-      "name": "confRadio",
-      "license": {
-        "licenseId": "MC_3ada1218-1763-428b-bb7f-d03f8ea91fa1_200_t30citestprov9.webex.com",
-        "offerName": "MC",
-        "licenseType": "CONFERENCING",
-        "billingServiceId": "SubCt30test1443208805",
-        "features": ["cloudmeetings"],
-        "volume": 25,
-        "isTrial": false,
-        "status": "ACTIVE",
-        "capacity": 200,
-        "siteUrl": "t30citestprov9.webex.com"
-      },
-      "isCustomerPartner": false,
-      "showCSVInfo": false,
-      "showSiteLinks": false,
-      "isIframeSupported": false,
-      "isAdminReportEnabled": false,
-      "isError": false,
-      "isWarn": false,
-      "webExSessionTicket": null,
-      "adminEmailParam": null,
-      "advancedSettings": null,
-      "userEmailParam": null,
-      "webexAdvancedUrl": null,
-      "MCLicensed": true,
-      "licenseTooltipDisplay": "\nMeeting Center 200",
-      "licenseTypeContentDisplay": "Meeting Center 200",
-      "ECLicensed": false,
-      "SCLicensed": false,
-      "TCLicensed": false,
-      "CMRLicensed": false,
-      "multipleWebexServicesLicensed": false
+      "offerCode": "MC",
+      "capacity": "25"
     }];
 
     //Create spies
-    spyOn(_WebExUtilsFact_, "getAllSitesWebexLicenseInfo").and.returnValue(fake_allSitesLicenseInfo);
+    spyOn(WebExUtilsFact, "getAllSitesWebexLicenseInfo").and.returnValue(deferred_licenseInfo.promise);
 
   }));
 
-  //1. Test suite to check things exist
-  describe(': Check things exists', function () {
-    it(': should exist as a service', function () {
-      expect(SiteListService).toBeDefined();
-    });
-
-    it(': fake_allSitesLicenseInfo should exist', function () {
-      expect(fake_allSitesLicenseInfo).not.toBe(null);
-    });
-
+  //1. Check service exists
+  it(': should exist as a service', function () {
+    expect(SiteListService).toBeDefined();
   });
 
-});
+  //2. Check mock data exists
+  it(': fake_allSitesLicenseInfo should exist', function () {
+    expect(fake_allSitesLicenseInfo).not.toBe(null);
+  });
+
+  //3. Test for license type column data
+  it(': fake_allSitesLicenseInfo should exist', function () {
+    SiteListService.updateLicenseTypesColumn(fake_gridData);
+    deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
+    $rootScope.$apply();
+
+    expect(fake_gridData).not.toBe(null);
+    expect(fake_gridData.length).toBe(4);
+
+    //3.1 sjsite14.webex.com has multiple licenses: MC & CMR
+    expect(fake_gridData[0].MCLicensed).toBe(true);
+    expect(fake_gridData[0].CMRLicensed).toBe(true);
+    expect(fake_gridData[0].multipleWebexServicesLicensed).toBe(true);
+    expect(fake_gridData[0].licenseTypeContentDisplay).toBe("siteList.multipleLicenses");
+    expect(fake_gridData[0].licenseTooltipDisplay).toBe("helpdesk.licenseDisplayNames.MC<br>helpdesk.licenseDisplayNames.CMR");
+
+    //3.2 t30citestprov9.webex.com has a single license: MC
+    expect(fake_gridData[2].MCLicensed).toBe(true);
+    expect(fake_gridData[2].multipleWebexServicesLicensed).toBe(false);
+    expect(fake_gridData[2].licenseTypeContentDisplay).toBe("helpdesk.licenseDisplayNames.MC");
+    expect(fake_gridData[2].licenseTooltipDisplay).toBe(null);
+
+  });
+}); //END describe

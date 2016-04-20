@@ -1,0 +1,69 @@
+/*************************************
+ *      DigitalRiver Style imports
+  ************************************/
+
+@import '../submitOrder/submitOrder';
+
+div.dr-container {
+	display: table;
+	width: 450px;
+	background-color: white;
+	border: 20px white;
+	border-style: solid;
+  	position: fixed;
+  	top: 50%;
+  	left: 50%;
+  	transform: translate(-50%, -50%)
+ }
+
+div.dr-row  {
+	display: table-row;
+}
+
+div.dr-left, div.dr-right {
+	display: table-cell;
+}
+
+div.dr-center {
+	text-align: center;
+}
+
+div.dr-button {
+	float: right;
+}
+
+div.dr-pad {
+	padding-bottom: 10px;
+}
+
+button.dr-button {
+	background: #418FDE;
+}
+
+button.dr-button:hover {
+	background: #167FE8;
+}
+
+button.dr-pad {
+	padding-top: 20px;
+}
+
+input.dr-center {
+	margin: 0 auto;
+	width: 300px;
+}
+
+img.dr-left {
+	float: left;
+}
+
+#dr-header  {
+	font-size: 200%;
+}
+
+#dr-error  {
+	background-color: white;
+	color: $color-negative-base;
+	width: 100%;
+	border: 0;
+}

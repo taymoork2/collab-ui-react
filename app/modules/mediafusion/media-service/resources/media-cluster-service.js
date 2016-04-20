@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, Config) {
+  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification, Config, UrlConfig) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -35,11 +35,10 @@
       return clusterCache;
     };
 
-    var getAggegatedClusters = function (clusters) {
+    var getAggegatedClusters = function (clusters, groupList) {
       $log.log("In getAggregatedClusters");
       //$log.log("clusterCache : ", clusterCache);
-
-      return MediaConverterService.aggregateClusters(clusters);
+      return MediaConverterService.aggregateClusters(clusters, groupList);
     };
 
     var setProperty = function (clusterId, property, value) {
@@ -161,7 +160,7 @@
     };
 
     var getOrganization = function (callback) {
-      var url = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
 
       $http.get(url)
         .success(function (data, status) {

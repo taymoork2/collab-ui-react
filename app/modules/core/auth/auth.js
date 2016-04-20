@@ -5,20 +5,24 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage) {
+function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
 
-  return {
+  var service = {
     logout: logout,
     authorize: authorize,
-    getAccount: getAccount,
+    getCustomerAccount: getCustomerAccount,
     isLoggedIn: isLoggedIn,
     setAccessToken: setAccessToken,
     redirectToLogin: redirectToLogin,
     getNewAccessToken: getNewAccessToken,
     refreshAccessToken: refreshAccessToken,
     setAuthorizationHeader: setAuthorizationHeader,
-    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest
+    refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
+    verifyOauthState: verifyOauthState,
+    getAuthorizationUrl: getAuthorizationUrl
   };
+
+  return service;
 
   var deferred;
 
@@ -34,40 +38,37 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return deferred;
   }
 
-  function getAccount(org) {
-    var url = Config.getAdminServiceUrl() + 'organization/' + org + '/accounts';
+  function getCustomerAccount(org) {
+    var url = UrlConfig.getAdminServiceUrl() + 'customers?orgId=' + org;
     return httpGET(url);
   }
 
-  function getNewAccessToken(code) {
-    var url = getAccessTokenUrl();
-    var token = Config.getOAuthClientRegistrationCredentials();
-    var data = Config.getOauthCodeUrl(code) + Config.oauthClientRegistration.scope + '&' + Config.getRedirectUrl();
+  function getNewAccessToken(params) {
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getNewAccessTokenPostData(params.code);
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
-    return httpPOST(url, data, token)
-      .then(updateAccessToken)
-      .catch(handleError('Failed to obtain new oauth access_token.'));
+    // Security: verify authentication request came from our site
+    if (service.verifyOauthState(params.state)) {
+      return httpPOST(url, data, token)
+        .then(updateAccessToken)
+        .catch(handleError('Failed to obtain new oauth access_token.'));
+    } else {
+      clearStorage();
+      return $q.reject();
+    }
   }
 
   function refreshAccessToken() {
-    var url = getAccessTokenUrl();
     var refreshToken = Storage.get('refreshToken');
-    var data = Config.getOauthAccessCodeUrl(refreshToken);
-    var token = Config.getOAuthClientRegistrationCredentials();
+
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getOauthAccessCodeUrl(refreshToken);
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
     return httpPOST(url, data, token)
       .then(updateAccessToken)
       .catch(handleError('Failed to refresh access token'));
-  }
-
-  function setAccessToken() {
-    var url = getAccessTokenUrl();
-    var token = Config.getOAuthClientRegistrationCredentials();
-    var data = Config.oauthUrl.oauth2ClientUrlPattern + Config.oauthClientRegistration.atlas.scope;
-
-    return httpPOST(url, data, token)
-      .then(updateAccessToken)
-      .catch(handleError('Failed to obtain oauth access_token'));
   }
 
   function refreshAccessTokenAndResendRequest(response) {
@@ -78,15 +79,25 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       });
   }
 
+  function setAccessToken() {
+    var url = OAuthConfig.getAccessTokenUrl();
+    var data = OAuthConfig.getAccessTokenPostData();
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
+
+    return httpPOST(url, data, token)
+      .then(updateAccessToken)
+      .catch(handleError('Failed to obtain oauth access_token'));
+  }
+
   function logout() {
-    var url = Config.getOauthDeleteTokenUrl();
+    var url = OAuthConfig.getOauthDeleteTokenUrl();
     var data = 'token=' + Storage.get('accessToken');
-    var token = Config.getOAuthClientRegistrationCredentials();
+    var token = OAuthConfig.getOAuthClientRegistrationCredentials();
     return httpPOST(url, data, token)
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
-        Storage.clear();
-        $window.location.href = Config.getLogoutUrl();
+        clearStorage();
+        $window.location.href = OAuthConfig.getLogoutUrl();
       });
   }
 
@@ -94,9 +105,11 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return !!Storage.get('accessToken');
   }
 
-  function redirectToLogin(email) {
+  function redirectToLogin(email, sso) {
     if (email) {
-      $window.location.href = Config.getOauthLoginUrl(email);
+      $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
+    } else if (sso) {
+      $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
@@ -106,7 +119,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   // authorize helpers
 
   function getAuthorizationUrl() {
-    var url = Config.getAdminServiceUrl();
+    var url = UrlConfig.getAdminServiceUrl();
 
     var customerOrgId = SessionStorage.get('customerOrgId');
     if (customerOrgId) {
@@ -122,7 +135,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function injectMessengerService(authData) {
-    var url = Config.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
+    var url = UrlConfig.getMessengerServiceUrl() + '/orgs/' + authData.orgId + '/cisync/';
     return httpGET(url)
       .then(function (res) {
         var isMessengerOrg = _.has(res, 'data.orgName') && _.has(res, 'data.orgID');
@@ -146,7 +159,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   }
 
   function replaceServices(authData) {
-    var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
+    var servicesUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + authData.orgId + '/services';
     return httpGET(servicesUrl).then(function (res) {
       authData.services = res.data.entitlements;
       return authData;
@@ -168,7 +181,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
   function initializeAuthinfo(authData) {
     Authinfo.initialize(authData);
     if (Authinfo.isAdmin()) {
-      return getAccount(Authinfo.getOrgId())
+      return getCustomerAccount(Authinfo.getOrgId())
         .then(function (res) {
           Authinfo.updateAccountInfo(res.data);
           Authinfo.initializeTabs();
@@ -202,10 +215,6 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   // helpers
 
-  function getAccessTokenUrl() {
-    return Config.getOauth2Url() + 'access_token';
-  }
-
   function httpGET(url) {
     var $http = $injector.get('$http');
     return $http.get(url);
@@ -226,10 +235,30 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function updateAccessToken(response) {
     var token = _.get(response, 'data.access_token', '');
-    Log.info('updateAccessToken: ' + token);
+    Log.info('Update Access Token');
     Storage.put('accessToken', token);
     setAuthorizationHeader(token);
     return token;
+  }
+
+  function getOauthState() {
+    var state = SessionStorage.get('oauthState') || generateOauthState();
+    return state;
+  }
+
+  function generateOauthState() {
+    var state = Utils.getUUID();
+    SessionStorage.put('oauthState', state);
+    return state;
+  }
+
+  function verifyOauthState(testState) {
+    return _.isEqual(testState, getOauthState());
+  }
+
+  function clearStorage() {
+    Storage.clear();
+    SessionStorage.clear();
   }
 
   function handleError(message) {

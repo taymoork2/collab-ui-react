@@ -103,20 +103,28 @@
   .overview {
     display: flex;
     align-items: center;
-    justify-content: center
+    justify-content: flex-start;
   }
 
   .overviewImage {
     width: 144px;
-    margin: 15px 15px 15px 0;
+    margin-right: 40px;
   }
 
   .overviewDescription {
     margin: 0 0 0 15px;
+    p {
+      font-size: 1.1rem;
+    }
   }
 
   .deviceIssue {
-    padding-bottom: 10px
+    padding-bottom: 10px;
+    color: $brand-warning;
+    p {
+      color: #6A6B6C;
+      line-height: 1.4;
+    }
   }
 }
 
@@ -167,14 +175,15 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-    padding: 8px 8px 8px 12px;
-    background-color: #c5e9f7;
-    color: #0387b8;
+    padding: 2px 8px 0 8px;
+    background-color: #eee;
+    color: #6A6B6C;
   }
   .add-tag {
-    background-color: white;
-    border: 1px solid #d7d7d8;
-    padding: 7px 7px 7px 11px;
+    background-color: #c5e9f7;
+    i {
+      font-size: 20px;
+    }
   }
   .add-tag:hover {
     cursor: pointer;
@@ -182,7 +191,7 @@
   }
   i {
     padding-left: 10px;
-    font-size: 20px;
+    font-size: 12px;
   }
   i:hover {
     cursor: pointer;

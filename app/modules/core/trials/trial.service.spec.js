@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTrialService*/
+/* globals $httpBackend, $q, $rootScope, Config, Authinfo, LogMetricsService, TrialCallService, TrialDeviceService,TrialMeetingService,TrialWebexService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, UrlConfig*/
 'use strict';
 
 describe('Service: Trial Service:', function () {
@@ -8,14 +8,11 @@ describe('Service: Trial Service:', function () {
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'WebexTrialService');
+      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialWebexService', 'TrialResource', 'TrialRoomSystemService', 'TrialDeviceService', 'UrlConfig');
   });
 
   beforeEach(function () {
     bard.mockService(LogMetricsService, {});
-  });
-
-  beforeEach(function () {
     bard.mockService(Authinfo, {
       getOrgId: '1',
       getLicenses: [{
@@ -25,6 +22,14 @@ describe('Service: Trial Service:', function () {
       }, {
         'trialId': 'fake-uuid-value-2'
       }]
+    });
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond({
+      activeDeviceTrials: 17,
+      maxDeviceTrials: 20
+    });
+    $httpBackend.whenGET(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials' + '?customerName=searchStr').respond({
+      activeDeviceTrials: 17,
+      maxDeviceTrials: 20
     });
   });
 
@@ -40,6 +45,7 @@ describe('Service: Trial Service:', function () {
 
     beforeEach(function () {
       TrialService.getData();
+      $httpBackend.flush();
     });
 
     afterEach(function () {
@@ -52,7 +58,7 @@ describe('Service: Trial Service:', function () {
     });
 
     it('should start a new trial', function () {
-      $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
+      $httpBackend.whenPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
       TrialService.startTrial().then(function (response) {
         expect(response.data).toEqual(trialAddResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
@@ -63,7 +69,7 @@ describe('Service: Trial Service:', function () {
     it('should edit a trial', function () {
       var customerOrgId = 123;
       var trialId = 444;
-      $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
+      $httpBackend.whenPATCH(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/' + trialId).respond(trialEditResponse);
       TrialService.editTrial(customerOrgId, trialId).then(function (response) {
         expect(response.data).toEqual(trialEditResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
@@ -79,6 +85,9 @@ describe('Service: Trial Service:', function () {
         bard.mockService(TrialMeetingService, {
           getData: trialData.enabled.trials.meetingTrial
         });
+        bard.mockService(TrialWebexService, {
+          getData: trialData.enabled.trials.webexTrial
+        });
         bard.mockService(TrialCallService, {
           getData: trialData.enabled.trials.callTrial
         });
@@ -92,8 +101,8 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have offers list', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-          var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+          var offerList = ['MESSAGE', 'MEETING', 'WEBEX', 'ROOMSYSTEMS', 'CALL'];
           var offers = angular.fromJson(data).offers;
           return _.every(offerList, function (offer) {
             return _.some(offers, {
@@ -108,7 +117,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have meeting settings', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var details = angular.fromJson(data).details;
           return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
         }).respond(200);
@@ -119,7 +128,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have device details', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var deviceList = [{
             model: 'CISCO_SX10',
             quantity: 2
@@ -137,7 +146,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should not have shipping details if none were provided', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           return _.isUndefined(data.shippingInfo);
         }).respond(200);
 
@@ -149,7 +158,7 @@ describe('Service: Trial Service:', function () {
 
     describe('start trial with disabled trials', function () {
       it('should have blank offers list', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           return angular.fromJson(data).offers.length === 0;
         }).respond(200);
 
@@ -159,7 +168,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should have blank details', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var details = angular.fromJson(data).details;
           return _.isEmpty(details.devices) && _.isEmpty(details.offers);
         }).respond(200);
@@ -179,7 +188,7 @@ describe('Service: Trial Service:', function () {
       });
 
       it('should not have devices if call trial order page was skipped', function () {
-        $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
+        $httpBackend.expectPOST(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
           var devices = angular.fromJson(data).details.devices;
           return _.isEmpty(devices);
         }).respond(200);
@@ -358,6 +367,17 @@ describe('Service: Trial Service:', function () {
           fakeToday = new Date(Date.UTC(2016, 1, 1, 23, 59, 59, 999));
           fakeStartDate = new Date(Date.UTC(2016, 1, 1, 0, 0, 0, 0));
           expect(TrialService.calcDaysUsed(fakeStartDate, fakeToday)).toBe(0);
+        });
+      });
+
+      describe('getTrials with customerName search string', function () {
+        it('should successfully return 17 active device trials  with customerName search', function () {
+          TrialService.getTrialsList('searchStr').then(function (response) {
+            expect(response.data.activeDeviceTrials).toBe(17);
+            expect(response.data.maxDeviceTrials).toBe(20);
+            expect(response.status).toBe(200);
+          });
+          $httpBackend.flush();
         });
       });
 

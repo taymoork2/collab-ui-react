@@ -6,7 +6,7 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, $translate, Config, Authinfo, Log) {
+  function SyncService($http, $q, $translate, Config, Authinfo, Log, UrlConfig) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
@@ -45,7 +45,7 @@
       syncMode: syncModes.messenger.off
     };
 
-    var serviceUrl = Config.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
+    var serviceUrl = UrlConfig.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
 
     var service = {
       getSyncStatus: getSyncStatus,
@@ -232,7 +232,7 @@
       var defer = $q.defer();
 
       // This function is called by core/wizard about inviting users w/o checking entitlement
-      // Will check webex-messenger here to prevent unnecessary call to msgr admin service.      
+      // Will check webex-messenger here to prevent unnecessary call to msgr admin service.
       if (!Authinfo.isEntitled(Config.entitlements.messenger)) {
         Log.info('isMessengerSyncEnabled: The Org is not Messenger migrated one, return false.');
         defer.resolve(false);

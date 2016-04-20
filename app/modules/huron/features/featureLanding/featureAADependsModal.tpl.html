@@ -4,10 +4,11 @@
       <span class="sr-only">Close</span>
     </button>
     <p class="h3 modal-title"
-       translate="huronFeatureDetails.aaDependsTitle"
-       translate-values="{featureName : huronFeatureAADepends.featureName}"></p>
+       translate="huronFeatureDetails.aaDependsTitle"></p>
   </div>
   <div class="modal-body">
+    <p translate="huronFeatureDetails.aaDependsContext"
+       translate-values="{featureName : huronFeatureAADepends.featureName}"></p>
     <ul style="list-style-type:none">
         <li ng-repeat="aaname in huronFeatureAADepends.dependsNames">{{aaname}}</li>
     </ul>

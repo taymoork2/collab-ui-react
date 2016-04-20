@@ -2,14 +2,14 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskHeaderController($interval, $scope, HelpdeskSearchHistoryService, Config, HelpdeskSparkStatusService) {
+  function HelpdeskHeaderController($interval, $scope, HelpdeskSearchHistoryService, Config, HelpdeskSparkStatusService, UrlConfig) {
 
     var vm = this;
     vm.clearSearchHistory = clearSearchHistory;
     vm.populateHistory = populateHistory;
     vm.loadSearch = loadSearch;
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
-    vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
     getHealthMetrics();
     var healthStatusPoller = $interval(getHealthMetrics, 60000);

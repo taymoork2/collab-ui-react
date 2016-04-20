@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('Core')
-  .service('SSOService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo',
-    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo) {
+  .service('SSOService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth', 'Authinfo', 'UrlConfig',
+    function ($rootScope, $http, Storage, Config, Log, Auth, Authinfo, UrlConfig) {
 
       return {
         getMetaInfo: function (callback) {
-          var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
+          var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp?attributes=id&attributes=entityId';
 
           $http.get(remoteIdpUrl)
             .success(function (data, status) {
@@ -24,7 +24,7 @@ angular.module('Core')
         },
 
         importRemoteIdp: function (metadataXmlContent, selfSigned, ssoEnabled, callback) {
-          var remoteIdpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
+          var remoteIdpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/remote/idp';
           var payload = {
             schemas: ['urn:cisco:codev:identity:idbroker:metadata:schemas:1.0'],
             metadataXml: metadataXmlContent,
@@ -55,6 +55,11 @@ angular.module('Core')
             metadataXml: metadataXmlContent,
             ssoEnabled: ssoEnabled
           };
+
+          //for ssoEnabled=false we don't need a metadataXml so remove it if argument is undefined or null
+          if (!ssoEnabled && (angular.isUndefined(metadataXmlContent) || metadataXmlContent == null)) {
+            delete payload.metadataXml;
+          }
 
           $http({
               method: 'PATCH',
@@ -89,7 +94,7 @@ angular.module('Core')
         },
 
         downloadHostedSp: function (callback) {
-          var hostedSpUrl = Config.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
+          var hostedSpUrl = UrlConfig.getSSOSetupUrl() + Authinfo.getOrgId() + '/v1/samlmetadata/hosted/sp';
           $http.get(hostedSpUrl)
             .success(function (data, status) {
               data = data || {};

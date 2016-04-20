@@ -9,8 +9,8 @@
   function TrialMessageService(Config) {
     var _trialData;
     var service = {
-      'getData': getData,
-      'reset': reset,
+      getData: getData,
+      reset: reset,
     };
 
     return service;
@@ -27,7 +27,7 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.offerTypes.collab,
+        'type': Config.offerTypes.message,
         'enabled': false,
         'details': {},
       };

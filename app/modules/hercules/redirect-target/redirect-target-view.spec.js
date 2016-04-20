@@ -1,12 +1,11 @@
 'use strict';
 
 describe('RedirectTargetView', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
   var $scope;
   var view;
 
   beforeEach(inject(function ($rootScope, $templateCache, $compile, $httpBackend) {
-    $httpBackend.whenGET('l10n/en_US.json').respond({});
     $scope = $rootScope.$new();
     var html = $templateCache.get("modules/hercules/redirect-target/redirect-target-dialog.html");
     view = $compile(angular.element(html))($scope);

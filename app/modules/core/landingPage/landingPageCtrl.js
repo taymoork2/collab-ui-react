@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
-    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state', 'chartColors', 'UrlConfig',
+    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state, chartColors, UrlConfig) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
 
       $scope.counts = {};
       $scope.refreshTime = null;
-      $scope.statusPageUrl = Config.getStatusPageUrl();
+      $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
 
       $scope.reportStatus = {
         calls: 'refresh',
@@ -82,11 +82,11 @@ angular.module('Core')
           'type': 'serial',
           'theme': 'none',
           'fontFamily': 'CiscoSansTT Thin',
-          'colors': Config.chartColors.blue,
+          'colors': chartColors.blue,
           'graphs': [{
             'type': 'line',
             'bullet': 'round',
-            'lineColor': Config.chartColors.blue,
+            'lineColor': chartColors.blue,
             'fillAlphas': 0,
             'lineAlpha': 1,
             'lineThickness': 3,

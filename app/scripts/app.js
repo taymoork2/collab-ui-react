@@ -23,6 +23,7 @@
 
 angular.module('Core', [
   'core.trial',
+  'core.onboard',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',
@@ -57,6 +58,8 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
+angular.module('DigitalRiver', ['Core']);
+
 angular.module('Huron', [
   'Core',
   'uc.moh',
@@ -69,7 +72,7 @@ angular.module('Huron', [
   'ngIcal'
 ]);
 
-angular.module('Hercules', ['Core', 'ngTagsInput']);
+angular.module('Hercules', ['Core', 'core.onboard', 'ngTagsInput']);
 
 angular.module('Mediafusion', ['Core']);
 
@@ -77,11 +80,15 @@ angular.module('WebExApp', ['Core']);
 
 angular.module('Messenger', ['Core']);
 
-angular.module('Sunlight', ['Core']);
+angular.module('Sunlight', [
+  'Core',
+  'CareDetails'
+]);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
+  'DigitalRiver',
   'Huron',
   'Hercules',
   'Mediafusion',

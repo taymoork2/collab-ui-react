@@ -12,13 +12,10 @@ namespace domainManagement {
       this._loggedOnUser = $state.params.loggedOnUser;
       this._loadTime = moment();
 
-      //if any domain is already verified, it is safe to verify more:
-      if (DomainManagementService.domainList.length == 0
-        || _.all(DomainManagementService.domainList, {status: DomainManagementService.states.pending})) {
-
-        //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
-        if (this.domainName != this._loggedOnUser.domain)
-          this._error = $translate.instant('domainManagement.verify.preventLockoutError', {domain: this._loggedOnUser.domain});
+      if (this._domain && this._domain.text && !this._domain.token) {
+        DomainManagementService.getToken(this._domain.text).then((res) => {
+          this._domain.token = res;
+        })
       }
     }
 
@@ -34,13 +31,16 @@ namespace domainManagement {
       return this._error;
     }
 
+    get showWarning() {
+      return this.DomainManagementService.enforceUsersInVerifiedAndClaimedDomains;
+    }
+
     set error(error) {
       this._error = error;
     }
 
     get operationAllowed() {
-      //input validation:
-      if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
+      if (!this.domain.token)
         return false;
 
       return !this._error;

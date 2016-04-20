@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$filter', '$location', '$window', '$http', 'Storage', 'SessionStorage', 'Config', 'Utils', 'Auth', 'Authinfo', 'PageParam', '$state', '$timeout', '$stateParams', 'LogMetricsService', 'Log',
-    function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, Log) {
+  .controller('LoginCtrl', ['$filter', '$http', '$location', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', '$window', 'Auth', 'Authinfo', 'Config', 'Log', 'LogMetricsService', 'PageParam', 'SessionStorage', 'Storage', 'Utils',
+    function ($filter, $http, $location, $rootScope, $scope, $state, $stateParams, $timeout, $window, Auth, Authinfo, Config, Log, LogMetricsService, PageParam, SessionStorage, Storage, Utils) {
 
       var loadingDelay = 2000;
       var logoutDelay = 5000;
@@ -23,6 +23,8 @@ angular.module('Core')
         SessionStorage.put('partnerOrgName', $stateParams.partnerOrgName);
         SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
       }
+
+      $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
       $scope.login = function (keyCode) {
         if (!keyCode || (keyCode === 13 && $scope.loginForm.email.$valid)) {
@@ -49,7 +51,7 @@ angular.module('Core')
               } else if (SessionStorage.get(storedState)) {
                 state = SessionStorage.pop(storedState);
                 params = SessionStorage.popObject(storedParams);
-              } else if (Authinfo.isPartnerAdmin()) {
+              } else if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) {
                 Log.debug('Sending "partner logged in" metrics');
                 LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
                 state = 'partneroverview';
@@ -82,21 +84,8 @@ angular.module('Core')
       if (!_.isEmpty(Storage.get('accessToken'))) {
         authorizeUser();
       } else if (!_.isNull(queryParams) && !_.isUndefined(queryParams.sso) && queryParams.sso === 'true') {
-        Auth.redirectToLogin();
+        Auth.redirectToLogin(null, queryParams.sso);
       }
-
-      // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).
-      function isIe() {
-        return false || ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
-      }
-
-      $scope.checkForIeWorkaround = function () {
-        if (isIe()) {
-          return "vertical-ie-workaround";
-        } else {
-          return "";
-        }
-      };
 
     }
   ]);

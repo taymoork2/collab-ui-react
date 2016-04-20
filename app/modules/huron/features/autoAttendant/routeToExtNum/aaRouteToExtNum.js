@@ -20,7 +20,8 @@
       key: 'phoneNumberInput',
       type: 'countrylist',
       templateOptions: {
-        placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder')
+        placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder'),
+        required: true
       }
     }];
 
@@ -30,6 +31,8 @@
       entries: []
     };
     vm.menuKeyEntry = {};
+
+    vm.uniqueCtrlIdentifer = $scope.schedule + "-" + $scope.index + ($scope.keyIndex ? ("-" + $scope.keyIndex) : "");
 
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
@@ -75,6 +78,17 @@
         if (newValue != oldValue) {
           saveUiModel();
         }
+      }
+    );
+
+    $scope.$watch('countrySelectForm.$invalid', function (invalid) {
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, !invalid);
+    });
+
+    $scope.$on(
+      "$destroy",
+      function (event) {
+        AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
       }
     );
 

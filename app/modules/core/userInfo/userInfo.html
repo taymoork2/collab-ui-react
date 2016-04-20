@@ -15,8 +15,12 @@
     <li class="divider"></li>
     <li ng-controller="SettingsMenuCtrl as langSettings">
       <a class="select-lng-dropdown">
-        <select id="languageSelector" ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
+        <select
+          id="languageSelector"
+          ng-options="item.label for item in langSettings.options track by item.value"
+          ng-model="langSettings.selected"
+          ng-change="langSettings.updateLanguage()"
+          onclick="event.stopPropagation();">
         </select>
       </a>
     </li>
@@ -26,7 +30,7 @@
     <li id="support-btn">
       <a id="support-lnk" href="{{supportUrl}}" target="_blank" tabindex="0" translate="index.support"></a>
     </li>
-    <li id="videoTutorial-btn" ng-hide="!(isPartner || isPartnerSales)">
+    <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales">
       <a id="videoTutorial-lnk" ng-click="openVideo()" tabindex="0" translate="index.videoTutorial"></a>
     </li>
     <li id="logout-btn" ng-show="loggedIn">

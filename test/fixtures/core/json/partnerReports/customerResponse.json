@@ -1,16 +1,43 @@
-[{
-  "customerOrgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
-  "state": "ACTIVE",
-  "customerName": "Test Org One",
-  "isAllowedToManage": true
-}, {
-  "customerOrgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
-  "state": "ACTIVE",
-  "customerName": "Test Org Two",
-  "isAllowedToManage": true
-}, {
-  "customerOrgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
-  "state": "ACTIVE",
-  "customerName": "Test Org Three",
-  "isAllowedToManage": true
-}]
+{
+  "customerResponse": [{
+    "customerOrgId": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "state": "ACTIVE",
+    "customerName": "Test Org One",
+    "isAllowedToManage": true
+  }, {
+    "customerOrgId": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+    "state": "ACTIVE",
+    "customerName": "Test Org Two",
+    "isAllowedToManage": true
+  }, {
+    "customerOrgId": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+    "state": "ACTIVE",
+    "customerName": "Test Org Three",
+    "isAllowedToManage": true
+  }],
+  "customerOptions": [{
+    "value": "a7cba512-7b62-4f0a-a869-725b413680e4",
+    "label": "Test Org One",
+    "isAllowedToManage": true,
+    "isSelected": true
+  }, {
+    "value": "1896f9dc-c5a4-4041-8257-b3adfe3cf9a4",
+    "label": "Test Org Three",
+    "isAllowedToManage": true,
+    "isSelected": true
+  }, {
+    "value": "b7e25333-6750-4b17-841c-ce5124f8ddbb",
+    "label": "Test Org Two",
+    "isAllowedToManage": true,
+    "isSelected": true
+  }, {
+    "value": "1",
+    "label": "Test Partner",
+    "isAllowedToManage": true,
+    "isSelected": true
+  }],
+  "nullCustomer": {
+    "value": 0,
+    "label": ""
+  }
+}

@@ -136,16 +136,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
     });
     **** */
 
-    it('should have called setCeInfo', function () {
-
-      controller.name = rawCeInfo.callExperienceName;
-
-      controller.saveUiModel();
-
-      $scope.$apply();
-
-      expect(AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalled();
-    });
   });
 
 });

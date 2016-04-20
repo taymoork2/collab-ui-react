@@ -1,6 +1,8 @@
 'use strict';
 
 describe('Service: AALanguageService', function () {
+  var enUs = loadEnUs();
+
   var AALanguageService;
   var $translate;
 
@@ -24,7 +26,17 @@ describe('Service: AALanguageService', function () {
     $translate = _$translate_;
   }));
 
-  afterEach(function () {});
+  describe('localizations', function () {
+    it('should have localized all languages', function () {
+      var count = 0;
+      AALanguageService.getLanguageOptions().forEach(function (lang) {
+        var translation = _.get(enUs, lang.label);
+        if (!translation) throw new Error('Translation not found for ' + lang.label);
+        count++;
+      });
+      expect(count).toBe(25);
+    });
+  });
 
   describe('getLanguageOptions', function () {
 
@@ -185,5 +197,12 @@ describe('Service: AALanguageService', function () {
     });
 
   });
+
+  function loadEnUs() {
+    jasmine.getJSONFixtures().fixturesPath = 'base/app';
+    var data = getJSONFixture('l10n/en_US.json');
+    jasmine.getJSONFixtures().fixturesPath = 'base/test/fixtures';
+    return data;
+  }
 
 });

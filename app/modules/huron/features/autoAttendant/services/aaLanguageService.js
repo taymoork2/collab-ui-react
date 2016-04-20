@@ -178,7 +178,7 @@
       }]
     }, {
       "code": "gl_ES",
-      "label": "languages.galacian",
+      "label": "languages.galician",
       "voices": [{
         "label": "autoAttendant.voices.carmela",
         "voice": "Carmela",

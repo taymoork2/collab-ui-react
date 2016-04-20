@@ -3,10 +3,12 @@ module.exports = function(context) {
   // Jasmine
   'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done', 'beforeAll', 'afterAll',
   // utils
-  'utils', 'deleteUtils', 'deleteTrialUtils',
+  'utils', 'deleteUtils', 'deleteTrialUtils', 'helper',
   // page objects
   'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice'
+  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
+  // Others
+  'Math', '_'
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -62,9 +64,6 @@ module.exports = function(context) {
 
       // Disallow page element functions
       if (node.callee.type == 'MemberExpression') {
-
-        if (node.callee.object.name == 'Math')
-          return;
 
         // Allow specific page element functions
         if (node.callee.property.type == 'Identifier' &&

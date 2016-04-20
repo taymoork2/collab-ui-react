@@ -1,10 +1,10 @@
 <div class="aa-flex-container">
   <div class="aa-flex-vertical-line"></div>
-  <div ng-show="!actions.template" name="newStepForm" class="aa-panel" id="newStepForm{{schedule + index}}">
+  <div ng-show="!actions.option" name="newStepForm" class="aa-panel" id="newStepForm{{schedule + index}}">
     <div class="aa-panel-body">
-      <div class="aa-flex-row">
+      <div class="aa-flex-row aa-help-wrapper">
         <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
-        <span class="aa-help-icon" aria-label="common.help"></span>
+        <span class="aa-help-icon" aria-label="common.help" popover="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
         <div ng-if="actions.allowStepAddsDeletes" class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>
@@ -14,18 +14,18 @@
       <div class="aa-flex-row">
         <p class="h6 aa-new-step-info" translate="autoAttendant.builderNewStepInfo"></p>
       </div>
-      <div class="aa-flex-row">
-        <cs-select ng-model="actions.template" options="actions.templates" labelfield="title" placeholder="actions.actionPlaceholder" icon="icon-chevron-down" id="actionSelect{{schedule + index}}" on-change-fn="actions.selectTemplate()"></cs-select>
-        <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.builderNewStepChoiceHelp' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+      <div class="aa-flex-row aa-help-wrapper">
+        <cs-select ng-model="actions.option" options="actions.options" labelfield="title" placeholder="actions.actionPlaceholder" icon="icon-chevron-down" id="actionSelect{{schedule + index}}" on-change-fn="actions.selectOption()"></cs-select>
+        <span class="aa-help-icon" aria-label="common.help" aa-popover-html="{{ :: actions.getSelectHint() }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
       </div>
     </div>
   </div>
 
-  <div ng-if="actions.template" class="aa-panel" name="actionForm">
-    <div class="aa-panel-body" name="{{actions.template.title}}">
-      <div class="aa-flex-row">
-        <h3 class="text-info" translate="{{actions.template.title}}"></h3>
-        <span ng-if="actions.template.help" class="aa-help-icon" popover="{{ :: actions.template.help }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+  <div ng-if="actions.option" class="aa-panel" name="actionForm">
+    <div class="aa-panel-body" name="{{actions.option.title}}">
+      <div class="aa-flex-row aa-help-wrapper">
+        <h3 class="text-info" translate="{{actions.option.title}}"></h3>
+        <span ng-if="actions.option.help" class="aa-help-icon" popover="{{ :: actions.option.help }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
         <div ng-if="actions.allowStepAddsDeletes" class="aa-action-delete">
           <a ng-click="actions.removeAction(index)">
             <span class="aa-action-delete-icon" aria-label="common.delete"></span>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="aa-flex-row">
-        <div ng-controller="actions.getTemplateController" ng-include="actions.template.url"></div>
+        <div ng-controller="actions.getOptionController" ng-include="actions.option.url"></div>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
       <div class="aa-flex-vertical-line"></div>
       <div ng-if="actions.allowStepAddsDeletes" class="aa-panel-round">
         <a ng-click="addAction({index: index})">
-          <span class="aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="false" popover-placement="bottom" popover-popup-delay="1500" popover-append-to-body="false"></span>
+          <span class="aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="bottom" popover-popup-delay="1500" popover-append-to-body="false"></span>
         </a>
       </div>
     </div>

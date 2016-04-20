@@ -76,7 +76,7 @@
               <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
               </cs-donut>
               <div class="webex">
-                <div translate="leaderBoard.{{service.offerName}}"></div>
+                <div ng-if="service.offerName !== 'MC'" translate="leaderBoard.{{service.offerName}}"></div>
                 <div ng-if="service.offerName === 'MC'" translate="leaderBoard.WebExMC"></div>
                 <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
                 <span class="quantity" translate="firstTimeWizard.quantity"></span>
@@ -88,9 +88,9 @@
       </section>
     </article>
     </cs-card>
-    <cs-card class="small header-bar people" ng-show="subscription.communication && subscription.communication.services.length !== 0">
+    <cs-card class="small header-bar" ng-show="subscription.communication && subscription.communication.services.length !== 0">
     <article>
-      <header class="header-section align-center">
+      <header class="header-section align-center cta-card ">
         <span class="bucket-header" translate="firstTimeWizard.call"></span>
       </header>
       <section class="bucket-info">

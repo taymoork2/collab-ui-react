@@ -18,9 +18,9 @@ describe('MediaConfigService', function () {
     });
   });
 
-  beforeEach(inject(function ($injector, _MediaConfigService_, Config) {
+  beforeEach(inject(function ($injector, _MediaConfigService_, UrlConfig) {
     Service = _MediaConfigService_;
-    rootPath = Config.getHerculesUrl();
+    rootPath = UrlConfig.getHerculesUrl();
   }));
 
   it('should return the correct url', function () {

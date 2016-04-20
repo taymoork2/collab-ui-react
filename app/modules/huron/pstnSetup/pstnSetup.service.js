@@ -5,13 +5,20 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, Authinfo, PstnSetup, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusCustomerCarrierDidService, TerminusResellerCarrierService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
     var PSTN = "PSTN";
+    var TYPE_PORT = "PORT";
     var PENDING = "PENDING";
     var QUEUED = "QUEUED";
+    var BLOCK = 'block';
+    var ORDER = 'order';
+    var PORT_ORDERS = 'portOrders';
+    var ADVANCED_ORDERS = 'advancedOrders';
+    var NEW_ORDERS = 'newOrders';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
 
     var service = {
       createCustomer: createCustomer,
@@ -27,6 +34,7 @@
       listResellerCarriers: listResellerCarriers,
       orderBlock: orderBlock,
       orderNumbers: orderNumbers,
+      portNumbers: portNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
@@ -35,12 +43,18 @@
       TATA: TATA,
       TELSTRA: TELSTRA,
       PSTN: PSTN,
-      PENDING: PENDING
+      PENDING: PENDING,
+      QUEUED: QUEUED,
+      BLOCK: BLOCK,
+      ORDER: ORDER,
+      PORT_ORDERS: PORT_ORDERS,
+      ADVANCED_ORDERS: ADVANCED_ORDERS,
+      NEW_ORDERS: NEW_ORDERS
     };
 
     return service;
 
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
+    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
       var payload = {
         uuid: uuid,
         name: name,
@@ -49,7 +63,7 @@
         email: email,
         pstnCarrierId: pstnCarrierId,
         numbers: numbers,
-        trial: true
+        trial: trial
       };
 
       if (PstnSetup.isResellerExists()) {
@@ -75,7 +89,7 @@
 
     function listDefaultCarriers() {
       return TerminusCarrierService.query({
-        service: 'PSTN',
+        service: PSTN,
         defaultOffer: true
       }).$promise.then(getCarrierDetails);
     }
@@ -178,15 +192,17 @@
       });
     }
 
-    function orderBlock(customerId, carrierId, npa, quantity) {
+    function orderBlock(customerId, carrierId, npa, quantity, isSequential) {
       var payload = {
         npa: npa,
-        quantity: quantity
+        quantity: quantity,
+        sequential: isSequential
       };
 
-      return TerminusBlockOrderService.save({
+      return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
-        carrierId: carrierId
+        carrierId: carrierId,
+        type: BLOCK
       }, payload).$promise;
     }
 
@@ -195,18 +211,43 @@
         numbers: numbers
       };
 
-      return TerminusNumberOrderService.save({
+      return TerminusCustomerCarrierDidService.save({
         customerId: customerId,
-        carrierId: carrierId
+        carrierId: carrierId,
+        type: ORDER
+      }, payload).$promise;
+    }
+
+    function portNumbers(customerId, carrierId, numbers) {
+      var payload = {
+        numbers: numbers
+      };
+
+      return TerminusCustomerCarrierDidService.save({
+        customerId: customerId,
+        carrierId: carrierId,
+        type: PORT_ORDERS
       }, payload).$promise;
     }
 
     function listPendingOrders(customerId) {
-      return TerminusOrderService.query({
-        customerId: customerId,
-        type: PSTN,
-        status: PENDING
-      }).$promise;
+      var pendingOrders = [];
+      pendingOrders.push(
+        TerminusOrderService.query({
+          customerId: customerId,
+          type: PSTN,
+          status: PENDING
+        }).$promise
+      );
+      pendingOrders.push(
+        TerminusOrderService.query({
+          customerId: customerId,
+          type: TYPE_PORT,
+          status: PENDING
+        }).$promise
+      );
+      return $q.all(pendingOrders)
+        .then(_.flatten);
     }
 
     function getOrder(customerId, orderId) {
@@ -221,17 +262,35 @@
 
       return listPendingOrders(customerId).then(function (orders) {
         var promises = [];
-        angular.forEach(orders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
-            angular.forEach(orderNumbers, function (orderNumber) {
-              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
-                pendingNumbers.push({
-                  pattern: orderNumber.number
-                });
-              }
+        _.forEach(orders, function (carrierOrder) {
+          if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
+            var areaCode = getAreaCode(carrierOrder);
+            try {
+              var json = JSON.parse(carrierOrder.response);
+            } catch (error) {
+              //if parsing fails, give order number to reference possible malformed order
+              pendingNumbers.push({
+                orderNumber: carrierOrder.carrierOrderId
+              });
+              return;
+            }
+            var orderQuantity = json[carrierOrder.carrierOrderId].length;
+            pendingNumbers.push({
+              pattern: '(' + areaCode + ') XXX-XXXX',
+              quantity: orderQuantity
             });
-          });
-          promises.push(promise);
+          } else {
+            var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+              _.forEach(orderNumbers, function (orderNumber) {
+                if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
+                  pendingNumbers.push({
+                    pattern: orderNumber.number
+                  });
+                }
+              });
+            });
+            promises.push(promise);
+          }
         });
 
         return $q.all(promises).then(function () {
@@ -245,6 +304,10 @@
         customerId: customerId,
         did: number
       }).$promise;
+    }
+
+    function getAreaCode(order) {
+      return _.chain(order).get('description').slice(-3).join('').value();
     }
 
   }

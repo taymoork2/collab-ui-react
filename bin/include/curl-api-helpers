@@ -13,10 +13,10 @@ ci_auth_api_url=${ci_auth_api_url:-https://idbroker.webex.com}
 ci_cookie_name=cisPRODiPlanetDirectoryPro
 client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
 client_secret=c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857
-oauth_token_metadata_dir=.oauth_token_metadata
+oauth_token_metadata_dir=.cache/oauth_token_metadata
 tmp_file=/tmp/http-header.$$
 top_dir=${WX2_ADMIN_WEB_CLIENT_HOME}
-auth_src=${top_dir}/test/api_sanity/test_helper.coffee
+auth_src=${top_dir}/test/api_sanity/test_helper.js
 
 # get list of org ids reflecting the list of orgs that we should *never* delete.
 function get_blacklisted_orgs {
@@ -236,10 +236,10 @@ function mk_token_metadata_file {
 # search for a JSON payload still within expiration window (<120-ish min.)
 # - if one exists, print its bearer token
 function get_last_active_bearer_token {
-    local usr_label=${1}
+    local user=${1}
     local expiration_in_min=119  # expiration is 7199 sec., but err on conservative side
     local payloads_list="`mktemp tmp.XXXXX`"
-    find ${top_dir}/${oauth_token_metadata_dir}/${usr_label} -type f -iname \*.json -mmin -${expiration_in_min} > ${payloads_list} 2>/dev/null
+    find ${top_dir}/${oauth_token_metadata_dir}/${user} -type f -iname \*.json -mmin -${expiration_in_min} > ${payloads_list} 2>/dev/null
     local last_active_payload=
     if [ -s "${payloads_list}" ]; then
         last_active_payload=`cat ${payloads_list} | xargs ls -1tr | tail -1`

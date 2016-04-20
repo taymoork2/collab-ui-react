@@ -6,19 +6,15 @@ describe('invite spec', function () {
   //var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoMrkJ7Hye+VFJ20BW2ghuv/7auSaumsYWmMkAlT+HIMqMKyK7AmUY3QhKY8fFXx34AQbKMkqy1ogx8uJUp1QL0E';
   var encryptedQueryParam = 'bnlA6k3ZerWIccYYY2RndVEeMjFu914UOsnFVyYNQoOtS2WBXdmPiQau5G/ErBDSiG5JxjtV9Dk6HIGGAAAkBQmkfHv5S9E8Ub+8rIeosI0QXZbR+/9ZN0m7BEtQIvRLfDFBFqh+L0B7vKsyzLGY/hy+SZ6sLAV22vzHZzWsIMg6OIP5gV/zkw8MLEFAyPNQHHkQQ5t7WB5QhUExd05+XQ==';
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   describe('invite page with user param', function () {
 
     it('should forward to squared app without page param', function () {
-      browser.get('#/invite');
+      navigation.navigateTo('#/invite');
       invite.expectWebClient();
     });
 
-    it('should forward to squared app with page param', function () {
-      browser.get('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
+    xit('should forward to squared app with page param', function () {
+      navigation.navigateTo('#/invite?user=' + encodeURIComponent(encryptedQueryParam));
       invite.expectWebClient();
     });
 
@@ -28,7 +24,7 @@ describe('invite spec', function () {
   xdescribe('Invite Launcher Flow', function () {
 
     it('invitelauncher should forward to squared app', function () {
-      browser.get('#/invitelauncher');
+      navigation.navigateTo('#/invitelauncher');
       invite.expectSquaredProtocol();
     });
 
@@ -37,22 +33,22 @@ describe('invite spec', function () {
   describe('App Launcher Flow', function () {
 
     it('applauncher route should forward to squared app', function () {
-      browser.get('#/applauncher');
+      navigation.navigateTo('#/applauncher');
       invite.expectWebClient();
     });
 
     it('applauncher page should forward to squared app', function () {
-      browser.get('applauncher.html');
+      navigation.navigateTo('applauncher.html');
       invite.expectWebClient();
     });
 
     it('applauncher route should forward to squared app with url paramters', function () {
-      browser.get('#/applauncher' + urlparams);
+      navigation.navigateTo('#/applauncher' + urlparams);
       invite.expectWebClient(urlparams);
     });
 
     it('applauncher page should forward to squared app with url parameters', function () {
-      browser.get('applauncher.html' + urlparams);
+      navigation.navigateTo('applauncher.html' + urlparams);
       invite.expectWebClient(urlparams);
     });
 
@@ -61,12 +57,12 @@ describe('invite spec', function () {
   describe('App Download Page', function () {
 
     it('appdownload route should forward to webapp', function () {
-      browser.get('#/appdownload');
+      navigation.navigateTo('#/appdownload');
       invite.expectWebClient();
     });
 
     it('applauncher page should forward to squared app', function () {
-      browser.get('appdownload.html');
+      navigation.navigateTo('appdownload.html');
       invite.expectWebClient();
     });
   });

@@ -7,90 +7,96 @@
 
         <div class="modal-body" ng-show="cdrLadderDiagram.diagramGenerated">
             <!-- download section-->
-            <div class="row options">
+            <div class="row options showgrid">
                 <button class="btn btn-default" ng-click="cdrLadderDiagram.isDownloadCollapsed = !cdrLadderDiagram.isDownloadCollapsed">
                     <span class="icon icon-download"></span> {{::"cdrLadderDiagram.downLoadEvents" | translate}}
                 </button>
                 <div collapse="cdrLadderDiagram.isDownloadCollapsed" class="download">
-                    <div class="row">
-                        <div class="col-lg-12">
+                    <div class="row showgrid">
+                        <div class="columns medium-12">
                             <h3>{{::"cdrLadderDiagram.downLoadOptions" | translate}}</h3>
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-lg-offset-1 col-lg-3">
+
+                    <div class="row showgrid download">
+                        <div class="columns medium-3 medium-offset-1">
                             <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadJson" | translate}}</h4>
                             <hr class="color-blk">{{::"cdrLadderDiagram.downLoadJsonDesc" | translate}}
                             <br>
                             {{::"cdrLadderDiagram.downLoadJsonNote" | translate}}
                         </div>
-                        <div class="col-lg-3">
+                        <div class="columns medium-3">
                             <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadCsv" | translate}}</h4>
                             <hr class="color-blk">{{::"cdrLadderDiagram.downLoadCsvDesc" | translate}}
                         </div>
-                        <div class="col-lg-3">
+                        <div class="columns medium-3 medium-pull-2">
                             <h4 class="color-blk">{{::"cdrLadderDiagram.downLoadHtml" | translate}}</h4>
                             <hr class="color-blk">{{::"cdrLadderDiagram.downLoadHtmlDesc" | translate}}
                         </div>
-                        <div class="col-lg-2"></div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-offset-1 col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.json" ng-href="{{ cdrLadderDiagram.jsonUrl }}"><span class="icon icon-download"></span></a></div>
-                        <div class="col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.csv" ng-href="{{ cdrLadderDiagram.csvUrl }}"><span class="icon icon-download"></span></a></div>
-                        <div class="col-lg-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.html" ng-href="{{ cdrLadderDiagram.htmlUrl }}"><span class="icon icon-download"></span></a></div>
+                    <div class="row showgrid">
+                        <div class="columns medium-3 medium-offset-1"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.json" ng-href="{{ cdrLadderDiagram.jsonUrl }}"><span class="icon icon-download"></span></a></div>
+                        <div class="columns medium-3"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.csv" ng-href="{{ cdrLadderDiagram.csvUrl }}"><span class="icon icon-download"></span></a></div>
+                        <div class="columns medium-3 medium-pull-2"><a ng-disabled='!cdrLadderDiagram.downloadReady' class="btn btn-info btn-download-icon pull-right" download="events.html" ng-href="{{ cdrLadderDiagram.htmlUrl }}"><span class="icon icon-download"></span></a></div>
                     </div>
                 </div>
             </div>
 
             <!-- filter section-->
-            <div class="row options">
+            <div class="row options showgrid">
                 <button class="btn btn-default" ng-click="cdrLadderDiagram.isFilterCollapsed = !cdrLadderDiagram.isFilterCollapsed">{{::"cdrLadderDiagram.filterOptions" | translate}}</button>
                 <div collapse="cdrLadderDiagram.isFilterCollapsed"  class="filter">
                     <div class="row showgrid">
                         <div class="columns medium-10">
                             <div class="row showgrid">
-                                <h4 class="col-lg-9 inherit-pad" ng-click="cdrLadderDiagram.isCallIdsCollapsed = !cdrLadderDiagram.isCallIdsCollapsed">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isCallIdsCollapsed = !cdrLadderDiagram.isCallIdsCollapsed">
                                     {{::"cdrLadderDiagram.callIds" | translate}}
                                     <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isCallIdsCollapsed, 'icon icon-arrow-up' : !cdrLadderDiagram.isCallIdsCollapsed}"></span>
                                 </h4>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2"></div>
+                            </div>
+                            <div class="row showgrid">
                                 <div collapse="cdrLadderDiagram.isCallIdsCollapsed">
-                                    <div class="inline no-wrap col-lg-4" ng-repeat="callId in cdrLadderDiagram.filterCallIdOptions">
-                                        <cs-checkbox ckid="{{callId.label}}" ng-model="callId.value" label="{{callId.label}}"></cs-checkbox>
+                                    <div class="row showgrid"  ng-repeat="callId in cdrLadderDiagram.filterCallIdOptions">
+                                        <div class="columns medium-11 medium-offset-1">
+                                            <cs-checkbox ckid="{{callId.label}}" ng-model="callId.value" label="{{callId.label}}"></cs-checkbox>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <h4 class="col-lg-9 inherit-pad" ng-click="cdrLadderDiagram.isSessionIDPairsCollapsed = !cdrLadderDiagram.isSessionIDPairsCollapsed">
+
+                            <div class="row showgrid">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isSessionIDPairsCollapsed = !cdrLadderDiagram.isSessionIDPairsCollapsed">
                                     {{::"cdrLadderDiagram.localRemoteSessionIds" | translate}}
                                     <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isSessionIDPairsCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isSessionIDPairsCollapsed == false }"></span>
                                 </h4>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2"></div>
+                            </div>
+                            <div class="row showgrid">
                                 <div collapse="cdrLadderDiagram.isSessionIDPairsCollapsed">
-                                    <div class="inline no-wrap col-lg-5" ng-repeat="pair in cdrLadderDiagram.SessionIDPairsFilterOptions">
-                                        <cs-checkbox ckid="{{pair.label}}" ng-model="pair.value" label="{{pair.label}}"></cs-checkbox>
+                                    <div class="row showgrid" ng-repeat="pair in cdrLadderDiagram.SessionIDPairsFilterOptions">
+                                        <div class="columns medium-11 medium-offset-1">
+                                            <cs-checkbox ckid="{{pair.label}}" ng-model="pair.value" label="{{pair.label}}"></cs-checkbox>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <h4 class="col-lg-9 inherit-pad" ng-click="cdrLadderDiagram.isHostNameCollapsed = !cdrLadderDiagram.isHostNameCollapsed">
+
+                            <div class="row showgrid">
+                                <h4 class="filter-label" ng-click="cdrLadderDiagram.isHostNameCollapsed = !cdrLadderDiagram.isHostNameCollapsed">
                                     {{::"cdrLadderDiagram.hostname" | translate}}
                                     <span ng-class="{ 'icon icon-arrow-down' : cdrLadderDiagram.isHostNameCollapsed == true, 'icon icon-arrow-up' : cdrLadderDiagram.isHostNameCollapsed == false }"></span>
                                 </h4>
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2"></div>
+                            </div>
+                            <div class="row showgrid">
                                 <div collapse="cdrLadderDiagram.isHostNameCollapsed">
-                                    <div class="inline no-wrap col-lg-4" ng-repeat="hostName in cdrLadderDiagram.filterHostNamefilterOptions">
-                                        <cs-checkbox ckid="{{hostName.label}}" ng-model="hostName.value" label="{{hostName.label}}"></cs-checkbox>
+                                    <div class="row showgrid" ng-repeat="hostName in cdrLadderDiagram.filterHostNamefilterOptions">
+                                        <div class="columns medium-11 medium-offset-1">
+                                            <cs-checkbox ckid="{{hostName.label}}" ng-model="hostName.value" label="{{hostName.label}}"></cs-checkbox>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="columns medium-2">
                             <div class="columns small-12" cs-dropdown is-open="cdrLadderDiagram.FilterSelectisOpen">

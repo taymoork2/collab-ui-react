@@ -8,7 +8,7 @@
           </cs-select>
         </div>
         <div class="small-8 columns">
-          <cs-select ng-model="keyAction.action" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
+          <cs-select ng-model="keyAction.action" valuefield="name" labelfield="label" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
           <div ng-switch="keyAction.action.name" class="aa-key-action">
             <aa-route-to-user ng-switch-when="phoneMenuRouteUser"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-user>
@@ -20,7 +20,7 @@
             <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-message>
          </div>
         </div>
-        <div class="text-right small-1 columns">
+        <div class="small-1 columns">
           <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></span>
         </div>
       </div>
@@ -34,14 +34,6 @@
   </div>
   <!-- timeout/invalid action -->
   <div class="panel">
-    <div class="row aa-pm-timeout">
-      <div class="small-4 columns">
-        <label class="control-label" for="timeoutSelect" translate="autoAttendant.phoneMenuTimeout"></label>
-      </div>
-      <div class="small-8 columns">
-        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" on-change-fn="aaPhoneMenu.timeoutInvalidChanged()">
-        </cs-select>
-      </div>
-    </div>
+    <aa-timeout-invalid aa-schedule="{{schedule}}" aa-index="index"></aa-timeout-invalid>
   </div>
 </div>

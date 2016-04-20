@@ -2,13 +2,13 @@
 
 //Defining a MeetingListService.
 angular.module('Mediafusion')
-  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth) {
+  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
-      var baseUrl = Config.getMeetingServiceUrl();
-      var meetinginfoUrl = Config.getMeetingInfoServiceUrl();
+      var baseUrl = UrlConfig.getMeetingServiceUrl();
+      var meetinginfoUrl = UrlConfig.getMeetingInfoServiceUrl();
 
       var meetinglistservice = {
 

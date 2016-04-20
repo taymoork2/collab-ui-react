@@ -3,7 +3,7 @@
 describe('ServiceStatusSummaryService', function () {
 
   // load the service's module
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   // instantiate service
   var Service;

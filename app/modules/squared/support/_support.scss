@@ -157,7 +157,10 @@
 }
 
 .support-logs .ui-grid-header-cell.header-client-log .ui-grid-cell-contents,
-.support-logs .ui-grid-header-cell.header-call-flow-logs .ui-grid-cell-contents{
+.support-logs .ui-grid-header-cell.header-call-flow-logs .ui-grid-cell-contents,
+.support-logs .ui-grid-header-cell.header-call-flow .ui-grid-cell-contents,
+.support-logs .ui-grid-header-cell.header-call-info .ui-grid-cell-contents,
+.support-logs .ui-grid-header-cell.header-call-summary .ui-grid-cell-contents {
   text-align: center;
 }
 
@@ -166,8 +169,25 @@
 }
 
 .support-logs .ui-grid-row-selected .ui-grid-cell.client-log .icon,
-.support-logs .ui-grid-row-selected .ui-grid-cell.call-flow-logs .icon {
+.support-logs .ui-grid-row-selected .ui-grid-cell.call-flow-logs .icon,
+.support-logs .ui-grid-row-selected .ui-grid-cell.call-flow .icon,
+.support-logs .ui-grid-row-selected .ui-grid-cell.call-info .icon,
+.support-logs .ui-grid-row-selected .ui-grid-cell.call-summary .icon {
   color: $white;
+}
+
+.support-logs .searchbox {
+  display: block;
+  float: left;
+}
+
+.support-logs .searchbox .searchinput {
+  margin-right: .5rem;
+}
+
+.support-logs .search-button {
+  display: block;
+  float: left;
 }
 
 /*.support-logs .ui-grid-header {

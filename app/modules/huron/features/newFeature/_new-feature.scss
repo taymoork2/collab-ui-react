@@ -1,49 +1,92 @@
-.huron-new-feature-modal {  // The modal body.
+.huron-new-feature-modal {
+  // The modal body.
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 2);
-
-  & button {               // The button options in the body.
+  & button {
+    // The button options in the body.
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    flex: 1;
+    flex: 1 1 200px;
     color: $gray-darkest;
     background-color: $gray-lightest;
     border-style: hidden;
     @include vr-spacing(mr, .125);
+    @include vr-spacing(ml, .5);
+    @include vr-spacing(mb, 1);
     @include vr-spacing(p, 0);
-
     &:hover {
       background-color: $gray-light;
     }
   }
 }
 
-.feature-modal-loading{
+.feature-modal-loading {
   font-size: 3rem;
   text-align: center;
 }
 
 .feature-icon-container {
   @include vr-spacing(pt, 2.5);
+  .icons {
+    width: rem-calc(120);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    color: $gray-base;
+    &.show-line:before {
+      content: ' ';
+      border-left: 1px solid $gray-base;
+      height: 1rem;
+      position: relative;
+      top: rem-calc(46);
+      left: 50%;
+    }
+    &.no-line {
+      padding-top: 1rem;
+    }
+    &.show-tree-line:before {
+      content: ' ';
+      border-top: 1px solid $gray-base;
+      border-left: 1px solid $gray-base;
+      border-right: 1px solid $gray-base;
+      height: 0.75rem;
+      width: 4rem;
+      position: relative;
+      top: rem-calc(46);
+      left: 50%;
+      margin-left: -2rem;
+      margin-bottom: 0.25rem;
+    }
+  }
+  .icon {
+    font-size: 24px;
+    flex: 1;
+    &:first-child {
+      flex-basis: 100%;
+      padding-bottom: 24px;
+    }
+  }
 }
 
 .feature-icon-circle {      // Icon in the option.
-  font-family: $brand-font-cisco-TT-Extra-Light;
+  font-family: $brand-font-extra-light;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
   justify-content: center;
-  font-size: $font-size-h1;
+  font-size: $h2-font-size;
   background: $brand-white;
   border-radius: 50%;
   width: rem-calc(78);
   height: rem-calc(78);
   @include vr-spacing(p, .625);
+  padding-top: 12px;
 }
 
 .feature-icon-color-AA {
@@ -53,6 +96,7 @@
 .feature-icon-color-HG {
   color: $color-eggplant;
 }
+
 .feature-icon-color-CP {
   color: $color-alerts;
 }
@@ -66,4 +110,7 @@
   @include vr-spacing(pt, 2);
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
+  &.text-center {
+    padding: 20px 20%;
+  }
 }

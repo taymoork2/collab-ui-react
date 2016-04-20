@@ -6,8 +6,8 @@
     .service('Userservice', Userservice);
 
   /* @ngInject */
-  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService) {
-    var userUrl = Config.getAdminServiceUrl();
+  function Userservice($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService, UrlConfig) {
+    var userUrl = UrlConfig.getAdminServiceUrl();
 
     var service = {
       updateUsers: updateUsers,
@@ -20,7 +20,9 @@
       migrateUsers: migrateUsers,
       onboardUsers: onboardUsers,
       bulkOnboardUsers: bulkOnboardUsers,
-      deactivateUser: deactivateUser
+      deactivateUser: deactivateUser,
+      resendInvitation: resendInvitation,
+      sendSparkWelcomeEmail: sendSparkWelcomeEmail
     };
 
     return service;
@@ -62,19 +64,19 @@
           method: 'PATCH',
           url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
           data: userData
-        }).success(function (data, status) {
+        }).success(function (data, status, headers) {
           data = data || {};
           $rootScope.$broadcast('Userservice::updateUsers');
           data.success = true;
           if (angular.isFunction(callback)) {
-            callback(data, status, method);
+            callback(data, status, method, headers);
           }
-        }).error(function (data, status) {
+        }).error(function (data, status, headers) {
           data = data || {};
           data.success = false;
           data.status = status;
           if (angular.isFunction(callback)) {
-            callback(data, status, method);
+            callback(data, status, method, headers);
           }
         });
       }
@@ -123,10 +125,9 @@
     }
 
     function getUser(userid, callback) {
-      var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
-      var userUrl = scimUrl;
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
-      $http.get(userUrl, {
+      $http.get(scimUrl, {
           cache: true
         })
         .success(function (data, status) {
@@ -143,7 +144,7 @@
     }
 
     function updateUserProfile(userid, userData, callback) {
-      var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
+      var scimUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
       if (userData) {
 
@@ -433,6 +434,37 @@
         }
 
         return entitlementOrLicense;
+      });
+    }
+
+    function isHuronUser(allEntitlements) {
+      return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
+    }
+
+    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      if (userStatus === 'pending' && !isHuronUser(entitlements)) {
+        return sendSparkWelcomeEmail(userEmail, userName);
+      } else if (isHuronUser(entitlements) && !dirsyncEnabled) {
+        return HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false);
+      }
+      return $q.reject('invitation not sent');
+    }
+
+    function sendSparkWelcomeEmail(userEmail, userName) {
+      var userData = [{
+        'address': userEmail,
+        'name': userName
+      }];
+
+      return $q(function (resolve, reject) {
+        inviteUsers(userData, null, true, function (data, status) {
+          if (data.success) {
+            resolve();
+          } else {
+            Log.debug('Resending failed. Status: ' + status);
+            reject(status);
+          }
+        });
       });
     }
 

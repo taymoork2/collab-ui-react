@@ -3,9 +3,6 @@
 /* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('should login as an admin user', function () {
     login.login('pbr-admin');
@@ -31,6 +28,8 @@ describe('First Time Wizard', function () {
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'SIP Domain');
+    utils.click(wizard.nextBtn);
     utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
@@ -43,7 +42,7 @@ describe('First Time Wizard', function () {
 
   it('should complete simple add users flow', function () {
     wizard.clickAddUsers();
-    utils.click(wizard.radiobuttons.first());
+    utils.click(wizard.manualAddUsers);
     notifications.clearNotifications();
     utils.click(wizard.nextBtn);
     utils.expectIsDisplayed(users.addUsersField);

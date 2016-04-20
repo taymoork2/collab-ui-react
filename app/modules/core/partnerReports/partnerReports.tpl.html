@@ -4,23 +4,23 @@
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-if="(nav.showEngagement && nav.showQuality)" translate="reportsPage.all"></span>
+          <span class="name" ng-if="nav.showEngagement && nav.showQuality" translate="reportsPage.all"></span>
           <span class="name" ng-if="nav.showEngagement && !nav.showQuality" translate="reportsPage.engagement"></span>
           <span class="name" ng-if="!nav.showEngagement && nav.showQuality" translate="reportsPage.quality"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" >
-          <li class="filter" ng-class="{'active' : nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards('all');">
+          <li class="filter" ng-class="{'active' : nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.allReports);">
            <a id="allReports">
               <span class="name" translate="reportsPage.all"></span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : nav.showEngagement && !nav.showQuality}" ng-click="nav.showHideCards('engagement');">
+          <li class="filter" ng-class="{'active' : nav.showEngagement && !nav.showQuality}" ng-click="nav.showHideCards(nav.engagement);">
              <a id="engagementReports">
               <span class="name" translate="reportsPage.engagement"></span>
             </a>
           </li>
-          <li class="filter" ng-class="{'active' : !nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards('quality');">
+          <li class="filter" ng-class="{'active' : !nav.showEngagement && nav.showQuality}" ng-click="nav.showHideCards(nav.quality);">
             <a id="qualityReports">
               <span class="name" translate="reportsPage.quality"></span>
             </a>
@@ -29,8 +29,8 @@
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select class="small-2 medium-2 large-3 columns" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
-      <cs-select  class="small-2 medium-2 large-3  columns" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
+      <cs-select class="small-2 medium-2 large-3 columns" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customerOptions.length < 1"></cs-select>
+      <cs-select class="small-2 medium-2 large-3 columns" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" filter="true" placeholder="nav.customerPlaceholder" multi="true" max="nav.customerMax" singular="{{::nav.customerSingular}}" plural="{{::nav.customerPlural}}" is-disabled="nav.customerOptions.length < 1"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container">

@@ -5,7 +5,7 @@
     .factory('EmailService', EmailService);
 
   /* @ngInject */
-  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService) {
+  function EmailService($http, $rootScope, Config, Authinfo, Auth, LogMetricsService, UrlConfig) {
 
     var _types = {
       CUSTOMER_TRIAL: '1',
@@ -15,12 +15,13 @@
       mkTrialPayload: mkTrialPayload,
       mkTrialConversionReqPayload: mkTrialConversionReqPayload
     };
-    var emailUrl = Config.getAdminServiceUrl() + 'email';
+    var emailUrl = UrlConfig.getAdminServiceUrl() + 'email';
 
     var factory = {
       emailNotifyTrialCustomer: emailNotifyTrialCustomer,
       emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer,
       emailNotifyPartnerTrialConversionRequest: emailNotifyPartnerTrialConversionRequest,
+      emailDRWelcomeRequest: emailDRWelcomeRequest,
       _types: _types,
       _helpers: _helpers
     };
@@ -56,7 +57,7 @@
           CUSTOMER_NAME: customerName,
           CUSTOMER_EMAIL: customerEmail,
           PARTNER_EMAIL: partnerEmail,
-          SUBJECT: customerName + ' has requested to purchase service or extend their trial'
+          SUBJECT: customerName + ' wants to order or extend their trial'
         }
       };
     }
@@ -64,6 +65,19 @@
     // TODO: mv implemention to backend, front-end should shouldn't need this many properties
     function emailNotifyPartnerTrialConversionRequest(customerName, customerEmail, partnerEmail) {
       var emailData = mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail);
+      return email(emailData);
+    }
+
+    function emailDRWelcomeRequest(customerEmail, uuid, orderId) {
+      var emailData = {
+        type: _types.NEW_DR_ORDER_WELCOME,
+        properties: {
+          CUSTOMER_EMAIL: customerEmail,
+          BUYER_UUID: uuid,
+          ORDER_ID: orderId,
+          SUBJECT: 'Setup your Cisco Spark Service'
+        }
+      };
       return email(emailData);
     }
 

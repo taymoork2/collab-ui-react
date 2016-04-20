@@ -1,10 +1,16 @@
 {
   "callExperienceName": "AAA2",
+  "scheduleId": "1",
   "assignedResources": [{
     "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     "type": "directoryNumber",
     "trigger": "incomingCall"
   }],
+  "scheduleEventTypeMap": {
+    "holiday": "closedHours",
+    "closed": "closedHours",
+    "openHours": "openHours"
+  },
   "actionSets": [{
     "name": "regularOpenActions",
     "actions": [{

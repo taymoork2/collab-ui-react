@@ -1,27 +1,17 @@
 'use strict';
 
 describe('Service: USSService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Hercules'));
 
   var $httpBackend, Service, authinfo;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
 
-  beforeEach(function () {
-    module(function ($provide) {
-      authinfo = {
-        getOrgId: sinon.stub()
-      };
-      authinfo.getOrgId.returns("456");
-      $provide.value('Authinfo', authinfo);
-    });
-  });
+  beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_) {
+    authinfo = _Authinfo_;
+    authinfo.getOrgId = sinon.stub().returns('456');
 
-  beforeEach(inject(function (_$httpBackend_, _USSService_) {
     Service = _USSService_;
     $httpBackend = _$httpBackend_;
-    $httpBackend
-      .when('GET', 'l10n/en_US.json')
-      .respond({});
   }));
 
   afterEach(function () {
@@ -31,32 +21,32 @@ describe('Service: USSService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
       .respond({
-        "userStatuses": [{
-          "userId": "123",
-          "orgId": "cisco",
-          "serviceId": "squared-fusion-cal",
-          "entitled": false,
-          "state": "deactivated"
+        userStatuses: [{
+          userId: '123',
+          orgId: 'cisco',
+          serviceId: 'squared-fusion-cal',
+          entitled: false,
+          state: 'deactivated'
         }, {
-          "userId": "123",
-          "orgId": "cisco",
-          "serviceId": "squared-fusion-uc",
-          "entitled": false,
-          "state": "pendingDeactivation"
+          userId: '123',
+          orgId: 'cisco',
+          serviceId: 'squared-fusion-uc',
+          entitled: false,
+          state: 'pendingDeactivation'
         }, {
-          "userId": "123",
-          "orgId": "cisco",
-          "serviceId": "squared-fusion-yolo",
-          "entitled": true,
-          "state": "deactivated"
+          userId: '123',
+          orgId: 'cisco',
+          serviceId: 'squared-fusion-yolo',
+          entitled: true,
+          state: 'deactivated'
         }, {
-          "userId": "123",
-          "orgId": "cisco",
-          "serviceId": "squared-fusion-voicemail",
-          "entitled": true,
-          "state": "activated"
+          userId: '123',
+          orgId: 'cisco',
+          serviceId: 'squared-fusion-voicemail',
+          entitled: true,
+          state: 'activated'
         }]
       });
 
@@ -74,14 +64,14 @@ describe('Service: USSService', function () {
 
   it('should do the jazz', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
       .respond({
-        "userStatuses": [{
-          "userId": "123",
-          "orgId": "cisco",
-          "serviceId": "squared-fusion-cal",
-          "entitled": false,
-          "state": "deactivated"
+        userStatuses: [{
+          userId: '123',
+          orgId: 'cisco',
+          serviceId: 'squared-fusion-cal',
+          entitled: false,
+          state: 'deactivated'
         }]
       });
 
@@ -94,7 +84,7 @@ describe('Service: USSService', function () {
 
   it('should return error status if unable to fetch data from backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?userId=123')
       .respond(500);
 
     var callback = sinon.stub();
@@ -107,7 +97,7 @@ describe('Service: USSService', function () {
 
   it('should return userStatuses summary', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses/summary?orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses/summary')
       .respond({});
 
     var callback = sinon.stub();
@@ -121,7 +111,7 @@ describe('Service: USSService', function () {
 
   it('should set error when userStatuses summary fails', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses/summary?orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses/summary')
       .respond(500);
 
     var callback = sinon.stub();
@@ -135,7 +125,7 @@ describe('Service: USSService', function () {
 
   it('should return userStatuses in getStatuses', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&entitled=true')
       .respond({});
 
     var callback = sinon.stub();
@@ -149,7 +139,7 @@ describe('Service: USSService', function () {
 
   it('should set error when userStatuses get fails', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&orgId=456')
+      .when('GET', rootPath + 'orgs/456/userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&entitled=true')
       .respond(500);
 
     var callback = sinon.stub();
@@ -162,11 +152,6 @@ describe('Service: USSService', function () {
   });
 
   describe('status decoration', function () {
-
-    afterEach(function () {
-      $httpBackend.flush();
-    });
-
     describe('when not entitled', function () {
 
       it('error state is not entitled', function () {

@@ -41,14 +41,16 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $modal, Config, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
+    vm.currentStep = $stateParams.currentStep;
     vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
+    vm.helpUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
@@ -97,8 +99,14 @@
         vm.current.tab = getTabs()[0];
       }
       var steps = getSteps();
-      if (steps.length > 0) {
-        vm.current.step = steps[0];
+      if (steps.length) {
+        var index = _.findIndex(steps, {
+          name: $stateParams.currentStep
+        });
+        if (index === -1) {
+          index = 0;
+        }
+        vm.current.step = steps[index];
       }
     }
 

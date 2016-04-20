@@ -3,18 +3,22 @@
  */
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
   var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
-  var tsTestOutputFolder = test + '/ts';
   var vendor = 'bower_components';
   var node_modules = 'node_modules';
   var now = new Date();
   var year = now.getFullYear();
+  var gulpFiles = 'gulp/**/*.js';
+  var tsSpecSuffix = '.ts.spec.js';
+  var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
+  var examples = 'examples';
+  var cache = '.cache';
 
   var config = {
     build: build,
@@ -22,8 +26,10 @@ module.exports = function() {
     test: test,
     vendor: vendor,
     coverage: 'coverage',
-    e2e: 'test/e2e-protractor',
-    tsTestOutputFolder: tsTestOutputFolder,
+    e2e: e2e,
+    e2eFailRetry: '.e2e-fail-retry',
+    e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
+    e2eReports: e2e + '/reports',
     app: 'app',
     unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
@@ -33,22 +39,31 @@ module.exports = function() {
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
+    cache: cache,
+    examples: examples,
+
+    gulpFiles: gulpFiles,
 
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js',
-        app + '!**/*.spec.js'
+        app + '/scripts/**/*.js'
       ],
-      ts: [app + '/**/*.ts'],
-      json: [app + '/**/*.json'],
-      csv: [app + '/**/*.csv'],
-      docs: [app + '/docs/**/*'],
-      tpl: [app + '/modules/**/*.html'],
-      html: [app + '/*.html'],
-      scss: ['styles/app.scss'],
-      images: [app + '/images'],
-      lang: [app + '/l10n/*.json'],
+      json: app + '/**/*.json',
+      csv: app + '/**/*.csv',
+      docs: app + '/docs/**/*',
+      tpl: app + '/modules/**/*.html',
+      html: app + '/*.html',
+      scss: 'styles/app.scss',
+      images: app + '/images',
+      lang: app + '/l10n/*.json',
+    },
+
+    typeScript: {
+      appFiles: app + '/**/*.ts',
+      testFiles: app + '/**/*.spec.ts',
+      compiledTestSuffix: tsSpecSuffix,
+      compiledTestFiles: compiledTestFiles,
     },
 
     unsupported: {
@@ -75,12 +90,10 @@ module.exports = function() {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
-        tsTestOutputFolder + '/modules/**/*.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -90,14 +103,16 @@ module.exports = function() {
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
         vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
+        node_modules + 'karma-ng-html2js-preprocessor/lib/index.js'
       ],
       global: [
         test + '/global.spec.js',
       ],
       spec: {
         all: app + '/**/*.spec.js',
-        ts: app + '/**/*.spec.ts',
         core: appModules + '/core/**/*.spec.js',
+        digitalRiver: appModules + '/digitalRiver/**/*.spec.js',
+        example: [examples + '/unit/example.module.js', examples + '/unit/*'],
         hercules: appModules + '/hercules/**/*.spec.js',
         huron: appModules + '/huron/**/*.spec.js',
         mediafusion: appModules + '/mediafusion/**/*.spec.js',
@@ -130,17 +145,17 @@ module.exports = function() {
         vendor + '/bootstrap/dist/js/bootstrap.js',
         vendor + '/addressparser/src/addressparser.js',
         vendor + '/alertify.js/lib/alertify.js',
-        vendor + '/amcharts3/amcharts/amcharts.js',
-        vendor + '/amcharts3/amcharts/pie.js',
-        vendor + '/amcharts3/amcharts/serial.js',
-        vendor + '/amcharts3/amcharts/funnel.js',
-        vendor + '/amcharts3/amcharts/plugins/export/export.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/fabric.js/fabric.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/blob.js/blob.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/jszip.js/jszip.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
-        vendor + '/amcharts3/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
+        vendor + '/cisco-amcharts/amcharts/amcharts.js',
+        vendor + '/cisco-amcharts/amcharts/pie.js',
+        vendor + '/cisco-amcharts/amcharts/serial.js',
+        vendor + '/cisco-amcharts/amcharts/funnel.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/export.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/fabric.js/fabric.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/blob.js/blob.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/jszip.js/jszip.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/FileSaver.js/FileSaver.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
         vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
@@ -180,6 +195,7 @@ module.exports = function() {
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+        vendor + '/moment-range/dist/moment-range.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js',
@@ -218,7 +234,7 @@ module.exports = function() {
         vendor + '/angular-dialog-service/dialogs.css',
         vendor + '/animate.css/animate.css',
         vendor + '/ng-tags-input/ng-tags-input.css',
-        vendor + '/amcharts3/amcharts/plugins/export/export.css',
+        vendor + '/cisco-amcharts/amcharts/plugins/export/export.css',
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',
@@ -235,14 +251,17 @@ module.exports = function() {
       ' */\n' +
       '',
 
-    isJenkins: isJenkins,
+    beautifyFiles: [
+      app + '/**/*.js',
+      app + '/**/*.json',
+      test + '/**/*.js',
+      test + '/**/*.json',
+      gulpFiles,
+      '!' + compiledTestFiles,
+      '!test/karma-unit.js',
+      '!karma.conf.js'
+    ]
   };
 
   return config;
-
-  ////////////////
-
-  function isJenkins() {
-    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
-  }
 };

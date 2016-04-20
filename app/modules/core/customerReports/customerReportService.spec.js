@@ -68,7 +68,7 @@ describe('Service: Customer Reports Service', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _CustomerReportService_, _Config_, _Notification_, UrlConfig) {
     $httpBackend = _$httpBackend_;
     CustomerReportService = _CustomerReportService_;
     Config = _Config_;
@@ -76,7 +76,7 @@ describe('Service: Customer Reports Service', function () {
 
     spyOn(Notification, 'notify');
 
-    var baseUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
+    var baseUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/';
     var customerView = '&isCustomerView=true';
     groupRoomsUrl = baseUrl + 'timeCharts/conversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     avgRoomsUrl = baseUrl + 'timeCharts/avgConversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
@@ -126,7 +126,10 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(activeUserDetailedUrl).respond(activeUserData);
 
       CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
-        expect(response).toEqual(responseActiveData);
+        expect(response).toEqual({
+          graphData: responseActiveData,
+          isActiveUsers: true
+        });
       });
 
       $httpBackend.flush();
@@ -136,7 +139,10 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(activeUserDetailedUrl).respond(500, error);
 
       CustomerReportService.getActiveUserData(timeFilter).then(function (response) {
-        expect(response).toEqual([]);
+        expect(response).toEqual({
+          graphData: [],
+          isActiveUsers: false
+        });
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 

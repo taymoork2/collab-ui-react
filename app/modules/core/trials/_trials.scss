@@ -11,6 +11,11 @@
     width: auto;
     padding: 13px 18px 10px 18px;
   }
+  .modal-footer {
+    .pad-top {
+      padding-top: 5px;
+    }
+  }
   .formly-field-checkbox {
     padding-bottom: 0;
     label,
@@ -56,7 +61,7 @@
     .form-group {
       margin-bottom: 0;
     }
-    input.form-control {
+    .form-control {
       margin: 0;
     }
   }
@@ -67,7 +72,10 @@
     padding-left: 22px;
   }
   .pad-top {
-    padding-top: 6px;
+    padding-top: 8px;
+    .cs-input-checkbox {
+      margin-bottom: 0;
+    }
   }
   .did-input .tokenfield {
     min-height: rem(144px);
@@ -102,6 +110,17 @@
   .flex1 {
       flex:1;
       padding-left: 1px;
+  }
+  .legal-tooltip {
+      color: $gray-light-1;
+      padding-left: rem(5px);
+      margin-top: rem(5px);
+  }
+  .tooltip-arrow {
+      top: rem(26px);
+  }
+  .city-width input {
+      min-width: rem(258px);
   }
 }
 

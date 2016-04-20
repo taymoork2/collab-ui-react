@@ -13,7 +13,7 @@
     top: rem-calc(30) !important;
   }
 
-  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite, 
+  .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.invite,
   .ui-grid-row:last-of-type .ui-grid-cell .dropdown.open .dropdown-menu.dropdown-primary.delete {
     top: rem-calc(-30);
   }
@@ -33,20 +33,25 @@
     }
   }
 
-  .export-users {
-    .icon-content-share {
-      color: $gray;
-      font-size: 1.5rem;
-      padding-left: .5rem;
-      margin-left: .5rem;
-      padding-right: .5rem;
-      margin-right: .5rem;
-      margin-top: 1rem;
+  .action-panel {
+    .icon {
+      color: $color-people-base;
+      font-size: 2.2rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
       cursor: pointer;
-      &:hover {
-        color: $brand-primary;
-        text-decoration: none;
-      }
+    }
+    .add-users-button {
+      margin-top: 0.6rem;
+    }
+  }
+
+  .export-users {
+    .icon {
+      color: $gray-dark-1;
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      cursor: pointer;
     }
   }
 

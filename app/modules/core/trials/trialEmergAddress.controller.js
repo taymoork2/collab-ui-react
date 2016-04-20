@@ -20,7 +20,7 @@
 
     vm.emergencyAddressFields = [{
       type: 'inline',
-      className: 'medium-12 columns',
+      className: 'medium-12 columns no-pad',
       templateOptions: {
         fields: [{
           model: vm.trial.details.emergAddr,
@@ -31,48 +31,48 @@
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.address'),
             labelClass: 'columns medium-2 text-right',
-            inputClass: 'columns medium-11'
+            inputClass: 'columns medium-9'
           }
         }, {
           model: vm.trial.details.emergAddr,
           key: 'unit',
           type: 'input',
-          className: 'medium-3 columns no-flex text-right',
+          className: 'medium-3 columns no-flex',
           templateOptions: {
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.unit'),
-            labelClass: 'columns medium-4 text-right',
-            inputClass: 'columns medium-7',
+            labelClass: 'columns medium-3 text-right',
+            inputClass: 'columns medium-9',
 
           }
         }]
       }
     }, {
+      model: vm.trial.details.emergAddr,
+      key: 'city',
+      type: 'input',
+      className: 'medium-9 columns no-pad',
+      templateOptions: {
+        labelfield: 'label',
+        label: $translate.instant('trialModal.pstn.city'),
+        labelClass: 'columns medium-2 text-right',
+        inputClass: 'columns medium-9 city-width',
+      }
+    }, {
       type: 'inline',
-      className: 'medium-12 columns',
+      className: 'medium-9 columns no-pad',
       templateOptions: {
         fields: [{
           model: vm.trial.details.emergAddr,
-          key: 'city',
-          type: 'input',
-          className: 'medium-5 columns no-flex',
-          templateOptions: {
-            labelfield: 'label',
-            label: $translate.instant('trialModal.pstn.city'),
-            labelClass: 'columns medium-3 text-right',
-            inputClass: 'columns medium-8',
-          }
-        }, {
-          model: vm.trial.details.emergAddr,
           key: 'state',
           type: 'select',
-          className: 'medium-4 columns max-width',
+          className: 'medium-5 columns max-width no-flex',
           templateOptions: {
             label: $translate.instant('trialModal.pstn.state'),
             labelfield: 'abbreviation',
             valuefield: 'abbreviation',
             labelClass: 'columns medium-5 text-right',
-            inputClass: 'columns medium-8',
+            inputClass: 'columns medium-7',
             options: []
           },
           controller: /* @ngInject */ function ($scope) {
@@ -84,12 +84,12 @@
           model: vm.trial.details.emergAddr,
           key: 'zip',
           type: 'input',
-          className: 'medium-3 columns no-flex',
+          className: 'medium-6 columns no-flex',
           templateOptions: {
             labelfield: 'label',
             label: $translate.instant('trialModal.pstn.zip'),
-            labelClass: 'columns medium-4 text-right',
-            inputClass: 'columns medium-8',
+            labelClass: 'columns medium-6 text-right',
+            inputClass: 'columns medium-7',
             onBlur: validateAddress
           }
         }]

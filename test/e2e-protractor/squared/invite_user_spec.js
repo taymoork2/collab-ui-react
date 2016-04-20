@@ -1,15 +1,14 @@
 'use strict';
 
 describe('Squared Add User Flow', function () {
-
+  var token;
   var inviteEmail, inviteEmail2;
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as pbr org admin and view users', function () {
-    login.login('pbr-admin', '#/users');
+    login.login('pbr-admin', '#/users')
+      .then(function (bearerToken) {
+        token = bearerToken;
+      });
   });
 
   describe('Add users through modal', function () {
@@ -62,8 +61,8 @@ describe('Squared Add User Flow', function () {
     });
 
     afterAll(function () {
-      deleteUtils.deleteUser(inviteEmail);
-      deleteUtils.deleteUser(inviteEmail2);
+      deleteUtils.deleteUser(inviteEmail, token);
+      deleteUtils.deleteUser(inviteEmail2, token);
     });
 
   });
@@ -116,8 +115,8 @@ describe('Squared Add User Flow', function () {
     });
 
     afterAll(function () {
-      deleteUtils.deleteUser(inviteEmail);
-      deleteUtils.deleteUser(inviteEmail2);
+      deleteUtils.deleteUser(inviteEmail, token);
+      deleteUtils.deleteUser(inviteEmail2, token);
     });
 
   });

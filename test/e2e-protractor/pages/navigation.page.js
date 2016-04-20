@@ -1,5 +1,7 @@
 'use strict';
 
+/*global TIMEOUT*/
+
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
@@ -12,6 +14,7 @@ var Navigation = function () {
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
+  this.callSettings = element(by.css('a[href="#/hurondetails/settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
@@ -36,6 +39,10 @@ var Navigation = function () {
   this.callServicePage = element(by.css('a[href="#services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
+  this.ecToggler = element(by.id('squaredFusionEc-toggler'));
+  this.ecTogglerSwitch = element(by.css('label[for="squaredFusionEc-toggler"]'));
+  this.updateSipDomain = element(by.id('updateSipDomain'));
+  this.inputSipDomain = element(by.id('sipDomain'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -55,6 +62,8 @@ var Navigation = function () {
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
+
+  this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
@@ -115,8 +124,9 @@ var Navigation = function () {
   };
 
   this.clickAutoAttendant = function () {
-    this.clickDevelopmentTab();
-    utils.click(this.callRoutingTab);
+    this.clickServicesTab();
+    utils.click(this.callSettings);
+    this.expectCurrentUrl('/hurondetails/settings');
     utils.click(this.autoAttendantPage);
     this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);
@@ -262,6 +272,49 @@ var Navigation = function () {
       utils.expectIsDisplayed(navigation.deactivateService);
     });
   }
+
+  this.ensureCallServiceAware = function () {
+    /* disabled temporarily as the HS page changes the state of the toggle during loading which throws this off
+    this.ecToggler.isSelected().then(function (selected) {
+      if (!selected) {
+        utils.click(navigation.ecTogglerSwitch);
+      }
+      utils.waitUntilEnabled(navigation.inputSipDomain);
+      utils.clear(navigation.inputSipDomain);
+      utils.sendKeys(navigation.inputSipDomain, '127.0.0.1:8081');
+      utils.click(navigation.updateSipDomain);
+    });*/
+  };
+
+  this.navigateTo = function (url) {
+    return browser.get(getUrl(url));
+  };
+
+  this.navigateToUsingIntegrationForTesting = function (url) {
+    return browser.get(getUrl(url, {
+      forceIntegration: true
+    }));
+  };
+
+  function getUrl(url, opts) {
+    var forceIntegration = opts && opts.forceIntegration;
+    var url = url || '#/login';
+    url += ~url.indexOf('?') ? '&' : '?';
+    url += 'test-env-config=';
+    url += isProductionBackend && !forceIntegration ? 'e2e-prod' : 'e2e';
+    return url;
+  }
+
+  this.launchSupportPage = function () {
+    browser.getAllWindowHandles().then(function (handles) {
+      browser.switchTo().window(handles[1]).then(function () {
+        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
+      });
+      browser.close();
+      // switch back to the main window
+      browser.switchTo().window(handles[0]);
+    });
+  };
 };
 
 module.exports = Navigation;

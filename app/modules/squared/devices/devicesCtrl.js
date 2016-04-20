@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronOrgDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -27,7 +27,8 @@ angular.module('Squared')
         scope: $scope
       });
 
-      vm.huronDeviceListSubscription = CsdmHuronDeviceService.on('data', angular.noop, {
+      var csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
+      vm.huronDeviceListSubscription = csdmHuronOrgDeviceService.on('data', angular.noop, {
         scope: $scope
       });
 
@@ -35,19 +36,27 @@ angular.module('Squared')
         return (vm.shouldShowList() && (
           Object.keys(CsdmCodeService.getCodeList()).length > 0 ||
           Object.keys(CsdmDeviceService.getDeviceList()).length > 0 ||
-          Object.keys(CsdmHuronDeviceService.getDeviceList()).length > 0));
+          Object.keys(csdmHuronOrgDeviceService.getDeviceList()).length > 0));
       };
 
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
           (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
-          (vm.huronDeviceListSubscription.eventCount !== 0 || CsdmHuronDeviceService.getDeviceList().length > 0);
+          (vm.huronDeviceListSubscription.eventCount !== 0 || csdmHuronOrgDeviceService.getDeviceList().length > 0);
+      };
+
+      vm.isEntitledToRoomSystem = function () {
+        return Authinfo.isDeviceMgmt();
+      };
+
+      vm.isEntitledToHuron = function () {
+        return Authinfo.isSquaredUC();
       };
 
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
-          .extend(CsdmHuronDeviceService.getDeviceList())
+          .extend(csdmHuronOrgDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
           .extend(CsdmUnusedAccountsService.getAccountList())
           .values()
@@ -58,8 +67,13 @@ angular.module('Squared')
       vm.showDeviceDetails = function (device) {
         vm.currentDevice = device; // fixme: modals depend on state set here
         $state.go('device-overview', {
-          currentDevice: device
+          currentDevice: device,
+          huronDeviceService: csdmHuronOrgDeviceService
         });
+      };
+
+      vm.clickUsers = function () {
+        $state.go('users.list');
       };
 
       vm.gridOptions = {

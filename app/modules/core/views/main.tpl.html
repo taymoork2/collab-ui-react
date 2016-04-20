@@ -1,26 +1,17 @@
 <div class="app-container">
   <div ng-controller="HeaderCtrl">
-    <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" >
+    <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" show-read-only>
       <cs-header-left>
-        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="top-bar-title" title="{{orgname}}">{{orgname}}</div></div>
+        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()">
+          <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
+        </div>
       </cs-header-left>
       <cs-header-right>
+        <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>
         <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
           <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
         </div>
-        <div cs-dropdown class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
-          <button cs-dropdown-toggle ng-show = "tabs && tabs.length > 0"  class="btn btn--header dropdown-toggle">
-            <div>
-              <i class="icon-settings icon"></i>
-              <span class="header-label">{{::'settings.title' | translate}}</span>
-            </div>
-          </button>
-          <ul cs-dropdown-menu class="dropdown-menu" role="menu">
-            <li ng-repeat="item in tabs">
-              <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
-            </li>
-          </ul>
-        </div>
+        <cr-setup-dropdown ng-if="Utils.isAdminPage()"></cr-setup-dropdown>
         <cr-user-info ng-if="Utils.isAdminPage()"></cr-user-info>
       </cs-header-right>
     </cs-header>

@@ -5,9 +5,9 @@
     .service('CdrLadderDiagramService', CdrLadderDiagramService);
 
   /* @ngInject */
-  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log) {
-    var callflowDiagramUrl = Config.getAdminServiceUrl() + 'callflow/ladderdiagram';
-    var TIMEOUT_IN_MILI = 8000;
+  function CdrLadderDiagramService($rootScope, $http, $q, Config, $filter, $translate, Notification, Log, UrlConfig) {
+    var callflowDiagramUrl = UrlConfig.getAdminServiceUrl() + 'callflow/ladderdiagram';
+    var TIMEOUT_IN_MILI = 15000;
     var NOT_FOUND = 'Not Found';
     var serviceName = "Diagnostics Server";
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
@@ -118,11 +118,12 @@
       return '';
     }
 
-    svc.query = function (esQuery) {
+    svc.query = function (esQuery, logstashPath) {
+      var cdrUrl = UrlConfig.getCdrUrl() + logstashPath + "/_search?pretty";
       var defer = $q.defer();
       $http({
         method: "POST",
-        url: Config.getCdrUrl(),
+        url: cdrUrl,
         data: esQuery,
         timeout: TIMEOUT_IN_MILI
       }).success(function (response) {
@@ -132,7 +133,7 @@
         if (status === 500 && response === retryError) {
           $http({
             method: "POST",
-            url: Config.getCdrUrl(),
+            url: cdrUrl,
             data: esQuery,
             timeout: TIMEOUT_IN_MILI
           }).success(function (secondaryResponse) {

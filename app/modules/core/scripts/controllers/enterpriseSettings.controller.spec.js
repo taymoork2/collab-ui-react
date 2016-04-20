@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: EnterpriseSettingsCtrl', function () {
-  var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
+  var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification, SSOService;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
   var rootScope;
@@ -16,6 +16,8 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
   beforeEach(module('Core'));
 
+  beforeEach(installPromiseMatchers);
+
   beforeEach(inject(function ($rootScope, _$controller_, _Notification_, _Config_, _$q_, _Orgservice_, _SparkDomainManagementService_) {
     $scope = $rootScope.$new();
     rootScope = $rootScope;
@@ -25,6 +27,12 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     Orgservice = _Orgservice_;
     Notification = _Notification_;
     $q = _$q_;
+
+    $scope.wizard = {
+      nextTab: sinon.stub()
+    };
+
+    spyOn($scope.wizard, 'nextTab');
 
     SparkDomainManagementService.checkDomainAvailability = jasmine.createSpy().and.returnValue($q.when({
       data: {
@@ -55,6 +63,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
   function initController() {
     controller = $controller('EnterpriseSettingsCtrl', {
       $scope: $scope,
+      $rootScope: rootScope,
       Authinfo: authInfo
     });
 
@@ -69,6 +78,22 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
     it('should call the Orgservice and set the displayName', function () {
       expect($scope.cloudSipUriField.inputValue).not.toBe('');
+    });
+  });
+
+  describe('test Orgservice getOrg callback sets displayName under different conditions', function () {
+    beforeEach(function () {
+      Orgservice.getOrg.and.callFake(function (callback, status) {
+        callback({
+          verifiedDomains: ['AtlasTestSipUri.com', 'AtlasTest.com'],
+          orgSettings: {}
+        }, 200);
+      });
+      initController();
+    });
+
+    it('should set displayName using the verifiedDomains from response', function () {
+      expect($scope.cloudSipUriField.inputValue).toBe('atlastestsipuri');
     });
   });
 
@@ -112,6 +137,73 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       $scope.checkSipUriAvailability();
       expect($scope.cloudSipUriField.isUrlAvailable).toEqual(false);
     });
+  });
+
+  describe('test the ssoEnabled settings', function () {
+    beforeEach(initController);
+
+    it('should set ssoEnabled field to true in the scope', function () {
+      rootScope.ssoEnabled = true;
+      $scope.updateSSO();
+      $scope.$apply();
+      expect($scope.ssoEnabled).toEqual(true);
+    });
+
+    it('should set ssoEnabled field to false in the scope', function () {
+      rootScope.ssoEnabled = false;
+      $scope.updateSSO();
+      $scope.$apply();
+      expect($scope.ssoEnabled).toEqual(false);
+    });
+
+    it('should go to next tab if sso is on and user clicks on next without clicking modify', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = false;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+    });
+
+    it('should go to next tab if sso is on and user clicks modify and switches from advanced to simple', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = true;
+      $scope.options.deleteSSOBySwitchingRadio = true;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+      //modify flag should be reset
+      expect($scope.options.modifySSO).toEqual(false);
+    });
+
+    it('should go to next step if sso is on and user clicks modify and clicks next without switching from advanced to simple', function () {
+      $scope.ssoEnabled = true;
+      $scope.options.modifySSO = true;
+      $scope.options.deleteSSOBySwitchingRadio = false;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeResolved();
+      expect($scope.options.modifySSO).toEqual(false);
+    });
+
+    it('should go to next tab if sso is off and user selects simple option', function () {
+      $scope.ssoEnabled = false;
+      $scope.options.configureSSO = 1;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeRejected();
+      expect($scope.wizard.nextTab).toHaveBeenCalled();
+    });
+
+    it('should go to next step if sso is off and user selects advanced option', function () {
+      $scope.ssoEnabled = false;
+      $scope.options.configureSSO = 0;
+      var promise = $scope.initNext();
+      $scope.$apply();
+      expect(promise).toBeResolved();
+    });
+
   });
 
   describe('test if addSipUriDomain errors gracefully', function () {

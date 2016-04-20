@@ -158,7 +158,7 @@
           _this.webExSiteSettingsObj.pageTitle = pageTitle;
           _this.webExSiteSettingsObj.pageTitleFull = pageTitleFull;
 
-          WebExXmlApiFact.getSessionTicket(siteUrl).then(
+          WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
             function getSessionTicketSuccess(sessionTicket) {
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
