@@ -5,7 +5,7 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
+function Auth($injector, $translate, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, WindowLocation) {
 
   var service = {
     logout: logout,
@@ -97,7 +97,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
         clearStorage();
-        $window.location.href = OAuthConfig.getLogoutUrl();
+        WindowLocation.set(OAuthConfig.getLogoutUrl());
       });
   }
 
@@ -107,9 +107,9 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function redirectToLogin(email, sso) {
     if (email) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
+      WindowLocation.set(OAuthConfig.getOauthLoginUrl(email, getOauthState()));
     } else if (sso) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
+      WindowLocation.set(OAuthConfig.getOauthLoginUrl(null, getOauthState()));
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
