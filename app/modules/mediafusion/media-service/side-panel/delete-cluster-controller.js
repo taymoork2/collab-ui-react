@@ -4,7 +4,7 @@
   /* @ngInject */
   function DeleteClusterController(groupName, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
     var vm = this;
-    window.x = $window;
+
     vm.groupDetail = null;
 
     vm.deleteAreYouSure = $translate.instant(

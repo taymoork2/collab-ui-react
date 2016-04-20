@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
+  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig, Notification) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');

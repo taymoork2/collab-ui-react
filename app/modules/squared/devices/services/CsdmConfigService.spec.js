@@ -1,22 +1,9 @@
 'use strict';
 
 describe('CsdmConfigService', function () {
-  beforeEach(module('wx2AdminWebClientApp'));
+  beforeEach(module('Squared'));
 
-  var Service, win;
-  var rootPath;
-
-  beforeEach(function () {
-    module(function ($provide) {
-      win = {
-        location: {
-          search: ''
-        },
-        document: window.document
-      };
-      $provide.value('$window', win);
-    });
-  });
+  var Service, rootPath;
 
   beforeEach(inject(function ($injector, _CsdmConfigService_, UrlConfig) {
     Service = _CsdmConfigService_;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService) {
+  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService, Notification) {
 
     MediaClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
