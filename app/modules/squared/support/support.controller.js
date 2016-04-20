@@ -7,7 +7,7 @@
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig) {
+  function SupportCtrl($scope, $timeout, $filter, Notification, Log, Config, Utils, Storage, Authinfo, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice, Userservice, $state, ModalService, UrlConfig, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -491,7 +491,7 @@
     $scope.downloadLog = function (filename) {
       LogService.downloadLog(filename, function (data, status) {
         if (data.success) {
-          $window.location.assign(data.tempURL);
+          WindowLocation.set(data.tempURL);
         } else {
           Log.debug('Failed to download log: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant(
@@ -503,7 +503,7 @@
     $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
       CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
         if (data.success) {
-          $window.location.assign(data.resultsUrl);
+          WindowLocation.set(data.resultsUrl);
         } else {
           Log.debug('Failed to download the callflow results corresponding to logFile: ' + filename + '. Status: ' + status);
           Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');

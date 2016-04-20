@@ -7,7 +7,7 @@ angular
 /* @ngInject */
 function WindowLocation($window) {
   return {
-    set: function(url) {
+    set: function (url) {
       $window.location.href = url;
     }
   };

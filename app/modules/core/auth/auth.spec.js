@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Auth Service', function () {
+describe('Auth Service', function () {
   beforeEach(module('Core'));
 
   var Auth, Authinfo, $httpBackend, Config, Storage, SessionStorage, $rootScope, $state, $q, OAuthConfig, UrlConfig, WindowLocation;
