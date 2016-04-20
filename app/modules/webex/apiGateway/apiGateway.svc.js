@@ -366,7 +366,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       //$log.log(logMsg);
 
       var deferredResponse = $q.defer();
-      var mockFlag = false;
 
       WebExRestApiFact.csvApiRequest(
         mockFlag,
