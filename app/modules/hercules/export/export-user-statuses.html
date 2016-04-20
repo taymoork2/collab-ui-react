@@ -24,19 +24,18 @@
     <p translate="hercules.export.modalNote"></p>
   </div>
   <div class="modal-footer">
-    <button class="btn"
+    <button
+      class="btn"
       ng-click="exportUserStatusesCtrl.cancelExport();$close()"
       translate="common.close">
-    <button cs-btn
+    </button>
+    <button
       cs-btn
       ng-disabled="exportUserStatusesCtrl.nothingToExport()"
       loading="exportUserStatusesCtrl.exportingUserStatusReport"
-      class="btn btn--primary pull-right">
-      <div ng-csv="exportUserStatusesCtrl.exportCSV()"
-        filename="{{'hercules.export.csvFilename' | translate}}">
+      class="btn btn--primary"
+      ng-click="exportUserStatusesCtrl.exportCSV()">
         <span translate="hercules.export.modalCTA"></span>
-      </div>
-    </button>
     </button>
   </div>
 </div>

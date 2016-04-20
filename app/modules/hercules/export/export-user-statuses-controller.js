@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($q, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService) {
+  function ExportUserStatusesController($q, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
 
@@ -17,19 +17,11 @@
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
+    vm.cancelExport = cancelExport;
+    vm.exportCSV = exportCSV;
 
-    vm.cancelExport = function () {
-      vm.exportCanceled = true;
-    };
-
-    vm.exportCSV = function () {
+    function exportCSV() {
       vm.exportingUserStatusReport = true;
-
-      // Improve formatting in all versions of Excel even if it means
-      // not being 100%  CSV-valid
-      // See https://github.com/asafdav/ng-csv/issues/28
-      vm.result.push(['sep=,']);
-      vm.result.push(UserDetails.getCSVColumnHeaders());
 
       // TODO: replace null by what has really been selected in the UI…
       return getStatuses(vm.selectedServiceId, null)
@@ -37,15 +29,26 @@
         .then(replaceWithDetails)
         .then(function (statuses) {
           if (vm.exportCanceled) {
-            return cancelExport();
+            return $q.reject('User Status Report download canceled');
           }
           vm.result = vm.result.concat(statuses);
           return vm.result;
         })
+        .then(function (statuses) {
+          return ExcelService.createFile(UserDetails.getCSVColumnHeaders(), statuses);
+        })
+        .then(function (data) {
+          var filename = 'export_user_statuses_SERVICE_STATUS.csv';
+          ExcelService.downloadFile(filename, data);
+        })
         .finally(function () {
           vm.exportingUserStatusReport = false;
         });
-    };
+    }
+
+    function cancelExport() {
+      vm.exportCanceled = true;
+    }
 
     function replaceWithDetails(statuses) {
       // This idea of replacing statuses by value to please the CSV export
@@ -162,10 +165,6 @@
       }).every(function (status) {
         return !status.selected;
       });
-    }
-
-    function cancelExport() {
-      return $q.reject('User Status Report download canceled');
     }
   }
 
