@@ -1,0 +1,45 @@
+<div class="careChatSetup">
+  <cs-overlay-panel class="care-chat overlay-panel typeahead-group" overlay-title="{{::'careChatTpl.createTitle' | translate}}" close="careChatSA.cancelModal()" ng-keyup="careChatSA.evalKeyPress($event.keyCode)">
+    <cs-setup-assistant previous="careChatSA.previousButton()" next="careChatSA.nextButton()" previous-fn="careChatSA.previousPage()" next-fn="careChatSA.nextPage()">
+
+      <div ng-switch on="careChatSA.currentState">
+        <div
+          ng-switch-when = "name"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-profile
+          ng-switch-when = "profile"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-overview
+          ng-switch-when = "overview"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-customer
+          ng-switch-when = "customer"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-feedback
+          ng-switch-when = "feedback"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-agent-unavailable
+          ng-switch-when = "agentUnavailable"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-off-hours
+          ng-switch-when = "offHours"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-chat-strings
+          ng-switch-when = "chatStrings"
+          ng-class="careChatSA.animation"></div>
+
+        <div ct-embed-code
+          ng-switch-when = "embedCode"
+          ng-class="careChatSA.animation"></div>
+      </div>
+
+    </cs-setup-assistant>
+  </cs-overlay-panel>
+</div>

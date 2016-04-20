@@ -18,10 +18,6 @@ describe('Onboard users with Hybrid Services', function () {
     }
   }
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users')
       .then(function (bearerToken) {

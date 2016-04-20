@@ -600,7 +600,7 @@
       }
       deviceCancelPromise = $q.defer();
 
-      return getService(urlBase + registeredEndpoints + getQuery(filter, false), deviceCancelPromise).then(function (response) {
+      return getService(urlBase + registeredEndpoints + getQuery(filter, cacheValue), deviceCancelPromise).then(function (response) {
         return analyzeDeviceData(response, filter);
       }, function (response) {
         return returnErrorCheck(response, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), {

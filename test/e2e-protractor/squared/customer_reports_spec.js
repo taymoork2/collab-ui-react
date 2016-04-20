@@ -1,9 +1,6 @@
 'use strict';
 
 describe('Customer Reports', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('should login', function () {
     login.login('pbr-admin');

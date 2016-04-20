@@ -411,7 +411,8 @@
             return $state.go('pstnSetup', {
               customerId: org.customerOrgId,
               customerName: org.customerName,
-              customerEmail: org.customerEmail
+              customerEmail: org.customerEmail,
+              customerCommunicationLicenseIsTrial: _.get(org, 'communications.isTrial', org.isTrial)
             });
           } else {
             return $state.go('didadd', {

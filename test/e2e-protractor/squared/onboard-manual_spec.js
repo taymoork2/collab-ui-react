@@ -6,10 +6,6 @@
 describe('Onboard users through Manual Invite', function () {
   var userList = [utils.randomTestGmailwithSalt('manual'), utils.randomTestGmailwithSalt('manual')];
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('should login as an account admin', function () {
     login.login('account-admin', '#/users');
   });
