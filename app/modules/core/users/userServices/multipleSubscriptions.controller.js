@@ -6,7 +6,7 @@
     .controller('MultipleSubscriptionsCtrl', MultipleSubscriptionsCtrl);
 
   /* @ngInject */
-  function MultipleSubscriptionsCtrl(Orgservice, Notification) {
+  function MultipleSubscriptionsCtrl(Orgservice, Notification, Config) {
     var vm = this;
 
     vm.oneBilling = false;
@@ -25,7 +25,9 @@
         vm.selectedSubscription = _.first(vm.subscriptionOptions);
         vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
       }).catch(function (response) {
-        Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+        if (!Config.isE2E()) {
+          Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+        }
       });
 
     }
