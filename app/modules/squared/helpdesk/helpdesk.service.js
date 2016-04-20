@@ -121,13 +121,11 @@
         });
     }
 
-    function userAdmins(orgId, limit, role, includeUnlicensed) {
+    function usersWithRole(orgId, role, limit) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      return cancelableHttpGET(urlBase + 'helpdesk/userAdmins?limit=' + limit + (orgId ?
-          '&orgId=' +
-          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + '&orgId=' + encodeURIComponent(orgId) + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
@@ -368,7 +366,7 @@
     }
 
     return {
-      userAdmins: userAdmins,
+      usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,

@@ -64,10 +64,10 @@ describe('Controller: HelpdeskOrgController', function () {
 
   describe('read only access', function () {
     beforeEach(function () {
-      sinon.stub(HelpdeskService, 'userAdmins');
-      var deferredUserAdminsResult = q.defer();
-      deferredUserAdminsResult.resolve({});
-      HelpdeskService.userAdmins.returns(deferredUserAdminsResult.promise);
+      sinon.stub(HelpdeskService, 'usersWithRole');
+      var deferredUsersWithRoleResult = q.defer();
+      deferredUsersWithRoleResult.resolve({});
+      HelpdeskService.usersWithRole.returns(deferredUsersWithRoleResult.promise);
 
       sinon.stub(LicenseService, 'getLicensesInOrg');
       var deferredLicensesResult = q.defer();
