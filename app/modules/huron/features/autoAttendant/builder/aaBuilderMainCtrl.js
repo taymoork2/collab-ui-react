@@ -8,7 +8,7 @@
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
-    AAValidationService, AANumberAssignmentService, Notification, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
+    AAValidationService, AANumberAssignmentService, AANotificationService, Notification, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -179,7 +179,7 @@
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
-              Notification.error('autoAttendant.errorFailedToAssignNumbers', {
+              Notification.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
                 phoneNumbers: _.pluck(response.failedResources, 'id')
               });
             }
@@ -213,7 +213,7 @@
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorUpdateCe', {
+          AANotificationService.error(response, 'autoAttendant.errorUpdateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -249,7 +249,7 @@
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorCreateCe', {
+          AANotificationService.error(response, 'autoAttendant.errorCreateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -438,7 +438,7 @@
                 vm.isAANameDefined = true;
               },
               function (response) {
-                Notification.error('autoAttendant.errorReadCe', {
+                AANotificationService.error(response, 'autoAttendant.errorReadCe', {
                   name: aaName,
                   statusText: response.statusText,
                   status: response.status
@@ -463,7 +463,7 @@
           vm.ui.ceInfo.scheduleId = scheduleId;
         },
         function (error) {
-          Notification.error('autoAttendant.errorCreateSchedule', {
+          AANotificationService.error(error, 'autoAttendant.errorCreateSchedule', {
             name: aaName,
             statusText: error.statusText,
             status: error.status
@@ -488,8 +488,8 @@
     function delete8To5Schedule(error) {
       if (error === 'CE_SAVE_FAILURE') {
         AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).catch(
-          function () {
-            Notification.error('autoAttendant.errorDeletePredefinedSchedule', {
+          function (response) {
+            AANotificationService.error(response, 'autoAttendant.errorDeletePredefinedSchedule', {
               name: vm.ui.ceInfo.name,
               statusText: error.statusText,
               status: error.status

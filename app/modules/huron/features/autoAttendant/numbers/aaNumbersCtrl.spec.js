@@ -348,7 +348,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       };
 
       errorSpy = jasmine.createSpy('error');
-      Notification.error = errorSpy;
+      Notification.errorResponse = errorSpy;
 
       spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
         statusText: "server error",
@@ -424,7 +424,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     it('should warn when fail to assign to CMI on remove', function () {
 
       errorSpy = jasmine.createSpy('error');
-      Notification.error = errorSpy;
+      Notification.errorResponse = errorSpy;
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType(aCe.assignedResources.type);
@@ -548,7 +548,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
       errorSpy = jasmine.createSpy('error');
-      Notification.error = errorSpy;
+      Notification.errorResponse = errorSpy;
 
     });
 

@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -142,9 +142,7 @@
       resources.push(resource);
 
       // Assign the number in CMI
-      // TODO: Remove the force
-      //saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
-      saveAANumberAssignments(Authinfo.getOrgId(), "1", resources).then(
+      saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
         function (response) {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
@@ -170,11 +168,9 @@
 
             },
             function (response) {
-              Notification.error('autoAttendant.errorAddCMI', {
+              Notification.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
-                statusText: response.statusText,
-                status: response.status,
-                trackingId: response.config.headers.TrackingID
+                statusText: response.statusText
               });
 
               resources.pop();
@@ -183,11 +179,10 @@
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorAddCMI', {
+          Notification.errorResponse(response, 'autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
-            status: response.status,
-            trackingId: response.config.headers.TrackingID
+            status: response.status
           });
 
           resources.pop();
@@ -216,7 +211,7 @@
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
           AACommonService.setIsValid('errorRemoveCMI', false);
-          Notification.error('autoAttendant.errorRemoveCMI');
+          Notification.errorResponse(response, 'autoAttendant.errorRemoveCMI');
         });
 
     }
@@ -373,13 +368,13 @@
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCMIOnly', {
+            Notification.errorResponse(response, 'autoAttendant.errorNumbersCMIOnly', {
               phoneNumbers: onlyCMI
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCESOnly', {
+            AANotificationService.error(response, 'autoAttendant.errorNumbersCESOnly', {
               phoneNumbers: onlyResources
             });
           }
@@ -390,7 +385,7 @@
             // Use AACommonService to thwart the saving when it is in this state
             AACommonService.setIsValid('readErrorCMI', false);
 
-            Notification.error('autoAttendant.errorReadCMI');
+            Notification.errorResponse(response, 'autoAttendant.errorReadCMI');
           }
         });
     }

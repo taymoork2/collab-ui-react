@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderMainCtrl', function () {
-  var controller, Notification, AutoAttendantCeService;
+  var controller, Notification, AANotificationService, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
@@ -48,7 +48,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_,
+  beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
     _AACalendarService_) {
@@ -70,6 +70,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeService = _AutoAttendantCeService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     Notification = _Notification_;
+    AANotificationService = _AANotificationService_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
     AAUiScheduleService = _AAUiScheduleService_;
@@ -86,6 +87,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope: $scope,
       $stateParams: $stateParams,
       Notification: Notification,
+      AANotificationService: AANotificationService
     });
     $scope.$apply();
   }));
@@ -198,7 +200,7 @@ describe('Controller: AABuilderMainCtrl', function () {
           return [200, response];
         });
 
-      spyOn(Notification, 'error');
+      spyOn(Notification, 'errorResponse');
       var resources = {
         workingResources: [],
         failedResources: ["9999999991"]
@@ -209,7 +211,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $scope.$apply();
 
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorFailedToAssignNumbers', jasmine.any(Object));
+      expect(Notification.errorResponse).toHaveBeenCalled();
 
     });
   });
@@ -226,6 +228,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       spyOn($scope.vm, 'saveUiModel');
       spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
 
@@ -262,7 +265,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveAARecords();
       $scope.$apply();
 
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe', jasmine.any(Object));
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should update an existing aaRecord successfully', function () {
@@ -294,7 +297,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveAARecords();
       $scope.$apply();
 
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorUpdateCe', jasmine.any(Object));
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not save when there is a name validation error', function () {
@@ -314,6 +317,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(angular.copy(aCe)));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       spyOn(AAModelService, 'getNewAARecord').and.callThrough();
 
     });
@@ -398,7 +402,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.selectAA('AA2');
       $scope.$apply();
 
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
@@ -664,7 +668,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       saveAARecordDefer = $q.defer();
       spyOn(AAUiScheduleService, 'create8To5Schedule').and.returnValue(createScheduleDefer.promise);
       spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
     });
 
     it('should return and resolve a promise when successfully save a 8to5 schedule', function () {
@@ -704,7 +708,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$apply();
 
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateSchedule', jasmine.any(Object));
+      expect(AANotificationService.error).toHaveBeenCalled();
       expect(errorText).toBe('SAVE_SCHEDULE_FAILURE');
     });
 
@@ -775,6 +779,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       deleteCalendarDefer = $q.defer();
       spyOn(AACalendarService, 'deleteCalendar').and.returnValue(deleteCalendarDefer.promise);
       spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
     });
 
     it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
@@ -795,7 +800,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $rootScope.$apply();
 
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should do nothing when there is a SAVE_SCHEDULE_FAILURE', function () {
