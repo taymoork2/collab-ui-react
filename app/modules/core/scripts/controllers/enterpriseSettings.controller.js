@@ -195,7 +195,7 @@
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
-        var r = confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
+        var r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
         if (r === true) {
           $scope.options.configureSSO = 1;
           $scope.options.deleteSSOBySwitchingRadio = true;
@@ -262,7 +262,7 @@
     $scope.$watch('idpFile.file', function (value) {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          var r = confirm($translate.instant('ssoModal.idpOverwriteWarning'));
+          var r = $window.confirm($translate.instant('ssoModal.idpOverwriteWarning'));
           if (r == true) {
             $timeout($scope.importRemoteIdp);
           } else {
