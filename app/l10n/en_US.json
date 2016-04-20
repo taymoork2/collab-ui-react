@@ -2945,7 +2945,9 @@
     "recorded_session_access": "Recorded Session Access",
     "coupon_usage": "Coupon Usage",
     "training_record_attendee": "Training Record Attendee",
-    "access_anywhere_usage": "Access Anywhere Usage"
+    "access_anywhere_usage": "Access Anywhere Usage",
+
+    "adminReportNotEnabled": "Reports are not enabled for this site"
   },
   "webexReportsPageTitles": {
     "meeting_in_progess": "Meetings in Progress",
@@ -3165,6 +3167,7 @@
     "licenseTypes": "License Types",
     "siteSettings": "Configure",
     "siteReports": "Reports",
+    "siteActions": "Actions",
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
@@ -3174,6 +3177,7 @@
     "siteCsvDownloadLinkLabel": "Download file",
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
+    "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
@@ -3193,8 +3197,8 @@
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
-    "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site. Contact support.",
+    "authError": "You are not entitled to make changes to this site.",
+    "systemError": "Unable to connect to site.",
     "multipleLicenses": "Multiple..."
   },
   "cloudExtensions": {
