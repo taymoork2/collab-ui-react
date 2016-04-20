@@ -125,7 +125,7 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + '&orgId=' + encodeURIComponent(orgId) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
