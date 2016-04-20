@@ -222,7 +222,7 @@
             } else {
               _.each(indices, function (index) {
                 if (dayLabel !== '') {
-                  dayLabel = dayLabel + ',';
+                  dayLabel = dayLabel + ', ';
                   numberofdays = numberofdays++;
                 }
                 dayLabel = dayLabel + (vm.days[index].label);
@@ -247,7 +247,7 @@
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
           vm.scheduleClass = (angular.isDefined(vm.holidays) && vm.holidays.length) ? 'aa-schedule-body' : 'aa-panel-body';
-          if (angular.isDefined(vm.openhours) && vm.openhours.length || angular.isDefined(vm.holidays) && vm.holidays.length) {
+          if (angular.isDefined(vm.openhours) && vm.openhours.length && isOpenClosed() || angular.isDefined(vm.holidays) && vm.holidays.length) {
             vm.isStartTimeSet = isStartTimePresent();
             getScheduleTitle();
             getHoursInfo();
@@ -260,6 +260,8 @@
     function getScheduleTitle() {
       if (vm.schedule === 'openHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleOpen');
+      } else if (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours') {
+        vm.laneTitle = $translate.instant('autoAttendant.scheduleClosedHolidays');
       } else if (vm.schedule === 'closedHours') {
         vm.laneTitle = $translate.instant('autoAttendant.scheduleClosed');
       } else if (vm.schedule === 'holidays') {
@@ -268,7 +270,7 @@
     }
 
     function isOpenClosed() {
-      return (vm.schedule === 'openHours' || vm.schedule === 'closedHours');
+      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours'));
     }
 
     function isClosed() {
@@ -276,7 +278,7 @@
     }
 
     function isHolidays() {
-      return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length);
+      return (vm.schedule === 'holidays' && angular.isDefined(vm.holidays) && vm.holidays.length) || (vm.schedule === 'closedHours' && vm.ui.holidaysValue === 'closedHours');
     }
 
     function formatTime(tt) {
@@ -300,6 +302,7 @@
     function activate() {
       vm.schedule = $scope.schedule;
       vm.aaModel = AAModelService.getAAModel();
+      vm.ui = AAUiModelService.getUiModel();
       populateHours();
     }
 

@@ -3,20 +3,8 @@
 describe('MediaConfigService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Service, win;
+  var Service;
   var rootPath;
-
-  beforeEach(function () {
-    module(function ($provide) {
-      win = {
-        location: {
-          search: ''
-        },
-        document: window.document
-      };
-      $provide.value('$window', win);
-    });
-  });
 
   beforeEach(inject(function ($injector, _MediaConfigService_, UrlConfig) {
     Service = _MediaConfigService_;

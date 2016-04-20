@@ -3,8 +3,7 @@
 
   /*ngInject*/
 
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller, UrlConfig, $window) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -38,19 +37,19 @@
     //TODO: Useragent detection a probably not a reliable way to detect mobile device...
     var isMobile = {
       Android: function () {
-        return navigator.userAgent.match(/Android/i);
+        return $window.navigator.userAgent.match(/Android/i);
       },
       BlackBerry: function () {
-        return navigator.userAgent.match(/BlackBerry/i);
+        return $window.navigator.userAgent.match(/BlackBerry/i);
       },
       iOS: function () {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        return $window.navigator.userAgent.match(/iPhone|iPad|iPod/i);
       },
       Opera: function () {
-        return navigator.userAgent.match(/Opera Mini/i);
+        return $window.navigator.userAgent.match(/Opera Mini/i);
       },
       Windows: function () {
-        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+        return $window.navigator.userAgent.match(/IEMobile/i) || $window.navigator.userAgent.match(/WPDesktop/i);
       },
       all: function () {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
@@ -121,13 +120,11 @@
         });
     }
 
-    function userAdmins(orgId, limit, role, includeUnlicensed) {
+    function usersWithRole(orgId, role, limit) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      return cancelableHttpGET(urlBase + 'helpdesk/userAdmins?limit=' + limit + (orgId ?
-          '&orgId=' +
-          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+      return cancelableHttpGET(urlBase + 'helpdesk/organizations/' + orgId + '/users?limit=' + limit + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
@@ -368,7 +365,7 @@
     }
 
     return {
-      userAdmins: userAdmins,
+      usersWithRole: usersWithRole,
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,

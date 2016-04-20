@@ -1356,7 +1356,8 @@ angular
             }
           },
           params: {
-            currentTab: {}
+            currentTab: {},
+            currentStep: ''
           },
           data: {
             firstTimeSetup: false
@@ -1687,7 +1688,8 @@ angular
           params: {
             customerId: {},
             customerName: {},
-            customerEmail: {}
+            customerEmail: {},
+            customerCommunicationLicenseIsTrial: {}
           },
           views: {
             'modal@': {

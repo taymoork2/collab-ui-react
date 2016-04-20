@@ -2,9 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterController(cluster, orgName, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log) {
+  function HostDeregisterController(cluster, orgName, MediaClusterService, XhrNotificationService, $translate, $modalInstance) {
     var vm = this;
-    window.x = $window;
 
     vm.deregisterAreYouSure = $translate.instant(
       'mediaFusion.clusters.deregisterAreYouSure', {

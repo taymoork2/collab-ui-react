@@ -71,7 +71,8 @@ describe('Service: PstnSetupService', function () {
       customerPayload.lastName,
       customerPayload.email,
       customerPayload.pstnCarrierId,
-      customerPayload.numbers
+      customerPayload.numbers,
+      customerPayload.trial
     );
     $httpBackend.flush();
   }

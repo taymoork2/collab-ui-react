@@ -352,8 +352,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
@@ -426,8 +424,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('say');
       expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('runActionsOnInput');
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
 
     });
 
@@ -446,8 +442,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('play4');
       expect($scope.vm.ui.openHours['entries'][2]['actions'][0]['name']).toEqual('play5');
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
     });
 
     it('should set up a say say open hours - say closed hours template', function () {
@@ -555,8 +549,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.populateUiModel();
 
       expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(false);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
+      expect($scope.vm.ui.isClosedHours).toEqual(true);
+      expect($scope.vm.ui.isHolidays).toEqual(true);
     });
 
     it('should build openHours, closedHours and holidays menus successfully from model', function () {
@@ -621,9 +615,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.ui.isClosedHours = false;
       $scope.vm.ui.isHolidays = true;
       $scope.vm.ui.holidays = {};
+      $scope.vm.ui.holidaysValue = 'closedHours';
       controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
+      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays, $scope.vm.ui.holidaysValue);
       expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
     });
 

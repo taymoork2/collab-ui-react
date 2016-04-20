@@ -886,7 +886,14 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
     "disableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to enable Single Sign-On (SSO)."
+    "enableSSOFailure": "Failed to enable Single Sign-On (SSO).",
+    "modifySSOLabel": "Modify",
+    "ssoEnabledStatus": "Single sign-on is enabled",
+    "ssoNotEnabledStatus": "Single sign-on is not enabled",
+    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
+    "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
+    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
@@ -1588,6 +1595,7 @@
     "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
+    "scheduleClosedHolidays": "Closed/Holidays",
     "scheduleHolidays": "Holidays",
     "hoursMissing": "No hours defined.",
     "holidaysMissing": "No holidays defined.",
@@ -1635,6 +1643,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
@@ -1646,7 +1655,7 @@
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
-    "closedBehavious": "Holidays Follow Closed Behavior",
+    "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",
@@ -2937,7 +2946,9 @@
     "recorded_session_access": "Recorded Session Access",
     "coupon_usage": "Coupon Usage",
     "training_record_attendee": "Training Record Attendee",
-    "access_anywhere_usage": "Access Anywhere Usage"
+    "access_anywhere_usage": "Access Anywhere Usage",
+
+    "adminReportNotEnabled": "Reports are not enabled for this site"
   },
   "webexReportsPageTitles": {
     "meeting_in_progess": "Meetings in Progress",
@@ -3157,6 +3168,7 @@
     "licenseTypes": "License Types",
     "siteSettings": "Configure",
     "siteReports": "Reports",
+    "siteActions": "Actions",
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
@@ -3166,6 +3178,7 @@
     "siteCsvDownloadLinkLabel": "Download file",
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
+    "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
@@ -3185,8 +3198,8 @@
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
-    "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site. Contact support.",
+    "authError": "You are not entitled to make changes to this site.",
+    "systemError": "Unable to connect to site.",
     "multipleLicenses": "Multiple..."
   },
   "cloudExtensions": {
