@@ -11,9 +11,13 @@
         <p><span translate="hercules.settings.call.aware"></span><br><span style="color:#CCC"
                                                                            translate="hercules.settings.call.on"></span>
         </p>
-        <div class="hercules-connect-setting"
-             ng-controller="DomainManagementCtrl as dv"
-             ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
+        <div>
+          <h6><strong translate="domainManagement.title"/></h6>
+          <p translate="domainManagement.description"></p>
+          <div class="hercules-connect-setting"
+               ng-controller="DomainManagementCtrl as dv"
+               ng-include="'modules/core/domainManagement/domainManagement.tpl.html'"></div>
+        </div>
       </div>
       <hr>
       <div class="call-connect">

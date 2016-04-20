@@ -3620,10 +3620,13 @@
   "globalSettings": {
     "pageTitle": "Settings",
     "branding": {
-      "title": "Branding"
+      "title": "Branding",
+      "subsectionLabel": "Branding"
     },
     "sipDomain": {
-      "title": "SIP Domain"
+      "title": "SIP Domain",
+      "subsectionLabel": "SIP Domain Prefix",
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
     },
     "domains": {
       "title": "Domains"

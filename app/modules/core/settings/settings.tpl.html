@@ -8,9 +8,9 @@
         <h4 class="section__title" translate="{{setting.title}}"></h4>
       </div>
       <div class="section__content">
-        <div class="sub-section">
+        <div ng-if="setting.subsectionLabel" class="sub-section">
           <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
-          <p class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>
+          <p ng-if="setting.subsectionDescription" class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>
         </div>
         <article ng-include="setting.template"></article>
       </div>

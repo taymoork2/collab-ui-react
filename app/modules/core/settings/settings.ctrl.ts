@@ -14,9 +14,11 @@ namespace Settings {
 
     constructor(settingKey:string, ctrl:SettingsCtrl) {
       this.title = 'globalSettings.' + settingKey + '.title';
+
+      this.subsectionLabel = 'globalSettings.' + settingKey + '.subsectionLabel';
+      this.subsectionDescription = 'globalSettings.' + settingKey + '.subsectionDescription';
       this.template = 'modules/core/settings/setting-' + settingKey + '.tpl.html';
-      this.subsectionLabel = 'Subsection Label ' + settingKey;
-      this.subsectionDescription = 'Subsection Description ' + settingKey;
+
       this.isPartner = ctrl.authinfo.isPartner();
       //this.isManaged = false;
       //this.isCiscoSupport = ctrl.authinfo.isCiscoSupport();
@@ -28,7 +30,6 @@ namespace Settings {
   class AuthSetting extends Setting {
     constructor(ctrl:SettingsCtrl) {
       super('authentication', ctrl);
-      this.subsectionLabel = 'globalSettings.' + 'authentication' + '.subsectionLabel';
       this.subsectionDescription = '';
     }
 
@@ -51,8 +52,29 @@ namespace Settings {
 
     constructor(ctrl:SettingsCtrl) {
       super('support', ctrl);
-      this.subsectionLabel = 'globalSettings.' + 'support' + '.subsectionLabel';
+      this.subsectionLabel = '';
       this.subsectionDescription = '';
+    }
+  }
+
+  class BrandingSetting extends Setting {
+    constructor(ctrl:SettingsCtrl) {
+      super('branding', ctrl);
+      this.subsectionDescription = '';
+    }
+  }
+
+  class SipDomainSetting extends Setting {
+    constructor(ctrl:SettingsCtrl) {
+      super('sipDomain', ctrl);
+    }
+  }
+
+  class DomainSetting extends Setting {
+    constructor(ctrl:SettingsCtrl) {
+      super('domains', ctrl);
+      this.subsectionLabel = 'domainManagement.title';
+      this.subsectionDescription = 'domainManagement.description';
     }
   }
 
@@ -71,13 +93,14 @@ namespace Settings {
 
       if (Authinfo.isPartner()) {
         this.settings = [
-          new Setting('branding', this),
+          new BrandingSetting(this),
           new SupportSetting(this)
         ];
       } else {
         this.settings = [
-          new Setting('sipDomain', this),
-          new Setting('domains', this),
+          new BrandingSetting(this),
+          new SipDomainSetting(this),
+          new DomainSetting(this),
           new AuthSetting(this),
           new SupportSetting(this)
         ];
