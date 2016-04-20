@@ -73,7 +73,7 @@
           // list of states are in the file apiGatewayConsts.svc.js
           conferenceService.csvMock = {
             mockExport: false,
-            mockImport: true,
+            mockImport: false,
             mockFileDownload: false,
             mockStatus: false,
 
