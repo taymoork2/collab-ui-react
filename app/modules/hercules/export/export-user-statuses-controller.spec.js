@@ -3,7 +3,7 @@
 describe('ExportUserStatusesController', function () {
   beforeEach(module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UiStats, UserDetails, USSService2, ClusterService, ExcelService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService2, ClusterService, ExcelService;
 
   beforeEach(function () {
     module(function ($provide) {
@@ -83,13 +83,6 @@ describe('ExportUserStatusesController', function () {
     };
     sinon.spy(ClusterService, 'getConnector');
 
-    UiStats = {
-      initStats: sinon.spy(),
-      insertServiceInfo: function () {},
-      noneSelected: sinon.spy(),
-      updateProgress: function () {}
-    };
-
     UserDetails = {
       getUsers: function (stateInfos, orgId, callback) {
         callback(stateInfos);
@@ -104,7 +97,6 @@ describe('ExportUserStatusesController', function () {
       $scope: scope,
       serviceId: 'squared-fusion-cal',
       Authinfo: Authinfo,
-      UiStats: UiStats,
       USSService2: USSService2,
       UserDetails: UserDetails,
       ExcelService: ExcelService,

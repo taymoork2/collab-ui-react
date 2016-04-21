@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($q, serviceId, userStatusSummary, Authinfo, UiStats, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($q, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
 
@@ -153,8 +153,29 @@
     }
 
     function getStatusTypes() {
-      var serviceInfo = userStatusSummary;
-      return serviceInfo ? UiStats.insertServiceInfo(serviceInfo) : [];
+      return formatStatusTypes(userStatusSummary);
+    }
+
+    function formatStatusTypes(summary) {
+      return [{
+        stateType: 'activated',
+        text: 'activated',
+        count: summary.activated,
+        selected: false,
+        unselectable: summary.activated === 0
+      }, {
+        stateType: 'error',
+        text: 'errors',
+        count: summary.error,
+        selected: true,
+        unselectable: summary.error === 0
+      }, {
+        stateType: 'notActivated',
+        text: 'pending activation',
+        count: summary.notActivated,
+        selected: true,
+        unselectable: summary.notActivated === 0
+      }];
     }
 
     function nothingToExport() {
