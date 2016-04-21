@@ -58,22 +58,31 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       licenses: ['MC']
     }]));
 
-    var fusionUcNotActivated = {"serviceId": "squared-fusion-uc", "entitled": true, "state": "notActivated"};
+    var fusionUcNotActivated = {
+      "serviceId": "squared-fusion-uc",
+      "entitled": true,
+      "state": "notActivated"
+    };
 
-    vm.extensions = [
-      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
-      {
-        "id": "squared-fusion-uc",
+    vm.extensions = [{
+      "id": "squared-fusion-cal",
+      "entitled": false,
+      "enabled": true
+    }, {
+      "id": "squared-fusion-uc",
+      "entitled": true,
+      "enabled": true,
+      "status": fusionUcNotActivated
+    }, {
+      "id": "squared-fusion-ec",
+      "entitled": true,
+      "enabled": true,
+      "status": {
+        "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "enabled": true,
-        "status": fusionUcNotActivated
-      },
-      {
-        "id": "squared-fusion-ec",
-        "entitled": true,
-        "enabled": true,
-        "status": {"serviceId": "squared-fusion-ec", "entitled": true, "state": "error"}
-      }];
+        "state": "error"
+      }
+    }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
     $rootScope.$digest();
@@ -85,22 +94,31 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       licenses: ['MC']
     }]));
 
-    var fusionUcNotActivated = {"serviceId": "squared-fusion-uc", "entitled": true, "state": "notActivated"};
+    var fusionUcNotActivated = {
+      "serviceId": "squared-fusion-uc",
+      "entitled": true,
+      "state": "notActivated"
+    };
 
-    vm.extensions = [
-      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
-      {
-        "id": "squared-fusion-uc",
+    vm.extensions = [{
+      "id": "squared-fusion-cal",
+      "entitled": false,
+      "enabled": true
+    }, {
+      "id": "squared-fusion-uc",
+      "entitled": true,
+      "enabled": true,
+      "status": fusionUcNotActivated
+    }, {
+      "id": "squared-fusion-ec",
+      "entitled": true,
+      "enabled": true,
+      "status": {
+        "serviceId": "squared-fusion-ec",
         "entitled": true,
-        "enabled": true,
-        "status": fusionUcNotActivated
-      },
-      {
-        "id": "squared-fusion-ec",
-        "entitled": true,
-        "enabled": true,
-        "status": {"serviceId": "squared-fusion-ec", "entitled": true, "state": "notActivated"}
-      }];
+        "state": "notActivated"
+      }
+    }];
     var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
 
     $rootScope.$digest();
@@ -112,18 +130,19 @@ describe('Directive Controller: HybridServicesCtrl', function () {
       licenses: ['MC']
     }]));
 
-    vm.extensions = [
-      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
-      {
-        "id": "squared-fusion-uc",
-        "entitled": false,
-        "enabled": true
-      },
-      {
-        "id": "squared-fusion-ec",
-        "entitled": false,
-        "enabled": true
-      }];
+    vm.extensions = [{
+      "id": "squared-fusion-cal",
+      "entitled": false,
+      "enabled": true
+    }, {
+      "id": "squared-fusion-uc",
+      "entitled": false,
+      "enabled": true
+    }, {
+      "id": "squared-fusion-ec",
+      "entitled": false,
+      "enabled": true
+    }];
     var mostSignificantStatus = vm.getStatus(undefined);
 
     $rootScope.$digest();
