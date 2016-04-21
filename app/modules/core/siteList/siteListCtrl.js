@@ -124,13 +124,13 @@
     });
 
     vm.gridOptions.columnDefs.push({
-        field: 'siteCSV',
-        displayName: $translate.instant('siteList.siteCsvColumnHeader'),
-        cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
-        headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
-        sortable: false,
-        width: '22%'
-      });
+      field: 'siteCSV',
+      displayName: $translate.instant('siteList.siteCsvColumnHeader'),
+      cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
+      headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
+      sortable: false,
+      width: '22%'
+    });
 
     vm.gridOptions.columnDefs.push({
       field: 'siteSettings',
