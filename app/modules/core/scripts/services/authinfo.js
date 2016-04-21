@@ -160,9 +160,7 @@ angular.module('Core')
           $rootScope.services = data.services;
           authData.isInitialized = true;
           authData.setupDone = data.setupDone;
-          $rootScope.$broadcast('AuthinfoUpdated', {
-            isPartner: this.isPartner()
-          });
+          $rootScope.$broadcast('AuthinfoUpdated');
 
           Localytics.setOrgId(authData.orgId);
           Localytics.setUserId(authData.userId);

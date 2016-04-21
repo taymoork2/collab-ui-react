@@ -5,7 +5,7 @@
     .controller('BodyCtrl', BodyCtrl);
 
   /* @ngInject */
-  function BodyCtrl($scope, $rootScope, $state) {
+  function BodyCtrl($scope, $rootScope, $state,Authinfo) {
     var vm = this;
     vm.partner = false;
     // vm.bodyClass = function() {
@@ -19,8 +19,8 @@
     //   }
     // };
     vm.bodyClass = $rootScope.bodyClass;
-    $scope.$on('AuthinfoUpdated', function (subScope, event) {
-      vm.partner = event.isPartner;
+    $scope.$on('AuthinfoUpdated', function () {
+      vm.partner = Authinfo.isPartner();
     });
   }
 })();
