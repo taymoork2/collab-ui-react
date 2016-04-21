@@ -49,23 +49,18 @@
     }
 
     function getStatusSeverity(status) {
-      var value = -1;
-
       switch (status) {
       case 'not_entitled':
-        value = 0;
-        break;
+        return 0;
       case 'activated':
-        value = 1;
-        break;
+        return 1;
       case 'pending_activation':
-        value = 2;
-        break;
+        return 2;
       case 'error':
+        return 3;
       default:
-        value = 3;
+        return -1;
       }
-      return value;
     }
 
     vm.extensionIcon = function (id) {
