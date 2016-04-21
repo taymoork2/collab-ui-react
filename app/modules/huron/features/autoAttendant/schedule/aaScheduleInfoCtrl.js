@@ -247,9 +247,14 @@
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
           vm.scheduleClass = (angular.isDefined(vm.holidays) && vm.holidays.length) ? 'aa-schedule-body' : 'aa-panel-body';
-          if (angular.isDefined(vm.openhours) && vm.openhours.length && isOpenClosed() || angular.isDefined(vm.holidays) && vm.holidays.length) {
+
+          getScheduleTitle();
+
+          if (angular.isDefined(vm.holidays) && vm.holidays.length) {
             vm.isStartTimeSet = isStartTimePresent();
-            getScheduleTitle();
+          }
+
+          if (vm.isOpenClosed() && angular.isDefined(vm.openhours) && vm.openhours.length) {
             getHoursInfo();
             prepareDayHourReport();
           }
