@@ -6,7 +6,7 @@
     .service('CertService', CertService);
 
   /* @ngInject */
-  function CertService($http, UrlConfig, Utils, $q) {
+  function CertService($http, UrlConfig, Utils, $q, $window) {
 
     var CertsUrl = UrlConfig.getCertsUrl() + 'certificate/api/v1';
 
@@ -22,7 +22,7 @@
 
     function uploadCert(orgId, file) {
       var deferred = $q.defer();
-      var reader = new FileReader();
+      var reader = new $window.FileReader();
       reader.onloadend = function () {
         $http.post(CertsUrl + '/certificates?orgId=' + orgId, {
             cert: Utils.Base64.encode(reader.result)

@@ -6,7 +6,7 @@
     .controller('TrialWebexCtrl', TrialWebexCtrl);
 
   /* @ngInject */
-  function TrialWebexCtrl($q, $translate, TrialWebexService, TimeZoneService) {
+  function TrialWebexCtrl($q, $translate, TrialWebexService, TrialTimeZoneService) {
     var vm = this;
 
     var _trialData = TrialWebexService.getData();
@@ -66,7 +66,7 @@
       expressionProperties: {
         'templateOptions.options': function () {
           var validTimeZoneIds = ['4', '7', '11', '17', '45', '41', '25', '28'];
-          var timeZones = TimeZoneService.getTimeZones();
+          var timeZones = TrialTimeZoneService.getTimeZones();
           return _.filter(timeZones, function (timeZone) {
             return _.includes(validTimeZoneIds, timeZone.timeZoneId);
           });

@@ -127,6 +127,9 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
+      if (angular.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
+        vm.aaModel.aaRecord.scheduleEventTypeMap = {};
+      }
 
       if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.holiday)) {
         vm.ui.isHolidays = true;

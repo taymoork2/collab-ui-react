@@ -13,6 +13,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
   'WebExXmlApiInfoSvc',
   'WebExRestApiFact',
   'WebExApiGatewayConstsService',
+  '$window',
 
   function (
     $rootScope,
@@ -24,7 +25,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     WebExXmlApiFact,
     webExXmlApiInfoObj,
     WebExRestApiFact,
-    WebExApiGatewayConstsService
+    WebExApiGatewayConstsService,
+    $window
   ) {
 
     var _this = this;
@@ -315,7 +317,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       var newData = new Uint8Array(byteArray);
 
-      var blob = new Blob([newData], {
+      var blob = new $window.Blob([newData], {
         type: 'text/csv;charset=UTF-16LE;'
       });
 
@@ -354,7 +356,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         WebExApiGatewayConstsService.csvRequests.csvImport
       );
 
-      var fd = new FormData();
+      var fd = new $window.FormData();
       fd.append("importCsvFile", _this.transformImportFile(csvFile));
 
       csvHttpsObj.data = fd;
@@ -364,7 +366,6 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       //$log.log(logMsg);
 
       var deferredResponse = $q.defer();
-      var mockFlag = false;
 
       WebExRestApiFact.csvApiRequest(
         mockFlag,

@@ -62,6 +62,9 @@
     }
 
     function createPstnEntity(customerOrgId) {
+      if (!_trialData.details.pstnProvider.apiExists) {
+        _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
+      }
       return reserveNumbers()
         .then(_.partial(createPstnCustomer, customerOrgId))
         .then(_.partial(orderNumbers, customerOrgId))
@@ -69,16 +72,19 @@
     }
 
     function reserveNumbers() {
-      return PstnSetupService.reserveCarrierInventory(
-        '',
-        _trialData.details.pstnProvider.uuid,
-        _trialData.details.pstnNumberInfo.numbers,
-        false
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
-        return $q.reject(response);
-      });
-
+      if (_trialData.details.pstnProvider.apiExists) {
+        return PstnSetupService.reserveCarrierInventory(
+          '',
+          _trialData.details.pstnProvider.uuid,
+          _trialData.details.pstnNumberInfo.numbers,
+          false
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.reserveFail');
+          return $q.reject(response);
+        });
+      } else {
+        return $q.resolve();
+      }
     }
 
     function createPstnCustomer(customerOrgId) {
@@ -109,21 +115,23 @@
     }
 
     function createCustomerSite(customerOrgId) {
-      var address = {
-        streetAddress: _trialData.details.emergAddr.streetAddress,
-        unit: _trialData.details.emergAddr.unit,
-        city: _trialData.details.emergAddr.city,
-        state: _trialData.details.emergAddr.state,
-        zip: _trialData.details.emergAddr.zip
-      };
-      return PstnServiceAddressService.createCustomerSite(
-        customerOrgId,
-        _trialData.details.pstnContractInfo.companyName,
-        address
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'trialModal.pstn.error.siteFail');
-        return $q.reject(response);
-      });
+      if (_trialData.details.pstnProvider.apiExists) {
+        var address = {
+          streetAddress: _trialData.details.emergAddr.streetAddress,
+          unit: _trialData.details.emergAddr.unit,
+          city: _trialData.details.emergAddr.city,
+          state: _trialData.details.emergAddr.state,
+          zip: _trialData.details.emergAddr.zip
+        };
+        return PstnServiceAddressService.createCustomerSite(
+          customerOrgId,
+          _trialData.details.pstnContractInfo.companyName,
+          address
+        ).catch(function (response) {
+          Notification.errorResponse(response, 'trialModal.pstn.error.siteFail');
+          return $q.reject(response);
+        });
+      }
     }
 
     function resetAddress() {

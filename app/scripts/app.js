@@ -1,5 +1,7 @@
 'use strict';
 
+/* global window, document */
+
 /**
  * @ngdoc overview
  * @name adminPortalPocApp
