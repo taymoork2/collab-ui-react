@@ -19,8 +19,8 @@
     //   }
     // };
     vm.bodyClass = $rootScope.bodyClass;
-    $scope.$on('InvertNavigation', function () {
-      vm.partner = true;
+    $scope.$on('AuthinfoUpdated', function (subScope, event) {
+      vm.partner = event.isPartner;
     });
   }
 })();

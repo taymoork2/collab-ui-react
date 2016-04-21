@@ -20,7 +20,7 @@ angular.module('Core')
         'sites'
       ];
 
-      $scope.isCustomerAdmin = Authinfo.isCustomerAdmin();
+      $scope.leaderBoardCtrlisPartner = Authinfo.isPartner();
       $scope.isAtlasTrialConversion = false;
       $scope.hasActiveTrial = false;
       $scope.trialExistsInSubscription = trialExistsInSubscription;
