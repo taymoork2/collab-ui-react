@@ -29,7 +29,7 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-      vm.isTelstraCsbEnabled = result;
+      vm.isCSB = Authinfo.isCSB() && result;
     }).finally(init);
 
     function init() {
@@ -66,10 +66,6 @@
         detail: $translate.instant('onboardModal.freeContactCenter'),
         actionsAvailable: true
       };
-
-      if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
-        vm.isCSB = true;
-      }
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
