@@ -222,6 +222,7 @@ angular.module('Core')
                 customerAccountLicenses = _.get(customerAccount, 'licenses');
               } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
                 customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+              }
 
               for (var l = 0; l < customerAccountLicenses.length; l++) {
                 var license = customerAccountLicenses[l];
