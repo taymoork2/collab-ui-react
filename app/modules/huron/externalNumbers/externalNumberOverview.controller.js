@@ -15,7 +15,7 @@
     $scope.$watchCollection(function () {
       return ExternalNumberService.getAllNumbers();
     }, function (numbers) {
-      vm.allNumbersCount = numbers.length;
+      vm.allNumbersCount = numbers.length + ExternalNumberService.getPendingOrderQuantity();
     });
 
     function updatePhoneNumberCount() {
@@ -34,7 +34,7 @@
     }
 
     function getNumberCount() {
-      vm.allNumbersCount = ExternalNumberService.getAllNumbers().length;
+      vm.allNumbersCount = ExternalNumberService.getAllNumbers().length + ExternalNumberService.getPendingOrderQuantity();
       vm.loading = false;
     }
   }

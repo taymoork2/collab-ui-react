@@ -19,6 +19,10 @@
 
     vm.showPstnSetup = false;
 
+    var ALL = 'all';
+    var PENDING = 'pending';
+    var UNASSIGNED = 'unassigned';
+
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
@@ -26,6 +30,7 @@
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
     vm.addNumbers = addNumbers;
+    vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
@@ -96,8 +101,8 @@
     }
 
     function getNumbers() {
-      vm.allNumbers = ExternalNumberService.getAllNumbers();
-      vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
+      vm.allNumbers = ExternalNumberService.getAllNumbers().concat(ExternalNumberService.getPendingOrders());
+      vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
@@ -117,6 +122,19 @@
           });
         }
       });
+    }
+
+    function getQuantity(type) {
+      switch (type) {
+      case ALL:
+        return ExternalNumberService.getAllNumbers().length + ExternalNumberService.getPendingOrderQuantity();
+      case PENDING:
+        return ExternalNumberService.getPendingNumbers().length + ExternalNumberService.getPendingOrderQuantity();
+      case UNASSIGNED:
+        return vm.unassignedNumbers.length;
+      default:
+        break;
+      }
     }
   }
 })();

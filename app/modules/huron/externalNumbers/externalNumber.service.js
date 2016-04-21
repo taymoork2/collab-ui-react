@@ -11,27 +11,39 @@
       clearNumbers: clearNumbers,
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
+      getAssignedNumbers: getAssignedNumbers,
       getPendingNumbers: getPendingNumbers,
+      getPendingOrders: getPendingOrders,
       getUnassignedNumbers: getUnassignedNumbers,
       getUnassignedNumbersWithoutPending: getUnassignedNumbersWithoutPending,
       deleteNumber: deleteNumber,
-      isTerminusCustomer: isTerminusCustomer
+      isTerminusCustomer: isTerminusCustomer,
+      getPendingOrderQuantity: getPendingOrderQuantity
     };
     var allNumbers = [];
     var pendingNumbers = [];
     var unassignedNumbers = [];
     var terminusDetails = [];
+    var pendingOrders = [];
+    var assignedNumbers = [];
 
     return service;
 
     function refreshNumbers(customerId) {
+      clearNumbers();
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
-                pendingNumbers = numbers;
+                _.forEach(numbers, function (number) {
+                  if (_.has(number, 'orderNumber') || _.has(number, 'quantity')) {
+                    pendingOrders.push(number);
+                  } else {
+                    pendingNumbers.push(number);
+                  }
+                });
               })
               .catch(function (response) {
                 pendingNumbers = [];
@@ -46,6 +58,7 @@
             .then(formatNumberLabels)
             .then(function (numbers) {
               unassignedNumbers = filterUnassigned(numbers);
+              assignedNumbers = filterAssigned(numbers);
               allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
             });
         })
@@ -70,6 +83,8 @@
       allNumbers = [];
       pendingNumbers = [];
       unassignedNumbers = [];
+      pendingOrders = [];
+      assignedNumbers = [];
     }
 
     function formatNumberLabels(numbers) {
@@ -95,18 +110,31 @@
       return _.reject(numbers, 'uuid');
     }
 
+    function filterAssigned(numbers) {
+      return _.filter(numbers, 'directoryNumber');
+    }
+
     function setAllNumbers(_allNumbers) {
       allNumbers = _allNumbers || [];
       unassignedNumbers = filterUnassigned(allNumbers);
       pendingNumbers = filterPending(allNumbers);
+      assignedNumbers = filterAssigned(allNumbers);
     }
 
     function getAllNumbers() {
       return allNumbers;
     }
 
+    function getAssignedNumbers() {
+      return assignedNumbers;
+    }
+
     function getPendingNumbers() {
       return pendingNumbers;
+    }
+
+    function getPendingOrders() {
+      return pendingOrders;
     }
 
     function getUnassignedNumbers() {
@@ -153,6 +181,16 @@
         customerId: customerId
       });
       return true;
+    }
+
+    function getPendingOrderQuantity() {
+      var pendingOrderNumberQuantity = 0;
+      _.forEach(getPendingOrders(), function (order) {
+        if (_.has(order, 'quantity')) {
+          pendingOrderNumberQuantity += order.quantity;
+        }
+      });
+      return pendingOrderNumberQuantity;
     }
   }
 })();
