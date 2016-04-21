@@ -53,6 +53,83 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     expect(ServiceDescriptor.services.called).toBe(false);
   });
 
+  it('should show aggregated status as error when Aware and Connects is entitled and Aware is activated but Connect is error', function () {
+    vm = createController({}, $q.when([{
+      licenses: ['MC']
+    }]));
+
+    var fusionUcNotActivated = {"serviceId": "squared-fusion-uc", "entitled": true, "state": "notActivated"};
+
+    vm.extensions = [
+      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
+      {
+        "id": "squared-fusion-uc",
+        "entitled": true,
+        "enabled": true,
+        "status": fusionUcNotActivated
+      },
+      {
+        "id": "squared-fusion-ec",
+        "entitled": true,
+        "enabled": true,
+        "status": {"serviceId": "squared-fusion-ec", "entitled": true, "state": "error"}
+      }];
+    var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
+
+    $rootScope.$digest();
+    expect(mostSignificantStatus).toBe('error');
+  });
+
+  it('should show aggregated status as not activated when Aware and Connects is entitled but both statuses are not activated', function () {
+    vm = createController({}, $q.when([{
+      licenses: ['MC']
+    }]));
+
+    var fusionUcNotActivated = {"serviceId": "squared-fusion-uc", "entitled": true, "state": "notActivated"};
+
+    vm.extensions = [
+      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
+      {
+        "id": "squared-fusion-uc",
+        "entitled": true,
+        "enabled": true,
+        "status": fusionUcNotActivated
+      },
+      {
+        "id": "squared-fusion-ec",
+        "entitled": true,
+        "enabled": true,
+        "status": {"serviceId": "squared-fusion-ec", "entitled": true, "state": "notActivated"}
+      }];
+    var mostSignificantStatus = vm.getStatus(fusionUcNotActivated);
+
+    $rootScope.$digest();
+    expect(mostSignificantStatus).toBe('pending_activation');
+  });
+
+  it('should show aggregated status as unknown when both Aware and Connects not entitled for user', function () {
+    vm = createController({}, $q.when([{
+      licenses: ['MC']
+    }]));
+
+    vm.extensions = [
+      {"id": "squared-fusion-cal", "entitled": false, "enabled": true},
+      {
+        "id": "squared-fusion-uc",
+        "entitled": false,
+        "enabled": true
+      },
+      {
+        "id": "squared-fusion-ec",
+        "entitled": false,
+        "enabled": true
+      }];
+    var mostSignificantStatus = vm.getStatus(undefined);
+
+    $rootScope.$digest();
+    expect(mostSignificantStatus).toBe('unknown');
+  });
+
   function createController(user, promise) {
     if (!promise) {
       promise = $q.reject();

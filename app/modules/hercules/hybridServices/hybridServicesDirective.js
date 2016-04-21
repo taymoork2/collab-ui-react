@@ -12,15 +12,61 @@
       return;
     }
     var vm = this;
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
+    var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
     vm.extensions = getExtensions();
     vm.isEnabled = false;
 
-    vm.getStatus = function (status) {
-      return USSService.decorateWithStatus(status);
+    $scope.allExceptUcFilter = function (item) {
+      return item.enabled === true && item.id !== 'squared-fusion-ec';
     };
+
+    vm.getStatus = function (status) {
+      // for Hybrid Call, we need to aggregate the status from ﬂﬂ Aware and Connect
+      var mostSignificantStatus;
+      if (status) {
+        if (_.find(extensionCallEntitlements, function (ece) {
+            return status && ece === status.serviceId;
+          })) {
+          var callServiceStatuses = getCallExtensions();
+          mostSignificantStatus = getMostSignificantStatus(callServiceStatuses);
+        }
+      }
+
+      return USSService.decorateWithStatus(mostSignificantStatus === undefined || mostSignificantStatus.status === undefined ? status : mostSignificantStatus.status);
+    };
+
+    function getMostSignificantStatus(statuses) {
+      var mostSignificant = _.max(statuses, function (s) {
+        if (s && s.status) {
+          return getStatusSeverity(USSService.decorateWithStatus(s.status));
+        }
+      });
+
+      return mostSignificant;
+    }
+
+    function getStatusSeverity(status) {
+      var value = -1;
+
+      switch (status) {
+        case 'not_entitled':
+          value = 0;
+          break;
+        case 'activated':
+          value = 1;
+          break;
+        case 'pending_activation':
+          value = 2;
+          break;
+        case 'error':
+        default:
+          value = 3;
+      }
+      return value;
+    }
 
     vm.extensionIcon = function (id) {
       return ServiceDescriptor.serviceIcon(id);
@@ -118,6 +164,18 @@
           return {
             id: extensionEntitlement,
             entitled: hasEntitlement(extensionEntitlement)
+          };
+        }
+      });
+    }
+
+    function getCallExtensions() {
+      return _.map(vm.extensions, function (extensionEntitlement) {
+        if (_.find(extensionCallEntitlements, function (ee) {
+            return extensionEntitlement.id === ee;
+          })) {
+          return {
+            status: extensionEntitlement.status
           };
         }
       });
