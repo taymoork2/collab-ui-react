@@ -210,14 +210,14 @@ angular.module('Core')
               authData.hasAccount = true;
             }
 
-            authData.customerType = _.get(customerAccounts, '[0].customerType');
+            authData.customerType = _.get(customerAccounts, '[0].customerType', '');
 
             for (var x = 0; x < customerAccounts.length; x++) {
 
               var customerAccount = customerAccounts[x];
               var customerAccountLicenses = [];
               //If org is a Customer Service Broker, get the license information from subscriptions
-              if ((['CCW', 'APP_DIRECT'].indexOf(authData.customerType) > -1) && _.has(customerAccount, 'subscriptions[0].licenses')) {
+              if (this.isCSB() && _.has(customerAccount, 'subscriptions[0].licenses')) {
                 customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
               } else if (_.has(customerAccount, 'licenses')) {
                 customerAccountLicenses = _.get(customerAccount, 'licenses');
