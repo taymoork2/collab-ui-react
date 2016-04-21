@@ -1,88 +1,90 @@
-<span ng-if="!row.entity.showSiteLinks">
-  <p class="ui-grid-cell-contents">
-    <span class="icon-report icon ui-grid-vcenter iconDisabled"></span>
+<p class="ui-grid-cell-contents">
+  <!-- start of column loading -->
+  <span ng-if="!row.entity.showSiteLinks">
+    <i class="icon-report icon ui-grid-vcenter iconDisabled"></i>
     
     <span>
       &nbsp;
     </span>
     
-    <span class="icon-settings icon ui-grid-vcenter iconDisabled"></span>
+    <i class="icon-settings icon ui-grid-vcenter iconDisabled"></i>
     
     <span>
       &nbsp;&nbsp;&nbsp;
     </span>
     
-    <span class="icon-spinner icon ui-grid-vcenter"></span>
+    <i class="icon-spinner icon ui-grid-vcenter"></i>
     
     <span translate="siteList.checkingServices"></span>
-  </p>
-</span>
+  </span>
+  <!-- end of column loading -->
 
-<span ng-if="row.entity.showSiteLinks">
-    <p class="ui-grid-cell-contents">
-      <span ng-if="!row.entity.isError">
-          <span ng-if="!row.entity.isAdminReportEnabled"
-                class="icon-report icon ui-grid-vcenter iconDisabled"
-                tooltip-append-to-body="true" 
-                tooltip-animation="false"
-                tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
-                tooltip-placement="top">
-          </span>
+  <!-- start of error handling -->
+  <span ng-if="row.entity.showSiteLinks && row.entity.isError">
+    <i id="id-siteReportsDisabledIcon"
+       class="icon-report icon ui-grid-vcenter iconDisabled">
+    </i>
+        
+    <span>
+      &nbsp;
+    </span>
+        
+    <i id="id-siteConfigDisabledIcon"
+       class="icon-settings icon ui-grid-vcenter iconDisabled">
+    </i>
+        
+    <span>
+      &nbsp;&nbsp;&nbsp;
+    </span>
+        
+    <span ng-if="!row.entity.isWarn"
+          id="{{row.entity.license.siteUrl}}_errorIcon">
+                
+      <i class="icon-error icon ui-grid-vcenter err webex-alert-text ui-grid-vcenter"></i>
+              
+      <span translate="siteList.systemError" class="webex-alert-text"></span>
+    </span>
           
-          <span ng-if="row.entity.isAdminReportEnabled"
-                id="id-IframeWebexSiteReportsLink"
-                class="icon-report icon ui-grid-vcenter iconEnabled"
-                tooltip-append-to-body="true" 
-                tooltip-animation="false"
-                tooltip="{{::'siteList.siteReports' | translate}}"
-                tooltip-placement="top">
-          </span>
-          
-          <span>
-            &nbsp;
-          </span>
-          
-          <span id="id-IframeWebexSiteConfigLink"
-                class="icon-settings icon ui-grid-vcenter iconEnabled"
-                tooltip-append-to-body="true" 
-                tooltip-animation="false"
-                tooltip="{{::'siteList.siteSettings' | translate}}"
-                tooltip-placement="top">
-          </span>
-      </span>  <!-- end !row.entity.isError -->
+    <span ng-if="row.entity.isWarn"
+          id="{{row.entity.license.siteUrl}}_warningIcon">
+                
+      <i class="icon-warning icon ui-grid-vcenter webex-attention-text ui-grid-vcenter"></i>
+              
+      <span translate="siteList.authError"></span>
+    </span>
+  </span>
+  <!-- end of error handling -->
 
-      <span ng-if="row.entity.isError">
-        <span id="id-siteReportsDisabledIcon"
-              class="icon-report icon ui-grid-vcenter iconDisabled">
-        </span>
-        
-        <span>
-          &nbsp;
-        </span>
-        
-        <span id="id-siteConfigDisabledIcon"
-              class="icon-settings icon ui-grid-vcenter iconDisabled">
-        </span>
-        
-        <span>
-          &nbsp;&nbsp;&nbsp;
-        </span>
-        
-        <span ng-if="!row.entity.isWarn"
-              id="{{row.entity.license.siteUrl}}_errorIcon">
-                
-          <span class="icon-error icon ui-grid-vcenter err webex-alert-text ui-grid-vcenter"></span>
-              
-          <span translate="siteList.systemError" class="webex-alert-text"></span>
-        </span>
+  <!-- start of service enabling -->
+  <span ng-if="row.entity.showSiteLinks && !row.entity.isError">
+    <i ng-if="!row.entity.isAdminReportEnabled"
+       class="icon-report icon ui-grid-vcenter iconDisabled"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip="{{::'webexSiteReports.adminReportNotEnabled' | translate}}"
+       tooltip-placement="top">
+    </i>
           
-        <span ng-if="row.entity.isWarn"
-              id="{{row.entity.license.siteUrl}}_warningIcon">
-                
-          <span class="icon-warning icon ui-grid-vcenter webex-attention-text ui-grid-vcenter"></span>
-              
-          <span translate="siteList.authError"></span>
-        </span>
-      </span>
-    </p>
-</span>
+    <i ng-if="row.entity.isAdminReportEnabled"
+       id="id-IframeWebexSiteReportsLink"
+       class="icon-report icon ui-grid-vcenter iconEnabled"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip="{{::'siteList.siteReports' | translate}}"
+       tooltip-placement="top">
+    </i>
+          
+    <span>
+      &nbsp;
+    </span>
+          
+    <i id="id-IframeWebexSiteConfigLink"
+       class="icon-settings icon ui-grid-vcenter iconEnabled"
+       tooltip-append-to-body="true" 
+       tooltip-animation="false"
+       tooltip="{{::'siteList.siteSettings' | translate}}"
+       tooltip-placement="top">
+    </i>
+  </span>
+  <!-- end of service enabling -->
+</p>
