@@ -21,28 +21,6 @@
 <span ng-if="row.entity.showSiteLinks">
     <p class="ui-grid-cell-contents">
       <span ng-if="!row.entity.isError">
-        <span ng-if="!row.entity.isIframeSupported">
-          <span ng-if="row.entity.isAdminReportEnabled"
-                id="id-nonIframeWebexSiteReportsLink"
-                tooltip-append-to-body="true" 
-                tooltip-animation="false"
-                tooltip="{{::'siteList.siteReports' | translate}}"
-                tooltip-placement="top">
-                
-            <i class="icon-report icon ui-grid-vcenter iconEnabled"></i>
-          </span>
-          
-          <span id="id-nonIframeWebexSiteConfigLink"
-                tooltip-append-to-body="true" 
-                tooltip-animation="false"
-                tooltip="{{::'siteList.siteSettings' | translate}}"
-                tooltip-placement="top">
-                
-            <i class="icon-settings icon ui-grid-vcenter iconEnabled"></i>
-          </span>
-        </span>  <!--  end !row.entity.isIframeSupported -->
-
-        <span ng-if="row.entity.isIframeSupported">
           <span ng-if="!row.entity.isAdminReportEnabled"
                 class="icon-report icon ui-grid-vcenter iconDisabled"
                 tooltip-append-to-body="true" 
@@ -53,12 +31,11 @@
           
           <span ng-if="row.entity.isAdminReportEnabled"
                 id="id-IframeWebexSiteReportsLink"
+                class="icon-report icon ui-grid-vcenter iconEnabled"
                 tooltip-append-to-body="true" 
                 tooltip-animation="false"
                 tooltip="{{::'siteList.siteReports' | translate}}"
                 tooltip-placement="top">
-                
-            <i class="icon-report icon ui-grid-vcenter iconEnabled"></i>
           </span>
           
           <span>
@@ -66,14 +43,12 @@
           </span>
           
           <span id="id-IframeWebexSiteConfigLink"
+                class="icon-settings icon ui-grid-vcenter iconEnabled"
                 tooltip-append-to-body="true" 
                 tooltip-animation="false"
                 tooltip="{{::'siteList.siteSettings' | translate}}"
                 tooltip-placement="top">
-                
-            <i class="icon-settings icon ui-grid-vcenter iconEnabled"></i>
           </span>
-        </span>  <!--  end row.entity.isIframeSupported -->
       </span>  <!-- end !row.entity.isError -->
 
       <span ng-if="row.entity.isError">
@@ -90,23 +65,21 @@
         </span>
         
         <span>
-          &nbsp;
+          &nbsp;&nbsp;&nbsp;
         </span>
         
         <span ng-if="!row.entity.isWarn"
-              id="{{row.entity.license.siteUrl}}_errorIcon"
-              class="ui-grid-cell-contents">
-                  
-            <i class="icon-error icon ui-grid-vcenter err webex-alert-text ui-grid-vcenter"></i>
+              id="{{row.entity.license.siteUrl}}_errorIcon">
+                
+          <span class="icon-error icon ui-grid-vcenter err webex-alert-text ui-grid-vcenter"></span>
               
-            <span translate="siteList.systemError" class="webex-alert-text"></span>
+          <span translate="siteList.systemError" class="webex-alert-text"></span>
         </span>
-        
+          
         <span ng-if="row.entity.isWarn"
-              id="{{row.entity.license.siteUrl}}_warningIcon"
-              class="ui-grid-cell-contents">
-                  
-          <i class="icon-warning icon ui-grid-vcenter webex-attention-text ui-grid-vcenter"></i>
+              id="{{row.entity.license.siteUrl}}_warningIcon">
+                
+          <span class="icon-warning icon ui-grid-vcenter webex-attention-text ui-grid-vcenter"></span>
               
           <span translate="siteList.authError"></span>
         </span>
