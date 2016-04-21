@@ -1105,6 +1105,7 @@
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
+      "report": "Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add a Resource",
