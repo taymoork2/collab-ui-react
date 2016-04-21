@@ -18,7 +18,8 @@
       getUnassignedNumbersWithoutPending: getUnassignedNumbersWithoutPending,
       deleteNumber: deleteNumber,
       isTerminusCustomer: isTerminusCustomer,
-      getPendingOrderQuantity: getPendingOrderQuantity
+      getPendingOrderQuantity: getPendingOrderQuantity,
+      getQuantity: getQuantity
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -27,16 +28,20 @@
     var pendingOrders = [];
     var assignedNumbers = [];
 
+    var ALL = 'all';
+    var PENDING = 'pending';
+    var UNASSIGNED = 'unassigned';
+
     return service;
 
     function refreshNumbers(customerId) {
-      clearNumbers();
       return isTerminusCustomer(customerId)
         .then(function (isSupported) {
           if (isSupported) {
             return PstnSetupService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
+                clearNumbers();
                 _.forEach(numbers, function (number) {
                   if (_.has(number, 'orderNumber') || _.has(number, 'quantity')) {
                     pendingOrders.push(number);
@@ -184,13 +189,20 @@
     }
 
     function getPendingOrderQuantity() {
-      var pendingOrderNumberQuantity = 0;
-      _.forEach(getPendingOrders(), function (order) {
-        if (_.has(order, 'quantity')) {
-          pendingOrderNumberQuantity += order.quantity;
-        }
-      });
-      return pendingOrderNumberQuantity;
+      return _.sum(getPendingOrders(), 'quantity');
+    }
+
+    function getQuantity(type) {
+      switch (type) {
+      case ALL:
+        return getAllNumbers().length + getPendingOrderQuantity();
+      case PENDING:
+        return getPendingNumbers().length + getPendingOrderQuantity();
+      case UNASSIGNED:
+        return getUnassignedNumbersWithoutPending().length;
+      default:
+        break;
+      }
     }
   }
 })();

@@ -113,6 +113,15 @@ describe('Service: ExternalNumberService', function () {
     expect(ExternalNumberService.getPendingOrderQuantity()).toEqual(1);
   });
 
+  it('should refresh numbers', function () {
+    ExternalNumberService.refreshNumbers();
+    $rootScope.$apply();
+
+    expect(ExternalNumberService.getQuantity('all')).toEqual(7);
+    expect(ExternalNumberService.getQuantity('pending')).toEqual(3);
+    expect(ExternalNumberService.getQuantity('unassigned')).toEqual(2);
+  });
+
   it('should refresh numbers and get order number for malformed advance order', function () {
     pendingList.push(malformedAdvanceOrder);
     $translate.instant.and.returnValue('Order Number');

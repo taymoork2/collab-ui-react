@@ -19,10 +19,6 @@
 
     vm.showPstnSetup = false;
 
-    var ALL = 'all';
-    var PENDING = 'pending';
-    var UNASSIGNED = 'unassigned';
-
     vm.allText = $translate.instant('common.all');
     vm.pendingText = $translate.instant('common.pending');
     vm.unassignedText = $translate.instant('common.unassigned');
@@ -125,16 +121,7 @@
     }
 
     function getQuantity(type) {
-      switch (type) {
-      case ALL:
-        return ExternalNumberService.getAllNumbers().length + ExternalNumberService.getPendingOrderQuantity();
-      case PENDING:
-        return ExternalNumberService.getPendingNumbers().length + ExternalNumberService.getPendingOrderQuantity();
-      case UNASSIGNED:
-        return vm.unassignedNumbers.length;
-      default:
-        break;
-      }
+      return ExternalNumberService.getQuantity(type);
     }
   }
 })();
