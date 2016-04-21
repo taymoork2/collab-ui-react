@@ -116,20 +116,20 @@
     });
 
     vm.gridOptions.columnDefs.push({
+      field: 'siteActions',
+      displayName: $translate.instant('siteList.siteActions'),
+      cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
+      sortable: false,
+      width: '27%'
+    });
+
+    vm.gridOptions.columnDefs.push({
       field: 'siteCSV',
       displayName: $translate.instant('siteList.siteCsvColumnHeader'),
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
       headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
       sortable: false,
-      width: '30%'
-    });
-
-    vm.gridOptions.columnDefs.push({
-      field: 'siteActions',
-      displayName: $translate.instant('siteList.siteActions'),
-      cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
-      sortable: false,
-      width: '30%'
+      width: '22%'
     });
 
     vm.gridOptions.columnDefs.push({
@@ -137,7 +137,7 @@
       displayName: $translate.instant('siteList.siteSettings'),
       cellTemplate: 'modules/core/siteList/siteConfigColumn.tpl.html',
       sortable: false,
-      width: '10%'
+      width: '9%'
     });
 
     vm.gridOptions.columnDefs.push({
@@ -145,7 +145,7 @@
       displayName: $translate.instant('siteList.siteReports'),
       cellTemplate: 'modules/core/siteList/siteReportsColumn.tpl.html',
       sortable: false,
-      width: '10%'
+      width: '9%'
     });
 
     // make sure that we have the signed in admin user email before we update the columns

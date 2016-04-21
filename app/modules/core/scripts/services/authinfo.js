@@ -210,16 +210,21 @@ angular.module('Core')
               authData.hasAccount = true;
             }
 
-            if (customerAccounts.customerType) {
-              authData.customerType = customerAccounts.customerType;
-            }
+            authData.customerType = _.get(customerAccounts, '[0].customerType', '');
 
             for (var x = 0; x < customerAccounts.length; x++) {
 
               var customerAccount = customerAccounts[x];
+              var customerAccountLicenses = [];
+              //If org is a Customer Service Broker, get the license information from subscriptions
+              if (this.isCSB() && _.has(customerAccount, 'subscriptions[0].licenses')) {
+                customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+              } else if (_.has(customerAccount, 'licenses')) {
+                customerAccountLicenses = _.get(customerAccount, 'licenses');
+              }
 
-              for (var l = 0; l < customerAccount.licenses.length; l++) {
-                var license = customerAccount.licenses[l];
+              for (var l = 0; l < customerAccountLicenses.length; l++) {
+                var license = customerAccountLicenses[l];
                 var service = null;
 
                 // Store license before filtering
