@@ -6,20 +6,24 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, ScheduleUpgradeService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, CertificateFormatterService) {
     var vm = this;
     vm.config = "";
     vm.emailSubscribers = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
+    vm.formattedCertificateList = [];
 
     var readCerts = function () {
       CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
         vm.certificates = res || [];
+        vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
       }, function (err) {
         return XhrNotificationService.notify(err);
       });
     };
+
+    vm.readCerts = readCerts;
 
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
