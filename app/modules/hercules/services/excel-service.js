@@ -45,13 +45,19 @@
       });
 
       if ($window.navigator.msSaveOrOpenBlob) {
-        $window.navigator.msSaveBlob(blob, filename);
+        // IE…
+        $window.navigator.msSaveOrOpenBlob(blob, filename);
+      } else if (!('download' in $window.document.createElement('a'))) {
+        // Safari…
+        $window.location.href = $window.URL.createObjectURL(blob);
       } else {
         var downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
         var downloadLink = angular.element(downloadContainer.children()[0]);
-        downloadLink.attr('href', $window.URL.createObjectURL(blob));
-        downloadLink.attr('download', filename);
-        downloadLink.attr('target', '_blank');
+        downloadLink.attr({
+          'href': $window.URL.createObjectURL(blob),
+          'download': filename,
+          'target': '_blank'
+        });
         $document.find('body').append(downloadContainer);
         $timeout(function () {
           downloadLink[0].click();
