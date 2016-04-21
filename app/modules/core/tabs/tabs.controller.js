@@ -20,8 +20,8 @@
 
       var tab = _.find($scope.tabs, function (tab) {
         return matchesLocationPath(tab.link) || _.some(tab.subPages, function (subTab) {
-            return matchesLocationPath(subTab.link);
-          });
+          return matchesLocationPath(subTab.link);
+        });
       });
 
       if (tab) {
@@ -47,9 +47,9 @@
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.any(features, {
-            feature: tab.feature.replace(/^!/, ''),
-            enabled: !/^!/.test(tab.feature)
-          });
+          feature: tab.feature.replace(/^!/, ''),
+          enabled: !/^!/.test(tab.feature)
+        });
       });
     }
 
@@ -61,11 +61,16 @@
         .invoke(String.prototype.replace, /^!/, '')
         .unique()
         .map(function (feature) {
-          return {feature: feature, enabled: false};
+          return {
+            feature: feature,
+            enabled: false
+          };
         }).value();
 
-    _.forEach(newFeatures,function (feature) {
-        var existing = _.find(features, {feature: feature.feature});
+      _.forEach(newFeatures, function (feature) {
+        var existing = _.find(features, {
+          feature: feature.feature
+        });
         if (existing) {
           //noop , keep the enabled flag from previous load.
         } else {
@@ -82,7 +87,6 @@
         });
       });
     }
-
 
     function initTabs() {
       tc.tabs = Authinfo.getTabs();

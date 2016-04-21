@@ -25,18 +25,18 @@
     title: 'tabs.userTab',
     state: 'users',
     link: '/users'
-  },{
+  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     feature: 'atlas-service-landing',
     state: 'services-landing',
     link: 'services/landing'
-  },{
+  }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature:"!atlas-service-landing",
+    feature: "!atlas-service-landing",
     subPages: [{
       title: 'tabs.conferencing',
       desc: 'tabs.conferencingDesc',
