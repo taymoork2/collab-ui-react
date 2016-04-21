@@ -24,11 +24,11 @@
     };
 
     vm.getStatus = function (status) {
-      // for Hybrid Call, we need to aggregate the status from ﬂﬂ Aware and Connect
+      // for Hybrid Call, we need to aggregate the status from Aware and Connect
       var mostSignificantStatus;
       if (status) {
         if (_.find(extensionCallEntitlements, function (ece) {
-            return status && ece === status.serviceId;
+            return ece === status.serviceId;
           })) {
           var callServiceStatuses = getCallExtensions();
           mostSignificantStatus = getMostSignificantStatus(callServiceStatuses);
@@ -52,18 +52,18 @@
       var value = -1;
 
       switch (status) {
-        case 'not_entitled':
-          value = 0;
-          break;
-        case 'activated':
-          value = 1;
-          break;
-        case 'pending_activation':
-          value = 2;
-          break;
-        case 'error':
-        default:
-          value = 3;
+      case 'not_entitled':
+        value = 0;
+        break;
+      case 'activated':
+        value = 1;
+        break;
+      case 'pending_activation':
+        value = 2;
+        break;
+      case 'error':
+      default:
+        value = 3;
       }
       return value;
     }
