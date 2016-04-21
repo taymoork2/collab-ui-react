@@ -1643,6 +1643,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
@@ -2596,7 +2597,10 @@
       "grant-registration-success-header-new-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Media Server within one hour to finish registration.",
       "next": "Next",
-      "back": "Back"
+      "back": "Back",
+      "errorTitle": "Registration Error",
+      "errorOnlineText": "The media server that you're registering already exists and is online.",
+      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -3199,7 +3203,8 @@
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
     "authError": "You are not entitled to make changes to this site.",
     "systemError": "Unable to connect to site.",
-    "multipleLicenses": "Multiple..."
+    "multipleLicenses": "Multiple...",
+    "checkingServices": "Checking services..."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

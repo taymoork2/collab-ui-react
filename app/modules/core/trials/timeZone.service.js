@@ -3,9 +3,9 @@
 
   angular
     .module('core.trial')
-    .factory('TimeZoneService', TimeZoneService);
+    .factory('TrialTimeZoneService', TrialTimeZoneService);
 
-  function TimeZoneService() {
+  function TrialTimeZoneService() {
     var service = {
       getTimeZones: getTimeZones
     };

@@ -81,7 +81,7 @@
     }
 
     function createObjectUrl(data, type, fileName) {
-      var blob = new Blob([data], {
+      var blob = new $window.Blob([data], {
         type: 'text/plain'
       });
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);

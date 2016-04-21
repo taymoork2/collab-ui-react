@@ -31,6 +31,7 @@
       label: '',
       value: ''
     };
+
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
 
     vm.menuEntry = {};
@@ -56,7 +57,6 @@
     vm.isMessageInputOnly = isMessageInputOnly;
 
     /////////////////////
-
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), properties.LABEL);
       setVoiceOption();

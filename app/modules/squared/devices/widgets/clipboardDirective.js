@@ -5,14 +5,14 @@
 
   angular
     .module('Squared')
-    .directive('sqClipboard', function ($timeout, Notification) {
+    .directive('sqClipboard', function ($timeout, Notification, $window) {
       return {
         restrict: 'A',
         scope: {
           sqClipboard: '&'
         },
         link: function ($scope, $element, $attr) {
-          if (!document.queryCommandSupported('copy')) {
+          if (!$window.document.queryCommandSupported('copy')) {
             $element.remove();
             return;
           }

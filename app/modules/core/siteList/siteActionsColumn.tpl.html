@@ -1,16 +1,20 @@
 <span ng-if="!row.entity.showSiteLinks">
   <p class="ui-grid-cell-contents">
     <span
-      id="id-webexSiteReportsDisabledIcon"
       class="icon-report icon iconDisabled">
     </span>
     <span>&nbsp;</span>
     <span
       class="icon-settings icon iconDisabled">
     </span>
-    <span>&nbsp;</span>
+    <span>&nbsp;&nbsp;&nbsp;</span>
+    <span
+      class="icon-spinner icon ui-grid-vcenter">
+    </span>
+    <span translate="siteList.checkingServices"></span>
   </p>
 </span>
+
 
 <span ng-if="row.entity.showSiteLinks">
     <p class="ui-grid-cell-contents">
@@ -66,11 +70,12 @@
 
       <span ng-if="row.entity.isError">
         <span
-          id="id-webexSiteReportsDisabledIcon"
+          id="id-siteReportsDisabledIcon"
           class="icon-report icon iconDisabled">
         </span>
         <span>&nbsp;</span>
         <span
+          id="id-siteConfigDisabledIcon"
           class="icon-settings icon iconDisabled">
         </span>
         <span>&nbsp;</span>

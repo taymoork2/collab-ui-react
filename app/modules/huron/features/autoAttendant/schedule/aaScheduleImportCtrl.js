@@ -6,7 +6,7 @@
     .controller('AAScheduleImportCtrl', AAScheduleImportCtrl);
 
   /* @ngInject */
-  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate) {
+  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate, Notification) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
