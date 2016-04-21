@@ -210,55 +210,58 @@ angular.module('Core')
               authData.hasAccount = true;
             }
 
-            if (customerAccounts[0].customerType) {
-              authData.customerType = customerAccounts[0].customerType;
-            }
+            authData.customerType = _.get(customerAccounts, '[0].customerType');
 
             for (var x = 0; x < customerAccounts.length; x++) {
 
               var customerAccount = customerAccounts[x];
-
-              if (_.get(customerAccount, 'licenses')) {
-                for (var l = 0; l < customerAccount.licenses.length; l++) {
-                  var license = customerAccount.licenses[l];
-                  var service = null;
-
-                  // Store license before filtering
-                  authData.licenses.push(license);
-
-                  // Do not store invalid licenses in service buckets
-                  if (license.status === 'CANCELLED' || license.status === 'SUSPENDED') {
-                    continue;
-                  }
-
-                  switch (license.licenseType) {
-                  case 'CONFERENCING':
-                    if (this.isCustomerAdmin() && license.siteUrl) {
-                      authData.roles.push('Site_Admin');
-                    }
-
-                    service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                      capacity: license.capacity
-                    }), x + 1, 'confRadio', license);
-                    if (license.siteUrl) {
-                      confLicensesWithoutSiteUrl.push(service);
-                    }
-                    confLicenses.push(service);
-                    break;
-                  case 'MESSAGING':
-                    service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
-                    msgLicenses.push(service);
-                    break;
-                  case 'COMMUNICATION':
-                    service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
-                    commLicenses.push(service);
-                    break;
-                  case 'CMR':
-                    service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                    cmrLicenses.push(service);
-                  }
-                } //end for
+              var customerAccountLicenses = [];
+              //If org is a Customer Service Broker, get the license information from subscriptions
+              if (['CCW', 'APP_DIRECT'].indexOf(authData.customerType) > -1) {
+                customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+              } else {
+                customerAccountLicenses = _.get(customerAccount, 'licenses');
               }
+
+              for (var l = 0; l < customerAccountLicenses.length; l++) {
+                var license = customerAccountLicenses[l];
+                var service = null;
+
+                // Store license before filtering
+                authData.licenses.push(license);
+
+                // Do not store invalid licenses in service buckets
+                if (license.status === 'CANCELLED' || license.status === 'SUSPENDED') {
+                  continue;
+                }
+
+                switch (license.licenseType) {
+                case 'CONFERENCING':
+                  if (this.isCustomerAdmin() && license.siteUrl) {
+                    authData.roles.push('Site_Admin');
+                  }
+
+                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                    capacity: license.capacity
+                  }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
+                  confLicenses.push(service);
+                  break;
+                case 'MESSAGING':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
+                  msgLicenses.push(service);
+                  break;
+                case 'COMMUNICATION':
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
+                  commLicenses.push(service);
+                  break;
+                case 'CMR':
+                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
+                  cmrLicenses.push(service);
+                }
+              } //end for
             } //end for
             if (msgLicenses.length !== 0) {
               authData.messageServices = msgLicenses;

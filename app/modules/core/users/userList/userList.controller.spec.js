@@ -46,8 +46,10 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback, oid, disableCache) {
       callback(getOrgJson, 200);
     });
+    spyOn(Authinfo, 'getOrgId').and.returnValue(currentUser.meta.organizationID);
     spyOn($scope, '$emit').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
   }));
 
   function initController() {
@@ -142,6 +144,17 @@ describe('UserListCtrl: Ctrl', function () {
       $scope.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       $scope.$apply();
       expect(Notification.success).toHaveBeenCalled();
+    });
+  });
+
+  describe('When atlasTelstraCsb is enabled and customerType is a CSB', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(true));
+      initController();
+    });
+
+    it('should set the isCSB flag to true', function () {
+      expect($scope.isCSB).toBe(true);
     });
   });
 
