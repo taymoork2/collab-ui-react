@@ -73,7 +73,7 @@
           // list of states are in the file apiGatewayConsts.svc.js
           conferenceService.csvMock = {
             mockExport: false,
-            mockImport: true,
+            mockImport: false,
             mockFileDownload: false,
             mockStatus: false,
 
@@ -120,6 +120,14 @@
       displayName: $translate.instant('siteList.siteCsvColumnHeader'),
       cellTemplate: 'modules/core/siteList/siteCSVColumn.tpl.html',
       headerCellTemplate: 'modules/core/siteList/siteCSVColumnHeader.tpl.html',
+      sortable: false,
+      width: '30%'
+    });
+
+    vm.gridOptions.columnDefs.push({
+      field: 'siteActions',
+      displayName: $translate.instant('siteList.siteActions'),
+      cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
       sortable: false,
       width: '30%'
     });

@@ -17,6 +17,7 @@ describe('Controller: PstnSetupCtrl', function () {
 
     $stateParams.customerId = customer.uuid;
     $stateParams.customerName = customer.name;
+    $stateParams.customerCommunicationLicenseIsTrial = customer.isTrial;
     deferred = $q.defer();
     $state.modal = {
       result: deferred.promise
@@ -24,6 +25,7 @@ describe('Controller: PstnSetupCtrl', function () {
 
     spyOn(PstnSetup, 'setCustomerId');
     spyOn(PstnSetup, 'setCustomerName');
+    spyOn(PstnSetup, 'setIsTrial');
     spyOn(PstnSetup, 'clear');
 
     controller = $controller('PstnSetupCtrl', {
@@ -36,6 +38,7 @@ describe('Controller: PstnSetupCtrl', function () {
   it('should initialize', function () {
     expect(PstnSetup.setCustomerId).toHaveBeenCalledWith(customer.uuid);
     expect(PstnSetup.setCustomerName).toHaveBeenCalledWith(customer.name);
+    expect(PstnSetup.setIsTrial).toHaveBeenCalledWith(customer.isTrial);
     expect(PstnSetup.clear).not.toHaveBeenCalled();
   });
 

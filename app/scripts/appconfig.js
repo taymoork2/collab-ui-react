@@ -1688,7 +1688,8 @@ angular
           params: {
             customerId: {},
             customerName: {},
-            customerEmail: {}
+            customerEmail: {},
+            customerCommunicationLicenseIsTrial: {}
           },
           views: {
             'modal@': {

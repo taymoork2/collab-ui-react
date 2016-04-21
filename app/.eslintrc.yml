@@ -2,6 +2,8 @@
   extends:
     - "../.eslintrc.yml"
     - "angular"
+  env:
+    browser: false
   rules:
     # airbnb-config inherited rules
     array-callback-return: 0

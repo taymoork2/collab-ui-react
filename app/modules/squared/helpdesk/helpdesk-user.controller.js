@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config,
-    LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService, HelpdeskLogService, Authinfo, $window, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -100,7 +99,7 @@
 
     function downloadLog(filename) {
       HelpdeskLogService.downloadLog(filename).then(function (tempURL) {
-        window.location.assign(tempURL);
+        WindowLocation.set(tempURL);
       });
     }
 
@@ -109,11 +108,11 @@
         XhrNotificationService.notify(err);
       }
     }
-  }
 
-  function keyPressHandler(event) {
-    if (event.keyCode === 27) { // Esc
-      window.history.back();
+    function keyPressHandler(event) {
+      if (event.keyCode === 27) { // Esc
+        $window.history.back();
+      }
     }
   }
 
