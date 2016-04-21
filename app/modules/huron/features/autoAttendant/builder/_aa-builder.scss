@@ -46,10 +46,6 @@ $aa-builder-text-color: $gray-dark-1;
 
     /* allows aa-builder-frame box-shadow to show */
     @include aa-builder-height($frame-margin-size + 2 * rem($aa-builder-border-size) + $margin-top);
-
-    .aa-builder-wrapper {
-      min-width: vr-adjust(1170);
-    }
   }
 }
 
@@ -165,7 +161,7 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-help-wrapper {
-    & .popover {
+  & .popover {
     width: 60%;
   }
 }
@@ -262,6 +258,7 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-panel-numbers {
   @extend .panel;
+  text-align: left;
 
   width: 16rem;
   @include vr-spacing(mv, 1);
@@ -295,6 +292,8 @@ $aa-builder-text-color: $gray-dark-1;
 
   @include vr-spacing(pl, .5);
   @include vr-spacing(pr, .5);
+  display: inline-block;
+  white-space: normal;
   box-shadow: none;
   line-height: .5rem;
 
@@ -326,7 +325,7 @@ $aa-builder-text-color: $gray-dark-1;
 
   .aa-schedule-body {
     @extend .aa-panel-body;
-    width: rem-calc(380);
+    //width: rem-calc(380);
   }
 
   .aa-panel-body-endcall {
@@ -354,7 +353,7 @@ $aa-builder-text-color: $gray-dark-1;
       @include vr-spacing(mt, 0);
       color: $gray-dark-1;
 
-      &.bottom >.arrow {
+      &.bottom > .arrow {
         background-color: transparent;
         border-bottom-color: transparent;
 
@@ -380,12 +379,12 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-transition.ng-enter,
 .aa-transition.ng-leave.ng-leave-active {
-  opacity:0;
+  opacity: 0;
 }
 
 .aa-transition.ng-leave,
 .aa-transition.ng-enter.ng-enter-active {
-  opacity:1;
+  opacity: 1;
 }
 
 .aa-add-step-icon {
@@ -421,43 +420,70 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
-.aa-flex-vertical-line {
+.aa-wrapper {
+  white-space: nowrap;
+  min-width: min-content;
+
+  .aa-general-wrapper {
+    text-align: center;
+  }
+
+  .aa-lanes {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .aa-1-lane {
+    width: 100%;
+    min-width: vr-adjust(390);
+  }
+
+  .aa-2-lanes {
+    width: 50%;
+    min-width: vr-adjust(390);
+  }
+
+  .aa-3-lanes {
+    width: 33.333%;
+    min-width: vr-adjust(390);
+  }
+}
+
+.aa-vertical-line {
   border-left: $aa-builder-border-size solid $aa-builder-border-color;
   min-height: 30px;
-  display: flex;
-  flex: 0 1 auto;
+  display: inline-block;
 }
 
-.aa-flex-vertical-spacer {
+.aa-vertical-spacer {
   min-height: 30px;
-  display: flex;
-  flex: 0 1 auto;
 }
 
-.aa-flex-horizontal-line {
+.aa-line-no-space{
+  font-size: 0;
+}
+.aa-line-left {
+  @extend .aa-line-no-space;
+  text-align: left;
+}
+
+.aa-line-right {
+  @extend .aa-line-no-space;
+  text-align: right;
+}
+
+.aa-horizontal-line {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   width: 100%;
-  display: flex;
-  flex: 0 1 auto;
+  display: inline-block;
 }
 
-.aa-flex-horizontal-line-right {
+.aa-horizontal-half-line {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
-  display: flex;
-  flex: 0 1 auto;
-  align-self: flex-end;
-}
-
-.aa-flex-horizontal-line-left {
-  border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
-  height: 1px;
-  min-width: 50%;
-  display: flex;
-  flex: 0 1 auto;
-  align-self: flex-start;
+  display: inline-block;
 }
 
 .aa-new-step-info {
