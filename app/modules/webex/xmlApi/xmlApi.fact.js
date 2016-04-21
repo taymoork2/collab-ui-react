@@ -349,6 +349,12 @@
                     $log.log(logMsg);
 
                     deferred.resolve(ticketObj.sessionTik);
+                  } else {
+                    logMsg = funcName + ": " + "wbxSiteUrl=" + wbxSiteUrl + "\n" +
+                      "Return an invalid ticket";
+                    $log.log(logMsg);
+
+                    deferred.reject('Invalid ticket');
                   }
                 }
               },
@@ -424,6 +430,12 @@
                   logMsg = funcName + ".success()" + ": " + "\n" + "Generated a new ticket for site=" + wbxSiteName;
                   $log.log(logMsg);
                   defer.resolve(ticket.sessionTik);
+                } else {
+                  // while  "sessionTicket" is undefined.
+                  logMsg = funcName + ".success()" + ": " + "\n" + " But failed to generate a new ticket for site=" + wbxSiteName;
+                  $log.log(logMsg);
+
+                  defer.reject('Failed to generate a new Ticket');
                 }
               }
             }, //getSessionTicketInfoSuccess();
