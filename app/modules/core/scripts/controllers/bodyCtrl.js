@@ -5,7 +5,7 @@
     .controller('BodyCtrl', BodyCtrl);
 
   /* @ngInject */
-  function BodyCtrl($scope, $rootScope, $state,Authinfo) {
+  function BodyCtrl($scope, $rootScope, $state, Authinfo) {
     var vm = this;
     vm.partner = false;
     // vm.bodyClass = function() {
