@@ -13,16 +13,6 @@
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.formattedCertificateList = [];
-
-    var readCerts = function () {
-      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
-        vm.certificates = res || [];
-        vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
-      }, function (err) {
-        return XhrNotificationService.notify(err);
-      });
-    };
-
     vm.readCerts = readCerts;
 
     vm.squaredFusionEc = false;
@@ -158,10 +148,18 @@
       }).result.then(readCerts);
     };
 
+    function readCerts() {
+      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
+        vm.certificates = res || [];
+        vm.formattedCertificateList = CertificateFormatterService.formatCerts(vm.certificates);
+      }, XhrNotificationService.notify);
+    }
+
     vm.invalidEmail = function (tag) {
       Notification.error(tag.text + " is not a valid email");
     };
   }
+
 
   /* @ngInject */
   function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
