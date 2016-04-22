@@ -29,12 +29,8 @@
     vm.disableAuthCodeLink = disableAuthCodeLink;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-      vm.isTelstraCsbEnabled = result;
+      vm.isCSB = Authinfo.isCSB() && result;
     }).finally(init);
-
-    if (Authinfo.isCSB() && vm.isTelstraCsbEnabled) {
-      vm.isCSB = true;
-    }
 
     function init() {
       vm.services = [];
