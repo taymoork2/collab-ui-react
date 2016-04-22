@@ -19,7 +19,7 @@
     vm.extensions = getExtensions();
     vm.isEnabled = false;
 
-    $scope.allExceptUcFilter = function (item) {
+    vm.allExceptUcFilter = function (item) {
       return item.enabled === true && item.id !== 'squared-fusion-ec';
     };
 
@@ -27,9 +27,7 @@
       // for Hybrid Call, we need to aggregate the status from Aware and Connect
       var mostSignificantStatus;
       if (status) {
-        if (_.find(extensionCallEntitlements, function (ece) {
-            return ece === status.serviceId;
-          })) {
+        if (_.includes(extensionCallEntitlements, status.serviceId)) {
           var callServiceStatuses = getCallExtensions();
           mostSignificantStatus = getMostSignificantStatus(callServiceStatuses);
         }
@@ -50,16 +48,16 @@
 
     function getStatusSeverity(status) {
       switch (status) {
-      case 'not_entitled':
-        return 0;
-      case 'activated':
-        return 1;
-      case 'pending_activation':
-        return 2;
-      case 'error':
-        return 3;
-      default:
-        return -1;
+        case 'not_entitled':
+          return 0;
+        case 'activated':
+          return 1;
+        case 'pending_activation':
+          return 2;
+        case 'error':
+          return 3;
+        default:
+          return -1;
       }
     }
 
@@ -166,9 +164,7 @@
 
     function getCallExtensions() {
       return _.map(vm.extensions, function (extensionEntitlement) {
-        if (_.find(extensionCallEntitlements, function (ee) {
-            return extensionEntitlement.id === ee;
-          })) {
+        if (_.includes(extensionCallEntitlements, extensionEntitlement.id)) {
           return {
             status: extensionEntitlement.status
           };
