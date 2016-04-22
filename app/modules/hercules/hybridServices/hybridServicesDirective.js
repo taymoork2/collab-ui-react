@@ -48,16 +48,16 @@
 
     function getStatusSeverity(status) {
       switch (status) {
-        case 'not_entitled':
-          return 0;
-        case 'activated':
-          return 1;
-        case 'pending_activation':
-          return 2;
-        case 'error':
-          return 3;
-        default:
-          return -1;
+      case 'not_entitled':
+        return 0;
+      case 'activated':
+        return 1;
+      case 'pending_activation':
+        return 2;
+      case 'error':
+        return 3;
+      default:
+        return -1;
       }
     }
 
