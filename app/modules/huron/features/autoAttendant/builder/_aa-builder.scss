@@ -181,7 +181,7 @@ $aa-builder-text-color: $gray-dark-1;
   transition: all 0.2s ease-in-out;
 
   .phone-number {
-    position: absolute;
+    display: inline-block;
     @include vr-spacing(pt, .25);
   }
 
