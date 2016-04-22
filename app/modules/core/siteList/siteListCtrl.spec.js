@@ -7,6 +7,7 @@ describe('Testing controller: SiteListCtrl', function () {
   beforeEach(module('WebExApp'));
 
   var SiteListCtrl, WebExApiGatewayService, WebExApiGatewayConstsService, SiteListService, Notification;
+  var WebExUtilsService, deferredcheckWebExFeaturToggle, FeatureToggleService, fakeToggleID;
   var scope, $q, $controller, Authinfo, fakeConferenceServices, deferredCsvExport, fakeSiteRow;
 
   beforeEach(inject(function (
@@ -17,6 +18,7 @@ describe('Testing controller: SiteListCtrl', function () {
     _FeatureToggleService_,
     _WebExApiGatewayService_,
     _WebExApiGatewayConstsService_,
+    _WebExUtilsService_,
     _Notification_
   ) {
 
@@ -29,8 +31,11 @@ describe('Testing controller: SiteListCtrl', function () {
     Notification = _Notification_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    WebExUtilsService = _WebExUtilsService_;
+    FeatureToggleService = _FeatureToggleService_;
 
-    deferredCsvExport = $q.defer();
+    //deferredCsvExport = $q.defer();
+    deferredcheckWebExFeaturToggle = $q.defer();
 
     fakeSiteRow = {
       license: {
@@ -48,6 +53,10 @@ describe('Testing controller: SiteListCtrl', function () {
       },
 
       csvPollIntervalObj: null
+    };
+
+    fakeToggleID = {
+      toggleID: 'webexCSV'
     };
 
     fakeConferenceServices = [{
@@ -96,10 +105,11 @@ describe('Testing controller: SiteListCtrl', function () {
       }
     };
 
-    spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvExport.promise);
+    //spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCsvExport.promise);
     spyOn(SiteListService, 'updateGrid');
     spyOn(SiteListService, 'updateCSVColumnInRow');
     spyOn(Notification, 'success');
+    spyOn(WebExUtilsService, 'checkWebExFeaturToggle').and.returnValue(deferredcheckWebExFeaturToggle.promise);
 
     SiteListCtrl = $controller('SiteListCtrl', {
       $scope: scope,
@@ -108,24 +118,45 @@ describe('Testing controller: SiteListCtrl', function () {
 
   }));
 
-  it('should be able to call export function with expected parameters', function () {
+  /*  it('should be able to call export function with expected parameters', function () {
 
-    deferredCsvExport.resolve({
+      deferredCsvExport.resolve({
+        siteUrl: 'fake.webex.com',
+        isTestResult: true,
+        status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+        completionDetails: null,
+      });
+
+      expect(SiteListCtrl).toBeDefined();
+      expect(scope).toBeDefined();
+
+      scope.csvExport(fakeSiteRow);
+      scope.$apply();
+
+      expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
+      expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
+      expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
+
+    }); */
+
+  it('should be able to call FeatureToggleService', function () {
+
+    deferredcheckWebExFeaturToggle.resolve({
       siteUrl: 'fake.webex.com',
       isTestResult: true,
-      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
-      completionDetails: null,
+      toggleId: 'webexCSV'
     });
 
     expect(SiteListCtrl).toBeDefined();
     expect(scope).toBeDefined();
 
-    scope.csvExport(fakeSiteRow);
+    //scope.csvExport(fakeSiteRow);
+    scope.checkWebExFeaturToggle(fakeToggleID);
     scope.$apply();
 
-    expect(WebExApiGatewayService.csvExport).toHaveBeenCalledWith('fake.webex.com', true);
-    expect(Notification.success).toHaveBeenCalledWith('siteList.exportStartedToast');
-    expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
+    expect(WebExUtilsService.checkWebExFeaturToggle).toHaveBeenCalled('webexCSV', true);
+    //expect(FeatureToggleService.supports).toHaveBeenCalledWith('webexCSV');
+    //expect(SiteListService.updateCSVColumnInRow).toHaveBeenCalled();
 
   });
 
