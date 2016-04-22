@@ -1,6 +1,7 @@
 'use strict';
 
 describe('ExportUserStatusesController', function () {
+  beforeEach(module('Core'));
   beforeEach(module('Hercules'));
 
   var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService2, ClusterService, ExcelService;
@@ -83,8 +84,8 @@ describe('ExportUserStatusesController', function () {
     sinon.spy(ClusterService, 'getConnector');
 
     UserDetails = {
-      getUsers: function (stateInfos, orgId, callback) {
-        callback(stateInfos);
+      getUsers: function (stateInfos) {
+        return $q.when(stateInfos);
       },
       getCSVColumnHeaders: function () {
         return ['whatever', 'foo', 'bar'];
@@ -92,8 +93,13 @@ describe('ExportUserStatusesController', function () {
     };
     sinon.spy(UserDetails, 'getUsers');
 
+    var $modalInstance = {
+      close: sinon.stub()
+    };
+
     vm = $controller('ExportUserStatusesController', {
       $scope: scope,
+      $modalInstance: $modalInstance,
       serviceId: 'squared-fusion-cal',
       userStatusSummary: userStatusSummary,
       Authinfo: Authinfo,

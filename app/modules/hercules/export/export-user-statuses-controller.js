@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($q, $translate, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($q, $translate, $modalInstance, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
     var numberOfUsersPrUssRequest = 500;
@@ -48,8 +48,9 @@
           return ExcelService.createFile(UserDetails.getCSVColumnHeaders(), statuses);
         })
         .then(function (data) {
-          var filename = 'export_user_statuses.csv';
+          var filename = 'user_statuses.csv';
           ExcelService.downloadFile(filename, data);
+          $modalInstance.close();
         })
         .finally(function () {
           vm.exportingUserStatusReport = false;
@@ -64,38 +65,25 @@
       // This idea of replacing statuses by value to please the CSV export
       // inside UserDetails.getUsers is a bad idea, but it is legacy.
       // The code should be cleaned up, one commit after another
-      return getUsersDetails(statuses);
+      return getUsersDetails(statuses, 0, numberOfUsersPrCiRequest);
     }
 
-    function getUsersDetails(statuses) {
+    function getUsersDetails(statuses, offset, limit) {
       var orgId = Authinfo.getOrgId();
-      var totalStatuses = statuses.length;
+      var statusesList = statuses.slice(offset, offset + limit);
+      var total = statuses.length;
 
-      // TODO: simplify this function with recrusive promise
-      return $q(function (resolve, reject) {
-        var result = [];
-
-        function getDetails(offset, limit, callback) {
-          var statusesList = statuses.slice(offset, offset + numberOfUsersPrCiRequest);
-          // Here is a good place to amit an updateProgress
-          UserDetails.getUsers(statusesList, orgId, function (response) {
-            result = result.concat(response);
-            var newOffset = offset + limit;
-            if (newOffset > totalStatuses) {
-              callback(result);
-            } else {
-              getDetails(newOffset, limit, callback);
-            }
-          });
-        }
-
-        getDetails(0, numberOfUsersPrCiRequest, function (responses) {
-          var result = responses.map(function (response) {
-            return response.details;
-          });
-          resolve(result);
+      return UserDetails.getUsers(orgId, statusesList)
+        .then(function (response) {
+          if (offset + limit < total) {
+            return getUsersDetails(statuses, offset + limit, limit)
+              .then(function (innerResponse) {
+                return response.concat(innerResponse);
+              });
+          } else {
+            return response;
+          }
         });
-      });
     }
 
     function addConnectorsDetails(statuses) {

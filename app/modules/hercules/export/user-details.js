@@ -7,77 +7,53 @@
 
   /* @ngInject  */
   function UserDetails($http, $translate, UrlConfig) {
-
-    var multipleUserFilter = function (userIds) {
-      var filter = '';
-      $.each(userIds, function (index, elem) {
-        filter += 'id eq ' + '"' + elem + '"' + ' or ';
-      });
-      filter = filter.slice(0, -4);
-      return filter;
-    };
-
-    var userUrl = function (userIds, orgId) {
-      return UrlConfig.getScimUrl(orgId) + '?filter=' + multipleUserFilter(userIds);
-    };
-
-    var getCSVColumnHeaders = function () {
-      return ['User', 'Host', 'State', 'Message', 'User ID', 'Service'];
-    };
-
-    var getUsers = function (stateInfos, orgId, callback) {
-
-      var userIds = $.map(stateInfos, function (stateInfo) {
-        return stateInfo.userId;
-      });
-
-      $http.get(userUrl(userIds, orgId))
-        .success(function (data, status) {
-          var total = [];
-          $.each(userIds, function (index, ussUserId) {
-            var result = {};
-
-            // Does the id exist in answer from CI ?
-            var foundUser = $.grep(data.Resources, function (ciUser) {
-              return ciUser.id === ussUserId;
-            });
-
-            var serviceName = stateInfos[index].serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + stateInfos[index].serviceId);
-            if (foundUser.length > 0) {
-              result.success = true;
-              result.details = {
-                userName: foundUser[0].userName,
-                connector: stateInfos[index].connector || 'not found(id=' + stateInfos[index].connectorId + ')',
-                state: stateInfos[index].state == 'notActivated' ? 'Pending Activation' : stateInfos[index].state,
-                message: stateInfos[index].state == 'error' ? stateInfos[index].description.defaultMessage : '',
-                userId: userIds[index],
-                service: serviceName
-              };
-            } else {
-              result.success = false;
-              result.details = {
-                userName: 'Not found',
-                connector: stateInfos[index].connector || 'not found(id=' + stateInfos[index].connectorId + ')',
-                state: stateInfos[index].state == 'notActivated' ? 'Pending Activation' : stateInfos[index].state,
-                message: stateInfos[index].state == 'error' ? stateInfos[index].description.defaultMessage : '',
-                userId: userIds[index],
-                service: serviceName
-              };
-            }
-
-            total.push(result);
-          });
-          callback(total, status);
-        });
-
-    };
-
-    return {
+    var service = {
+      getCSVColumnHeaders: getCSVColumnHeaders,
       getUsers: getUsers,
+      // exported for testing purpose
       multipleUserFilter: multipleUserFilter,
-      userUrl: userUrl,
-      getCSVColumnHeaders: getCSVColumnHeaders
+      userUrl: userUrl
     };
-  }
 
+    return service;
+
+    function multipleUserFilter(userIds) {
+      return _.chain(userIds)
+        .map(function (id) {
+          return 'id eq "' + id + '"';
+        })
+        .join(' or ')
+        .value();
+    }
+
+    function userUrl(orgId, userIds) {
+      return UrlConfig.getScimUrl(orgId) + '?filter=' + multipleUserFilter(userIds);
+    }
+
+    function getCSVColumnHeaders() {
+      return ['User', 'Host', 'State', 'Error Message', 'User ID', 'Service'];
+    }
+
+    function getUsers(orgId, statuses) {
+      var userIds = _.map(statuses, 'userId');
+      return $http.get(userUrl(orgId, userIds))
+        .then(function (response) {
+          var data = response.data;
+          return _.map(statuses, function (status) {
+            // Does the id exist in answer from CI?
+            var foundUser = _.find(data.Resources, 'id', status.userId);
+            var serviceName = status.serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + status.serviceId);
+            // Same shape as getCSVColumnHeaders!
+            return [
+              foundUser ? foundUser.userName : 'Not found',
+              status.connector || 'not found(id=' + status.connectorId + ')',
+              status.state === 'notActivated' ? 'Pending Activation' : status.state,
+              status.state === 'error' ? status.description.defaultMessage : '',
+              status.userId,
+              serviceName
+            ];
+          });
+        });
+    }
+  }
 })();
