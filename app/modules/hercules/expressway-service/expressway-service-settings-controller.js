@@ -160,7 +160,6 @@
     };
   }
 
-
   /* @ngInject */
   function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
     var modalVm = this;
