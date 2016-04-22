@@ -6,7 +6,7 @@
     .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
-  function UserOverviewCtrl($http, $scope, $stateParams, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
+  function UserOverviewCtrl($http, $q, $scope, $stateParams, $translate, Authinfo, Config, FeatureToggleService, Log, Orgservice, Notification, UrlConfig, Userservice, Utils) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -18,8 +18,8 @@
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
     vm.pendingStatus = false;
+    vm.hasNoLicenseId = false;
     vm.dirsyncEnabled = false;
-    vm.isTelstraCsbEnabled = false;
     vm.isCSB = false;
     vm.hasAccount = Authinfo.hasAccount();
     vm.isSquaredUC = Authinfo.isSquaredUC();
@@ -28,9 +28,17 @@
     vm.enableAuthCodeLink = enableAuthCodeLink;
     vm.disableAuthCodeLink = disableAuthCodeLink;
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
-      vm.isCSB = Authinfo.isCSB() && result;
-    }).finally(init);
+    $q.all([FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus)
+      ])
+      .then(function (result) {
+        vm.isCSB = Authinfo.isCSB() && result[0];
+        if (result[1]) {
+          getAccountStatus();
+        } else {
+          vm.pendingStatus = false;
+        }
+      }).finally(init);
 
     function init() {
       vm.services = [];
@@ -97,14 +105,6 @@
       }
 
       updateUserTitleCard();
-
-      FeatureToggleService.supports(FeatureToggleService.features.atlasInvitePendingStatus).then(function (result) {
-        if (result) {
-          getAccountStatus();
-        } else {
-          vm.pendingStatus = false;
-        }
-      });
     }
 
     var generateOtpLink = {
@@ -236,6 +236,7 @@
       Userservice.getUser(currentUserId, function (data, status) {
         if (data.success) {
           vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+          vm.hasNoLicenseId = _.isEmpty(data.licenseID);
         } else {
           Log.debug('Get existing account info failed. Status: ' + status);
         }
