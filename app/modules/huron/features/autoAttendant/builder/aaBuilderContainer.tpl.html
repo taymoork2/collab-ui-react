@@ -17,7 +17,7 @@
        ng-class="{'aa-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'),
                 'aa-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours') &&
                 (aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays),
-                'aa-1-lane': !(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays)}">
+                'aa-1-lane': !(aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)}">
     <!--open lane-->
     <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-line-right">
       <div class="aa-horizontal-half-line"></div>
