@@ -6,14 +6,14 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($q, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($q, $translate, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
+    var numberOfUsersPrUssRequest = 500;
 
     vm.selectedServiceId = serviceId;
     vm.exportingUserStatusReport = false;
     vm.exportCanceled = false;
-    vm.result = [];
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
@@ -22,23 +22,33 @@
 
     function exportCSV() {
       vm.exportingUserStatusReport = true;
+      var selectedServices = [vm.selectedServiceId];
+      // if current is Call Aware we need to add Call Connect manually to the list
+      if (vm.selectedServiceId === 'squared-fusion-uc') {
+        selectedServices.push('squared-fusion-ec');
+      }
+      var selectedTypes = _.chain(vm.statusTypes)
+        .filter(function (status) {
+          return status.selected && status.count;
+        })
+        .map('stateType')
+        .value();
 
-      // TODO: replace null by what has really been selected in the UI…
-      return getStatuses(vm.selectedServiceId, null)
+      return getAllUserStatuses(selectedServices, selectedTypes)
+        .then(_.flatten)
         .then(addConnectorsDetails)
         .then(replaceWithDetails)
         .then(function (statuses) {
           if (vm.exportCanceled) {
             return $q.reject('User Status Report download canceled');
           }
-          vm.result = vm.result.concat(statuses);
-          return vm.result;
+          return statuses;
         })
         .then(function (statuses) {
           return ExcelService.createFile(UserDetails.getCSVColumnHeaders(), statuses);
         })
         .then(function (data) {
-          var filename = 'export_user_statuses_SERVICE_STATUS.csv';
+          var filename = 'export_user_statuses.csv';
           ExcelService.downloadFile(filename, data);
         })
         .finally(function () {
@@ -52,8 +62,8 @@
 
     function replaceWithDetails(statuses) {
       // This idea of replacing statuses by value to please the CSV export
-      // inside UserDetails.getUsers is a bad idea, but it is legacy and
-      // the code is being and the code is cleaned up commit after commit
+      // inside UserDetails.getUsers is a bad idea, but it is legacy.
+      // The code should be cleaned up, one commit after another
       return getUsersDetails(statuses);
     }
 
@@ -61,6 +71,7 @@
       var orgId = Authinfo.getOrgId();
       var totalStatuses = statuses.length;
 
+      // TODO: simplify this function with recrusive promise
       return $q(function (resolve, reject) {
         var result = [];
 
@@ -114,7 +125,10 @@
       return $q.all(promises)
         .then(function (connectors) {
           // convert response to a more usable data structure
-          var hostNames = _.chain(connectors).indexBy('id').mapValues('host_name').value();
+          var hostNames = _.chain(connectors)
+            .indexBy('id')
+            .mapValues('host_name')
+            .value();
           // augment statuses with details about the connectors
           return _.map(statuses, function (status) {
             status.connector = hostNames[status.connectorId];
@@ -123,33 +137,30 @@
         });
     }
 
-    // Note: this code would actually look simpler if USSService2.getStatuses
-    // was accepting a callback and not just returning a promise…
-    function getStatuses(serviceId, states) {
-      return $q(function (resolve, reject) {
-        var statuses = [];
-        var limit = 1000;
-        USSService2.getStatuses(serviceId, states, 0, limit)
-          .then(function (response) {
-            statuses = statuses.concat(response.userStatuses);
-            if (response.paging.pages > 1) {
-              var remainingPages = _.range(response.paging.pages - 1)
-                .map(function (item, i) {
-                  return USSService2.getStatuses(serviceId, states, (i + 1) * limit, limit);
-                });
-              $q.all(remainingPages)
-                .then(function (results) {
-                  var remainingUserStatuses = results.reduce(function (acc, result) {
-                    return acc.concat(result.userStatuses);
-                  }, []);
-                  statuses = statuses.concat(remainingUserStatuses);
-                  resolve(statuses);
-                }, reject);
-            } else {
-              resolve(statuses);
-            }
-          }, reject);
-      });
+    function getUserStatuses(service, type, offset, limit) {
+      return USSService2.getStatuses(service, type, offset, limit)
+        .then(function (response) {
+          if (offset + limit < response.paging.count) {
+            return getUserStatuses(service, type, offset + limit, limit)
+              .then(function (statuses) {
+                return response.userStatuses.concat(statuses);
+              });
+          } else {
+            return response.userStatuses;
+          }
+        });
+    }
+
+    function getAllUserStatuses(services, types) {
+      var requestList = _.chain(services)
+        .map(function (service) {
+          return _.map(types, function (type) {
+            return getUserStatuses(service, type, 0, numberOfUsersPrUssRequest);
+          });
+        })
+        .flatten()
+        .value();
+      return $q.all(requestList);
     }
 
     function getStatusTypes() {
@@ -159,22 +170,22 @@
     function formatStatusTypes(summary) {
       return [{
         stateType: 'activated',
-        text: 'activated',
+        text: $translate.instant('hercules.activationStatus.activated'),
         count: summary.activated,
         selected: false,
         unselectable: summary.activated === 0
       }, {
-        stateType: 'error',
-        text: 'errors',
-        count: summary.error,
-        selected: true,
-        unselectable: summary.error === 0
-      }, {
         stateType: 'notActivated',
-        text: 'pending activation',
+        text: $translate.instant('hercules.activationStatus.pending_activation'),
         count: summary.notActivated,
         selected: true,
         unselectable: summary.notActivated === 0
+      }, {
+        stateType: 'error',
+        text: $translate.instant('hercules.activationStatus.error'),
+        count: summary.error,
+        selected: true,
+        unselectable: summary.error === 0
       }];
     }
 

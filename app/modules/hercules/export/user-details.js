@@ -6,23 +6,23 @@
     .service('UserDetails', UserDetails);
 
   /* @ngInject  */
-  function UserDetails(Utils, Config, Authinfo, $http, Log, UrlConfig) {
+  function UserDetails($http, $translate, UrlConfig) {
 
     var multipleUserFilter = function (userIds) {
-      var filter = "";
+      var filter = '';
       $.each(userIds, function (index, elem) {
-        filter += "id eq " + "\"" + elem + "\"" + " or ";
+        filter += 'id eq ' + '"' + elem + '"' + ' or ';
       });
       filter = filter.slice(0, -4);
       return filter;
     };
 
     var userUrl = function (userIds, orgId) {
-      return UrlConfig.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
+      return UrlConfig.getScimUrl(orgId) + '?filter=' + multipleUserFilter(userIds);
     };
 
     var getCSVColumnHeaders = function () {
-      return ["User", "Host", "State", "Message", "User ID"];
+      return ['User', 'Host', 'State', 'Message', 'User ID', 'Service'];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
@@ -42,23 +42,26 @@
               return ciUser.id === ussUserId;
             });
 
+            var serviceName = stateInfos[index].serviceId === 'squared-fusion-uc' ? $translate.instant('hercules.serviceNames.squared-fusion-uc.full') : $translate.instant('hercules.serviceNames.' + stateInfos[index].serviceId);
             if (foundUser.length > 0) {
               result.success = true;
               result.details = {
                 userName: foundUser[0].userName,
-                connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
-                state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "",
-                extras: userIds[index]
+                connector: stateInfos[index].connector || 'not found(id=' + stateInfos[index].connectorId + ')',
+                state: stateInfos[index].state == 'notActivated' ? 'Pending Activation' : stateInfos[index].state,
+                message: stateInfos[index].state == 'error' ? stateInfos[index].description.defaultMessage : '',
+                userId: userIds[index],
+                service: serviceName
               };
             } else {
               result.success = false;
               result.details = {
-                userName: "Not found",
-                connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
-                state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "",
-                extras: userIds[index]
+                userName: 'Not found',
+                connector: stateInfos[index].connector || 'not found(id=' + stateInfos[index].connectorId + ')',
+                state: stateInfos[index].state == 'notActivated' ? 'Pending Activation' : stateInfos[index].state,
+                message: stateInfos[index].state == 'error' ? stateInfos[index].description.defaultMessage : '',
+                userId: userIds[index],
+                service: serviceName
               };
             }
 

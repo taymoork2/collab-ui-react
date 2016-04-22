@@ -36,18 +36,17 @@ describe('ExportUserStatusesController', function () {
       downloadFile: sinon.stub()
     };
 
+    var userStatusSummary = [{
+      serviceId: 'squared-fusion-cal',
+      total: 14,
+      notActivated: 2,
+      activated: 0,
+      error: 12,
+      deactivated: 0,
+      notEntitled: 0
+    }];
+
     USSService2 = {
-      getStatusesSummary: function () {
-        return [{
-          serviceId: 'squared-fusion-cal',
-          total: 14,
-          notActivated: 2,
-          activated: 0,
-          error: 12,
-          deactivated: 0,
-          notEntitled: 0
-        }];
-      },
       getStatuses: function () {
         return $q.when({
           // 51 to be over numberOfUsersPrCiRequest (which should be 50)
@@ -96,19 +95,24 @@ describe('ExportUserStatusesController', function () {
     vm = $controller('ExportUserStatusesController', {
       $scope: scope,
       serviceId: 'squared-fusion-cal',
+      userStatusSummary: userStatusSummary,
       Authinfo: Authinfo,
       USSService2: USSService2,
       UserDetails: UserDetails,
       ExcelService: ExcelService,
       ClusterService: ClusterService
     });
+    vm.statusTypes = [{
+      stateType: 'notActivated',
+      count: 51,
+      selected: true
+    }];
   }));
 
   it('should have sane default on init', function () {
     vm.selectedServiceId = 'squared-fusion-cal';
     expect(vm.exportingUserStatusReport).toBe(false);
     expect(vm.exportCanceled).toBe(false);
-    expect(vm.result).toEqual([]);
   });
 
   it('should cancel exporting when calling cancelExport()', function () {
@@ -138,12 +142,6 @@ describe('ExportUserStatusesController', function () {
       $rootScope.$apply();
       expect(ExcelService.createFile.called).toBe(true);
       expect(ExcelService.downloadFile.called).toBe(true);
-    });
-    it('should populate vm.result', function () {
-      vm.exportCSV();
-      $rootScope.$apply();
-      // 51 statuses
-      expect(vm.result.length).toBe(51);
     });
     it('should not actually finish export when exportCanceled is true', function () {
       vm.exportCanceled = true;
