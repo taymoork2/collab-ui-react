@@ -210,16 +210,22 @@ angular.module('Core')
               authData.hasAccount = true;
             }
 
-            if (customerAccounts.customerType) {
-              authData.customerType = customerAccounts.customerType;
-            }
+            authData.customerType = _.get(customerAccounts, '[0].customerType', '');
 
             for (var x = 0; x < customerAccounts.length; x++) {
 
               var customerAccount = customerAccounts[x];
+              var customerAccountLicenses = [];
 
-              for (var l = 0; l < customerAccount.licenses.length; l++) {
-                var license = customerAccount.licenses[l];
+              //If org has subscriptions get the license information from subscriptions, else from licences
+              if (_.has(customerAccount, 'licenses')) {
+                customerAccountLicenses = _.get(customerAccount, 'licenses');
+              } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
+                customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
+              }
+
+              for (var l = 0; l < customerAccountLicenses.length; l++) {
+                var license = customerAccountLicenses[l];
                 var service = null;
 
                 // Store license before filtering
@@ -359,8 +365,7 @@ angular.module('Core')
           return this.hasRole('Full_Admin');
         },
         isCSB: function () {
-          var csb = ['CCW', 'APP_DIRECT'];
-          return csb.indexOf(authData.customerType) > -1;
+          return authData.customerType === 'APP_DIRECT';
         },
         isPartner: function () {
           return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');

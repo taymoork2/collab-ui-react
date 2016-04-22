@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$q', '$scope', '$translate', 'Orgservice', 'Authinfo', 'FeatureToggleService',
-    function ($q, $scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
+  .controller('leaderBoardCtrl', ['$scope', '$translate', 'Orgservice', 'Authinfo', 'FeatureToggleService',
+    function ($scope, $translate, Orgservice, Authinfo, FeatureToggleService) {
 
       // TODO: revisit after graduation (2016-02-17) - see if this can be moved into the template
       $scope.label = $translate.instant('leaderBoard.licenseUsage');
@@ -20,7 +20,7 @@ angular.module('Core')
         'sites'
       ];
 
-      $scope.isCustomerAdmin = Authinfo.isCustomerAdmin();
+      $scope.isCustomer = !Authinfo.isPartner();
       $scope.isAtlasTrialConversion = false;
       $scope.hasActiveTrial = false;
       $scope.trialExistsInSubscription = trialExistsInSubscription;

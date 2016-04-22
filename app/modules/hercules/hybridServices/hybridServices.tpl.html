@@ -4,7 +4,7 @@
   </div>
   <div class="feature-list cloud-extensions">
     <ul>
-      <li class="feature" ng-repeat="extension in hybridServicesCtrl.extensions | filter: { enabled: true }">
+      <li class="feature" ng-repeat="extension in hybridServicesCtrl.extensions | filter: hybridServicesCtrl.allExceptUcFilter">
         <a id="link_{{extension.id}}"
            ui-sref="user-overview.hybrid-services-{{extension.id}}({extensionId: extension.id})">
           <i class="feature-icon-extension" ng-class="hybridServicesCtrl.extensionIcon(extension.id)"></i>
