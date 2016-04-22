@@ -5,7 +5,7 @@
     .module('Core')
     .factory('OAuthConfig', OAuthConfig);
 
-  function OAuthConfig(Utils, Config, UrlConfig) {
+  function OAuthConfig(Utils, Config) {
 
     var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
@@ -46,7 +46,7 @@
     // public
 
     function getLogoutUrl() {
-      var acu = UrlConfig.getAdminPortalUrl();
+      var acu = getAdminPortalUrl();
       return config.logoutUrl + encodeURIComponent(acu);
     }
 
@@ -63,7 +63,7 @@
     }
 
     function getOauthLoginUrl(email, oauthState) {
-      var redirectUrl = UrlConfig.getAdminPortalUrl();
+      var redirectUrl = getAdminPortalUrl();
       var pattern = config.oauthUrl.oauth2LoginUrlPattern;
       var params = [
         getOauth2Url(),
@@ -102,9 +102,20 @@
     // private
 
     function getRedirectUrl() {
-      var acu = UrlConfig.getAdminPortalUrl();
+      var acu = getAdminPortalUrl();
       var params = [encodeURIComponent(acu)];
       return Utils.sprintf(config.oauthUrl.ciRedirectUrl, params);
+    }
+
+    function getAdminPortalUrl() {
+      var adminPortalUrl = {
+        dev: 'http://127.0.0.1:8000',
+        cfe: 'https://cfe-admin.ciscospark.com',
+        integration: 'https://int-admin.ciscospark.com/',
+        prod: 'https://admin.ciscospark.com/'
+      };
+      var env = Config.isE2E() ? 'dev' : Config.getEnv();
+      return adminPortalUrl[env];
     }
 
     function getClientSecret() {

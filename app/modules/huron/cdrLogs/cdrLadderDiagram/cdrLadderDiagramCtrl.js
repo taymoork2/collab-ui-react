@@ -6,7 +6,7 @@
     .controller('CdrLadderDiagramCtrl', CdrLadderDiagramCtrl);
 
   /* @ngInject */
-  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $state, $translate, $stateParams, CdrService, CdrLadderDiagramService, $sce, Log) {
+  function CdrLadderDiagramCtrl($scope, $rootScope, $filter, $state, $translate, $stateParams, CdrService, CdrLadderDiagramService, $sce, Log, $window) {
     var vm = this;
 
     vm.downLoadLabel = $translate.instant('cdrLadderDiagram.downLoadEvents');
@@ -61,35 +61,35 @@
         cdrs: vm.call,
         events: vm.events
       };
-      var jsonBlob = new Blob([JSON.stringify(jsonFileData, null, 2)], {
+      var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData, null, 2)], {
         type: 'application/json'
       });
-      vm.jsonUrl = (window.URL || window.webkitURL).createObjectURL(jsonBlob);
+      vm.jsonUrl = ($window.URL || $window.webkitURL).createObjectURL(jsonBlob);
 
-      var csvBlob = new Blob([convertCsv()], {
+      var csvBlob = new $window.Blob([convertCsv()], {
         type: 'text/csv'
       });
-      vm.csvUrl = (window.URL || window.webkitURL).createObjectURL(csvBlob);
+      vm.csvUrl = ($window.URL || $window.webkitURL).createObjectURL(csvBlob);
 
-      var htmlBlob = new Blob([vm.diagramHTML], {
+      var htmlBlob = new $window.Blob([vm.diagramHTML], {
         type: 'text/html'
       });
-      vm.htmlUrl = (window.URL || window.webkitURL).createObjectURL(htmlBlob);
+      vm.htmlUrl = ($window.URL || $window.webkitURL).createObjectURL(htmlBlob);
 
       vm.downloadReady = true;
     }
 
     function clearDownloads() {
       if (vm.jsonUrl !== null) {
-        (window.URL || window.webkitURL).revokeObjectURL(vm.jsonUrl);
+        ($window.URL || $window.webkitURL).revokeObjectURL(vm.jsonUrl);
       }
 
       if (vm.csvUrl !== null) {
-        (window.URL || window.webkitURL).revokeObjectURL(vm.csvUrl);
+        ($window.URL || $window.webkitURL).revokeObjectURL(vm.csvUrl);
       }
 
       if (vm.htmlUrl !== null) {
-        (window.URL || window.webkitURL).revokeObjectURL(vm.htmlUrl);
+        ($window.URL || $window.webkitURL).revokeObjectURL(vm.htmlUrl);
       }
     }
 

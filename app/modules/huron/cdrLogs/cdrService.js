@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($rootScope, $window, $translate, $http, $q, Authinfo, Config, Notification, Log, UrlConfig) {
+  function CdrService($rootScope, $translate, $http, $q, Authinfo, Config, Notification, Log, UrlConfig, $window) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';
@@ -61,7 +61,7 @@
       var jsonFileData = {
         cdrs: call
       };
-      var jsonBlob = new Blob([JSON.stringify(jsonFileData)], {
+      var jsonBlob = new $window.Blob([JSON.stringify(jsonFileData)], {
         type: 'application/json'
       });
 

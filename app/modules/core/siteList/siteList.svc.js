@@ -513,6 +513,11 @@ angular.module('Core').service('SiteListService', [
 
           // don't show the CSV column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
+            vm.gridOptions.columnDefs.splice(3, 1);
+          }
+
+          // don't show the Actions column if admin user does not have feature toggle
+          if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(2, 1);
           }
 

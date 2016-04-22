@@ -11,16 +11,18 @@ describe('Service: CsvDownloadService', function () {
 
   beforeEach(module('Core'));
 
-  describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
-    beforeEach(module(function ($provide) {
-      $provide.value("Authinfo", Authinfo);
-    }));
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", Authinfo);
+  }));
 
-    beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_) {
-      CsvDownloadService = _CsvDownloadService_;
-      $httpBackend = _$httpBackend_;
-      UrlConfig = _UrlConfig_;
-    }));
+  beforeEach(inject(function (_CsvDownloadService_, _$httpBackend_, _UrlConfig_, _$window_) {
+    CsvDownloadService = _CsvDownloadService_;
+    $httpBackend = _$httpBackend_;
+    UrlConfig = _UrlConfig_;
+    $window = _$window_;
+  }));
+
+  describe("Browser: Firefox, Chrome, and cross-browser tests", function () {
 
     afterEach(function () {
       $httpBackend.verifyNoOutstandingExpectation();
@@ -88,25 +90,13 @@ describe('Service: CsvDownloadService', function () {
   });
 
   describe('Browser: IE specific tests', function () {
-    $window = {
-      URL: {
-        createObjectURL: jasmine.createSpy('createObjectURL').and.callFake(function () {
-          return 'blob';
-        })
-      },
-      navigator: {
-        msSaveOrOpenBlob: jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () {})
-      }
-    };
 
-    beforeEach(module(function ($provide) {
-      $provide.value('$window', $window);
-      $provide.value("Authinfo", Authinfo);
-    }));
-
-    beforeEach(inject(function (_CsvDownloadService_) {
-      CsvDownloadService = _CsvDownloadService_;
-    }));
+    beforeEach(function () {
+      $window.URL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {
+        return 'blob';
+      });
+      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () {});
+    });
 
     it('openInIE should only call msSaveOrOpenBlob when there is a saved blob of the correct type', function () {
       CsvDownloadService.openInIE(typeUser, 'fileName.csv');
