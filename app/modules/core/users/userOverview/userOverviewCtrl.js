@@ -17,6 +17,7 @@
     vm.subTitleCard = '';
     vm.getAccountStatus = getAccountStatus;
     vm.resendInvitation = resendInvitation;
+    vm.atlasInviteToggleStatus = false;
     vm.pendingStatus = false;
     vm.hasNoLicenseId = false;
     vm.dirsyncEnabled = false;
@@ -33,11 +34,7 @@
       ])
       .then(function (result) {
         vm.isCSB = Authinfo.isCSB() && result[0];
-        if (result[1]) {
-          getAccountStatus();
-        } else {
-          vm.pendingStatus = false;
-        }
+        vm.atlasInviteToggleStatus = result[1];
       }).finally(init);
 
     function init() {
@@ -104,6 +101,7 @@
         vm.services.push(contactCenterState);
       }
 
+      getAccountStatus();
       updateUserTitleCard();
     }
 
@@ -235,8 +233,8 @@
       var currentUserId = vm.currentUser.id;
       Userservice.getUser(currentUserId, function (data, status) {
         if (data.success) {
-          vm.pendingStatus = (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
-          vm.hasNoLicenseId = _.isEmpty(data.licenseID);
+          vm.pendingStatus = vm.atlasInviteToggleStatus && (_.indexOf(data.accountStatus, 'pending') >= 0) && (_.isEmpty(data.licenseID));
+          vm.hasNoLicenseId = vm.isCSB && _.isEmpty(data.licenseID);
         } else {
           Log.debug('Get existing account info failed. Status: ' + status);
         }
