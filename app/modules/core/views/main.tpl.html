@@ -9,7 +9,7 @@
       <cs-header-right>
         <csv-download type="any" filename="exported_file.csv" no-icon></csv-download>
         <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
-          <cs-header-push-trigger icon="icon" state="state" label="label"></cs-header-push-trigger>
+          <cs-header-push-trigger icon="icon" state="state" label="label" ng-if="isCustomer"></cs-header-push-trigger>
         </div>
         <cr-setup-dropdown ng-if="Utils.isAdminPage()"></cr-setup-dropdown>
         <cr-user-info ng-if="Utils.isAdminPage()"></cr-user-info>

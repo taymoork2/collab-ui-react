@@ -216,11 +216,12 @@ angular.module('Core')
 
               var customerAccount = customerAccounts[x];
               var customerAccountLicenses = [];
-              //If org is a Customer Service Broker, get the license information from subscriptions
-              if (this.isCSB() && _.has(customerAccount, 'subscriptions[0].licenses')) {
-                customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
-              } else if (_.has(customerAccount, 'licenses')) {
+
+              //If org has subscriptions get the license information from subscriptions, else from licences
+              if (_.has(customerAccount, 'licenses')) {
                 customerAccountLicenses = _.get(customerAccount, 'licenses');
+              } else if (_.has(customerAccount, 'subscriptions[0].licenses')) {
+                customerAccountLicenses = _.get(customerAccount, 'subscriptions[0].licenses');
               }
 
               for (var l = 0; l < customerAccountLicenses.length; l++) {
@@ -364,8 +365,7 @@ angular.module('Core')
           return this.hasRole('Full_Admin');
         },
         isCSB: function () {
-          var csb = ['CCW', 'APP_DIRECT'];
-          return csb.indexOf(authData.customerType) > -1;
+          return authData.customerType === 'APP_DIRECT';
         },
         isPartner: function () {
           return this.hasRole('PARTNER_USER') || this.hasRole('PARTNER_ADMIN');
