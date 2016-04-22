@@ -16,9 +16,12 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
+  var tsManifest = 'ts-manifest.txt';
+  // var tsTestManifest = build+'ts-spec-manifest.txt';
 
   var config = {
     build: build,
@@ -41,6 +44,7 @@ module.exports = function () {
     jsUnsupportedName: 'unsupported.scripts',
     cache: cache,
     examples: examples,
+    tsManifest: tsManifest,
 
     gulpFiles: gulpFiles,
 
@@ -62,6 +66,7 @@ module.exports = function () {
     typeScript: {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
+      compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
       compiledTestFiles: compiledTestFiles,
     },
@@ -246,10 +251,10 @@ module.exports = function () {
     },
 
     banner: '/**\n' +
-      ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-      ' * Copyright ' + year + ' <%= pkg.author %>\n' +
-      ' */\n' +
-      '',
+    ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+    ' * Copyright ' + year + ' <%= pkg.author %>\n' +
+    ' */\n' +
+    '',
 
     beautifyFiles: [
       app + '/**/*.js',
