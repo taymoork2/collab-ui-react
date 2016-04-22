@@ -1,0 +1,46 @@
+<div class="enterprise-sipUri-page" id="sip-url-domain-setup">
+	<div class="title space-flow">
+		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartOne"></p>
+		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartTwo"></p>
+		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartThree"></p>
+		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartFour"></p>
+	</div>
+	<div class="row-fluid">
+		<div class="col-md-12">
+			<p translate="firstTimeWizard.setSipUriDomainMsg"></p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="col-md-3">
+			<!-- TODO: replace function call for isError-->
+			<cs-input-deprecated class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
+			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
+			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input-deprecated>
+		</div>
+		<div class="col-md-9 font-regular">
+			<button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability" ng-disabled="cloudSipUriField.isButtonDisabled"></button>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="uri-check-space">
+			<p class="url-examples-style" translate="firstTimeWizard.setSipUriDomainCompNames"></p>
+		</div>
+		<div class="uri-check-space url-examples-style">
+			<h5 class="inline">{{cloudSipUriField.inputValue}}.call{{cloudSipUriField.domainSuffix}}</h5>
+			<i ng-if="cloudSipUriField.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+			<i ng-if="cloudSipUriField.isError" class="red-error-icon space icon icon-error"></i>
+			<i ng-if="cloudSipUriField.isLoading" class="space icon icon-spinner"></i>
+		</div>
+		<div ng-if="cloudSipUriField.isRoomLicensed" class="uri-check-space url-examples-style">
+			<h5 class="inline">{{cloudSipUriField.inputValue}}.room{{cloudSipUriField.domainSuffix}}</h5>
+			<i ng-if="cloudSipUriField.isUrlAvailable" class="green-check space icon icon-checkbox"></i>
+			<i ng-if="cloudSipUriField.isError" class="red-error-icon space icon icon-error"></i>
+			<i ng-if="cloudSipUriField.isLoading" class="space icon icon-spinner"></i>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="confirm-box">
+			<cs-checkbox ckid="confirmSaveCheckBox" ng-if="cloudSipUriField.isUrlAvailable" ng-model="cloudSipUriField.isConfirmed" label="By checking this box and clicking next, you acknowledge that this domain will be registered."></cs-checkbox>
+		</div>
+	</div>
+</div>
