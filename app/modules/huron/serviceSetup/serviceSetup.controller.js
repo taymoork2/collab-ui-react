@@ -8,7 +8,7 @@
   /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, Notification, Authinfo, $translate,
     HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
-    ExternalNumberService, ModalService) {
+    ExternalNumberService, ModalService, FeatureToggleService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -73,6 +73,8 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
+    vm.timeZoneToggleEnabled = false;
+    vm.previousTimeZone = DEFAULT_TZ;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -207,8 +209,11 @@
           });
         },
         expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+          'templateOptions.required': function () {
+            return vm.timeZoneToggleEnabled;
+          },
+          'templateOptions.disabled': function () {
+            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
           }
         }
       }, {
@@ -573,6 +578,9 @@
       }).catch(function (response) {
         errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
+        // Get the timezone feature toggle setting
+        return enableTimeZoneFeatureToggle();
+      }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
@@ -596,6 +604,8 @@
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
+              vm.model.site.timeZone = site.timeZone;
+              vm.previousTimeZone = site.timeZone;
             });
           }
         });
@@ -641,6 +651,16 @@
         if (vm.hasVoicemailService) {
           return listVoicemailTimezone(timezones);
         }
+      });
+    }
+
+    function enableTimeZoneFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
+        if (result) {
+          vm.timeZoneToggleEnabled = result;
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'serviceSetupModal.errorGettingTimeZoneToggle');
       });
     }
 
@@ -888,6 +908,11 @@
           return createSite(vm.model.site);
         } else {
           var siteData = {};
+          //this value is not gonna change when timezone select combo is disabled
+          // so no need to check for timeZoneToggle here
+          if (_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) {
+            siteData.timeZone = vm.model.site.timeZone.value;
+          }
           if (vm.model.site.steeringDigit !== vm.model.ftswSteeringDigit) {
             siteData.steeringDigit = vm.model.site.steeringDigit;
           }
@@ -923,16 +948,9 @@
       }
 
       function saveTimezone() {
-        if ((_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) && voicemailToggleEnabled) {
-          if (!vm.hasVoicemailService) {
-            // If the customer doesn't have voicemail service, then get the existing
-            // timezone first before updating since voicemail was just enabled.
-            return listVoicemailTimezone(vm.timeZoneOptions).then(function () {
-              return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-            });
-          } else {
-            return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
-          }
+        if ((_.get(vm, 'model.site.timeZone.value') !== _.get(vm, 'previousTimeZone.value')) && voicemailToggleEnabled && vm.hasVoicemailService) {
+
+          return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
         }
       }
 

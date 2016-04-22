@@ -615,11 +615,17 @@
 
     function toggleShipFields() {
       var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
-      var isValidQuantity = quantity < 2 || quantity > 7;
+      var invalidDeviceQuantity = quantity < 2 || quantity > 7;
+      var invalidPhoneQuantity = _(_trialCallData.details.phones)
+        .flatten()
+        .pluck('quantity')
+        .some(function (quantity) {
+          return quantity > 5;
+        });
+      var invalidRoomQuantity = calcQuantity(_trialRoomSystemData.details.roomSystems) > 5;
 
-      // if valid number of devices, make shipping fields editable, else, disable
       _.forEach(vm.shippingFields, function (field) {
-        field.templateOptions.disabled = isValidQuantity;
+        field.templateOptions.disabled = invalidDeviceQuantity || invalidRoomQuantity || invalidPhoneQuantity;
       });
     }
 

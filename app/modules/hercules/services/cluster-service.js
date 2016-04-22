@@ -117,7 +117,9 @@
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
       var provisioning = _.find(cluster.provisioning, 'connectorType', type);
-      var upgradeAvailable = provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion;
+      var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
+        return connector.runningVersion !== provisioning.availableVersion;
+      });
       var hosts = _.chain(connectors)
         .pluck('hostname')
         .uniq()

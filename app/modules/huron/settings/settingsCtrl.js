@@ -31,7 +31,7 @@
 
     var savedModel = null;
     var errors = [];
-    var timeZoneToggleEnabled = false;
+    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -226,10 +226,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return timeZoneToggleEnabled;
+          return vm.timeZoneToggleEnabled;
         },
         'templateOptions.disabled': function () {
-          return !timeZoneToggleEnabled;
+          return !vm.timeZoneToggleEnabled;
         }
       }
 
@@ -1027,11 +1027,10 @@
           clearCallerIdFields();
 
           if (vm.hasVoiceService) {
-            promises.push(loadTimeZoneOptions().then(loadVoicemailUserTimeZone));
+            promises.push(loadTimeZoneOptions().then(loadSite).then(loadVoicemailUserTimeZone));
             promises.push(loadInternalNumbers());
             promises.push(loadInternationalDialing());
             promises.push(loadDialPlan());
-            promises.push(loadSite());
             promises.push(loadCallerId());
           }
 
@@ -1455,7 +1454,7 @@
     function enableTimeZoneFeatureToggle() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
         if (result) {
-          timeZoneToggleEnabled = result;
+          vm.timeZoneToggleEnabled = result;
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');

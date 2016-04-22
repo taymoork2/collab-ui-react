@@ -1,4 +1,4 @@
-/* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TimeZoneService*/
+/* globals $controller, $q, $rootScope, TrialWebexCtrl, TrialWebexService, TrialTimeZoneService*/
 'use strict';
 
 describe('Controller: Trial Webex', function () {
@@ -9,7 +9,7 @@ describe('Controller: Trial Webex', function () {
   beforeEach(module('Core'));
 
   beforeEach(function () {
-    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TimeZoneService');
+    bard.inject(this, '$controller', '$q', '$rootScope', 'TrialWebexService', 'TrialTimeZoneService');
 
     bard.mockService(TrialWebexService, {
       getData: trialData.enabled.trials.webexTrial,
@@ -28,7 +28,7 @@ describe('Controller: Trial Webex', function () {
       }
     });
 
-    bard.mockService(TimeZoneService, {
+    bard.mockService(TrialTimeZoneService, {
       getTimeZones: $q.when([])
     });
 

@@ -3,19 +3,15 @@
 describe('ResponseInterceptor', function () {
   beforeEach(module('Core'));
 
-  var $httpBackend, Interceptor, Storage, Auth;
+  var $httpBackend, Interceptor, Auth;
 
   beforeEach(function () {
     module(function ($provide) {
-      Storage = {
-        get: sinon.stub()
-      };
       Auth = {
         logout: sinon.stub(),
         refreshAccessTokenAndResendRequest: sinon.stub()
       };
       $provide.value('Auth', Auth);
-      $provide.value('Storage', Storage);
     });
   });
 
@@ -61,8 +57,6 @@ describe('ResponseInterceptor', function () {
   });
 
   it('should logout when token has expired', function () {
-    Storage.get.onCall(0).returns(true);
-
     Interceptor.responseError({
       status: 400,
       data: {

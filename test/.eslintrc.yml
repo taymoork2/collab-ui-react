@@ -51,6 +51,8 @@
     helper: true
     huntGroup: true
     huronFeatures: true
+    careLandingPage: true
+    careChatTemplateSetupPage: true
     inject: true
     invite: true
     inviteusers: true

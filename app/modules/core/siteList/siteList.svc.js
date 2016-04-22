@@ -467,7 +467,7 @@ angular.module('Core').service('SiteListService', [
           logMsg = funcName + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           // save the response obj into the siteRow obj... when get result (for completed job) is clicked,
           // we will need  more information from the response obj
@@ -512,6 +512,11 @@ angular.module('Core').service('SiteListService', [
           $log.log(logMsg);
 
           // don't show the CSV column if admin user does not have feature toggle
+          if (!adminUserSupportCSV) {
+            vm.gridOptions.columnDefs.splice(3, 1);
+          }
+
+          // don't show the Actions column if admin user does not have feature toggle
           if (!adminUserSupportCSV) {
             vm.gridOptions.columnDefs.splice(2, 1);
           }

@@ -84,7 +84,7 @@
           Log.error('SyncService::fetchSyncStatus(): ' + error);
 
           defer.reject({
-            status: status,
+            status: response.status,
             message: error
           });
         });
@@ -328,7 +328,7 @@
         syncStatus = previousSettings;
 
         defer.reject({
-          status: status,
+          status: response.status,
           message: error
         });
       });

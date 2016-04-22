@@ -35,26 +35,28 @@
     vm.allowLaunchAtlas = false;
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
 
-    function isMarvelRelatedOrg(orgData) {
-      var isMarvel = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e");
-      var managedByMarvel = _.find(orgData.managedBy, function (mb) {
-        return mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e";
+    function isWhitelistedOrg(orgData) {
+      var isWhitelisted = (orgData.id === "ce8d17f8-1734-4a54-8510-fae65acc505e" || orgData.id === "d5235404-6637-4050-9978-e3d0f4338c36");
+      var managedByWhitelisted = _.find(orgData.managedBy, function (mb) {
+        return (mb.orgId === "ce8d17f8-1734-4a54-8510-fae65acc505e" || mb.orgId === "d5235404-6637-4050-9978-e3d0f4338c36");
       });
-      return (isMarvel || managedByMarvel);
+      return (isWhitelisted || managedByWhitelisted);
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-
-      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e") {
+      if (Authinfo.getOrgId() != "ce8d17f8-1734-4a54-8510-fae65acc505e" && Authinfo.getOrgId() != "d5235404-6637-4050-9978-e3d0f4338c36") {
         vm.allowLaunchAtlas = false;
       } else if (orgData.id == Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
-      } else if (!isMarvelRelatedOrg(orgData)) {
+      } else if (!isWhitelistedOrg(orgData)) {
         vm.allowLaunchAtlas = false;
+      } else if (!orgData.orgSettings) {
+        vm.allowLaunchAtlas = true;
       } else {
         var orgSettings = JSON.parse(_.last(orgData.orgSettings));
         vm.allowLaunchAtlas = orgSettings.allowReadOnlyAccess;
       }
+
     }
 
     function isTrials(orgSettings) {
@@ -117,7 +119,7 @@
     }
 
     function findAdminUsers(org) {
-      HelpdeskService.userAdmins(org.id, 100, 'id_full_admin').then(function (users) {
+      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
           numUsers: users.length
@@ -149,7 +151,7 @@
     function keyPressHandler(event) {
       switch (event.keyCode) {
       case 27: // Esc
-        window.history.back();
+        $window.history.back();
         break;
       case 83: // S
         gotoSearchUsersAndDevices();

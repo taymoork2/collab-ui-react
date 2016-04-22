@@ -18,7 +18,7 @@
         </formly-form>
     </section>
   </section>
-  <div ng-if="pstnTrial.trialData.details.pstnProvider.name !== 'IntelePeer'">
+  <div ng-hide="pstnTrial.trialData.details.pstnProvider.apiExists">
     <section class="modal-body row">
       <h5 translate="trialModal.pstn.phoneNumbers"></h5>
       <h6 class="indent" translate="trialModal.pstn.pleaseAdd"></h6>
@@ -32,7 +32,7 @@
       </section>
     </section>
   </div>
-  <div ng-if="pstnTrial.trialData.details.pstnProvider.name === 'IntelePeer'">
+  <div ng-show="pstnTrial.trialData.details.pstnProvider.apiExists">
     <section class="modal-body row">
         <div class="flex-row">
             <h5 translate="trialModal.pstn.contract"></h5>
@@ -67,7 +67,8 @@
       translate="common.back">
     </button>
     <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !pstnTrial.checkForInvalidTokens()">
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" 
+      ng-disabled="(trialForm.$invalid && pstnTrial.showOrdering) || pstnTrial.disableNextButton()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>

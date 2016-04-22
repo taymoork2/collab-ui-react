@@ -6,7 +6,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($state) {
+  function OverviewUsersCard($state, $rootScope) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -27,6 +27,10 @@
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
             card.dirsyncEnabled = data.dirsyncEnabled || false;
+            //ssoEnabled is used in enterpriseSettingsCtrl so share through rootScope
+            if (data.ssoEnabled) {
+              $rootScope.ssoEnabled = true;
+            }
           }
         };
 

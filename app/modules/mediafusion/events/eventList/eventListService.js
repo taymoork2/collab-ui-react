@@ -2,8 +2,8 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('EventListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('EventListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig', '$window',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig, $window) {
       // console.log("EventListService");
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
@@ -20,7 +20,7 @@ angular.module('Mediafusion')
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
             eventSearchUrl = eventListUrl + '?' + searchfilter + "&" + queryParams;
-            encodedSearchStr = window.encodeURIComponent(searchString);
+            encodedSearchStr = $window.encodeURIComponent(searchString);
             eventListUrl = Utils.sprintf(eventSearchUrl, [encodedSearchStr]);
           } else {
             eventListUrl = eventListUrl + '?' + queryParams;

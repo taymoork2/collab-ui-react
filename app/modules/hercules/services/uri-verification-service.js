@@ -7,10 +7,13 @@
 
   /* @ngInject */
   function UriVerificationService(DomainManagementService) {
-    DomainManagementService.getVerifiedDomains();
 
     return {
-      isDomainVerified: function (uri) {
+
+      isDomainVerified: function (domainList, uri) {
+
+        if (!domainList)
+          return false;
 
         if (!uri)
           return false;
@@ -22,7 +25,7 @@
         //we always normalize to lowercase.
         uriDomain = uriDomain ? uriDomain.toLowerCase() : uriDomain;
 
-        return _.some(DomainManagementService.domainList, function (domain) {
+        return _.some(domainList, function (domain) {
           return domain.status && domain.text &&
             (domain.status === DomainManagementService.states.verified || domain.status === DomainManagementService.states.claimed) &&
             (uriDomain === domain.text || uriDomain.indexOf('.' + domain.text, uriDomain.length - domain.text.length - 1) !== -1);

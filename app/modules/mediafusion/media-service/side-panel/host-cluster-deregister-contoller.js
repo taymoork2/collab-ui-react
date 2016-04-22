@@ -4,7 +4,7 @@
   /* @ngInject */
   function HostClusterDeregisterController(cluster, orgName, MediaClusterService, XhrNotificationService, $translate, $modalInstance, $window, $log, $modal) {
     var vm = this;
-    window.x = $window;
+
     vm.deregisterAreYouSure = $translate.instant(
       'mediaFusion.clusters.defuseAreYouSure', {
         clusterName: cluster.name,
