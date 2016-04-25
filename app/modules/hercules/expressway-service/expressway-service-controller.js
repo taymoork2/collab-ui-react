@@ -223,6 +223,7 @@
           Userservice.getUser(userStatus.userId, function (data, status) {
             if (data.success) {
               userStatus.displayName = data.displayName || data.userName;
+              userStatus.emailAddress = data.emails[0].value;
               vm.userStatuses.push(userStatus);
             }
           });
