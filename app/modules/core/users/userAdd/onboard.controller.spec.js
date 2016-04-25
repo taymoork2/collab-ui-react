@@ -533,6 +533,11 @@ describe('OnboardCtrl: Ctrl', function () {
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
+    it('checkUnauthorizedToAdd', function () {
+      Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(403, '400096')));
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
     it('check hybrid services without paid licenses', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');

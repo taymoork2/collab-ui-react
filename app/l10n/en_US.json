@@ -105,6 +105,7 @@
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
     "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
+    "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
     "telstraAppRedirect": "Connecting to Telstra App Marketplace"
   },
   "groupsPage": {
@@ -1099,13 +1100,14 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "csvFilename": "user_status_report.csv"
+      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
       "activated": "{{number}} activated",
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
+      "report": "Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add a Resource",
