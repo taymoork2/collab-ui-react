@@ -21,12 +21,12 @@
       <p ng-repeat="status in userErrorsCtrl.userStatuses" style="padding-top:10px;">
         <span>
           <span style="font-weight:bold;">{{status.displayName}}</span>
+          <span>({{status.emailAddress}})</span>
           <span ng-if="status.connector">
             on <a href="https://{{status.connector.host_name}}"
                   target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
           </span>
-          <br/>
-          {{status.description.defaultMessage}}
+          <span ng-if="status.description.defaultMessage">: <em>{{status.description.defaultMessage}}</em>.</span>
         </span>
       </p>
     </div>
