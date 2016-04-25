@@ -1,7 +1,7 @@
 ---
   # we have to use the legacy flavor because we use ES5
-  extends: "airbnb/legacy"
-  # override (temporarily?) some rules from the "airbnb/legacy" configuration
+  extends: "airbnb-base/legacy"
+  # override (temporarily?) some rules from the "airbnb-base/legacy" configuration
   rules:
     camelcase: 0
     comma-dangle: 0
@@ -16,6 +16,7 @@
     no-nested-ternary: 0
     no-redeclare: 0
     no-shadow: 0
+    no-underscore-dangle: 0
     no-unneeded-ternary: 0
     no-unused-vars: 0
     no-use-before-define: 0
