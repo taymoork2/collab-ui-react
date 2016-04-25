@@ -17,6 +17,7 @@
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
+    vm.timeToExport = timeToExport;
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
 
@@ -182,11 +183,29 @@
     }
 
     function nothingToExport() {
-      return _.filter(vm.statusTypes, function (status) {
-        return !status.unselectable;
-      }).every(function (status) {
-        return !status.selected;
-      });
+      return _.chain(vm.statusTypes)
+        .filter(function (status) {
+          return !status.unselectable;
+        })
+        .every(function (status) {
+          return !status.selected;
+        })
+        .value();
+    }
+
+    function timeToExport() {
+      // in millisecond
+      var guesstimateExportTimePerUser = 35;
+      var duration = _.chain(vm.statusTypes)
+        .filter(function (status) {
+          return status.selected;
+        })
+        .map(function (status) {
+          return status.count * guesstimateExportTimePerUser;
+        })
+        .sum()
+        .value();
+      return moment.duration(duration);
     }
   }
 

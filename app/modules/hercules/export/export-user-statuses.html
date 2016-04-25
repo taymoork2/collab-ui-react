@@ -6,7 +6,7 @@
     <h5 class="modal-title" translate="hercules.export.modalTitle"></h5>
   </div>
   <div class="modal-body">
-    <p><span translate="hercules.export.modalText1"></span><span translate="hercules.export.modalText2"></span></p>
+    <p><span translate="hercules.export.modalText1"></span> <span translate="hercules.export.modalText2"></span></p>
     <form name="userStatusesExport">
       <div class="cs-checkbox-group">
         <div ng-hide="item.unselectable" ng-repeat="item in exportUserStatusesCtrl.statusTypes">
@@ -20,6 +20,7 @@
         </div>
       </div>
     </form>
+    <!-- <p ng-if="exportUserStatusesCtrl.timeToExport().seconds() > 30" translate="hercules.export.guesstimate" translate-values="{minutes: exportUserStatusesCtrl.timeToExport().minutes(), seconds: exportUserStatusesCtrl.timeToExport().seconds()}"></p> -->
     <p><strong translate="hercules.export.modalNote"></strong></p>
   </div>
   <div class="modal-footer">
