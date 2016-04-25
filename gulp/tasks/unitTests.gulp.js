@@ -171,17 +171,19 @@ function createGulpKarmaConfigModule(module) {
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(series(
-          gulp.src(unitTestFiles, {read: false}),
-          gulp.src(typeScriptUtil.getTsFilesFromManifest(), {read: false})
-        ), {
-          addRootSlash: false,
-          starttag: '// inject:unitTestFiles',
-          endtag: '// end-inject:unitTestFiles',
-          transform: function (filepath, file, i, length) {
-            return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-          }
-        }))
+        .pipe($.inject(
+          series(
+            gulp.src(unitTestFiles, {read: false}),
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {read: false})
+          ),
+          {
+            addRootSlash: false,
+            starttag: '// inject:unitTestFiles',
+            endtag: '// end-inject:unitTestFiles',
+            transform: function (filepath, file, i, length) {
+              return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+            }
+          }))
         .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({

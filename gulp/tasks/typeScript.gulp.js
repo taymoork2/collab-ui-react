@@ -32,7 +32,7 @@ gulp.task('ts:build-test', function () {
   var files = config.typeScript.testFiles;
 
   messageLogger('Transpiling TypeScript test files', files);
-  return typeScriptUtil.compile(files, config.app, false,false);
+  return typeScriptUtil.compile(files, config.app, false);
 });
 
 gulp.task('ts:build-app', function () {
@@ -42,5 +42,5 @@ gulp.task('ts:build-app', function () {
   );
 
   messageLogger('Transpiling TypeScript files', files);
-  return typeScriptUtil.compile(files, config.build, true, true);
+  return typeScriptUtil.compile(files, config.build, true);
 });
