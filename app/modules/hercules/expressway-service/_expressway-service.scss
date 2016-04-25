@@ -3,6 +3,7 @@
 .calendar-service-list-state {
   @extend %page-background-white;
 }
+
 .expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
@@ -25,14 +26,14 @@
   top: 0.1em;
 }
 
-.hercules.call-service{
-  .call-aware, .call-connect{
+.hercules.call-service {
+  .call-aware, .call-connect {
     padding-bottom: 2rem;
   }
-  .call-connect{
+  .call-connect {
     padding-top: 2rem;
   }
-  .feature-settings{
+  .feature-settings {
     padding-bottom: 1rem;
   }
 }
@@ -260,7 +261,7 @@ Special stuff currently used for out own mail input field...
 
 .hercules-update-warning-text {
   margin-top: 0;
-  margin-right:5px;
+  margin-right: 5px;
   font-size: 0.75rem;
   color: orange;
 }
@@ -276,5 +277,5 @@ Special stuff currently used for out own mail input field...
   left: 0;
   width: 100%;
   font-size: 10px;
-  color:#CCC;
+  color: #CCC;
 }
