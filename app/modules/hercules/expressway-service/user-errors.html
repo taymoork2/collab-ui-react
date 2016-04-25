@@ -19,25 +19,23 @@
       </p>
 
       <p ng-repeat="status in userErrorsCtrl.userStatuses" class="hercules-user-error-status">
-        <span>
-          <span class="hercules-user-error-name">{{status.displayName}}</span>
-          <span>({{status.emailAddress}})</span>
-          <span ng-if="status.connector">
-            on <a href="https://{{status.connector.host_name}}"
-                  target="_blank" class="hercules-user-error-link">{{status.connector.host_name}}</a>
-          </span>
-          <span ng-if="status.description.defaultMessage">: <em>{{status.description.defaultMessage}}</em>.</span>
+        <span class="hercules-user-error-name">{{status.displayName}}</span>
+        <span>({{status.emailAddress}})</span>
+        <span ng-if="status.connector">
+          on <a href="https://{{status.connector.host_name}}"
+                target="_blank">{{status.connector.host_name}}</a>
         </span>
+        <span ng-if="status.description.defaultMessage">: <em>{{status.description.defaultMessage}}</em>.</span>
       </p>
     </div>
   </div>
   <div class="modal-footer">
-    <button id="convertCancelButton" class="btn" ng-click="$close()">
-      <span>Close</span>
+    <button class="btn" ng-click="$close()">
+      Close
     </button>
-    <button id="openUserStatusReport" class="btn register-button btn--primary"
+    <button class="btn btn--primary"
             ng-click="userErrorsCtrl.openUserStatusReportModal(userErrorsCtrl.serviceId);">
-      <span>Open Report</span>
+      Open Report
     </button>
   </div>
 </div>
