@@ -31,12 +31,18 @@ describe('Controller: CdrService', function () {
   };
 
   describe("browsers: chrome, firefox, and misc - ", function () {
-    beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_) {
+    beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_, $window) {
       CdrService = _CdrService_;
       Notification = _Notification_;
       $q = _$q_;
       $httpBackend = _$httpBackend_;
       Authinfo = _Authinfo_;
+      $window.URL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {
+        return 'blob';
+      });
+      $window.webkitURL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {
+        return 'blob';
+      });
 
       spyOn(Notification, 'notify');
       spyOn(Authinfo, 'getOrgId').and.returnValue('1');
@@ -71,7 +77,7 @@ describe('Controller: CdrService', function () {
     it('should create jsonblob and url from call data', function () {
       var downloadData = CdrService.createDownload('blob');
       expect(angular.isDefined(downloadData.jsonBlob)).toBeTruthy();
-      expect(downloadData.jsonUrl).toContain("blob:http://localhost");
+      expect(downloadData.jsonUrl).toContain('blob');
     });
   });
 
