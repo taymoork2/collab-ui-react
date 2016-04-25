@@ -1,11 +1,13 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('Core')
-  .controller('ModalWizardCtrl', ModalWizardCtrl);
+  angular.module('Core')
+    .controller('ModalWizardCtrl', ModalWizardCtrl);
 
-/* @ngInject */
-function ModalWizardCtrl($scope, $modalInstance) {
-  $scope.finish = function () {
-    $modalInstance.close();
-  };
-}
+  /* @ngInject */
+  function ModalWizardCtrl($scope, $modalInstance) {
+    $scope.finish = function () {
+      $modalInstance.close();
+    };
+  }
+})();

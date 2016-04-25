@@ -1,16 +1,18 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('Core')
-  .controller('UserPreviewCtrl', UserPreviewCtrl);
+  angular.module('Core')
+    .controller('UserPreviewCtrl', UserPreviewCtrl);
 
-/* @ngInject */
-function UserPreviewCtrl($scope, $state, $stateParams, $rootScope, $translate, FeatureToggleService, Userservice) {
-  $scope.service = 'ALL';
+  /* @ngInject */
+  function UserPreviewCtrl($scope, $state, $stateParams, $rootScope, $translate, FeatureToggleService, Userservice) {
+    $scope.service = 'ALL';
 
-  if ($stateParams.service) {
-    $scope.service = $stateParams.service;
+    if ($stateParams.service) {
+      $scope.service = $stateParams.service;
+    }
+    $scope.closePreview = function () {
+      $state.go('users.list');
+    };
   }
-  $scope.closePreview = function () {
-    $state.go('users.list');
-  };
-}
+})();

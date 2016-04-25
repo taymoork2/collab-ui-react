@@ -1,13 +1,15 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('WebExApp')
-  .service('webExXmlApiInfoObj', webExXmlApiInfoObj);
+  angular.module('WebExApp')
+    .service('webExXmlApiInfoObj', webExXmlApiInfoObj);
 
-function webExXmlApiInfoObj() {
-  return {
-    xmlApiUrl: "",
-    webexAdminID: "",
-    webexSessionTicket: "",
-    webexUserId: ""
-  }; // return
-} // WebExXmlApiInfo()
+  function webExXmlApiInfoObj() {
+    return {
+      xmlApiUrl: "",
+      webexAdminID: "",
+      webexSessionTicket: "",
+      webexUserId: ""
+    }; // return
+  } // WebExXmlApiInfo()
+})();

@@ -1,36 +1,38 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular
-  .module('uc.autoattendant')
-  .directive('aaKeypress', aaKeypress);
+  angular
+    .module('uc.autoattendant')
+    .directive('aaKeypress', aaKeypress);
 
-/* @ngInject */
-function aaKeypress(Notification) {
-  return function (scope, element, attrs) {
-    var charsNotAllowed = [{
-      'keyCode': 60,
-      char: '<'
-    }, {
-      'keyCode': 62,
-      char: '>'
-    }];
+  /* @ngInject */
+  function aaKeypress(Notification) {
+    return function (scope, element, attrs) {
+      var charsNotAllowed = [{
+        'keyCode': 60,
+        char: '<'
+      }, {
+        'keyCode': 62,
+        char: '>'
+      }];
 
-    element.bind('keypress', function (event) {
-      var keyCode = event.keyCode;
+      element.bind('keypress', function (event) {
+        var keyCode = event.keyCode;
 
-      if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
+        if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
 
-        scope.$apply(Notification.error(
-          'autoAttendant.sayMessageInvalidChar', {
-            char: _.find(charsNotAllowed, {
-              'keyCode': keyCode
-            }).char
-          }));
+          scope.$apply(Notification.error(
+            'autoAttendant.sayMessageInvalidChar', {
+              char: _.find(charsNotAllowed, {
+                'keyCode': keyCode
+              }).char
+            }));
 
-        event.preventDefault();
+          event.preventDefault();
 
-      }
+        }
 
-    });
-  };
-}
+      });
+    };
+  }
+})();
