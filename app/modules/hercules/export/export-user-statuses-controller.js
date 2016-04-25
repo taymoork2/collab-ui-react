@@ -6,7 +6,7 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($q, $translate, $modalInstance, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
     var numberOfUsersPrUssRequest = 500;
@@ -19,6 +19,10 @@
     vm.nothingToExport = nothingToExport;
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
+
+    $scope.$on('destroy', function () {
+      vm.exportCanceled = true;
+    });
 
     function exportCSV() {
       vm.exportingUserStatusReport = true;
