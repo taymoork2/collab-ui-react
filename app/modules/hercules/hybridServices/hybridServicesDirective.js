@@ -12,15 +12,54 @@
       return;
     }
     var vm = this;
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
+    var extensionCallEntitlements = ['squared-fusion-uc', 'squared-fusion-ec'];
     var stopDelayedUpdates = false;
     var delayedUpdateTimer = null;
     vm.extensions = getExtensions();
     vm.isEnabled = false;
 
-    vm.getStatus = function (status) {
-      return USSService.decorateWithStatus(status);
+    vm.allExceptUcFilter = function (item) {
+      return item.enabled === true && item.id !== 'squared-fusion-ec';
     };
+
+    vm.getStatus = function (status) {
+      // for Hybrid Call, we need to aggregate the status from Aware and Connect
+      var mostSignificantStatus;
+      if (status) {
+        if (_.includes(extensionCallEntitlements, status.serviceId)) {
+          var callServiceStatuses = getCallExtensions();
+          mostSignificantStatus = getMostSignificantStatus(callServiceStatuses);
+        }
+      }
+
+      return USSService.decorateWithStatus(mostSignificantStatus === undefined || mostSignificantStatus.status === undefined ? status : mostSignificantStatus.status);
+    };
+
+    function getMostSignificantStatus(statuses) {
+      var mostSignificant = _.max(statuses, function (s) {
+        if (s && s.status) {
+          return getStatusSeverity(USSService.decorateWithStatus(s.status));
+        }
+      });
+
+      return mostSignificant;
+    }
+
+    function getStatusSeverity(status) {
+      switch (status) {
+      case 'not_entitled':
+        return 0;
+      case 'activated':
+        return 1;
+      case 'pending_activation':
+        return 2;
+      case 'error':
+        return 3;
+      default:
+        return -1;
+      }
+    }
 
     vm.extensionIcon = function (id) {
       return ServiceDescriptor.serviceIcon(id);
@@ -118,6 +157,16 @@
           return {
             id: extensionEntitlement,
             entitled: hasEntitlement(extensionEntitlement)
+          };
+        }
+      });
+    }
+
+    function getCallExtensions() {
+      return _.map(vm.extensions, function (extensionEntitlement) {
+        if (_.includes(extensionCallEntitlements, extensionEntitlement.id)) {
+          return {
+            status: extensionEntitlement.status
           };
         }
       });

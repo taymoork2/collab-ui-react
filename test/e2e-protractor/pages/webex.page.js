@@ -70,7 +70,7 @@ var WebExPage = function () {
   };
 
   this.setup = function (username, password, testSiteUrl) {
-    login.loginThroughGui(username, password);
+    login.loginThroughGuiUsingIntegrationBackend(username, password);
     var defer = protractor.promise.defer();
     browser.executeScript("return window.localStorage.getItem('accessToken');").then(function (accessToken) {
       var promise = webEx.getTicket(username, accessToken, testSiteUrl);
