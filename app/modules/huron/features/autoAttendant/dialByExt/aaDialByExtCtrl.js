@@ -43,7 +43,6 @@
     vm.saveUiModel = saveUiModel;
 
     /////////////////////
-
     function setVoiceOptions() {
       vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), 'label');
       setVoiceOption();

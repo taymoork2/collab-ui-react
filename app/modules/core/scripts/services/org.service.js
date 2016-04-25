@@ -62,7 +62,7 @@
         });
     }
 
-    function getAdminOrg(callback, oid) {
+    function getAdminOrg(callback, oid, disableCache) {
       var adminUrl = null;
       if (oid) {
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + oid;
@@ -70,7 +70,12 @@
         adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
       }
 
-      return $http.get(adminUrl)
+      var cacheDisabled = !!disableCache;
+      return $http.get(adminUrl, {
+          params: {
+            disableCache: cacheDisabled
+          }
+        })
         .success(function (data, status) {
           data = data || {};
           data.success = true;

@@ -658,7 +658,7 @@
       };
     }
 
-    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+    function updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
       if (!ceRecord.scheduleEventTypeMap) {
         ceRecord['scheduleEventTypeMap'] = {};
       }
@@ -671,16 +671,16 @@
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
         ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
-        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
         if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
           ceRecord.defaultActionSet = 'holidays';
         }
       }
     }
 
-    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
 
-      updateScheduleActionSetMap(ceRecord, actionSetName);
+      updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
 
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
@@ -1084,15 +1084,17 @@
     function deleteScheduleActionSetMap(ceRecord, actionSetName) {
       // remove associated schedule to actionSet map, e.g.,
       // scheduleEventTypeMap.open = 'openHours'
+      var prop;
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
-      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
-        return this.scheduleEventTypeMap[prop] === this.actionSetName;
-      }, {
-        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
-        actionSetName: actionSetName
-      });
+      if (actionSetName === 'holidays') {
+        prop = 'holiday';
+      } else if (actionSetName === 'closedHours') {
+        prop = 'closed';
+      } else {
+        prop = 'open';
+      }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
         if (ceRecord.scheduleEventTypeMap) {

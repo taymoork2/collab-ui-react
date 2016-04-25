@@ -12,6 +12,43 @@ describe('Services > Webex page aka Site List page', function () {
     browser.ignoreSynchronization = true;
   });
 
+  describe(': Actions Col : ', function () {
+    var setup = false;
+
+    beforeAll(function () {
+      var promise = webEx.setup(sitelist.t31CSVToggleUser.testAdminUsername, sitelist.t31CSVToggleUser.testAdminPassword, sitelist.t31CSVToggleUser.siteUrl);
+      promise.then(function (ticket) {
+        if (ticket) {
+          setup = true;
+        }
+      });
+    });
+
+    it('should navigate to webex site list', function () {
+      if (setup) {
+        navigation.clickServicesTab();
+        utils.click(sitelist.conferencingLink);
+        utils.wait(sitelist.siteListPageId);
+      }
+    });
+
+    it('should detect the Reports icon in Actions Col', function () {
+      if (setup) {
+        utils.wait(sitelist.actionReportsLinkID);
+      }
+    });
+
+    it('should detect the Site Config icon in Actions Col', function () {
+      if (setup) {
+        utils.wait(sitelist.actionSiteConfigLinkID);
+      }
+    });
+
+    afterAll(function () {
+      navigation.logout();
+    });
+  });
+
   describe(': CSV Export/Import : ', function () {
     var setup = false;
 
@@ -115,7 +152,7 @@ describe('Services > Webex page aka Site List page', function () {
   xdescribe(': License Types - Single : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
-      login.loginThroughGui(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
+      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
     });
 
     it('should navigate to webex site list page', function () {
@@ -141,7 +178,7 @@ describe('Services > Webex page aka Site List page', function () {
   xdescribe(': License Types - Multiple : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
-      login.loginThroughGui(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
+      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
     });
 
     it('should navigate to webex site list page', function () {

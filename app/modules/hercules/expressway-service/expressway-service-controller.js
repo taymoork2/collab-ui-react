@@ -92,9 +92,37 @@
     }
 
     function extractSummaryForAService() {
-      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
-        serviceId: vm.currentServiceId
-      });
+      // Handle special case where we need to get both  squared-fusion-uc and
+      // squared-fusion-ec when currentServiceId = squared-fusion-uc
+      if (vm.currentServiceId === 'squared-fusion-cal') {
+        vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
+          serviceId: vm.currentServiceId
+        });
+      } else if (vm.currentServiceId === 'squared-fusion-uc') {
+        var emptySummary = {
+          activated: 0,
+          deactivated: 0,
+          error: 0,
+          notActivated: 0,
+          notEntitled: 0,
+          total: 0,
+        };
+        vm.userStatusSummary = _.chain(USSService2.getStatusesSummary())
+          .filter(function (summary) {
+            return _.includes(['squared-fusion-uc', 'squared-fusion-ec'], summary.serviceId);
+          })
+          .reduce(function (acc, summary) {
+            return {
+              activated: acc.activated + summary.activated,
+              deactivated: acc.deactivated + summary.deactivated,
+              error: acc.error + summary.error,
+              notActivated: acc.notActivated + summary.notActivated,
+              notEntitled: acc.notEntitled + summary.notEntitled,
+              total: acc.total + summary.total
+            };
+          }, emptySummary)
+          .value();
+      }
     }
 
     function openUserStatusReportModal(serviceId) {
@@ -105,6 +133,9 @@
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
+          },
+          userStatusSummary: function () {
+            return vm.userStatusSummary;
           }
         }
       });
@@ -192,10 +223,10 @@
           Userservice.getUser(userStatus.userId, function (data, status) {
             if (data.success) {
               userStatus.displayName = data.displayName || data.userName;
+              userStatus.emailAddress = data.emails[0].value;
               vm.userStatuses.push(userStatus);
             }
           });
-          return status;
         });
 
         _.forEach(connectorIds, function (connectorId) {

@@ -14,7 +14,7 @@
     var param = {};
     if (angular.isDefined(incomingParam)) {
       // convert from Base64 to ascii
-      var decParam = atob(incomingParam);
+      var decParam = $window.atob(incomingParam);
       var paramArray = decParam.split('|');
       if (paramArray.length > 0) {
         for (var i = 0; i < paramArray.length; i++) {

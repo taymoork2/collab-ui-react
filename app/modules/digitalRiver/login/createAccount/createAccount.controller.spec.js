@@ -8,13 +8,6 @@
     var $location;
 
     beforeEach(module('DigitalRiver'));
-    beforeEach(module(function ($provide) {
-      $provide.value('$window', $window = {
-        location: {
-          href: ''
-        }
-      });
-    }));
 
     beforeEach(inject(function (_$rootScope_, _$controller_, _$location_, _$cookies_, _DigitalRiverService_, _$q_) {
       $rootScope = _$rootScope_;

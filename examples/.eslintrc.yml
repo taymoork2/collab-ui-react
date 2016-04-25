@@ -1,6 +1,6 @@
 ---
   extends:
-    - "airbnb/legacy"
+    - "airbnb-base/legacy"
     - "angular"
   rules:
     func-names: 0

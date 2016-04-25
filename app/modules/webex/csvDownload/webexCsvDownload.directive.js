@@ -49,6 +49,7 @@
           ).catch(
             function (response) {
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+              $scope.$emit('download-error');
             }
           );
         }
@@ -114,6 +115,11 @@
           },
           500
         );
+      });
+
+      scope.$on('download-error', function () {
+        scope.webexCsvDownload.downloading = false;
+        // changeAnchorAttrToOriginalState();
       });
 
       if (attrs.filedownloadurl) {

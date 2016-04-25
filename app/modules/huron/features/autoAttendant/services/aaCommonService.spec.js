@@ -108,6 +108,7 @@
         ui.isOpenHours = true;
         ui.isClosedHours = true;
         ui.isHolidays = true;
+        ui.holidaysValue = 'closedHours';
 
         AACommonService.saveUiModel(ui, aaRecord);
         expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalled();
