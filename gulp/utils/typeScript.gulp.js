@@ -8,6 +8,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var concatFilenames = require('gulp-concat-filenames');
+var fileListParser = require('./fileListParser.gulp');
 var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({
   lazy: true
@@ -16,7 +17,7 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var args = require('yargs').argv;
 
-function compile(files, dest, concatOut, writeManifest) {
+function compile(files, dest, writeManifest) {
   var reporter = $.typescript.reporter.defaultReporter();
   var SPEC_SUFFIX = '.spec';
   return gulp
@@ -44,24 +45,23 @@ function compile(files, dest, concatOut, writeManifest) {
         }
       }
     ))
-    // .pipe($.print())
-    // .pipe(concatFilenames((concatOut?'':'spec-')+'ts-manifest.txt'
-    //,
-    // {
-    // root:'/app',
-    // outDir:'build'}
-    // ))
-    // .pipe($.if(concatOut, concat('modules/core/ts-output.js')))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
-    .pipe($.if(writeManifest,concatFilenames((concatOut ? '' : 'spec-') + config.tsManifest)))
-    .pipe($.if(writeManifest,gulp.dest(dest)))
+    .pipe($.if(writeManifest, concatFilenames(config.tsManifest)))
+    .pipe($.if(writeManifest, gulp.dest(dest)))
     .pipe(reload({
         stream: true
       })
     );
 }
 
+function getTsFilesFromManifest() {
+  var fileList = [];
+  fileList = fileList.concat(fileListParser.toList(config.build + '/' + config.tsManifest, "utf8"));
+  return fileList;
+}
+
 module.exports = {
-  compile: compile
+  compile: compile,
+  getTsFilesFromManifest: getTsFilesFromManifest
 };

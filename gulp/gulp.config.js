@@ -52,6 +52,10 @@ module.exports = function () {
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
       ],
+      notTs: [
+        '!' + app + '/modules/**/*.js',
+        '!' + app + '/scripts/**/*.js'
+      ],
       json: app + '/**/*.json',
       csv: app + '/**/*.csv',
       docs: app + '/docs/**/*',
@@ -98,6 +102,11 @@ module.exports = function () {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
+      ],
+      notTs: [
+        '!' + build + '/scripts/**/*.ts.js',
+        '!' + build + '/modules/**/*.module.ts.js',
+        '!' + build + '/modules/**/*.ts.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',

@@ -181,11 +181,11 @@ gulp.task('copy:changed-files', function () {
 });
 
 gulp.task('ts:changed-spec-files', function () {
-  return typeScriptUtil.compile([].concat(changedFiles), config.app, false, false);
+  return typeScriptUtil.compile([].concat(changedFiles), config.app, false);
 });
 
 gulp.task('ts:changed-files', function () {
-  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build, false, false);
+  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build, false);
 });
 
 function karmaModifiedFiles(event) {
