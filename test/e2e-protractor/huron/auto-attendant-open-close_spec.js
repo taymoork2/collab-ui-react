@@ -3,9 +3,24 @@
 
 describe('Huron Auto Attendant', function () {
 
+  var initialIgnoreSync = true;
+
   beforeAll(function () {
+
+    initialIgnoreSync = browser.ignoreSynchronization;
+
     login.login('huron-int1');
+
   }, 120000);
+
+  // See AUTOATTN-556
+  beforeEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = initialIgnoreSync;
+  });
 
   describe('Create and Delete AA', function () {
 
@@ -67,8 +82,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectCheckbox(autoattendant.day5, true);
       utils.expectCheckbox(autoattendant.day6, false);
       utils.expectCheckbox(autoattendant.day7, false);
-      utils.expectValueToContain(autoattendant.starttime, '08:00:00.000');
-      utils.expectValueToContain(autoattendant.endtime, '17:00:00.000');
+      utils.expectValueToContain(autoattendant.starttime, '08:00 AM');
+      utils.expectValueToContain(autoattendant.endtime, '05:00 PM');
       utils.wait(autoattendant.modalcancel, 12000);
       utils.click(autoattendant.modalcancel);
 
