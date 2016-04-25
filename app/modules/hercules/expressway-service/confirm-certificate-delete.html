@@ -3,7 +3,45 @@
 </div>
 <div class="modal-body">
   <p translate="hercules.settings.call.certificatesModalText"></p>
-  <em>{{confirmCertificateDelete.cert.decoded.subjectDN}}</em>
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        <em translate="hercules.settings.call.certificatesEmailAddress"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesCommonName"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesOrganization"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesLocality"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesCountry"></em>
+      </td>
+      <td>
+        <span>{{confirmCertificateDelete.cert.emailAddress}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.commonName}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.organizationalUnit}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.organization}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.locality}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.stateAndProvince}}</span>
+        <br>
+        <span>{{confirmCertificateDelete.cert.country}}</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+
 </div>
 <div class="modal-footer">
   <button ng-click="confirmCertificateDelete.cancel()" class="btn" translate="common.cancel"></button>

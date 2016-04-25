@@ -90,7 +90,6 @@ angular.module('Mediafusion')
             setTimeout(function () {
               getVtsList();
             }, 1000);
-            //$window.location.reload()
           } else {
             var error = [$filter('translate')('Error while decomissioning enterprise resource.')];
             Notification.notify(error, 'error');

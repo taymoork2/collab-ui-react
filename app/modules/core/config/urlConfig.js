@@ -2,12 +2,6 @@
   'use strict';
 
   var serviceUrlMapping = {
-    AdminPortalUrl: {
-      dev: 'http://127.0.0.1:8000',
-      cfe: 'https://cfe-admin.ciscospark.com',
-      integration: 'https://int-admin.ciscospark.com/',
-      prod: 'https://admin.ciscospark.com/'
-    },
     AdminServiceUrl: {
       dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
       cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',

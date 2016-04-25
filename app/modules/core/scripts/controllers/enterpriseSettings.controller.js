@@ -195,7 +195,7 @@
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
-        var r = confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
+        var r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
         if (r === true) {
           $scope.options.configureSSO = 1;
           $scope.options.deleteSSOBySwitchingRadio = true;
@@ -262,7 +262,7 @@
     $scope.$watch('idpFile.file', function (value) {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          var r = confirm($translate.instant('ssoModal.idpOverwriteWarning'));
+          var r = $window.confirm($translate.instant('ssoModal.idpOverwriteWarning'));
           if (r == true) {
             $timeout($scope.importRemoteIdp);
           } else {
@@ -481,10 +481,10 @@
         if (data.success) {
           $scope.metaFilename = 'idb-meta-' + Authinfo.getOrgId() + '-SP.xml';
           var content = data.metadataXml;
-          var blob = new Blob([content], {
+          var blob = new $window.Blob([content], {
             type: 'text/xml'
           });
-          $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
+          $scope.url = ($window.URL || $window.webkitURL).createObjectURL(blob);
         } else {
           Log.debug('Failed to Export Identity Broker SP Metadata. Status: ' + status);
         }

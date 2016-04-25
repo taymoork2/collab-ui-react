@@ -226,7 +226,6 @@
               vm.userStatuses.push(userStatus);
             }
           });
-          return status;
         });
 
         _.forEach(connectorIds, function (connectorId) {

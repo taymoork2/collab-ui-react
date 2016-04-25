@@ -2,8 +2,8 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('AlarmListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('AlarmListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig', '$window',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig, $window) {
       //console.log("AlarmListService");
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
@@ -20,7 +20,7 @@ angular.module('Mediafusion')
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
             alarmSearchUrl = alarmListUrl + '?' + searchfilter + "&" + queryParams;
-            encodedSearchStr = window.encodeURIComponent(searchString);
+            encodedSearchStr = $window.encodeURIComponent(searchString);
             alarmListUrl = Utils.sprintf(alarmSearchUrl, [encodedSearchStr]);
           } else {
             alarmListUrl = alarmListUrl + '?' + queryParams;

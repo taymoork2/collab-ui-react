@@ -222,7 +222,7 @@
             } else {
               _.each(indices, function (index) {
                 if (dayLabel !== '') {
-                  dayLabel = dayLabel + ',';
+                  dayLabel = dayLabel + ', ';
                   numberofdays = numberofdays++;
                 }
                 dayLabel = dayLabel + (vm.days[index].label);
@@ -247,9 +247,14 @@
           vm.openhours = angular.copy(calhours.hours);
           vm.holidays = calhours.holidays;
           vm.scheduleClass = (angular.isDefined(vm.holidays) && vm.holidays.length) ? 'aa-schedule-body' : 'aa-panel-body';
-          if (angular.isDefined(vm.openhours) && vm.openhours.length || angular.isDefined(vm.holidays) && vm.holidays.length) {
+
+          getScheduleTitle();
+
+          if (angular.isDefined(vm.holidays) && vm.holidays.length) {
             vm.isStartTimeSet = isStartTimePresent();
-            getScheduleTitle();
+          }
+
+          if (vm.isOpenClosed() && angular.isDefined(vm.openhours) && vm.openhours.length) {
             getHoursInfo();
             prepareDayHourReport();
           }
@@ -270,7 +275,7 @@
     }
 
     function isOpenClosed() {
-      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours' && angular.isDefined(vm.openHours) && vm.openhours.length));
+      return (vm.schedule === 'openHours' || (vm.schedule === 'closedHours'));
     }
 
     function isClosed() {
