@@ -26,6 +26,7 @@
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
     vm.addNumbers = addNumbers;
+    vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
@@ -96,8 +97,8 @@
     }
 
     function getNumbers() {
-      vm.allNumbers = ExternalNumberService.getAllNumbers();
-      vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
+      vm.allNumbers = ExternalNumberService.getAllNumbers().concat(ExternalNumberService.getPendingOrders());
+      vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
@@ -117,6 +118,10 @@
           });
         }
       });
+    }
+
+    function getQuantity(type) {
+      return ExternalNumberService.getQuantity(type);
     }
   }
 })();
