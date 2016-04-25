@@ -1,4 +1,4 @@
-<div class="enterprise-sipUri-page" id="sip-url-domain-setup">
+<div class="sipurlPrefix" id="sip-url-domain-setup">
 	<div class="title space-flow">
 		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartOne"></p>
 		<p class="paragraphSpacing" translate="firstTimeWizard.setSipUriDescPartTwo"></p>
@@ -17,9 +17,7 @@
 			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
 			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required="true"></cs-input-deprecated>
 		</div>
-		<div class="col-md-9 font-regular">
-			<button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability" ng-disabled="cloudSipUriField.isButtonDisabled"></button>
-		</div>
+    <button id="checkAvailabilityBtn" class="space btn--cta" ng-click="checkSipUriAvailability()" translate="firstTimeWizard.setSipUriDomainCheckAvailability" ng-disabled="cloudSipUriField.isButtonDisabled"></button>
 	</div>
 	<div class="row-fluid">
 		<div class="uri-check-space">
@@ -39,8 +37,9 @@
 		</div>
 	</div>
 	<div class="row-fluid">
-		<div class="confirm-box">
-			<cs-checkbox ckid="confirmSaveCheckBox" ng-if="cloudSipUriField.isUrlAvailable" ng-model="cloudSipUriField.isConfirmed" label="By checking this box and clicking next, you acknowledge that this domain will be registered."></cs-checkbox>
-		</div>
+		<div class="confirm-box" ng-hide="!cloudSipUriField.isUrlAvailable">
+			<cs-checkbox ckid="confirmSaveCheckBox" ng-model="cloudSipUriField.isConfirmed" label="By checking this box and clicking 'Register', you acknowledge that this domain will be registered."></cs-checkbox>
+      <button id="registerPrefixBtn" class="space btn--cta" onclick="alert('{{cloudSipUriField.inputValue}}')" ng-disabled="!cloudSipUriField.isConfirmed">Register</button>
+    </div>
 	</div>
 </div>
