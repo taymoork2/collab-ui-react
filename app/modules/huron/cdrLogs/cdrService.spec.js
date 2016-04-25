@@ -70,56 +70,30 @@ describe('Controller: CdrService', function () {
 
     it('should create jsonblob and url from call data', function () {
       var downloadData = CdrService.createDownload('blob');
-      expect(downloadData.jsonBlob).toEqual(new Blob([JSON.stringify({
-        cdrs: 'blob'
-      })], {
-        type: 'application/json'
-      }));
+      expect(angular.isDefined(downloadData.jsonBlob)).toBeTruthy();
       expect(downloadData.jsonUrl).toContain("blob:http://localhost:8080/");
     });
   });
 
   describe("browsers: IE 10/11 - ", function () {
-    var $window = {
-      URL: {
-        createObjectURL: jasmine.createSpy('createObjectURL').and.callFake(function () {
-          return 'blob';
-        })
-      },
-      navigator: {
-        msSaveOrOpenBlob: jasmine.createSpy('msSaveOrOpenBlob')
-      }
-    };
+    var win;
 
-    beforeEach(module(function ($provide) {
-      $provide.value('$window', $window);
-    }));
-
-    beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_) {
+    beforeEach(inject(function (_CdrService_, $window) {
       CdrService = _CdrService_;
-      Notification = _Notification_;
-      $q = _$q_;
-      $httpBackend = _$httpBackend_;
-      Authinfo = _Authinfo_;
-
-      spyOn(Notification, 'notify');
-      spyOn(Authinfo, 'getOrgId').and.returnValue('1');
+      $window.navigator.msSaveOrOpenBlob = jasmine.createSpy('msSaveOrOpenBlob').and.callFake(function () {});
+      win = $window;
     }));
 
     it('should only create the jsonblob from call data', function () {
       var downloadData = CdrService.createDownload('blob');
-      expect(downloadData.jsonBlob).toEqual(new Blob([JSON.stringify({
-        cdrs: 'blob'
-      })], {
-        type: 'application/json'
-      }));
+      expect(angular.isDefined(downloadData.jsonBlob)).toBeTruthy();
       expect(downloadData.jsonUrl).not.toBeDefined();
     });
 
     it('downloadInIE should call msSaveOrOpenBlob', function () {
-      expect($window.navigator.msSaveOrOpenBlob).not.toHaveBeenCalled();
+      expect(win.navigator.msSaveOrOpenBlob).not.toHaveBeenCalled();
       CdrService.downloadInIE('blob', 'filename.json');
-      expect($window.navigator.msSaveOrOpenBlob).toHaveBeenCalledWith('blob', 'filename.json');
+      expect(win.navigator.msSaveOrOpenBlob).toHaveBeenCalledWith('blob', 'filename.json');
     });
   });
 });
