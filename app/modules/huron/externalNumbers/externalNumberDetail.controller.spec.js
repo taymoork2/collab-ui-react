@@ -36,6 +36,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'isTerminusCustomer').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'setAllNumbers');
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -91,7 +92,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     modalDefer.resolve();
     $scope.$apply();
 
-    expect(controller.allNumbers.length).toEqual(1);
+    expect(ExternalNumberService.setAllNumbers).toHaveBeenCalledWith([externalNumbers[1]]);
     expect(Notification.success).toHaveBeenCalled();
   });
 

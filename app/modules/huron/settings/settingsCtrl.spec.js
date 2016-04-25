@@ -394,7 +394,13 @@ describe('Controller: HuronSettingsCtrl', function () {
   });
 
   describe('formly watcher functions: ', function () {
-    var assignedExternalNumbers = [];
+    var assignedExternalNumbers = [{
+      pattern: '+19725551001',
+      label: '(972) 555-1001'
+    }, {
+      pattern: '+19725551002',
+      label: '(972) 555-1002'
+    }];
 
     beforeEach(function () {
       $scope.to = {};
@@ -425,7 +431,7 @@ describe('Controller: HuronSettingsCtrl', function () {
 
       // assignedExternalNumbers array is constructed by the difference of all minus
       // unassigned numbers
-      assignedExternalNumbers = [{
+      controller.assignedExternalNumbers = [{
         pattern: '+19725551001',
         label: '(972) 555-1001'
       }, {
