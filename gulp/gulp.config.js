@@ -20,8 +20,7 @@ module.exports = function () {
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
-  var tsManifest = 'ts-manifest.txt';
-  // var tsTestManifest = build+'ts-spec-manifest.txt';
+  var tsManifest = '/../ts/ts-manifest.txt';
 
   var config = {
     build: build,
