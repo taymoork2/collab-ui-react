@@ -6,7 +6,7 @@
     .controller("RedirectTargetController", RedirectTargetController);
 
   /* @ngInject */
-  function RedirectTargetController(RedirectTargetService, $modalInstance, $window, XhrNotificationService) {
+  function RedirectTargetController(RedirectTargetService, $modalInstance, $window, XhrNotificationService, $translate) {
     var vm = this;
     vm.addRedirectTargetClicked = addRedirectTargetClicked;
     vm.redirectToTargetAndCloseWindowClicked = redirectToTargetAndCloseWindowClicked;
@@ -16,7 +16,16 @@
     function addRedirectTargetClicked(hostName) {
       RedirectTargetService.addRedirectTarget(hostName).then(function () {
         vm.enableRedirectToTarget = true;
-      }, XhrNotificationService.notify);
+      }, function (data) {
+        console.log('in reject');
+        var message = $translate.instant('hercules.redirect-target-dialog.register-error-500');
+
+        if (data.status === 400) {
+          message = $translate.instant('hercules.redirect-target-dialog.register-error-400');
+        }
+
+        XhrNotificationService.notify(message);
+      });
     }
 
     function redirectToTargetAndCloseWindowClicked(hostName) {

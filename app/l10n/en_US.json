@@ -1121,7 +1121,9 @@
       "activate-resource-button": "Next",
       "register-resource-button": "Go to Expressway",
       "grant-registration-success-header": "You may now register the Expressway {{hostname}} with Cisco Collaboration Cloud.",
-      "grant-success-information": "Go to your Expressway within one hour to complete registration."
+      "grant-success-information": "Go to your Expressway within one hour to complete registration.",
+      "register-error-400": "Could not register Expressway. The hostname is invalid.",
+      "register-error-500": "Could not register Expressway. Try again later, or contact your Cisco technical support representative if the problem persists."
     },
     "activateService": {
       "ingress": "Extend the Cloud to your On-Premise Environment",
