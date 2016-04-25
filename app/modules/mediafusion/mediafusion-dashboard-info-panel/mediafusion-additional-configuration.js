@@ -2,17 +2,17 @@
 
 (function () {
   angular.module('Mediafusion')
-    .controller('MediaFusionAdditionalConfigurationController', function () {
+    .controller('MediaFusionAdditionalConfigurationController', MediaFusionAdditionalConfigurationController)
+    .directive('mediafusionAdditionalConfiguration', mediafusionAdditionalConfiguration);
 
-    })
-    .directive('mediafusionAdditionalConfiguration', [
-      function () {
-        return {
-          restrict: 'E',
-          scope: false,
-          controller: 'MediaFusionAdditionalConfigurationController',
-          templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-additional-configuration.html'
-        };
-      }
-    ]);
+    function MediaFusionAdditionalConfigurationController() {}
+
+    function mediafusionAdditionalConfiguration() {
+      return {
+        restrict: 'E',
+        scope: false,
+        controller: 'MediaFusionAdditionalConfigurationController',
+        templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-additional-configuration.html'
+      };
+    }
 })();

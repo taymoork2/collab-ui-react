@@ -48,46 +48,52 @@
 
   angular
     .module('Squared')
-    .directive('sqEditableInput', [
-      function () {
-        return {
-          scope: {
-            sqSave: '&',
-            ngModel: '='
-          },
-          restrict: 'E',
-          controller: EditableInputController,
-          templateUrl: 'modules/squared/devices/widgets/editableInputDirective.html'
-        };
-      }
-    ])
-    .directive('focusOn', function ($timeout) {
-      return {
-        restrict: 'A',
-        link: function ($scope, $element, $attr) {
-          $scope.$watch($attr.focusOn, function (_focusVal) {
-            $timeout(function () {
-              if (_focusVal) {
-                $element.focus();
-              }
-            });
-          });
-        }
-      };
-    })
-    .directive('selectText', function ($timeout) {
-      return {
-        restrict: 'A',
-        link: function ($scope, $element, $attr) {
-          $scope.$watch($attr.selectText, function (_focusVal) {
-            $timeout(function () {
-              if (_focusVal) {
-                $element.select();
-              }
-            });
-          });
-        }
-      };
-    });
+    .directive('sqEditableInput', sqEditableInput)
+    .directive('focusOn', focusOn)
+    .directive('selectText', selectText);
 
+  /* @ngInject */
+  function sqEditableInput() {
+    return {
+      scope: {
+        sqSave: '&',
+        ngModel: '='
+      },
+      restrict: 'E',
+      controller: EditableInputController,
+      templateUrl: 'modules/squared/devices/widgets/editableInputDirective.html'
+    };
+  }
+
+  /* @ngInject */
+  function focusOn($timeout) {
+    return {
+      restrict: 'A',
+      link: function ($scope, $element, $attr) {
+        $scope.$watch($attr.focusOn, function (_focusVal) {
+          $timeout(function () {
+            if (_focusVal) {
+              $element.focus();
+            }
+          });
+        });
+      }
+    };
+  }
+
+  /* @ngInject */
+  function selectText($timeout) {
+    return {
+      restrict: 'A',
+      link: function ($scope, $element, $attr) {
+        $scope.$watch($attr.selectText, function (_focusVal) {
+          $timeout(function () {
+            if (_focusVal) {
+              $element.select();
+            }
+          });
+        });
+      }
+    };
+  }
 }());

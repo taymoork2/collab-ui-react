@@ -1,27 +1,28 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediafusionConfigService', ['$location', 'UrlConfig',
-    function MediafusionConfigService($location, UrlConfig) {
+  .service('MediafusionConfigService', MediafusionConfigService);
 
-      var baseHerculesUrl = UrlConfig.getHerculesUrl();
-      var baseUssUrl = UrlConfig.getUssUrl();
-      var baseCalliopeUrl = UrlConfig.getCalliopeUrl();
+/* @ngInject */
+function MediafusionConfigService($location, UrlConfig) {
 
-      var getUrl = function () {
-        return baseHerculesUrl;
-      };
-      var getUSSUrl = function () {
-        return baseUssUrl + 'uss/api/v1';
-      };
-      var getCalliopeUrl = function () {
-        return baseCalliopeUrl;
-      };
+  var baseHerculesUrl = UrlConfig.getHerculesUrl();
+  var baseUssUrl = UrlConfig.getUssUrl();
+  var baseCalliopeUrl = UrlConfig.getCalliopeUrl();
 
-      return {
-        getUrl: getUrl,
-        getUSSUrl: getUSSUrl,
-        getCalliopeUrl: getCalliopeUrl
-      };
-    }
-  ]);
+  var getUrl = function () {
+    return baseHerculesUrl;
+  };
+  var getUSSUrl = function () {
+    return baseUssUrl + 'uss/api/v1';
+  };
+  var getCalliopeUrl = function () {
+    return baseCalliopeUrl;
+  };
+
+  return {
+    getUrl: getUrl,
+    getUSSUrl: getUSSUrl,
+    getCalliopeUrl: getCalliopeUrl
+  };
+}

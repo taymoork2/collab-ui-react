@@ -2,177 +2,139 @@
 
 /* global Uint8Array:false */
 
-angular.module('WebExApp').service('WebExApiGatewayService', [
-  '$rootScope',
-  '$q',
-  '$log',
-  'Authinfo',
-  'Storage',
-  'WebExUtilsFact',
-  'WebExXmlApiFact',
-  'WebExXmlApiInfoSvc',
-  'WebExRestApiFact',
-  'WebExApiGatewayConstsService',
-  '$window',
+angular.module('WebExApp').service('WebExApiGatewayService', WebExApiGatewayService);
 
-  function (
-    $rootScope,
-    $q,
-    $log,
-    Authinfo,
-    Storage,
-    WebExUtilsFact,
-    WebExXmlApiFact,
-    webExXmlApiInfoObj,
-    WebExRestApiFact,
-    WebExApiGatewayConstsService,
-    $window
+/* @ngInject */
+function WebExApiGatewayService(
+  $rootScope,
+  $q,
+  $log,
+  Authinfo,
+  Storage,
+  WebExUtilsFact,
+  WebExXmlApiFact,
+  webExXmlApiInfoObj,
+  WebExRestApiFact,
+  WebExApiGatewayConstsService,
+  $window
+) {
+
+  var _this = this;
+
+  this.csvConstructHttpsObj = function (
+    siteUrl,
+    csvApi
   ) {
 
-    var _this = this;
+    var httpsObj = null;
+    var csvUrl = null;
+    var accessToken = null;
 
-    this.csvConstructHttpsObj = function (
-      siteUrl,
-      csvApi
-    ) {
+    WebExApiGatewayConstsService.csvAPIs.forEach(
+      function checkAPI(csvAPI) {
 
-      var httpsObj = null;
-      var csvUrl = null;
-      var accessToken = null;
+        if (csvApi == csvAPI.request) {
 
-      WebExApiGatewayConstsService.csvAPIs.forEach(
-        function checkAPI(csvAPI) {
+          csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
 
-          if (csvApi == csvAPI.request) {
+          accessToken = Storage.get('accessToken');
 
-            csvUrl = 'https://' + siteUrl + '/meetingsapi/v1/users/' + csvAPI.api;
-
-            accessToken = Storage.get('accessToken');
-
-            httpsObj = {
-              url: csvUrl,
-              method: csvAPI.method,
-              headers: {
-                'Content-Type': csvAPI.contentType,
-                'Authorization': 'Bearer ' + accessToken,
-              }
-            };
-
-            if ("POST" == csvAPI.method) {
-              httpsObj.data = csvAPI.data;
+          httpsObj = {
+            url: csvUrl,
+            method: csvAPI.method,
+            headers: {
+              'Content-Type': csvAPI.contentType,
+              'Authorization': 'Bearer ' + accessToken,
             }
+          };
 
+          if ("POST" == csvAPI.method) {
+            httpsObj.data = csvAPI.data;
           }
-        } // csvAPI()
-      ); // WebExApiGatewayConstsService.csvAPIs.forEach()
 
-      return httpsObj;
-    }; // csvConstructHttpsObj()
+        }
+      } // csvAPI()
+    ); // WebExApiGatewayConstsService.csvAPIs.forEach()
 
-    this.csvStatus = function (
+    return httpsObj;
+  }; // csvConstructHttpsObj()
+
+  this.csvStatus = function (
+    siteUrl,
+    mockFlag,
+    mockCsvStatusReq
+  ) {
+
+    var funcName = 'csvStatus()';
+    var logMsg = '';
+
+    var csvHttpsObj = _this.csvConstructHttpsObj(
       siteUrl,
+      WebExApiGatewayConstsService.csvRequests.csvStatus
+    );
+
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+      "mockFlag=" + mockFlag + "\n" +
+      "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+    // $log.log(logMsg);
+
+    var successResult = {
+      siteUrl: siteUrl,
+      isMockResult: mockFlag,
+      status: null, // can be any one of WebExApiGatewayConstsService.csvStatusTypes[]
+      details: null
+    };
+
+    var errorResult = {
+      siteUrl: siteUrl,
+      isMockResult: mockFlag,
+      status: 'error',
+      errorId: null,
+      errorDesc: null,
+      details: null
+    };
+
+    var deferredResponse = $q.defer();
+
+    WebExRestApiFact.csvApiRequest(
       mockFlag,
-      mockCsvStatusReq
-    ) {
+      mockCsvStatusReq,
+      csvHttpsObj
+    ).then(
 
-      var funcName = 'csvStatus()';
-      var logMsg = '';
+      function success(response) {
+        var funcName = "WebExRestApiFact.csvStatusReq.success()";
+        var logMsg = "";
 
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvStatus
-      );
+        logMsg = funcName + "\n" +
+          "response=" + JSON.stringify(response);
+        // $log.log(logMsg);
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      // $log.log(logMsg);
+        successResult.details = response;
+        errorResult.details = response;
 
-      var successResult = {
-        siteUrl: siteUrl,
-        isMockResult: mockFlag,
-        status: null, // can be any one of WebExApiGatewayConstsService.csvStatusTypes[]
-        details: null
-      };
+        // TODO: if error response then return reject
 
-      var errorResult = {
-        siteUrl: siteUrl,
-        isMockResult: mockFlag,
-        status: 'error',
-        errorId: null,
-        errorDesc: null,
-        details: null
-      };
+        var csvJobType = response.jobType;
+        var csvJobStatus = response.request;
 
-      var deferredResponse = $q.defer();
+        switch (csvJobType) {
+        case WebExApiGatewayConstsService.csvJobTypes.typeNone:
+          successResult.status = WebExApiGatewayConstsService.csvStates.none;
+          break;
 
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        mockCsvStatusReq,
-        csvHttpsObj
-      ).then(
-
-        function success(response) {
-          var funcName = "WebExRestApiFact.csvStatusReq.success()";
-          var logMsg = "";
-
-          logMsg = funcName + "\n" +
-            "response=" + JSON.stringify(response);
-          // $log.log(logMsg);
-
-          successResult.details = response;
-          errorResult.details = response;
-
-          // TODO: if error response then return reject
-
-          var csvJobType = response.jobType;
-          var csvJobStatus = response.request;
-
-          switch (csvJobType) {
-          case WebExApiGatewayConstsService.csvJobTypes.typeNone:
-            successResult.status = WebExApiGatewayConstsService.csvStates.none;
+        case WebExApiGatewayConstsService.csvJobTypes.typeImport:
+          switch (csvJobStatus) {
+          case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
+          case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
+          case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
+            successResult.status = WebExApiGatewayConstsService.csvStates.importInProgress;
             break;
 
-          case WebExApiGatewayConstsService.csvJobTypes.typeImport:
-            switch (csvJobStatus) {
-            case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
-            case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
-            case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
-              successResult.status = WebExApiGatewayConstsService.csvStates.importInProgress;
-              break;
-
-            case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
-              successResult.status = (
-                response.failedRecords === 0
-              ) ? WebExApiGatewayConstsService.csvStates.importCompletedNoErr : WebExApiGatewayConstsService.csvStates.importCompletedWithErr;
-              break;
-
-            default:
-              // TODO: handle error
-              break;
-            }
-
-            break;
-
-          case WebExApiGatewayConstsService.csvJobTypes.typeExport:
-            switch (csvJobStatus) {
-            case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
-            case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
-            case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
-              successResult.status = WebExApiGatewayConstsService.csvStates.exportInProgress;
-              break;
-
-            case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
-              successResult.status = (
-                response.failedRecords === 0
-              ) ? WebExApiGatewayConstsService.csvStates.exportCompletedNoErr : WebExApiGatewayConstsService.csvStates.exportCompletedWithErr;
-              break;
-
-            default:
-              // TODO: handle error
-              break;
-            }
-
+          case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
+            successResult.status = (
+              response.failedRecords === 0
+            ) ? WebExApiGatewayConstsService.csvStates.importCompletedNoErr : WebExApiGatewayConstsService.csvStates.importCompletedWithErr;
             break;
 
           default:
@@ -180,486 +142,513 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
             break;
           }
 
-          deferredResponse.resolve(successResult);
-        },
+          break;
 
-        function error(response) {
-          var funcName = "WebExRestApiFact.csvStatusReq.error()";
-          var logMsg = "";
+        case WebExApiGatewayConstsService.csvJobTypes.typeExport:
+          switch (csvJobStatus) {
+          case WebExApiGatewayConstsService.csvJobStatus.statusQueued:
+          case WebExApiGatewayConstsService.csvJobStatus.statusPreProcess:
+          case WebExApiGatewayConstsService.csvJobStatus.statusInProcess:
+            successResult.status = WebExApiGatewayConstsService.csvStates.exportInProgress;
+            break;
 
-          logMsg = funcName + "\n" +
-            "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
+            successResult.status = (
+              response.failedRecords === 0
+            ) ? WebExApiGatewayConstsService.csvStates.exportCompletedNoErr : WebExApiGatewayConstsService.csvStates.exportCompletedWithErr;
+            break;
 
-          deferredResponse.reject(errorResult);
+          default:
+            // TODO: handle error
+            break;
+          }
+
+          break;
+
+        default:
+          // TODO: handle error
+          break;
         }
-      );
 
-      return deferredResponse.promise;
-    }; // csvStatus()
+        deferredResponse.resolve(successResult);
+      },
 
-    this.csvExport = function (
+      function error(response) {
+        var funcName = "WebExRestApiFact.csvStatusReq.error()";
+        var logMsg = "";
+
+        logMsg = funcName + "\n" +
+          "response=" + JSON.stringify(response);
+        $log.log(logMsg);
+
+        deferredResponse.reject(errorResult);
+      }
+    );
+
+    return deferredResponse.promise;
+  }; // csvStatus()
+
+  this.csvExport = function (
+    siteUrl,
+    mockFlag
+  ) {
+
+    var funcName = 'csvExport()';
+    var logMsg = '';
+
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl;
+    $log.log(logMsg);
+
+    var csvHttpsObj = _this.csvConstructHttpsObj(
       siteUrl,
-      mockFlag
-    ) {
+      WebExApiGatewayConstsService.csvRequests.csvExport
+    );
 
-      var funcName = 'csvExport()';
-      var logMsg = '';
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+      "mockFlag=" + mockFlag + "\n" +
+      "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+    $log.log(logMsg);
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl;
-      $log.log(logMsg);
+    var successResult = {
+      'siteUrl': siteUrl,
+      'status': 'success'
+    };
 
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvExport
-      );
+    var errorResult = {
+      'siteUrl': siteUrl,
+      'status:': "error",
+      'errorCode': null,
+      'errorText': null
+    };
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
+    var deferredResponse = $q.defer();
 
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
+    WebExRestApiFact.csvApiRequest(
+      mockFlag,
+      null,
+      csvHttpsObj
+    ).then(
 
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
+      function success(response) {
+        var funcName = "WebExRestApiFact.csvApiRequest.success()";
+        var logMsg = "";
 
-      var deferredResponse = $q.defer();
+        $log.log(funcName);
 
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        null,
-        csvHttpsObj
-      ).then(
+        deferredResponse.resolve(successResult);
+      },
 
-        function success(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.success()";
-          var logMsg = "";
+      function error(response) {
+        var funcName = "WebExRestApiFact.csvApiRequest.error()";
+        var logMsg = "";
 
-          $log.log(funcName);
+        $log.log(funcName);
 
-          deferredResponse.resolve(successResult);
-        },
-
-        function error(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.error()";
-          var logMsg = "";
-
-          $log.log(funcName);
-
-          deferredResponse.reject(errorResult);
-        }
-
-      ).catch(
-
-        function catchError(response) {
-          var funcName = "WebExRestApiFact.csvApiRequest.catchError()";
-          var logMsg = "";
-
-          $log.log(funcName);
-
-          deferredResponse.reject(errorResult);
-        }
-
-      ); // WebExRestApiFact.csvExportReq()
-
-      return deferredResponse.promise;
-    }; // csvExport()
-
-    this.transformImportFile = function (csvFile) {
-
-      var funcName = 'transformImportFile()';
-      var logMsg = '';
-
-      logMsg = funcName + ': ' + 'csvFile=' + csvFile;
-      //$log.log(logMsg);
-
-      var byteArray = [];
-      var header = '%ff%fe';
-
-      header.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
-
-      var newDataArray = [];
-      var newDataCount = 0;
-
-      for (var i = 0; i < csvFile.length; i++) {
-        var hexByte = null;
-
-        if ("\t" == csvFile[i]) {
-          hexByte = "%09";
-        } else if ("\n" == csvFile[i]) {
-          hexByte = "%0A";
-          // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
-        } else {
-          hexByte = csvFile[i].charCodeAt(0).toString(16);
-        }
-
-        newDataArray = newDataArray.concat(hexByte);
-        newDataArray = newDataArray.concat('%00');
-
-        newDataCount = newDataCount + 2;
+        deferredResponse.reject(errorResult);
       }
 
-      var newDataStr = newDataArray.toString();
+    ).catch(
 
-      newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
-        byteArray.push(parseInt(byte, 16));
-      });
+      function catchError(response) {
+        var funcName = "WebExRestApiFact.csvApiRequest.catchError()";
+        var logMsg = "";
 
-      var newData = new Uint8Array(byteArray);
+        $log.log(funcName);
 
-      var blob = new $window.Blob([newData], {
-        type: 'text/csv;charset=UTF-16LE;'
-      });
+        deferredResponse.reject(errorResult);
+      }
 
-      return blob;
-    }; //transformImportFile()
+    ); // WebExRestApiFact.csvExportReq()
 
-    this.csvImport = function (
-      vm
-    ) {
+    return deferredResponse.promise;
+  }; // csvExport()
 
-      var funcName = 'csvImport()';
-      var logMsg = '';
+  this.transformImportFile = function (csvFile) {
 
-      var siteUrl = vm.siteUrl;
-      var mockFlag = vm.csvImportObj.csvMock.mockImport;
-      var csvFile = vm.modal.file;
+    var funcName = 'transformImportFile()';
+    var logMsg = '';
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
-      //$log.log(logMsg);
+    logMsg = funcName + ': ' + 'csvFile=' + csvFile;
+    //$log.log(logMsg);
 
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
+    var byteArray = [];
+    var header = '%ff%fe';
 
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
+    header.replace(/([0-9a-f]{2})/gi, function (byte) {
+      byteArray.push(parseInt(byte, 16));
+    });
 
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvImport
-      );
+    var newDataArray = [];
+    var newDataCount = 0;
 
-      var fd = new $window.FormData();
-      fd.append("importCsvFile", _this.transformImportFile(csvFile));
+    for (var i = 0; i < csvFile.length; i++) {
+      var hexByte = null;
 
-      csvHttpsObj.data = fd;
+      if ("\t" == csvFile[i]) {
+        hexByte = "%09";
+      } else if ("\n" == csvFile[i]) {
+        hexByte = "%0A";
+        // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
+      } else {
+        hexByte = csvFile[i].charCodeAt(0).toString(16);
+      }
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      //$log.log(logMsg);
+      newDataArray = newDataArray.concat(hexByte);
+      newDataArray = newDataArray.concat('%00');
 
-      var deferredResponse = $q.defer();
+      newDataCount = newDataCount + 2;
+    }
 
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        null,
-        csvHttpsObj
-      ).then(
+    var newDataStr = newDataArray.toString();
 
-        function success(response) {
-          deferredResponse.resolve(successResult);
-        },
+    newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
+      byteArray.push(parseInt(byte, 16));
+    });
 
-        function error(response) {
-          deferredResponse.reject(errorResult);
-        }
+    var newData = new Uint8Array(byteArray);
 
-      ).catch(
+    var blob = new $window.Blob([newData], {
+      type: 'text/csv;charset=UTF-16LE;'
+    });
 
-        function catchError(response) {
-          deferredResponse.reject(errorResult);
-        }
+    return blob;
+  }; //transformImportFile()
 
-      ); // WebExRestApiFact.csvExportReq()
+  this.csvImport = function (
+    vm
+  ) {
 
-      return deferredResponse.promise;
-    }; // csvImport()
+    var funcName = 'csvImport()';
+    var logMsg = '';
 
-    this.csvFileDownload = function (
+    var siteUrl = vm.siteUrl;
+    var mockFlag = vm.csvImportObj.csvMock.mockImport;
+    var csvFile = vm.modal.file;
+
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
+      'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
+    //$log.log(logMsg);
+
+    var successResult = {
+      'siteUrl': siteUrl,
+      'status': 'success'
+    };
+
+    var errorResult = {
+      'siteUrl': siteUrl,
+      'status:': "error",
+      'errorCode': null,
+      'errorText': null
+    };
+
+    var csvHttpsObj = _this.csvConstructHttpsObj(
       siteUrl,
-      downloadUrl,
-      mockFlag
-    ) {
-      var funcName = 'csvFileDownload()';
-      var logMsg = '';
+      WebExApiGatewayConstsService.csvRequests.csvImport
+    );
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'downloadUrl=' + downloadUrl + "\n" +
-        'mockFlag=' + mockFlag;
-      // $log.log(logMsg);
+    var fd = new $window.FormData();
+    fd.append("importCsvFile", _this.transformImportFile(csvFile));
 
-      var successResult = {
-        'siteUrl': siteUrl,
-        'status': 'success'
-      };
+    csvHttpsObj.data = fd;
 
-      var errorResult = {
-        'siteUrl': siteUrl,
-        'status:': "error",
-        'errorCode': null,
-        'errorText': null
-      };
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+      "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+    //$log.log(logMsg);
 
-      var csvHttpsObj = _this.csvConstructHttpsObj(
-        siteUrl,
-        WebExApiGatewayConstsService.csvRequests.csvFileDownload
-      );
+    var deferredResponse = $q.defer();
 
-      csvHttpsObj.url = downloadUrl;
+    WebExRestApiFact.csvApiRequest(
+      mockFlag,
+      null,
+      csvHttpsObj
+    ).then(
 
-      logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
-        "mockFlag=" + mockFlag + "\n" +
-        "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
+      function success(response) {
+        deferredResponse.resolve(successResult);
+      },
 
-      var deferredResponse = $q.defer();
+      function error(response) {
+        deferredResponse.reject(errorResult);
+      }
 
-      WebExRestApiFact.csvApiRequest(
-        mockFlag,
-        null,
-        csvHttpsObj
-      ).then(
+    ).catch(
 
-        function success(response) {
-          deferredResponse.resolve(successResult);
-        },
+      function catchError(response) {
+        deferredResponse.reject(errorResult);
+      }
 
-        function error(response) {
-          deferredResponse.reject(errorResult);
-        }
+    ); // WebExRestApiFact.csvExportReq()
 
-      ).catch(
+    return deferredResponse.promise;
+  }; // csvImport()
 
-        function catchError(response) {
-          deferredResponse.reject(errorResult);
-        }
+  this.csvFileDownload = function (
+    siteUrl,
+    downloadUrl,
+    mockFlag
+  ) {
+    var funcName = 'csvFileDownload()';
+    var logMsg = '';
 
-      ); // WebExRestApiFact.csvExportReq()
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
+      'downloadUrl=' + downloadUrl + "\n" +
+      'mockFlag=' + mockFlag;
+    // $log.log(logMsg);
 
-      return deferredResponse.promise;
-    }; // csvFileDownload()
+    var successResult = {
+      'siteUrl': siteUrl,
+      'status': 'success'
+    };
 
-    this.isSiteSupportsIframe = function (siteUrl) {
-      var funcName = "isSiteSupportsIframe()";
-      var logMsg = "";
+    var errorResult = {
+      'siteUrl': siteUrl,
+      'status:': "error",
+      'errorCode': null,
+      'errorText': null
+    };
 
-      var deferredIsSiteSupportsIframe = $q.defer();
-      var siteName = WebExUtilsFact.getSiteName(siteUrl);
+    var csvHttpsObj = _this.csvConstructHttpsObj(
+      siteUrl,
+      WebExApiGatewayConstsService.csvRequests.csvFileDownload
+    );
 
-      logMsg = funcName + ": " + "siteUrl=" + siteUrl;
-      // $log.log(logMsg);
+    csvHttpsObj.url = downloadUrl;
 
-      WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
-        function getSessionTicketSuccess(response) {
-          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = response;
+    logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
+      "mockFlag=" + mockFlag + "\n" +
+      "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
+    $log.log(logMsg);
 
-          var siteVersionJsonObj = null;
-          var enableT30UnifiedAdminJsonObj = null;
+    var deferredResponse = $q.defer();
 
-          var isAdminReportEnabled = false;
-          var isT31IframeSupported = false;
-          var isT30IframeSupported = false;
+    WebExRestApiFact.csvApiRequest(
+      mockFlag,
+      null,
+      csvHttpsObj
+    ).then(
 
-          getSiteData().then(
-            function getSiteDataSuccess(response) {
-              var funcName = "getSiteDataSuccess()";
-              var logMsg = "";
+      function success(response) {
+        deferredResponse.resolve(successResult);
+      },
 
-              siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(response.siteVersionXml);
-              isAdminReportEnabled = isAdminReportEnabledCheck(WebExUtilsFact.validateSiteInfoXmlData(response.siteInfoXml));
-              isT31IframeSupported = isT31IframeSupportedCheck(siteVersionJsonObj);
+      function error(response) {
+        deferredResponse.reject(errorResult);
+      }
 
-              if (isT31IframeSupported) {
-                var isSiteSupportsIframeResult = {
-                  siteUrl: siteUrl,
-                  isCSVSupported: true,
-                  isIframeSupported: true,
-                  isAdminReportEnabled: isAdminReportEnabled
-                };
+    ).catch(
 
-                logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                  "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                $log.log(logMsg);
+      function catchError(response) {
+        deferredResponse.reject(errorResult);
+      }
 
-                deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-              } else { // check iFrame support for T30 site
-                getEnableT30UnifiedAdminData().then(
-                  function getEnableT30UnifiedAdminDataSuccess(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataSuccess()";
-                    var logMsg = "";
+    ); // WebExRestApiFact.csvExportReq()
 
-                    enableT30UnifiedAdminJsonObj = WebExUtilsFact.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml);
-                    isT30IframeSupported = isT30IframeSupportedCheck(
-                      siteVersionJsonObj,
-                      enableT30UnifiedAdminJsonObj
-                    );
+    return deferredResponse.promise;
+  }; // csvFileDownload()
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      isCSVSupported: false,
-                      isIframeSupported: isT30IframeSupported,
-                      isAdminReportEnabled: isAdminReportEnabled
-                    };
+  this.isSiteSupportsIframe = function (siteUrl) {
+    var funcName = "isSiteSupportsIframe()";
+    var logMsg = "";
 
-                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
+    var deferredIsSiteSupportsIframe = $q.defer();
+    var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
-                    deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                  }, // getEnableT30UnifiedAdminDataSuccess()
+    logMsg = funcName + ": " + "siteUrl=" + siteUrl;
+    // $log.log(logMsg);
 
-                  function getEnableT30UnifiedAdminDataError(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataError()";
-                    var logMsg = "";
+    WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
+      function getSessionTicketSuccess(response) {
+        webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+        webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
+        webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
+        webExXmlApiInfoObj.webexAdminSessionTicket = response;
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      error: "getEnableT30UnifiedAdminDataError",
-                      response: response
-                    };
+        var siteVersionJsonObj = null;
+        var enableT30UnifiedAdminJsonObj = null;
 
-                    logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
+        var isAdminReportEnabled = false;
+        var isT31IframeSupported = false;
+        var isT30IframeSupported = false;
 
-                    deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
-                  } // getEnableT30UnifiedAdminDataError()
-                ); // getEnableT30UnifiedAdminData().then()
-              } // check iFrame support for T30 site
-            }, // getSiteDataSuccess()
+        getSiteData().then(
+          function getSiteDataSuccess(response) {
+            var funcName = "getSiteDataSuccess()";
+            var logMsg = "";
 
-            function getSiteDataError(response) {
-              var funcName = "getSiteDataError()";
-              var logMsg = "";
+            siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(response.siteVersionXml);
+            isAdminReportEnabled = isAdminReportEnabledCheck(WebExUtilsFact.validateSiteInfoXmlData(response.siteInfoXml));
+            isT31IframeSupported = isT31IframeSupportedCheck(siteVersionJsonObj);
 
+            if (isT31IframeSupported) {
               var isSiteSupportsIframeResult = {
                 siteUrl: siteUrl,
-                error: "getSiteDataError",
-                response: response
+                isCSVSupported: true,
+                isIframeSupported: true,
+                isAdminReportEnabled: isAdminReportEnabled
               };
 
               logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
                 "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
               $log.log(logMsg);
 
-              deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
-            } // getSiteDataError()
-          ); // getSiteData().then
-        }, // isSiteSupportsIframe().getSessionTicketSuccess()
+              deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
+            } else { // check iFrame support for T30 site
+              getEnableT30UnifiedAdminData().then(
+                function getEnableT30UnifiedAdminDataSuccess(response) {
+                  var funcName = "getEnableT30UnifiedAdminDataSuccess()";
+                  var logMsg = "";
 
-        function getSessionTicketError(response) {
-          var funcName = "isSiteSupportsIframe().getSessionTicketError()";
-          var logMsg = "";
+                  enableT30UnifiedAdminJsonObj = WebExUtilsFact.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml);
+                  isT30IframeSupported = isT30IframeSupportedCheck(
+                    siteVersionJsonObj,
+                    enableT30UnifiedAdminJsonObj
+                  );
 
-          var result = {
-            siteUrl: siteUrl,
-            error: "getSessionTicketError",
-            response: response
-          };
+                  var isSiteSupportsIframeResult = {
+                    siteUrl: siteUrl,
+                    isCSVSupported: false,
+                    isIframeSupported: isT30IframeSupported,
+                    isAdminReportEnabled: isAdminReportEnabled
+                  };
 
-          logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-            "result=" + JSON.stringify(result);
-          $log.log(logMsg);
+                  logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+                    "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                  $log.log(logMsg);
 
-          deferredIsSiteSupportsIframe.reject(result);
-        } // isSiteSupportsIframe().getSessionTicketError()
-      ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
+                  deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
+                }, // getEnableT30UnifiedAdminDataSuccess()
 
-      function getSiteData() {
-        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
-        var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+                function getEnableT30UnifiedAdminDataError(response) {
+                  var funcName = "getEnableT30UnifiedAdminDataError()";
+                  var logMsg = "";
 
-        return $q.all({
-          siteVersionXml: siteVersionXml,
-          siteInfoXml: siteInfoXml
-        });
-      } // getSiteData()
+                  var isSiteSupportsIframeResult = {
+                    siteUrl: siteUrl,
+                    error: "getEnableT30UnifiedAdminDataError",
+                    response: response
+                  };
 
-      function getEnableT30UnifiedAdminData() {
-        var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(webExXmlApiInfoObj);
+                  logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+                    "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                  $log.log(logMsg);
 
-        return $q.all({
-          enableT30UnifiedAdminInfoXml: enableT30UnifiedAdminInfoXml
-        });
-      } // getEnableT30UnifiedAdminData()
+                  deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
+                } // getEnableT30UnifiedAdminDataError()
+              ); // getEnableT30UnifiedAdminData().then()
+            } // check iFrame support for T30 site
+          }, // getSiteDataSuccess()
 
-      function isT31IframeSupportedCheck(siteVersionJsonObj) {
-        var funcName = "isT31IframeSupportedCheck()";
+          function getSiteDataError(response) {
+            var funcName = "getSiteDataError()";
+            var logMsg = "";
+
+            var isSiteSupportsIframeResult = {
+              siteUrl: siteUrl,
+              error: "getSiteDataError",
+              response: response
+            };
+
+            logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+              "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+            $log.log(logMsg);
+
+            deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
+          } // getSiteDataError()
+        ); // getSiteData().then
+      }, // isSiteSupportsIframe().getSessionTicketSuccess()
+
+      function getSessionTicketError(response) {
+        var funcName = "isSiteSupportsIframe().getSessionTicketError()";
         var logMsg = "";
 
-        var trainReleaseOrder = WebExUtilsFact.getSiteVersion(siteVersionJsonObj).trainReleaseOrder;
-        var isT31IframeSupported = (
-          (null != trainReleaseOrder) &&
-          (400 <= +trainReleaseOrder)
-        ) ? true : false;
+        var result = {
+          siteUrl: siteUrl,
+          error: "getSessionTicketError",
+          response: response
+        };
 
         logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-          "trainReleaseOrder=" + trainReleaseOrder + "\n" +
-          "isT31IframeSupported=" + isT31IframeSupported;
-        // $log.log(logMsg);
+          "result=" + JSON.stringify(result);
+        $log.log(logMsg);
 
-        return isT31IframeSupported;
-      } // isT31IframeSupportedCheck()
+        deferredIsSiteSupportsIframe.reject(result);
+      } // isSiteSupportsIframe().getSessionTicketError()
+    ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
 
-      function isT30IframeSupportedCheck(
-        siteVersionJsonObj,
-        enableT30UnifiedAdminJsonObj
-      ) {
-        var funcName = "isT30IframeSupportedCheck()";
-        var logMsg = "";
+    function getSiteData() {
+      var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
+      var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
 
-        var enableT30UnifiedAdmin = WebExUtilsFact.getEnableT30UnifiedAdmin(enableT30UnifiedAdminJsonObj);
-        var isT30IframeSupported = (
-          (null != enableT30UnifiedAdmin) &&
-          ("true" == enableT30UnifiedAdmin)
+      return $q.all({
+        siteVersionXml: siteVersionXml,
+        siteInfoXml: siteInfoXml
+      });
+    } // getSiteData()
+
+    function getEnableT30UnifiedAdminData() {
+      var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(webExXmlApiInfoObj);
+
+      return $q.all({
+        enableT30UnifiedAdminInfoXml: enableT30UnifiedAdminInfoXml
+      });
+    } // getEnableT30UnifiedAdminData()
+
+    function isT31IframeSupportedCheck(siteVersionJsonObj) {
+      var funcName = "isT31IframeSupportedCheck()";
+      var logMsg = "";
+
+      var trainReleaseOrder = WebExUtilsFact.getSiteVersion(siteVersionJsonObj).trainReleaseOrder;
+      var isT31IframeSupported = (
+        (null != trainReleaseOrder) &&
+        (400 <= +trainReleaseOrder)
+      ) ? true : false;
+
+      logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+        "trainReleaseOrder=" + trainReleaseOrder + "\n" +
+        "isT31IframeSupported=" + isT31IframeSupported;
+      // $log.log(logMsg);
+
+      return isT31IframeSupported;
+    } // isT31IframeSupportedCheck()
+
+    function isT30IframeSupportedCheck(
+      siteVersionJsonObj,
+      enableT30UnifiedAdminJsonObj
+    ) {
+      var funcName = "isT30IframeSupportedCheck()";
+      var logMsg = "";
+
+      var enableT30UnifiedAdmin = WebExUtilsFact.getEnableT30UnifiedAdmin(enableT30UnifiedAdminJsonObj);
+      var isT30IframeSupported = (
+        (null != enableT30UnifiedAdmin) &&
+        ("true" == enableT30UnifiedAdmin)
+      ) ? true : false;
+
+      logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
+        "enableT30UnifiedAdmin=" + enableT30UnifiedAdmin + "\n" +
+        "isIframeSupported=" + isT30IframeSupported;
+      // $log.log(logMsg);
+
+      return isT30IframeSupported;
+    } // isT30IframeSupportedCheck()
+
+    function isAdminReportEnabledCheck(siteInfoJsonObj) {
+      var funcName = "isAdminReportEnabledCheck()";
+      var logMsg = "";
+
+      var isAdminReportEnabled = false;
+
+      if ("" === siteInfoJsonObj.errId) { // got a good response
+        var siteInfoJson = siteInfoJsonObj.bodyJson;
+
+        isAdminReportEnabled = (
+          "true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport
         ) ? true : false;
+      }
 
-        logMsg = funcName + ": " + "siteUrl=" + siteUrl + "\n" +
-          "enableT30UnifiedAdmin=" + enableT30UnifiedAdmin + "\n" +
-          "isIframeSupported=" + isT30IframeSupported;
-        // $log.log(logMsg);
+      return isAdminReportEnabled;
+    } // isAdminReportEnabledCheck()
 
-        return isT30IframeSupported;
-      } // isT30IframeSupportedCheck()
-
-      function isAdminReportEnabledCheck(siteInfoJsonObj) {
-        var funcName = "isAdminReportEnabledCheck()";
-        var logMsg = "";
-
-        var isAdminReportEnabled = false;
-
-        if ("" === siteInfoJsonObj.errId) { // got a good response
-          var siteInfoJson = siteInfoJsonObj.bodyJson;
-
-          isAdminReportEnabled = (
-            "true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport
-          ) ? true : false;
-        }
-
-        return isAdminReportEnabled;
-      } // isAdminReportEnabledCheck()
-
-      return deferredIsSiteSupportsIframe.promise;
-    }; // isSiteSupportsIframe()
-  } // end top level function
-]);
+    return deferredIsSiteSupportsIframe.promise;
+  }; // isSiteSupportsIframe()
+} // end top level function

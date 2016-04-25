@@ -1,33 +1,34 @@
 'use strict';
 
 angular.module('Squared')
-  .controller('DownloadsCtrl', ['$scope', '$location', '$http', 'UrlConfig', 'Userservice',
-    function ($scope, $location, $http, UrlConfig, Userservice) {
+  .controller('DownloadsCtrl', DownloadsCtrl);
 
-      $scope.email = $location.search().email;
-      $scope.tlData = {
-        email: $scope.email
-      };
+/* @ngInject */
+function DownloadsCtrl($scope, $location, $http, UrlConfig, Userservice) {
 
-      $scope.webClientURL = UrlConfig.getWebClientUrl();
-      $scope.iPhoneURL = UrlConfig.getItunesStoreUrl();
-      $scope.androidURL = UrlConfig.getAndroidStoreUrl();
+  $scope.email = $location.search().email;
+  $scope.tlData = {
+    email: $scope.email
+  };
 
-      var hasJustResetPassword = $location.search().pwdResetSuccess;
+  $scope.webClientURL = UrlConfig.getWebClientUrl();
+  $scope.iPhoneURL = UrlConfig.getItunesStoreUrl();
+  $scope.androidURL = UrlConfig.getAndroidStoreUrl();
 
-      if (hasJustResetPassword) {
-        // call backend to send
+  var hasJustResetPassword = $location.search().pwdResetSuccess;
 
-        var callback = function (data, status) {
-          if (data.success) {
-            $scope.sendStatus = 'email success';
-          } else {
-            $scope.sendStatus = 'email failed status: ' + status;
-          }
-        };
+  if (hasJustResetPassword) {
+    // call backend to send
 
-        Userservice.sendEmail($scope.email, $location.search().forward, callback);
+    var callback = function (data, status) {
+      if (data.success) {
+        $scope.sendStatus = 'email success';
+      } else {
+        $scope.sendStatus = 'email failed status: ' + status;
       }
+    };
 
-    }
-  ]);
+    Userservice.sendEmail($scope.email, $location.search().forward, callback);
+  }
+
+}

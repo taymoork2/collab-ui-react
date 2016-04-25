@@ -2,32 +2,35 @@
 
 angular
   .module('uc.autoattendant')
-  .directive('aaKeypress', ['Notification', function (Notification) {
-    return function (scope, element, attrs) {
-      var charsNotAllowed = [{
-        'keyCode': 60,
-        char: '<'
-      }, {
-        'keyCode': 62,
-        char: '>'
-      }];
+  .directive('aaKeypress', aaKeypress);
 
-      element.bind('keypress', function (event) {
-        var keyCode = event.keyCode;
+/* @ngInject */
+function aaKeypress(Notification) {
+  return function (scope, element, attrs) {
+    var charsNotAllowed = [{
+      'keyCode': 60,
+      char: '<'
+    }, {
+      'keyCode': 62,
+      char: '>'
+    }];
 
-        if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
+    element.bind('keypress', function (event) {
+      var keyCode = event.keyCode;
 
-          scope.$apply(Notification.error(
-            'autoAttendant.sayMessageInvalidChar', {
-              char: _.find(charsNotAllowed, {
-                'keyCode': keyCode
-              }).char
-            }));
+      if (_.indexOf(_.map(charsNotAllowed, 'keyCode'), keyCode) >= 0) {
 
-          event.preventDefault();
+        scope.$apply(Notification.error(
+          'autoAttendant.sayMessageInvalidChar', {
+            char: _.find(charsNotAllowed, {
+              'keyCode': keyCode
+            }).char
+          }));
 
-        }
+        event.preventDefault();
 
-      });
-    };
-  }]);
+      }
+
+    });
+  };
+}

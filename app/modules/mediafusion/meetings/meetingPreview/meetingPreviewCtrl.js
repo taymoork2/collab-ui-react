@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .controller('MeetingPreviewCtrl', ['$scope', '$state',
-    function ($scope, $state) {
-      $scope.closePreview = function () {
-        $state.go('meetings.list');
-      };
-    }
-  ]);
+  .controller('MeetingPreviewCtrl', MeetingPreviewCtrl);
+
+/* @ngInject */
+function MeetingPreviewCtrl($scope, $state) {
+  $scope.closePreview = function () {
+    $state.go('meetings.list');
+  };
+}

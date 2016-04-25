@@ -1,19 +1,13 @@
 'use strict';
 
 angular.module('Mediafusion')
+  .directive('crThresholdInfoCard', crThresholdInfoCard);
 
-.directive('crThresholdInfoCard', [
-
-  function () {
-    return {
-      restrict: 'EA',
-      replace: true,
-      templateUrl: 'modules/mediafusion/threshold/thresholdPreview/thresholdInfoCard.tpl.html',
-      link: function (scope, element, attrs) {
-
-      }
-    };
-  }
-])
-
-;
+function crThresholdInfoCard() {
+  return {
+    restrict: 'EA',
+    replace: true,
+    templateUrl: 'modules/mediafusion/threshold/thresholdPreview/thresholdInfoCard.tpl.html',
+    link: function (scope, element, attrs) {}
+  };
+}

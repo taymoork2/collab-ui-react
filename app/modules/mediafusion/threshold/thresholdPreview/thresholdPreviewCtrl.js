@@ -1,61 +1,62 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .controller('ThresholdPreviewCtrl', ['$scope', '$state', 'ThresholdService',
-    function ($scope, $state, ThresholdService) {
+  .controller('ThresholdPreviewCtrl', ThresholdPreviewCtrl);
 
-      $scope.systemTypes = [];
-      $scope.systemNames = [];
-      $scope.sysTypeSelected = "";
-      $scope.systemSelected = "All";
+/* @ngInject */
+function ThresholdPreviewCtrl($scope, $state, ThresholdService) {
 
-      //console.log("in threshold Preview Ctrl");
-      $scope.closePreview = function () {
-        // console.log("we are here");
-        $state.go('threshold');
-      };
+  $scope.systemTypes = [];
+  $scope.systemNames = [];
+  $scope.sysTypeSelected = "";
+  $scope.systemSelected = "All";
 
-      $scope.getSystemTypesList = function () {
-        ThresholdService.listSystemTypes(function (data, status) {
-          $scope.systemTypes = data;
-        });
-      };
+  //console.log("in threshold Preview Ctrl");
+  $scope.closePreview = function () {
+    // console.log("we are here");
+    $state.go('threshold');
+  };
 
-      $scope.getSystemsByType = function () {
-        ThresholdService.listSystems($scope.sysTypeSelected.systemType, function (data, status) {
-          $scope.systemNames = data;
-        });
-      };
+  $scope.getSystemTypesList = function () {
+    ThresholdService.listSystemTypes(function (data, status) {
+      $scope.systemTypes = data;
+    });
+  };
 
-      $scope.deleteThreshold = function () {
-        ThresholdService.deleteThreshold($scope.id, function (data, status) {});
-      };
+  $scope.getSystemsByType = function () {
+    ThresholdService.listSystems($scope.sysTypeSelected.systemType, function (data, status) {
+      $scope.systemNames = data;
+    });
+  };
 
-      $scope.saveOverrideThreshold = function () {
+  $scope.deleteThreshold = function () {
+    ThresholdService.deleteThreshold($scope.id, function (data, status) {});
+  };
 
-        var threshold = {
-          "thresholdName": $scope.thresholdName,
-          "metricType": $scope.metricType,
-          "counter": $scope.counter,
-          "operator": $scope.operator,
-          "value": $scope.valuePercentage,
-          "eventName": $scope.eventName,
-          "systemType": $scope.sysTypeSelected.systemType,
-          "hostName": $scope.systemSelected,
-          "parentId": $scope.parentId
-        };
+  $scope.saveOverrideThreshold = function () {
 
-        ThresholdService.addThreshold(threshold, function (data, status) {});
+    var threshold = {
+      "thresholdName": $scope.thresholdName,
+      "metricType": $scope.metricType,
+      "counter": $scope.counter,
+      "operator": $scope.operator,
+      "value": $scope.valuePercentage,
+      "eventName": $scope.eventName,
+      "systemType": $scope.sysTypeSelected.systemType,
+      "hostName": $scope.systemSelected,
+      "parentId": $scope.parentId
+    };
 
-        $scope.systemSelected = "";
-        $scope.valuePercentage = "";
-        $scope.sysTypeSelected = "";
-      };
+    ThresholdService.addThreshold(threshold, function (data, status) {});
 
-      $scope.overrideCancel = function () {
-        $scope.systemSelected = "";
-        $scope.valuePercentage = "";
-        $scope.sysTypeSelected = "";
-      };
-    }
-  ]);
+    $scope.systemSelected = "";
+    $scope.valuePercentage = "";
+    $scope.sysTypeSelected = "";
+  };
+
+  $scope.overrideCancel = function () {
+    $scope.systemSelected = "";
+    $scope.valuePercentage = "";
+    $scope.sysTypeSelected = "";
+  };
+}

@@ -222,11 +222,10 @@ var mockData = function () {
 
 angular
   .module('Mediafusion')
-  .service('MediafusionConnectorMock', [
+  .service('MediafusionConnectorMock', MediafusionConnectorMock);
 
-    function MediafusionConnectorMock() {
-      return {
-        mockData: mockData
-      };
-    }
-  ]);
+function MediafusionConnectorMock() {
+  return {
+    mockData: mockData
+  };
+}

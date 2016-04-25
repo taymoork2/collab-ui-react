@@ -1,36 +1,39 @@
 'use strict';
 
 angular.module('Core')
-  .controller('LaunchSiteCtrl', ['$scope', '$sce', '$timeout',
-    function ($scope, $sce, $timeout) {
+  .controller('LaunchSiteCtrl', LaunchSiteCtrl)
+  .directive('launchSite', launchSite);
 
-      $scope.trustSrc = function (src) {
-        return $sce.trustAsResourceUrl(src);
-      };
+/* @ngInject */
+function LaunchSiteCtrl($scope, $sce, $timeout) {
 
-      $scope.getId = function (url) {
-        var match = url.match(/^https?\:\/\/([^:\/?#]*)/);
-        return match[1].replace(/\./g, '-');
-      };
+  $scope.trustSrc = function (src) {
+    return $sce.trustAsResourceUrl(src);
+  };
 
-      $scope.submitForm = function () {
-        $timeout(function () {
-          var id = '#hiddenButton-' + $scope.getId($scope.webexAdvancedUrl);
-          angular.element(id).trigger('click');
-        }, 0);
-      };
+  $scope.getId = function (url) {
+    var match = url.match(/^https?\:\/\/([^:\/?#]*)/);
+    return match[1].replace(/\./g, '-');
+  };
 
-    }
-  ])
-  .directive('launchSite', function () {
-    return {
-      restrict: 'EA',
-      scope: {
-        advancedSettings: '@',
-        adminEmailParam: '@',
-        userEmailParam: '@',
-        webexAdvancedUrl: '@'
-      },
-      templateUrl: 'modules/core/launchSite/launchSite.tpl.html'
-    };
-  });
+  $scope.submitForm = function () {
+    $timeout(function () {
+      var id = '#hiddenButton-' + $scope.getId($scope.webexAdvancedUrl);
+      angular.element(id).trigger('click');
+    }, 0);
+  };
+
+}
+
+function launchSite() {
+  return {
+    restrict: 'EA',
+    scope: {
+      advancedSettings: '@',
+      adminEmailParam: '@',
+      userEmailParam: '@',
+      webexAdvancedUrl: '@'
+    },
+    templateUrl: 'modules/core/launchSite/launchSite.tpl.html'
+  };
+}

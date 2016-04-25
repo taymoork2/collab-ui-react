@@ -2,139 +2,140 @@
 
 //Defining a FaultRuleService.
 angular.module('Mediafusion')
-  .service('FaultRuleService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('FaultRuleService', FaultRuleService);
 
-      //Fetching the Base url form config.js file.
-      var baseUrl = UrlConfig.getFaultServiceUrl();
+/* @ngInject */
+function FaultRuleService($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
-      var listFaultServices = {
+  //Fetching the Base url form config.js file.
+  var baseUrl = UrlConfig.getFaultServiceUrl();
 
-        listSystemTypes: function (callback) {
+  var listFaultServices = {
 
-          var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
+    listSystemTypes: function (callback) {
 
-          $http.get(sysTypesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
 
-        listSystems: function (systemType, callback) {
+      $http.get(sysTypesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?type=" + systemType;
+    listSystems: function (systemType, callback) {
 
-          var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
-          sysNamesListUrl = sysNamesListUrl + queryParams;
+      var queryParams = "?type=" + systemType;
 
-          $http.get(sysNamesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
+      sysNamesListUrl = sysNamesListUrl + queryParams;
 
-        listMetricTypes: function (systemName, callback) {
+      $http.get(sysNamesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?system=" + systemName;
+    listMetricTypes: function (systemName, callback) {
 
-          var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
-          metricTypesListUrl = metricTypesListUrl + queryParams;
+      var queryParams = "?system=" + systemName;
 
-          $http.get(metricTypesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
+      metricTypesListUrl = metricTypesListUrl + queryParams;
 
-        listMetricCounters: function (systemName, metricType, callback) {
+      $http.get(metricTypesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?system=" + systemName + "&metricType=" + metricType;
+    listMetricCounters: function (systemName, metricType, callback) {
 
-          var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
-          metricCountersListUrl = metricCountersListUrl + queryParams;
+      var queryParams = "?system=" + systemName + "&metricType=" + metricType;
 
-          $http.get(metricCountersListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
+      metricCountersListUrl = metricCountersListUrl + queryParams;
 
-        addThreshold: function (threshold, callback) {
+      $http.get(metricCountersListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
+    addThreshold: function (threshold, callback) {
 
-          $http.post(addThresholdUrl, threshold)
-            .success(function (data, status) {
-              //data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              //data.success = false;
-              //data.status = status;
+      var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
 
-              callback(data, status);
-            });
-        }
+      $http.post(addThresholdUrl, threshold)
+        .success(function (data, status) {
+          //data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          //data.success = false;
+          //data.status = status;
 
-      };
-
-      return listFaultServices;
-
+          callback(data, status);
+        });
     }
-  ]);
+
+  };
+
+  return listFaultServices;
+
+}

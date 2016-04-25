@@ -2,258 +2,259 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('ThresholdService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('ThresholdService', ThresholdService);
 
-      //Fetching the Base url form config.js file.
-      var searchfilter = 'filter=%s';
-      var baseUrl = UrlConfig.getMetricsServiceUrl();
+/* @ngInject */
+function ThresholdService($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
-      var thresholdService = {
+  //Fetching the Base url form config.js file.
+  var searchfilter = 'filter=%s';
+  var baseUrl = UrlConfig.getMetricsServiceUrl();
 
-        queryThresholdList: function (pgNo, parentId, callback) {
+  var thresholdService = {
 
-          var queryParams = "?parentId=" + parentId;
-          var thresholdListUrl = Utils.sprintf(baseUrl + '/threshold/allThreshold', [Authinfo.getOrgId()]);
-          thresholdListUrl = thresholdListUrl + queryParams;
+    queryThresholdList: function (pgNo, parentId, callback) {
 
-          //Actual rest call to get meeting info from server and also error case is handeled.
-          $http.get(thresholdListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var queryParams = "?parentId=" + parentId;
+      var thresholdListUrl = Utils.sprintf(baseUrl + '/threshold/allThreshold', [Authinfo.getOrgId()]);
+      thresholdListUrl = thresholdListUrl + queryParams;
 
-        listMetricTypes: function (callback) {
+      //Actual rest call to get meeting info from server and also error case is handeled.
+      $http.get(thresholdListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
+    listMetricTypes: function (callback) {
 
-          $http.get(metricTypesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var metricTypesListUrl = Utils.sprintf(baseUrl + '/threshold/metricType', [Authinfo.getOrgId()]);
 
-        listMetricCounters: function (metricType, callback) {
+      $http.get(metricTypesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?metricType=" + metricType;
+    listMetricCounters: function (metricType, callback) {
 
-          var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
-          metricCountersListUrl = metricCountersListUrl + queryParams;
+      var queryParams = "?metricType=" + metricType;
 
-          $http.get(metricCountersListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounter', [Authinfo.getOrgId()]);
+      metricCountersListUrl = metricCountersListUrl + queryParams;
 
-        listMetricInsCounters: function (metricType, metricCounter, callback) {
+      $http.get(metricCountersListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?metricType=" + metricType + "&counter=" + metricCounter;
+    listMetricInsCounters: function (metricType, metricCounter, callback) {
 
-          var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounterInstance', [Authinfo.getOrgId()]);
-          metricCountersListUrl = metricCountersListUrl + queryParams;
+      var queryParams = "?metricType=" + metricType + "&counter=" + metricCounter;
 
-          $http.get(metricCountersListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var metricCountersListUrl = Utils.sprintf(baseUrl + '/threshold/metricCounterInstance', [Authinfo.getOrgId()]);
+      metricCountersListUrl = metricCountersListUrl + queryParams;
 
-        listEvents: function (callback) {
+      $http.get(metricCountersListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          //var eventNamesListUrl = Utils.sprintf(baseUrl + '/threshold/eventNames', [Authinfo.getOrgId()]);
+    listEvents: function (callback) {
 
-          var eventNamesListUrl = Utils.sprintf("http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/all", [Authinfo.getOrgId()]);
+      //var eventNamesListUrl = Utils.sprintf(baseUrl + '/threshold/eventNames', [Authinfo.getOrgId()]);
 
-          $http.get(eventNamesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var eventNamesListUrl = Utils.sprintf("http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/all", [Authinfo.getOrgId()]);
 
-        listSystemTypes: function (callback) {
+      $http.get(eventNamesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
+    listSystemTypes: function (callback) {
 
-          $http.get(sysTypesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var sysTypesListUrl = Utils.sprintf(baseUrl + '/threshold/allSystemTypes', [Authinfo.getOrgId()]);
 
-        listSystems: function (systemType, callback) {
+      $http.get(sysTypesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var queryParams = "?type=" + systemType;
+    listSystems: function (systemType, callback) {
 
-          var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
-          sysNamesListUrl = sysNamesListUrl + queryParams;
+      var queryParams = "?type=" + systemType;
 
-          $http.get(sysNamesListUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var sysNamesListUrl = Utils.sprintf(baseUrl + '/threshold/system', [Authinfo.getOrgId()]);
+      sysNamesListUrl = sysNamesListUrl + queryParams;
 
-        addThreshold: function (threshold, callback) {
+      $http.get(sysNamesListUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-          var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
+    addThreshold: function (threshold, callback) {
 
-          $http.post(addThresholdUrl, threshold)
-            .success(function (data, status) {
-              //data = data || {};
-              //data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              //data = data || {};
-              //data.success = false;
-              //data.status = status;
-              callback(data, status);
-            });
-        },
+      var addThresholdUrl = Utils.sprintf(baseUrl + '/threshold/add', [Authinfo.getOrgId()]);
 
-        addEvents: function (events, callback) {
+      $http.post(addThresholdUrl, threshold)
+        .success(function (data, status) {
+          //data = data || {};
+          //data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          //data = data || {};
+          //data.success = false;
+          //data.status = status;
+          callback(data, status);
+        });
+    },
 
-          var addEventsUrl = Utils.sprintf('http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/create', [Authinfo.getOrgId()]);
+    addEvents: function (events, callback) {
 
-          $http.post(addEventsUrl, events)
-            .success(function (data, status) {
-              //data = data || {};
-              //data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              //data = data || {};
-              //data.success = false;
-              //data.status = status;
+      var addEventsUrl = Utils.sprintf('http://10.104.121.51:8080/faultrest/mediafusion/v1/eventcatalog/create', [Authinfo.getOrgId()]);
 
-              callback(data, status);
-            });
-        },
+      $http.post(addEventsUrl, events)
+        .success(function (data, status) {
+          //data = data || {};
+          //data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          //data = data || {};
+          //data.success = false;
+          //data.status = status;
 
-        deleteThreshold: function (thresholdId, callback) {
+          callback(data, status);
+        });
+    },
 
-          var queryParams = "?id=" + thresholdId;
+    deleteThreshold: function (thresholdId, callback) {
 
-          var deleteThresholdUrl = Utils.sprintf(baseUrl + '/threshold/deleteThreshold', [Authinfo.getOrgId()]);
-          deleteThresholdUrl = deleteThresholdUrl + queryParams;
+      var queryParams = "?id=" + thresholdId;
 
-          $http.get(deleteThresholdUrl)
-            .success(function (data, status) {
-              //data = data || {};
-              //data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              //data = data || {};
-              //data.success = false;
-              //data.status = status;
-              callback(data, status);
-            });
-        },
+      var deleteThresholdUrl = Utils.sprintf(baseUrl + '/threshold/deleteThreshold', [Authinfo.getOrgId()]);
+      deleteThresholdUrl = deleteThresholdUrl + queryParams;
 
-      };
+      $http.get(deleteThresholdUrl)
+        .success(function (data, status) {
+          //data = data || {};
+          //data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          //data = data || {};
+          //data.success = false;
+          //data.status = status;
+          callback(data, status);
+        });
+    },
 
-      return thresholdService;
+  };
 
-    }
-  ]);
+  return thresholdService;
+
+}

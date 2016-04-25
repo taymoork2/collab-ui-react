@@ -2,72 +2,73 @@
 
 //Defining a utilizationService.
 angular.module('Mediafusion')
-  .service('utilizationService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('utilizationService', utilizationService);
 
-      //Fetching the Base url form config.js file.
-      var baseUrl = UrlConfig.getUtilizationServiceUrl();
+/* @ngInject */
+function utilizationService($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
 
-      var utilizationservice = {
+  //Fetching the Base url form config.js file.
+  var baseUrl = UrlConfig.getUtilizationServiceUrl();
 
-        //overallUtilization will actually perform a rest call and fetches the data from the server and return back to controller.
+  var utilizationservice = {
 
-        overallUtilization: function (callback) {
+    //overallUtilization will actually perform a rest call and fetches the data from the server and return back to controller.
 
-          var overallUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/overAllUtilization');
+    overallUtilization: function (callback) {
 
-          //Actual rest call to get OverallUtilization info from server and also error case is handeled.
-          $http.get(overallUtilizationUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      var overallUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/overAllUtilization');
 
-        //realtime bridge utilization
+      //Actual rest call to get OverallUtilization info from server and also error case is handeled.
+      $http.get(overallUtilizationUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-        realTimeBridgeUtilization: function (callback) {
+    //realtime bridge utilization
 
-          //console.log("inside realTimeBridgeUtilization of utilizationservice");
-          var realTimeBridgeUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/realTimeUtilization');
+    realTimeBridgeUtilization: function (callback) {
 
-          //Actual rest call to get realTimeBridgeUtilizationUrl info from server and also error case is handeled.
-          $http.get(realTimeBridgeUtilizationUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              data.status = status;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-              var description = null;
-              var errors = data.Errors;
-              if (errors) {
-                description = errors[0].description;
-              }
-            });
-        },
+      //console.log("inside realTimeBridgeUtilization of utilizationservice");
+      var realTimeBridgeUtilizationUrl = Utils.sprintf(baseUrl + '/utilization/realTimeUtilization');
 
-      };
+      //Actual rest call to get realTimeBridgeUtilizationUrl info from server and also error case is handeled.
+      $http.get(realTimeBridgeUtilizationUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          data.status = status;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
+    },
 
-      return utilizationservice;
+  };
 
-    }
-  ]);
+  return utilizationservice;
+
+}

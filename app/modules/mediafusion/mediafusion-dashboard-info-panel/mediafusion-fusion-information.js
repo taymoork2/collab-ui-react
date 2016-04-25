@@ -3,17 +3,17 @@
 (
   function () {
     angular.module('Mediafusion')
-      .controller('MediaFusionInformationController', function () {
+      .controller('MediaFusionInformationController', MediaFusionInformationController)
+      .directive('mediafusionFusionInformation', mediafusionFusionInformation);
 
-      })
-      .directive('mediafusionFusionInformation', [
-        function () {
-          return {
-            restrict: 'E',
-            scope: false,
-            controller: 'MediaFusionInformationController',
-            templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-fusion-information.html'
-          };
-        }
-      ]);
+      function MediaFusionInformationController() {}
+
+      function mediafusionFusionInformation() {
+        return {
+          restrict: 'E',
+          scope: false,
+          controller: 'MediaFusionInformationController',
+          templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-fusion-information.html'
+        };
+      }
   })();

@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('Core')
+  .controller('QuikLinksCtrl', QuikLinksCtrl);
 
-.controller('QuikLinksCtrl', ['$scope', 'Authinfo',
-  function ($scope, Authinfo) {
-
-    $scope.isPageActive = function (name) {
-      return Authinfo.isAllowedState(name);
-    };
-  }
-]);
+/* @ngInject */
+function QuikLinksCtrl($scope, Authinfo) {
+  $scope.isPageActive = function (name) {
+    return Authinfo.isAllowedState(name);
+  };
+}
