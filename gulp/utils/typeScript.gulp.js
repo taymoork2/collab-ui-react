@@ -54,7 +54,7 @@ function compile(files, dest, concatOut, writeManifest) {
     // .pipe($.if(concatOut, concat('modules/core/ts-output.js')))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
-    .pipe($.if(writeManifest,concatFilenames((concatOut ? '' : 'spec-') + 'ts-manifest.txt')))
+    .pipe($.if(writeManifest,concatFilenames((concatOut ? '' : 'spec-') + config.tsManifest)))
     .pipe($.if(writeManifest,gulp.dest(dest)))
     .pipe(reload({
         stream: true
