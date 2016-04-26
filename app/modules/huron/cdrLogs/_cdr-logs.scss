@@ -16,32 +16,29 @@
     width: 100%;
     margin: 0;
     padding: 10px 30px 30px 35px;
-
     .hitSize {
       padding-top: rem-calc(15);
       padding-bottom: rem-calc(10);
     }
-
     .inline-display {
       display: inline-block;
       padding-right: rem-calc(35);
     }
-
+    .accordion {
+      min-width: rem-calc(1430);
+    }
     /* makes cs-datepicker required */
     .searchUpload .cs-datapicker-normal {
       button {
         visibility: hidden;
       }
-
       input {
         max-width: 75%;
       }
     }
-
     .cdrDisplay {
       padding-top: rem-calc(10);
     }
-
     .cdr-accordion-title {
       margin: 0 0 rem-calc(10);
     }
@@ -74,11 +71,9 @@
         display: inline-flex;
         margin-right: rem-calc(10);
       }
-
       .search-display {
         display: inline-flex;
       }
-
       .has-error > .cdr-datepicker > cs-datepicker > .cs-datapicker-normal {
         border: rem-calc(2) solid #f05d3b;
       }

@@ -81,7 +81,7 @@
       $scope.authToken = Storage.get('accessToken');
       $scope.siteName = $stateParams.siteUrl;
       $scope.siteName2 = WebExUtilsFact.getSiteName($stateParams.siteUrl);
-      $scope.fullSparkDNS = window.location.origin;
+      $scope.fullSparkDNS = $window.location.origin;
 
       $scope.locale = (
         "es_LA" == translateUse
@@ -100,14 +100,14 @@
       $rootScope.lastSite = $stateParams.siteUrl;
       $log.log("last site " + $rootScope.lastSite);
 
-      var parser = document.createElement('a');
+      var parser = $window.document.createElement('a');
       parser.href = iframeUrl;
       $rootScope.nginxHost = parser.hostname;
       $log.log("nginxHost " + $rootScope.nginxHost);
 
       $timeout(
         function loadIframe() {
-          var submitFormBtn = document.getElementById('submitFormBtn');
+          var submitFormBtn = $window.document.getElementById('submitFormBtn');
           submitFormBtn.click();
         }, // loadIframe()
 

@@ -26,6 +26,7 @@
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
     vm.addNumbers = addNumbers;
+    vm.getQuantity = getQuantity;
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
@@ -96,8 +97,8 @@
     }
 
     function getNumbers() {
-      vm.allNumbers = ExternalNumberService.getAllNumbers();
-      vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
+      vm.allNumbers = ExternalNumberService.getAllNumbers().concat(ExternalNumberService.getPendingOrders());
+      vm.pendingList = ExternalNumberService.getPendingNumbers().concat(ExternalNumberService.getPendingOrders());
       vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbersWithoutPending();
       vm.refresh = false;
     }
@@ -108,7 +109,8 @@
           return $state.go('pstnSetup', {
             customerId: org.customerOrgId,
             customerName: org.customerName,
-            customerEmail: org.customerEmail
+            customerEmail: org.customerEmail,
+            customerCommunicationLicenseIsTrial: _.get(org, 'communications.isTrial', org.isTrial)
           });
         } else {
           return $state.go('didadd', {
@@ -116,6 +118,10 @@
           });
         }
       });
+    }
+
+    function getQuantity(type) {
+      return ExternalNumberService.getQuantity(type);
     }
   }
 })();

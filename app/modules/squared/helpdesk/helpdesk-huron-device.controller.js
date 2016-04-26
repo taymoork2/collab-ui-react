@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskHuronDeviceController($stateParams, HelpdeskHuronService, HelpdeskService, XhrNotificationService) {
+  function HelpdeskHuronDeviceController($stateParams, HelpdeskHuronService, HelpdeskService, XhrNotificationService, $window) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
@@ -49,7 +49,7 @@
 
     function keyPressHandler(event) {
       if (event.keyCode === 27) { // Esc
-        window.history.back();
+        $window.history.back();
       }
     }
   }

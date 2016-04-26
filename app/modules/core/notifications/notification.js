@@ -66,7 +66,7 @@
 
     function errorResponse(response, errorKey, errorParams) {
       var errorMsg = processErrorResponse(response, errorKey, errorParams);
-      toaster.pop('error', null, errorMsg.trim(), 0);
+      notify(errorMsg.trim(), 'error');
     }
 
     function processErrorResponse(response, errorKey, errorParams) {

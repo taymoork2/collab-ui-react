@@ -543,10 +543,6 @@ exports.expectRowIsNotDisplayed = function (text) {
   this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
 };
 
-exports.dumpConsoleErrors = function () {
-  // todo: smu will remove in separate PR as numerous files are changed...
-};
-
 exports.formatPhoneNumbers = function (value) {
   if (typeof value !== 'string') {
     value = value.toString();

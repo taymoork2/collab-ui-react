@@ -31,7 +31,7 @@
 
     var savedModel = null;
     var errors = [];
-    var timeZoneToggleEnabled = false;
+    vm.timeZoneToggleEnabled = false;
 
     vm.init = init;
     vm.save = save;
@@ -226,10 +226,10 @@
       },
       expressionProperties: {
         'templateOptions.required': function () {
-          return timeZoneToggleEnabled;
+          return vm.timeZoneToggleEnabled;
         },
         'templateOptions.disabled': function () {
-          return !timeZoneToggleEnabled;
+          return !vm.timeZoneToggleEnabled;
         }
       }
 
@@ -974,6 +974,7 @@
       return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
         vm.unassignedExternalNumbers = ExternalNumberService.getUnassignedNumbers();
         vm.allExternalNumbers = ExternalNumberService.getAllNumbers();
+        vm.assignedExternalNumbers = ExternalNumberService.getAssignedNumbers();
       }).catch(function (response) {
         vm.unassignedExternalNumbers = [];
         vm.allExternalNumbers = [];
@@ -1027,11 +1028,10 @@
           clearCallerIdFields();
 
           if (vm.hasVoiceService) {
-            promises.push(loadTimeZoneOptions().then(loadVoicemailUserTimeZone));
+            promises.push(loadTimeZoneOptions().then(loadSite).then(loadVoicemailUserTimeZone));
             promises.push(loadInternalNumbers());
             promises.push(loadInternationalDialing());
             promises.push(loadDialPlan());
-            promises.push(loadSite());
             promises.push(loadCallerId());
           }
 
@@ -1378,21 +1378,14 @@
 
     function _buildServiceNumberOptions(localScope) {
       localScope.$watchCollection(function () {
-        return vm.allExternalNumbers;
+        return vm.assignedExternalNumbers;
       }, function (externalNumberPool) {
         localScope.to.options = _.chain(externalNumberPool)
-          // build a collection of assigned numbers
-          .reject(function (externalNumber) {
-            return _.some(vm.unassignedExternalNumbers, {
-              pattern: externalNumber.pattern
-            });
-          })
           // remove the voicemail number if it exists
           .reject(function (externalNumber) {
             return externalNumber.pattern === _.get(vm, 'model.site.voicemailPilotNumber');
           })
           .value();
-
         // add the existing emergencyCallBackNumber back into the list of options
         if (_.get(vm, 'model.site.emergencyCallBackNumber.pattern') && !_.find(localScope.to.options, function (externalNumber) {
             return externalNumber.pattern === vm.model.site.emergencyCallBackNumber.pattern;
@@ -1455,7 +1448,7 @@
     function enableTimeZoneFeatureToggle() {
       return FeatureToggleService.supports(FeatureToggleService.features.atlasHuronDeviceTimeZone).then(function (result) {
         if (result) {
-          timeZoneToggleEnabled = result;
+          vm.timeZoneToggleEnabled = result;
         }
       }).catch(function (response) {
         Notification.errorResponse(response, 'huronSettings.errorGettingTimeZoneToggle');

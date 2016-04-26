@@ -8,13 +8,13 @@
         </div>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
-        <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'" class="export-list">
+        <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'" class="hercules-export-list">
           <i class="icon icon-circle-user"></i>
           <span class="export-number" translate="hercules.overview.activated" translate-values="{number: exp.userStatusSummary.activated || 0}"></span>
-          <span class="export-number" ng-if="exp.userStatusSummary.notActivated > 0">| <span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
-          <span class="export-number" ng-if="exp.userStatusSummary.error > 0">| <span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></span>
-          <a ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)" class="export-users-statuses-icon">
-            <span id="export-icon" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
+          <span class="export-number" ng-if="exp.userStatusSummary.notActivated > 0"><span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
+          <span class="export-number" ng-if="exp.userStatusSummary.error > 0" ng-click="exp.openUserErrorsModal()"><span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></span>
+          <a class="icon-download-container" ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+            <span translate="hercules.overview.report"></span> <i class="icon icon-download"></i>
           </a>
         </div>
         <button class="btn btn--people add-resource-button" type="submit"

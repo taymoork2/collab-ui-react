@@ -5,10 +5,6 @@
 describe('WebEx user settings', function () {
   var setup = false;
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   beforeAll(function () {
     var promise = webEx.setup(usersettings.testAdmin.username, usersettings.testAdmin.password, usersettings.testSiteUrl);
     promise.then(function (ticket) {

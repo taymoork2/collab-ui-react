@@ -16,17 +16,14 @@ while (1 >= sitesettings.testInfo.describeCount) {
   }
 
   describe(sitesettings.testInfo.describeText, function () {
-    afterEach(function () {
-      utils.dumpConsoleErrors();
-    });
 
     if (sitesettings.testInfo.testType == "T31") {
       it('should signin as ' + sitesettings.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGui(sitesettings.t31Info.testAdminUsername, sitesettings.t31Info.testAdminPassword);
+        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t31Info.testAdminUsername, sitesettings.t31Info.testAdminPassword);
       });
     } else {
       it('should signin as ' + sitesettings.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGui(sitesettings.t30Info.testAdminUsername, sitesettings.t30Info.testAdminPassword);
+        login.loginThroughGuiUsingIntegrationBackend(sitesettings.t30Info.testAdminUsername, sitesettings.t30Info.testAdminPassword);
       });
     }
 
