@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   (function () {
@@ -6,15 +6,15 @@
       .controller('MediaFusionAdditionalConfigurationController', MediaFusionAdditionalConfigurationController)
       .directive('mediafusionAdditionalConfiguration', mediafusionAdditionalConfiguration);
 
-      function MediaFusionAdditionalConfigurationController() {}
+    function MediaFusionAdditionalConfigurationController() {}
 
-      function mediafusionAdditionalConfiguration() {
-        return {
-          restrict: 'E',
-          scope: false,
-          controller: 'MediaFusionAdditionalConfigurationController',
-          templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-additional-configuration.html'
-        };
-      }
+    function mediafusionAdditionalConfiguration() {
+      return {
+        restrict: 'E',
+        scope: false,
+        controller: 'MediaFusionAdditionalConfigurationController',
+        templateUrl: 'modules/mediafusion/mediafusion-dashboard-info-panel/mediafusion-additional-configuration.html'
+      };
+    }
   })();
 })();

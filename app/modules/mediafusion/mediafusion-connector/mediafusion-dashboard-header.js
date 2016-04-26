@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   (function () {
@@ -21,6 +21,6 @@
         controller: 'mediafusionDashboardHeaderController',
         templateUrl: 'modules/mediafusion/mediafusion-connector/mediafusion-dashboard-header.html'
       };
-      }
+    }
   })();
 })();

@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   /* global Uint8Array:false */

@@ -7,7 +7,7 @@
     .module('Squared')
     .directive('sqClipboard', sqClipboard);
 
-    /* @ngInject */
+  /* @ngInject */
   function sqClipboard($timeout, Notification, $window) {
     return {
       restrict: 'A',

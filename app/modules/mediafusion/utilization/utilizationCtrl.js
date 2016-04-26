@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   //Defining a controller for Utilization with required dependencies.
