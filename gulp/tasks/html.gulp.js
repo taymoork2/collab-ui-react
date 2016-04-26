@@ -19,7 +19,6 @@ gulp.task('processHtml:build', function (done) {
   runSeq(['index:build', 'unsupported:build'], done);
 });
 
-
 // Inject dependancies into index.html
 gulp.task('index:build', function () {
   var jsFiles = [].concat(
@@ -40,12 +39,16 @@ gulp.task('index:build', function () {
   return gulp
     .src(config.app + '/index.html')
     .pipe($.if(args.verbose, $.print()))
-    .pipe($.inject(series(gulp.src(jsFiles, {
-      read: false
-    }), gulp.src(typeScriptUtil.getTsFilesFromManifest(), {read: false})), {
-      ignorePath: config.build,
-      addRootSlash: false
-    }))
+    .pipe($.inject(
+      series(
+        gulp.src(jsFiles, {
+          read: false
+        }), gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+          read: false
+        })), {
+        ignorePath: config.build,
+        addRootSlash: false
+      }))
     .pipe($.inject(gulp.src(cssFiles, {
       read: false
     }), {
