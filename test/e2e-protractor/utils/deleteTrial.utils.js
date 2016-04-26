@@ -2,6 +2,8 @@
 
 /* global protractor */
 
+var _ = require('lodash');
+
 var config = require('./test.config.js');
 var utils = require('./test.utils.js');
 
@@ -35,9 +37,9 @@ function getBlackListOrgs() {
     i,
     ret = {};
 
-  for (i in auth) {
-    ret[auth[i].org] = null;
-  }
+  _.forOwn(auth, function (value) {
+    ret[value.org] = null;
+  });
   return ret;
 }
 

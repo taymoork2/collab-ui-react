@@ -1,9 +1,10 @@
 'use strict';
 
 describe('ExportUserStatusesController', function () {
+  beforeEach(module('Core'));
   beforeEach(module('Hercules'));
 
-  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UiStats, UserDetails, USSService2, ClusterService;
+  var vm, Authinfo, scope, $httpBackend, $q, $rootScope, UserDetails, USSService2, ClusterService, ExcelService;
 
   beforeEach(function () {
     module(function ($provide) {
@@ -31,18 +32,22 @@ describe('ExportUserStatusesController', function () {
     $rootScope = _$rootScope_;
     scope = $rootScope.$new();
 
+    ExcelService = {
+      createFile: sinon.stub(),
+      downloadFile: sinon.stub()
+    };
+
+    var userStatusSummary = [{
+      serviceId: 'squared-fusion-cal',
+      total: 14,
+      notActivated: 2,
+      activated: 0,
+      error: 12,
+      deactivated: 0,
+      notEntitled: 0
+    }];
+
     USSService2 = {
-      getStatusesSummary: function () {
-        return [{
-          serviceId: 'squared-fusion-cal',
-          total: 14,
-          notActivated: 2,
-          activated: 0,
-          error: 12,
-          deactivated: 0,
-          notEntitled: 0
-        }];
-      },
       getStatuses: function () {
         return $q.when({
           // 51 to be over numberOfUsersPrCiRequest (which should be 50)
@@ -78,16 +83,9 @@ describe('ExportUserStatusesController', function () {
     };
     sinon.spy(ClusterService, 'getConnector');
 
-    UiStats = {
-      initStats: sinon.spy(),
-      insertServiceInfo: function () {},
-      noneSelected: sinon.spy(),
-      updateProgress: function () {}
-    };
-
     UserDetails = {
-      getUsers: function (stateInfos, orgId, callback) {
-        callback(stateInfos);
+      getUsers: function (stateInfos) {
+        return $q.when(stateInfos);
       },
       getCSVColumnHeaders: function () {
         return ['whatever', 'foo', 'bar'];
@@ -95,22 +93,32 @@ describe('ExportUserStatusesController', function () {
     };
     sinon.spy(UserDetails, 'getUsers');
 
+    var $modalInstance = {
+      close: sinon.stub()
+    };
+
     vm = $controller('ExportUserStatusesController', {
+      $scope: scope,
+      $modalInstance: $modalInstance,
       serviceId: 'squared-fusion-cal',
+      userStatusSummary: userStatusSummary,
       Authinfo: Authinfo,
-      UiStats: UiStats,
       USSService2: USSService2,
       UserDetails: UserDetails,
-      ClusterService: ClusterService,
-      $scope: scope
+      ExcelService: ExcelService,
+      ClusterService: ClusterService
     });
+    vm.statusTypes = [{
+      stateType: 'notActivated',
+      count: 51,
+      selected: true
+    }];
   }));
 
   it('should have sane default on init', function () {
     vm.selectedServiceId = 'squared-fusion-cal';
     expect(vm.exportingUserStatusReport).toBe(false);
     expect(vm.exportCanceled).toBe(false);
-    expect(vm.result).toEqual([]);
   });
 
   it('should cancel exporting when calling cancelExport()', function () {
@@ -120,18 +128,7 @@ describe('ExportUserStatusesController', function () {
   });
 
   describe('exportCSV', function () {
-    it('should have the default CSV "header"', function (done) {
-      var excelSeperator = 'sep=,';
-      var columnHeaders = UserDetails.getCSVColumnHeaders();
-      vm.exportCSV()
-        .then(function (response) {
-          expect(response[0][0]).toBe(excelSeperator);
-          expect(response[1]).toEqual(columnHeaders);
-          done();
-        });
-      $rootScope.$apply();
-    });
-    it('should call get statuses from USSService2.getStatuses', function () {
+    it('should call USSService2.getStatuses', function () {
       vm.exportCSV();
       $rootScope.$apply();
       expect(USSService2.getStatuses.called).toBe(true);
@@ -141,16 +138,16 @@ describe('ExportUserStatusesController', function () {
       $rootScope.$apply();
       expect(ClusterService.getConnector.called).toBe(true);
     });
-    it('should call get user details from UserDetails.getUsers as much as it has to', function () {
+    it('should call UserDetails.getUsers as much as it has to', function () {
       vm.exportCSV();
       $rootScope.$apply();
       expect(UserDetails.getUsers.callCount).toBe(2);
     });
-    it('should populate vm.result', function () {
+    it('should call ExcelService.createFile and ExcelService.downloadFile', function () {
       vm.exportCSV();
       $rootScope.$apply();
-      // 2 lines for CSV headers and 51 statuses
-      expect(vm.result.length).toBe(53);
+      expect(ExcelService.createFile.called).toBe(true);
+      expect(ExcelService.downloadFile.called).toBe(true);
     });
     it('should not actually finish export when exportCanceled is true', function () {
       vm.exportCanceled = true;

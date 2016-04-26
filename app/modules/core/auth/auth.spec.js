@@ -142,6 +142,22 @@ describe('Auth Service', function () {
     $httpBackend.flush();
   });
 
+  it('should return rejected promise if setAccessToken fails', function (done) {
+    OAuthConfig.getAccessTokenUrl = sinon.stub().returns('url');
+    OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+    OAuthConfig.getAccessTokenPostData = sinon.stub().returns('data');
+
+    $httpBackend
+      .expectPOST('url', 'data', assertCredentials)
+      .respond(500, {});
+
+    Auth.setAccessToken().catch(function () {
+      _.defer(done);
+    });
+
+    $httpBackend.flush();
+  });
+
   it('should refresh token and resend request', function (done) {
     OAuthConfig.getOauth2Url = sinon.stub().returns('');
     OAuthConfig.getAccessTokenUrl = sinon.stub().returns('access_token_url');
