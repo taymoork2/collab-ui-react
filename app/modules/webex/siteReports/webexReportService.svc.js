@@ -12,7 +12,7 @@
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj,
+    WebExXmlApiInfoSvc,
     Notification
   ) {
     var self = this;
@@ -379,10 +379,10 @@
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";
 
-          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = siteName;
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+          WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+          WebExXmlApiInfoSvc.webexSiteName = siteName;
+          WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
+          WebExXmlApiInfoSvc.webexAdminSessionTicket = sessionTicket;
 
           var navInfoDef = self.getNaviationInfo();
 
@@ -452,7 +452,7 @@
     }; //end initReportsObject
 
     this.getNaviationInfo = function () {
-      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(webExXmlApiInfoObj);
+      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(WebExXmlApiInfoSvc);
 
       return $q.all({
         // siteInfoXml: siteInfoXml,

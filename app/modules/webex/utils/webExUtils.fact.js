@@ -13,7 +13,7 @@
     Authinfo,
     Orgservice,
     WebExXmlApiFact,
-    webExXmlApiInfoObj
+    WebExXmlApiInfoSvc
   ) {
     var obj = {};
 

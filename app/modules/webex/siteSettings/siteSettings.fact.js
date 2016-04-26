@@ -12,7 +12,7 @@
     Authinfo,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj
+    WebExXmlApiInfoSvc
   ) {
     return {
       newWebExSiteSettingsObj: function (
@@ -157,10 +157,10 @@
             var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
             var logMsg = "";
 
-            webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-            webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
-            webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-            webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+            WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+            WebExXmlApiInfoSvc.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
+            WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
+            WebExXmlApiInfoSvc.webexAdminSessionTicket = sessionTicket;
 
             _this.getSiteSettingsInfo();
           }, // getSessionTicketSuccess()
@@ -527,9 +527,9 @@
       }, // getCategoryObj()
 
       getSiteSettingsInfoXml: function () {
-        // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
-        // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
-        var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
+        // var siteInfoXml = WebExXmlApiFact.getSiteInfo(WebExXmlApiInfoSvc);
+        // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(WebExXmlApiInfoSvc);
+        var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(WebExXmlApiInfoSvc);
 
         return $q.all({
           // siteInfoXml: siteInfoXml,

@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('WebExApp')
-    .service('webExXmlApiInfoObj', webExXmlApiInfoObj);
+    .service('WebExXmlApiInfoSvc', WebExXmlApiInfoSvc);
 
-  function webExXmlApiInfoObj() {
+  function WebExXmlApiInfoSvc() {
     return {
       xmlApiUrl: "",
       webexAdminID: "",

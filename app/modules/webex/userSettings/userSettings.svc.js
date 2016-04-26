@@ -198,5 +198,5 @@
         siteVersionInfo: null,
       }, // telephonyPriviledges
     }; // return
-  } // WebexUserSettingsModel
+  } // WebexUserSettingsSvc
 })();
