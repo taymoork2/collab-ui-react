@@ -261,7 +261,9 @@
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Hybrid Services: Management",
     "expresswayManagementServiceTabDesc": "Expressway Management Service",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
