@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: RegisterSipUriPrefixCtrl', function () {
+describe('Controller: RegisterSipUriPrefixCtrl', function () {
   var controller, $scope, Config, Orgservice, SparkDomainManagementService, $q, $controller, Notification;
   var orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
   var getOrgStatus = 200;
