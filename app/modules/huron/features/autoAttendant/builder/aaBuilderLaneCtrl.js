@@ -28,15 +28,15 @@
       // scroll to the added new step/action form
       $timeout(function () {
         var $target = $("#newStepForm" + vm.schedule + (index + 1));
-        var targetHeight = $target.outerHeight(true);
-        var targetEnd = $target.offset().top + targetHeight;
+        var targetHeight = angular.isDefined($target.outerHeight(true)) ? $target.outerHeight(true) : 0;
+        var targetEnd = angular.isDefined($target.offset()) ? $target.offset().top + targetHeight : targetHeight;
 
         var $container = $("#builderScrollContainer");
-        var containerEnd = $container.offset().top + $container.outerHeight(true);
+        var containerEnd = angular.isDefined($container.offset()) && angular.isDefined($container.outerHeight(true)) ? $container.offset().top + $container.outerHeight(true) : 0;
 
-        if(targetEnd > containerEnd){
+        if (targetEnd > containerEnd) {
           var scrollPosition = $container.scrollTop();
-          var offset= scrollPosition + targetHeight + 60; //60 is the space for the vertical lane and the +
+          var offset = scrollPosition + targetHeight + 60; //60 is the space for the vertical lane and the +
           $container.animate({
             scrollTop: offset
           }, 800);
