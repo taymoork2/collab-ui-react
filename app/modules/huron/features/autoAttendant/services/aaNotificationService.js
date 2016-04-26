@@ -5,6 +5,7 @@
     .module('uc.autoattendant')
     .factory('AANotificationService', AANotificationService);
 
+  /* @ngInject */
   function AANotificationService($translate, Notification) {
 
     var service = {
