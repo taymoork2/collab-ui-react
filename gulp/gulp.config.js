@@ -259,10 +259,10 @@ module.exports = function () {
     },
 
     banner: '/**\n' +
-    ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-    ' * Copyright ' + year + ' <%= pkg.author %>\n' +
-    ' */\n' +
-    '',
+      ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+      ' * Copyright ' + year + ' <%= pkg.author %>\n' +
+      ' */\n' +
+      '',
 
     beautifyFiles: [
       app + '/**/*.js',

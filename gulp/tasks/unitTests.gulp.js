@@ -173,10 +173,13 @@ function createGulpKarmaConfigModule(module) {
         .src(config.testFiles.karmaTpl)
         .pipe($.inject(
           series(
-            gulp.src(unitTestFiles, {read: false}),
-            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {read: false})
-          ),
-          {
+            gulp.src(unitTestFiles, {
+              read: false
+            }),
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+              read: false
+            })
+          ), {
             addRootSlash: false,
             starttag: '// inject:unitTestFiles',
             endtag: '// end-inject:unitTestFiles',

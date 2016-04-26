@@ -50,9 +50,8 @@ function compile(files, dest, writeManifest) {
     .pipe($.if(writeManifest, concatFilenames(config.tsManifest)))
     .pipe($.if(writeManifest, gulp.dest(dest)))
     .pipe(reload({
-        stream: true
-      })
-    );
+      stream: true
+    }));
 }
 
 function getTsFilesFromManifest() {
