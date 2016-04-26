@@ -6,10 +6,6 @@ describe('Care admin shoule be able to', function () {
     login.login('contactcenter-admin', '#/careDetails/features');
   });
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   it('see the landing page and able to click on new btn', function () {
     utils.expectIsDisplayed(careLandingPage.careLandingPgae);
     utils.expectIsDisplayed(careLandingPage.cccIcon);

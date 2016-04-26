@@ -6,7 +6,7 @@
     .controller('userRedirectCtrl', userRedirectCtrl);
 
   /*ng-Inject*/
-  function userRedirectCtrl($timeout, $window, Utils) {
+  function userRedirectCtrl($timeout, WindowLocation, Utils) {
     var vm = this;
 
     vm.loadingDelay = 2000;
@@ -14,7 +14,7 @@
     $timeout(redirect, vm.loadingDelay);
 
     function redirect() {
-      $window.location.href = "https://marketplace.telstra.com/";
+      WindowLocation.set("https://marketplace.telstra.com/");
     }
 
     Utils.checkForIeWorkaround();

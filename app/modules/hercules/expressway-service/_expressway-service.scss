@@ -3,36 +3,20 @@
 .calendar-service-list-state {
   @extend %page-background-white;
 }
+
 .expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
 }
 
-.export-users-statuses-icon i {
-  display: inline-block;
-  color: $gray;
-  font-size: 1.5rem;
-  cursor: pointer;
-
-  &:hover {
-    color: $brand-primary;
-    text-decoration: none;
-  }
-}
-
-.icon-circle-user {
-  font-size: 1.5em;
-  top: 0.1em;
-}
-
-.hercules.call-service{
-  .call-aware, .call-connect{
+.hercules.call-service {
+  .call-aware, .call-connect {
     padding-bottom: 2rem;
   }
-  .call-connect{
+  .call-connect {
     padding-top: 2rem;
   }
-  .feature-settings{
+  .feature-settings {
     padding-bottom: 1rem;
   }
 }
@@ -199,33 +183,54 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.export-list {
-  .icon {
-    vertical-align: middle;
+.hercules-export-list {
+  display: flex;
+  align-items: center;
+  color: $gray-light-1;
+
+  .icon-download-container {
+    color: inherit;
+
+    > i, span {
+      vertical-align: middle;
+    }
+  }
+
+  .icon-circle-user {
+    margin-right: 10px;
+  }
+
+  .icon-circle-user,
+  .icon-download {
+    font-size: 1.5em;
+  }
+
+  .export-number {
+    position: relative;
+    margin-right: 20px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      right: -10px;
+      width: 1px;
+      height: 60%;
+      background-color: $gray-light-1;
+    }
+
+    // &:last-of-type{
+    //   margin-right: 10px;
+    //
+    //   &:after {
+    //     display: none;
+    //   }
+    // }
   }
 }
 
-.export-number {
-  display: inline-block;
-  vertical-align: -2px;
-
-  &:last-of-type {
-    margin-right: 5px;
-  }
-}
-
-// This class is used when a button has a spinner inside
-// The following prevents the button from looking weird
-.hercules-button-exporting {
-  padding-top: 0.45rem;
-  padding-bottom: 0.45rem;
-  height: 36px;
-}
-
-.hercules-modal-checkboxes {
-  label {
-    margin: 5px 0;
-  }
+.add-resource-button {
+  margin-left: 25px;
 }
 
 .hercules-sip-settings {
@@ -236,11 +241,6 @@ Special stuff currently used for out own mail input field...
   .sip-domain-icon {
     margin-left: 30px;
   }
-}
-
-.add-resource-button {
-  margin-left: 0;
-  vertical-align: middle;
 }
 
 .hercules-sip-destination-table {
@@ -260,6 +260,7 @@ Special stuff currently used for out own mail input field...
 
 .hercules-update-warning-text {
   margin-top: 0;
+  margin-right: 5px;
   font-size: 0.75rem;
   color: orange;
 }
@@ -275,5 +276,13 @@ Special stuff currently used for out own mail input field...
   left: 0;
   width: 100%;
   font-size: 10px;
-  color:#CCC;
+  color: #CCC;
+}
+
+.hercules-user-error-name {
+  font-weight: bold;
+}
+
+.hercules-user-error-status {
+  padding-top: 10px;
 }

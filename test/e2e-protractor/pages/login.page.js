@@ -51,7 +51,7 @@ var LoginPage = function () {
 
   this.login = function (username, expectedUrl, opts) {
     var bearer;
-    var method = opts && opts.navigateToUsingIntegrationForTesting ? 'navigateToUsingIntegrationForTesting' : 'navigateTo';
+    var method = (opts && opts.navigateUsingIntegrationBackend) ? 'navigateUsingIntegrationBackend' : 'navigateTo';
     navigation[method](expectedUrl);
     helper.getBearerToken(username)
       .then(function (_bearer) {
@@ -68,9 +68,9 @@ var LoginPage = function () {
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
-  this.loginUsingIntegrationForTesting = function (username, expectedUrl) {
+  this.loginUsingIntegrationBackend = function (username, expectedUrl) {
     return this.login(username, expectedUrl, {
-      navigateToUsingIntegrationForTesting: true
+      navigateUsingIntegrationBackend: true
     });
   };
 
@@ -92,14 +92,22 @@ var LoginPage = function () {
     }, 10000, 'Could not retrieve bearer token to login');
   };
 
-  this.loginThroughGui = function (username, password, expectedUrl) {
-    navigation.navigateToUsingIntegrationForTesting(expectedUrl || '#/login');
+  this.loginThroughGui = function (username, password, expectedUrl, opts) {
+    var method = (opts && opts.navigateUsingIntegrationBackend) ? 'navigateUsingIntegrationBackend' : 'navigateTo';
+    navigation[method](expectedUrl || '#/login');
+
     utils.sendKeys(this.emailField, username);
     utils.click(this.loginButton);
     browser.driver.wait(this.isLoginPasswordPresent, TIMEOUT);
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+  };
+
+  this.loginThroughGuiUsingIntegrationBackend = function (username, password, expectedUrl) {
+    return this.loginThroughGui(username, password, expectedUrl, {
+      navigateUsingIntegrationBackend: true
+    });
   };
 
 };

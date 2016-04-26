@@ -2,6 +2,8 @@
   extends:
     - "../.eslintrc.yml"
     - "angular"
+  env:
+    browser: false
   rules:
     # airbnb-config inherited rules
     array-callback-return: 0
@@ -16,10 +18,13 @@
     no-cond-assign: 0
     no-loop-func: 0
     no-param-reassign: 0
+    no-restricted-syntax: 0
     no-self-assign: 0
     no-spaced-func: 0
     no-throw-literal: 0
     no-trailing-spaces: 0
+    no-useless-concat: 0
+    no-useless-escape: 0
     one-var-declaration-per-line: 0
     one-var: 0
     radix: 0

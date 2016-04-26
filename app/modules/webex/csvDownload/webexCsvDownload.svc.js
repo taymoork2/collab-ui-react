@@ -10,7 +10,8 @@
     $log,
     $resource,
     Authinfo,
-    UrlConfig
+    UrlConfig,
+    $window
   ) {
 
     var objectUrl;
@@ -106,12 +107,12 @@
     } // getWebExCsv()
 
     function createObjectUrl(data) {
-      var blob = new Blob([data], {
+      var blob = new $window.Blob([data], {
         // type: 'text/csv'
         type: 'application/octet-stream'
       });
 
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
 
       setObjectUrl(oUrl);
 
@@ -146,11 +147,11 @@
         }
       }
 
-      var blob = new Blob([new Uint8Array(intBytes)], {
+      var blob = new $window.Blob([new Uint8Array(intBytes)], {
         type: 'text/csv;charset=UTF-16LE;'
       });
 
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
 
       setObjectUrl(oUrl);
 
@@ -159,7 +160,7 @@
 
     function revokeObjectUrl() {
       if (getObjectUrl()) {
-        (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
+        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
         setObjectUrl(null);
       }
     }

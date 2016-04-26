@@ -29,9 +29,9 @@
     vm.viewReady = true;
     vm.resetFile = resetFile;
 
-    vm.onFileSizeError = function () {
+    /**vm.onFileSizeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvMaxSizeError'));
-    };
+    };**/
 
     vm.onFileTypeError = function () {
       Notification.error($translate.instant('firstTimeWizard.csvFileTypeError'));

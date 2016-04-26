@@ -3,9 +3,6 @@
 /* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
 
   it('should login as an admin user', function () {
     login.login('pbr-admin');
@@ -28,6 +25,7 @@ describe('First Time Wizard', function () {
 
   it('should complete custom sso provider flow', function () {
     wizard.clickPlanReview();
+    notifications.clearNotifications();
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');

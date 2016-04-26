@@ -1,2 +1,17 @@
   <h3 translate="firstTimeWizard.setupSSOSub"></h3>
-  <cs-radiolist class="ftwConfigSSO" ng-model="options.configureSSO" options="configureSSOOptions"></cs-radiolist>
+  <cs-radiolist ng-if="!ssoEnabled || options.modifySSO" class="ftwConfigSSO" ng-model="options.configureSSO" options="configureSSOOptions"></cs-radiolist>
+  <div class="sso-status-block">
+    <ul>
+      <li>
+        <div ng-show="!ssoEnabled">
+          <i class="icon icon-circle sso-status-circle-disabled"></i>
+          <span translate="ssoModal.ssoNotEnabledStatus"></span>
+        </div>
+        <div ng-show="ssoEnabled">
+          <i class="icon icon-circle sso-status-circle"></i>
+          <span translate="ssoModal.ssoEnabledStatus"></span>
+          <a ng-if="!options.modifySSO" translate="ssoModal.modifySSOLabel" ng-click="handleModify()"></a>
+        </div>
+      </li>
+    </ul>
+  </div>

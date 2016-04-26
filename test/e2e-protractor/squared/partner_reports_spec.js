@@ -6,10 +6,6 @@ describe('Partner Reports', function () {
   var time = ['Last Week', 'Last Month', 'Last Three Months'];
   var lowerTime = ['last week', 'last month', 'last three months'];
 
-  afterEach(function () {
-    utils.dumpConsoleErrors();
-  });
-
   describe('Log In', function () {
     it('should login to partner reports page', function () {
       login.login('partner-reports', '#/partner/reports');

@@ -87,7 +87,7 @@ describe('Service: Customer Reports Service', function () {
     metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
     activeUserDetailedUrl = baseUrl + 'detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
     mostActiveUrl = baseUrl + 'useractivity?type=weeklyUsage&cache=' + cacheValue;
-    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=false';
+    devicesUrl = baseUrl + 'trend/registeredEndpointsByDeviceType?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
     activeUserData.data[0].data = updateDates(activeUserData.data[0].data);
     responseActiveData = updateDates(responseActiveData, dayFormat);

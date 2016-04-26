@@ -15,7 +15,7 @@
   }
 
   /* @ngInject */
-  function TrialWebexService($http, Config, UrlConfig, WebexOrderStatusResource) {
+  function TrialWebexService($http, Config, UrlConfig, WebexOrderStatusResource, Notification) {
     var _trialData;
     var service = {
       getData: getData,

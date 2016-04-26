@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('BillingService', BillingService);
 
 /* @ngInject */
-function BillingService($http, UrlConfig, Log, Auth, $log) {
+function BillingService($http, UrlConfig, Log, Auth, $log, $window) {
   var service = {
     getOrderStatus: getOrderStatus,
     resendCustomerEmail: resendCustomerEmail,
@@ -14,7 +14,7 @@ function BillingService($http, UrlConfig, Log, Auth, $log) {
   return service;
 
   function getOrderStatus(enc, callback) {
-    var orderStatusUrl = UrlConfig.getAdminServiceUrl() + 'orders?enc=' + window.encodeURIComponent(enc);
+    var orderStatusUrl = UrlConfig.getAdminServiceUrl() + 'orders?enc=' + $window.encodeURIComponent(enc);
 
     $http.get(orderStatusUrl)
       .success(function (data, status) {
