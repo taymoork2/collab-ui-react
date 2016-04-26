@@ -1,4 +1,4 @@
-<div ng-if="siteCSVImportModalCtrl.viewReady" id="siteCSVImportModal">
+<div ng-if="siteCSVImportModalCtrl.viewReady" id="siteCSVImportModal" class="modal-content">
 
     <div class="modal-header">
         <button id="closeCSVImportModal" type="button" class="close"
@@ -9,11 +9,9 @@
         </h4>
     </div>
 
-    <div>
-        <div class="modal-body csv-import-modal-body">
-            <p translate='siteList.importStartModalInstruction_1'></p>
-        </div>
-        <div class="users-upload-csv">
+      <div class="modal-body csv-import-modal-body">
+          <p translate='siteList.importStartModalInstruction_1'></p>
+          <div class="users-upload-csv">
             <div ng-if="!siteCSVImportModalCtrl.modal.file" class="file-drop" cr-file-drop
                 file="siteCSVImportModalCtrl.modal.file" file-name="siteCSVImportModalCtrl.modal.fileName"
                 file-type="text/csv, application/csv, application/vnd.ms-excel"

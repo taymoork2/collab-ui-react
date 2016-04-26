@@ -79,6 +79,7 @@
             controllerAs: 'adc',
             controller: 'AddDeviceController',
             templateUrl: 'modules/squared/devices/addDevice/addDevice.html',
+            modalId: 'addDeviceModal',
             resolve: {
               activationCode: _.constant(activationCode)
             }
