@@ -5,7 +5,7 @@
     .service('MediafusionClusterService', MediafusionClusterService);
 
   /* @ngInject */
-  function MediafusionClusterService($http, $q, $location, mock, converter, MediafusionConfigService, notification, Authinfo) {
+  function MediafusionClusterService($http, $q, $location, MediafusionConnectorMock, MediafusionConverterService, MediafusionConfigService, XhrNotificationService, Authinfo) {
     var lastClusterResponse = [];
 
     function extractDataFromResponse(res) {
@@ -16,7 +16,7 @@
       var searchObject = $location.search();
       var backend = searchObject['hercules-backend'];
       if (angular.isDefined(backend) && backend === 'mock') {
-        return callback(null, converter.convertClusters(mock.mockData()));
+        return callback(null, MediafusionConverterService.convertClusters(MediafusionConnectorMock.mockData()));
       }
       if (angular.isDefined(backend) && backend === 'nodata') {
         return callback(null, []);
@@ -35,7 +35,7 @@
       $http
         .get(MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
         .success(function (data) {
-          var converted = converter.convertClusters(data);
+          var converted = MediafusionConverterService.convertClusters(data);
           lastClusterResponse = converted;
           callback(null, converted);
         });
@@ -79,7 +79,7 @@
 
     function createErrorHandler(message, callback) {
       return function () {
-        notification.notify(message, arguments);
+        XhrNotificationService.notify(message, arguments);
         callback(arguments);
       };
     }
