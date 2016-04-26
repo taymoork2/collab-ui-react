@@ -2,7 +2,12 @@
   'use strict';
 
   angular.module('uc.autoattendant')
-    .filter('preferredAAResource', function () {
+    .filter('preferredAAResource', preferredAAResource)
+    .filter('moreAAResources', moreAAResources)
+    .filter('allAAResources', allAAResources);
+
+    /* @ngInject */
+    function preferredAAResource() {
       return function (ceInfo) {
         if (angular.isUndefined(ceInfo)) {
           return "";
@@ -15,8 +20,10 @@
         // for now returns first number
         return resources[0].getNumber();
       };
-    })
-    .filter('moreAAResources', function ($translate) {
+    }
+
+    /* @ngInject */
+    function moreAAResources($translate) {
       return function (ceInfo) {
         if (angular.isUndefined(ceInfo)) {
           return "";
@@ -35,8 +42,10 @@
 
         return "";
       };
-    })
-    .filter('allAAResources', function () {
+    }
+
+    /* @ngInject */
+    function allAAResources() {
       return function (ceInfo) {
         if (angular.isUndefined(ceInfo)) {
           return "";
@@ -53,5 +62,5 @@
 
         return "";
       };
-    });
+    }
 })();
