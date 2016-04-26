@@ -1506,6 +1506,8 @@
     "dataRetentionDesc": "Upon deleting a user (or trial) from the system, how long should the system retain the user's team rooms?",
     "dataShareTitle": "Usage Data Sent to Cisco Partner",
     "dataShareLabel": "Share quality of service and engagement data with your Cisco Partner to enable higher level partner support.",
+    "appSecurity": "App Security",
+    "appSecurityLabel": "Users can only launch the Cisco Spark app on protected devices or workstations",
     "setupSSOSub": "Single Sign-On",
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",

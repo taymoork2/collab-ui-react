@@ -6,7 +6,7 @@
     .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
   /* @ngInject */
-  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification) {
+  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
     var vm = this;
     var msgIntFlag = false;
     var CurrentDataRetentionPeriod = null;
@@ -34,6 +34,11 @@
       value: 'indefinite'
     }];
     $scope.showMessengerInterop = false;
+    $scope.showAppSecurity = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.appleEnhancement).then(function (result) {
+      $scope.showAppSecurity = result;
+    });
 
     var orgId = Authinfo.getOrgId();
     AccountOrgService.getServices(orgId, null)
