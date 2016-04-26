@@ -265,7 +265,8 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-container {
-  overflow: visible;
+ // overflow: visible;
+  width:100%;
   padding: 0;
   min-height: 1px;
   align-items: center;
@@ -422,15 +423,31 @@ $aa-builder-text-color: $gray-dark-1;
 
 .aa-wrapper {
   white-space: nowrap;
-  min-width: min-content;
 
   .aa-general-wrapper {
     text-align: center;
   }
 
+  .aa-general-1-lane {
+    min-width: vr-adjust(390);
+  }
+
+  .aa-general-2-lanes {
+    min-width: vr-adjust(780);
+  }
+
+  .aa-general-3-lanes {
+    min-width: vr-adjust(1175);
+  }
+
   .aa-lanes {
     display: inline-block;
     vertical-align: top;
+
+    .aa-panel-action {
+      @extend .aa-panel;
+      max-width: 100%;
+    }
   }
 
   .aa-1-lane {

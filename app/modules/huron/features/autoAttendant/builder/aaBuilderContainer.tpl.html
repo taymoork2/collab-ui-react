@@ -1,5 +1,8 @@
 <div class="aa-wrapper">
-  <div name="general" class="aa-general-wrapper">
+  <div name="general" class="aa-general-wrapper" ng-class="{'aa-general-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'),
+                'aa-general-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours') &&
+                (aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays),
+                'aa-general-1-lane': !(aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)}">
     <div class="aa-line-no-space">
       <div class="aa-vertical-line"></div>
     </div>
