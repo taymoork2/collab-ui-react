@@ -5,7 +5,7 @@
     .service('MediafusionClusterService', MediafusionClusterService);
 
   /* @ngInject */
-  function MediafusionClusterService($http, $q, $location, mock, converter, config, notification, Authinfo) {
+  function MediafusionClusterService($http, $q, $location, mock, converter, MediafusionConfigService, notification, Authinfo) {
     var lastClusterResponse = [];
 
     function extractDataFromResponse(res) {
@@ -33,7 +33,7 @@
       }());*/
 
       $http
-        .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
+        .get(MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
         .success(function (data) {
           var converted = converter.convertClusters(data);
           lastClusterResponse = converted;
@@ -45,7 +45,7 @@
     };
 
     var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
 
       var errorCallback = (function () {
         if (opts && opts.squelchErrors) {
@@ -64,7 +64,7 @@
     };
 
     var defuseConnector = function (clusterId, callback) {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       $http
         .delete(url)
         .success(callback)
@@ -85,7 +85,7 @@
     }
 
     var getGroups = function () {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
       return $http.get(url).then(extractDataFromResponse);
     };
 
@@ -94,12 +94,12 @@
         'property_set_id': propertySetId
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
       return $http.post(url, clusterAssignedPropertySet);
     };
 
     var removeGroupAssignment = function (clusterId, propertySetId) {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
       return $http.delete(url);
     };
 
@@ -113,7 +113,7 @@
         }
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
       return $http
         .post(url, grp);
       //.success(callback);
@@ -124,7 +124,7 @@
         'mf.role': role
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+      var url = MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
       return $http
         .post(url, grp);
       //.success(callback);

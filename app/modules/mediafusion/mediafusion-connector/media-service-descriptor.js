@@ -5,11 +5,11 @@
     .service('MediaServiceDescriptor', MediaServiceDescriptor);
 
   /* @ngInject */
-  function MediaServiceDescriptor($http, config, Authinfo) {
+  function MediaServiceDescriptor($http, MediafusionConfigService, Authinfo) {
 
     var setServiceEnabled = function (serviceId, enabled) {
       return $http
-        .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+        .patch(MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
           enabled: enabled
         });
 
@@ -17,7 +17,7 @@
 
     var isServiceEnabled = function (serviceId, callback) {
       $http
-        .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+        .get(MediafusionConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
         .success(function (data) {
           var service = _.find(data.items, {
             id: serviceId
@@ -34,12 +34,12 @@
     };
 
     var getUserIdentityOrgToMediaAgentOrgMapping = function () {
-      var url = config.getCalliopeUrl() + '/identity2agent/' + Authinfo.getOrgId();
+      var url = MediafusionConfigService.getCalliopeUrl() + '/identity2agent/' + Authinfo.getOrgId();
       return $http.get(url);
     };
 
     var setUserIdentityOrgToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      var url = config.getCalliopeUrl() + '/identity2agent';
+      var url = MediafusionConfigService.getCalliopeUrl() + '/identity2agent';
       return $http
         .put(url, {
           identityOrgId: Authinfo.getOrgId(),
