@@ -64,10 +64,10 @@ gulp.task('watch:ts', function () {
         ])
         .on('change', karmaModifiedFiles);
       gulp.watch(
-        [
-          '!' + config.typeScript.appFiles,
-          config.typeScript.testFiles
-        ], ['ts:changed-spec-files', 'index:build'])
+          [
+            '!' + config.typeScript.appFiles,
+            config.typeScript.testFiles
+          ], ['ts:changed-spec-files', 'index:build'])
         .on('change', karmaModifiedFiles);
     } else {
       gulp.watch([
@@ -80,14 +80,14 @@ gulp.task('watch:ts', function () {
         ])
         .on('change', karmaModifiedFiles);
       gulp.watch(
-        [
-          '!' + config.typeScript.appFiles,
-          config.typeScript.testFiles
-        ], [
-          'karma-watch',
-          'ts:changed-spec-files',
-          'index:build'
-        ])
+          [
+            '!' + config.typeScript.appFiles,
+            config.typeScript.testFiles
+          ], [
+            'karma-watch',
+            'ts:changed-spec-files',
+            'index:build'
+          ])
         .on('change', karmaModifiedFiles);
     }
   }
@@ -154,10 +154,13 @@ gulp.task('karma-config-watch', function () {
     .src(config.testFiles.karmaTpl)
     .pipe($.inject(
       series(
-        gulp.src(unitTestFiles, {read: false}),
-        gulp.src(typeScriptUtil.getTsFilesFromManifest(), {read: false})
-      ),
-      {
+        gulp.src(unitTestFiles, {
+          read: false
+        }),
+        gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+          read: false
+        })
+      ), {
         addRootSlash: false,
         starttag: 'files: [',
         endtag: ',',
