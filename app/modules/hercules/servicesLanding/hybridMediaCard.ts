@@ -21,7 +21,7 @@ namespace servicesLanding {
 
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.hybridMedia.title', 'servicesLanding.cards.hybridMedia.description', 'icon-circle-media', false, 'media', CardType.hybrid);
+        'servicesLanding.cards.hybridMedia.title', 'servicesLanding.cards.hybridMedia.description', 'icon-circle-data', false, 'media', CardType.hybrid);
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>){

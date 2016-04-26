@@ -25,7 +25,7 @@ namespace servicesLanding {
 
     public constructor() {
       super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.hybridCall.title', 'servicesLanding.cards.hybridCall.description', 'icon-circle-call', false, 'call', CardType.hybrid);
+        'servicesLanding.cards.hybridCall.title', 'servicesLanding.cards.hybridCall.description', 'icon-circle-data', false, 'call', CardType.hybrid);
     }
 
     public hybridStatusEventHandler(services:Array<{id:string,status:string, enabled:boolean}>) {
