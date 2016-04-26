@@ -44,6 +44,13 @@
       setActiveTab();
     }
 
+    function initTabs() {
+      tc.tabs = Authinfo.getTabs();
+      updateFeatureTogglesFromTabs(tc.tabs, tc.features);
+      getFeatureToggles(tc.features);
+      updateScopeTabs();
+    }
+
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
         return !tab.feature || _.any(features, {
@@ -86,17 +93,6 @@
           updateScopeTabs();
         });
       });
-    }
-
-    function initTabs() {
-      tc.tabs = Authinfo.getTabs();
-      updateFeatureTogglesFromTabs(tc.tabs, tc.features);
-      getFeatureToggles(tc.features);
-      updateScopeTabs();
-      // $scope.tabs = filterFeatureToggledTabs(tabs, tc.features);
-      // console.log('features', features, filterFeatureToggledTabs(tabs, features));
-      // _.forEach($scope.tabs, function (tab) {console.log(tab);});
-      // setActiveTab();
     }
   }
 })();
