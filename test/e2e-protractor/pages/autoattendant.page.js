@@ -157,6 +157,7 @@ var AutoAttendantPage = function () {
   this.assertCreateSuccess = assertCreateSuccess;
   this.assertImportSuccess = assertImportSuccess;
   this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
+  this.assertDeleteSuccess = assertDeleteSuccess;
   this.importSchedule = element(by.id('importSchedule'));
   this.importContinue = element(by.id('importCtn'));
   this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
@@ -175,6 +176,10 @@ var AutoAttendantPage = function () {
 
   function assertCalendarUpdateSuccess(test) {
     notifications.assertSuccess('Calendar for ' + test + ' updated successfully');
+  }
+
+  function assertDeleteSuccess(test) {
+    notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
   }
 
 };

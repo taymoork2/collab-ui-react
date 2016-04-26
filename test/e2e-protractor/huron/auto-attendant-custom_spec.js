@@ -135,6 +135,7 @@ describe('Huron Auto Attendant', function () {
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
         utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
       });
 
       // click delete X on the AA card for import schedule test AA
@@ -143,6 +144,7 @@ describe('Huron Auto Attendant', function () {
       // confirm dialog with import schedule test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAImportName + ' Auto Attendant?').then(function () {
         utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAImportName)
       });
 
     }, 60000);
