@@ -82,7 +82,8 @@
       $modal.open({
         controller: 'RedirectTargetController',
         controllerAs: 'redirectTarget',
-        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html'
+        templateUrl: 'modules/hercules/redirect-target/redirect-target-dialog.html',
+        type: 'small'
       });
     };
 

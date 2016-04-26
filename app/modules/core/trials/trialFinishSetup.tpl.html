@@ -1,53 +1,49 @@
-<div class="trial-modal trial-modal--complete">
-  <!-- header -->
-  <div class="modal-header"></div>
-  <!-- body -->
-  <div class="modal-body">
-    <section class="text-center row">
-      <i class="icon icon-circle-comp-pos icon-5x"></i>
-    </section>
-    <section class="text-center" ng-show="trial.showDefaultFinish()">
-      <div class="row">
-        <h3 translate="trialModal.trialSuccess"></h3>
-        <p translate="trialModal.nextStepPrompt"></p>
-      </div>
-      <div class="row">
-        <div class="medium-12 columns">
-          <div class="medium-6 medium-offset-3 columns">
-            <button class="btn btn--primary btn--expand" ng-click="trial.launchCustomerPortal()"
-              translate="trialModal.setupNow">
-            </button>
-          </div>
+<!-- header -->
+<div class="modal-header"></div>
+<!-- body -->
+<div class="modal-body">
+  <section class="text-center row">
+    <i class="icon icon-circle-comp-pos icon-5x"></i>
+  </section>
+  <section class="text-center" ng-show="trial.showDefaultFinish()">
+    <div class="row">
+      <h3 translate="trialModal.trialSuccess"></h3>
+      <p translate="trialModal.nextStepPrompt"></p>
+    </div>
+    <div class="row">
+      <div class="medium-12 columns">
+        <div class="medium-6 medium-offset-3 columns">
+          <button class="btn btn--primary btn--expand" ng-click="trial.launchCustomerPortal()"
+            translate="trialModal.setupNow">
+          </button>
         </div>
       </div>
-      <div class="row">
-        <div class="medium-12 columns">
-          <div class="medium-6 medium-offset-3 columns">
-            <button id="trialNotifyCustomer" class="btn btn--expand" ng-click="trial.closeDialogBox()"
-              translate="trialModal.setupLater">
-            </button>
-          </div>
+    </div>
+    <div class="row">
+      <div class="medium-12 columns">
+        <div class="medium-6 medium-offset-3 columns">
+          <button id="trialNotifyCustomer" class="btn btn--expand" ng-click="trial.closeDialogBox()"
+            translate="trialModal.setupLater">
+          </button>
         </div>
       </div>
-    </section>
-    <section class="text-center" ng-show="!trial.showDefaultFinish()">
-      <div class="row">
-        <h3 translate="trialModal.finishTrialAdded"></h3>
-        <div class="medium-12 columns">
-          <p class="medium-10 medium-offset-1 columns text-left" translate="trialModal.finishMeetingDescription"></p>
+    </div>
+  </section>
+  <section class="text-center" ng-show="!trial.showDefaultFinish()">
+    <div class="row">
+      <h3 translate="trialModal.finishTrialAdded"></h3>
+      <div class="medium-12 columns">
+        <p class="medium-10 medium-offset-1 columns text-left" translate="trialModal.finishMeetingDescription"></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="medium-12 columns">
+        <div class="medium-6 medium-offset-3 columns">
+          <button id="trialNotifyCustomer" class="btn btn--primary btn--expand" ng-click="trial.closeDialogBox()"
+            translate="common.done">
+          </button>
         </div>
       </div>
-      <div class="row">
-        <div class="medium-12 columns">
-          <div class="medium-6 medium-offset-3 columns">
-            <button id="trialNotifyCustomer" class="btn btn--primary btn--expand" ng-click="trial.closeDialogBox()"
-              translate="common.done">
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-  <!-- footer -->
-  <div class="modal-footer"></div>
+    </div>
+  </section>
 </div>

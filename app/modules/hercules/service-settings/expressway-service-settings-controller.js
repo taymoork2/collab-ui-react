@@ -112,6 +112,7 @@
     vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
+        type: 'small',
         controller: DisableConfirmController,
         controllerAs: 'disableConfirmDialog',
         resolve: {

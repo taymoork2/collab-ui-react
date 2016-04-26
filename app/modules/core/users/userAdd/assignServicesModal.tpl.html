@@ -1,27 +1,24 @@
-<div id="modalContent" class="add-users">
-  <div class="modal-header">
-    <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser" ng-if="!convertUsersFlow">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <button type="button" class="close" ng-click="cancelConvert()" id="closeConvertUser" ng-if="convertUsersFlow">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
-    <h3 class="modal-title" translate="usersPage.assignServices"></h3>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" id="closeAddUser" ng-if="!convertUsersFlow">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <button type="button" class="close" ng-click="cancelConvert()" id="closeConvertUser" ng-if="convertUsersFlow">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="usersPage.assignServices"></h3>
+</div>
 
-  <div class="modal-body">
-    <cr-assign-services></cr-assign-services>
-  </div>
+<div class="modal-body">
+  <cr-assign-services></cr-assign-services>
+</div>
 
-  <div class="modal-footer" ng-if="!convertUsersFlow">
-    <button type="button" id="btnBack" class="btn" ui-sref="users.add"><span translate="common.back"></span></button>
-    <button type="button" id="btnOnboard" cs-btn loading="btnOnboardLoading" class="btn btn--primary" ng-click="assignServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
-  </div>
+<div class="modal-footer" ng-if="!convertUsersFlow">
+  <button type="button" id="btnBack" class="btn" ui-sref="users.add"><span translate="common.back"></span></button>
+  <button type="button" id="btnOnboard" cs-btn loading="btnOnboardLoading" class="btn btn--primary" ng-click="assignServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
+</div>
 
-  <div class="modal-footer" ng-if="convertUsersFlow">
-    <button type="button" id="btnBack" class="btn" ng-click="goToConvertUsers()"><span translate="common.back"></span></button>
-    <button type="button" id="btnConvert" cs-btn loading="btnConvertLoad" class="btn btn--primary" ng-click="convertUsersNext()" >
-    <span translate="{{getServicesNextText()}}"></span></button>
-  </div>
-
+<div class="modal-footer" ng-if="convertUsersFlow">
+  <button type="button" id="btnBack" class="btn" ng-click="goToConvertUsers()"><span translate="common.back"></span></button>
+  <button type="button" id="btnConvert" cs-btn loading="btnConvertLoad" class="btn btn--primary" ng-click="convertUsersNext()" >
+  <span translate="{{getServicesNextText()}}"></span></button>
 </div>

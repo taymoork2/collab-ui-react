@@ -1738,7 +1738,7 @@
       data: 'unlicensedUsersList',
       rowHeight: 45,
       enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 40,
+      selectionRowHeaderWidth: 50,
       enableRowHeaderSelection: true,
       enableFullRowSelection: true,
       useExternalSorting: false,

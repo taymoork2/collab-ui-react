@@ -2479,7 +2479,6 @@
   },
   "mohManagement": {
     "title": "Media On Hold",
-    "subtitle": "New copy to come from Ahmed.",
     "newPlaylistButton": "New Playlist",
     "tracks": "Tracks",
     "draganddrop": "Drag and drop to reorder tracks. These tracks will loop.",
@@ -3471,7 +3470,7 @@
     "aaDependsTitle": "Auto Attendant Dependents",
     "aaDependsContext": "Here is a list of all Auto Attendants that reference {{featureName}}:",
     "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
-    "deleteFeature": "Delete {{ featureType }}",
+    "deleteFeature": "Delete",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
     "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",

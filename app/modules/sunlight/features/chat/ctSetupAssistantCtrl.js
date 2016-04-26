@@ -96,7 +96,8 @@
 
     function cancelModal() {
       $modal.open({
-        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
+        templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html',
+        type: 'dialog'
       });
     }
 
