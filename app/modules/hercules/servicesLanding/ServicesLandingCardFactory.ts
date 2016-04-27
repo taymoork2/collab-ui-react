@@ -22,7 +22,7 @@ namespace servicesLanding {
           new ServicesLandingCalendarCard(),
           new ServicesLandingHybridCallCard(),
           new ServicesLandingHybridMediaCard(),
-          // new ServicesLandingHybridContextCard()
+          new ServicesLandingHybridContextCard()
         ];
       }
     };
