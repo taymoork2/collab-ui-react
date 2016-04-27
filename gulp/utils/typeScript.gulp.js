@@ -6,8 +6,6 @@
 /* eslint no-param-reassign:0 */
 
 var gulp = require('gulp');
-var concat = require('gulp-concat');
-var concatFilenames = require('gulp-concat-filenames');
 var fileListParser = require('./fileListParser.gulp');
 var config = require('../gulp.config')();
 var $ = require('gulp-load-plugins')({
@@ -47,7 +45,7 @@ function compile(files, dest, writeManifest) {
     ))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
-    .pipe($.if(writeManifest, concatFilenames(config.tsManifest)))
+    .pipe($.if(writeManifest, $.concatFilenames(config.tsManifest)))
     .pipe($.if(writeManifest, gulp.dest(dest)))
     .pipe(reload({
       stream: true

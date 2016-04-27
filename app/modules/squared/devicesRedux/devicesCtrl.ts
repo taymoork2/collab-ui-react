@@ -7,7 +7,7 @@ namespace devicesRedux {
     private groupedDevices;
     private subscriptions = [];
     private currentOffset = {};
-
+    private csdmHuronOrgDeviceService = null;
     private deviceProps = {
       product: 'Product',
       software: 'Software',
@@ -35,11 +35,11 @@ namespace devicesRedux {
                 private $state,
                 private $window,
                 private $location,
-                private $rootScope,
+                private Authinfo,
                 private AddDeviceModal,
                 private CsdmCodeService,
                 private CsdmDeviceService,
-                private CsdmHuronDeviceService,
+                private CsdmHuronOrgDeviceService,
                 private CsdmUnusedAccountsService) {
 
       // hack until toolkit supports #fff background
@@ -53,7 +53,8 @@ namespace devicesRedux {
         scope: $scope
       }));
 
-      this.subscriptions.push(CsdmHuronDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
+      this.csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
+      this.subscriptions.push(this.csdmHuronOrgDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
         scope: $scope
       }));
     }
@@ -75,15 +76,37 @@ namespace devicesRedux {
       return _.any(this.subscriptions, 'currentError');
     }
 
+
     updateCodesAndDevices() {
+      function createRooms(devices, displayName) {
+        if (devices.length == 1) return devices[0];
+
+        function matchesDisplayName(device) {
+          return ~device.displayName.toLowerCase().indexOf(this.search.toLowerCase());
+        }
+
+        if (this.search && !_.all(devices, matchesDisplayName)) {
+          return devices;
+        }
+
+        return {
+          type: 'group',
+          devices: devices,
+          count: devices.length,
+          displayName: displayName
+        };
+      }
       const devicesAndCodesArr = _({})
         .extend(this.CsdmDeviceService.getDeviceList())
         .extend(this.CsdmCodeService.getCodeList())
-        .extend(this.CsdmHuronDeviceService.getDeviceList())
+        .extend(this.csdmHuronOrgDeviceService.getDeviceList())
         .extend(this.CsdmUnusedAccountsService.getAccountList())
         .values()
         .filter(this.filterOnSearchQuery.bind(this))
-        .sortBy(this.displayNameSorter.bind(this))
+          .groupBy('displayName')
+          .map(createRooms)
+          .flatten()
+          .sortBy(this.displayNameSorter.bind(this))
         .value();
 
       this.groupedDevices = _(this.groups)

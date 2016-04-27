@@ -7,7 +7,19 @@
 
   function OAuthConfig(Utils, Config) {
 
-    var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
+    var scopes = [
+      'webexsquare:admin',
+      'webexsquare:billing',
+      'ciscouc:admin',
+      'Identity:SCIM',
+      'Identity:Config',
+      'Identity:Organization',
+      'cloudMeetings:login',
+      'webex-messenger:get_webextoken',
+      'ccc_config:admin'
+    ];
+
+    var oauth2Scope = encodeURIComponent(scopes.join(' '));
 
     var config = {
       oauthClientRegistration: {

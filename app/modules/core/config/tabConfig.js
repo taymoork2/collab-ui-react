@@ -48,6 +48,11 @@
       state: 'huronsettings',
       link: '#hurondetails/settings'
     }, {
+      title: 'tabs.careTab',
+      desc: 'tabs.careTabDesc',
+      state: 'care.Features',
+      link: '#careDetails/features'
+    }, {
       title: 'tabs.fusionDetailsTab',
       desc: 'tabs.fusionDetailsTabDesc',
       state: 'fusion',

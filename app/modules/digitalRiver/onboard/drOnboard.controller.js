@@ -23,11 +23,13 @@
           if (_.includes(data.roles, Config.roles.full_admin)) {
             isAdmin = true;
           }
-          isPaidOrg = data.orgId !== (Config.consumerOrgId && Config.consumerMockOrgId);
+          isPaidOrg = (data.orgId !== (Config.consumerOrgId && Config.consumerMockOrgId));
 
           if (isPaidOrg && isAdmin) {
             params.org = data.orgName;
             $state.go('drConfirmAdminOrg', params);
+          } else if (isPaidOrg && !isAdmin) {
+            $state.go('drAdminChoices', params);
           } else if (!isPaidOrg) {
             params.email = data.name;
             $state.go('drOnboardQuestion', params);

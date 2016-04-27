@@ -119,7 +119,8 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials'
+      huronCallTrials: 'huron-call-trials',
+      enableCrashLogs: 'csdm-enable-crash-logs'
     };
 
     var toggles = {};
