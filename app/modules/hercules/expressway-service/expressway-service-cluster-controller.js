@@ -130,7 +130,7 @@
     ClusterService.getReleaseNotes('GA', serviceType)
       .then(function (res) {
         vm.releaseNotes = res;
-    });
+      });
 
     vm.upgrade = function () {
       vm.upgrading = true;

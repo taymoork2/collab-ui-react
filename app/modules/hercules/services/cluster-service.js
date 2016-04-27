@@ -253,7 +253,7 @@
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
       return $http.get(url)
         .then(extractDataFromResponse)
-        .then(function(data) {
+        .then(function (data) {
           return data.releaseNotes;
         });
     }
