@@ -1,12 +1,12 @@
-/// <reference path="ServicesLandingCard.ts"/>
-namespace servicesLanding {
+/// <reference path="ServicesOverviewCard.ts"/>
+namespace servicesOverview {
   export enum CardFilter{
     all,
     active
   }
-  export class ServicesLandingCtrl {
+  export class ServicesOverviewCtrl {
 
-    private cards:Array<ServicesLandingCard>;
+    private cards:Array<ServicesOverviewCard>;
     private _feature = false;
 
     get featureEnabled():boolean {
@@ -14,16 +14,16 @@ namespace servicesLanding {
     }
 
     public hybridCardFilters = {
-      all: {cardType: servicesLanding.CardType.hybrid},
-      active: {cardType: servicesLanding.CardType.hybrid, active: true}
+      all: {cardType: servicesOverview.CardType.hybrid},
+      active: {cardType: servicesOverview.CardType.hybrid, active: true}
     };
     private activeHybridCardFilter = this.hybridCardFilters.all;
     public showFilterDropDown:boolean = false;
 
 
     /* @ngInject */
-    constructor(Orgservice, private ServicesLandingCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
-      this.cards = ServicesLandingCardFactory.createCards();
+    constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
+      this.cards = ServicesOverviewCardFactory.createCards();
 
       this.loadWebexSiteList();
 
@@ -31,7 +31,7 @@ namespace servicesLanding {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
 
-      FeatureToggleService.supports(FeatureToggleService.features.serviceLanding).then((supports)=> {
+      FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
         this._feature = !!supports;
       });
     }
@@ -41,7 +41,7 @@ namespace servicesLanding {
     }
 
     get cloudCards() {
-      return _.filter(this.cards, {cardType: servicesLanding.CardType.cloud});
+      return _.filter(this.cards, {cardType: servicesOverview.CardType.cloud});
     }
 
     public filterHybridCard(filter:string) {
@@ -74,5 +74,5 @@ namespace servicesLanding {
   }
   angular
     .module('Hercules')
-    .controller('ServicesLandingCtrl', ServicesLandingCtrl);
+    .controller('ServicesOverviewCtrl', ServicesOverviewCtrl);
 }

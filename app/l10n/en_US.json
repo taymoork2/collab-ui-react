@@ -3942,7 +3942,7 @@
     "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   },
-  "servicesLanding": {
+  "servicesOverview": {
     "title": "Services",
     "cloudServices": "Cloud services",
     "hybridServices": "Hybrid services",

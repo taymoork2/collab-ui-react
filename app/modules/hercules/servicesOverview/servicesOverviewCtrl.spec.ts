@@ -1,8 +1,8 @@
 ///<reference path="../../../../typings/tsd-testing.d.ts"/>
-/// <reference path="servicesLanding.ctrl.ts"/>
-namespace servicesLanding {
+/// <reference path="ServicesOverview.ctrl.ts"/>
+namespace servicesOverview {
 
-  describe('ServiceLandingCtrl', ()=> {
+  describe('ServiceOverviewCtrl', ()=> {
 
     let Config, $q, $rootScope, $httpBackend;
 
@@ -16,15 +16,15 @@ namespace servicesLanding {
 
     }));
 
-    let ctrl:ServicesLandingCtrl;
+    let ctrl:ServicesOverviewCtrl;
     beforeEach(inject(($injector, $controller)=> {
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend.when('GET', /\/services/).respond([]);
-      ctrl = $controller('ServicesLandingCtrl',
+      ctrl = $controller('ServicesOverviewCtrl',
         {
           FeatureToggleService: {
             supports: sinon.stub().returns($q.resolve(true)),
-            features: {serviceLanding: 'service-landing'}
+            features: {servicesOverview: 'services-overview'}
           }
         });
     }));
@@ -50,17 +50,17 @@ namespace servicesLanding {
       });
 
       it('should create cloud cards', ()=> {
-        expect(_.filter(ctrl.cloudCards, {name: 'servicesLanding.cards.message.title'}).length).toBe(1);
-        expect(_.filter(ctrl.cloudCards, {name: 'servicesLanding.cards.meeting.title'}).length).toBe(1);
-        expect(_.filter(ctrl.cloudCards, {name: 'servicesLanding.cards.call.title'}).length).toBe(1);
+        expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.message.title'}).length).toBe(1);
+        expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.meeting.title'}).length).toBe(1);
+        expect(_.filter(ctrl.cloudCards, {name: 'servicesOverview.cards.call.title'}).length).toBe(1);
       });
 
       it('should default filter to show all hybrid cards', ()=> {
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesLanding.cards.hybridManagement.title'}).length).toBe(1);
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesLanding.cards.calendar.title'}).length).toBe(1);
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesLanding.cards.hybridCall.title'}).length).toBe(1);
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesLanding.cards.hybridMedia.title'}).length).toBe(1);
-        expect(_.filter(ctrl.hybridCards, {name: 'servicesLanding.cards.hybridContext.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridManagement.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.calendar.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridCall.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridMedia.title'}).length).toBe(1);
+        expect(_.filter(ctrl.hybridCards, {name: 'servicesOverview.cards.hybridContext.title'}).length).toBe(1);
       });
     });
 

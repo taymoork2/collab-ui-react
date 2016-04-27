@@ -287,12 +287,12 @@
         'devices',
         'device-overview',
         'devices-redux',
-        'services-landing'
+        'services-overview'
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-service',
-        'services-landing'
+        'services-overview'
       ],
       'spark-room-system': [
         'devices',
@@ -304,7 +304,7 @@
       ],
       'squared-fusion-cal': [
         'calendar-service',
-        'services-landing'
+        'services-overview'
       ],
       'squared-team-member': [
         'organization'

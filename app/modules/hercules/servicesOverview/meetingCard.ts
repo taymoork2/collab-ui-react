@@ -1,29 +1,29 @@
-/// <reference path="ServicesLandingCard.ts"/>
-namespace servicesLanding {
+/// <reference path="ServicesOverviewCard.ts"/>
+namespace servicesOverview {
 
-  export class ServicesLandingMeetingCard extends ServicesLandingCard {
-    private moreButton:CardButton = {name: 'servicesLanding.showMore', link: 'site-list'};
+  export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
+    private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list'};
 
-    getShowMoreButton():servicesLanding.CardButton {
+    getShowMoreButton():servicesOverview.CardButton {
       if (this._buttons.length > 3) {
         return this.moreButton;
       }
       return undefined;
     }
 
-    private _buttons:Array<servicesLanding.CardButton> = [
+    private _buttons:Array<servicesOverview.CardButton> = [
       {name: 'site 1', link: ''},
       {name: 'site 2', link: ''},
       {name: 'site 3', link: ''},
       {name: 'site 4', link: ''}];
 
-    getButtons():Array<servicesLanding.CardButton> {
+    getButtons():Array<servicesOverview.CardButton> {
       return _.take(this._buttons, 3);
     }
 
     public constructor() {
-      super('modules/hercules/servicesLanding/serviceCard.tpl.html',
-        'servicesLanding.cards.meeting.title', 'servicesLanding.cards.meeting.description', 'icon-circle-group', true, 'meetings');
+      super('modules/hercules/servicesOverview/serviceCard.tpl.html',
+        'servicesOverview.cards.meeting.title', 'servicesOverview.cards.meeting.description', 'icon-circle-group', true, 'meetings');
     }
 
     public updateWebexSiteList(data:{data:Array<{license:{siteUrl:string}}>}) {

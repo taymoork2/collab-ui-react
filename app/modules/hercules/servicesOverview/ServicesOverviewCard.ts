@@ -1,4 +1,4 @@
-namespace servicesLanding {
+namespace servicesOverview {
 
   export interface CardButton {
     name:String;
@@ -10,7 +10,7 @@ namespace servicesLanding {
     hybrid
   }
 
-  export abstract class ServicesLandingCard {
+  export abstract class ServicesOverviewCard {
 
     protected _status;
     protected _loading = true;
@@ -80,24 +80,20 @@ namespace servicesLanding {
     }
 
     protected filterAndGetEnabledService(services:Array<{id:string,enabled:boolean}>, serviceIds:Array<String>):boolean {
-      let serviceEnabled = _.chain(services)
+      return _.chain(services)
         .filter((service)=> {
           return _.indexOf(serviceIds, service.id) >= 0;
         })
         .reduce((result, serv:{enabled:boolean})=> {
-          let enabled = this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-          return enabled;
+          return this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
         }, undefined)
         .value();
-      return serviceEnabled;
     }
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
       let callServiceStatus:string = _.chain(services)
         .filter((service)=> {
-          let found = _.indexOf(serviceIds, service.id) >= 0;
-          console.log("service", service, found);
-          return found;
+          return _.indexOf(serviceIds, service.id) >= 0;
         })
         .reduce((result, serv:{status:string})=> {
           return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result

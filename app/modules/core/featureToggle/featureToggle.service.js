@@ -41,7 +41,7 @@
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      serviceLanding: 'atlas-service-landing',
+      servicesOverview: 'atlas-services-overview',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',

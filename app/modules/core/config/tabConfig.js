@@ -29,14 +29,14 @@
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: 'atlas-service-landing',
-    state: 'services-landing',
-    link: 'services/landing'
+    feature: 'atlas-services-overview',
+    state: 'services-overview',
+    link: 'services/overview'
   }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: "!atlas-service-landing",
+    feature: "!atlas-services-overview",
     subPages: [{
       title: 'tabs.conferencing',
       desc: 'tabs.conferencingDesc',

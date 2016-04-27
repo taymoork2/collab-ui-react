@@ -1876,11 +1876,11 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('services-landing', {
-          url: '/services/landing',
-          templateUrl: 'modules/hercules/servicesLanding/servicesLanding.html',
-          controller: 'ServicesLandingCtrl',
-          controllerAs: 'servicesLandingCtrl',
+        .state('services-overview', {
+          url: '/services/overview',
+          templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+          controller: 'ServicesOverviewCtrl',
+          controllerAs: 'servicesOverviewCtrl',
           parent: 'main'
         })
         .state('calendar-service', {
