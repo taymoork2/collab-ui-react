@@ -332,6 +332,8 @@ angular
       $httpProvider.interceptors.push('TimingInterceptor');
       $httpProvider.interceptors.push('ServerErrorInterceptor');
 
+      $httpProvider.interceptors.push('ReadonlyInterceptor');
+
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
 
