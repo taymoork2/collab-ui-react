@@ -52,6 +52,10 @@
             return "images/devices-hi/mx200g2.png";
           case "Cisco TelePresence MX300 G2":
             return "images/devices-hi/mx300g2.png";
+          case "Cisco TelePresence MX700":
+            return "images/devices-hi/mx700d.png";
+          case "Cisco TelePresence MX800":
+            return "images/devices-hi/mx800d.png";
           case "Project Swedish Island":
             return "images/devices-hi/swedish_island.png";
           default:

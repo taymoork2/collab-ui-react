@@ -4,7 +4,6 @@
   angular.module('Core')
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
-  /* @ngInject */
   function PartnerProfileCtrl($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion, FeatureToggleService) {
     var orgId = Authinfo.getOrgId();
 
@@ -14,6 +13,7 @@
     $scope.usePartnerLogo = true;
     $scope.allowCustomerLogos = false;
     $scope.allowReadOnlyAccess = true;
+    $scope.allowCrashLogUpload = false;
     $scope.progress = 0;
 
     $scope.profileHelpUrl = 'https://support.ciscospark.com';
@@ -45,6 +45,7 @@
     //For now restrict to one user (who is a partner)
     //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
     $scope.showClientVersions = false;
+    $scope.showCrashLogUpload = false;
 
     $scope.sendFeedback = function () {
       var appType = 'Atlas_' + $window.navigator.userAgent;
@@ -132,6 +133,12 @@
             $scope.allowCustomerLogos = settings.allowCustomerLogos;
           }
 
+          if (!_.isUndefined(settings.allowCrashLogUpload)) {
+            $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
+          } else {
+            $scope.allowCrashLogUpload = false;
+          }
+
           if (!_.isUndefined(settings.allowReadOnlyAccess)) {
             $scope.allowReadOnlyAccess = settings.allowReadOnlyAccess;
           }
@@ -154,6 +161,9 @@
         //toggle=false;
         $scope.showClientVersions = toggle;
         $scope.initWbxClientVersions();
+      });
+      FeatureToggleService.supports(FeatureToggleService.features.enableCrashLogs).then(function (toggle) {
+        $scope.showCrashLogUpload = toggle;
       });
 
     };
@@ -230,7 +240,8 @@
           helpUrl: $scope.helpUrl || null,
           isCiscoHelp: isCiscoHelp,
           isCiscoSupport: isCiscoSupport,
-          allowReadOnlyAccess: $scope.allowReadOnlyAccess
+          allowReadOnlyAccess: $scope.allowReadOnlyAccess,
+          allowCrashLogUpload: $scope.allowCrashLogUpload
         };
 
         updateOrgSettings(orgId, settings);
@@ -245,6 +256,11 @@
         $scope.supportText = '';
       }
       $scope.problemSiteRadioValue = value;
+      touchForm();
+    };
+
+    $scope.setCrashReportCheckbox = function (value) {
+      $scope.allowCrashLogUpload = value;
       touchForm();
     };
 

@@ -263,7 +263,8 @@
 
     function handleError(message) {
       return function (res) {
-        Log.error(message, res && res.data || res.text);
+        Log.error(message, res && (res.data || res.text));
+        return $q.reject(res);
       };
     }
 
