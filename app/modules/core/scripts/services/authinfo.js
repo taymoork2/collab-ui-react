@@ -238,7 +238,7 @@ angular.module('Core')
 
                 switch (license.licenseType) {
                 case 'CONFERENCING':
-                  if (this.isCustomerAdmin() && license.siteUrl) {
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl) {
                     authData.roles.push('Site_Admin');
                   }
 
