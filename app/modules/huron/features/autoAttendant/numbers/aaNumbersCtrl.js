@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, AANotificationService, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -168,7 +168,7 @@
 
             },
             function (response) {
-              Notification.errorResponse(response, 'autoAttendant.errorAddCMI', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
                 statusText: response.statusText
               });
@@ -179,7 +179,7 @@
 
         },
         function (response) {
-          Notification.errorResponse(response, 'autoAttendant.errorAddCMI', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
             status: response.status
@@ -211,7 +211,7 @@
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
           AACommonService.setIsValid('errorRemoveCMI', false);
-          Notification.errorResponse(response, 'autoAttendant.errorRemoveCMI');
+          AANotificationService.errorResponse(response, 'autoAttendant.errorRemoveCMI');
         });
 
     }
@@ -368,13 +368,13 @@
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.errorResponse(response, 'autoAttendant.errorNumbersCMIOnly', {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCMIOnly', {
               phoneNumbers: onlyCMI
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            AANotificationService.error(response, 'autoAttendant.errorNumbersCESOnly', {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCESOnly', {
               phoneNumbers: onlyResources
             });
           }
@@ -385,7 +385,7 @@
             // Use AACommonService to thwart the saving when it is in this state
             AACommonService.setIsValid('readErrorCMI', false);
 
-            Notification.errorResponse(response, 'autoAttendant.errorReadCMI');
+            AANotificationService.errorResponse(response, 'autoAttendant.errorReadCMI');
           }
         });
     }

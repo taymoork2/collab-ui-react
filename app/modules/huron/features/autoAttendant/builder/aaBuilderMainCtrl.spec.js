@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderMainCtrl', function () {
-  var controller, Notification, AANotificationService, AutoAttendantCeService;
+  var controller, AANotificationService, AutoAttendantCeService;
   var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AACommonService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
   var AAUiScheduleService, AACalendarService;
@@ -48,7 +48,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_, _AANotificationService_,
+  beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _AANotificationService_,
     _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
     _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AACommonService_, _AAUiScheduleService_,
     _AACalendarService_) {
@@ -69,7 +69,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     AACommonService = _AACommonService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
-    Notification = _Notification_;
     AANotificationService = _AANotificationService_;
     HuronConfig = _HuronConfig_;
     $httpBackend = _$httpBackend_;
@@ -86,7 +85,6 @@ describe('Controller: AABuilderMainCtrl', function () {
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,
       $stateParams: $stateParams,
-      Notification: Notification,
       AANotificationService: AANotificationService
     });
     $scope.$apply();
@@ -168,7 +166,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecordUUID = "uuid";
 
       var errorSpy = jasmine.createSpy('error');
-      Notification.error = errorSpy;
+      AANotificationService.error = errorSpy;
 
       controller.close();
 
@@ -200,7 +198,7 @@ describe('Controller: AABuilderMainCtrl', function () {
           return [200, response];
         });
 
-      spyOn(Notification, 'errorResponse');
+      spyOn(AANotificationService, 'errorResponse');
       var resources = {
         workingResources: [],
         failedResources: ["9999999991"]
@@ -211,7 +209,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $scope.$apply();
 
-      expect(Notification.errorResponse).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
 
     });
   });
@@ -226,9 +224,9 @@ describe('Controller: AABuilderMainCtrl', function () {
     beforeEach(function () {
       createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(Notification, 'success');
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'errorResponse');
       spyOn($scope.vm, 'saveUiModel');
       spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
 
@@ -253,7 +251,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
+      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
     });
 
     it('should report failure if AutoAttendantCeService.createCe() failed', function () {
@@ -265,7 +263,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveAARecords();
       $scope.$apply();
 
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should update an existing aaRecord successfully', function () {
@@ -284,7 +282,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
 
     it('should report failure if AutoAttendantCeService.updateCe() failed', function () {
@@ -297,7 +295,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveAARecords();
       $scope.$apply();
 
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should not save when there is a name validation error', function () {
@@ -316,8 +314,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     beforeEach(function () {
       readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(angular.copy(aCe)));
       spyOn($scope.vm, 'populateUiModel');
-      spyOn(Notification, 'error');
       spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'errorResponse');
       spyOn(AAModelService, 'getNewAARecord').and.callThrough();
 
     });
@@ -330,7 +328,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
     });
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is empty', function () {
@@ -341,7 +339,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
     });
 
@@ -355,7 +353,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
     });
 
@@ -369,7 +367,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       // $scope.vm.aaModel should not be initialized again with a new AARecord
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
@@ -382,7 +380,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
 
       expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
@@ -400,7 +398,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.selectAA('AA2');
       $scope.$apply();
 
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
       expect($scope.vm.loading).toBeTruthy();
@@ -410,8 +408,8 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('setupTemplate', function () {
 
     beforeEach(function () {
-      spyOn(Notification, 'success');
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'success');
+      spyOn(AANotificationService, 'error');
 
     });
 
@@ -473,7 +471,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.templateName = 'templateDoesNotExist';
       controller.setupTemplate();
 
-      expect(Notification.error).toHaveBeenCalledWith(
+      expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplate', jasmine.any(Object)
       );
 
@@ -488,7 +486,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.templateName = 'templateNoActions';
       controller.setupTemplate();
 
-      expect(Notification.error).toHaveBeenCalledWith(
+      expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
       );
 
@@ -509,7 +507,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.templateName = 'templateMissingActionSet';
       controller.setupTemplate();
 
-      expect(Notification.error).toHaveBeenCalledWith(
+      expect(AANotificationService.error).toHaveBeenCalledWith(
         'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
       );
 
@@ -663,7 +661,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       saveAARecordDefer = $q.defer();
       spyOn(AAUiScheduleService, 'create8To5Schedule').and.returnValue(createScheduleDefer.promise);
       spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
-      spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'errorResponse');
     });
 
     it('should return and resolve a promise when successfully save a 8to5 schedule', function () {
@@ -703,7 +701,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$apply();
 
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
       expect(errorText).toBe('SAVE_SCHEDULE_FAILURE');
     });
 
@@ -773,8 +771,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       deleteCalendarDefer = $q.defer();
       spyOn(AACalendarService, 'deleteCalendar').and.returnValue(deleteCalendarDefer.promise);
-      spyOn(Notification, 'error');
       spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'errorResponse');
     });
 
     it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
@@ -785,7 +783,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $rootScope.$apply();
 
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('should display an error info when failed to delete a calendar', function () {
@@ -795,7 +793,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $rootScope.$apply();
 
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(AANotificationService.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should do nothing when there is a SAVE_SCHEDULE_FAILURE', function () {

@@ -6,7 +6,7 @@
     .controller('AAScheduleImportCtrl', AAScheduleImportCtrl);
 
   /* @ngInject */
-  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate, Notification) {
+  function AAScheduleImportCtrl($modalInstance, AACalendarService, AAICalService, AAModelService, $translate, AANotificationService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectAA');
@@ -34,7 +34,7 @@
         });
       }, function (response) {
         if (response.status !== 404) {
-          Notification.error('autoAttendant.failureImport', {
+          AANotificationService.error('autoAttendant.failureImport', {
             status: response.status
           });
         }

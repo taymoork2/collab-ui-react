@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
-  var controller, Notification, AutoAttendantCeService, ExternalNumberPoolService;
+  var controller, AANotificationService, AutoAttendantCeService, ExternalNumberPoolService;
   var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService, AACommonService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
@@ -81,7 +81,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Config_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
+    _AAModelService_, _AANumberAssignmentService_, _AACommonService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_, _AANotificationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
@@ -98,7 +98,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     Authinfo = _Authinfo_;
     AACommonService = _AACommonService_;
 
-    Notification = _Notification_;
+    AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
 
@@ -348,7 +348,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       };
 
       errorSpy = jasmine.createSpy('error');
-      Notification.errorResponse = errorSpy;
+      AANotificationService.errorResponse = errorSpy;
 
       spyOn(AANumberAssignmentService, 'formatAAExtensionResourcesBasedOnCMI').and.returnValue($q.reject({
         statusText: "server error",
@@ -424,7 +424,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     it('should warn when fail to assign to CMI on remove', function () {
 
       errorSpy = jasmine.createSpy('error');
-      Notification.errorResponse = errorSpy;
+      AANotificationService.errorResponse = errorSpy;
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType(aCe.assignedResources.type);
@@ -548,7 +548,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
       errorSpy = jasmine.createSpy('error');
-      Notification.errorResponse = errorSpy;
+      AANotificationService.errorResponse = errorSpy;
 
     });
 

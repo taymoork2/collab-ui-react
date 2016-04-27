@@ -19,6 +19,7 @@ describe('Service: AANotificationService', function () {
   var response = {
     data: data
   };
+
   var message = 'autoAttendant.errorCreateCe';
   var parameters = {
     name: 'AA',
@@ -35,17 +36,33 @@ describe('Service: AANotificationService', function () {
     Notification = _Notification_;
 
     spyOn(Notification, 'notify');
+    spyOn(Notification, 'errorResponse');
   }));
 
   afterEach(function () {
 
   });
 
-  describe('error', function () {
-    it('should parse through response and call core Notification', function () {
-      AANotificationService.error(response, message, parameters);
+  describe('errorResponse', function () {
+    it('should parse through response and call core Notification for CES', function () {
+      AANotificationService.errorResponse(response, message, parameters);
       expect(Notification.notify).toHaveBeenCalledWith(
         "autoAttendant.errorCreateCe Key: CES0005 Description: No Database Entries found for the specified criteria TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2", 'error');
     });
   });
+
+  describe('errorResponse', function () {
+    var data = {
+      errorMessage: 'improper uuid format in request'
+    };
+    var response = {
+      data: data
+    };
+
+    it('should parse through response and call core Notification for CMI', function () {
+      AANotificationService.errorResponse(response, message, parameters);
+      expect(Notification.errorResponse).toHaveBeenCalledWith(response, message, parameters);
+    });
+  });
+
 });

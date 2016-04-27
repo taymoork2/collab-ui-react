@@ -8,7 +8,7 @@
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
-    AAValidationService, AANumberAssignmentService, AANotificationService, Notification, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
+    AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -97,7 +97,7 @@
             return response;
           },
           function (response) {
-            Notification.error('autoAttendant.errorResetCMI');
+            AANotificationService.error('autoAttendant.errorResetCMI');
             return $q.reject(response);
           }
         );
@@ -189,7 +189,7 @@
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
-              Notification.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
                 phoneNumbers: _.pluck(response.failedResources, 'id')
               });
             }
@@ -217,13 +217,13 @@
           AACommonService.resetFormStatus();
           vm.canSave = false;
 
-          Notification.success('autoAttendant.successUpdateCe', {
+          AANotificationService.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
 
         },
         function (response) {
-          AANotificationService.error(response, 'autoAttendant.errorUpdateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -253,13 +253,13 @@
           AACommonService.resetFormStatus();
           vm.canSave = false;
 
-          Notification.success('autoAttendant.successCreateCe', {
+          AANotificationService.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName
           });
 
         },
         function (response) {
-          AANotificationService.error(response, 'autoAttendant.errorCreateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -388,14 +388,14 @@
       });
 
       if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
-        Notification.error('autoAttendant.errorInvalidTemplate', {
+        AANotificationService.error('autoAttendant.errorInvalidTemplate', {
           template: vm.templateName
         });
         return;
       }
 
       if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
-        Notification.error('autoAttendant.errorInvalidTemplateDef', {
+        AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
           template: vm.templateName
         });
         return;
@@ -413,7 +413,7 @@
         }
 
         if (angular.isUndefined(action.actionset)) {
-          Notification.error('autoAttendant.errorInvalidTemplateDef', {
+          AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
             template: vm.templateName
           });
           return;
@@ -450,7 +450,7 @@
                 vm.isAANameDefined = true;
               },
               function (response) {
-                AANotificationService.error(response, 'autoAttendant.errorReadCe', {
+                AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {
                   name: aaName,
                   statusText: response.statusText,
                   status: response.status
@@ -459,7 +459,7 @@
             );
             return;
           } else {
-            Notification.error('autoAttendant.errorReadCe', {
+            AANotificationService.error('autoAttendant.errorReadCe', {
               name: aaName
             });
           }
@@ -475,7 +475,7 @@
           vm.ui.ceInfo.scheduleId = scheduleId;
         },
         function (error) {
-          AANotificationService.error(error, 'autoAttendant.errorCreateSchedule', {
+          AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {
             name: aaName,
             statusText: error.statusText,
             status: error.status
@@ -501,7 +501,7 @@
       if (error === 'CE_SAVE_FAILURE') {
         AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).catch(
           function (response) {
-            AANotificationService.error(response, 'autoAttendant.errorDeletePredefinedSchedule', {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorDeletePredefinedSchedule', {
               name: vm.ui.ceInfo.name,
               statusText: error.statusText,
               status: error.status
