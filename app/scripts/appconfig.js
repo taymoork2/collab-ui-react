@@ -347,8 +347,7 @@ angular
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
         options = options || {};
-        /* @ngInject */
-        return function ($modal, $state, $previousState) {
+        return /* @ngInject */ function ($modal, $state, $previousState) {
           if ($state.modal) {
             $state.modal.stopPreviousState = true;
           } else {
@@ -1303,24 +1302,22 @@ angular
         })
         .state('wizardmodal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState',
-            function ($modal, $state, $previousState) {
-              $previousState.memo(wizardmodalMemo);
-              $state.modal = $modal.open({
-                template: '<div ui-view="modal"></div>',
-                controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
-                backdrop: 'static'
-              });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
-                var previousState = $previousState.get(wizardmodalMemo);
-                if (previousState) {
-                  return $previousState.go(wizardmodalMemo);
-                }
-              });
-            }
-          ],
+          onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+            $previousState.memo(wizardmodalMemo);
+            $state.modal = $modal.open({
+              template: '<div ui-view="modal"></div>',
+              controller: 'ModalWizardCtrl',
+              windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+              backdrop: 'static'
+            });
+            $state.modal.result.finally(function () {
+              $state.modal = null;
+              var previousState = $previousState.get(wizardmodalMemo);
+              if (previousState) {
+                return $previousState.go(wizardmodalMemo);
+              }
+            });
+          },
           onExit: ['$state', '$previousState',
             function ($state, $previousState) {
               if ($state.modal) {
