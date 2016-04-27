@@ -1,10 +1,6 @@
 <!doctype html>
 <html ng-app="wx2AdminWebClientApp">
   <head>
-    <!-- build:js scripts/unsupported.js -->
-    <!-- unsupported:js -->
-    <!-- endinject -->
-    <!-- endbuild -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="Localize.varTitle()"></title>
@@ -17,9 +13,19 @@
     <!-- endinject -->
     <!-- endbuild -->
   </head>
-  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" ng-cloak cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
+  <body ng-controller="BodyCtrl as bodyCtrl" ng-class="{inverse: bodyCtrl.partner}" class="{{$root.bodyClass}}" cs-breakpoint="{0:'screen-xs', 769:'screen-sm', 993:'screen-md', 1201:'screen-lg'}">
     <toaster-container></toaster-container>
-    <div ui-view="main"></div>
+    <div ui-view="main" ng-cloak></div>
+
+    <noscript>
+      JavaScript is not enabled. Please enable it and reload the page.
+    </noscript>
+
+    <div class="unsupported-browser" translate="errors.unsupported">
+      You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.
+    </div>
+    <!--[if lt IE 11]>
+    <![endif]-->
 
     <script>
       var preload = new Image();
