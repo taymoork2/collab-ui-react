@@ -65,7 +65,7 @@ describe('Controller: PartnerProfileCtrl', function () {
           isCiscoHelp: false,
           isCiscoSupport: false,
           allowReadOnlyAccess: false,
-          allowCrashLogUpload: true
+          allowCrashLogUpload: false
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });
