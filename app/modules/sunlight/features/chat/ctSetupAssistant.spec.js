@@ -7,7 +7,6 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var escapeKey = 27;
   var leftArrow = 37;
   var rightArrow = 39;
-
   var templateName = 'Atlas UT Chat Template';
 
   beforeEach(module('Sunlight'));

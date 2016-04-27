@@ -1,6 +1,4 @@
-
 @import "setupAssistantPages/setup-assistant-pages";
-@import "setupAssistantPages/ct-name";
 
 .careChatSetup {
   @extend %content-header;
@@ -32,4 +30,3 @@
     @include vr-spacing(mt, 0.75);
   }
 }
-

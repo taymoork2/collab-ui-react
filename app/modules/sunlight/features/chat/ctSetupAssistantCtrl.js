@@ -40,7 +40,6 @@
     vm.leftArrow = 37;
     vm.rightArrow = 39;
 
-    //Template information
     vm.templateJson = {
       name: '',
       mediaType: 'chat'
@@ -76,16 +75,27 @@
       return vm.states.indexOf(vm.currentState);
     }
 
-    function nextButton() {
-      if (vm.currentState === vm.states[vm.states.length - 1]) {
-        return 'hidden';
-      } else if (vm.currentState === 'name') {
-        if (vm.templateJson.name === '') {
-          return false;
-        }
+    function validatePageName() {
+      if (vm.templateJson.name === '') {
+        return false;
       }
-
       return true;
+    }
+
+    function nextButton() {
+      var retVal = true;
+
+      switch (vm.currentState) {
+      case 'name':
+        retVal = validatePageName();
+        break;
+      case 'embedCode':
+        retVal = 'hidden';
+        break;
+      default:
+        break;
+      }
+      return retVal;
     }
 
     function previousButton() {
