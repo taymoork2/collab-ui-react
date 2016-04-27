@@ -25,7 +25,9 @@
     })
     .then(function () {
       if (vm.isCSB) {
-        _.remove(vm.cards, {name: 'overview.cards.users.title'});
+        _.remove(vm.cards, {
+          name: 'overview.cards.users.title'
+        });
       }
     });
 
