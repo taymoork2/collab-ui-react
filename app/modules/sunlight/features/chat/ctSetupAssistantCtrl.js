@@ -79,11 +79,9 @@
     function nextButton() {
       if (vm.currentState === vm.states[vm.states.length - 1]) {
         return 'hidden';
-      } else if (vm.currentState === vm.states[0]) {
+      } else if (vm.currentState === 'name') {
         if (vm.templateJson.name === '') {
           return false;
-        } else {
-          return true;
         }
       }
 
@@ -109,14 +107,6 @@
       $timeout(function () {
         vm.currentState = vm.states[getPageIndex() - 1];
       }, vm.animationTimeout);
-    }
-
-    function enterNextPage($keyCode) {
-      if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
-        if (vm.templateJson.name !== '') {
-          nextPage();
-        }
-      }
     }
 
   }
