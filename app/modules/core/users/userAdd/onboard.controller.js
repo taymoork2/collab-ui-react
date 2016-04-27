@@ -1149,6 +1149,10 @@
             userResult.message = $translate.instant('usersPage.userExistsInDiffOrgError', {
               email: userResult.email
             });
+          } else if (userStatus === 403 && user.message === '400096') {
+            userResult.message = $translate.instant('usersPage.unauthorizedError', {
+              email: userResult.email
+            });
           } else if (userStatus === 400 && user.message === '400087') {
             userResult.message = $translate.instant('usersPage.hybridServicesError');
             hybridCheck = true;

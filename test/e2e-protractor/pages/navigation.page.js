@@ -290,7 +290,7 @@ var Navigation = function () {
     return browser.get(getUrl(url));
   };
 
-  this.navigateToUsingIntegrationForTesting = function (url) {
+  this.navigateUsingIntegrationBackend = function (url) {
     return browser.get(getUrl(url, {
       forceIntegration: true
     }));

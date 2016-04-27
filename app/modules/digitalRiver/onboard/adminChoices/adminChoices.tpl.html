@@ -1,0 +1,23 @@
+<div class="dr-container" id="admin-choices-container">
+    <div class="dr-row" ng-hide="adminChoicesController.error == null">
+        <textarea rows="2" cols="50" ng-model="adminChoicesController.error" readonly="readonly" id="dr-error"/>
+    </div>
+    <div class="dr-row">
+        <div class="dr-center dr-pad" translate="digitalRiver.adminChoices.header1" />
+    </div>
+    <div class="dr-row">
+        <div class="dr-center dr-pad" translate="digitalRiver.adminChoices.header2" />
+    </div>
+    <div class="dr-row">
+        <div class="cs-radio-group">
+            <input cs-input type="radio" ng-model="adminChoicesController.choice" id="adminChoice1" name="individualRadio" value="1" cs-input-label="{{adminChoicesController.choice1a}}" cs-input-help-text="{{adminChoicesController.choice1b}}">
+            <input cs-input type="radio" ng-model="adminChoicesController.choice" id="adminChoice2" name="individualRadio" value="2" cs-input-label="{{adminChoicesController.choice2}}">
+            <input cs-input type="radio" ng-model="adminChoicesController.choice" id="adminChoice3" name="individualRadio" value="3" cs-input-label="{{adminChoicesController.choice3a}}" cs-input-help-text="{{adminChoicesController.choice3b}}">
+        </div>
+    </div>
+    <div class="dr-row">
+        <div class="dr-button">
+            <button class="btn btn--primary" ng-click="adminChoicesController.handleContinue()" id="dr-onboard-question-yes" translate="digitalRiver.continue"/>
+        </div>
+    </div>
+</div>

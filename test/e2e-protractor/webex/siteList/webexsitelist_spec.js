@@ -152,7 +152,7 @@ describe('Services > Webex page aka Site List page', function () {
   xdescribe(': License Types - Single : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_single.testAdminUsername, function () {
-      login.loginThroughGui(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
+      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_single.testAdminUsername, sitelist.multiCenterLicenseUser_single.testAdminPassword);
     });
 
     it('should navigate to webex site list page', function () {
@@ -178,7 +178,7 @@ describe('Services > Webex page aka Site List page', function () {
   xdescribe(': License Types - Multiple : ', function () {
 
     it('should allow login as admin user ' + sitelist.multiCenterLicenseUser_multiple.testAdminUsername, function () {
-      login.loginThroughGui(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
+      login.loginThroughGuiUsingIntegrationBackend(sitelist.multiCenterLicenseUser_multiple.testAdminUsername, sitelist.multiCenterLicenseUser_multiple.testAdminPassword);
     });
 
     it('should navigate to webex site list page', function () {

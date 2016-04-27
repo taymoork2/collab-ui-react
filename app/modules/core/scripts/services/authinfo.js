@@ -238,7 +238,7 @@ angular.module('Core')
 
                 switch (license.licenseType) {
                 case 'CONFERENCING':
-                  if (this.isCustomerAdmin() && license.siteUrl) {
+                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) && license.siteUrl) {
                     authData.roles.push('Site_Admin');
                   }
 
@@ -372,6 +372,9 @@ angular.module('Core')
         },
         isPartnerAdmin: function () {
           return this.hasRole('PARTNER_ADMIN');
+        },
+        isPartnerReadOnlyAdmin: function () {
+          return this.hasRole('PARTNER_READ_ONLY_ADMIN');
         },
         isPartnerSalesAdmin: function () {
           return this.hasRole('PARTNER_SALES_ADMIN');

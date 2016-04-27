@@ -27,6 +27,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
 
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
+    spyOn(ExternalNumberService, 'getQuantity').and.returnValue(2);
     spyOn(Notification, 'errorResponse');
 
     controller = $controller('ExternalNumberOverviewCtrl', {
@@ -36,24 +37,14 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     $scope.$apply();
   }));
 
-  it('should calculate number of phone numbers', function () {
+  it('should get the number of phone numbers', function () {
     expect(controller.allNumbersCount).toEqual(2);
-  });
-
-  it('should update number of phone numbers', function () {
-    var newNumbers = externalNumbers.concat([{
-      'pattern': '789'
-    }, {
-      'pattern': '000'
-    }]);
-    ExternalNumberService.getAllNumbers.and.returnValue(newNumbers);
-    $scope.$apply();
-    expect(controller.allNumbersCount).toEqual(4);
   });
 
   it('should show 0 numbers on error', function () {
     ExternalNumberService.refreshNumbers.and.returnValue($q.reject());
     ExternalNumberService.getAllNumbers.and.returnValue([]);
+    ExternalNumberService.getQuantity.and.returnValue(0);
     controller = $controller('ExternalNumberOverviewCtrl', {
       $scope: $scope
     });
@@ -64,6 +55,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
 
   it('should show 0 numbers if no customer found', function () {
     ExternalNumberService.getAllNumbers.and.callThrough();
+    ExternalNumberService.getQuantity.and.returnValue(0);
     delete $stateParams.currentCustomer.customerOrgId;
     controller = $controller('ExternalNumberOverviewCtrl', {
       $scope: $scope
