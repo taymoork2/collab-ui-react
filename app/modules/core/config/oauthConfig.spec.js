@@ -12,11 +12,11 @@ describe('OAuthConfig', function () {
     spyOn($location, 'host');
   }));
 
-  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
   var devHost = 'localhost';
+  var prodHost = 'admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
   var intHost = 'int-admin.ciscospark.com';
-  var prodHost = 'admin.ciscospark.com';
+  var scope = 'webexsquare%3Aadmin%20webexsquare%3Abilling%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin%20webex-messenger%3Aget_webextoken%20ccc_config%3Aadmin';
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {
