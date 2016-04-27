@@ -121,7 +121,6 @@
     var vm = this;
 
     vm.upgrading = false;
-    vm.provisionedVersion = softwareUpgrade.provisionedVersion;
     vm.availableVersion = softwareUpgrade.availableVersion;
     vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
     vm.clusterName = cluster.name;
