@@ -41,8 +41,13 @@
         }
         if (_.get(response, 'data.error.message')) {
           cesErrorMsg += ' Description:';
-          for (i = 0; i < response.data.error.message.length; i++) {
-            cesErrorMsg += ' ' + response.data.error.message[i].description;
+          // data.error.message could have description object or not.
+          if (response.data.error.message[0].description != null) {
+            for (i = 0; i < response.data.error.message.length; i++) {
+              cesErrorMsg += ' ' + response.data.error.message[i].description;
+            }
+          } else {
+            cesErrorMsg += ' ' + response.data.error.message;
           }
         }
         if (_.get(response, 'data.error.trackingId')) {

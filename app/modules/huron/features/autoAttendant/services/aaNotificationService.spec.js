@@ -65,4 +65,24 @@ describe('Service: AANotificationService', function () {
     });
   });
 
+  describe('errorResponse', function () {
+    var error = {
+      key: key,
+      message: 'message field is not an object',
+      trackingId: trackingId
+    };
+    var data = {
+      error: error
+    };
+    var response = {
+      data: data
+    };
+
+    it('should parse through response with data.error.message which is not an object', function () {
+      AANotificationService.errorResponse(response, message, parameters);
+      expect(Notification.notify).toHaveBeenCalledWith(
+        "autoAttendant.errorCreateCe Key: CES0005 Description: message field is not an object TrackingId: ATLAS_09d583dc-e55a-2574-7862-ff14fe6b9aed_2", 'error');
+    });
+  });
+
 });
