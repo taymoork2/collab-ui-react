@@ -22,23 +22,26 @@
         <hr-external-number-list
           numbers="externalNumbers.allNumbers"
           count-translate-key="externalNumberPanel.allNumbers"
-          external-numbers="externalNumbers">
+          external-numbers="externalNumbers"
+          quantity="externalNumbers.getQuantity('all')">
         </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.pendingText}}">
         <hr-external-number-list
-          numbers="externalNumbers.pendingNumbers"
+          numbers="externalNumbers.pendingList"
           count-translate-key="externalNumberPanel.pendingNumbers"
           external-numbers="externalNumbers"
           tooltip-text="{{:: 'externalNumberPanel.pendingNumbersTooltip' | translate}}"
-          tooltip-class="icon-information">
+          tooltip-class="icon-information"
+          quantity="externalNumbers.getQuantity('pending')">
         </hr-external-number-list>
       </tab>
       <tab heading="{{::externalNumbers.unassignedText}}">
         <hr-external-number-list
           numbers="externalNumbers.unassignedNumbers"
           count-translate-key="externalNumberPanel.unassignedNumbers"
-          external-numbers="externalNumbers">
+          external-numbers="externalNumbers"
+          quantity="externalNumbers.getQuantity('unassigned')">
         </hr-external-number-list>
       </tab>
     </tabset>

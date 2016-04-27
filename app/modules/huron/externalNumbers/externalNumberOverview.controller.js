@@ -9,13 +9,15 @@
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
+    vm.allNumbersCount = 0;
+    var ALL = 'all';
 
     updatePhoneNumberCount();
 
     $scope.$watchCollection(function () {
       return ExternalNumberService.getAllNumbers();
-    }, function (numbers) {
-      vm.allNumbersCount = numbers.length;
+    }, function () {
+      vm.allNumbersCount = ExternalNumberService.getQuantity(ALL);
     });
 
     function updatePhoneNumberCount() {
@@ -34,7 +36,7 @@
     }
 
     function getNumberCount() {
-      vm.allNumbersCount = ExternalNumberService.getAllNumbers().length;
+      vm.allNumbersCount = ExternalNumberService.getQuantity(ALL);
       vm.loading = false;
     }
   }

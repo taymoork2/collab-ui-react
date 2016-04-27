@@ -43,6 +43,7 @@ describe('Controller: CdrService', function () {
       $window.webkitURL.createObjectURL = jasmine.createSpy('createObjectURL').and.callFake(function () {
         return 'blob';
       });
+      $window.navigator.msSaveOrOpenBlob = undefined;
 
       spyOn(Notification, 'notify');
       spyOn(Authinfo, 'getOrgId').and.returnValue('1');

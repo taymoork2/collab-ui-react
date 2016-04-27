@@ -179,7 +179,7 @@ function Auth($injector, $translate, $q, Log, Config, SessionStorage, Authinfo, 
 
   function initializeAuthinfo(authData) {
     Authinfo.initialize(authData);
-    if (Authinfo.isAdmin()) {
+    if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin()) {
       return getCustomerAccount(Authinfo.getOrgId())
         .then(function (res) {
           Authinfo.updateAccountInfo(res.data);
