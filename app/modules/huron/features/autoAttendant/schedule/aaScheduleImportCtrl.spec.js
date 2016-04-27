@@ -3,6 +3,7 @@
 describe('Controller: AAScheduleImportCtrl', function () {
   var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q;
   var aaModel = {
+    aaRecord : {scheduleId : 'url-1'},
     aaRecords: [{
       callExperienceURL: 'url-1',
       callExperienceName: 'AA1'
@@ -31,6 +32,7 @@ describe('Controller: AAScheduleImportCtrl', function () {
       scheduleUrl: '/schedules/url-2',
       scheduleName: 'Calendar for AA2'
     }]));
+
     spyOn(AAICalService, 'getHoursRanges').and.returnValue({});
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
@@ -42,7 +44,8 @@ describe('Controller: AAScheduleImportCtrl', function () {
   }));
 
   it('should have options after load', function () {
-    expect(controller.options.length).toBe(2);
+    // we are filtering out the AA's schedule, so it should be one.
+    expect(controller.options.length).toBe(1);
   });
 
   it('select and continue to import', function () {

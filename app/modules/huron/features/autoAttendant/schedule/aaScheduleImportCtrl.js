@@ -27,17 +27,24 @@
     function activate() {
       var aaModel = AAModelService.getAAModel();
 
-      var aaName = aaModel.aaName;
+      var aaRecordScheduleID = aaModel.aaRecord.scheduleId;
 
       AACalendarService.listCalendars().then(function (data) {
-        vm.options = _.map(data, function (obj) {
-          if (obj.scheduleName && obj.scheduleName.localeCompare(aaName) !== 0) {
+        vm.options = _.filter(data, function (obj) {
+          var scheduleID;
+
+          if (obj.scheduleUrl) {
+            scheduleID = obj.scheduleUrl.split('/schedules/')[1];
+          }
+
+          if (scheduleID && scheduleID.localeCompare(aaRecordScheduleID) !== 0) {
             return {
               label: obj.scheduleName,
-              value: obj.scheduleUrl.split('/schedules/')[1]
+              value: scheduleID 
             };
           }
         });
+
       }, function (response) {
         if (response.status !== 404) {
           Notification.error('autoAttendant.failureImport', {
