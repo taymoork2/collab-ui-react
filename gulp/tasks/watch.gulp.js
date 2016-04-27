@@ -15,6 +15,7 @@ var logWatch = require('../utils/logWatch.gulp')();
 var path = require('path');
 var reload = browserSync.reload;
 var typeScriptUtil = require('../utils/typeScript.gulp.js');
+var series = require('stream-series');
 
 var changedFiles;
 var testFiles;
@@ -143,6 +144,7 @@ gulp.task('karma-config-watch', function () {
   var unitTestFiles = [].concat(
     config.vendorFiles.js,
     config.testFiles.js,
+    config.testFiles.notTs,
     config.testFiles.app,
     config.testFiles.global,
     testFiles
@@ -150,16 +152,22 @@ gulp.task('karma-config-watch', function () {
 
   return gulp
     .src(config.testFiles.karmaTpl)
-    .pipe($.inject(gulp.src(unitTestFiles, {
-      read: false
-    }), {
-      addRootSlash: false,
-      starttag: 'files: [',
-      endtag: ',',
-      transform: function (filepath, file, i, length) {
-        return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-      }
-    }))
+    .pipe($.inject(
+      series(
+        gulp.src(unitTestFiles, {
+          read: false
+        }),
+        gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+          read: false
+        })
+      ), {
+        addRootSlash: false,
+        starttag: 'files: [',
+        endtag: ',',
+        transform: function (filepath, file, i, length) {
+          return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+        }
+      }))
     .pipe($.rename({
       basename: 'karma-watch',
       extname: '.js'
@@ -181,11 +189,11 @@ gulp.task('copy:changed-files', function () {
 });
 
 gulp.task('ts:changed-spec-files', function () {
-  return typeScriptUtil.compile([].concat(changedFiles), config.app);
+  return typeScriptUtil.compile([].concat(changedFiles), config.app, false);
 });
 
 gulp.task('ts:changed-files', function () {
-  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build);
+  return typeScriptUtil.compile([].concat(changedFiles, 'app/scripts/types.ts'), config.build, false);
 });
 
 function karmaModifiedFiles(event) {
