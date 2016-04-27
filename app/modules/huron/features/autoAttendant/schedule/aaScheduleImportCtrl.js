@@ -30,7 +30,7 @@
       var aaRecordScheduleID = aaModel.aaRecord.scheduleId;
 
       AACalendarService.listCalendars().then(function (data) {
-        vm.options = _.map(_.filter(data, function (obj) {
+        var filtered = _.filter(data, function (obj) {
           var scheduleID;
 
           /* remove bad URLs here */
@@ -46,7 +46,9 @@
 
           return false;
 
-        }), function (obj) {
+        });
+
+        vm.options = _.map(filtered, function (obj) {
           return {
             label: obj.scheduleName,
             value: obj.scheduleUrl.split('/schedules/')[1]
