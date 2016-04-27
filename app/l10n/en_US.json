@@ -3921,7 +3921,7 @@
     "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
   },
   "servicesLanding": {
-    "title":"Services",
+    "title": "Services",
     "cloudServices": "Cloud services",
     "hybridServices": "Hybrid services",
     "showAllCards": "Show all cards",
