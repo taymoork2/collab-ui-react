@@ -11,7 +11,7 @@ angular.module('Core')
       $scope.usePartnerLogo = true;
       $scope.allowCustomerLogos = false;
       $scope.allowReadOnlyAccess = true;
-      $scope.allowCrashLogUpload = true;
+      $scope.allowCrashLogUpload = false;
       $scope.progress = 0;
 
       $scope.profileHelpUrl = 'https://support.ciscospark.com';
@@ -134,7 +134,7 @@ angular.module('Core')
             if (!_.isUndefined(settings.allowCrashLogUpload)) {
               $scope.allowCrashLogUpload = settings.allowCrashLogUpload;
             } else {
-              $scope.allowCrashLogUpload = true;
+              $scope.allowCrashLogUpload = false;
             }
 
             if (!_.isUndefined(settings.allowReadOnlyAccess)) {
@@ -161,7 +161,6 @@ angular.module('Core')
           $scope.initWbxClientVersions();
         });
         FeatureToggleService.supports(FeatureToggleService.features.enableCrashLogs).then(function (toggle) {
-          //toggle=false;
           $scope.showCrashLogUpload = toggle;
         });
 
