@@ -270,7 +270,7 @@
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
 
-      if (Authinfo.isPartnerAdmin()) {
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // move our org to the top of the list
         // dont know why this is here yet
         // this should be handled by a sorting fn
