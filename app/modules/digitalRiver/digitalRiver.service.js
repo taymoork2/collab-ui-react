@@ -6,7 +6,7 @@
     .service('DigitalRiverService', DigitalRiverService);
 
   /* @ngInject */
-  function DigitalRiverService($http, $window, Config, Auth, $q, UrlConfig, Storage, EmailService) {
+  function DigitalRiverService($http, $window, $translate, Config, Auth, $q, UrlConfig, Storage, EmailService) {
 
     var service = {
       getUserFromEmail: getUserFromEmail,
@@ -18,14 +18,15 @@
       getUserAuthInfo: getUserAuthInfo,
       submitOrderOnline: submitOrderOnline,
       sendDRWelcomeEmail: sendDRWelcomeEmail,
-      decrytpUserAuthToken: decrytpUserAuthToken
+      decrytpUserAuthToken: decrytpUserAuthToken,
+      userExists: userExists
     };
 
     return service;
 
     function getUserFromEmail(email) {
       return Auth.setAccessToken().then(function () {
-        return $http.get(UrlConfig.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/' + email + '/exists');
+        return $http.get(UrlConfig.getAdminServiceUrl() + 'ordertranslator/online/user/' + email + '/exists');
       });
     }
 
@@ -85,5 +86,31 @@
       Auth.setAuthorizationHeader(token);
       return EmailService.emailDRWelcomeRequest(customerEmail, uuid, orderId);
     }
+
+    function userExists(email) {
+      var result = {};
+      result.domainClaimed = false;
+      result.userExists = false;
+      result.error = null;
+
+      return getUserFromEmail(email)
+        .then(function (response) {
+          if (response.status === 200) {
+            if (response.data.data.checkEmail.domainClaimed === true) {
+              result.domainClaimed = true;
+            } else if (angular.isDefined(response.data.data.checkEmail.identityUser)) {
+              result.userExists = true;
+            }
+          } else {
+            result.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+          }
+          return result;
+        })
+        .catch(function (error) {
+          result.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
+          return result;
+        });
+    }
+
   }
 })();

@@ -51,19 +51,19 @@ var WebExPage = function () {
     var wbxSiteName = siteUrl.slice(0, dotIndex);
 
     sessionTicketRequest = "" +
-      "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
-      "    <header>" + "\n" +
-      "        <securityContext>" + "\n" +
-      "            <siteName>" + wbxSiteName + "</siteName> " + "\n" +
-      "            <webExID>" + webexAdminID + "</webExID>" + "\n" +
-      "        </securityContext>" + "\n" +
-      "    </header>" + "\n" +
-      "    <body>" + "\n" +
-      "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">" + "\n" +
-      "            <accessToken>" + accessToken + "</accessToken>" + "\n" +
-      "        </bodyContent>" + "\n" +
-      "    </body>" + "\n" +
-      "</serv:message>" + "\n";
+      "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+      "    <header>\n" +
+      "        <securityContext>\n" +
+      "            <siteName>" + wbxSiteName + "</siteName> \n" +
+      "            <webExID>" + webexAdminID + "</webExID>\n" +
+      "        </securityContext>\n" +
+      "    </header>\n" +
+      "    <body>\n" +
+      "        <bodyContent xsi:type=\"java:com.webex.service.binding.user.AuthenticateUser\">\n" +
+      "            <accessToken>" + accessToken + "</accessToken>\n" +
+      "        </bodyContent>\n" +
+      "    </body>\n" +
+      "</serv:message>\n";
 
     var flow = protractor.promise.controlFlow();
     return flow.execute(this.initPost);

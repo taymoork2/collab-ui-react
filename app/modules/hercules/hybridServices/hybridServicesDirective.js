@@ -20,7 +20,7 @@
     vm.isEnabled = false;
 
     vm.allExceptUcFilter = function (item) {
-      return item.enabled === true && item.id !== 'squared-fusion-ec';
+      return item && item.enabled === true && item.id !== 'squared-fusion-ec';
     };
 
     vm.getStatus = function (status) {

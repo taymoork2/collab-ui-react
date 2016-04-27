@@ -2,7 +2,7 @@
 
 describe('Service: ExternalNumberService', function () {
   var $rootScope, $httpBackend, $translate, $q, ExternalNumberService, HuronConfig, PstnSetupService, ExternalNumberPool;
-  var allNumbers, pendingNumbers, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
+  var allNumbers, pendingNumbers, pendingOrders, unassignedNumbers, assignedNumbers, externalNumbers, numberResponse, noNumberResponse, pendingList, pendingAdvanceOrder, malformedAdvanceOrder, malformedAdvanceOrderLabel;
   var customerId, externalNumber;
 
   beforeEach(module('Huron'));
@@ -27,7 +27,9 @@ describe('Service: ExternalNumberService', function () {
       pattern: '123'
     }, {
       pattern: '456'
-    }, {
+    }];
+
+    pendingOrders = [{
       pattern: '(123) XXX-XXXX',
       quantity: 1
     }];
@@ -73,8 +75,9 @@ describe('Service: ExternalNumberService', function () {
 
     externalNumbers = unassignedNumbers.concat(assignedNumbers);
     allNumbers = pendingNumbers.concat(externalNumbers);
+    pendingList = pendingNumbers.concat(pendingOrders);
 
-    spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.when(pendingNumbers));
+    spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.when(pendingList));
     spyOn(PstnSetupService, 'isCarrierSwivel').and.returnValue($q.when(false));
     spyOn(PstnSetupService, 'getCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'deleteNumber');
@@ -101,20 +104,31 @@ describe('Service: ExternalNumberService', function () {
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual(allNumbers);
+    expect(ExternalNumberService.getAssignedNumbers()).toEqual(assignedNumbers);
     expect(ExternalNumberService.getPendingNumbers()).toEqual(pendingNumbers);
     expect(ExternalNumberService.getUnassignedNumbers()).toEqual(unassignedNumbers);
-    expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
+    expect(ExternalNumberService.getPendingOrders()).toContain(jasmine.objectContaining({
       label: pendingAdvanceOrder
     }));
+    expect(ExternalNumberService.getPendingOrderQuantity()).toEqual(1);
+  });
+
+  it('should refresh numbers', function () {
+    ExternalNumberService.refreshNumbers();
+    $rootScope.$apply();
+
+    expect(ExternalNumberService.getQuantity('all')).toEqual(7);
+    expect(ExternalNumberService.getQuantity('pending')).toEqual(3);
+    expect(ExternalNumberService.getQuantity('unassigned')).toEqual(2);
   });
 
   it('should refresh numbers and get order number for malformed advance order', function () {
-    pendingNumbers.push(malformedAdvanceOrder);
+    pendingList.push(malformedAdvanceOrder);
     $translate.instant.and.returnValue('Order Number');
     ExternalNumberService.refreshNumbers();
 
     $rootScope.$apply();
-    expect(ExternalNumberService.getPendingNumbers()).toContain(jasmine.objectContaining({
+    expect(ExternalNumberService.getPendingOrders()).toContain(jasmine.objectContaining({
       label: malformedAdvanceOrderLabel
     }));
   });
