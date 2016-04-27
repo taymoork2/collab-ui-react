@@ -17,6 +17,7 @@
       isDisabled: true,
       isUrlAvailable: false,
       isButtonDisabled: false,
+      isSipUriRegistered: false,
       isLoading: false,
       isConfirmed: null,
       urlValue: '',
@@ -52,6 +53,7 @@
           if (data.orgSettings.sipCloudDomain) {
             displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
             sipField.isButtonDisabled = true;
+            sipField.isSipUriRegistered = true;
             isAlreadyRegistered = true;
           } else if (data.verifiedDomains) {
             if (_.isArray(data.verifiedDomains)) {
@@ -59,7 +61,7 @@
             }
           } else if (data.displayName) {
             displayName = data.displayName.split(/[^A-Za-z]/)[0].toLowerCase();
-          } 
+          }
           sipField.isDisabled = isAlreadyRegistered;
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
@@ -108,6 +110,7 @@
               sipField.isError = false;
               sipField.isDisabled = true;
               sipField.isButtonDisabled = true;
+              sipField.isSipUriRegistered = true;
               Notification.success('firstTimeWizard.setSipUriDomainSuccessMessage');
               $rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
             }
