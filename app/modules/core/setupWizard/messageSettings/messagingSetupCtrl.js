@@ -11,6 +11,7 @@
     var msgIntFlag = false;
     var CurrentDataRetentionPeriod = null;
     vm.msgIntegration = false;
+    vm.appSecurity = false;
     vm.dataShare = true;
     vm.placeholder = 'Select retention time';
     vm.selected = {
@@ -36,7 +37,7 @@
     $scope.showMessengerInterop = false;
     $scope.showAppSecurity = false;
 
-    FeatureToggleService.supports(FeatureToggleService.features.appleEnhancement).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
       $scope.showAppSecurity = result;
     });
 
