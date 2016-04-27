@@ -84,24 +84,15 @@ namespace servicesLanding {
         .filter((service)=> {
           return _.indexOf(serviceIds, service.id) >= 0;
         })
-        .transform((result, serv, key)=> {
+        .reduce((result, serv:{enabled:boolean})=> {
           let enabled = this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-            console.log("service enable", serv, enabled);
-            return enabled;
+          return enabled;
         }, undefined)
-        // .reduce((result, serv:{enabled:boolean})=> {
-        //   let enabled = this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-        //   console.log("service enable", serv, enabled);
-        //   return enabled;
-        // }, undefined)
         .value();
-      console.log("service enabled2", serviceEnabled);
       return serviceEnabled;
     }
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
-      // _.reduce(callServices, function (result, serv) {
-      //   return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
       let callServiceStatus:string = _.chain(services)
         .filter((service)=> {
           let found = _.indexOf(serviceIds, service.id) >= 0;
@@ -109,11 +100,9 @@ namespace servicesLanding {
           return found;
         })
         .reduce((result, serv:{status:string})=> {
-          console.log("service red", result, serv);
           return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
         }, undefined)
         .value();
-      console.log("status ", callServiceStatus);
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
       }

@@ -27,7 +27,7 @@ namespace servicesLanding {
     }
 
     public updateWebexSiteList(data:{data:Array<{license:{siteUrl:string}}>}) {
-      console.log("update site",data);
+      // console.log("update site",data);
       if (!data || !data.data) {
         this._loading = false;
         return

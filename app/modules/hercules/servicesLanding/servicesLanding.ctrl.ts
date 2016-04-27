@@ -4,7 +4,7 @@ namespace servicesLanding {
     all,
     active
   }
-  class ServicesLandingCtrl {
+  export class ServicesLandingCtrl {
 
     private cards:Array<ServicesLandingCard>;
     private _feature = false;
@@ -36,11 +36,11 @@ namespace servicesLanding {
       });
     }
 
-    public hybridCards() {
+    get hybridCards() {
       return _.filter(this.cards, this.activeHybridCardFilter);
     }
 
-    public cloudCards() {
+    get cloudCards() {
       return _.filter(this.cards, {cardType: servicesLanding.CardType.cloud});
     }
 
@@ -54,7 +54,7 @@ namespace servicesLanding {
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-      console.log("forwarding event", eventArgs, "this", this);
+      // console.log("forwarding event", eventArgs, "this", this);
       _.each(this.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);
@@ -67,7 +67,6 @@ namespace servicesLanding {
         let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
         resolve(siteList);
       }).then((siteList)=> {
-        console.log("supersite", siteList);
         this.forwardEvent('updateWebexSiteList', siteList);
       });
 
