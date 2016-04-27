@@ -76,7 +76,7 @@
 
     function showUpgradeDialog() {
       $modal.open({
-        templateUrl: 'modules/hercules/expressway-service/software-upgrade-dialog.html',
+        templateUrl: 'modules/hercules/sw-upgrade/software-upgrade-dialog.html',
         controller: SoftwareUpgradeController,
         controllerAs: 'softwareUpgradeCtrl',
         resolve: {
@@ -121,10 +121,17 @@
     var vm = this;
 
     vm.upgrading = false;
+    vm.provisionedVersion = softwareUpgrade.provisionedVersion;
     vm.availableVersion = softwareUpgrade.availableVersion;
     vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
     vm.clusterName = cluster.name;
     vm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
+    vm.releaseNotes = '';
+
+    ClusterService.getReleaseNotes('GA', serviceType)
+      .then(function (res) {
+        vm.releaseNotes = res;
+    });
 
     vm.upgrade = function () {
       vm.upgrading = true;
