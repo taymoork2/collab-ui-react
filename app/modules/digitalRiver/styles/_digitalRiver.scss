@@ -3,6 +3,8 @@
   ************************************/
 
 @import '../submitOrder/submitOrder';
+@import '../onboard/confirmAdminOrg/drConfirmAdminOrg.scss';
+@import '../onboard/adminChoices/adminChoices.scss';
 
 div.dr-container {
 	display: table;
@@ -36,14 +38,6 @@ div.dr-pad {
 	padding-bottom: 10px;
 }
 
-button.dr-button {
-	background: #418FDE;
-}
-
-button.dr-button:hover {
-	background: #167FE8;
-}
-
 button.dr-pad {
 	padding-top: 20px;
 }
@@ -70,4 +64,13 @@ img.dr-left {
 	color: $color-negative-base;
 	width: 100%;
 	border: 0;
+	resize: none
+}
+
+#dr-status  {
+	background-color: white;
+	color: blue;
+	width: 100%;
+	border: 0;
+	resize: none
 }
