@@ -1,0 +1,20 @@
+///// Type ahead input box styling with icon ///////
+.typeahead-large {
+  .ct-input-hint {
+    border: 0;
+    border-top: solid rem(1px) $gray-light;
+    width: 100%;
+    text-align: center;
+    @include vr-spacing(p, 1);
+    color: $gray;
+    font-style: italic;
+  }
+
+  // Input control.
+  input {
+    height: 44px; // prevents Firefox from clipping top of text
+    &:focus ~ .ct-input-hint {
+      border-top: solid rem(1px) $brand-primary;
+    }
+  }
+}

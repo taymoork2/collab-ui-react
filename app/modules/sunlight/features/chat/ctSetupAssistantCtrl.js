@@ -40,6 +40,12 @@
     vm.leftArrow = 37;
     vm.rightArrow = 39;
 
+    //Template information
+    vm.templateJson = {
+      name: '',
+      mediaType: 'chat'
+    };
+
     function cancelModal() {
       $modal.open({
         templateUrl: 'modules/sunlight/features/chat/ctCancelModal.tpl.html'
@@ -73,7 +79,14 @@
     function nextButton() {
       if (vm.currentState === vm.states[vm.states.length - 1]) {
         return 'hidden';
+      } else if (vm.currentState === vm.states[0]) {
+        if (vm.templateJson.name === '') {
+          return false;
+        } else {
+          return true;
+        }
       }
+
       return true;
     }
 
@@ -96,6 +109,14 @@
       $timeout(function () {
         vm.currentState = vm.states[getPageIndex() - 1];
       }, vm.animationTimeout);
+    }
+
+    function enterNextPage($keyCode) {
+      if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
+        if (vm.templateJson.name !== '') {
+          nextPage();
+        }
+      }
     }
 
   }
