@@ -243,6 +243,11 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -317,6 +322,11 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -576,6 +586,11 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
