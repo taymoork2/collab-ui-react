@@ -13,6 +13,10 @@
     $scope.externalNumberPool = [];
     $scope.telephonyInfo = {};
 
+    $scope.searchStr = '';
+    $scope.timeoutVal = 1000;
+    $scope.timer = 0;
+
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -23,6 +27,7 @@
     $scope.mapDidToDn = mapDidToDn;
     $scope.resetDns = resetDns;
     $scope.syncGridDidDn = syncGridDidDn;
+    $scope.filterList = filterList;
     $scope.isMapped = false;
     $scope.isMapInProgress = false;
     $scope.isResetInProgress = false;
@@ -773,6 +778,20 @@
 
       return idList;
     };
+
+    function filterList(str) {
+      if ($scope.timer) {
+        $timeout.cancel($scope.timer);
+        $scope.timer = 0;
+      }
+
+      $scope.timer = $timeout(function () {
+        if (str.length >= 3 || str === '') {
+          $scope.searchStr = str;
+          getUnlicensedUsers();
+        }
+      }, $scope.timeoutVal);
+    }
 
     /**
      * get the list of selected account licenses on the dialog
@@ -1719,7 +1738,7 @@
             });
           }
         }
-      });
+      }, null, $scope.searchStr);
     };
 
     $scope.convertDisabled = function () {

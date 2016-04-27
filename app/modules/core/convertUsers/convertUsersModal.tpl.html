@@ -9,6 +9,10 @@
   </div>
   <div class="modal-body">
     <p><span translate="homePage.convertUsersText"></span></p>
+    <div class = "searchBar">
+      <cs-searchfilter filters="filters" search-item-fn="filterList(searchStr)" placeholder-text="Enter customer name or email address">
+      </cs-searchfilter>
+    </div>
     <div id="unlicensedUserList" ng-show="unlicensed > 0">
       <div id="unlicensedList" class="row">
         <div class="gridStyle grid-checkbox" ui-grid="convertGridOptions" ui-grid-selection ui-grid-save-state ></div>
