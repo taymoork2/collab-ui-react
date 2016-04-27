@@ -15,15 +15,13 @@
         </div>
         <div class="users-upload-csv">
             <div ng-if="!siteCSVImportModalCtrl.modal.file" class="file-drop" cr-file-drop
-                file="siteCSVImportModalCtrl.modal.file" file-name="siteCSVImportModalCtrl.modal.fileName" file-max-size="10"
-                file-max-size-error="siteCSVImportModalCtrl.onFileSizeError()"
+                file="siteCSVImportModalCtrl.modal.file" file-name="siteCSVImportModalCtrl.modal.fileName"
                 file-type="text/csv, application/csv, application/vnd.ms-excel"
                 file-suffix="csv" file-type-error="siteCSVImportModalCtrl.onFileTypeError()">
                 <div class="file-drop-content">
                     <div class="icon icon-circle-upload center"></div>
                     <input id="upload" name="upload" type="file" cr-file-read
-                        file="siteCSVImportModalCtrl.modal.file" file-name="siteCSVImportModalCtrl.modal.fileName" file-max-size="10"
-                        file-max-size-error="siteCSVImportModalCtrl.onFileSizeError()"
+                        file="siteCSVImportModalCtrl.modal.file" file-name="siteCSVImportModalCtrl.modal.fileName"
                         file-type="text/csv, application/csv, application/vnd.ms-excel"
                         file-suffix="csv" file-type-error="siteCSVImportModalCtrl.onFileTypeError()" />
                         <span translate="firstTimeWizard.uploadPrompt"></span>

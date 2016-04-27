@@ -20,50 +20,42 @@
     vm.downloading = false;
 
     function downloadCsv() {
-      var logMsg = "";
-
       if (vm.type) {
         $scope.$emit('download-start');
 
-        if (
-          (vm.type == WebExCsvDownloadService.typeWebExExport) ||
-          (vm.type == WebExCsvDownloadService.typeWebExImport)
-        ) {
-
-          WebExCsvDownloadService.getWebExCsv(
-            vm.type,
-            vm.fileDownloadUrl
+        if (vm.type == WebExCsvDownloadService.typeExport) {
+          WebExCsvDownloadService.getCsv(
+            vm.type
           ).then(
-
             function (csvData) {
               var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }
-
           ).catch(
-
             function (response) {
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
             }
           );
         } else {
-          WebExCsvDownloadService.getCsv(vm.type).then(
+          WebExCsvDownloadService.getWebExCsv(
+            vm.fileDownloadUrl
+          ).then(
             function (csvData) {
-              var objectUrl = WebExCsvDownloadService.createObjectUrl(csvData.content);
+              var objectUrl = WebExCsvDownloadService.webexCreateObjectUrl(csvData.content);
 
               $scope.$emit('downloaded', objectUrl);
             }
-
           ).catch(
             function (response) {
               Notification.errorResponse(response, 'firstTimeWizard.downloadError');
+              $scope.$emit('download-error');
             }
           );
         }
       }
-    }
-  }
+    } // downloadCsv()
+  } // webexCsvDownloadCtrl()
 
   /* @ngInject */
   function webexCsvDownload(
@@ -125,6 +117,11 @@
         );
       });
 
+      scope.$on('download-error', function () {
+        scope.webexCsvDownload.downloading = false;
+        // changeAnchorAttrToOriginalState();
+      });
+
       if (attrs.filedownloadurl) {
         scope.webexCsvDownload.fileDownloadUrl = attrs.filedownloadurl;
       }
@@ -144,7 +141,7 @@
             download: attrs.filename
           }).removeAttr('disabled');
         });
-      }
+      } // changeAnchorAttrToDownload()
 
       function changeAnchorAttrToOriginalState() {
         $timeout(function () {
@@ -154,7 +151,7 @@
             href: ''
           }).removeAttr('download');
         });
-      }
-    }
-  }
+      } // changeAnchorAttrToOriginalState()
+    } // link()
+  } // webexCsvDownloadCtrl()
 })();

@@ -117,7 +117,7 @@
 
     function notifyError(response) {
       Notification.errorResponse(response, 'errors.statusError', {
-        status: status
+        status: response.status
       });
     }
   }

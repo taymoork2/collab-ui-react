@@ -9,7 +9,8 @@
 
     var _types = {
       CUSTOMER_TRIAL: '1',
-      NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST: '15'
+      NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST: '15',
+      NEW_DR_ORDER_WELCOME: '20'
     };
     var _helpers = {
       mkTrialPayload: mkTrialPayload,
@@ -21,6 +22,7 @@
       emailNotifyTrialCustomer: emailNotifyTrialCustomer,
       emailNotifyOrganizationCustomer: emailNotifyOrganizationCustomer,
       emailNotifyPartnerTrialConversionRequest: emailNotifyPartnerTrialConversionRequest,
+      emailDRWelcomeRequest: emailDRWelcomeRequest,
       _types: _types,
       _helpers: _helpers
     };
@@ -64,6 +66,19 @@
     // TODO: mv implemention to backend, front-end should shouldn't need this many properties
     function emailNotifyPartnerTrialConversionRequest(customerName, customerEmail, partnerEmail) {
       var emailData = mkTrialConversionReqPayload(customerName, customerEmail, partnerEmail);
+      return email(emailData);
+    }
+
+    function emailDRWelcomeRequest(customerEmail, uuid, orderId) {
+      var emailData = {
+        type: _types.NEW_DR_ORDER_WELCOME,
+        properties: {
+          EMAIL_ADDRESS: customerEmail,
+          BUYER_UUID: uuid,
+          ORDER_ID: orderId,
+          SUBJECT: 'Setup your Cisco Spark Service'
+        }
+      };
       return email(emailData);
     }
 

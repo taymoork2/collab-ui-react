@@ -104,7 +104,9 @@
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report.",
     "claimedDomainError": "{{email}} cannot be added. User domains must be the same as one of your organization’s claimed domains or be unclaimed by a different organization, if your organization has not claimed a domain.",
-    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization."
+    "userExistsInDiffOrgError": "{{email}} cannot be added. The user already exists in a different organization.",
+    "unauthorizedError": "{{email}} cannot be added. You are not authorized to invite this user.",
+    "telstraAppRedirect": "Connecting to Telstra App Marketplace"
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -259,7 +261,9 @@
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Hybrid Services: Management",
     "expresswayManagementServiceTabDesc": "Expressway Management Service",
-    "helpdesk": "Help Desk"
+    "helpdesk": "Help Desk",
+    "careTab": "Care",
+    "careTabDesc": "Cloud Contact Center"
   },
   "index": {
     "welcome": "Welcome!",
@@ -885,7 +889,14 @@
     "finalDisableSSO": "The test was unsuccessful. Disable Single Sign On.",
     "disableFailed": "Failed to disable Single Sign On",
     "disableSuccess": "Single Sign-On (SSO) successfully disabled for all users",
-    "enableSSOFailure": "Failed to enable Single Sign-On (SSO)."
+    "enableSSOFailure": "Failed to enable Single Sign-On (SSO).",
+    "modifySSOLabel": "Modify",
+    "ssoEnabledStatus": "Single sign-on is enabled",
+    "ssoNotEnabledStatus": "Single sign-on is not enabled",
+    "ssoModifyWarning": "SSO is Enabled <br/> Changing settings could invalidate the connection.",
+    "idpOverwriteWarning": "Are you Sure? Single Sign-On is currently enabled. Importing a new metadata file will invalidate your existing configuration. If you proceed you cannot revert to your previous SSO configuration. Do you want to continue?",
+    "disableSSOByRadioWarning": "Are you sure? Your existing SSO configuration will be disabled. All users will now begin using the built-in authentication in Spark and may need assistance establishing or resetting their passwords. You will not be able to undo this selection, but can re-enable SSO again from Enterprise Settings. Do you want to continue? ",
+    "ssoDisableSuccessNotification": "SSO is disabled <br/> User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
     "timeZone": "Time Zone",
@@ -1091,13 +1102,14 @@
       "modalText2": "Select the type of information that you want included in the report:",
       "modalNote": "Note: The more users included, the longer the report takes to generate.",
       "modalCTA": "Export to CSV",
-      "csvFilename": "user_status_report.csv"
+      "guesstimate": "Selection estimated to {{minutes}}min {{seconds}}s"
     },
     "overview": {
       "activated": "{{number}} activated",
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
+      "report": "Report",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add a Resource",
@@ -1242,6 +1254,7 @@
       "upgradingHost": "Upgrading {{host}} to {{version}}",
       "upgradeDone": "Upgrade completed!",
       "upToDate": "{{connectorType}} is up to date on this cluster.",
+      "upgradePossible": "A new version is available for {{connectorType}}: {{availableVersion}}.",
       "upgradeImpossible": "{{connectorType}} is not configured on this cluster. Configure and start it before initiating an upgrade."
     },
     "settings": {
@@ -1267,6 +1280,15 @@
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
+        "certificatesEmailAddress": "Email Address",
+        "certificatesCommonName": "Common Name",
+        "certificatesOrganizationalUnit": "Organizational Unit",
+        "certificatesOrganization": "Organization",
+        "certificatesLocality": "Locality",
+        "certificatesStateOrProvince": "State/Province",
+        "certificatesCountry": "Country",
+        "certificatesCreated": "Created",
+        "certificatesExpires": "Expires",
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
@@ -1586,6 +1608,7 @@
     "scheduleOpenClosed": "Open/Closed",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
+    "scheduleClosedHolidays": "Closed/Holidays",
     "scheduleHolidays": "Holidays",
     "hoursMissing": "No hours defined.",
     "holidaysMissing": "No holidays defined.",
@@ -1633,6 +1656,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
+    "sayMessageInvalidChar": "Invalid character. Character '{{char}}' is not allowed.",
     "scheduleAddAdditionalHolidays": "Add Holidays",
     "selectDate": "Select Date",
     "allDay": "All Day",
@@ -1644,7 +1668,7 @@
     "selectAA": "Select Auto Attendant",
     "importSchedule": "Import Schedule",
     "importDesc": "Select an existing Auto Attendant to import the Open/Closed and Holiday schedule from",
-    "closedBehavious": "Holidays Follow Closed Behavior",
+    "closedBehaviour": "Holidays Follow Closed Behavior",
     "failureImport": "Failed to retrieve schedules. Status: {{status}} ",
     "voices": {
       "male": "male",
@@ -2343,7 +2367,8 @@
     "deviceCodeExpires": "The current activation code will expire {{inXDays}}",
     "getNewCode": "Get a New Code",
     "channelUpdated": "Software Update Channel updated",
-    "channelUpdateFailed": "Device did not update its Software Update Channel in time"
+    "channelUpdateFailed": "Device did not update its Software Update Channel in time",
+    "logUploadWarning": "Selecting 'Report Issue' will send the device logs to Cisco."
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -2586,7 +2611,10 @@
       "grant-registration-success-header-new-cluster": "You can now register the media server <strong>{{hostname}}</strong>, belonging to the new cluster <strong>{{clustername}}</strong> with Cisco Collaboration Cloud.",
       "grant-success-information": "Go to your Media Server within one hour to finish registration.",
       "next": "Next",
-      "back": "Back"
+      "back": "Back",
+      "errorTitle": "Registration Error",
+      "errorOnlineText": "The media server that you're registering already exists and is online.",
+      "errorOfflineText": "The media server that you're registering already exists and is offline. Deregister the existing server before you try again."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2935,7 +2963,9 @@
     "recorded_session_access": "Recorded Session Access",
     "coupon_usage": "Coupon Usage",
     "training_record_attendee": "Training Record Attendee",
-    "access_anywhere_usage": "Access Anywhere Usage"
+    "access_anywhere_usage": "Access Anywhere Usage",
+
+    "adminReportNotEnabled": "Reports are not enabled for this site"
   },
   "webexReportsPageTitles": {
     "meeting_in_progess": "Meetings in Progress",
@@ -3072,7 +3102,12 @@
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
     "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
-    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization."
+    "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization.",
+    "crashReportTitle": "Automatic Crash Reporting",
+    "crashReportText": "If an endpoint crashes, logs will be uploaded to Cisco to help improve the quality of the service.",
+    "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
+    "crashReportTooltipDescription": "What do these reports contain?",
+    "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
   },
   "fileUpload": {
     "uploading": "Uploading File",
@@ -3155,6 +3190,7 @@
     "licenseTypes": "License Types",
     "siteSettings": "Configure",
     "siteReports": "Reports",
+    "siteActions": "Actions",
     "siteCsvColumnHeader": "User Attributes",
     "siteCsvExportLinkLabel": "Export",
     "siteCsvExportInProgressLinkLabel": "Exporting...",
@@ -3164,6 +3200,7 @@
     "siteCsvDownloadLinkLabel": "Download file",
     "siteCsvImportResultsLinkLabel": "Import Results",
     "userAttributesTooltip": "Modify user attributes for multiple WebEx users at once using a spreadsheet program. Export your users into a .csv file, edit user information, and import the updated .csv file back into the WebEx site.",
+    "bulkModifyUserAttributesTooltip": "Bulk Modify User Attributes",
     "exportBlockedTooltip": "In order to Export, you must wait for Import to complete.",
     "exportInProgressTooltip": "This export may take a while. The export will continue until completed, even if you log out, or import or export user attributes on another site. A download link will appear on this page when ready.",
     "exportFinishedWithErrorsTooltip": "Export finished with errors",
@@ -3183,9 +3220,10 @@
     "asyncErrorMessage": "Unable to retrieve current status.",
     "siteCSVNotAvailable": "Not available",
     "siteCSVNotAvailableTooltip": "You must upgrade this site to access this feature",
-    "authError": "Cannot authenticate. Check your entitlement for this site.",
-    "systemError": "Unable to communicate with this WebEx site. Contact support.",
-    "multipleLicenses": "Multiple..."
+    "authError": "You are not entitled to access this site.",
+    "systemError": "Unable to connect to site.",
+    "multipleLicenses": "Multiple...",
+    "checkingServices": "Checking services..."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -3510,29 +3548,75 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "title": "Atlas Portal Shopping Cart Login (APSCL)",
-      "header": "Enter eMail Addr",
-      "emailPlaceholder": "Ex. x@y.com",
+      "startTrial": "To start a Spark trial you must create an account.",
+      "enterEmail": "Please enter account email address",
+      "emailPlaceholder": "Enter email address",
       "validation": {
-        "emptyEmail": "The email address cannot be blank"
-      }
+        "emptyEmail": "The email address is missing or invalid."
+      },
+      "domainClaimed": "We have matched your domain to an organization that does not allow accounts to be added. Please provide an alternate email address to continue."
     },
     "createAccount": {
-      "title": "Create Account",
-      "passwordLabel": "Enter your password:",
-      "confirmPlaceholder": "confirm",
+      "noAccount": "{{email}} does not have an account. Please create one:",
+      "passwordLabel": "Enter your password",
+      "confirmEmailPlaceholder": "Verify email address",
+      "passwordPlaceholder": "Enter password",
+      "confirmPasswordPlaceholder": "Verify password",
+      "createAccount": "Create Account",
       "validation": {
-        "emptyEmail": "Empty email",
-        "emptyPassword": "Empty password",
-        "emailsDontMatch": "Emails do not match",
-        "passwordsDontMatch": "Passwords do not match"
+        "emptyEmail": "An email address is missing or invalid.",
+        "emptyPassword": "A password is missing.",
+        "emailsDontMatch": "The email addresses do not match.",
+        "passwordsDontMatch": "The passwords do not match.",
+        "accountExists": "An account with that email address already exists."
       }
     },
+    "submitOrder": {
+      "submitting": "Submitting Order...",
+      "activate": "Click the Activate button below to start your subscription and begin using your new service.",
+      "newUser": "Thank you for your purchase. An activation email has been sent to {{email}}. Please click the Get Started button in the email to start your subscription and begin using your new service.",
+      "missingEmail": "It has been over 30 minutes and I still have not received the email.",
+      "userError": "An error occurred while retrieving the user.",
+      "submitError": "An error occurred while submitting the order."
+    },
+    "drOnboardQuestion": {
+      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Spark services?"
+    },
+    "drConfirmAdminOrg": {
+      "useDifferentName": "Use Different Name",
+      "companyAndOrg1": "We have matched your email address to the following organization:",
+      "companyAndOrg2": "Would you like to assign the Spark services to this organization?"
+    },
+    "drOnboardEnterAdminEmail": {
+      "adminEmailLabel": "Please enter the email address of the person who will be managing the Spark services"
+    },
+    "orgName": {
+      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Spark services, etc.",
+      "enterOrgName": "Enter Company Name",
+      "missingOrgName": "The Company Name is missing."
+    },
+    "adminChoices": {
+      "header1": "We have matched your email address to the existing organization {{orgName}}. However, you do not have admin privileges for this organization.",
+      "header2": "You have the following choices:",
+      "choice1a": "Send a request to receive admin privileges",
+      "choice1b": "Once you have been assigned admin privileges you can restart the process by clicking on the button in the Welcome email again or going to the <Screen 15> page.",
+      "choice2": "Allow the Admin of this organization to manage the service(s) I purchased",
+      "choice3a": "Create a new organization to manage the service(s)",
+      "choice3b": "Note you will not be able to assign Spark licenses you just purchased to anyone in your current organization if you choose this option."
+    },
     "validation": {
+      "missingSKU": "The order is missing a SKU.",
+      "invalidOrder": "The order information is missing or invalid.",
       "unexpectedError": "Unexpected error"
     },
+    "restrictedPage": "Restricted Page",
+    "ciscoSpark": "Cisco Spark",
     "emailLabel": "Enter your email address:",
-    "nextButton": "Next"
+    "nextButton": "Next",
+    "submitButton": "Submit",
+    "activateButton": "Activate",
+    "continue": "Continue",
+    "sentEmail": "Thank you. An email has been sent to {{email}}"
   },
   "overview": {
     "pageTitle": "Overview",

@@ -13,7 +13,10 @@ describe('Controller: CustomerListCtrl', function () {
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
-    customerEmail: 'customer@cisco.com'
+    customerEmail: 'customer@cisco.com',
+    communications: {
+      isTrial: false
+    }
   };
   var numberResponse = {
     numbers: [1, 2, 3]
@@ -106,7 +109,8 @@ describe('Controller: CustomerListCtrl', function () {
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
-        customerEmail: testOrg.customerEmail
+        customerEmail: testOrg.customerEmail,
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
       });
     });
 
@@ -117,7 +121,8 @@ describe('Controller: CustomerListCtrl', function () {
       expect($state.go).toHaveBeenCalledWith('pstnSetup', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
-        customerEmail: testOrg.customerEmail
+        customerEmail: testOrg.customerEmail,
+        customerCommunicationLicenseIsTrial: testOrg.communications.isTrial
       });
     });
   });
@@ -137,4 +142,85 @@ describe('Controller: CustomerListCtrl', function () {
 
   });
 
+  describe('customerCommunicationLicenseIsTrial flag', function () {
+    beforeEach(initController);
+
+    it('should be true if communication license is a trial.', function () {
+      var org = {
+        customerOrgId: '1234-34534-afdagfg-425345-afaf',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer@cisco.com',
+        communications: {
+          isTrial: true
+        }
+      };
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $scope.addNumbers(org);
+      $httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail,
+        customerCommunicationLicenseIsTrial: true
+      });
+    });
+
+    it('should be false if communication license is not a trial.', function () {
+      var org = {
+        customerOrgId: '1234-34534-afdagfg-425345-afaf',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer@cisco.com',
+        communications: {
+          isTrial: false
+        }
+      };
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $scope.addNumbers(org);
+      $httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail,
+        customerCommunicationLicenseIsTrial: false
+      });
+    });
+
+    it('should be true if trial data is missing.', function () {
+      var org = {
+        customerOrgId: '1234-34534-afdagfg-425345-afaf',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer@cisco.com'
+      };
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $scope.addNumbers(org);
+      $httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail,
+        customerCommunicationLicenseIsTrial: true
+      });
+    });
+
+    it('should always be false if isPartner is true.', function () {
+      var org = {
+        customerOrgId: '1234-34534-afdagfg-425345-afaf',
+        customerName: 'ControllerTestOrg',
+        customerEmail: 'customer@cisco.com',
+        isPartner: true,
+        communications: {
+          isTrial: true
+        }
+      };
+      $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + org.customerOrgId).respond(200);
+      $scope.addNumbers(org);
+      $httpBackend.flush();
+      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+        customerId: org.customerOrgId,
+        customerName: org.customerName,
+        customerEmail: org.customerEmail,
+        customerCommunicationLicenseIsTrial: false
+      });
+    });
+  });
 });

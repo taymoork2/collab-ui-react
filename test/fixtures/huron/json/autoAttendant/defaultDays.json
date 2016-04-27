@@ -16,9 +16,9 @@
     "active": true
   }, {
     "label": "Saturday",
-    "active": false
+    "active": true
   }, {
     "label": "Sunday",
-    "active": false
+    "active": true
   }]
 }

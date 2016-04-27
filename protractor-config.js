@@ -1,6 +1,7 @@
 'use strict';
 
-/*global jasmine, browser, _*/
+/* eslint global-require:0 */
+/* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
@@ -42,6 +43,18 @@ exports.config = {
     shardTestFiles: true,
     maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
   },
+
+  plugins: [{
+    package: 'protractor-console-plugin',
+    failOnWarning: false, // (Default - false),
+    failOnError: false,   // (Default - true),
+    logWarnings: true,    // (Default - true),
+    exclude: [            // Array of strings and regex (Default - [])
+      /executionContextId/,
+      /object Object/,
+      /favicon/
+    ]
+  }],
 
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
@@ -114,6 +127,8 @@ exports.config = {
     var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
     var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
     var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
+    var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
+    var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -155,6 +170,8 @@ exports.config = {
     global.huntGroup = new HuntGroup();
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
+    global.careLandingPage = new CareLandingPage();
+    global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
 
     function initReporters(config) {
       var testFile = _.chain(config).get('specs[0]', '').split(config.configDir).takeRight().trimLeft('/').value();

@@ -2,8 +2,8 @@
 
 //Defining a MeetingListService.
 angular.module('Mediafusion')
-  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig',
-    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig) {
+  .service('MeetingListService', ['$http', '$rootScope', 'Config', 'Authinfo', 'Log', 'Utils', 'Auth', 'UrlConfig', '$window',
+    function ($http, $rootScope, Config, Authinfo, Log, Utils, Auth, UrlConfig, $window) {
 
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
@@ -23,7 +23,7 @@ angular.module('Mediafusion')
 
           if (searchString !== '' && typeof (searchString) !== 'undefined') {
             meetingSearchUrl = meetingListUrl + '?' + searchfilter + "&" + queryParams;
-            encodedSearchStr = window.encodeURIComponent(searchString);
+            encodedSearchStr = $window.encodeURIComponent(searchString);
             meetingListUrl = Utils.sprintf(meetingSearchUrl, [encodedSearchStr]);
           } else {
             meetingListUrl = meetingListUrl + '?' + queryParams;

@@ -64,7 +64,8 @@ describe('Controller: PartnerProfileCtrl', function () {
           helpUrl: 'helpUrl',
           isCiscoHelp: false,
           isCiscoSupport: false,
-          allowReadOnlyAccess: false
+          allowReadOnlyAccess: false,
+          allowCrashLogUpload: false
         };
         expect(Orgservice.setOrgSettings).toHaveBeenCalledWith(null, expectedOrgSettings);
       });
@@ -104,7 +105,7 @@ describe('Controller: PartnerProfileCtrl', function () {
       it('when update fails', saveAndNotifyErrorResponse);
 
       function initSpyFailure() {
-        Orgservice.setOrgSettings.and.returnValue($q.reject());
+        Orgservice.setOrgSettings.and.returnValue($q.reject({}));
       }
 
       function saveAndNotifyErrorResponse() {

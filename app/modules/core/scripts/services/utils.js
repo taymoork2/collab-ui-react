@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Utils', ['$rootScope', '$location',
-    function ($rootScope, $location) {
+  .factory('Utils', ['$rootScope', '$location', '$window',
+    function ($rootScope, $location, $window) {
 
       var guid = (function () {
         function s4() {
@@ -141,7 +141,7 @@ angular.module('Core')
         },
 
         isIPhone: function () {
-          if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
+          if ($window.navigator.userAgent.match(/iPhone/i) || $window.navigator.userAgent.match(/iPod/i) || $window.navigator.userAgent.match(/iPad/i)) {
             return true;
           } else {
             return false;
@@ -149,7 +149,7 @@ angular.module('Core')
         },
 
         isAndroid: function () {
-          if (navigator.userAgent.match(/Android/i)) {
+          if ($window.navigator.userAgent.match(/Android/i)) {
             return true;
           } else {
             return false;
@@ -157,7 +157,7 @@ angular.module('Core')
         },
 
         isWindowsPhone: function () {
-          if (navigator.userAgent.match(/WPDesktop/i) || navigator.userAgent.match(/Windows Phone/i)) {
+          if ($window.navigator.userAgent.match(/WPDesktop/i) || $window.navigator.userAgent.match(/Windows Phone/i)) {
             return true;
           } else {
             return false;
@@ -251,6 +251,19 @@ angular.module('Core')
             }
           }
           return entitlements;
+        },
+
+        // Remove when Microsoft fixes flexbox problem when min-height is defined (in messagebox-small).
+        isIe: function () {
+          return ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
+        },
+
+        checkForIeWorkaround: function () {
+          if (this.isIe()) {
+            return "vertical-ie-workaround";
+          } else {
+            return "";
+          }
         }
 
       };

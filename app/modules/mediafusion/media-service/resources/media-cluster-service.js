@@ -72,6 +72,11 @@
       });
     };
 
+    var getClusterList = function () {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
+      return $http.get(url).then(extractDataFromResponse);
+    };
+
     var getConnector = function (connectorId) {
       var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
@@ -201,7 +206,8 @@
       getAggegatedClusters: getAggegatedClusters,
       getPropertySet: getPropertySet,
       setPropertySet: setPropertySet,
-      getOrganization: getOrganization
+      getOrganization: getOrganization,
+      getClusterList: getClusterList
     };
   }
 

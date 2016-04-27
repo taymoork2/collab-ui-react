@@ -19,12 +19,23 @@
   }
 
   /* @ngInject */
-  function ShowReadOnly($modal, Authinfo, $translate) {
+  function ShowReadOnly($modal, Authinfo, $translate, $window) {
 
     function link(scope, element, attributes) {
       if (Authinfo.isReadOnlyAdmin()) {
-        element.prepend('<div class="read-only-banner">' + $translate.instant('readOnlyModal.banner') +
-          '</div>');
+        var wrapper = angular.element('.wrapper');
+        wrapper.css('padding-top', '6rem');
+        element.prepend('<div class="read-only-banner">' + $translate.instant('readOnlyModal.banner') + '</div>');
+        var observer = new $window.MutationObserver(function () {
+          var sidePanel = angular.element('div.side-panel');
+          sidePanel.addClass('side-panel-correction');
+        });
+
+        observer.observe($window.document.body, {
+          childList: true,
+          subtree: true
+        });
+
       }
     }
 

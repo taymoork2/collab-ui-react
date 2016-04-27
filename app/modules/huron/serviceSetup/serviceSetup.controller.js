@@ -213,7 +213,7 @@
             return vm.timeZoneToggleEnabled;
           },
           'templateOptions.disabled': function () {
-            return !vm.timeZoneToggleEnabled;
+            return !vm.timeZoneToggleEnabled && !vm.firstTimeSetup;
           }
         }
       }, {
@@ -604,8 +604,10 @@
               vm.model.site.siteCode = site.siteCode;
               vm.model.site.vmCluster = site.vmCluster;
               vm.model.site.emergencyCallBackNumber = site.emergencyCallBackNumber;
-              vm.model.site.timeZone = site.timeZone;
-              vm.previousTimeZone = site.timeZone;
+              vm.model.site.timeZone = _.find(vm.timeZoneOptions, function (timezone) {
+                return timezone.value === site.timeZone;
+              });
+              vm.previousTimeZone = vm.model.site.timeZone;
             });
           }
         });

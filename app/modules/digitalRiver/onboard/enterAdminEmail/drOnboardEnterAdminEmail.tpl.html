@@ -1,0 +1,27 @@
+<div class="dr-container">
+    <div class="dr-row" ng-hide="drOnboardEnterAdminEmailController.error == null">
+        <textarea rows="2" cols="50" ng-model="drOnboardEnterAdminEmailController.error" readonly="readonly" id="dr-error"/>
+    </div>
+    <div class="dr-row" ng-hide="drOnboardEnterAdminEmailController.status == null">
+        <textarea rows="2" cols="50" ng-model="drOnboardEnterAdminEmailController.status" readonly="readonly" id="dr-status"/>
+    </div>
+    <div class="dr-row">
+        <div class="dr-center dr-pad" id="dr-onboard-admin-email-label" translate="digitalRiver.drOnboardEnterAdminEmail.adminEmailLabel" />
+        <div class="dr-right" />
+    </div>
+    <div class="dr-row">
+        <div class="dr-center dr-pad">
+            <input class="dr-center" type="email" autofocus ng-model="drOnboardEnterAdminEmailController.email1" placeholder="{{drOnboardEnterAdminEmailController.emailPlaceholder()}}">
+        </div>
+    </div>
+    <div class="dr-row">
+        <div class="dr-center dr-pad">
+            <input class="dr-center" type="email" ng-model="drOnboardEnterAdminEmailController.email2" placeholder="{{drOnboardEnterAdminEmailController.confirmEmailPlaceholder()}}">
+        </div>
+    </div>
+    <div class="dr-row">
+         <div class="dr-button">
+           <button class="btn btn--primary" id="dr-enter-email-addr-next" ng-disabled="drOnboardEnterAdminEmailController.isSubmitted" ng-click="drOnboardEnterAdminEmailController.handleEnterEmailAddr()" translate="common.ok" />
+        </div>
+    </div>
+</div>

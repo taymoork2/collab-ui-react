@@ -14,7 +14,7 @@
   }
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, FeatureToggleService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnSetup, PstnSetupService, TelephoneNumberService, TerminusStateService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnSetup.getProvider();
@@ -29,7 +29,7 @@
     };
     vm.orderNumbersTotal = 0;
     vm.showAdvancedOrder = false;
-    vm.showPortNumbers = false;
+    vm.showPortNumbers = !PstnSetup.getIsTrial();
     var ADVANCED_ORDERS = PstnSetupService.ADVANCED_ORDERS;
     var PORT_ORDERS = PstnSetupService.PORT_ORDERS;
     var NEW_ORDERS = PstnSetupService.NEW_ORDERS;
@@ -193,11 +193,6 @@
     }];
 
     ////////////////////////
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPstnPort)
-      .then(function (isSupported) {
-        vm.showPortNumbers = !PstnSetup.getIsTrial() && isSupported;
-      });
 
     function getStateInventory() {
       PstnSetupService.getCarrierInventory(PstnSetup.getProviderId(), vm.model.state.abbreviation)

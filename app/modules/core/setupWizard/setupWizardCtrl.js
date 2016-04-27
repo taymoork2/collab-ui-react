@@ -103,7 +103,7 @@
       $q.all([FeatureToggleService.supportsDirSync(), FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)])
         .then(function (result) {
           $scope.isDirSyncEnabled = result[0];
-          $scope.isTelstraCsbEnabled = result[1];
+          $scope.isCSB = Authinfo.isCSB() && result[1];
         }).finally(init);
     }
 
@@ -143,7 +143,7 @@
         });
       }
 
-      if ($scope.isTelstraCsbEnabled) {
+      if ($scope.isCSB) {
         _.remove($scope.tabs, {
           name: 'addUsers'
         });

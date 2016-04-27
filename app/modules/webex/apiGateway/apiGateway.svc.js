@@ -1,5 +1,7 @@
 'use strict';
 
+/* global Uint8Array:false */
+
 angular.module('WebExApp').service('WebExApiGatewayService', [
   '$rootScope',
   '$q',
@@ -11,6 +13,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
   'WebExXmlApiInfoSvc',
   'WebExRestApiFact',
   'WebExApiGatewayConstsService',
+  '$window',
 
   function (
     $rootScope,
@@ -22,7 +25,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     WebExXmlApiFact,
     webExXmlApiInfoObj,
     WebExRestApiFact,
-    WebExApiGatewayConstsService
+    WebExApiGatewayConstsService,
+    $window
   ) {
 
     var _this = this;
@@ -82,7 +86,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         "mockFlag=" + mockFlag + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
+      // $log.log(logMsg);
 
       var successResult = {
         siteUrl: siteUrl,
@@ -114,7 +118,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
           logMsg = funcName + "\n" +
             "response=" + JSON.stringify(response);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           successResult.details = response;
           errorResult.details = response;
@@ -269,6 +273,57 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       return deferredResponse.promise;
     }; // csvExport()
 
+    this.transformImportFile = function (csvFile) {
+
+      var funcName = 'transformImportFile()';
+      var logMsg = '';
+
+      logMsg = funcName + ': ' + 'csvFile=' + csvFile;
+      //$log.log(logMsg);
+
+      var byteArray = [];
+      var header = '%ff%fe';
+
+      header.replace(/([0-9a-f]{2})/gi, function (byte) {
+        byteArray.push(parseInt(byte, 16));
+      });
+
+      var newDataArray = [];
+      var newDataCount = 0;
+
+      for (var i = 0; i < csvFile.length; i++) {
+        var hexByte = null;
+
+        if ("\t" == csvFile[i]) {
+          hexByte = "%09";
+        } else if ("\n" == csvFile[i]) {
+          hexByte = "%0A";
+          // $log.log("newDataCount=" + newDataCount + "; hexByte=" + hexByte);
+        } else {
+          hexByte = csvFile[i].charCodeAt(0).toString(16);
+        }
+
+        newDataArray = newDataArray.concat(hexByte);
+        newDataArray = newDataArray.concat('%00');
+
+        newDataCount = newDataCount + 2;
+      }
+
+      var newDataStr = newDataArray.toString();
+
+      newDataStr.replace(/([0-9a-f]{2})/gi, function (byte) {
+        byteArray.push(parseInt(byte, 16));
+      });
+
+      var newData = new Uint8Array(byteArray);
+
+      var blob = new $window.Blob([newData], {
+        type: 'text/csv;charset=UTF-16LE;'
+      });
+
+      return blob;
+    }; //transformImportFile()
+
     this.csvImport = function (
       vm
     ) {
@@ -281,8 +336,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       var csvFile = vm.modal.file;
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + '\n' +
-        'mockFlag=' + mockFlag;
-      // $log.log(logMsg);
+        'mockFlag=' + mockFlag + ' csvFile=' + csvFile;
+      //$log.log(logMsg);
 
       var successResult = {
         'siteUrl': siteUrl,
@@ -301,14 +356,16 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
         WebExApiGatewayConstsService.csvRequests.csvImport
       );
 
-      csvHttpsObj.data.file = csvFile;
+      var fd = new $window.FormData();
+      fd.append("importCsvFile", _this.transformImportFile(csvFile));
+
+      csvHttpsObj.data = fd;
 
       logMsg = funcName + ': ' + 'siteUrl=' + siteUrl + "\n" +
         "csvHttpsObj=" + JSON.stringify(csvHttpsObj);
-      $log.log(logMsg);
+      //$log.log(logMsg);
 
       var deferredResponse = $q.defer();
-      var mockFlag = false;
 
       WebExRestApiFact.csvApiRequest(
         mockFlag,
