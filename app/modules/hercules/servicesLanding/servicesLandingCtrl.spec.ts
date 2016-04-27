@@ -2,7 +2,7 @@
 /// <reference path="servicesLanding.ctrl.ts"/>
 namespace servicesLanding {
 
-  fdescribe('ServiceLandingCtrl', ()=> {
+  describe('ServiceLandingCtrl', ()=> {
 
     let Config, $q, $rootScope, $httpBackend;
 
