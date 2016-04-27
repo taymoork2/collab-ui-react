@@ -30,19 +30,27 @@
       var aaRecordScheduleID = aaModel.aaRecord.scheduleId;
 
       AACalendarService.listCalendars().then(function (data) {
-        vm.options = _.filter(data, function (obj) {
+        vm.options = _.map(_.filter(data, function (obj) {
           var scheduleID;
 
-          if (obj.scheduleUrl) {
-            scheduleID = obj.scheduleUrl.split('/schedules/')[1];
+          /* remove bad URLs here */
+          if (!obj.scheduleUrl) {
+            return false;
           }
 
+          scheduleID = obj.scheduleUrl.split('/schedules/')[1];
+
           if (scheduleID && scheduleID.localeCompare(aaRecordScheduleID) !== 0) {
-            return {
-              label: obj.scheduleName,
-              value: scheduleID 
-            };
+            return true;
           }
+
+          return false;
+
+        }), function (obj) {
+          return {
+            label: obj.scheduleName,
+            value: obj.scheduleUrl.split('/schedules/')[1]
+          };
         });
 
       }, function (response) {
