@@ -3,7 +3,9 @@
 describe('Controller: AAScheduleImportCtrl', function () {
   var $scope, controller, $modalInstance, AACalendarService, AAICalService, AAModelService, $translate, $q;
   var aaModel = {
-    aaRecord : {scheduleId : 'url-1'},
+    aaRecord: {
+      scheduleId: 'url-1'
+    },
     aaRecords: [{
       callExperienceURL: 'url-1',
       callExperienceName: 'AA1'
