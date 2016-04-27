@@ -25,13 +25,36 @@
     }
 
     function activate() {
+      var aaModel = AAModelService.getAAModel();
+
+      var aaRecordScheduleID = aaModel.aaRecord.scheduleId;
+
       AACalendarService.listCalendars().then(function (data) {
-        vm.options = _.map(data, function (obj) {
+        var filtered = _.filter(data, function (obj) {
+          var scheduleID;
+
+          /* remove bad URLs here */
+          if (!obj.scheduleUrl) {
+            return false;
+          }
+
+          scheduleID = obj.scheduleUrl.split('/schedules/')[1];
+
+          if (scheduleID && scheduleID.localeCompare(aaRecordScheduleID) !== 0) {
+            return true;
+          }
+
+          return false;
+
+        });
+
+        vm.options = _.map(filtered, function (obj) {
           return {
             label: obj.scheduleName,
             value: obj.scheduleUrl.split('/schedules/')[1]
           };
         });
+
       }, function (response) {
         if (response.status !== 404) {
           AANotificationService.error('autoAttendant.failureImport', {
