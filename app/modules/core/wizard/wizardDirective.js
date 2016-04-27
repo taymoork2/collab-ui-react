@@ -198,6 +198,7 @@
         });
       }
     }
+    getTabController.$inject = ['$scope'];
 
     function getSubTabController($scope) {
       var subTab = getSubTab();
@@ -207,6 +208,7 @@
         });
       }
     }
+    getSubTabController.$inject = ['$scope'];
 
     function loadOverview() {
       $state.go('overview');
