@@ -15,6 +15,8 @@ var runSeq = require('run-sequence');
 var fs = require('fs');
 var _ = require('lodash');
 var util = require('gulp-util');
+var jsonlint = require('gulp-jsonlint');
+var plato = require('plato');
 
 // vet JS files and create coverage report
 gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
@@ -109,7 +111,6 @@ gulp.task('jsb:verify', function (done) {
 });
 
 gulp.task('json:verify', function () {
-  var jsonlint = require('gulp-jsonlint');
   return gulp.src(['./test/**/*.json', './app/**/*.json'])
     .pipe(jsonlint())
     .pipe(jsonlint.reporter())
@@ -179,7 +180,6 @@ function startPlatoVisualizer(done) {
   messageLogger('Running Plato');
   var files = glob.sync('app/**/*.js');
   var excludeFiles = /.*\.spec\.js/;
-  var plato = require('plato');
   var options = {
     title: 'Plato Inspections Report',
     exclude: excludeFiles

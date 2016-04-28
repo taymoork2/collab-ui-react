@@ -22,7 +22,7 @@
     });
 
     describe('login service methods', function () {
-      it('getUserFromEmail', function () {
+      xit('getUserFromEmail', function () {
         httpBackend.expectPOST('https://idbroker.webex.com/idb/oauth2/v1/access_token').respond('');
         httpBackend.expectGET(UrlConfig.getAdminServiceUrl() + 'ordertranslator/digitalriver/user/foo@bar.com/exists').respond(200);
         DigitalRiverService.getUserFromEmail('foo@bar.com');
