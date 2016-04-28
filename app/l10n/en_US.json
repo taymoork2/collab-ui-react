@@ -90,6 +90,7 @@
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
     "convertUserError": "Failed to convert",
+    "convertUserSearch": "Enter customer name or email address",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",

@@ -16,6 +16,7 @@
     $scope.searchStr = '';
     $scope.timeoutVal = 1000;
     $scope.timer = 0;
+    $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
 
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
