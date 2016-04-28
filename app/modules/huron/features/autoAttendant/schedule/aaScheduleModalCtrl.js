@@ -381,7 +381,9 @@
     function deleteSchedule() {
       var id = vm.aaModel.aaRecord.scheduleId;
       var ceName = vm.aaModel.aaRecord.callExperienceName;
-      vm.aaModel.aaRecord.scheduleId = undefined;
+
+      delete vm.aaModel.aaRecord.scheduleId;
+
       AACommonService.saveUiModel(vm.ui, vm.aaModel.aaRecord);
       var ceUrl;
       if (vm.aaModel.aaRecordUUID.length > 0) {
@@ -395,7 +397,9 @@
       return AutoAttendantCeService.updateCe(ceUrl, vm.aaModel.aaRecord)
         .then(function (response) {
           // success removing ScheduleId from CE, delete the calendar 
-          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId);
+          return AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).then(function () {
+            delete vm.ui.ceInfo.scheduleId;
+          });
         });
     }
 
