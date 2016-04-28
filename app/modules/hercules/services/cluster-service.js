@@ -26,7 +26,8 @@
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
       upgradeSoftware: upgradeSoftware,
-      mergeRunningState: mergeRunningState
+      mergeRunningState: mergeRunningState,
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
@@ -119,7 +120,9 @@
     function buildAggregates(type, cluster) {
       var connectors = cluster.connectors;
       var provisioning = _.find(cluster.provisioning, 'connectorType', type);
-      var upgradeAvailable = provisioning && provisioning.availableVersion && provisioning.provisionedVersion !== provisioning.availableVersion;
+      var upgradeAvailable = provisioning && _.some(cluster.connectors, function (connector) {
+        return connector.runningVersion !== provisioning.availableVersion;
+      });
       var hosts = _.chain(connectors)
         .pluck('hostname')
         .uniq()
@@ -257,5 +260,15 @@
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
     }
+
+    function getReleaseNotes(releaseChannel, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
+      return $http.get(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          return data.releaseNotes;
+        });
+    }
+
   }
 }());

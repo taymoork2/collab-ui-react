@@ -17,45 +17,33 @@
   </cs-sp-section>
   <cs-sp-section>
     <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
-    <table>
-      <tbody>
-      <tr ng-if="!clusterDetailsCtrl.showUpgradeProgress">
-        <td translate="hercules.softwareUpgrade.currentVersion"></td>
-        <td><span>{{clusterDetailsCtrl.softwareUpgrade.provisionedVersion}}</span></td>
-      </tr>
-      <tr ng-if="clusterDetailsCtrl.showUpgradeProgress" class="software-upgrade-container">
-        <td colspan="2" ng-if="clusterDetailsCtrl.fakeUpgrade">
-          <div class="progressbar-info">
-            <span class="progressbar-label" translate="hercules.softwareUpgrade.pending"></span>
-            <span class="progressbar-progress">0 / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar animate="true" value="10" max="100"></progressbar>
-        </td>
-        <td colspan="2" ng-if="!clusterDetailsCtrl.fakeUpgrade">
-          <div class="progressbar-info">
-            <span ng-show="!clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: clusterDetailsCtrl.upgradeDetails.upgradingHostname, version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
-            <span ng-if="clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
-            <span class="progressbar-progress">{{clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts}} / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
-          </div>
-          <progressbar ng-show="!clusterDetailsCtrl.upgradeJustFinished" animate="true" value="clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts" max="clusterDetailsCtrl.softwareUpgrade.numberOfHosts"></progressbar>
-          <progressbar ng-show="clusterDetailsCtrl.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
-        </td>
-      </tr>
-      </tr>
-      <tr ng-if="!clusterDetailsCtrl.showUpgradeProgress && clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable">
-        <td translate="hercules.softwareUpgrade.newVersion"></td>
-        <td><span>{{clusterDetailsCtrl.softwareUpgrade.availableVersion}}</span></td>
-      </tr>
-      </tbody>
-    </table>
     <div ng-if="!clusterDetailsCtrl.showUpgradeProgress">
+      <p ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
+      <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upgradePossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName, availableVersion: clusterDetailsCtrl.softwareUpgrade.availableVersion}"></p>
       <button class="btn btn--primary"
-              ng-click="clusterDetailsCtrl.upgrade()"
+              ng-click="clusterDetailsCtrl.showUpgradeDialog()"
               ng-disabled="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable || !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"
               translate="hercules.softwareUpgrade.upgradeNow">
       </button>
-      <p class="hercules-uptodate-text" ng-if="!clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable" translate="hercules.softwareUpgrade.upToDate" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
-      <p class="hercules-uptodate-text red" ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible" translate="hercules.softwareUpgrade.upgradeImpossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></p>
+      <p ng-if="clusterDetailsCtrl.softwareUpgrade.isUpgradeAvailable && !clusterDetailsCtrl.softwareUpgrade.isUpgradePossible"><i class="icon icon-warning no-data-warning hercules-update-warning-text"></i><span  class="hercules-update-warning-text" translate="hercules.softwareUpgrade.upgradeImpossible" translate-values="{connectorType: clusterDetailsCtrl.connectorName}"></span></p>
+    </div>
+    <div ng-if="clusterDetailsCtrl.showUpgradeProgress">
+      <div ng-if="clusterDetailsCtrl.fakeUpgrade">
+        <div class="progressbar-info">
+          <span class="progressbar-label" translate="hercules.softwareUpgrade.pending"></span>
+          <span class="progressbar-progress">0 / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
+        </div>
+        <progressbar animate="true" value="10" max="100"></progressbar>
+      </div>
+      <div ng-if="!clusterDetailsCtrl.fakeUpgrade">
+        <div class="progressbar-info">
+          <span ng-show="!clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradingHost" translate-values="{host: clusterDetailsCtrl.upgradeDetails.upgradingHostname, version: clusterDetailsCtrl.softwareUpgrade.provisionedVersion}"></span>
+          <span ng-if="clusterDetailsCtrl.upgradeJustFinished" class="progressbar-label" translate="hercules.softwareUpgrade.upgradeDone"></span>
+          <span class="progressbar-progress">{{clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts}} / {{clusterDetailsCtrl.softwareUpgrade.numberOfHosts}}</span>
+        </div>
+        <progressbar ng-show="!clusterDetailsCtrl.upgradeJustFinished" animate="true" value="clusterDetailsCtrl.upgradeDetails.numberOfUpsmthngHosts" max="clusterDetailsCtrl.softwareUpgrade.numberOfHosts"></progressbar>
+        <progressbar ng-show="clusterDetailsCtrl.upgradeJustFinished" type="success" value="1" max="1"></progressbar>
+      </div>
     </div>
   </cs-sp-section>
   <cs-sp-section>

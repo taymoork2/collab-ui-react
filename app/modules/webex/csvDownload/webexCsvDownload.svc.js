@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* global Uint8Array:false */
+
   angular.module('WebExApp').service('WebExCsvDownloadService', WebExCsvDownloadService);
 
   /* @ngInject */
@@ -8,7 +10,8 @@
     $log,
     $resource,
     Authinfo,
-    UrlConfig
+    UrlConfig,
+    $window
   ) {
 
     var objectUrl;
@@ -17,8 +20,6 @@
     var typeExport = 'export';
     var typeWebExExport = 'webexexport';
     var typeWebExImport = 'webeximport';
-
-    var webexCsvResource;
 
     var userCsvUrl = UrlConfig.getAdminServiceUrl() + 'csv/organizations/' + Authinfo.getOrgId() + '/users/:type';
     var csvUserResource = $resource(
@@ -47,11 +48,13 @@
     );
 
     var service = {
+      typeExport: typeExport,
       typeWebExExport: typeWebExExport,
       typeWebExImport: typeWebExImport,
       getCsv: getCsv,
       getWebExCsv: getWebExCsv,
       createObjectUrl: createObjectUrl,
+      webexCreateObjectUrl: webexCreateObjectUrl,
       revokeObjectUrl: revokeObjectUrl,
       getObjectUrl: getObjectUrl,
       setObjectUrl: setObjectUrl,
@@ -67,68 +70,8 @@
       }).$promise;
     } // getCsv()
 
-    function getWebExCsv(
-      type,
-      fileDownloadUrl
-    ) {
-
-      var logMsg = "";
-
-      logMsg = "WebExCsvDownloadService().getWebExCsv()" + "\n" +
-        "type=" + type + "\n" +
-        "fileDownloadUrl=" + fileDownloadUrl;
-      // $log.log(logMsg);
-
-      if (
-        (type === typeWebExExport) ||
-        (type === typeWebExImport)
-      ) {
-
-        createWebexCsvResource(fileDownloadUrl);
-
-        return webexCsvResource.get('').$promise;
-      }
-    } // getWebExCsv()
-
-    function createObjectUrl(data) {
-      var blob = new Blob([data], {
-        // type: 'text/csv'
-        type: 'text/plain'
-          // type: 'application/octet-stream'
-      });
-
-      var oUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-
-      setObjectUrl(oUrl);
-
-      return oUrl;
-    }
-
-    function revokeObjectUrl() {
-      if (getObjectUrl()) {
-        (window.URL || window.webkitURL).revokeObjectURL(getObjectUrl());
-        setObjectUrl(null);
-      }
-    }
-
-    function getObjectUrl() {
-      return objectUrl;
-    }
-
-    function setObjectUrl(oUrl) {
-      objectUrl = oUrl;
-    }
-
-    function getObjectUrlTemplate() {
-      return objectUrlTemplate;
-    }
-
-    function setObjectUrlTemplate(oUrl) {
-      objectUrlTemplate = oUrl;
-    }
-
-    function createWebexCsvResource(fileDownloadUrl) {
-      var funcName = "WebExCsvDownloadService().createWebexCsvResource()";
+    function getWebExCsv(fileDownloadUrl) {
+      var funcName = "getWebExCsv)";
       var logMsg = "";
 
       var fileDownloadUrlFixed = fileDownloadUrl.replace("http:", "https:");
@@ -138,7 +81,7 @@
         "fileDownloadUrlFixed=" + fileDownloadUrlFixed;
       // $log.log(logMsg);
 
-      webexCsvResource = $resource(fileDownloadUrlFixed, {}, {
+      var webexCsvResource = $resource(fileDownloadUrlFixed, {}, {
         get: {
           method: 'POST',
           // override transformResponse function because $resource
@@ -159,6 +102,83 @@
             } // transformResponse()
         } // get
       }); // $resource()
-    } // createWebexCsvResource()
+
+      return webexCsvResource.get('').$promise;
+    } // getWebExCsv()
+
+    function createObjectUrl(data) {
+      var blob = new $window.Blob([data], {
+        // type: 'text/csv'
+        type: 'application/octet-stream'
+      });
+
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
+
+      setObjectUrl(oUrl);
+
+      return oUrl;
+    } // createObjectUrl()
+
+    function webexCreateObjectUrl(data) {
+      var funcName = "webexCreateObjectUrl()";
+      var logMsg = "";
+
+      var intBytes = [];
+      var littleEndianHeader = "%ff%fe";
+
+      littleEndianHeader.replace(/([0-9a-f]{2})/gi, function (hexByte) {
+        var intByte = parseInt(hexByte, 16);
+
+        intBytes.push(intByte);
+      });
+
+      for (var i = 0; i < data.length; ++i) {
+        var hexByte = data[i].charCodeAt(0).toString(16);
+        var intByte = parseInt(hexByte, 16);
+
+        if (2 <= i) {
+          intBytes.push(intByte);
+        } else {
+          logMsg = funcName + "\n" +
+            "data[" + i + "]=" + data[i] + "\n" +
+            "hexByte=" + hexByte + "\n" +
+            "intByte=" + intByte;
+          $log.log(logMsg);
+        }
+      }
+
+      var blob = new $window.Blob([new Uint8Array(intBytes)], {
+        type: 'text/csv;charset=UTF-16LE;'
+      });
+
+      var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
+
+      setObjectUrl(oUrl);
+
+      return oUrl;
+    } // webexCreateObjectUrl()
+
+    function revokeObjectUrl() {
+      if (getObjectUrl()) {
+        ($window.URL || $window.webkitURL).revokeObjectURL(getObjectUrl());
+        setObjectUrl(null);
+      }
+    }
+
+    function getObjectUrl() {
+      return objectUrl;
+    }
+
+    function setObjectUrl(oUrl) {
+      objectUrl = oUrl;
+    }
+
+    function getObjectUrlTemplate() {
+      return objectUrlTemplate;
+    }
+
+    function setObjectUrlTemplate(oUrl) {
+      objectUrlTemplate = oUrl;
+    }
   } // WebExCsvDownloadService()
 })();

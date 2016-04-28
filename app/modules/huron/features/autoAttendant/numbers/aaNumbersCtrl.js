@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, AACommonService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
+    AAModelService, AACommonService, Authinfo, AANotificationService, $translate, telephoneNumberFilter, TelephoneNumberService, TelephonyInfoService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -88,7 +88,6 @@
       vm.availablePhoneNums.sort(function (a, b) {
         return compareNumbersExternalThenInternal(a.value, b.value);
       });
-
       deleteAAResource(number);
 
       // clear selection
@@ -144,7 +143,6 @@
 
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
-
         function (response) {
 
           // after assignment, the extension ESN numbers are derived; update CE based on CMI ESN info
@@ -166,13 +164,13 @@
               }
 
               sortAssignedResources(resources);
+              AACommonService.setCENumberStatus(true);
 
             },
             function (response) {
-              Notification.error('autoAttendant.errorAddCMI', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
                 phoneNumber: number,
-                statusText: response.statusText,
-                status: response.status
+                statusText: response.statusText
               });
 
               resources.pop();
@@ -181,7 +179,7 @@
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorAddCMI', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
             phoneNumber: number,
             statusText: response.statusText,
             status: response.status
@@ -207,9 +205,13 @@
 
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
-        vm.aaModel.aaRecordUUID, resources).catch(
+        vm.aaModel.aaRecordUUID, resources).then(function () {
+        AACommonService.setCENumberStatus(true);
+      }).catch(
         function (response) {
-          Notification.error('autoAttendant.errorRemoveCMI');
+          /* Use AACommonService to thwart the saving when it is in this state. */
+          AACommonService.setIsValid('errorRemoveCMI', false);
+          AANotificationService.errorResponse(response, 'autoAttendant.errorRemoveCMI');
         });
 
     }
@@ -366,13 +368,13 @@
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCMIOnly', {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCMIOnly', {
               phoneNumbers: onlyCMI
             });
           }
           if (onlyResources.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
-            Notification.error('autoAttendant.errorNumbersCESOnly', {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorNumbersCESOnly', {
               phoneNumbers: onlyResources
             });
           }
@@ -383,7 +385,7 @@
             // Use AACommonService to thwart the saving when it is in this state
             AACommonService.setIsValid('readErrorCMI', false);
 
-            Notification.error('autoAttendant.errorReadCMI');
+            AANotificationService.errorResponse(response, 'autoAttendant.errorReadCMI');
           }
         });
     }

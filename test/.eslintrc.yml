@@ -39,6 +39,7 @@
     callrouting: true
     cdr: true
     config: true
+    customers: true
     deleteUtils: true
     describe: true
     disyncwizard: true
@@ -51,6 +52,8 @@
     helper: true
     huntGroup: true
     huronFeatures: true
+    careLandingPage: true
+    careChatTemplateSetupPage: true
     inject: true
     invite: true
     inviteusers: true

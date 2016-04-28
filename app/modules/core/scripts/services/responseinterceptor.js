@@ -11,25 +11,25 @@
     return {
       responseError: function (response) {
         if (is20001Error(response)) {
-          Log.info('Refresh access token due to 20001 response.');
+          Log.warn('Refresh access token due to 20001 response.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isHttpAuthError(response)) {
-          Log.info('Refresh access token due to HTTP authentication error.');
+          Log.warn('Refresh access token due to HTTP authentication error.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
         if (isCIInvalidAccessTokenError(response)) {
-          Log.info('Refresh access token due to invalid CI error.');
+          Log.warn('Refresh access token due to invalid CI error.', response);
           return Auth.refreshAccessTokenAndResendRequest(response);
         }
 
         if (refreshTokenHasExpired(response)) {
-          Log.info('Refresh-token has expired.');
+          Log.warn('Refresh-token has expired.', response);
           return Auth.logout();
         }
 
         if (refreshTokenIsInvalid(response)) {
-          Log.info('Refresh-token is invalid.');
+          Log.warn('Refresh-token is invalid.', response);
           return Auth.logout();
         }
 

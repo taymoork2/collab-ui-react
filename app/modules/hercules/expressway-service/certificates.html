@@ -6,13 +6,46 @@
 <div ng-if="expresswayServiceSettings.certificates.length > 0" class="hercules-certificates-table">
   <p>Uploaded Certificates:</p>
   <hr>
-  <table>
+  <table class="table table-striped">
     <tbody>
-    <tr data-ng-repeat="cert in expresswayServiceSettings.certificates">
+    <tr data-ng-repeat="cert in expresswayServiceSettings.formattedCertificateList">
       <td>
-        <span>{{cert.decoded.subjectDN}}</span>
+        <em translate="hercules.settings.call.certificatesEmailAddress"></em>
         <br>
-        <span>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</span>
+        <em translate="hercules.settings.call.certificatesCommonName"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesOrganizationalUnit"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesOrganization"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesLocality"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesStateOrProvince"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesCountry"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesCreated"></em>
+        <br>
+        <em translate="hercules.settings.call.certificatesExpires"></em>
+      </td>
+      <td>
+        <span>{{cert.emailAddress}}</span>
+        <br>
+        <span>{{cert.commonName}}</span>
+        <br>
+        <span>{{cert.organizationalUnit}}</span>
+        <br>
+        <span>{{cert.organization}}</span>
+        <br>
+        <span>{{cert.locality}}</span>
+        <br>
+        <span>{{cert.stateAndProvince}}</span>
+        <br>
+        <span>{{cert.country}}</span>
+        <br>
+        <span>{{cert.created | date:'fullDate'}}</span>
+        <br>
+        <span>{{cert.expires | date:'fullDate'}}</span>
       </td>
       <td>
         <i class="icon icon-trash icon-lg hercules-trash-icon right"

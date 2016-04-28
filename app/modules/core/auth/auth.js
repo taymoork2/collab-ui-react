@@ -5,12 +5,12 @@ angular
   .factory('Auth', Auth);
 
 /* @ngInject */
-function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig) {
+function Auth($injector, $translate, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, OAuthConfig, UrlConfig, WindowLocation) {
 
   var service = {
     logout: logout,
     authorize: authorize,
-    getAccount: getAccount,
+    getCustomerAccount: getCustomerAccount,
     isLoggedIn: isLoggedIn,
     setAccessToken: setAccessToken,
     redirectToLogin: redirectToLogin,
@@ -18,7 +18,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     refreshAccessToken: refreshAccessToken,
     setAuthorizationHeader: setAuthorizationHeader,
     refreshAccessTokenAndResendRequest: refreshAccessTokenAndResendRequest,
-    verifyOauthState: verifyOauthState
+    verifyOauthState: verifyOauthState,
+    getAuthorizationUrl: getAuthorizationUrl
   };
 
   return service;
@@ -37,8 +38,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
     return deferred;
   }
 
-  function getAccount(org) {
-    var url = UrlConfig.getAdminServiceUrl() + 'organization/' + org + '/accounts';
+  function getCustomerAccount(org) {
+    var url = UrlConfig.getAdminServiceUrl() + 'customers?orgId=' + org;
     return httpGET(url);
   }
 
@@ -96,7 +97,7 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
       .catch(handleError('Failed to delete the oAuth token'))
       .finally(function () {
         clearStorage();
-        $window.location.href = OAuthConfig.getLogoutUrl();
+        WindowLocation.set(OAuthConfig.getLogoutUrl());
       });
   }
 
@@ -106,9 +107,9 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function redirectToLogin(email, sso) {
     if (email) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl(email, getOauthState());
+      WindowLocation.set(OAuthConfig.getOauthLoginUrl(email, getOauthState()));
     } else if (sso) {
-      $window.location.href = OAuthConfig.getOauthLoginUrl(null, getOauthState());
+      WindowLocation.set(OAuthConfig.getOauthLoginUrl(null, getOauthState()));
     } else {
       var $state = $injector.get('$state');
       $state.go('login');
@@ -152,7 +153,6 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
         }
         return authData;
       }).catch(function (res) {
-        handleError('Ignore error from Msgr service check.')(res);
         return authData;
       });
   }
@@ -179,8 +179,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function initializeAuthinfo(authData) {
     Authinfo.initialize(authData);
-    if (Authinfo.isAdmin()) {
-      return getAccount(Authinfo.getOrgId())
+    if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin()) {
+      return getCustomerAccount(Authinfo.getOrgId())
         .then(function (res) {
           Authinfo.updateAccountInfo(res.data);
           Authinfo.initializeTabs();
@@ -262,7 +262,8 @@ function Auth($injector, $translate, $window, $q, Log, Config, SessionStorage, A
 
   function handleError(message) {
     return function (res) {
-      Log.error(message, res && res.data || res.text);
+      Log.error(message, res && (res.data || res.text));
+      return $q.reject(res);
     };
   }
 

@@ -66,7 +66,8 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
+
+  return utils.sendRequest(options).then(function (result) {
     return 200;
   });
 };
@@ -96,8 +97,9 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
       'Authorization': 'Bearer ' + token
     }
   };
-  return utils.sendRequest(options).then(function () {
-    return 204;
+
+  return utils.sendRequest(options).then(function (result) {
+    return 200;
   });
 };
 
@@ -105,7 +107,22 @@ exports.deleteNumberAssignments = function (aaUrl, token) {
 // auto-attendant_spec.js
 exports.testAAName = 'AA for Atlas e2e Tests';
 exports.testAAImportName = 'AA for Atlas e2e Import Tests';
-// deleteTestAA - Delete the Test AA via the CES API
+
+// deleteTestAA - Delete a single AA via the CES API
+//
+// bearer - token with access to our API
+// aaUrl - the AA URL
+exports.deleteTestAA = function (bearer, aaUrl) {
+
+  var aaDeleteTasks = [];
+
+  aaDeleteTasks.push(exports.deleteAutoAttendant(aaUrl, bearer));
+  aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
+
+  return Promise.all(aaDeleteTasks);
+}
+
+// deleteTestAAs - Delete the Test AAs via the CES API
 //
 // Check all of the autoattendants eturned for this
 // customer and if our test one is there send it to
@@ -115,18 +132,20 @@ exports.testAAImportName = 'AA for Atlas e2e Import Tests';
 //
 // bearer - token with access to our API
 // data - query results from our CES GET API
-exports.deleteTestAA = function (bearer, data) {
+exports.deleteTestAAs = function (bearer, data) {
   var test = [this.testAAName, this.testAAImportName];
   for (var i = 0; i < data.length; i++) {
+
+    var AAsToDelete = [];
+
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
-
-      return exports.deleteAutoAttendant(data[i].callExperienceURL, bearer).then(function () {
-
-        return exports.deleteNumberAssignments(data[i].callExperienceURL, bearer);
-
-      });
+      AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
+
   }
+
+  return Promise.all(AAsToDelete);
+
 };
 
 //
@@ -157,7 +176,7 @@ exports.findAndDeleteTestAA = function () {
           }
         });
       return defer.promise.then(function (data) {
-        return exports.deleteTestAA(bearer, data);
+        return exports.deleteTestAAs(bearer, data);
       });
 
     });

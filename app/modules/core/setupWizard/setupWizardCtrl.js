@@ -97,13 +97,14 @@
     }];
 
     $scope.isDirSyncEnabled = false;
+    $scope.isTelstraCsbEnabled = false;
 
     if (Authinfo.isCustomerAdmin()) {
-      FeatureToggleService.supportsDirSync().then(function (result) {
-        $scope.isDirSyncEnabled = result;
-      }).finally(function () {
-        init();
-      });
+      $q.all([FeatureToggleService.supportsDirSync(), FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb)])
+        .then(function (result) {
+          $scope.isDirSyncEnabled = result[0];
+          $scope.isCSB = Authinfo.isCSB() && result[1];
+        }).finally(init);
     }
 
     function init() {
@@ -139,6 +140,12 @@
             name: 'init',
             template: 'modules/core/setupWizard/finish/finish.tpl.html'
           }]
+        });
+      }
+
+      if ($scope.isCSB) {
+        _.remove($scope.tabs, {
+          name: 'addUsers'
         });
       }
 

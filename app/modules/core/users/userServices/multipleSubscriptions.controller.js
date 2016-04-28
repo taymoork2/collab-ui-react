@@ -6,7 +6,7 @@
     .controller('MultipleSubscriptionsCtrl', MultipleSubscriptionsCtrl);
 
   /* @ngInject */
-  function MultipleSubscriptionsCtrl(Orgservice) {
+  function MultipleSubscriptionsCtrl(Orgservice, Notification) {
     var vm = this;
 
     vm.oneBilling = false;

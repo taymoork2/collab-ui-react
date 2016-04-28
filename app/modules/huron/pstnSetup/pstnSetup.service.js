@@ -18,6 +18,7 @@
     var PORT_ORDERS = 'portOrders';
     var ADVANCED_ORDERS = 'advancedOrders';
     var NEW_ORDERS = 'newOrders';
+    var BLOCK_ORDER = 'BLOCK_ORDER';
 
     var service = {
       createCustomer: createCustomer,
@@ -53,7 +54,7 @@
 
     return service;
 
-    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
+    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers, trial) {
       var payload = {
         uuid: uuid,
         name: name,
@@ -62,7 +63,7 @@
         email: email,
         pstnCarrierId: pstnCarrierId,
         numbers: numbers,
-        trial: true
+        trial: trial
       };
 
       if (PstnSetup.isResellerExists()) {
@@ -262,16 +263,34 @@
       return listPendingOrders(customerId).then(function (orders) {
         var promises = [];
         _.forEach(orders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
-            _.forEach(orderNumbers, function (orderNumber) {
-              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
-                pendingNumbers.push({
-                  pattern: orderNumber.number
-                });
-              }
+          if (_.get(carrierOrder, 'operation') === BLOCK_ORDER) {
+            var areaCode = getAreaCode(carrierOrder);
+            try {
+              var json = JSON.parse(carrierOrder.response);
+            } catch (error) {
+              //if parsing fails, give order number to reference possible malformed order
+              pendingNumbers.push({
+                orderNumber: carrierOrder.carrierOrderId
+              });
+              return;
+            }
+            var orderQuantity = json[carrierOrder.carrierOrderId].length;
+            pendingNumbers.push({
+              pattern: '(' + areaCode + ') XXX-XXXX',
+              quantity: orderQuantity
             });
-          });
-          promises.push(promise);
+          } else {
+            var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+              _.forEach(orderNumbers, function (orderNumber) {
+                if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
+                  pendingNumbers.push({
+                    pattern: orderNumber.number
+                  });
+                }
+              });
+            });
+            promises.push(promise);
+          }
         });
 
         return $q.all(promises).then(function () {
@@ -285,6 +304,10 @@
         customerId: customerId,
         did: number
       }).$promise;
+    }
+
+    function getAreaCode(order) {
+      return _.chain(order).get('description').slice(-3).join('').value();
     }
 
   }

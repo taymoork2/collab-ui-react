@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAValidationService', function () {
-  var Notification, AAModelService, AutoAttendantCeInfoModelService, AAValidationService;
+  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService;
 
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -36,11 +36,11 @@ describe('Service: AAValidationService', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_Notification_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_) {
+  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_) {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAValidationService = _AAValidationService_;
-    Notification = _Notification_;
+    AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
   }));
@@ -52,9 +52,18 @@ describe('Service: AAValidationService', function () {
   describe('isNameValidationSuccess', function () {
 
     beforeEach(function () {
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
+    });
+
+    it('report name validation error for uuid undefined', function () {
+      // when aaModel.aaRecord is defined
+      var ceInfo_name = 'AA';
+      var uuid = undefined;
+      var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
+
+      expect(valid).toEqual(false);
     });
 
     it('report name validation error for an empty string', function () {
@@ -64,7 +73,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('report name validation error for a string of spaces', function () {
@@ -73,7 +82,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should report name validation error if new AA name is not unique', function () {
@@ -85,7 +94,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should report name validation success if new AA name is unique', function () {
@@ -102,17 +111,17 @@ describe('Service: AAValidationService', function () {
 
   describe('isPhoneMenuValidationSuccess', function () {
     beforeEach(function () {
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
     });
 
-    it('report validation success for a normal Route to Auto Attendant configuration', function () {
+    it('report validation success for a phone menu defined', function () {
       var uiCombinedMenu = angular.copy(data.combinedMenu);
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Auto Attendant target', function () {
@@ -123,7 +132,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to Auto Attendant target if key is not initialized', function () {
@@ -135,7 +144,99 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Hunt Group target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[2];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Hunt Group target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[2];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to User target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[3];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to User target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[3];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Voicemail target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[4];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Voicemail target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[4];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Phone Number target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[5];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(AANotificationService.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Phone Number target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[5];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
   });
 

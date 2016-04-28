@@ -20,6 +20,8 @@ var fs = require('fs');
 var glob = require('glob');
 var istanbul = require('istanbul');
 var ll = require('gulp-ll');
+var typeScriptUtil = require('../utils/typeScript.gulp.js');
+var series = require('stream-series');
 
 var RUN_KARMA = 'run-karma-';
 var RUN_KARMA_PARALLEL = 'run-karma-parallel-';
@@ -49,6 +51,7 @@ ll.tasks(runKarmaParallelModules);
  *
  *   `gulp karma-config`                ->  [karma-config-all]
  *   `gulp karma`                       ->  [karma-all]
+ *   `gulp karma --fast`                ->  [karma-all] but skips html/coverage/junit reporters
  *
  *   `gulp karma-config-parallel`       ->  runs every karma-config-{module} in parallel
  *   `gulp karma-parallel`              ->  [karma-config-parallel] then every run-karma-parallel-{module}
@@ -142,6 +145,7 @@ function createGulpKarmaConfigModule(module) {
       var unitTestFiles = [].concat(
         config.vendorFiles.js,
         config.testFiles.js,
+        config.testFiles.notTs,
         config.testFiles.app,
         config.testFiles.global
       );
@@ -167,16 +171,23 @@ function createGulpKarmaConfigModule(module) {
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(gulp.src(unitTestFiles, {
-          read: false
-        }), {
-          addRootSlash: false,
-          starttag: 'files: [',
-          endtag: ',',
-          transform: function (filepath, file, i, length) {
-            return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-          }
-        }))
+        .pipe($.inject(
+          series(
+            gulp.src(unitTestFiles, {
+              read: false
+            }),
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+              read: false
+            })
+          ), {
+            addRootSlash: false,
+            starttag: '// inject:unitTestFiles',
+            endtag: '// end-inject:unitTestFiles',
+            transform: function (filepath, file, i, length) {
+              return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+            }
+          }))
+        .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({
           basename: 'karma-unit-' + module,

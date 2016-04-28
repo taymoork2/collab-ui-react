@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -16,19 +16,23 @@
     vm.save = save;
     vm.isSavable = isSavable;
     vm.isOpenHoursAfterCloseHours = isOpenHoursAfterCloseHours;
+    vm.forceStartBeforeEndCheck = forceStartBeforeEndCheck;
     vm.addRange = addRange;
     vm.deleteRange = deleteRange;
     vm.toggleSection = toggleSection;
     vm.removeHoliday = removeHoliday;
     vm.addHoliday = addHoliday;
     vm.isHolidaysSavable = isHolidaysSavable;
+    vm.exactDateChanged = exactDateChanged;
     vm.forceCheckHoliday = forceCheckHoliday;
     vm.changeAllDay = changeAllDay;
     vm.openImportModal = openImportModal;
+    vm.changeBehaviour = changeBehaviour;
     vm.isDeleted = false;
     vm.toggleHolidays = true;
     vm.toggleHours = false;
     vm.holidays = [];
+    vm.holidayBehavior = false;
     vm.oneAtATime = true;
     vm.messages = {
       required: $translate.instant('common.invalidRequired'),
@@ -43,15 +47,30 @@
     vm.openhours = [];
 
     function addRange() {
-      vm.openhours.push(angular.copy(AAICalService.getDefaultRange()));
+      var openhour = AAICalService.getDefaultRange();
+      _.each(openhour.days, function (day) {
+        day.label = moment.weekdays(day.index);
+      });
+      vm.openhours.push(angular.copy(openhour));
     }
 
     function deleteRange(index) {
       if (index < vm.openhours.length) {
         vm.openhours.splice(index, 1);
         vm.isDeleted = true;
+        resetHolidayBehavior();
         vm.hoursForm.$setDirty();
       }
+    }
+
+    function resetHolidayBehavior() {
+      if (vm.holidays.length === 0) {
+        vm.holidayBehavior = false;
+      }
+    }
+
+    function changeBehaviour() {
+      vm.holidaysForm.$setDirty();
     }
 
     function changeAllDay(form) {
@@ -115,12 +134,43 @@
     function removeHoliday(index) {
       vm.holidays.splice(index, 1);
       vm.isDeleted = true;
+      resetHolidayBehavior();
       vm.holidaysForm.$setDirty();
     }
 
-    function isOpenHoursAfterCloseHours(hours) {
-      if (hours.starttime && hours.endtime) {
-        return hours.starttime > hours.endtime;
+    function isOpenHoursAfterCloseHours(startTime, endTime) {
+      if (startTime && endTime) {
+        var startTime = moment(startTime);
+        var endTime = moment(endTime);
+        var start = moment({
+          hour: startTime.hour(),
+          minute: startTime.minute()
+        });
+        var end = moment({
+          hour: endTime.hour(),
+          minute: endTime.minute()
+        });
+        return start.isSame(end) || start.isAfter(end);
+      }
+    }
+
+    function forceStartBeforeEndCheck() {
+      var index = _.findLastIndex(vm.holidays, {
+        isOpen: true
+      });
+      if (index >= 0) {
+        var indexForm = 'holidayForm' + index;
+        vm.holidaysForm[indexForm].holidayEnd.$error.compareTo = vm.isOpenHoursAfterCloseHours(vm.holidays[index].starttime, vm.holidays[index].endtime);
+        vm.holidaysForm[indexForm].holidayEnd.$setDirty();
+      }
+    }
+
+    function exactDateChanged(holiday) {
+      // If exactDate unselected, auto select recurAnnually
+      if (holiday.exactDate === false) {
+        holiday.recurAnnually = true;
+      } else {
+        holiday.recurAnnually = false;
       }
     }
 
@@ -150,7 +200,7 @@
             return flag;
           }
         }
-        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined)) {
+        if (!holiday.allDay && (holiday.starttime === undefined || holiday.endtime === undefined || isOpenHoursAfterCloseHours(holiday.starttime, holiday.endtime))) {
           return flag;
         }
         flag = true;
@@ -162,7 +212,7 @@
       var flag = false;
       _.each(vm.openhours, function (hours) {
         flag = false; //Verify each OpenHour(time and days) is valid to enable save
-        if (isOpenHoursAfterCloseHours(hours)) {
+        if (isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)) {
           return flag;
         }
         if (hours.starttime && hours.endtime) {
@@ -222,7 +272,13 @@
         var notifyName = "Calendar for " + vm.aaModel.aaRecord.callExperienceName;
 
         vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-        vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
+        vm.ui.isClosedHours = (vm.openhours.length) || (vm.holidayBehavior && vm.holidays.length) ? true : false;
+        if (vm.holidayBehavior && vm.holidays.length > 0) {
+          vm.ui.holidaysValue = 'closedHours';
+        } else {
+          vm.ui.holidaysValue = 'holidays';
+        }
+
         if (vm.aaModel.aaRecord.scheduleId) {
           if ((vm.openhours.length > 0) || (vm.holidays.length > 0)) {
             savePromise = updateSchedule(calName);
@@ -241,12 +297,12 @@
               //and the newly created orphaned calendar is deleted.
               return;
             }
-            Notification.success('autoAttendant.successUpdateCe', {
+            AANotificationService.success('autoAttendant.successUpdateCe', {
               name: notifyName
             });
             vm.isDeleted = false;
             vm.ui.isHolidays = (vm.holidays.length) ? true : false;
-            vm.ui.isClosedHours = (vm.openhours.length) ? true : false;
+            vm.ui.isClosedHours = (vm.openhours.length || (vm.holidayBehavior && vm.holidays.length)) ? true : false;
             $modalInstance.close(response);
           },
           function (response) {
@@ -255,20 +311,20 @@
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
               vm.isDeleted = false;
-              Notification.error('autoAttendant.errorDeleteCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorDeleteCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
               //Calendar create failed
-              Notification.error('autoAttendant.errorCreateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else {
-              Notification.error('autoAttendant.errorUpdateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
                 name: notifyName,
                 statusText: response.statusText,
                 status: response.status
@@ -307,7 +363,7 @@
           vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
         }, function (response) {
           // failure in updating CE with schedue id, so clean up the possible orphaned schedule and the objects
-          Notification.error('autoAttendant.errorUpdateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: ceName,
             statusText: response.statusText,
             status: response.status
@@ -356,6 +412,11 @@
         AACalendarService.readCalendar(vm.aaModel.aaRecord.scheduleId).then(function (data) {
           var allHours = AAICalService.getHoursRanges(data);
           vm.openhours = allHours.hours;
+          _.each(vm.openhours, function (openhour) {
+            _.each(openhour.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
+          });
           vm.holidays = allHours.holidays;
           _.each(vm.holidays, function (holiday) {
             if (!holiday.exactDate) {
@@ -381,12 +442,14 @@
       });
       vm.dayOptions = [];
       _.each(AAICalService.getTwoLetterDays(), function (value, index) {
-        vm.dayOptions.push({
+        vm.dayOptions[(index - 1 + 7) % 7] = {
           index: index,
           abbr: value,
           label: moment.weekdays(index)
-        });
+        };
       });
+
+      vm.holidayBehavior = vm.ui.holidaysValue === 'closedHours' ? true : false;
     }
 
     function openImportModal() {
@@ -398,11 +461,14 @@
       });
       importModal.result.then(function (allHours) {
         if (allHours) {
-          Notification.success('autoAttendant.successImport', {
+          AANotificationService.success('autoAttendant.successImport', {
             holidays: allHours.holidays.length,
             hours: allHours.hours.length
           });
           allHours.hours.forEach(function (value) {
+            _.each(value.days, function (day) {
+              day.label = moment.weekdays(day.index);
+            });
             vm.openhours.unshift(value);
           });
           allHours.holidays.forEach(function (value) {
@@ -424,7 +490,6 @@
       populateUiModel();
       vm.isDeleted = false;
     }
-
     activate();
   }
 })();

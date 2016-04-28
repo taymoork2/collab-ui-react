@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AAScheduleModalCtrl', function () {
-  var Notification, AutoAttendantCeService;
+  var AANotificationService, AutoAttendantCeService;
   var AACalendarService, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AAICalService, AACommonService;
   var $scope, $translate, $modalInstance, $controller, $modal;
   var ical;
@@ -54,7 +54,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _Notification_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
+  beforeEach(inject(function (_ical_, $q, _$controller_, _$translate_, _$modal_, $rootScope, _AANotificationService_, _AACalendarService_, _AAModelService_, _AAUiModelService_, _AutoAttendantCeService_, _AutoAttendantCeInfoModelService_, _AAICalService_, _AACommonService_) {
     $translate = _$translate_;
     $scope = $rootScope.$new();
     ical = _ical_;
@@ -169,7 +169,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
     spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when());
     spyOn($modal, 'open').and.returnValue(fakeModal);
     spyOn(AACommonService, 'saveUiModel');
-    Notification = jasmine.createSpyObj('Notification', ['success', 'error']);
+    AANotificationService = jasmine.createSpyObj('AANotificationService', ['success', 'error']);
     $modalInstance = jasmine.createSpyObj('$modalInstance', ['close', 'dismiss']);
 
   }));
@@ -183,7 +183,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -204,7 +203,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -239,7 +237,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModelWithScheduleId);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -266,7 +263,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaModel.ceInfos.push(ceInfo);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
+        AANotificationService: AANotificationService,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -280,7 +277,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(AACalendarService.createCalendar).toHaveBeenCalledWith('AA1', controller.calendar);
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalled();
+      expect(AANotificationService.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
     });
 
@@ -290,7 +287,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaModelWithScheduleId.ceInfos.push(ceInfo);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
+        AANotificationService: AANotificationService,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -305,7 +302,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(AACalendarService.updateCalendar).toHaveBeenCalled();
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalled();
+      expect(AANotificationService.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
     });
 
@@ -315,7 +312,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaModelWithScheduleId.ceInfos.push(ceInfo);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
+        AANotificationService: AANotificationService,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -331,7 +328,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       $scope.$apply();
       expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
       expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(Notification.success).toHaveBeenCalled();
+      expect(AANotificationService.success).toHaveBeenCalled();
       expect($modalInstance.close).toHaveBeenCalled();
     });
 
@@ -342,7 +339,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       aaModelWithScheduleId.ceInfos.push(ceInfo);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
+        AANotificationService: AANotificationService,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -353,7 +350,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       controller.save();
       $scope.$apply();
       expect(AACalendarService.createCalendar).toHaveBeenCalled();
-      expect(Notification.success.calls.any()).toEqual(false);
+      expect(AANotificationService.success.calls.any()).toEqual(false);
       expect($modalInstance.close.calls.any()).toEqual(false);
     });
 
@@ -364,7 +361,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -401,7 +397,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -438,7 +433,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
+        AANotificationService: AANotificationService,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -455,7 +450,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModelWithScheduleId);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -472,7 +466,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -495,7 +488,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -547,7 +539,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -633,7 +624,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -645,7 +635,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
     it('no hours should undefined', function () {
       var hours = {};
-      expect(controller.isOpenHoursAfterCloseHours(hours)).toBeUndefined();
+      expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeUndefined();
     });
 
     it('should false', function () {
@@ -653,7 +643,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
         starttime: starttime,
         endtime: endtime
       };
-      expect(controller.isOpenHoursAfterCloseHours(hours)).toBeFalsy();
+      expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeFalsy();
     });
 
     it('should true', function () {
@@ -661,7 +651,59 @@ describe('Controller: AAScheduleModalCtrl', function () {
         starttime: endtime,
         endtime: starttime
       };
-      expect(controller.isOpenHoursAfterCloseHours(hours)).toBeTruthy();
+      expect(controller.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)).toBeTruthy();
+    });
+  });
+
+  describe('forceStartBeforeEndCheck', function () {
+    beforeEach(function () {
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        $modalInstance: $modalInstance,
+        AACalendarService: AACalendarService,
+        AAICalService: AAICalService,
+        AAModelService: AAModelService,
+        AAUiModelService: AAUiModelService
+      });
+      controller.holidaysForm = {
+        holidayForm0: {
+          holidayEnd: {
+            $setDirty: function () {},
+            $error: {
+              compareTo: undefined
+            }
+          }
+        }
+      };
+      $scope.$apply();
+      spyOn(controller.holidaysForm.holidayForm0.holidayEnd, '$setDirty');
+    });
+
+    it('no holidays open should undefined', function () {
+      controller.forceStartBeforeEndCheck();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeUndefined();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty.calls.any()).toEqual(false);
+    });
+
+    it('holiday hours valid should have no error', function () {
+      controller.holidays = [{
+        isOpen: true
+      }];
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(false);
+      controller.forceStartBeforeEndCheck();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeFalsy();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
+    });
+
+    it('holiday hours invalid should have error', function () {
+      controller.holidays = [{
+        isOpen: true
+      }];
+      spyOn(controller, 'isOpenHoursAfterCloseHours').and.returnValue(true);
+      controller.forceStartBeforeEndCheck();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$error.compareTo).toBeTruthy();
+      expect(controller.holidaysForm.holidayForm0.holidayEnd.$setDirty).toHaveBeenCalled();
     });
   });
 
@@ -670,7 +712,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       controller = $controller('AAScheduleModalCtrl as vm', {
         $scope: $scope,
-        Notification: Notification,
         $modalInstance: $modalInstance,
         AACalendarService: AACalendarService,
         AAICalService: AAICalService,
@@ -766,4 +807,35 @@ describe('Controller: AAScheduleModalCtrl', function () {
       expect(controller.isHolidaysSavable()).toBeFalsy();
     });
   });
+
+  describe('exactDateChanged', function () {
+    beforeEach(function () {
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      controller = $controller('AAScheduleModalCtrl as vm', {
+        $scope: $scope,
+        $modalInstance: $modalInstance
+      });
+    });
+
+    it('selected, recurAnnually should be false', function () {
+      controller.holidays = [{
+        name: "Test",
+        exactDate: true,
+        recurAnnually: false
+      }];
+      controller.exactDateChanged(controller.holidays[0]);
+      expect(controller.holidays[0].recurAnnually).toBe(false);
+    });
+
+    it('unselected, recurAnnually should be true', function () {
+      controller.holidays = [{
+        name: "Test",
+        exactDate: false,
+        recurAnnually: false
+      }];
+      controller.exactDateChanged(controller.holidays[0]);
+      expect(controller.holidays[0].recurAnnually).toBe(true);
+    });
+  });
+
 });

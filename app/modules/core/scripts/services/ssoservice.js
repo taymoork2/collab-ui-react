@@ -56,6 +56,11 @@ angular.module('Core')
             ssoEnabled: ssoEnabled
           };
 
+          //for ssoEnabled=false we don't need a metadataXml so remove it if argument is undefined or null
+          if (!ssoEnabled && (angular.isUndefined(metadataXmlContent) || metadataXmlContent == null)) {
+            delete payload.metadataXml;
+          }
+
           $http({
               method: 'PATCH',
               url: metaUrl,

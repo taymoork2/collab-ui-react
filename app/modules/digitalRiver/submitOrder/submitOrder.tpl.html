@@ -1,0 +1,27 @@
+<div class="dr-container" id="submit-order-container">
+    <div class="dr-row" ng-hide="submitOrderController.error == null">
+        <textarea rows="2" cols="50" ng-model="submitOrderController.error" readonly="readonly" id="dr-error"/>
+    </div>
+    <div class="dr-row" ng-show="submitOrderController.isSubmitting == true">
+        <div class="dr-center" translate="digitalRiver.submitOrder.submitting" />
+    </div>
+    <div class="dr-row" ng-show="submitOrderController.error == null">
+        <div class="dr-row" ng-show="submitOrderController.isSubmitting == false">
+            <div class="dr-row" ng-show="submitOrderController.existingUser == true">
+                <div class="dr-center dr-pad" translate="digitalRiver.submitOrder.activate" />
+                <div class="dr-button">
+                    <button class="btn btn--primary" id="dr-activate-order-next" ng-click="submitOrderController.handleActivate()" translate="digitalRiver.activateButton">
+                    </button>
+                </div>
+            </div>
+            <div class="dr-row" ng-show="submitOrderController.existingUser == false">
+                <div class="dr-center dr-pad" translate="digitalRiver.submitOrder.newUser" translate-values="{email: submitOrderController.email}" />
+                <!--TODO <div class="dr-row dr-center"> 
+                <a href ng-click="submitOrderController.handleMissingEmail()" translate="digitalRiver.submitOrder.missingEmail"/> -->
+            </div>
+        </div>
+    </div>
+    <div class="dr-center" ng-show="submitOrderController.loading">
+        <i class="icon icon-3x icon-spinner"></i>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService;
+  var controller, $controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService, FeatureToggleService;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService, ModalService, modalDefer;
 
   var dialPlanDetailsNorthAmerica = [{
@@ -15,7 +15,7 @@ describe('Controller: ServiceSetup', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _ServiceSetup_, _Notification_,
-    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_) {
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_, _ModalService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -25,6 +25,7 @@ describe('Controller: ServiceSetup', function () {
     DialPlanService = _DialPlanService_;
     ExternalNumberService = _ExternalNumberService_;
     ModalService = _ModalService_;
+    FeatureToggleService = _FeatureToggleService_;
     modalDefer = $q.defer();
 
     customer = {
@@ -130,6 +131,8 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }));
 
   function initController() {
@@ -240,6 +243,11 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -314,6 +322,11 @@ describe('Controller: ServiceSetup', function () {
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -487,11 +500,97 @@ describe('Controller: ServiceSetup', function () {
       expect(ModalService.open).not.toHaveBeenCalled();
     });
 
+    it('customer with voicemail service should not update customer but update site with TZ data', function () {
+      var selectedPilotNumber = {
+        label: voicemail.label,
+        pattern: voicemail.pilotNumber
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+      expect(ModalService.open).not.toHaveBeenCalled();
+    });
+
+    it('customer with voicemail service and VM Pilot must update customer and site with TZ data', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+      expect(ModalService.open).not.toHaveBeenCalled();
+    });
+
+    it('customer without voicemail service must update site with TZ data', function () {
+      var selectedPilotNumber = {
+        pattern: '+19728965000',
+        label: '(972) 896-5000'
+      };
+
+      controller.hasSites = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+      controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = selectedPilotNumber;
+      controller.hasVoicemailService = false;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+
+      //remove singlenumber range for it to pass
+      controller.deleteInternalNumberRange(model.numberRanges[2]);
+      controller.initNext();
+      $scope.$apply();
+
+      expect(ServiceSetup.updateSite).toHaveBeenCalled();
+      expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+      expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+      expect(ModalService.open).not.toHaveBeenCalled();
+    });
+
     it('customer with voicemail service should create voice only site', function () {
       controller.hasSites = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = false;
       controller.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = undefined;
       controller.hasVoicemailService = true;
+      controller.model.site.timeZone = {
+        value: 'bogus',
+        timezoneid: '10'
+      };
+      controller.previousTimeZone = controller.model.site.timeZone;
 
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -571,7 +670,7 @@ describe('Controller: ServiceSetup', function () {
       expect(ModalService.open).not.toHaveBeenCalled();
     });
 
-    it('customer without voicemail should update site and change voicemail timezone', function () {
+    it('customer without voicemail should update site and not change voicemail timezone', function () {
       var selectedPilotNumber = {
         pattern: '+19728965000',
         label: '(972) 896-5000'
@@ -593,7 +692,7 @@ describe('Controller: ServiceSetup', function () {
 
       expect(ServiceSetup.updateSite).toHaveBeenCalled();
       expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
-      expect(ServiceSetup.updateVoicemailTimezone).toHaveBeenCalled();
+      expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
       expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
       expect(ModalService.open).not.toHaveBeenCalled();
     });

@@ -22,6 +22,7 @@
 @import '../users/userAdd/user-add';
 @import '../users/userDelete/user-delete';
 @import '../users/userPreview/user-preview';
+@import '../users/userRedirect/user-redirect';
 @import '../users/userDetails/user-details';
 @import '../users/userRoles/user-roles';
 @import '../wizard/wizard';
@@ -33,4 +34,5 @@
 @import '../siteList/site-list';
 @import '../domainManagement/domainManagement';
 @import '../video/video';
-@import '../csvDownload/csv-download'
+@import '../csvDownload/csv-download';
+@import '../scripts/directives/show-read-only';

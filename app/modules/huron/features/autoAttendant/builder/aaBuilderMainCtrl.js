@@ -8,7 +8,7 @@
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService,
     AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
-    AAValidationService, AANumberAssignmentService, Notification, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
+    AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService) {
 
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -34,9 +34,9 @@
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
     vm.setLoadingDone = setLoadingDone;
 
-    vm.save9To5Schedule = save9To5Schedule;
+    vm.save8To5Schedule = save8To5Schedule;
     vm.saveCeDefinition = saveCeDefinition;
-    vm.delete9To5Schedule = delete9To5Schedule;
+    vm.delete8To5Schedule = delete8To5Schedule;
 
     vm.templateDefinitions = [{
       tname: "template1",
@@ -97,7 +97,7 @@
             return response;
           },
           function (response) {
-            Notification.error('autoAttendant.errorResetCMI');
+            AANotificationService.error('autoAttendant.errorResetCMI');
             return $q.reject(response);
           }
         );
@@ -127,21 +127,31 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
+      if (angular.isUndefined(vm.aaModel.aaRecord.scheduleEventTypeMap)) {
+        vm.aaModel.aaRecord.scheduleEventTypeMap = {};
+      }
 
-      if (angular.isDefined(vm.ui.closedHours)) {
+      if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.holiday)) {
+        vm.ui.isHolidays = true;
+        vm.ui.holidaysValue = vm.aaModel.aaRecord.scheduleEventTypeMap.holiday;
+      } else {
+        vm.ui.isHolidays = false;
+        if (angular.isUndefined(vm.ui.holidays)) {
+          vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
+          vm.ui.holidays.setType('MENU_WELCOME');
+        }
+      }
+
+      if (angular.isDefined(vm.aaModel.aaRecord.scheduleEventTypeMap.closed)) {
         vm.ui.isClosedHours = true;
       } else {
         vm.ui.isClosedHours = false;
-        vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.closedHours.setType('MENU_WELCOME');
+        if (angular.isUndefined(vm.ui.closedHours)) {
+          vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
+          vm.ui.closedHours.setType('MENU_WELCOME');
+        }
       }
-      if (angular.isDefined(vm.ui.holidays)) {
-        vm.ui.isHolidays = true;
-      } else {
-        vm.ui.isHolidays = false;
-        vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.holidays.setType('MENU_WELCOME');
-      }
+
     }
 
     function saveUiModel() {
@@ -162,7 +172,7 @@
         vm.ui.closedHours.setType('MENU_WELCOME');
       }
       if (vm.ui.isHolidays && angular.isDefined(vm.ui.holidays)) {
-        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays);
+        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays, vm.ui.holidaysValue);
       } else {
         AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'holidays');
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
@@ -179,7 +189,7 @@
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
             if (_.get(response, 'failedResources.length', false)) {
-              Notification.error('autoAttendant.errorFailedToAssignNumbers', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorFailedToAssignNumbers', {
                 phoneNumbers: _.pluck(response.failedResources, 'id')
               });
             }
@@ -207,13 +217,13 @@
           AACommonService.resetFormStatus();
           vm.canSave = false;
 
-          Notification.success('autoAttendant.successUpdateCe', {
+          AANotificationService.success('autoAttendant.successUpdateCe', {
             name: aaRecord.callExperienceName
           });
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorUpdateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -243,13 +253,13 @@
           AACommonService.resetFormStatus();
           vm.canSave = false;
 
-          Notification.success('autoAttendant.successCreateCe', {
+          AANotificationService.success('autoAttendant.successCreateCe', {
             name: aaRecord.callExperienceName
           });
 
         },
         function (response) {
-          Notification.error('autoAttendant.errorCreateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
             name: aaRecord.callExperienceName,
             statusText: response.statusText,
             status: response.status
@@ -261,18 +271,20 @@
     }
 
     function removeNewStep(menu) {
-      menu.entries = _.reject(menu.entries, function (entry) {
-        // Remove New Step placeholder.  New Step has two respresentation in the UI model:
-        // 1) When a New Step is added by an user, it is defined by a menuEntry with an empty
-        // actions array in UI model.  It was stored as an empty menuEntry {} into
-        // the CE definition.
-        // 2) When an empty menuEntry {} is read from CE definition, it is translated into
-        // the UI model as a menuEntry with an un-configured action in actions array and
-        // action.name set to "".
-        return angular.isDefined(entry.actions) &&
-          (entry.actions.length === 0 ||
-            (entry.actions.length === 1 && entry.actions[0].name.length === 0));
-      });
+      if (menu) {
+        menu.entries = _.reject(menu.entries, function (entry) {
+          // Remove New Step placeholder.  New Step has two respresentation in the UI model:
+          // 1) When a New Step is added by an user, it is defined by a menuEntry with an empty
+          // actions array in UI model.  It was stored as an empty menuEntry {} into
+          // the CE definition.
+          // 2) When an empty menuEntry {} is read from CE definition, it is translated into
+          // the UI model as a menuEntry with an un-configured action in actions array and
+          // action.name set to "".
+          return angular.isDefined(entry.actions) &&
+            (entry.actions.length === 0 ||
+              (entry.actions.length === 1 && entry.actions[0].name.length === 0));
+        });
+      }
     }
 
     function saveAARecords() {
@@ -345,9 +357,7 @@
     }
 
     function canSaveAA() {
-      if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
-        vm.canSave = true;
-      } else if (AACommonService.isFormDirty()) {
+      if (AACommonService.isFormDirty()) {
         vm.canSave = true;
       } else if (vm.aaModel.possibleNumberDiscrepancy) {
         vm.canSave = true;
@@ -378,14 +388,14 @@
       });
 
       if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
-        Notification.error('autoAttendant.errorInvalidTemplate', {
+        AANotificationService.error('autoAttendant.errorInvalidTemplate', {
           template: vm.templateName
         });
         return;
       }
 
       if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
-        Notification.error('autoAttendant.errorInvalidTemplateDef', {
+        AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
           template: vm.templateName
         });
         return;
@@ -403,7 +413,7 @@
         }
 
         if (angular.isUndefined(action.actionset)) {
-          Notification.error('autoAttendant.errorInvalidTemplateDef', {
+          AANotificationService.error('autoAttendant.errorInvalidTemplateDef', {
             template: vm.templateName
           });
           return;
@@ -440,7 +450,7 @@
                 vm.isAANameDefined = true;
               },
               function (response) {
-                Notification.error('autoAttendant.errorReadCe', {
+                AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {
                   name: aaName,
                   statusText: response.statusText,
                   status: response.status
@@ -449,7 +459,7 @@
             );
             return;
           } else {
-            Notification.error('autoAttendant.errorReadCe', {
+            AANotificationService.error('autoAttendant.errorReadCe', {
               name: aaName
             });
           }
@@ -459,13 +469,13 @@
       vm.setupTemplate();
     }
 
-    function save9To5Schedule(aaName) {
-      return AAUiScheduleService.create9To5Schedule(aaName).then(
+    function save8To5Schedule(aaName) {
+      return AAUiScheduleService.create8To5Schedule(aaName).then(
         function (scheduleId) {
           vm.ui.ceInfo.scheduleId = scheduleId;
         },
         function (error) {
-          Notification.error('autoAttendant.errorCreateSchedule', {
+          AANotificationService.errorResponse(error, 'autoAttendant.errorCreateSchedule', {
             name: aaName,
             statusText: error.statusText,
             status: error.status
@@ -487,11 +497,11 @@
       );
     }
 
-    function delete9To5Schedule(error) {
+    function delete8To5Schedule(error) {
       if (error === 'CE_SAVE_FAILURE') {
         AACalendarService.deleteCalendar(vm.ui.ceInfo.scheduleId).catch(
-          function () {
-            Notification.error('autoAttendant.errorDeletePredefinedSchedule', {
+          function (response) {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorDeletePredefinedSchedule', {
               name: vm.ui.ceInfo.name,
               statusText: error.statusText,
               status: error.status
@@ -503,7 +513,7 @@
 
     $scope.$on('AANameCreated', function () {
       if (vm.ui.aaTemplate && vm.ui.aaTemplate === 'OpenClosedHoursTemplate') {
-        vm.save9To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete9To5Schedule);
+        vm.save8To5Schedule(vm.ui.ceInfo.name).then(vm.saveCeDefinition).catch(vm.delete8To5Schedule);
       } else {
         vm.saveAARecords().then(function () {
           // Sucessfully created new CE Definition, time to move from Name-assignment page

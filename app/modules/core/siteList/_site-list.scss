@@ -15,6 +15,23 @@
    	   }
      }
    }
+   
+   .iconDisabled {
+      color: #d9d9d9;
+      vertical-align: middle;
+   }
+
+   .iconEnabled {
+      color: #8c8c8c;
+      vertical-align: middle;
+      &:hover {
+        color: #049FD9;
+      }
+   }
+    
+   .ui-grid-vcenter {
+     vertical-align: middle;
+   }
 }
 
 
@@ -25,5 +42,9 @@
 .csv-results {
     background-color: #C9EBE6;
     padding: 5px 10px;
+}
+
+.error_text{
+    color: #F5483F;
 }
 

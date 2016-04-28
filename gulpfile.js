@@ -9,9 +9,10 @@ if (!semver.satisfies(process.version, '>=4')) {
   gutil.log(gutil.colors.red('Consider using nvm: https://github.com/creationix/nvm'));
   process.exit(1);
 }
-var spawn = require('child_process').spawnSync;
+var spawn = require('cross-spawn').sync;
 var child = spawn('npm', ['--version']);
-var npmVersion = child.stdout.toString();
+var npmVersion = child.stdout ? child.stdout.toString() : '';
+
 if (child.status !== 0 || !semver.satisfies(npmVersion, '=2')) {
   gutil.log(gutil.colors.red('npm version should strictly be version 2, current is:'), gutil.colors.red.bold(npmVersion));
   gutil.log(gutil.colors.red('`npm install -g npm@latest-2` may do the trick'));

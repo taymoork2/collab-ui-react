@@ -25,8 +25,13 @@ var auth = {
   },
   'partner-sales-user': {
     user: 'phtest77+salesadmin@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'P@ssword123',
     org: '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
+  },
+  'partner-reports-sales-admin': {
+    user: 'kingkuntauser4+1715@gmail.com',
+    pass: 'Cisco123!',
+    org: 'ce8d17f8-1734-4a54-8510-fae65acc505e'
   },
   'pbr-admin-test': {
     user: 'pbr-org-admin-test@wx2.example.com',
@@ -109,9 +114,9 @@ var auth = {
     org: 'd30a6828-dc35-4753-bab4-f9b468828688'
   },
   'contactcenter-admin': {
-    user: 'sikkimadmn@outlook.com',
-    pass: 'Cisco@123',
-    org: '021fffdc-dd5e-49ca-b9d6-013445e3c3ae'
+    user: 'sunlight-integ-test-admn@outlook.com',
+    pass: 'C1sco123=',
+    org: '676a82cd-64e9-4ebd-933c-4dce087a02bd'
   }
 };
 

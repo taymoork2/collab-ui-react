@@ -5,12 +5,15 @@
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, $templateCache, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
+  function CustomerListCtrl($q, $rootScope, $scope, $state, $stateParams, $templateCache, $translate, $window, Authinfo, Config, ExternalNumberService, Localytics, Log, Notification, Orgservice, PartnerService, PstnSetupService, TrialService) {
     $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
     $scope.activeBadge = false;
     $scope.isTestOrg = false;
+    $scope.searchStr = '';
+    $scope.timeoutVal = 1000;
 
     $scope.setFilter = setFilter;
+    $scope.filterAction = filterAction;
     $scope.openAddTrialModal = openAddTrialModal;
     $scope.openEditTrialModal = openEditTrialModal;
     $scope.getTrialsList = getTrialsList;
@@ -27,6 +30,7 @@
     $scope.isOrgSetup = isOrgSetup;
     $scope.isOwnOrg = isOwnOrg;
     $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
+    $scope.filterList = _.debounce(filterAction, $scope.timeoutVal);
 
     // expecting this guy to be unset on init, and set every time after
     // check resetLists fn to see how its being used
@@ -237,6 +241,13 @@
       }
     }
 
+    function filterAction(value) {
+      $scope.searchStr = value;
+      resetLists().then(function () {
+        setFilter($scope.activeFilter);
+      });
+    }
+
     function getMyOrgDetails() {
       return $q(function (resolve, reject) {
         var accountId = Authinfo.getOrgId();
@@ -255,15 +266,18 @@
       });
     }
 
-    function getManagedOrgsList() {
+    function getManagedOrgsList(searchText) {
       $scope.showManagedOrgsRefresh = true;
-      var promiselist = [PartnerService.getManagedOrgsList()];
+      var promiselist = [PartnerService.getManagedOrgsList(searchText)];
 
-      if (Authinfo.isPartnerAdmin()) {
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // move our org to the top of the list
         // dont know why this is here yet
         // this should be handled by a sorting fn
-        promiselist.push(getMyOrgDetails());
+        if (searchText === '' || Authinfo.getOrgName().indexOf(searchText) !== -1) {
+          promiselist.push(getMyOrgDetails());
+        }
+
       }
 
       return $q.all(promiselist)
@@ -298,8 +312,8 @@
     // WARNING: not sure if this is needed, getManagedOrgsList contains a superset of this list
     // can be filtered by `createdBy` and `license.isTrial` but we have a second endpoint that
     // may at one point in the future return something other than the subset
-    function getTrialsList() {
-      return TrialService.getTrialsList()
+    function getTrialsList(searchText) {
+      return TrialService.getTrialsList(searchText)
         .catch(function (err) {
           Log.debug('Failed to retrieve trial information. Status: ' + err.status);
           Notification.error('partnerHomePage.errGetTrialsQuery', {
@@ -335,7 +349,7 @@
     }
 
     function resetLists() {
-      return $q.all([getTrialsList(), getManagedOrgsList()]);
+      return $q.all([getTrialsList($scope.searchStr), getManagedOrgsList($scope.searchStr)]);
     }
 
     function launchCustomerPortal(trial) {
@@ -390,6 +404,11 @@
       angular.element('.open').removeClass('open');
     }
 
+    function getIsTrial(org) {
+      if (!!org.isPartner) return false;
+      return _.get(org, 'communications.isTrial', true);
+    }
+
     function addNumbers(org) {
       return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
         .then(function (response) {
@@ -397,7 +416,8 @@
             return $state.go('pstnSetup', {
               customerId: org.customerOrgId,
               customerName: org.customerName,
-              customerEmail: org.customerEmail
+              customerEmail: org.customerEmail,
+              customerCommunicationLicenseIsTrial: getIsTrial(org)
             });
           } else {
             return $state.go('didadd', {

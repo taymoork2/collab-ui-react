@@ -33,6 +33,19 @@
     @include vr-spacing(pb, 0.5);
   }
 
+  .icon-information {
+    position: relative;
+    top: rem-calc(3);
+    color: $gray-light-1;
+  }
+  .icon-information:hover {
+    color: $color-primary-base;
+  }
+  .tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+  }
+
   .radio-input-spacing {
     align-items: flex-start;
 

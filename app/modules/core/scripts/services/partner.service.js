@@ -38,8 +38,12 @@
 
     return factory;
 
-    function getManagedOrgsList() {
-      return $http.get(managedOrgsUrl);
+    function getManagedOrgsList(searchText) {
+      return $http.get(managedOrgsUrl, {
+        params: {
+          customerName: searchText
+        }
+      });
     }
 
     // Series of fns dont make any sense, unless isTrial = null means something...
@@ -148,13 +152,15 @@
         state: customer.state,
         isAllowedToManage: true,
         isSquaredUcOffer: false,
-        notes: {}
+        notes: {},
+        isPartner: false
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer);
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
 
@@ -232,7 +238,7 @@
               licenseType: Config.licenseTypes.CONFERENCING
             });
             var communicationsLicense = _.find(customer.licenses, {
-              licenseType: Config.licenseTypes.COMMUNICATIONS
+              licenseType: Config.licenseTypes.COMMUNICATION
             });
             var roomSystemsLicense = _.find(customer.licenses, {
               licenseType: Config.licenseTypes.SHARED_DEVICES
@@ -280,6 +286,17 @@
 
       var deviceServiceText = [];
       var userServices = [];
+
+      _.forEach(_.get(customer, 'licenses', []), function (licenseInfo) {
+        if (!licenseInfo) {
+          return;
+        }
+        switch (licenseInfo.licenseType) {
+        case Config.licenseTypes.COMMUNICATION:
+          partial.isSquaredUcOffer = true;
+          break;
+        }
+      });
 
       for (var offer in _.get(customer, 'offers', [])) {
         var offerInfo = customer.offers[offer];

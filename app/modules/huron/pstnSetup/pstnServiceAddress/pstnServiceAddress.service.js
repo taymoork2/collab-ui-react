@@ -164,6 +164,7 @@
         .then(function (sites) {
           var siteId = _.get(sites, '[0].uuid');
           if (siteId) {
+            site.serviceAddress.serviceName = _.get(sites, '[0].name');
             return updateSite(customerId, siteId, site);
           } else {
             return $q.reject('Site not found');

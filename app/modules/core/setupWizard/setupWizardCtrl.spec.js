@@ -16,6 +16,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(false));
     spyOn(FeatureToggleService, 'supportsDirSync').and.returnValue($q.when(false));
@@ -273,6 +274,22 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('When atlasTelstraCsb is enabled', function () {
+    beforeEach(function () {
+      FeatureToggleService.supports.and.callFake(function (val) {
+        if (val === FeatureToggleService.features.atlasTelstraCsb) {
+          return $q.when(true);
+        }
+        return $q.when(false);
+      });
+      initController();
+    });
+
+    it('the wizard should have 4 tabs', function () {
+      expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
   describe('When everything is true', function () {
     beforeEach(function () {
       Authinfo.isSetupDone.and.returnValue(true);
@@ -285,16 +302,12 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'addUsers']);
+      expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings']);
 
       expectSubStepOrder('planReview', ['init']);
       expectSubStepOrder('serviceSetup', ['init']);
       expectSubStepOrder('messagingSetup', ['setup']);
       expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-
-      expectSubTabOrder('addUsers', ['csv', 'advanced']);
-      expectSubTabStepOrder('addUsers', 'csv', ['init', 'csvDownload', 'csvUpload', 'csvProcessing', 'csvResult']);
-      expectSubTabStepOrder('addUsers', 'advanced', ['init', 'domainEntry', 'installConnector', 'syncStatus', 'dirsyncServices', 'dirsyncProcessing', 'dirsyncResult']);
     });
 
   });

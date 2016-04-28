@@ -2,6 +2,8 @@
   <cs-page-header title="{{::'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
+      <cs-searchfilter filters="filters" search-item-fn="filterList(searchStr)">
+      </cs-searchfilter>
       <div cs-dropdown class="table-filter" ng-if="!isCustomerPartner">
         <div cs-dropdown-toggle class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm' || breakpoint === 'screen-md'">
           <span class="name" ng-if="activeFilter === 'all'" translate="customerPage.all"></span>

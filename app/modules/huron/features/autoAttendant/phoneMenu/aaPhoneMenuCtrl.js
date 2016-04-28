@@ -74,7 +74,6 @@
         name: 'phoneMenuRouteMailbox',
         action: 'routeToVoiceMail'
       }
-
     ];
 
     // search for a key action by its name

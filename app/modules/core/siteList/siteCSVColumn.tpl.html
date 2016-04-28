@@ -21,7 +21,13 @@
         </span>
       </span>
         
-      <span ng-if="row.entity.isCSVSupported">
+      <span ng-if="row.entity.isCSVSupported && row.entity.showAsyncErr">
+          <i id="{{row.entity.license.siteUrl}}_asyncErrorIcon" 
+                 class="icon-error icon err webex-alert-text ui-grid-vcenter"></i>
+          <span class="ui-grid-vcenter error_text" translate="siteList.asyncErrorMessage"></span>
+      </span>
+
+      <span ng-if="row.entity.isCSVSupported && !row.entity.showAsyncErr">
           <!-- export section -->
           <span id="{{row.entity.license.siteUrl}}_exportStatus">
             <!-- Export Results -->

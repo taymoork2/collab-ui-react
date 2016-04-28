@@ -14,8 +14,10 @@ var AutoAttendantPage = function () {
   this.saveButton = element(by.name('saveButton'));
   this.closeEditButton = element(by.id('close-panel'));
   this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+  this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
 
   this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+  this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
 
   this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
 
@@ -31,12 +33,13 @@ var AutoAttendantPage = function () {
   this.sayMessageVoice = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
   this.sayMessageVoiceOptions = element(by.css('div.aa-panel-body[name="Say Message"]')).element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
-  this.phoneMenu = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
+  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"]')).all(by.cssContainingText("h3", "Phone Menu"));
+  this.phoneMenuSay = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
   this.phonesayMessageInput = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message [name="sayMessageInput"]'));
   this.phonesayMessageLanguage = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div a.select-toggle'));
   this.phonelanguageDropDownOptions = element(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
-  this.phonesayMessageVoice = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
-  this.phonesayMessageVoiceOptions = this.phoneMenu.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.phonesayMessageVoice = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
+  this.phonesayMessageVoiceOptions = this.phoneMenuSay.element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.addPlus = element(by.css('.aa-add-step-icon'));
   this.repeatPlus = element(by.css('.icon-plus-circle'));
@@ -88,14 +91,10 @@ var AutoAttendantPage = function () {
   // and select the first one (which we added via Add New Step) for further tests
   this.sayMessageInputFirst = this.sayMessageAll.first().element(by.name('sayMessageInput'));
 
-  // since we added a Phone Menu via Add New Step, there should be more than 1 from now on.
-  // Get them all so we can check:
-  this.phoneMenuAll = element.all(by.css('div.aa-panel-body[name="Phone Menu"] aa-say-message'));
-
-  this.phoneSayMessageLanguageFirst = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
+  this.phoneSayMessageLanguageFirst = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('a.select-toggle'));
 
   // let's select galician (10th selection starting from 0 == 9) for a change of pace
-  this.phoneLanguageDropDownOptionsTenth = this.phoneMenuAll.first().all(by.name('languageSelect')).first().element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(9);
+  this.phoneLanguageDropDownOptionsTenth = this.phoneMenuSay.all(by.name('languageSelect')).first().element(by.css('div.dropdown-menu')).all(by.tagName('li')).get(9);
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
@@ -114,9 +113,9 @@ var AutoAttendantPage = function () {
 
   this.schedule = element(by.css('.aa-schedule-container')).element(by.css('.aa-edit-icon'));
   this.addschedule = element(by.linkText('Add Hours'));
-  this.toggleHoliday = element(by.css('.simple-accordion .pull-right'));
-  this.toggleHolidayWhenOpenCloseExpanded = element(by.css('div.simple-accordion.aa-holidays a.icon-right-arrow.pull-right'));
+  this.toggleHolidays = element(by.css('a#toggleHolidays.icon.icon-right-arrow.pull-right'));
   this.addholiday = element(by.css('#addHoliday'));
+  this.deleteHoliday = element(by.name('aaScheduleModalCtrl.holidaysForm')).all(by.css('i.icon-trash'));
   this.holidayName = element(by.css('#holidayName'));
   this.holidayName2 = element(by.css('div.content.active')).element(by.css('#holidayName'));
   this.recurAnnually = element(by.name('recurAnnually1'));
@@ -138,6 +137,7 @@ var AutoAttendantPage = function () {
   this.day5 = element(by.cssContainingText('cs-checkbox', 'Friday'));
   this.day6 = element(by.cssContainingText('cs-checkbox', 'Saturday'));
   this.day7 = element(by.cssContainingText('cs-checkbox', 'Sunday'));
+  this.holidayBehaviour = element(by.cssContainingText('.cs-checkbox', 'Holidays Follow Closed Behavior'));
   this.scheduletrash = element(by.css('.aa-schedule-trash'));
   this.modalsave = element(by.id('saveOpenClosedBtn'));
   this.modalcancel = element(by.id('cancelDeleteFeature'));
@@ -155,6 +155,9 @@ var AutoAttendantPage = function () {
   this.scheduleInfoHolidayHours = element(by.css('aa-schedule-info[schedule="holidays"]'));
   this.assertUpdateSuccess = assertUpdateSuccess;
   this.assertCreateSuccess = assertCreateSuccess;
+  this.assertImportSuccess = assertImportSuccess;
+  this.assertCalendarUpdateSuccess = assertCalendarUpdateSuccess;
+  this.assertDeleteSuccess = assertDeleteSuccess;
   this.importSchedule = element(by.id('importSchedule'));
   this.importContinue = element(by.id('importCtn'));
   this.importScheduleTitle = element.all(by.cssContainingText('.modal-title', 'Import Schedule'));
@@ -166,6 +169,19 @@ var AutoAttendantPage = function () {
   function assertCreateSuccess(test) {
     notifications.assertSuccess(test + ' created successfully');
   }
+
+  function assertImportSuccess(hours, holidays) {
+    notifications.assertSuccess("Imported " + hours + " Open/Closed Hours and " + holidays + " Holidays Successfully");
+  }
+
+  function assertCalendarUpdateSuccess(test) {
+    notifications.assertSuccess('Calendar for ' + test + ' updated successfully');
+  }
+
+  function assertDeleteSuccess(test) {
+    notifications.assertSuccess(test + ' Auto Attendant has been deleted successfully');
+  }
+
 };
 
 module.exports = AutoAttendantPage;

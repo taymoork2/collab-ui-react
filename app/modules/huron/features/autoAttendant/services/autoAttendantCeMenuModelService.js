@@ -299,9 +299,38 @@
 
     /////////////////////
 
+    function encodeUtf8(stringToEncode) {
+      if (stringToEncode) {
+        try {
+          var stringEncoded = encodeURIComponent(stringToEncode);
+          var encodedStringUnescaped = unescape(stringEncoded);
+          return encodedStringUnescaped;
+        } catch (exception) {
+          //exception can occur if string is ready encoded
+          return stringToEncode;
+        }
+      }
+      return stringToEncode;
+    }
+
+    function decodeUtf8(stringToDecode) {
+      if (stringToDecode) {
+        try {
+          var stringEscaped = escape(stringToDecode);
+          var escapedStringDecoded = decodeURIComponent(stringEscaped);
+          return escapedStringDecoded;
+
+        } catch (exception) {
+          // exception can occur if string was previously encoded non-utf-8
+          return stringToDecode;
+        }
+      }
+      return stringToDecode;
+    }
+
     function parseSayObject(menuEntry, inObject) {
       var action;
-      action = new Action('say', inObject.value);
+      action = new Action('say', decodeUtf8(inObject.value));
       if (angular.isDefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -318,7 +347,7 @@
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
-        newActionArray[i].value = (actions[i].getValue() ? actions[i].getValue() : '');
+        newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         if (angular.isDefined(actions[i].voice) && actions[i].voice.length > 0) {
           newActionArray[i].voice = actions[i].voice;
         }
@@ -341,7 +370,7 @@
         setDescription(action, inAction.play);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.say)) {
-        action = new Action('say', inAction.say.value);
+        action = new Action('say', decodeUtf8(inAction.say.value));
         setDescription(action, inAction.say);
         if (angular.isDefined(inAction.say.voice)) {
           action.setVoice(inAction.say.voice);
@@ -407,7 +436,7 @@
             angular.isDefined(inAction.runActionsOnInput.prompts.sayList)) {
             var sayList = inAction.runActionsOnInput.prompts.sayList;
             if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
-              action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+              action.value = decodeUtf8(inAction.runActionsOnInput.prompts.sayList[0].value);
               action.voice = inAction.runActionsOnInput.voice;
               menuEntry.voice = inAction.runActionsOnInput.voice;
               menuEntry.language = inAction.runActionsOnInput.language;
@@ -658,7 +687,7 @@
       };
     }
 
-    function updateScheduleActionSetMap(ceRecord, actionSetName) {
+    function updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue) {
       if (!ceRecord.scheduleEventTypeMap) {
         ceRecord['scheduleEventTypeMap'] = {};
       }
@@ -671,16 +700,16 @@
         ceRecord.scheduleEventTypeMap['closed'] = actionSetName;
         ceRecord.defaultActionSet = 'closedHours';
       } else if (actionSetName === 'holidays') {
-        ceRecord.scheduleEventTypeMap['holiday'] = actionSetName;
+        ceRecord.scheduleEventTypeMap['holiday'] = actionSetValue;
         if (!ceRecord.scheduleEventTypeMap['open'] && !ceRecord.scheduleEventTypeMap['closed']) {
           ceRecord.defaultActionSet = 'holidays';
         }
       }
     }
 
-    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu, actionSetValue) {
 
-      updateScheduleActionSetMap(ceRecord, actionSetName);
+      updateScheduleActionSetMap(ceRecord, actionSetName, actionSetValue);
 
       updateMenu(ceRecord, actionSetName, aaCombinedMenu);
       if (aaCombinedMenu.length > 0) {
@@ -814,7 +843,7 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'say') {
-              newActionArray[i][actionName].value = menuEntry.actions[0].getValue();
+              newActionArray[i][actionName].value = encodeUtf8(menuEntry.actions[0].getValue());
               newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
             } else if (actionName === 'play') {
               newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
@@ -871,7 +900,7 @@
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
         if (actionName === 'say') {
-          newActionArray[i][actionName].value = val;
+          newActionArray[i][actionName].value = encodeUtf8(val);
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
           // convert unique filename to corresponding URL
@@ -914,7 +943,7 @@
           var prompts = {};
           var sayListArr = [];
           var sayList = {};
-          sayList.value = action.value;
+          sayList.value = encodeUtf8(action.value);
           sayListArr[0] = sayList;
           prompts.sayList = sayListArr;
           newAction.prompts = prompts;
@@ -1084,15 +1113,17 @@
     function deleteScheduleActionSetMap(ceRecord, actionSetName) {
       // remove associated schedule to actionSet map, e.g.,
       // scheduleEventTypeMap.open = 'openHours'
+      var prop;
       if (!ceRecord.scheduleEventTypeMap) {
         return;
       }
-      var prop = _.find(Object.keys(ceRecord.scheduleEventTypeMap), function (prop) {
-        return this.scheduleEventTypeMap[prop] === this.actionSetName;
-      }, {
-        scheduleEventTypeMap: ceRecord.scheduleEventTypeMap,
-        actionSetName: actionSetName
-      });
+      if (actionSetName === 'holidays') {
+        prop = 'holiday';
+      } else if (actionSetName === 'closedHours') {
+        prop = 'closed';
+      } else {
+        prop = 'open';
+      }
       if (prop) {
         delete ceRecord.scheduleEventTypeMap[prop];
         if (ceRecord.scheduleEventTypeMap) {

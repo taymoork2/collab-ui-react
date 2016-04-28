@@ -6,11 +6,11 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig) {
+  function OverviewCtrl($scope, $rootScope, $state, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory, FeatureToggleService, UrlConfig, Notification) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
-
+    vm.isCSB = false;
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
@@ -19,6 +19,17 @@
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard()
     ];
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+        vm.isCSB = Authinfo.isCSB() && result;
+      })
+      .then(function () {
+        if (vm.isCSB) {
+          _.remove(vm.cards, {
+            name: 'overview.cards.users.title'
+          });
+        }
+      });
 
     function forwardEvent(handlerName) {
       var eventArgs = [].slice.call(arguments, 1);
@@ -43,7 +54,7 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
@@ -105,6 +116,10 @@
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', vm.setSipUriNotificationAcknowledged);
 
+    $rootScope.$watch('ssoEnabled', function () {
+      Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, true);
+    });
+
     vm.showServiceActivationPage = function (serviceName) {
       if (serviceName === 'calendar-service') {
         $state.go('calendar-service.list');
@@ -119,6 +134,13 @@
     vm.showEnterpriseSettings = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'enterpriseSettings'
+      });
+    };
+
+    vm.showSSOSettings = function () {
+      $state.go('setupwizardmodal', {
+        currentTab: 'enterpriseSettings',
+        currentStep: 'init'
       });
     };
 

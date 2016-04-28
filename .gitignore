@@ -24,6 +24,7 @@ dist
 screenshots
 plato
 typings
+/ts/ts-manifest.txt
 .cache
 
 bower_components

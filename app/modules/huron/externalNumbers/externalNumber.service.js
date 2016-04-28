@@ -5,22 +5,32 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
+  function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnSetupService, TelephoneNumberService, Notification) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
+      getAssignedNumbers: getAssignedNumbers,
       getPendingNumbers: getPendingNumbers,
+      getPendingOrders: getPendingOrders,
       getUnassignedNumbers: getUnassignedNumbers,
       getUnassignedNumbersWithoutPending: getUnassignedNumbersWithoutPending,
       deleteNumber: deleteNumber,
-      isTerminusCustomer: isTerminusCustomer
+      isTerminusCustomer: isTerminusCustomer,
+      getPendingOrderQuantity: getPendingOrderQuantity,
+      getQuantity: getQuantity
     };
     var allNumbers = [];
     var pendingNumbers = [];
     var unassignedNumbers = [];
     var terminusDetails = [];
+    var pendingOrders = [];
+    var assignedNumbers = [];
+
+    var ALL = 'all';
+    var PENDING = 'pending';
+    var UNASSIGNED = 'unassigned';
 
     return service;
 
@@ -31,7 +41,14 @@
             return PstnSetupService.listPendingNumbers(customerId)
               .then(formatNumberLabels)
               .then(function (numbers) {
-                pendingNumbers = numbers;
+                clearNumbers();
+                _.forEach(numbers, function (number) {
+                  if (_.has(number, 'orderNumber') || _.has(number, 'quantity')) {
+                    pendingOrders.push(number);
+                  } else {
+                    pendingNumbers.push(number);
+                  }
+                });
               })
               .catch(function (response) {
                 pendingNumbers = [];
@@ -46,6 +63,7 @@
             .then(formatNumberLabels)
             .then(function (numbers) {
               unassignedNumbers = filterUnassigned(numbers);
+              assignedNumbers = filterAssigned(numbers);
               allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
             });
         })
@@ -70,11 +88,19 @@
       allNumbers = [];
       pendingNumbers = [];
       unassignedNumbers = [];
+      pendingOrders = [];
+      assignedNumbers = [];
     }
 
     function formatNumberLabels(numbers) {
       _.forEach(numbers, function (number) {
-        number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+        if (_.has(number, 'quantity')) {
+          number.label = number.pattern + ' ' + $translate.instant('pstnSetup.quantity') + ': ' + number.quantity;
+        } else if (_.has(number, 'orderNumber')) {
+          number.label = $translate.instant('pstnSetup.orderNumber') + ' ' + number.orderNumber;
+        } else {
+          number.label = TelephoneNumberService.getDIDLabel(number.pattern);
+        }
       });
       return numbers;
     }
@@ -89,18 +115,31 @@
       return _.reject(numbers, 'uuid');
     }
 
+    function filterAssigned(numbers) {
+      return _.filter(numbers, 'directoryNumber');
+    }
+
     function setAllNumbers(_allNumbers) {
       allNumbers = _allNumbers || [];
       unassignedNumbers = filterUnassigned(allNumbers);
       pendingNumbers = filterPending(allNumbers);
+      assignedNumbers = filterAssigned(allNumbers);
     }
 
     function getAllNumbers() {
       return allNumbers;
     }
 
+    function getAssignedNumbers() {
+      return assignedNumbers;
+    }
+
     function getPendingNumbers() {
       return pendingNumbers;
+    }
+
+    function getPendingOrders() {
+      return pendingOrders;
     }
 
     function getUnassignedNumbers() {
@@ -147,6 +186,23 @@
         customerId: customerId
       });
       return true;
+    }
+
+    function getPendingOrderQuantity() {
+      return _.sum(getPendingOrders(), 'quantity');
+    }
+
+    function getQuantity(type) {
+      switch (type) {
+      case ALL:
+        return getAllNumbers().length + getPendingOrderQuantity();
+      case PENDING:
+        return getPendingNumbers().length + getPendingOrderQuantity();
+      case UNASSIGNED:
+        return getUnassignedNumbersWithoutPending().length;
+      default:
+        break;
+      }
     }
   }
 })();

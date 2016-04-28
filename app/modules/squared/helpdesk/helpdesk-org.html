@@ -23,10 +23,10 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+          <span>{{'helpdesk.accountCreated' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
+          <span>{{helpdeskOrgCtrl.org.meta.created | date : 'longDate' : '+0000'}}</span>
         </div>
       </div>
 
@@ -106,6 +106,15 @@
       </div>
 
       <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        </div>
+      </div>
+
+      <div class="row">
         <div class="medium-12 columns">
           <span>
               <a href ng-click="helpdeskOrgCtrl.gotoSearchUsersAndDevices()">
@@ -149,7 +158,14 @@
 
       <div class="row" ng-if="helpdeskOrgCtrl.allowLaunchAtlas">
         <div class="medium-12 columns">
-          <button cs-btn class="btn btn--people centered launch-button" type="button" ng-click="helpdeskOrgCtrl.launchAtlasReadonly()" loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.viewPortal' | translate}}</button>
+          <h4 translate="helpdesk.customerPortalViewHeading"></h4>
+          <div class="details-value">
+            <span>{{'helpdesk.customerPortalViewDetails' | translate}}</span>
+          </div>
+          <button cs-btn class="btn btn--people centered launch-button"
+                  type="button"
+                  ng-click="helpdeskOrgCtrl.launchAtlasReadonly()"
+                  loading="helpdeskOrgCtrl.launchingAtlas">{{'helpdesk.view' | translate}} {{helpdeskOrgCtrl.org.displayName}}</button>
         </div>
       </div>
 

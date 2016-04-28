@@ -16,9 +16,11 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
+  var tsManifest = '/../ts/ts-manifest.txt';
 
   var config = {
     build: build,
@@ -41,6 +43,7 @@ module.exports = function () {
     jsUnsupportedName: 'unsupported.scripts',
     cache: cache,
     examples: examples,
+    tsManifest: tsManifest,
 
     gulpFiles: gulpFiles,
 
@@ -48,6 +51,10 @@ module.exports = function () {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
+      ],
+      notTs: [
+        '!' + app + '/modules/**/*.js',
+        '!' + app + '/scripts/**/*.js'
       ],
       json: app + '/**/*.json',
       csv: app + '/**/*.csv',
@@ -62,6 +69,7 @@ module.exports = function () {
     typeScript: {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
+      compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
       compiledTestFiles: compiledTestFiles,
     },
@@ -90,11 +98,15 @@ module.exports = function () {
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',
-      karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
+      ],
+      notTs: [
+        '!' + build + '/scripts/**/*.ts.js',
+        '!' + build + '/modules/**/*.module.ts.js',
+        '!' + build + '/modules/**/*.ts.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -196,6 +208,7 @@ module.exports = function () {
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+        vendor + '/moment-range/dist/moment-range.js',
         vendor + '/ng-clip/src/ngClip.js',
         vendor + '/zeroclipboard/dist/ZeroClipboard.js',
         vendor + '/d3/d3.min.js',

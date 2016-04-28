@@ -6,7 +6,7 @@
     .factory('AAValidationService', AAValidationService);
 
   /* @ngInject */
-  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, Notification) {
+  function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, AANotificationService) {
 
     var service = {
       isNameValidationSuccess: isNameValidationSuccess,
@@ -21,7 +21,7 @@
       var aaModel = AAModelService.getAAModel();
 
       if (!angular.isDefined(name) || name.trim().length === 0) {
-        Notification.error('autoAttendant.invalidBuilderNameMissing');
+        AANotificationService.error('autoAttendant.invalidBuilderNameMissing');
         return false;
       }
 
@@ -31,7 +31,7 @@
 
       for (var i = 0; i < aaModel.ceInfos.length; i++) {
         if ((uuid !== AutoAttendantCeInfoModelService.extractUUID(aaModel.ceInfos[i].ceUrl)) && (name === aaModel.ceInfos[i].getName())) {
-          Notification.error('autoAttendant.invalidBuilderNameNotUnique');
+          AANotificationService.error('autoAttendant.invalidBuilderNameNotUnique');
           return false;
         }
       }
@@ -60,6 +60,12 @@
             key: entry.key
           });
         }
+        if (entry.key && 'routeToVoiceMail' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
+            key: entry.key
+          });
+        }
         if (entry.key && 'route' === entry.actions[0].name && !entry.actions[0].value) {
           outErrors.push({
             msg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
@@ -83,7 +89,7 @@
         errors = checkAllKeys(optionMenu);
 
         _.forEach(errors, function (err) {
-          Notification.error(err.msg, {
+          AANotificationService.error(err.msg, {
             key: err.key
           });
         });
