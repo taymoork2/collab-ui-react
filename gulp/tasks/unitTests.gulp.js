@@ -20,6 +20,8 @@ var fs = require('fs');
 var glob = require('glob');
 var istanbul = require('istanbul');
 var ll = require('gulp-ll');
+var typeScriptUtil = require('../utils/typeScript.gulp.js');
+var series = require('stream-series');
 
 var RUN_KARMA = 'run-karma-';
 var RUN_KARMA_PARALLEL = 'run-karma-parallel-';
@@ -143,6 +145,7 @@ function createGulpKarmaConfigModule(module) {
       var unitTestFiles = [].concat(
         config.vendorFiles.js,
         config.testFiles.js,
+        config.testFiles.notTs,
         config.testFiles.app,
         config.testFiles.global
       );
@@ -168,16 +171,22 @@ function createGulpKarmaConfigModule(module) {
 
       return gulp
         .src(config.testFiles.karmaTpl)
-        .pipe($.inject(gulp.src(unitTestFiles, {
-          read: false
-        }), {
-          addRootSlash: false,
-          starttag: '// inject:unitTestFiles',
-          endtag: '// end-inject:unitTestFiles',
-          transform: function (filepath, file, i, length) {
-            return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
-          }
-        }))
+        .pipe($.inject(
+          series(
+            gulp.src(unitTestFiles, {
+              read: false
+            }),
+            gulp.src(typeScriptUtil.getTsFilesFromManifest(), {
+              read: false
+            })
+          ), {
+            addRootSlash: false,
+            starttag: '// inject:unitTestFiles',
+            endtag: '// end-inject:unitTestFiles',
+            transform: function (filepath, file, i, length) {
+              return '\'' + filepath + '\'' + (i + 1 < length ? ',' : '');
+            }
+          }))
         .pipe($.replace('// inject:reporters', args.fast ? '' : ",'junit', 'coverage', 'html'"))
         .pipe($.replace('<module>', module))
         .pipe($.rename({

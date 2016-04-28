@@ -39,6 +39,7 @@
     callrouting: true
     cdr: true
     config: true
+    customers: true
     deleteUtils: true
     describe: true
     disyncwizard: true

@@ -167,6 +167,9 @@
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
+          },
+          userStatusSummary: function () {
+            return vm.userStatusSummary;
           }
         }
       });
@@ -182,7 +185,7 @@
   }
 
   /* @ngInject */
-  function UserErrorsController($modal, $scope, serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
+  function UserErrorsController($modal, $scope, serviceId, userStatusSummary, USSService, XhrNotificationService, Userservice, ClusterService) {
     var vm = this;
     vm.loading = true;
     vm.limit = 5;
@@ -201,6 +204,9 @@
         resolve: {
           serviceId: function () {
             return vm.serviceId;
+          },
+          userStatusSummary: function () {
+            return userStatusSummary;
           }
         }
       });

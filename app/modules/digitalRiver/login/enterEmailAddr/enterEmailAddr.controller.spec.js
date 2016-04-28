@@ -28,7 +28,7 @@
       $rootScope.$apply();
     }
 
-    describe('emailPlaceholder', function () {
+    xdescribe('emailPlaceholder', function () {
       beforeEach(initController);
 
       it('should return the correct value', function () {
@@ -36,7 +36,7 @@
       });
     });
 
-    describe('handleEnterEmailAddr', function () {
+    xdescribe('handleEnterEmailAddr', function () {
       beforeEach(initController);
       it('should validate an empty email', function () {
         controller.handleEnterEmailAddr();
@@ -51,7 +51,7 @@
       });
     });
 
-    describe('getUserFromEmail', function () {
+    xdescribe('getUserFromEmail', function () {
       beforeEach(function () {
         initController();
         controller.email = 'foo@bar.com';
@@ -76,7 +76,7 @@
       });
 
       //TODO Note: a tech debt US has been created to refactor these tests
-      xit('should redirect to create-account on success with improper data', function (done) {
+      it('should redirect to create-account on success with improper data', function (done) {
         DigitalRiverService.getUserFromEmail.and.returnValue($q.when({
           data: {
             success: true
@@ -89,7 +89,7 @@
         $rootScope.$apply();
       });
 
-      xit('should redirect to dr-login-forward on success with proper data', function (done) {
+      it('should redirect to dr-login-forward on success with proper data', function (done) {
         DigitalRiverService.getUserFromEmail.and.returnValue($q.when({
           data: {
             data: {

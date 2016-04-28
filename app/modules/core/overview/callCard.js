@@ -6,7 +6,7 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper) {
+  function OverviewCallCard(OverviewHelper, Authinfo, FeatureToggleService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -22,6 +22,11 @@
         card.settingsUrl = '#/hurondetails/settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
+        card.isCSB = false;
+
+        FeatureToggleService.supports(FeatureToggleService.features.atlasTelstraCsb).then(function (result) {
+          card.isCSB = Authinfo.isCSB() && result;
+        });
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;
