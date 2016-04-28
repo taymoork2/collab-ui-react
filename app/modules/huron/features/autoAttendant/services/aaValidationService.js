@@ -78,24 +78,50 @@
 
     }
 
-    function isPhoneMenuValidationSuccess(uiCombinedMenu) {
-      var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
-        return this === entry.type;
-      }, 'MENU_OPTION');
+    function isPhoneMenuValidationSuccess(ui) {
+      var openHoursValid = true;
+      var closedHoursValid = true;
+      var holidaysValid = true;
 
+      if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
+        openHoursValid = checkForValid(ui.openHours);
+      }
+      if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
+        closedHoursValid = checkForValid(ui.closedHours);
+      }
+
+      if (ui.isHolidays && _.has(ui, 'holidays.entries')) {
+        holidaysValid = checkForValid(ui.holidays);
+      }
+
+      return openHoursValid && closedHoursValid && holidaysValid;
+
+    }
+
+    function checkForValid(uiCombinedMenu) {
+      var isValid = true;
       var errors = [];
 
-      if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
-        errors = checkAllKeys(optionMenu);
+      var menuOptions = _.filter(uiCombinedMenu.entries, {
+        'type': 'MENU_OPTION'
+      });
+
+      _.forEach(menuOptions, function (optionMenu) {
+
+        if (_.has(optionMenu, 'entries')) {
+          errors = checkAllKeys(optionMenu);
+        }
 
         _.forEach(errors, function (err) {
+          isValid = false;
           AANotificationService.error(err.msg, {
             key: err.key
           });
         });
-      }
+      });
 
-      return errors.length === 0;
+      return isValid;
+
     }
   }
 })();
