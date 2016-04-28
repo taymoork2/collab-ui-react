@@ -70,7 +70,8 @@
       checkCustomerVoicemail: checkCustomerVoicemail,
       getTelephonyInfoObject: getTelephonyInfoObject,
       getInternationalDialing: getInternationalDialing,
-      getUserInternationalDialingDetails: getUserInternationalDialingDetails
+      getUserInternationalDialingDetails: getUserInternationalDialingDetails,
+      telephonyInfo: telephonyInfo
     };
 
     return telephonyInfoService;
@@ -410,30 +411,27 @@
     }
 
     function getUserInternationalDialingDetails(userUuid) {
-      return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestrictions) {
+      return InternationalDialing.listCosRestrictions(userUuid).then(function (cosRestriction) {
         var overRide = null;
         var custRestriction = null;
-        var cosRestriction = null;
 
-        for (var i = 0; i < cosRestrictions.length; i++) {
-          cosRestriction = cosRestrictions[i];
-          if (cosRestriction.user.length > 0) {
-            for (var j = 0; j < cosRestriction.user.length; j++) {
-              if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
-                overRide = true;
-                break;
-              }
-            }
-          }
-          if (cosRestriction.customer.length > 0) {
-            for (var k = 0; k < cosRestriction.customer.length; k++) {
-              if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
-                custRestriction = true;
-                break;
-              }
+        if (cosRestriction.user.length > 0) {
+          for (var j = 0; j < cosRestriction.user.length; j++) {
+            if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
+              overRide = true;
+              break;
             }
           }
         }
+        if (cosRestriction.customer.length > 0) {
+          for (var k = 0; k < cosRestriction.customer.length; k++) {
+            if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
+              custRestriction = true;
+              break;
+            }
+          }
+        }
+
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
             telephonyInfo.internationalDialingStatus = cbNeverAllow;

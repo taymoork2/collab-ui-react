@@ -54,30 +54,27 @@
     }
 
     function initInternationalDialing() {
-      return InternationalDialing.listCosRestrictions(vm.currentUser.id).then(function (cosRestrictions) {
+      return InternationalDialing.listCosRestrictions(vm.currentUser.id).then(function (cosRestriction) {
         var overRide = null;
         var custRestriction = null;
-        var cosRestriction = null;
 
-        angular.forEach(cosRestrictions, function (restriction) {
-          cosRestriction = restriction;
-          if (cosRestriction.user.length > 0) {
-            for (var j = 0; j < cosRestriction.user.length; j++) {
-              if (cosRestriction.user[j].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
-                overRide = true;
-                break;
-              }
+        if (cosRestriction.user.length > 0) {
+          for (var j = 0; j < cosRestriction.user.length; j++) {
+            if (cosRestriction.user[j].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
+              overRide = true;
+              break;
             }
           }
-          if (cosRestriction.customer.length > 0) {
-            for (var k = 0; k < cosRestriction.customer.length; k++) {
-              if (cosRestriction.customer[k].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
-                custRestriction = true;
-                break;
-              }
+        }
+        if (cosRestriction.customer.length > 0) {
+          for (var k = 0; k < cosRestriction.customer.length; k++) {
+            if (cosRestriction.customer[k].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
+              custRestriction = true;
+              break;
             }
           }
-        });
+        }
+
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
             vm.model.internationalDialingEnabled = cbNeverAllow;

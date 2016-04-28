@@ -20,7 +20,7 @@
     return internationalDialing;
 
     function listCosRestrictions(curUserId) {
-      return UserCosRestrictionServiceV2.query({
+      return UserCosRestrictionServiceV2.get({
         customerId: Authinfo.getOrgId(),
         userId: curUserId
       }, angular.bind(this, function (cosRestrictions) {

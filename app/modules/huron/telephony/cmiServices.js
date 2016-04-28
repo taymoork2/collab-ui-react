@@ -134,9 +134,12 @@
       customerId: '@customerId',
       cesId: '@cesId'
     }, {
-      query: {
+      get: {
         method: 'GET',
-        isArray: true
+        transformResponse: function (data) {
+          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
+          return _.get(data, '[0]', data);
+        }
       },
       update: {
         method: 'PUT'
@@ -388,6 +391,13 @@
     }, {
       update: {
         method: 'PUT'
+      },
+      get: {
+        method: 'GET',
+        transformResponse: function (data, headers) {
+          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
+          return _.get(data, '[0]', data);
+        }
       }
     });
   })
@@ -397,7 +407,32 @@
     return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
       customerId: '@customerId',
       restrictionId: '@restrictionId'
+    }, {
+      get: {
+        method: 'GET',
+        transformResponse: function (data) {
+          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
+          return _.get(data, '[0]', data);
+        }
+      }
     });
   });
+
+  function transformEnvelope() {
+    return {
+      method: 'GET',
+      transformResponse: function (data) {
+        if (_.isString(data)) {
+          try {
+            return JSON.parse(data);
+          } catch (err) {
+            return data;
+          }
+        } else {
+          return _.isObject(data) ? data : _.get(data, '[0]', data);
+        }
+      }
+    };
+  }
 
 })();
