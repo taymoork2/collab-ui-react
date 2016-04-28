@@ -376,6 +376,9 @@
       isPartnerAdmin: function () {
         return this.hasRole('PARTNER_ADMIN');
       },
+      isPartnerReadOnlyAdmin: function () {
+        return this.hasRole('PARTNER_READ_ONLY_ADMIN');
+      },
       isPartnerSalesAdmin: function () {
         return this.hasRole('PARTNER_SALES_ADMIN');
       },
