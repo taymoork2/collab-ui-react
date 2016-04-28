@@ -4,6 +4,7 @@
   angular.module('Core')
     .controller('PartnerProfileCtrl', PartnerProfileCtrl);
 
+  /* @ngInject */
   function PartnerProfileCtrl($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService, WebexClientVersion, FeatureToggleService) {
     var orgId = Authinfo.getOrgId();
 

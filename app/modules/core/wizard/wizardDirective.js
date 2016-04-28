@@ -190,6 +190,7 @@
       }
     }
 
+    /* @ngInject */
     function getTabController($scope) {
       var tab = getTab();
       if (tab && tab.controller) {
@@ -198,8 +199,8 @@
         });
       }
     }
-    getTabController.$inject = ['$scope'];
 
+    /* @ngInject */
     function getSubTabController($scope) {
       var subTab = getSubTab();
       if (subTab && subTab.controller) {
@@ -208,7 +209,6 @@
         });
       }
     }
-    getSubTabController.$inject = ['$scope'];
 
     function loadOverview() {
       $state.go('overview');
