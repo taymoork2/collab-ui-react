@@ -516,6 +516,16 @@ angular
           controllerAs: 'settingsCtrl',
           parent: 'main'
         })
+        .state('settings.enable3rdPartyAuth', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'Enable3rdPartyAuthCtrl',
+              controllerAs: 'enable3rdPartyAuth',
+              templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'
+            }
+          }
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
