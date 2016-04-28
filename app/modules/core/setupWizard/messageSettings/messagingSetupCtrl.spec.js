@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: messagingSetupCtrl', function () {
+describe('Controller: messagingSetupCtrl', function () {
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
@@ -18,6 +18,10 @@ fdescribe('Controller: messagingSetupCtrl', function () {
     spyOn(AccountOrgService, 'getOrgSettings').and.returnValue({
       success: _.noop
     });
+    spyOn(AccountOrgService, 'getServices').and.returnValue({
+      success: _.noop
+    });
+    spyOn(Authinfo, 'getOrgId').and.returnValue(1);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     spyOn(Notification, 'notify');
 
@@ -32,6 +36,7 @@ fdescribe('Controller: messagingSetupCtrl', function () {
 
   describe('controller', function () {
     beforeEach(initController);
+
     it('should be defined', function () {
       expect(controller).toBeDefined();
     });
@@ -49,7 +54,7 @@ fdescribe('Controller: messagingSetupCtrl', function () {
     });
 
     it('should set the showAppSecurity flag to be true', function () {
-      expect($scope.showAppSecurity).toBe(true);
+      expect(controller.showAppSecurity).toBe(true);
     });
   });
 });
