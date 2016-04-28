@@ -78,24 +78,54 @@
 
     }
 
-    function isPhoneMenuValidationSuccess(uiCombinedMenu) {
-      var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
-        return this === entry.type;
-      }, 'MENU_OPTION');
-
-      var errors = [];
-
-      if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
-        errors = checkAllKeys(optionMenu);
-
-        _.forEach(errors, function (err) {
-          AANotificationService.error(err.msg, {
-            key: err.key
-          });
-        });
+    function isPhoneMenuValidationSuccess(ui) {
+      var openHoursValid = true;
+      var closedHoursValid = true;
+      var holidaysValid = true;
+      var closedHoliday =  _.get(ui, 'holidaysValue', 'Closed') === 'closedHours'
+      if (ui.isOpenHours && _.has(ui, 'openHours.entries')) {
+        openHoursValid = checkForValid(ui.openHours, 'Open Hours');
+      }
+      if (ui.isClosedHours && _.has(ui, 'closedHours.entries')) {
+        closedHoursValid = checkForValid(ui.closedHours, 
+          closedHoliday ? 'Closed/Holiday' : 'Closed');
       }
 
-      return errors.length === 0;
+      if (ui.isHolidays && (!closedHoliday) && _.has(ui, 'holidays.entries')) {
+        holidaysValid = checkForValid(ui.holidays, 'Holiday');
+      }
+
+      return openHoursValid && closedHoursValid && holidaysValid;
+
+    }
+
+    function checkForValid(uiCombinedMenu, from) {
+      var isValid = true;
+      var errors = [];
+
+      var menuOptions = _.filter(uiCombinedMenu.entries, {
+        'type': 'MENU_OPTION'
+      });
+
+      _.forEach(menuOptions, function (optionMenu) {
+
+        if (_.has(optionMenu, 'entries')) {
+          errors = checkAllKeys(optionMenu);
+        }
+
+        _.forEach(errors, function (err) {
+          isValid = false;
+              
+          AANotificationService.error(err.msg, {
+            key: err.key,
+            schedule: from,
+            at : _.indexOf(menuOptions, optionMenu) + 1
+          });
+        });
+      });
+
+      return isValid;
+
     }
   }
 })();

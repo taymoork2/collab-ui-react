@@ -303,7 +303,7 @@
         return deferred.promise;
       }
 
-      if (vm.ui.isOpenHours && !AAValidationService.isPhoneMenuValidationSuccess(vm.ui.openHours)) {
+      if (!AAValidationService.isPhoneMenuValidationSuccess(vm.ui)) {
         deferred.reject({
           statusText: '',
           status: 'VALIDATION_FAILURE'
