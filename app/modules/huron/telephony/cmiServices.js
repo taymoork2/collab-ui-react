@@ -137,8 +137,7 @@
       get: {
         method: 'GET',
         transformResponse: function (data) {
-          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
-          return _.get(data, '[0]', data);
+          return transformEnvelope(data);
         }
       },
       update: {
@@ -395,8 +394,7 @@
       get: {
         method: 'GET',
         transformResponse: function (data, headers) {
-          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
-          return _.get(data, '[0]', data);
+          return transformEnvelope(data);
         }
       }
     });
@@ -411,28 +409,22 @@
       get: {
         method: 'GET',
         transformResponse: function (data) {
-          data = _.isObject(data) ? data : (_.isString(data) ? JSON.parse(data) : data);
-          return _.get(data, '[0]', data);
+          return transformEnvelope(data);
         }
       }
     });
   });
 
-  function transformEnvelope() {
-    return {
-      method: 'GET',
-      transformResponse: function (data) {
-        if (_.isString(data)) {
-          try {
-            return JSON.parse(data);
-          } catch (err) {
-            return data;
-          }
-        } else {
-          return _.isObject(data) ? data : _.get(data, '[0]', data);
-        }
+  function transformEnvelope(data) {
+    if (_.isString(data)) {
+      try {
+        data = JSON.parse(data);
+      } catch (err) {
+        // take no action, return unparseable string
       }
-    };
+    }
+
+    return _.isObject(data) ? data : _.get(data, '[0]', data);
   }
 
 })();

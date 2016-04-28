@@ -56,9 +56,6 @@
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ];
-    vm.availableExtensions = [
-      '3', '4', '5'
-    ];
 
     vm.model = {
       site: {
@@ -253,18 +250,6 @@
       },
       expressionProperties: {
         'templateOptions.isWarn': vm.steeringDigitChangeValidation
-      }
-    }, {
-      model: vm.model.site,
-      key: 'extensionLength',
-      type: 'select',
-      templateOptions: {
-        inputClass: 'large-10',
-        label: $translate.instant('serviceSetupModal.extensionRange'),
-        description: $translate.instant('serviceSetupModal.extensionRangeDescription'),
-        warnMsg: $translate.instant('serviceSetupModal.extensionRangeChangeWarning'),
-        isWarn: false,
-        options: vm.availableExtensions
       }
     }, {
       className: 'service-setup service-setup-extension',
