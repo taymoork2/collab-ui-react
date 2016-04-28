@@ -31,22 +31,9 @@ namespace servicesOverview {
 
     describe('constructor', () => {
 
-
-
-      // beforeEach(inject(($controller, $translate)=> {
-      //   DomainManagementService.getVerifiedDomains = sinon.stub().returns($q.resolve());
-      //   ctrl = $controller('DomainManagementCtrl', {
-      //     Authinfo: {getOrgId: sinon.stub().returns('org-id')},
-      //     CiService: {
-      //       getUser: sinon.stub().returns($q.resolve({userName: 'logged-on-user'}))
-      //     }
-      //   });
-      // }));
-
       it('should create the ctrl and add the cards', ()=> {
         $rootScope.$digest();
         expect(ctrl.cloudCards).not.toBeNull();
-        // expect(ctrl.loggedOnUser.email).toBe('logged-on-user');
       });
 
       it('should create cloud cards', ()=> {
@@ -64,9 +51,15 @@ namespace servicesOverview {
       });
     });
 
-    // it('selecting filter to show only active should remove non active', ()=> {
-    //   ctrl.filterHybridCard('active');
-    //   expect(_.some(ctrl.hybridCards, {active: true})).toBeFalsy();
-    // });
+    it('selecting filter to show only active should remove non active', ()=> {
+      ctrl.filterHybridCard('active');
+      expect(_.some(ctrl.hybridCards, {active: false})).toBeFalsy();
+    });
+
+    it('selecting filter to show all cards should show non active', ()=> {
+      ctrl.filterHybridCard('all');
+      console.log(ctrl.hybridCards);
+      expect(_.some(ctrl.hybridCards, {active: false})).toBeTruthy();
+    });
   });
 }
