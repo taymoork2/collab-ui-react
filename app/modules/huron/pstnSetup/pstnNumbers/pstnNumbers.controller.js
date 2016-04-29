@@ -71,125 +71,134 @@
     });
 
     vm.fields = [{
-      type: 'inline',
-      templateOptions: {
-        fields: [{
-          type: 'select',
-          key: 'state',
-          templateOptions: {
-            required: true,
-            label: $translate.instant('pstnSetup.state'),
-            options: [],
-            labelfield: 'name',
-            valuefield: 'abbreviation',
-            onChangeFn: getStateInventory,
-            placeholder: $translate.instant('pstnSetup.selectState'),
-            inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
-            filter: true
-          },
-          controller: /* @ngInject */ function ($scope) {
-            TerminusStateService.query().$promise.then(function (states) {
-              $scope.to.options = states;
-            });
-          }
-        }, {
-          type: 'select',
-          key: 'areaCode',
-          id: 'areaCode',
-          templateOptions: {
-            required: true,
-            label: $translate.instant('pstnSetup.areaCode'),
-            options: [],
-            labelfield: 'code',
-            valuefield: 'code',
-            placeholder: $translate.instant('pstnSetup.selectAreaCode'),
-            inputPlaceholder: $translate.instant('pstnSetup.searchAreaCodes'),
-            filter: true,
-            onChangeFn: function () {
-              vm.showAdvancedOrder = false;
-            }
-          },
-          controller: /* @ngInject */ function ($scope) {
-            $scope.$watchCollection(function () {
-              return vm.areaCodeOptions;
-            }, function (newAreaCodes) {
-              newAreaCodes = newAreaCodes || [];
-              $scope.to.options = _.sortBy(newAreaCodes, 'code');
-            });
-          }
-        }, {
-          type: 'cs-input',
-          key: 'quantity',
-          id: 'quantity',
-          templateOptions: {
-            required: true,
-            label: $translate.instant('pstnSetup.quantity'),
-            groupSize: 'small-12',
-            max: 100
-          },
-          hideExpression: function () {
-            return !vm.model.block;
-          },
-          validators: {
-            positiveNumber: {
-              expression: ValidationService.positiveNumber,
-              message: function () {
-                return $translate.instant('validation.positiveNumber');
-              }
-            }
-          }
-        }, {
-          type: 'button',
-          key: 'searchBtn',
-          className: 'search-button',
-          templateOptions: {
-            btnClass: 'btn btn--circle primary',
-            spanClass: 'icon icon-search',
-            onClick: searchCarrierInventory
-          },
-          expressionProperties: {
-            'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-              return !scope.model.areaCode || !scope.model.quantity;
-            }
-          }
-        }]
-      }
-    }, {
-      type: 'inline',
-      className: 'small-2',
-      templateOptions: {
-        fields: [{
-          type: 'cs-input',
-          key: 'block',
-          className: 'small-1 columns no-pad right-margin',
-          templateOptions: {
-            type: 'checkbox',
-            id: 'blockChk',
-            label: $translate.instant('pstnSetup.block')
-          }
-        }, {
-          className: '',
-          noFormControl: true,
-          template: '<i class="icon icon-question-circle" tooltip="{{::\'pstnSetup.advancedOrder.tooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
-        }]
-      }
-    }, {
-      type: 'cs-input',
-      key: 'consecutive',
-      templateOptions: {
-        type: 'checkbox',
-        id: 'consecutiveChk',
-        className: 'no-pad',
-        label: $translate.instant('pstnSetup.consecutive')
-      },
-      hideExpression: function () {
-        if (angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2) {
-          // uncheck the consecutive checkbox
-          vm.model.consecutive = false;
-          return true;
+      className: 'row',
+      fieldGroup: [{
+        type: 'select',
+        key: 'state',
+        className: 'medium-3 columns',
+        templateOptions: {
+          required: true,
+          label: $translate.instant('pstnSetup.state'),
+          options: [],
+          labelfield: 'name',
+          valuefield: 'abbreviation',
+          onChangeFn: getStateInventory,
+          placeholder: $translate.instant('pstnSetup.selectState'),
+          inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
+          filter: true
+        },
+        controller: /* @ngInject */ function ($scope) {
+          TerminusStateService.query().$promise.then(function (states) {
+            $scope.to.options = states;
+          });
         }
-        return false;
-      }
+      }, {
+        type: 'select',
+        key: 'areaCode',
+        id: 'areaCode',
+        className: 'medium-3 columns',
+        templateOptions: {
+          required: true,
+          label: $translate.instant('pstnSetup.areaCode'),
+          options: [],
+          labelfield: 'code',
+          valuefield: 'code',
+          placeholder: $translate.instant('pstnSetup.selectAreaCode'),
+          inputPlaceholder: $translate.instant('pstnSetup.searchAreaCodes'),
+          filter: true,
+          onChangeFn: function () {
+            vm.showAdvancedOrder = false;
+          }
+        },
+        controller: /* @ngInject */ function ($scope) {
+          $scope.$watchCollection(function () {
+            return vm.areaCodeOptions;
+          }, function (newAreaCodes) {
+            newAreaCodes = newAreaCodes || [];
+            $scope.to.options = _.sortBy(newAreaCodes, 'code');
+          });
+        }
+      }, {
+        type: 'input',
+        key: 'quantity',
+        id: 'quantity',
+        className: 'medium-2 columns',
+        templateOptions: {
+          required: true,
+          label: $translate.instant('pstnSetup.quantity'),
+          // groupSize: 'medium-1',
+          max: 100
+        },
+        hideExpression: function () {
+          return !vm.model.block;
+        },
+        validators: {
+          positiveNumber: {
+            expression: ValidationService.positiveNumber,
+            message: function () {
+              return $translate.instant('validation.positiveNumber');
+            }
+          }
+        }
+      }, {
+        type: 'button',
+        key: 'searchBtn',
+        className: 'search-button',
+        templateOptions: {
+          btnClass: 'btn btn--circle primary',
+          spanClass: 'icon icon-search',
+          onClick: searchCarrierInventory
+        },
+        expressionProperties: {
+          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+            return !scope.model.areaCode || !scope.model.quantity;
+          }
+        }
+      }]
+    }, {
+      className: 'row',
+      fieldGroup: [{
+        type: 'cs-input',
+        key: 'block',
+        templateOptions: {
+          type: 'checkbox',
+          id: 'blockChk',
+          label: $translate.instant('pstnSetup.block')
+        }
+      }, {
+        className: '',
+        noFormControl: true,
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.blockTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>'
+      }, {
+        type: 'cs-input',
+        key: 'consecutive',
+        className: 'check-space',
+        templateOptions: {
+          type: 'checkbox',
+          id: 'consecutiveChk',
+          label: $translate.instant('pstnSetup.consecutive')
+        },
+        hideExpression: function () {
+          if (angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2) {
+            // uncheck the consecutive checkbox
+            vm.model.consecutive = false;
+            return true;
+          }
+          return false;
+        }
+      }, {
+        className: '',
+        noFormControl: true,
+        template: '<i class="icon icon-info" tooltip="{{::\'pstnSetup.advancedOrder.consecutiveTooltip\' | translate}}"  tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>',
+        hideExpression: function () {
+          if (angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2) {
+            // uncheck the consecutive checkbox
+            vm.model.consecutive = false;
+            return true;
+          }
+          return false;
+        }
+      }]
     }];
 
     ////////////////////////
