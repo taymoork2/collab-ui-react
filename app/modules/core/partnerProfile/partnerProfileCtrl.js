@@ -379,6 +379,20 @@ angular.module('Core')
         }
       };
 
+      //TODO:  show branding example Modal
+      $scope.showBrandingExample = function () {
+        $scope.exampleModal = $modal.open({
+          scope: $scope,
+          templateUrl: 'modules/core/partnerProfile/brandingExample.tpl.html',
+          size: 'lg'
+        });
+      };
+
+      //TODO:  close branding example Modal
+      $scope.closeExampleModal = function () {
+        $scope.exampleModal.close();
+      };
+
       // TODO: Refactor to use appconfig states
       function openModal(size) {
         $scope.uploadModal = $modal.open({

@@ -58,8 +58,14 @@
             <div id="brandingLogoPanel" class="small-12 columns optional-row">
               <h4 translate="partnerProfile.brandingTitle"></h4>
               <div class="form-spacing form-group">
-                <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
-                <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
+                <span ng-if="!isPartner" >
+                  <span translate="customerProfile.brandingInfo.prefix"></span>
+                  <a ng-click="showBrandingExample()" translate="customerProfile.brandingInfo.middle"></a><span translate="customerProfile.brandingInfo.sufix"></span>
+                </span>
+                <span ng-if="isPartner">
+                  <span translate="partnerProfile.brandingInfo.prefix"></span>
+                  <a ng-click="showBrandingExample()" translate="partnerProfile.brandingInfo.middle"></a><span translate="partnerProfile.brandingInfo.sufix"></span>
+                </span>
               </div>
             </div>
             <div class="row form-spacing collapse-both">
@@ -68,13 +74,14 @@
                   <div class="cs-input-group cs-input-radio">
                     <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
                     <label for="partnerLogoRadio">
-                      <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-                      <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+                      <span translate="partnerProfile.useCiscoLogo"></span>
+                      <!-- <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span> -->
                     </label>
                   </div>
 
                   <div class="cs-input-group cs-input-radio">
                     <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+                    <label translate="partnerProfile.useCustomLogo" for="customLogoRadio" ></label> 
                     <label for="customLogoRadio" class="radio-input-spacing">
                       <div class="radio-input-flex">
                         <div class="drop-box form-section" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
@@ -83,16 +90,18 @@
                           <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
                         </div>
 
-                        <button class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                        <button class="btn btn--primary btn-choose" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
                           <span translate="partnerProfile.chooseFile"></span>
                         </button>
                       </div>
+                      <p class="body-small drop-box-note" translate="partnerProfile.logoUploadNote"></p>
                     </label>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row form-spacing" ng-if="isPartner">
+              <h4 translate="partnerProfile.customerBrandingTitle"></h4>
               <div class="small-12 columns cs-checkbox-group">
                 <input
                   cs-input

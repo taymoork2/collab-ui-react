@@ -3048,10 +3048,16 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
-    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
+    "brandingInfo": {
+      "prefix": "Personalize your employee’s  experience of WebEx and Spark by uploading your company logo below. See where your logo will appear with this ",
+      "middle": "example image",
+      "sufix": "."
+    },
     "allowCustomerLogo": "Enable all customers to use their own logo",
-    "useCiscoLogo": "Use Cisco Spark logo",
+    "useCiscoLogo": "Use default logos from Cisco",
+    "useCustomLogo": "Use Custom Logo",
     "logoPlaceholder": "Drag and drop your logo here",
+    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3064,7 +3070,8 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
-    "brandingTitle": "Customize Branding",
+    "brandingTitle": "Custom Branding",
+    "customerBrandingTitle": "Customer Branding",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -3094,12 +3101,20 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
-    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
+    "brandingInfo": {
+      "prefix": "Personalize your customer’s experience of WebEx and Spark by uploading your company logo below. See where your logo will appear with this ",
+      "middle": "example image",
+      "sufix": "."
+    },
     "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
     "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
     "supportAccessCheckbox": "Allow Cisco or Partner Support read-only access to your organization."
+  },
+  "brandingExample": {
+    "title": "Examples of Custom Branding",
+    "description": "Logo Placement Examples: <br/>After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "fileUpload": {
     "uploading": "Uploading File",

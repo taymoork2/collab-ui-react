@@ -83,13 +83,13 @@
 
   .drop-box {
     display: inline-block;
-    width: calc(100% - 2rem);
+    width: 330px;
 
     @include vr-spacing(mb, 0.25);
 
     @include vr-spacing(p, 0.25);
 
-    height: 150px;
+    height: 92px;
     background-color: $brand-white;
     border: 1px solid $gray-light;
     border-radius: 3px;
@@ -102,6 +102,19 @@
     &.dragover-error {
       border-color: $brand-danger;
     }
+  }
+
+  .radio-input-flex{
+    margin-left: 2rem;
+
+    .btn-choose {
+      vertical-align: bottom;
+      margin-bottom: 0.25rem;
+    }
+  } 
+
+  .drop-box-note {
+    margin-left: 2rem;
   }
 
   .thumbnail {
