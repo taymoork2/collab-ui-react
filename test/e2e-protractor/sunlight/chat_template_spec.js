@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Care admin shoule be able to', function () {
+describe('Care admin should be able to', function () {
 
   beforeAll(function () {
     login.login('contactcenter-admin', '#/careDetails/features');
@@ -41,10 +41,9 @@ describe('Care admin shoule be able to', function () {
   // Creating placeholder functions for testing multiple setUp assistant pages
   // these placeholder functions will be implemented in coming stories
   function validateContentsOfNamePage() {
-    utils.expectTextToBeSet(careChatTemplateSetupPage.typeAheadInput, "Name the Chat Template");
-    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This chat template name is for you to uniquely identify the template and it is invisible to the customer");
+    utils.expectIsDisplayed(careChatTemplateSetupPage.typeAheadInput);
+    utils.expectTextToBeSet(careChatTemplateSetupPage.nameHint, "This name is for you to uniquely identify this chat template.");
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
-    utils.expectIsDisabled(careChatTemplateSetupPage.setUpRightBtn);
     utils.sendKeys(careChatTemplateSetupPage.typeAheadInput, careChatTemplateSetupPage.randomChatTemplateName);
   }
 

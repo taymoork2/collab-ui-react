@@ -3437,7 +3437,7 @@
   },
   "careChatTpl": {
     "namePlaceholder": "Name the Chat Template",
-    "nameHint": "This chat template name is for you to uniquely identify the template and it is invisible to the customer",
+    "nameHint": "This name is for you to uniquely identify this chat template.",
     "createTitle": "Create Chat Template",
     "profile": "Chat Template Profile",
     "overview": "Chat Template Overview",
