@@ -6,19 +6,18 @@
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController);
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService, CertificateFormatterService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, FusionUtils, CertificateFormatterService) {
     var vm = this;
-    vm.config = "";
-    vm.emailSubscribers = "";
-    vm.serviceType = $stateParams.serviceType;
-    vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
+    vm.emailSubscribers = '';
+    vm.connectorType = $state.current.data.connectorType;
+    vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
 
     vm.squaredFusionEc = false;
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
+      ServiceDescriptor.isServiceEnabled('squared-fusion-ec', function (a, b) {
         vm.squaredFusionEc = b;
         if (vm.squaredFusionEc) {
           readCerts();
@@ -31,11 +30,11 @@
         // Only store when disabling. The enabling is done in the Save button handler
         // need this hack because the switch call backs twice, every time the user clicks it:
         // one time with the old value, one time with the new value
-        ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+        ServiceDescriptor.setServiceEnabled('squared-fusion-ec', vm.squaredFusionEc,
           function (err) {
             // TODO: fix this callback crap!
             if (err) {
-              XhrNotificationService.notify("Failed to enable Aware");
+              XhrNotificationService.notify('Failed to enable Aware');
             }
           }
         );
@@ -62,12 +61,11 @@
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;
-        Notification.error("hercules.errors.sipDomainInvalid");
+        Notification.error('hercules.errors.sipDomainInvalid');
       });
     };
 
-    vm.config = "";
-    ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
+    ServiceDescriptor.getEmailSubscribers(vm.servicesId[0], function (error, emailSubscribers) {
       if (!error) {
         vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
           return {
@@ -79,17 +77,15 @@
       }
     });
 
-    vm.cluster = $stateParams.cluster;
-
     vm.writeConfig = function () {
       var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
         return data.text;
       }).toString();
       if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
-        Notification.error("hercules.errors.invalidEmail");
+        Notification.error('hercules.errors.invalidEmail');
       } else {
         vm.savingEmail = true;
-        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (err) {
+        ServiceDescriptor.setEmailSubscribers(vm.servicesId[0], emailSubscribers, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);
@@ -104,8 +100,8 @@
         if (error !== null) {
           XhrNotificationService.notify(error);
         } else {
-          $state.go(HelperNuggetsService.serviceType2RouteName(HelperNuggetsService.serviceId2ServiceType(serviceId)) + ".list", {
-            serviceType: HelperNuggetsService.serviceId2ServiceType(serviceId)
+          $state.go(FusionUtils.connectorType2RouteName(FusionUtils.serviceId2ConnectorType(serviceId)) + '.list', {
+            connectorType: FusionUtils.serviceId2ConnectorType(serviceId)
           }, {
             reload: true
           });
@@ -115,9 +111,9 @@
 
     vm.confirmDisable = function (serviceId) {
       $modal.open({
-        templateUrl: "modules/hercules/expressway-service/confirm-disable-dialog.html",
+        templateUrl: 'modules/hercules/service-settings/confirm-disable-dialog.html',
         controller: DisableConfirmController,
-        controllerAs: "disableConfirmDialog",
+        controllerAs: 'disableConfirmDialog',
         resolve: {
           serviceId: function () {
             return serviceId;
@@ -137,9 +133,9 @@
 
     vm.confirmCertDelete = function (cert) {
       $modal.open({
-        templateUrl: "modules/hercules/expressway-service/confirm-certificate-delete.html",
+        templateUrl: 'modules/hercules/service-settings/confirm-certificate-delete.html',
         controller: ConfirmCertificateDeleteController,
-        controllerAs: "confirmCertificateDelete",
+        controllerAs: 'confirmCertificateDelete',
         resolve: {
           cert: function () {
             return cert;
@@ -156,15 +152,15 @@
     }
 
     vm.invalidEmail = function (tag) {
-      Notification.error(tag.text + " is not a valid email");
+      Notification.error(tag.text + ' is not a valid email');
     };
   }
 
   /* @ngInject */
-  function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
+  function DisableConfirmController(FusionUtils, $modalInstance, serviceId) {
     var modalVm = this;
     modalVm.serviceId = serviceId;
-    modalVm.serviceIconClass = ServiceDescriptor.serviceIcon(serviceId);
+    modalVm.serviceIconClass = FusionUtils.serviceId2Icon(serviceId);
 
     modalVm.ok = function () {
       $modalInstance.close();

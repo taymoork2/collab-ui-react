@@ -18,7 +18,7 @@
   /* @ngInject */
   function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
-    var cluster = ClusterService.getCluster($stateParams.serviceType, $stateParams.clusterId);
+    var cluster = ClusterService.getCluster($stateParams.connectorType, $stateParams.clusterId);
     vm.host = _.find(cluster.connectors, {
       hostname: $stateParams.host
     });
@@ -26,7 +26,7 @@
     vm.deleteHost = function () {
       return ClusterService.deleteHost(cluster.id, vm.host.hostSerial)
         .then(function () {
-          if (ClusterService.getCluster($stateParams.serviceType, cluster.id)) {
+          if (ClusterService.getCluster($stateParams.connectorType, cluster.id)) {
             $state.go('cluster-details', {
               clusterId: cluster.id
             });
