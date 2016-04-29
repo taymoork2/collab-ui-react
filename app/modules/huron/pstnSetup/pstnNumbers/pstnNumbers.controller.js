@@ -125,9 +125,7 @@
         className: 'medium-2 columns',
         templateOptions: {
           required: true,
-          label: $translate.instant('pstnSetup.quantity'),
-          // groupSize: 'medium-1',
-          max: 100
+          label: $translate.instant('pstnSetup.quantity')
         },
         hideExpression: function () {
           return !vm.model.block;
@@ -137,6 +135,12 @@
             expression: ValidationService.positiveNumber,
             message: function () {
               return $translate.instant('validation.positiveNumber');
+            }
+          },
+          maxValue: {
+            expression: ValidationService.maxNumber100,
+            message: function () {
+              return $translate.instant('validation.maxNumber100');
             }
           }
         }

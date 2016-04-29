@@ -3241,7 +3241,8 @@
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters.",
     "numeric": "Field can contain digits 0 to 9.",
-    "positiveNumber": "Must enter a positive number."
+    "positiveNumber": "Must enter a positive number.",
+    "maxNumber100": "Quantity must be 100 or less."
   },
   "CsdmStatus": {
     "Online": "Online",
