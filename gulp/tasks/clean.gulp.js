@@ -64,7 +64,9 @@ gulp.task('clean:test', function () {
 
 gulp.task('clean:ts', function () {
   var files = [
-    config.typeScript.compiledTestFiles
+    config.typeScript.compiledTestFiles,
+    config.app + config.tsManifest,
+    config.app + config.tsTestManifest
   ];
   messageLogger('Cleaning TypeScript compiled tests', files);
   return del(files);

@@ -8,16 +8,28 @@
 var gulp = require('gulp');
 var fileListParser = require('./fileListParser.gulp');
 var config = require('../gulp.config')();
+var lazypipe = require('lazypipe');
 var $ = require('gulp-load-plugins')({
   lazy: true
 });
+var messageLogger = require('../utils/messageLogger.gulp')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var args = require('yargs').argv;
 
-function compile(files, dest, writeManifest) {
+function compile(files, dest, writeManifestTo) {
   var reporter = $.typescript.reporter.defaultReporter();
   var SPEC_SUFFIX = '.spec';
+
+  var writeManifest;
+  if (!!writeManifestTo) {
+    writeManifest = lazypipe()
+      .pipe($.concatFilenames, writeManifestTo)
+      .pipe(gulp.dest, dest);
+  } else {
+    writeManifest = lazypipe().pipe($.util.noop);
+  }
+
   return gulp
     .src(files, {
       base: config.app
@@ -45,16 +57,15 @@ function compile(files, dest, writeManifest) {
     ))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(dest))
-    .pipe($.if(writeManifest, $.concatFilenames(config.tsManifest)))
-    .pipe($.if(writeManifest, gulp.dest(dest)))
+    .pipe($.if(!!writeManifestTo, writeManifest()))
     .pipe(reload({
       stream: true
     }));
 }
 
-function getTsFilesFromManifest() {
+function getTsFilesFromManifest(manifest) {
   var fileList = [];
-  fileList = fileList.concat(fileListParser.toList(config.build + '/' + config.tsManifest, "utf8"));
+  fileList = fileList.concat(fileListParser.toList(config.build + '/' + manifest, "utf8"));
   return fileList;
 }
 
