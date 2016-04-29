@@ -82,4 +82,7 @@
   .panel-title span {
     margin-left: 0px;
   }
+  .accordion--navigation > a:hover {
+    color: $brand-white;
+  }
 }

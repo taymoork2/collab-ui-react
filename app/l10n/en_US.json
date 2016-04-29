@@ -2071,10 +2071,9 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Trial Setup - Meeting and WebEx",
-      "webexHeader": "Meeting and WebEx License Type",
-      "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition",
+      "title": "Trial Setup - WebEx",
+      "webexHeader": "WebEx License Type",
+      "webexDetails": "WebEx Enterprise Edition 200",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -3930,5 +3929,8 @@
     "title": "Read Only",
     "okButton": "OK",
     "text": "You are now viewing <b>{{orgName}}</b> portal as a Read Only user. Your limited accss allows viewing of the entire portal, but will not accept changes."
+  },
+  "readOnlyMessages": {
+    "notAllowed": "Not allowed in read-only mode. Operation not executed."
   }
 }
