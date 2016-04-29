@@ -420,10 +420,18 @@
         }
 
         _.forEach(action.actionset, function (actionset) {
-          var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
-          menuEntry.addAction(menuAction);
+          var menuEntry;
+          var menuAction;
+          if (actionset === 'runActionsOnInput') {
+            menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
+            menuEntry.type = 'MENU_OPTION';
+          } else {
+            menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+            menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
+            menuEntry.addAction(menuAction);
+          }
           uiMenu.appendEntry(menuEntry);
+
         });
       });
     }
