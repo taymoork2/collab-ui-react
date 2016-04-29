@@ -424,7 +424,7 @@
       }
     }
 
-    return _.isObject(data) ? data : _.get(data, '[0]', data);
+    return _.isArray(data) ? _.get(data, '[0]', data) : data;
   }
 
 })();
