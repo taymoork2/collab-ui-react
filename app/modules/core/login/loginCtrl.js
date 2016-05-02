@@ -43,9 +43,6 @@ angular.module('Core')
             } else {
               var state = 'overview';
               var params;
-              if (Authinfo.isPartner()) {
-                $scope.$emit('InvertNavigation');
-              }
               if (PageParam.getRoute()) {
                 state = PageParam.getRoute();
               } else if (SessionStorage.get(storedState)) {

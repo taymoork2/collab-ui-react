@@ -151,7 +151,7 @@
     function keyPressHandler(event) {
       switch (event.keyCode) {
       case 27: // Esc
-        window.history.back();
+        $window.history.back();
         break;
       case 83: // S
         gotoSearchUsersAndDevices();

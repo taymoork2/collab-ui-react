@@ -2,7 +2,7 @@
 
 describe('Service: AAUiScheduleService', function () {
   var $q, $scope, $rootScope, AAUiScheduleService, AAICalService, AutoAttendantCeInfoModelService, AACalendarService;
-  var Notification;
+  var AANotificationService;
 
   function getRange8To5() {
     var calendar = AAICalService.createCalendar();
@@ -59,8 +59,8 @@ describe('Service: AAUiScheduleService', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _Notification_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
-    Notification = _Notification_;
+  beforeEach(inject(function (_$q_, _$rootScope_, _AANotificationService_, _Notification_, _AAUiScheduleService_, _AAICalService_, _AutoAttendantCeInfoModelService_, _AACalendarService_) {
+    AANotificationService = _AANotificationService_;
     AAUiScheduleService = _AAUiScheduleService_;
     AAICalService = _AAICalService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
@@ -77,13 +77,14 @@ describe('Service: AAUiScheduleService', function () {
       createCalendarDefer = $q.defer();
 
       spyOn(AACalendarService, 'createCalendar').and.returnValue(createCalendarDefer.promise);
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
+      spyOn(AANotificationService, 'errorResponse');
 
       scheduleId = undefined;
       AAUiScheduleService.create8To5Schedule('AA').then(function (value) {
         scheduleId = value;
       }, function (response) {
-        Notification.error('autoAttendant.errorCreateCe', {
+        AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
           name: 'AA',
           statusText: response.statusText,
           status: response.status
@@ -112,7 +113,7 @@ describe('Service: AAUiScheduleService', function () {
 
       $scope.$apply();
       expect(scheduleId).toEqual(undefined);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
     });
   });
 });

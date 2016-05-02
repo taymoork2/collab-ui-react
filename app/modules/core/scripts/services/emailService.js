@@ -9,7 +9,8 @@
 
     var _types = {
       CUSTOMER_TRIAL: '1',
-      NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST: '15'
+      NOTIFY_PARTNER_ADMIN_CUSTOMER_TRIAL_EXT_INTEREST: '15',
+      NEW_DR_ORDER_WELCOME: '20'
     };
     var _helpers = {
       mkTrialPayload: mkTrialPayload,
@@ -72,7 +73,7 @@
       var emailData = {
         type: _types.NEW_DR_ORDER_WELCOME,
         properties: {
-          CUSTOMER_EMAIL: customerEmail,
+          EMAIL_ADDRESS: customerEmail,
           BUYER_UUID: uuid,
           ORDER_ID: orderId,
           SUBJECT: 'Setup your Cisco Spark Service'

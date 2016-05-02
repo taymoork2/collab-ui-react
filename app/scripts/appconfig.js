@@ -83,7 +83,7 @@ angular
         })
         // start online order pages. note: unauthenticated pages are protected by a URL token
         .state('enterEmailAddr', {
-          url: '/enter-email-addr',
+          url: '/enter-email-addr?referrer&sku&orderId&campaignId',
           views: {
             'main@': {
               templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -158,6 +158,7 @@ angular
           },
           params: {
             email: null,
+            referrer: null,
             redirect: null,
             params: null
           },
@@ -232,6 +233,17 @@ angular
             }
           },
           authenticate: true
+        })
+        .state('drAdminChoices', {
+          url: '/dr-admin-choices',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/adminChoices/adminChoices.tpl.html',
+              controller: 'adminChoicesController',
+              controllerAs: 'adminChoicesController'
+            }
+          },
+          authenticate: false
         })
         // end online order pages
         .state('unauthorized', {
@@ -319,6 +331,7 @@ angular
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
       $httpProvider.interceptors.push('ServerErrorInterceptor');
+      $httpProvider.interceptors.push('ReadonlyInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');

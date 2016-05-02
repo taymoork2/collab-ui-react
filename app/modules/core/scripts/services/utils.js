@@ -141,7 +141,7 @@ angular.module('Core')
         },
 
         isIPhone: function () {
-          if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
+          if ($window.navigator.userAgent.match(/iPhone/i) || $window.navigator.userAgent.match(/iPod/i) || $window.navigator.userAgent.match(/iPad/i)) {
             return true;
           } else {
             return false;
@@ -149,7 +149,7 @@ angular.module('Core')
         },
 
         isAndroid: function () {
-          if (navigator.userAgent.match(/Android/i)) {
+          if ($window.navigator.userAgent.match(/Android/i)) {
             return true;
           } else {
             return false;
@@ -157,7 +157,7 @@ angular.module('Core')
         },
 
         isWindowsPhone: function () {
-          if (navigator.userAgent.match(/WPDesktop/i) || navigator.userAgent.match(/Windows Phone/i)) {
+          if ($window.navigator.userAgent.match(/WPDesktop/i) || $window.navigator.userAgent.match(/Windows Phone/i)) {
             return true;
           } else {
             return false;

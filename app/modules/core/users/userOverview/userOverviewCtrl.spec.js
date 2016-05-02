@@ -44,6 +44,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(Authinfo, 'isCSB').and.returnValue(true);
     spyOn(Notification, 'success');
 
     // eww
@@ -189,6 +190,10 @@ describe('Controller: UserOverviewCtrl', function () {
     it('should check if status is pending', function () {
       expect(controller.pendingStatus).toBe(true);
     });
+
+    it('should not have any licenseID', function () {
+      expect(controller.hasNoLicenseId).toBe(true);
+    });
   });
 
   describe('resendInvitation', function () {
@@ -208,4 +213,9 @@ describe('Controller: UserOverviewCtrl', function () {
     });
   });
 
+  describe('When atlasTelstraCsb is enabled', function () {
+    it('should set the isCSB flag to true', function () {
+      expect(controller.isCSB).toBe(true);
+    });
+  });
 });

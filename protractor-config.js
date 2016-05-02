@@ -1,6 +1,7 @@
 'use strict';
 
-/*global jasmine, browser, _*/
+/* eslint global-require:0 */
+/* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require("https-proxy-agent");
 var touch = require('touch');
@@ -89,6 +90,7 @@ exports.config = {
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');
     var Notifications = require('./test/e2e-protractor/pages/notifications.page.js');
     var UsersPage = require('./test/e2e-protractor/pages/users.page.js');
+    var CustomersPage = require('./test/e2e-protractor/pages/customers.page.js');
     var LoginPage = require('./test/e2e-protractor/pages/login.page.js');
     var LandingPage = require('./test/e2e-protractor/pages/landing.page.js');
     var ManagePage = require('./test/e2e-protractor/pages/manage.page.js');
@@ -132,6 +134,7 @@ exports.config = {
     global.notifications = new Notifications();
     global.navigation = new Navigation();
     global.users = new UsersPage();
+    global.customers = new CustomersPage();
     global.login = new LoginPage();
     global.landing = new LandingPage();
     global.manage = new ManagePage();
