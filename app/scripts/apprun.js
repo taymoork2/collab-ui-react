@@ -64,10 +64,6 @@
       }
     });
 
-    $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
-      console.warn('$stateChangeError', event, toState, toParams, fromState, fromParams, error);
-    });
-
     $rootScope.status = 'init';
 
     if (!Storage.get('accessToken')) {
