@@ -93,16 +93,12 @@
         if (_.isArray(userArray) && userArray.length > 0 && _.isArray(userArray[0])) {
           if (_.indexOf(userArray[0], 'User ID/Email (Required)') > -1) {
             csvHeaders = userArray.shift();
-          }
-          if (userArray.length > 0 && userArray.length <= maxUsers) {
-            isCsvValid = true;
-          } else {
-            isCsvValid = false;
+            if (userArray.length > 0 && userArray.length <= maxUsers) {
+              isCsvValid = true;
+            }
           }
         }
         setUploadProgress(100);
-      } else {
-        isCsvValid = false;
       }
     };
 
@@ -116,6 +112,7 @@
     vm.cancelProcessCsv = function () {
       cancelDeferred.resolve();
       saveDeferred.resolve();
+      $scope.$broadcast('timer-stop');
     };
 
     // functions
@@ -239,6 +236,7 @@
           UserCsvService.setCsvStat({
             isProcessing: false
           });
+          $scope.$broadcast('timer-stop');
           sendBulkMetric();
           saveDeferred.resolve();
         }
@@ -411,9 +409,9 @@
                       numOfActiveMessageLicenses++;
                     }
                   } else if (isFalse(input)) {
-                    // TODO - in phase 2, if allow license removal, then un-comment the next line
-                    // licenseList.push(new LicenseFeature(header.license, false));
-                    _.noop();
+                    if (vm.model.enableRemove) {
+                      licenseList.push(new LicenseFeature(header.license, false));
+                    }
                   } else if (input !== '') {
                     isWrongLicenseFormat = true;
                   }
@@ -425,9 +423,9 @@
                         if (isTrue(input)) {
                           entitleList.push(new Feature(entitlement, true));
                         } else if (isFalse(input)) {
-                          // TODO - in phase 2, if allow license removal, then un-comment the next line
-                          // entitleList.push(new Feature(entitlement, false));
-                          _.noop();
+                          if (vm.model.enableRemove) {
+                            entitleList.push(new Feature(entitlement, false));
+                          }
                         }
                       }
                     });

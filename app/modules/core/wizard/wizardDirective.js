@@ -257,7 +257,8 @@
     }
 
     function nextStep() {
-      new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, getSubTab().controllerAs).then(function () {
+      var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
+      new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         //TODO remove these broadcasts
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
@@ -280,7 +281,6 @@
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
-
     }
 
     function updateStep() {

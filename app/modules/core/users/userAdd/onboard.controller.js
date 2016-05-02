@@ -1837,6 +1837,7 @@
             Notification.error('firstTimeWizard.uploadDirSyncEmpty');
             reject();
           } else {
+            $scope.model.numMaxUsers = userArray.length;
             resolve();
           }
         } else {
