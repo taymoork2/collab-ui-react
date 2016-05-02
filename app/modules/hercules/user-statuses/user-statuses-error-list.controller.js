@@ -6,32 +6,12 @@
     .controller('UserErrorsController', UserErrorsController);
 
   /* @ngInject */
-  function UserErrorsController($modal, $scope, serviceId, userStatusSummary, USSService, XhrNotificationService, Userservice, ClusterService) {
+  function UserErrorsController($modal, $scope, servicesId, userStatusSummary, USSService, XhrNotificationService, Userservice, ClusterService) {
     var vm = this;
     vm.loading = true;
     vm.limit = 5;
-    vm.serviceId = serviceId;
-
-    vm.openUserStatusReportModal = function (serviceId) {
-      // $scope.modal.close();
-      $scope.close = function () {
-        $scope.$parent.modal.close();
-      };
-      $scope.modal = $modal.open({
-        scope: $scope,
-        controller: 'ExportUserStatusesController',
-        controllerAs: 'exportUserStatusesCtrl',
-        templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
-        resolve: {
-          serviceId: function () {
-            return vm.serviceId;
-          },
-          userStatusSummary: function () {
-            return userStatusSummary;
-          }
-        }
-      });
-    };
+    vm.serviceId = servicesId[0];
+    vm.openUserStatusReportModal = openUserStatusReportModal;
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {
@@ -74,5 +54,26 @@
       }
       vm.loading = false;
     }, vm.serviceId, 'error', vm.limit);
+
+    function openUserStatusReportModal(serviceId) {
+      // $scope.modal.close();
+      $scope.close = function () {
+        $scope.$parent.modal.close();
+      };
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/user-statuses/export-user-statuses.html',
+        resolve: {
+          servicesId: function () {
+            return [serviceId];
+          },
+          userStatusSummary: function () {
+            return userStatusSummary;
+          }
+        }
+      });
+    }
   }
 }());

@@ -63,8 +63,8 @@
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/user-statuses/user-errors.html',
         resolve: {
-          serviceId: function () {
-            return serviceId;
+          servicesId: function () {
+            return [serviceId];
           },
           userStatusSummary: function () {
             return vm.userStatusSummary;
