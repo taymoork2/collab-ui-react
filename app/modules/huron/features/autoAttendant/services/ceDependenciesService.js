@@ -3,9 +3,12 @@
 
   angular
     .module('uc.autoattendant')
-    .factory('CeDependenciesService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/dependencies', {
-        customerId: '@customerId'
-      });
+    .factory('CeDependenciesService', CeDependenciesService);
+
+  /* @ngInject */
+  function CeDependenciesService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/dependencies', {
+      customerId: '@customerId'
     });
+  }
 })();

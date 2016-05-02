@@ -1,14 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('WebExApp').service('WebexClientVersion', [
-  '$q',
-  '$log',
-  '$filter',
-  '$http',
-  'Authinfo',
-  'UrlConfig',
-  'Notification',
-  function (
+  angular.module('WebExApp').service('WebexClientVersion', WebexClientVersion);
+
+  /* @ngInject */
+  function WebexClientVersion(
     $q,
     $log,
     $filter,
@@ -190,4 +186,4 @@ angular.module('WebExApp').service('WebexClientVersion', [
       return "testData";
     };
   }
-]);
+})();

@@ -1,21 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-/* global Uint8Array:false */
+  /* global Uint8Array:false */
 
-angular.module('WebExApp').service('WebExApiGatewayService', [
-  '$rootScope',
-  '$q',
-  '$log',
-  'Authinfo',
-  'Storage',
-  'WebExUtilsFact',
-  'WebExXmlApiFact',
-  'WebExXmlApiInfoSvc',
-  'WebExRestApiFact',
-  'WebExApiGatewayConstsService',
-  '$window',
+  angular.module('WebExApp').service('WebExApiGatewayService', WebExApiGatewayService);
 
-  function (
+  /* @ngInject */
+  function WebExApiGatewayService(
     $rootScope,
     $q,
     $log,
@@ -23,7 +14,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
     Storage,
     WebExUtilsFact,
     WebExXmlApiFact,
-    webExXmlApiInfoObj,
+    WebExXmlApiInfoSvc,
     WebExRestApiFact,
     WebExApiGatewayConstsService,
     $window
@@ -468,10 +459,10 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
 
       WebExXmlApiFact.getSessionTicket(siteUrl, siteName).then(
         function getSessionTicketSuccess(response) {
-          webExXmlApiInfoObj.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = response;
+          WebExXmlApiInfoSvc.xmlApiUrl = "https://" + siteUrl + "/WBXService/XMLService";
+          WebExXmlApiInfoSvc.webexSiteName = WebExUtilsFact.getSiteName(siteUrl);
+          WebExXmlApiInfoSvc.webexAdminID = Authinfo.getPrimaryEmail();
+          WebExXmlApiInfoSvc.webexAdminSessionTicket = response;
 
           var siteVersionJsonObj = null;
           var enableT30UnifiedAdminJsonObj = null;
@@ -586,8 +577,8 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       ); // isSiteSupportsIframe().getSessionTicket(siteUrl).then()
 
       function getSiteData() {
-        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
-        var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+        var siteVersionXml = WebExXmlApiFact.getSiteVersion(WebExXmlApiInfoSvc);
+        var siteInfoXml = WebExXmlApiFact.getSiteInfo(WebExXmlApiInfoSvc);
 
         return $q.all({
           siteVersionXml: siteVersionXml,
@@ -596,7 +587,7 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       } // getSiteData()
 
       function getEnableT30UnifiedAdminData() {
-        var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(webExXmlApiInfoObj);
+        var enableT30UnifiedAdminInfoXml = WebExXmlApiFact.getEnableT30UnifiedAdminInfo(WebExXmlApiInfoSvc);
 
         return $q.all({
           enableT30UnifiedAdminInfoXml: enableT30UnifiedAdminInfoXml
@@ -662,4 +653,4 @@ angular.module('WebExApp').service('WebExApiGatewayService', [
       return deferredIsSiteSupportsIframe.promise;
     }; // isSiteSupportsIframe()
   } // end top level function
-]);
+})();

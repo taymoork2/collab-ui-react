@@ -82,7 +82,6 @@
     }
 
     function checkIfConnectorsConfigured(connectorType) {
-
       var clusters = ClusterService.getClustersByConnectorType(connectorType);
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
