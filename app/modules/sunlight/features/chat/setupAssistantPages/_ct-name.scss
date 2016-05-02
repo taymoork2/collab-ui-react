@@ -11,7 +11,7 @@
 
   // Input control.
   input {
-    height: 44px; // prevents Firefox from clipping top of text
+    height: rem-calc(44); // prevents Firefox from clipping top of text
     &:focus ~ .ct-input-hint {
       border-top: solid rem(1px) $brand-primary;
     }

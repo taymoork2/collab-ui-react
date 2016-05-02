@@ -46,14 +46,14 @@ describe('Care Chat Setup Assistant Ctrl', function () {
     checkStateOfButton(8, true, 'hidden');
   });
 
-  it("should test the right arrow when template name is not null on the first page", function () {
-    controller.templateJson.name = templateName;
+  it("next button should be enabled when name is present", function () {
+    controller.template.name = templateName;
     checkStateOfButton(0, 'hidden', true);
     validateKeyPressEvent(rightArrow, 0, 1);
   });
 
-  it("should disable next button when template name is null on first page", function () {
-    controller.templateJson.name = '';
+  it("next button should be disabled when name is not present", function () {
+    controller.template.name = '';
     checkStateOfButton(0, 'hidden', false);
   });
 

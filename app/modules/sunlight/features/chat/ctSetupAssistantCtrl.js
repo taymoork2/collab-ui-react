@@ -40,7 +40,7 @@
     vm.leftArrow = 37;
     vm.rightArrow = 39;
 
-    vm.templateJson = {
+    vm.template = {
       name: '',
       mediaType: 'chat'
     };
@@ -76,7 +76,7 @@
     }
 
     function validatePageName() {
-      if (vm.templateJson.name === '') {
+      if (vm.template.name === '') {
         return false;
       }
       return true;
