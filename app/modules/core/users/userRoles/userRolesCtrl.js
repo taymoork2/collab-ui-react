@@ -125,7 +125,7 @@
       switch ($scope.rolesObj.adminRadioValue) {
       case 0: // No admin
         for (var roleName in Config.roles) {
-          if (Config.roles[roleName] != Config.roles.helpdesk) {
+          if (Config.roles[roleName] != Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms) {
             roles.push({
               'roleName': Config.roles[roleName],
               'roleState': Config.roleState.inactive
@@ -184,6 +184,11 @@
       roles.push({
         'roleName': Config.roles.helpdesk,
         'roleState': ($scope.rolesObj.helpdeskValue ? Config.roleState.active : Config.roleState.inactive)
+      });
+
+      roles.push({
+        'roleName': Config.roles.spark_synckms,
+        'roleState': (hasRole(Config.backend_roles.spark_synckms) ? Config.roleState.active : Config.roleState.inactive)
       });
 
       Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {
