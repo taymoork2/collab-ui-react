@@ -15,7 +15,8 @@
                 </div>
             </div>
             <div class="dr-row" ng-show="submitOrderController.existingUser == false">
-                <div class="dr-center dr-pad" translate="digitalRiver.submitOrder.newUser" translate-values="{email: submitOrderController.email}" />
+                <div class="dr-center dr-pad" id="dr-header" translate="digitalRiver.submitOrder.newUserHeader" />
+                <div class="dr-center dr-pad" translate="digitalRiver.submitOrder.newUserText" translate-values="{email: submitOrderController.email}" />
                 <!--TODO <div class="dr-row dr-center"> 
                 <a href ng-click="submitOrderController.handleMissingEmail()" translate="digitalRiver.submitOrder.missingEmail"/> -->
             </div>
