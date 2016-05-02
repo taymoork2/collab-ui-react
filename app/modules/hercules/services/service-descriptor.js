@@ -119,24 +119,6 @@
         });
     };
 
-    var serviceIcon = function (serviceId) {
-      if (!serviceId) {
-        return 'icon icon-circle-question';
-      }
-      switch (serviceId) {
-      case 'squared-fusion-cal':
-        return 'icon icon-circle-calendar';
-      case 'squared-fusion-uc':
-        return 'icon icon-circle-call';
-      case 'squared-fusion-media':
-        return 'icon icon-circle-telepresence';
-      case 'contact-center-context':
-        return 'icon icon-circle-world';
-      default:
-        return 'icon icon-circle-question';
-      }
-    };
-
     var acknowledgeService = function (serviceId) {
       return $http
         .patch(UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
@@ -151,7 +133,6 @@
       isFusionEnabled: isFusionEnabled,
       isServiceEnabled: isServiceEnabled,
       setServiceEnabled: setServiceEnabled,
-      serviceIcon: serviceIcon,
       acknowledgeService: acknowledgeService,
       getServices: getServices,
       servicesInOrg: servicesInOrg,

@@ -6,16 +6,16 @@
     .controller('ExpresswayServiceClusterController', ExpresswayServiceClusterController);
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService, $timeout) {
+  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $scope, $state, $modal, $stateParams, $translate, ClusterService, FusionUtils, $timeout) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.clusterId;
-    vm.serviceType = $stateParams.serviceType;
-    vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
-    vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
-    vm.connectorName = $translate.instant('hercules.connectorNames.' + vm.serviceId);
+    vm.connectorType = $stateParams.connectorType;
+    vm.servicesId = FusionUtils.connectorType2ServicesId(vm.connectorType);
+    vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.servicesId[0]);
+    vm.connectorName = $translate.instant('hercules.connectorNames.' + vm.servicesId[0]);
     vm.getSeverity = ClusterService.getRunningStateSeverity;
-    vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
+    vm.route = FusionUtils.connectorType2RouteName(vm.connectorType);
     vm.showDeregisterDialog = showDeregisterDialog;
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.fakeUpgrade = false;
@@ -23,7 +23,7 @@
     var wasUpgrading = false;
     var promise = null;
     $scope.$watch(function () {
-      return ClusterService.getCluster(vm.serviceType, vm.clusterId);
+      return ClusterService.getCluster(vm.connectorType, vm.clusterId);
     }, function (newValue, oldValue) {
       vm.cluster = newValue;
       var isUpgrading = vm.cluster.aggregates.upgradeState === 'upgrading';
@@ -76,15 +76,15 @@
 
     function showUpgradeDialog() {
       $modal.open({
-        templateUrl: 'modules/hercules/sw-upgrade/software-upgrade-dialog.html',
-        controller: SoftwareUpgradeController,
+        templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
+        controller: 'SoftwareUpgradeController',
         controllerAs: 'softwareUpgradeCtrl',
         resolve: {
-          serviceId: function () {
-            return vm.serviceId;
+          servicesId: function () {
+            return vm.servicesId;
           },
-          serviceType: function () {
-            return vm.serviceType;
+          connectorType: function () {
+            return vm.connectorType;
           },
           cluster: function () {
             return vm.cluster;
@@ -114,34 +114,5 @@
       }
       return upgrading.hostname;
     }
-  }
-
-  /* @ngInject */
-  function SoftwareUpgradeController($translate, $modalInstance, ClusterService, XhrNotificationService, serviceId, serviceType, softwareUpgrade, cluster) {
-    var vm = this;
-
-    vm.upgrading = false;
-    vm.availableVersion = softwareUpgrade.availableVersion;
-    vm.serviceName = $translate.instant('hercules.serviceNames.' + serviceId);
-    vm.clusterName = cluster.name;
-    vm.connectorName = $translate.instant('hercules.connectorNames.' + serviceId);
-    vm.releaseNotes = '';
-
-    ClusterService.getReleaseNotes('GA', serviceType)
-      .then(function (res) {
-        vm.releaseNotes = res;
-      });
-
-    vm.upgrade = function () {
-      vm.upgrading = true;
-      ClusterService
-        .upgradeSoftware(cluster.id, serviceType)
-        .then(function () {
-          $modalInstance.close();
-        }, XhrNotificationService.notify)
-        .finally(function () {
-          vm.upgrading = false;
-        });
-    };
   }
 }());

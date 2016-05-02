@@ -6,18 +6,16 @@
     .controller('ExportUserStatusesController', ExportUserStatusesController);
 
   /* @ngInject */
-  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, serviceId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
+  function ExportUserStatusesController($scope, $q, $translate, $modalInstance, servicesId, userStatusSummary, Authinfo, UserDetails, USSService2, ClusterService, ExcelService) {
     var vm = this;
     var numberOfUsersPrCiRequest = 50; // can probably go higher, depending on the CI backend...
     var numberOfUsersPrUssRequest = 500;
 
-    vm.selectedServiceId = serviceId;
     vm.exportingUserStatusReport = false;
     vm.exportCanceled = false;
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
-    vm.timeToExport = timeToExport;
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
 
@@ -27,11 +25,6 @@
 
     function exportCSV() {
       vm.exportingUserStatusReport = true;
-      var selectedServices = [vm.selectedServiceId];
-      // if current is Call Aware we need to add Call Connect manually to the list
-      if (vm.selectedServiceId === 'squared-fusion-uc') {
-        selectedServices.push('squared-fusion-ec');
-      }
       var selectedTypes = _.chain(vm.statusTypes)
         .filter(function (status) {
           return status.selected && status.count;
@@ -39,7 +32,7 @@
         .map('stateType')
         .value();
 
-      return getAllUserStatuses(selectedServices, selectedTypes)
+      return getAllUserStatuses(servicesId, selectedTypes)
         .then(_.flatten)
         .then(addConnectorsDetails)
         .then(replaceWithDetails)
@@ -191,21 +184,6 @@
           return !status.selected;
         })
         .value();
-    }
-
-    function timeToExport() {
-      // in millisecond
-      var guesstimateExportTimePerUser = 35;
-      var duration = _.chain(vm.statusTypes)
-        .filter(function (status) {
-          return status.selected;
-        })
-        .map(function (status) {
-          return status.count * guesstimateExportTimePerUser;
-        })
-        .sum()
-        .value();
-      return moment.duration(duration);
     }
   }
 

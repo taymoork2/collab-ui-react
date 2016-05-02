@@ -1858,11 +1858,11 @@ angular
     function ($stateProvider) {
       $stateProvider
         .state('calendar-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_cal"
+            connectorType: 'c_cal'
           },
           parent: 'main',
           abstract: true
@@ -1870,60 +1870,54 @@ angular
         .state('calendar-service.list', {
           url: '/services/calendar',
           views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            fullPane: {
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('calendar-service.settings', {
           url: '/services/calendar/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/calendar-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_cal"
           }
         })
         .state('call-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_ucmc"
+            connectorType: 'c_ucmc'
           },
           parent: 'main'
         })
         .state('call-service.list', {
           url: '/services/call',
           views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            fullPane: {
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('call-service.settings', {
           url: '/services/call/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/call-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_ucmc"
           }
         })
         .state('management-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_mgmt"
+            connectorType: 'c_mgmt'
           },
           parent: 'main',
           abstract: true
@@ -1932,21 +1926,18 @@ angular
           url: '/services/expressway-management',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('management-service.settings', {
           url: '/services/expressway-management/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/management-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_mgmt"
           }
         })
         .state('cluster-details', {
@@ -1955,10 +1946,10 @@ angular
             'sidepanel@': {
               controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
-              templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
+              templateUrl: 'modules/hercules/cluster-sidepanel/cluster-details.html'
             },
             'header@cluster-details': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
+              templateUrl: 'modules/hercules/cluster-sidepanel/cluster-header.html'
             }
           },
           data: {
@@ -1966,11 +1957,11 @@ angular
           },
           params: {
             clusterId: null,
-            serviceType: null
+            connectorType: null
           }
         })
         .state('cluster-details.alarm-details', {
-          templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
+          templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
           controller: 'AlarmController',
           controllerAs: 'alarmCtrl',
           data: {
@@ -1982,7 +1973,7 @@ angular
           }
         })
         .state('cluster-details.host-details', {
-          templateUrl: 'modules/hercules/expressway-service/host-details.html',
+          templateUrl: 'modules/hercules/cluster-sidepanel/host-details.html',
           controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
           data: {
@@ -1991,7 +1982,7 @@ angular
           params: {
             host: null,
             clusterId: null,
-            serviceType: null
+            connectorType: null
           }
         });
     }
