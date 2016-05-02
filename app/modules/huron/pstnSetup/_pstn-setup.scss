@@ -177,6 +177,23 @@
   .right-margin {
       margin-right:rem(10px);
   }
+  .form {
+    .row {
+      > div {
+        display: inline-block;
+      }
+      .cs-input-group {
+        margin-left: 1rem;
+      }
+      .icon-info {
+        bottom: rem(3px);
+        margin-left: 1rem;
+      }
+      .check-space {
+        margin-left: 2rem;
+      }
+    }
+  }
 }
 
 .pstn-review {

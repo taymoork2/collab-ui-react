@@ -1982,7 +1982,8 @@
       "noResults": "No search results but we have a solution.",
       "detail": "Though we don’t have any numbers to show in the search results, we can still put in a special order to get {{areaCode}} area code numbers. It could take about 5 days to fullfill the order by the provider.",
       "addNumbers": "Add Numbers",
-      "tooltip": "Block allows you to add a large quantity of consecutive and non-consecutive numbers.",
+      "blockTooltip": "Check this box to display a block of phone numbers. After, you can select the numbers you want to order.",
+      "consecutiveTooltip": "Check this box to filter the results and only show a consecutive sequence of phone numbers.",
       "extra": "*Consecutive Numbers will be an additional charge"
     },
     "errors": {
@@ -3240,7 +3241,8 @@
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters.",
     "numeric": "Field can contain digits 0 to 9.",
-    "positiveNumber": "Must enter a positive number."
+    "positiveNumber": "Must enter a positive number.",
+    "maxNumber100": "Quantity must be 100 or less."
   },
   "CsdmStatus": {
     "Online": "Online",

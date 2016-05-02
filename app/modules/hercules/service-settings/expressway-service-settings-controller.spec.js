@@ -13,7 +13,14 @@ describe('Controller: ExpresswayServiceSettingsController', function () {
 
     $scope = $rootScope.$new();
     controller = $controller('ExpresswayServiceSettingsController', {
-      $scope: $scope
+      $scope: $scope,
+      $state: {
+        current: {
+          data: {
+            connectorType: 'c_ucmc'
+          }
+        }
+      }
     });
     $scope.$apply();
   }));

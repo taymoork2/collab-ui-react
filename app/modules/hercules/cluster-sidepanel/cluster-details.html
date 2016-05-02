@@ -53,7 +53,7 @@
         <li class="feature" ng-repeat="host in clusterDetailsCtrl.cluster.aggregates.hosts | orderBy:'host.hostname'"
             ng-class="{'list-item': !$first}">
           <a
-            ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, serviceType: clusterDetailsCtrl.serviceType})">
+            ui-sref="cluster-details.host-details({host: host.hostname, clusterId: clusterDetailsCtrl.clusterId, connectorType: clusterDetailsCtrl.connectorType})">
             <i class="fa fa-circle status-icon" ng-class="'hercules-state-' + clusterDetailsCtrl.getSeverity(host.state).label"></i>
             <span class="feature-name">{{host.hostname}}</span>
             <span class="feature-status">

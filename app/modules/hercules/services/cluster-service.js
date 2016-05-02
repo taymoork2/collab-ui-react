@@ -214,8 +214,8 @@
       return _.values(clusterCache[type]);
     }
 
-    function upgradeSoftware(clusterId, serviceType) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+    function upgradeSoftware(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + connectorType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function (data) {

@@ -100,7 +100,7 @@ describe('ExportUserStatusesController', function () {
     vm = $controller('ExportUserStatusesController', {
       $scope: scope,
       $modalInstance: $modalInstance,
-      serviceId: 'squared-fusion-cal',
+      servicesId: ['squared-fusion-cal'],
       userStatusSummary: userStatusSummary,
       Authinfo: Authinfo,
       USSService2: USSService2,

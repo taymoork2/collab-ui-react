@@ -1,19 +1,15 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Mediafusion')
+  angular.module('Mediafusion')
+    .directive('crMetricsInfoCard', crMetricsInfoCard);
 
-.directive('crMetricsInfoCard', [
-
-  function () {
+  function crMetricsInfoCard() {
     return {
       restrict: 'EA',
       replace: true,
       templateUrl: 'modules/mediafusion/metrics/metricsPreview/metricsInfoCard.tpl.html',
-      link: function (scope, element, attrs) {
-
-      }
+      link: function (scope, element, attrs) {}
     };
   }
-])
-
-;
+})();
