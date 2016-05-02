@@ -7,8 +7,12 @@
 
   /* @ngInject */
   function ExpresswayServiceController($state, $modal, $scope, $translate, XhrNotificationService, ServiceStateChecker, ServiceDescriptor, ClusterService, USSService2, ServiceStatusSummaryService, FusionUtils) {
-    ClusterService.subscribe('data', clustersUpdated, { scope: $scope });
-    USSService2.subscribeStatusesSummary('data', extractSummaryForAService, { scope: $scope });
+    ClusterService.subscribe('data', clustersUpdated, {
+      scope: $scope
+    });
+    USSService2.subscribeStatusesSummary('data', extractSummaryForAService, {
+      scope: $scope
+    });
 
     var vm = this;
     vm.connectorType = $state.current.data.connectorType;
