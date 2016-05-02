@@ -61,10 +61,10 @@
       $scope.modal = $modal.open({
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
-        templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        templateUrl: 'modules/hercules/user-statuses/user-errors.html',
         resolve: {
-          serviceId: function () {
-            return serviceId;
+          servicesId: function () {
+            return [serviceId];
           },
           userStatusSummary: function () {
             return vm.userStatusSummary;
@@ -78,7 +78,7 @@
       NotificationService.removeNotification(notificationId);
     };
 
-    vm.addResourceButtonClicked = function () {
+    vm.openAddResourceModal = function () {
       $modal.open({
         controller: 'RedirectTargetController',
         controllerAs: 'redirectTarget',

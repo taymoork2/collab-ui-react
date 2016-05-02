@@ -1,7 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Squared')
-  .directive('crReloadData', function () {
+  angular.module('Squared')
+    .directive('crReloadData', crReloadData);
+
+  function crReloadData() {
     return {
       restrict: 'E',
       scope: {
@@ -19,4 +22,5 @@ angular.module('Squared')
         });
       }
     };
-  });
+  }
+})();

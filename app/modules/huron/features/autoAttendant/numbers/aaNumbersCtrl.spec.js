@@ -548,7 +548,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
 
       errorSpy = jasmine.createSpy('error');
-      AANotificationService.errorResponse = errorSpy;
+      AANotificationService.error = errorSpy;
 
     });
 

@@ -1,10 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Mediafusion')
+  angular.module('Mediafusion')
+    .directive('crEventInfoCard', crEventInfoCard);
 
-.directive('crEventInfoCard', [
-
-  function () {
+  function crEventInfoCard() {
     return {
       restrict: 'EA',
       replace: true,
@@ -14,6 +14,4 @@ angular.module('Mediafusion')
       }
     };
   }
-])
-
-;
+})();

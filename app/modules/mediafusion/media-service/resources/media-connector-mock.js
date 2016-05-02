@@ -206,12 +206,11 @@
 
   angular
     .module('Mediafusion')
-    .service('MediaConnectorMock', [
+    .service('MediaConnectorMock', MediaConnectorMock);
 
-      function MediaConnectorMock() {
-        return {
-          mockData: mockData
-        };
-      }
-    ]);
+  function MediaConnectorMock() {
+    return {
+      mockData: mockData
+    };
+  }
 }());
