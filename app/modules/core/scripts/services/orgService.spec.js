@@ -212,6 +212,16 @@ describe('orgService', function () {
     expect(callback.args[0][0].success).toBe(true);
   });
 
+  it('should successfully get unlicensedUsers with searchStr', function () {
+    var orgId = Authinfo.getOrgId();
+    var callback = sinon.stub();
+    httpBackend.when('GET', UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/unlicensedUsers?searchPrefix=sqtest').respond(200, {});
+    Orgservice.getUnlicensedUsers(callback, null, 'sqtest');
+    httpBackend.flush();
+    expect(callback.callCount).toBe(1);
+    expect(callback.args[0][0].success).toBe(true);
+  });
+
   it('should fail to get unlicensed users for getOrgId provided by Authinfo', function () {
     var orgId = Authinfo.getOrgId();
     var callback = sinon.stub();

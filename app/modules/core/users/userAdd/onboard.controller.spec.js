@@ -15,6 +15,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMessageServices;
   var getLicensesUsage;
   var getLicensesUsageSpy;
+  var getUnlicensedUsers;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -418,6 +419,15 @@ describe('OnboardCtrl: Ctrl', function () {
     it('check hybrid services without paid licenses', function () {
       Userservice.onboardUsers.and.returnValue($q.resolve(onboardUsersResponse(400, '400087')));
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+  });
+
+  describe('filterList', function () {
+    beforeEach(initController);
+    it('a proper query should call out to organizationService', function () {
+      $scope.filterList('abcd');
+      $timeout.flush();
+      expect(Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
     });
   });
 
