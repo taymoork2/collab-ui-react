@@ -125,7 +125,7 @@
       switch ($scope.rolesObj.adminRadioValue) {
       case 0: // No admin
         for (var roleName in Config.roles) {
-          if (Config.roles[roleName] != Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms) {
+          if (Config.roles[roleName] !== Config.roles.helpdesk && Config.roles[roleName] !== Config.roles.spark_synckms) {
             roles.push({
               'roleName': Config.roles[roleName],
               'roleState': Config.roleState.inactive
