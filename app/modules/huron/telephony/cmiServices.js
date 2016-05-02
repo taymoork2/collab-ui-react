@@ -415,16 +415,9 @@
     });
   });
 
-  function transformEnvelope(data) {
-    if (_.isString(data)) {
-      try {
-        data = JSON.parse(data);
-      } catch (err) {
-        // take no action, return unparseable string
-      }
-    }
-
-    return _.isArray(data) ? _.get(data, '[0]', data) : data;
+  function transformEnvelope(response) {
+    var responseObj = angular.fromJson(response);
+    return _.get(responseObj, '[0]', responseObj);
   }
 
 })();
