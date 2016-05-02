@@ -331,6 +331,7 @@ angular
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
       $httpProvider.interceptors.push('ServerErrorInterceptor');
+      $httpProvider.interceptors.push('ReadonlyInterceptor');
 
       $httpProvider.interceptors.push('ReadonlyInterceptor');
 

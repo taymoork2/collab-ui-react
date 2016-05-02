@@ -13,20 +13,12 @@
       }
     }
 
-    // function readOnlyResponse(rejection) {
-    //   if (rejection.status == 403 && Authinfo.isReadOnlyAdmin()) {
-    //     Notification.notifyReadOnly(rejection);
-    //   }
-    //   return $q.reject(rejection);
-    // }
-
     function isWriteOp(method) {
       return (method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE');
     }
 
     return {
-      request: rejectOnNotRead,
-      //responseError: readOnlyResponse
+      request: rejectOnNotRead
     };
   }
 

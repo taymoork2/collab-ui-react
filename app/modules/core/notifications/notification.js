@@ -44,7 +44,7 @@
     }
 
     function notifyReadOnly(rejection) {
-      notify('Not allowed in read-only mode. Operation not executed.', 'warning', true);
+      notify($translate.instant('readOnlyMessages.notAllowed'), 'warning', true);
     }
 
     function notify(notifications, type, readOnly) {

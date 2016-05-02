@@ -15,7 +15,8 @@
       alertingName: alertingName,
       callForward: callForward,
       numeric: numeric,
-      positiveNumber: positiveNumber
+      positiveNumber: positiveNumber,
+      maxNumber100: maxNumber100
     };
 
     return factory;
@@ -53,6 +54,11 @@
     function positiveNumber(viewValue, modelValue) {
       var value = modelValue || viewValue;
       return (angular.isString(value) && value.length === 0) || value > 0;
+    }
+
+    function maxNumber100(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return value <= 100;
     }
   }
 })();
