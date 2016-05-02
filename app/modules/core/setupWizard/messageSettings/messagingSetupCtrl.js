@@ -6,11 +6,16 @@
     .controller('MessagingSetupCtrl', MessagingSetupCtrl);
 
   /* @ngInject */
-  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification) {
+  function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, FeatureToggleService, Notification) {
     var vm = this;
     var msgIntFlag = false;
     var CurrentDataRetentionPeriod = null;
+    var orgId = Authinfo.getOrgId();
+
+    vm.showMessengerInterop = false;
     vm.msgIntegration = false;
+    vm.showAppSecurity = false;
+    vm.appSecurity = false;
     vm.dataShare = true;
     vm.placeholder = 'Select retention time';
     vm.selected = {
@@ -33,33 +38,46 @@
       label: 'Keep forever',
       value: 'indefinite'
     }];
-    $scope.showMessengerInterop = false;
 
-    var orgId = Authinfo.getOrgId();
-    AccountOrgService.getServices(orgId, null)
-      .success(function (data, status) {
-        var interopIndex = _.findIndex(data.entitlements, function (obj) {
-          return obj.serviceId == 'messengerInterop';
-        });
-        if (interopIndex > -1) {
-          vm.msgIntegration = true;
-          msgIntFlag = true;
-        }
-      });
+    FeatureToggleService.supports(FeatureToggleService.features.atlasAppleFeatures).then(function (result) {
+      vm.showAppSecurity = result;
+    });
 
-    AccountOrgService.getOrgSettings(orgId)
-      .success(function (data, status) {
-        var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
-          return obj.key == 'dataRetentionPeriodDays';
-        });
-        if (dataRetentionIndex > -1) {
-          var selectedIndex = _.findIndex(vm.options, function (obj) {
-            return obj.value == data.settings[dataRetentionIndex].value;
+    init();
+
+    function init() {
+      getServices();
+      getOrgSettings();
+    }
+
+    function getServices() {
+      AccountOrgService.getServices(orgId, null)
+        .success(function (data, status) {
+          var interopIndex = _.findIndex(data.entitlements, function (obj) {
+            return obj.serviceId == 'messengerInterop';
           });
-          vm.selected = vm.options[selectedIndex];
-          CurrentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
-        }
-      });
+          if (interopIndex > -1) {
+            vm.msgIntegration = true;
+            msgIntFlag = true;
+          }
+        });
+    }
+
+    function getOrgSettings() {
+      AccountOrgService.getOrgSettings(orgId)
+        .success(function (data, status) {
+          var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
+            return obj.key == 'dataRetentionPeriodDays';
+          });
+          if (dataRetentionIndex > -1) {
+            var selectedIndex = _.findIndex(vm.options, function (obj) {
+              return obj.value == data.settings[dataRetentionIndex].value;
+            });
+            vm.selected = vm.options[selectedIndex];
+            CurrentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
+          }
+        });
+    }
 
     $scope.$on('wizard-messenger-setup-event', function () {
 
