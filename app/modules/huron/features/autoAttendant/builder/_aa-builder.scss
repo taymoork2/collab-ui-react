@@ -265,8 +265,8 @@ $aa-builder-text-color: $gray-dark-1;
 }
 
 .aa-container {
- // overflow: visible;
-  width:100%;
+  // overflow: visible;
+  width: 100%;
   padding: 0;
   min-height: 1px;
   align-items: center;
@@ -293,7 +293,6 @@ $aa-builder-text-color: $gray-dark-1;
 
   @include vr-spacing(pl, .5);
   @include vr-spacing(pr, .5);
-  display: inline-block;
   white-space: normal;
   box-shadow: none;
   line-height: .5rem;
@@ -421,86 +420,113 @@ $aa-builder-text-color: $gray-dark-1;
   }
 }
 
+.aa-1-lane-wrapper {
+  min-width: 391px;
+}
+
+.aa-2-lanes-wrapper {
+  min-width: 782px;
+}
+
+.aa-3-lanes-wrapper {
+  min-width: 1174px;
+}
+
 .aa-wrapper {
-  white-space: nowrap;
+  display: flex;
+  flex-flow: row wrap;
 
   .aa-general-wrapper {
-    text-align: center;
+    @extend .aa-flex-container;
+    flex: 0 1 auto;
   }
 
   .aa-general-1-lane {
-    min-width: vr-adjust(390);
+    width: 100%;
+    @extend .aa-1-lane-wrapper;
   }
 
   .aa-general-2-lanes {
-    min-width: vr-adjust(780);
+    width: 100%;
+    @extend .aa-2-lanes-wrapper;
   }
 
   .aa-general-3-lanes {
-    min-width: vr-adjust(1175);
+    width: 99%;
+    min-width: 1173px;
   }
 
-  .aa-lanes {
-    display: inline-block;
-    vertical-align: top;
+  .aa-lanes-wrapper {
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: flex-start;
+  }
+
+  .aa-lane {
+    @extend .aa-flex-container;
+    flex: 0 1 auto;
+    min-width: 391px;
 
     .aa-panel-lane {
       @extend .aa-panel;
-      max-width: 100%;
+      @extend .aa-max-width;
     }
   }
 
   .aa-1-lane {
     width: 100%;
-    min-width: vr-adjust(390);
   }
 
   .aa-2-lanes {
     width: 50%;
-    min-width: vr-adjust(390);
   }
 
   .aa-3-lanes {
-    width: 33.333%;
-    min-width: vr-adjust(390);
+    width: 33%;
   }
+}
+
+.aa-max-width {
+  max-width: 100%;
 }
 
 .aa-vertical-line {
   border-left: $aa-builder-border-size solid $aa-builder-border-color;
   min-height: 30px;
-  display: inline-block;
+  display: flex;
+  flex: 0 1 auto;
 }
 
 .aa-vertical-spacer {
   min-height: 30px;
-}
-
-.aa-line-no-space{
-  font-size: 0;
-}
-.aa-line-left {
-  @extend .aa-line-no-space;
-  text-align: left;
-}
-
-.aa-line-right {
-  @extend .aa-line-no-space;
-  text-align: right;
+  display: flex;
+  flex: 0 1 auto;
 }
 
 .aa-horizontal-line {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   width: 100%;
-  display: inline-block;
+  display: flex;
+  flex: 0 1 auto;
 }
 
-.aa-horizontal-half-line {
+.aa-horizontal-line-right {
   border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
   height: 1px;
   min-width: 50%;
-  display: inline-block;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-end;
+}
+
+.aa-horizontal-line-left {
+  border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
+  height: 1px;
+  min-width: 50%;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-start;
 }
 
 .aa-new-step-info {

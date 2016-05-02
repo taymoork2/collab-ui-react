@@ -1,56 +1,32 @@
 <div class="aa-wrapper">
-  <div name="general" class="aa-general-wrapper" ng-class="{'aa-general-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'),
-                'aa-general-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours') &&
-                (aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays),
-                'aa-general-1-lane': !(aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)}">
-    <div class="aa-line-no-space">
-      <div class="aa-vertical-line"></div>
-    </div>
+  <div class="aa-general-wrapper" ng-class="aaBuilder.generalStyle">
+    <div class="aa-vertical-line"></div>
     <div ng-include="'modules/huron/features/autoAttendant/numbers/aaNumbers.tpl.html'"></div>
-    <div class="aa-line-no-space">
-      <div class="aa-vertical-line"></div>
-    </div>
-    <div class="aa-line-no-space" ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']"
+    <div class="aa-vertical-line"></div>
+    <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']"
          ng-include="'modules/huron/features/autoAttendant/schedule/aaSchedule.tpl.html'"></div>
-    <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-line-no-space">
-      <div class="aa-vertical-line"></div>
+    <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-vertical-line"></div>
+  </div>
+  <div class="aa-lanes-wrapper" ng-class="aaBuilder.lanesWrapperStyle">
+    <div class="aa-lane" ng-class="aaBuilder.laneStyle">
+      <!--open lane-->
+      <div ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" class="aa-horizontal-line-right"></div>
+      <aa-schedule-info ng-if="aaBuilder.closedLane || aaBuilder.holidaysLane" schedule="openHours"></aa-schedule-info>
+      <aa-builder-lane aa-schedule="openHours" class="aa-max-width"></aa-builder-lane>
+    </div>
+    <div ng-if="aaBuilder.closedLane" class="aa-lane" ng-class="aaBuilder.laneStyle">
+      <!--close lane-->
+      <div ng-if="!aaBuilder.holidaysLane" class="aa-horizontal-line-left"></div>
+      <div ng-if="aaBuilder.holidaysLane" class="aa-horizontal-line"></div>
+      <aa-schedule-info schedule="closedHours"></aa-schedule-info>
+      <aa-builder-lane aa-schedule="closedHours" class="aa-max-width"></aa-builder-lane>
+    </div>
+    <div ng-if="aaBuilder.holidaysLane" class="aa-lane" ng-class="aaBuilder.laneStyle">
+      <!--holiday lane   -->
+      <div class="aa-horizontal-line-left"></div>
+      <aa-schedule-info schedule="holidays"></aa-schedule-info>
+      <aa-builder-lane aa-schedule="holidays" class="aa-max-width"></aa-builder-lane>
     </div>
   </div>
-  <div class="aa-lanes"
-       ng-class="{'aa-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'),
-                'aa-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours') &&
-                (aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays),
-                'aa-1-lane': !(aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)}">
-    <!--open lane-->
-    <div ng-if="aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays" class="aa-line-right">
-      <div class="aa-horizontal-half-line"></div>
-    </div>
-    <aa-schedule-info ng-if="(aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)"
-                      schedule="openHours"></aa-schedule-info>
-    <aa-builder-lane aa-schedule="openHours"></aa-builder-lane>
-  </div><div class="aa-lanes" ng-if="aaBuilder.ui.isClosedHours"
-       ng-class="{'aa-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'),
-       'aa-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours') && (aaBuilder.ui.isClosedHours
-       || aaBuilder.ui.isHolidays)}">
-    <!--close lane-->
-    <div ng-if="!aaBuilder.ui.isHolidays || aaBuilder.ui.holidaysValue == 'closedHours'" class="aa-line-left">
-      <div class="aa-horizontal-half-line"></div>
-    </div>
-    <div ng-if="aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'" class="aa-line-no-space">
-      <div class="aa-horizontal-line"></div>
-    </div>
-    <aa-schedule-info schedule="closedHours"></aa-schedule-info>
-    <aa-builder-lane aa-schedule="closedHours"></aa-builder-lane>
-  </div><div class="aa-lanes" ng-if="aaBuilder.ui.isHolidays && aaBuilder.ui.holidaysValue !== 'closedHours'"
-       ng-class="{'aa-3-lanes': (aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays),
-       'aa-2-lanes':!(aaBuilder.ui.isClosedHours && aaBuilder.ui.isHolidays) &&
-       (aaBuilder.ui.isClosedHours || aaBuilder.ui.isHolidays)}">
-    <!--holiday lane   -->
-    <div class="aa-line-left">
-      <div class="aa-horizontal-half-line"></div>
-    </div>
-    <aa-schedule-info schedule="holidays"></aa-schedule-info>
-    <aa-builder-lane aa-schedule="holidays"></aa-builder-lane>
-  </div>
-  <div class="aa-vertical-spacer"></div>
 </div>
+<div class="aa-vertical-spacer"></div>
