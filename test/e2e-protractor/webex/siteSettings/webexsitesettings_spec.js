@@ -33,14 +33,26 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+      xit('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
         utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t31CardsSectionId);
       });
+
+      it('should click on Actions column configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
+        utils.click(sitesettings.t31ConfigureIcon);
+        utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t31CardsSectionId);
+      });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      xit('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
         utils.click(sitesettings.t30ConfigureCog);
+        utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t30CardsSectionId);
+      });
+
+      it('should click on Actions column configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
+        utils.click(sitesettings.t30ConfigureIcon);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t30CardsSectionId);
       });
@@ -51,14 +63,26 @@ while (1 >= sitesettings.testInfo.describeCount) {
     });
 
     if (sitesettings.testInfo.testType == "T31") {
-      it('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
+      xit('should click on configure site cog for ' + sitesettings.t31Info.siteUrl, function () {
         utils.click(sitesettings.t31ConfigureCog);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t31CardsSectionId);
       });
+
+      it('should click on configure site icon for ' + sitesettings.t31Info.siteUrl, function () {
+        utils.click(sitesettings.t31ConfigureIcon);
+        utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t31CardsSectionId);
+      });
     } else {
-      it('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
+      xit('should click on configure site cog for ' + sitesettings.t30Info.siteUrl, function () {
         utils.click(sitesettings.t30ConfigureCog);
+        utils.wait(sitesettings.siteSettingsPanel);
+        utils.wait(sitesettings.t30CardsSectionId);
+      });
+
+      it('should click on configure site icon for ' + sitesettings.t30Info.siteUrl, function () {
+        utils.click(sitesettings.t30ConfigureIcon);
         utils.wait(sitesettings.siteSettingsPanel);
         utils.wait(sitesettings.t30CardsSectionId);
       });
@@ -232,12 +256,14 @@ while (1 >= sitesettings.testInfo.describeCount) {
     if (sitesettings.testInfo.testType == "T31") {
       it('should click on configure site cog and navigate to site settings index', function () {
         utils.click(sitesettings.siteListCrumb);
-        utils.wait(sitesettings.t31ConfigureCog);
+        //utils.wait(sitesettings.t31ConfigureCog);
+        utils.wait(sitesettings.t31ConfigureIcon);
       });
     } else {
       it('should click on configure site cog and navigate to site settings index', function () {
         utils.click(sitesettings.siteListCrumb);
-        utils.wait(sitesettings.t30ConfigureCog);
+        //utils.wait(sitesettings.t30ConfigureCog);
+        utils.wait(sitesettings.t30ConfigureIcon);
       });
     }
 

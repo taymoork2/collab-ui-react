@@ -33,14 +33,26 @@ while (1 >= sitereports.testInfo.describeCount) {
     });
 
     if (sitereports.testInfo.testType == "T31") {
-      it('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+      xit('should click on reports cog for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T31ReportsCog);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t31CardsSectionId);
       });
+
+      it('should click on Actions column reports icon for ' + sitesettings.t31Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T31ReportsIcon);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t31CardsSectionId);
+      });
     } else {
-      it('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+      xit('should click on reports cog for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
         utils.click(sitereports.T30ReportsCog);
+        utils.wait(sitereports.webexSiteReportsPanel);
+        utils.wait(sitereports.t30CardsSectionId);
+      });
+
+      it('should click on Actions column reports icon for ' + sitesettings.t30Info.siteUrl + ' and navigate to webex reports index', function () {
+        utils.click(sitereports.T30ReportsIcon);
         utils.wait(sitereports.webexSiteReportsPanel);
         utils.wait(sitereports.t30CardsSectionId);
       });
