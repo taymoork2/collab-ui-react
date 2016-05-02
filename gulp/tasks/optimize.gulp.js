@@ -50,7 +50,7 @@ gulp.task('optimize:app', function () {
       add: true
     }))
     .pipe($.uglify({
-      mangle: false
+      mangle: true
     }))
     .pipe(jsFilter.restore)
     .pipe($.header(config.banner, {

@@ -190,6 +190,7 @@
       }
     }
 
+    /* @ngInject */
     function getTabController($scope) {
       var tab = getTab();
       if (tab && tab.controller) {
@@ -199,6 +200,7 @@
       }
     }
 
+    /* @ngInject */
     function getSubTabController($scope) {
       var subTab = getSubTab();
       if (subTab && subTab.controller) {

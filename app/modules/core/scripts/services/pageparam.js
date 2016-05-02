@@ -1,52 +1,55 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
-  .service('PageParam', ['Storage',
-    function PageParam(Storage) {
+  angular.module('Core')
+    .service('PageParam', PageParam);
 
-      var pageParamKey = 'pageParam';
+  /* @ngInject */
+  function PageParam(Storage) {
 
-      var paramData = {
-        'route': null,
-        'param': {}
-      };
+    var pageParamKey = 'pageParam';
 
-      var parseParam = function () {
-        var paramString = Storage.get(pageParamKey);
+    var paramData = {
+      'route': null,
+      'param': {}
+    };
+
+    var parseParam = function () {
+      var paramString = Storage.get(pageParamKey);
+      if (paramString) {
+        var rerouteData = paramString.split('_');
+        paramData.route = rerouteData[0];
+        for (var i = 1; i < rerouteData.length; i++) {
+          var kv = rerouteData[i].split(':');
+          paramData.param[kv[0]] = kv[1];
+        }
+      }
+    };
+
+    parseParam();
+
+    return {
+      set: function (paramString) {
         if (paramString) {
-          var rerouteData = paramString.split('_');
-          paramData.route = rerouteData[0];
-          for (var i = 1; i < rerouteData.length; i++) {
-            var kv = rerouteData[i].split(':');
-            paramData.param[kv[0]] = kv[1];
-          }
+          Storage.put(pageParamKey, paramString);
+          parseParam();
         }
-      };
+      },
 
-      parseParam();
+      getRoute: function () {
+        return paramData.route;
+      },
 
-      return {
-        set: function (paramString) {
-          if (paramString) {
-            Storage.put(pageParamKey, paramString);
-            parseParam();
-          }
-        },
+      getParam: function (paramName) {
+        return paramData.param[paramName];
+      },
 
-        getRoute: function () {
-          return paramData.route;
-        },
+      clear: function () {
+        Storage.remove(pageParamKey);
+        paramData.route = null;
+        paramData.param = {};
+      }
+    };
 
-        getParam: function (paramName) {
-          return paramData.param[paramName];
-        },
-
-        clear: function () {
-          Storage.remove(pageParamKey);
-          paramData.route = null;
-          paramData.param = {};
-        }
-      };
-
-    }
-  ]);
+  }
+})();

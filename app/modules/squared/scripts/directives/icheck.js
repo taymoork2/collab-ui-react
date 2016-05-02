@@ -1,7 +1,11 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('wx2AdminWebClientApp')
-  .directive('icheck', function ($timeout) {
+  angular.module('wx2AdminWebClientApp')
+    .directive('icheck', icheck);
+
+  /* @ngInject */
+  function icheck($timeout) {
     return {
       require: 'ngModel',
       link: function ($scope, element, $attrs, ngModel) {
@@ -28,4 +32,5 @@ angular.module('wx2AdminWebClientApp')
         });
       }
     };
-  });
+  }
+})();
