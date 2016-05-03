@@ -395,6 +395,18 @@ angular.module('Core')
             .then(uploadSuccess, uploadError, uploadProgress);
         }
       };
+      // TODO: ShowExamplePage
+      $scope.showExampleModal = function () {
+        $scope.exampleModal = $modal.open({
+          scope: $scope,
+          templateUrl: 'modules/core/partnerProfile/brandingExample.tpl.html',
+          size: 'lg'
+        });
+      };
+      // TODO:  close Example Page;
+      $scope.closeExampleModal = function () {
+        $scope.exampleModal.close();
+      };
 
       // TODO: Refactor to use appconfig states
       function openModal(size) {

@@ -96,13 +96,14 @@
 
   .drop-box {
     display: inline-block;
-    width: calc(100% - 2rem);
+    width: 412px;
+    margin-left: 2rem;
 
     @include vr-spacing(mb, 0.25);
 
     @include vr-spacing(p, 0.25);
 
-    height: 150px;
+    height: 95px;
     background-color: $brand-white;
     border: 1px solid $gray-light;
     border-radius: 3px;
@@ -115,6 +116,16 @@
     &.dragover-error {
       border-color: $brand-danger;
     }
+
+    + .btn {
+      vertical-align: bottom;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .drop-box-note{
+    width: 412px;
+    margin-left: 2rem;
   }
 
   .thumbnail {
