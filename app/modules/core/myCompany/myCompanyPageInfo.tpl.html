@@ -1,1 +1,83 @@
-<div>info content</div>
+<!--<form class="cs-form">-->
+<!--<div class="cs-form__section" ng-repeat="setting in mcpInfo.settings">-->
+<!--<div class="section__info">-->
+<!--<h4 class="section__title" translate="{{setting.title}}"></h4>-->
+<!--</div>-->
+<!--<div class="section__content">-->
+<!--<div ng-if="setting.subsectionLabel" class="sub-section">-->
+<!--<h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>-->
+<!--<p ng-if="setting.subsectionDescription" class="sub-section__description" translate="{{setting.subsectionDescription}}"></p>-->
+<!--</div>-->
+<!--<article ng-include="setting.template"></article>-->
+<!--</div>-->
+<!--</div>-->
+<!--</form>-->
+
+
+<!-- if the use of settings  as in global settings, then replace with above-->
+
+
+<form class="cs-form">
+  <div class="cs-form__section">
+
+
+    <!-- company name / account number -->
+    <div class="section__info">
+      <h4 class="section__title" translate="partnerProfile.companyInfo"></h4>
+    </div>
+    <div class="section__content">
+      <div ng-if="setting.subsectionLabel" class="sub-section">
+        <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
+        <p ng-if="setting.subsectionDescription" class="sub-section__description"
+           translate="{{setting.subsectionDescription}}"></p>
+      </div>
+      <article>
+        <div class="form-group">
+          <!-- <div class="columns small-4"> -->
+          <label for="company-name" translate="partnerProfile.name"></label>
+          <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
+          <!-- </div> -->
+        </div>
+        <div class="form-group">
+          <!-- <div class="columns small-4"> -->
+          <label for="company-id" translate="partnerProfile.id"></label>
+          <input id="company-id" class="form-control" type="text" disabled="true">
+          <!-- </div> -->
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- cisco rep -->
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" ng-if="isPartner" translate="partnerProfile.ciscoRep"></h4>
+      <h4 class="section__title" ng-if="!isPartner" translate="customerProfile.supportContacts"></h4>
+    </div>
+    <div class="section__content">
+      <div ng-if="setting.subsectionLabel" class="sub-section">
+        <h5 class="sub-section__label" translate="{{setting.subsectionLabel}}"></h5>
+        <p ng-if="setting.subsectionDescription" class="sub-section__description"
+           translate="{{setting.subsectionDescription}}"></p>
+      </div>
+      <div ng-show="rep !== null" class="form-spacing">
+        <h4 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h4>
+        <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
+        <span class="rep-info" translate="rep.displayName"></span>
+        <span class="rep-info" translate="rep.userName"></span>
+        <!-- grant cisco access checkbox -->
+        <div class="row grant-row" ng-show="false">
+          <div class="columns small-12">
+            <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
+          </div>
+        </div>
+      </div>
+      <div ng-if="!isPartner && partner !== null">
+        <h4 translate="customerProfile.partnerAdmin"></h4>
+        <span class="rep-info">{{partner.displayName}}</span>
+        <span class="rep-info">{{partner.userName}}</span>
+      </div>
+    </div>
+  </div>
+</form>
+
