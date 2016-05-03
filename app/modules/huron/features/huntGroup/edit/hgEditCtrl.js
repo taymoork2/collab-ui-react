@@ -307,7 +307,7 @@
             vm.form.$setDirty();
           }
         },
-        controller: /* ngInject */ function ($scope) {
+        controller: /* @ngInject */ function ($scope) {
           $scope.to.options = vm.allPilotOptions;
           $scope.$watchCollection('model.numbers', function (value) {
             if (angular.equals(value, vm.selectedPilotNumbers)) {

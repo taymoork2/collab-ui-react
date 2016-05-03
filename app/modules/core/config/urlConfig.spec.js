@@ -16,7 +16,6 @@ describe('UrlConfigSpec', function () {
   var intHost = 'int-admin.ciscospark.com';
   var prodHost = 'admin.ciscospark.com';
 
-  var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
   var orgId = 'abc123efg456';
   var siteURL = 'webex.com';
 
@@ -47,15 +46,6 @@ describe('UrlConfigSpec', function () {
       }
     };
   };
-
-  it('should return correct admin client url', function () {
-    whenCalling('getAdminPortalUrl', orgId).expectUrlToBe({
-      dev: 'http://127.0.0.1:8000',
-      cfe: 'https://cfe-admin.ciscospark.com',
-      integration: 'https://int-admin.ciscospark.com/',
-      prod: 'https://admin.ciscospark.com/'
-    });
-  });
 
   it('should return correct identity user service url', function () {
     whenCalling('getScimUrl', orgId).expectUrlToBe({

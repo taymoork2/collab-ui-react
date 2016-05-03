@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService) {
 
     function getMessageCardForOrg(org, licenses) {

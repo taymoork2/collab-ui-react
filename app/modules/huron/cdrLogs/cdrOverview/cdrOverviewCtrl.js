@@ -6,7 +6,7 @@
     .controller('CdrOverviewCtrl', CdrOverviewCtrl);
 
   /* @ngInject */
-  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, CdrService, chartColors) {
+  function CdrOverviewCtrl($scope, $state, $stateParams, $translate, CdrService, chartColors) {
     var vm = this;
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
@@ -16,12 +16,14 @@
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
     vm.searchField = "";
     vm.cdrTable = [];
-    vm.jsonUrl = "";
+    vm.filename = "cdr.json";
+    vm.jsonUrl = undefined;
+    vm.jsonBlob = undefined;
 
     vm.localSessionID = cdrData.localSessionID;
     vm.remoteSessionID = cdrData.remoteSessionID;
     vm.cdr = [];
-    // build an array to use with angular filter.
+    // build an array to use with angular filter
     angular.forEach(cdrData, function (value, key) {
       if (key.toLowerCase() !== '$$hashkey') {
         vm.cdr.push({
@@ -53,8 +55,20 @@
       });
     };
 
+    vm.cdrClick = function () {
+      if (angular.isDefined(vm.jsonBlob)) {
+        CdrService.downloadInIE(vm.jsonBlob, vm.filename);
+      }
+    };
+
     function init() {
-      vm.jsonUrl = CdrService.createDownload(call);
+      var downloadData = CdrService.createDownload(call);
+      if (angular.isDefined(downloadData.jsonBlob)) {
+        vm.jsonBlob = downloadData.jsonBlob;
+      }
+      if (angular.isDefined(downloadData.jsonUrl)) {
+        vm.jsonUrl = downloadData.jsonUrl;
+      }
     }
 
     function formatCdr(cdrRawJson) {

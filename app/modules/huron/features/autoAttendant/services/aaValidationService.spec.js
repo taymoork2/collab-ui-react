@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: AAValidationService', function () {
-  var Notification, AAModelService, AutoAttendantCeInfoModelService, AAValidationService;
+  var AANotificationService, AAModelService, AutoAttendantCeInfoModelService, AAValidationService;
 
   var rawCeInfo = {
     "callExperienceName": "AAA2",
@@ -36,11 +36,11 @@ describe('Service: AAValidationService', function () {
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_Notification_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_) {
+  beforeEach(inject(function (_AANotificationService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _AAValidationService_) {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAValidationService = _AAValidationService_;
-    Notification = _Notification_;
+    AANotificationService = _AANotificationService_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
   }));
@@ -52,7 +52,7 @@ describe('Service: AAValidationService', function () {
   describe('isNameValidationSuccess', function () {
 
     beforeEach(function () {
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
     });
@@ -73,7 +73,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('report name validation error for a string of spaces', function () {
@@ -82,7 +82,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should report name validation error if new AA name is not unique', function () {
@@ -94,7 +94,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isNameValidationSuccess(ceInfo_name, uuid);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should report name validation success if new AA name is unique', function () {
@@ -111,7 +111,7 @@ describe('Service: AAValidationService', function () {
 
   describe('isPhoneMenuValidationSuccess', function () {
     beforeEach(function () {
-      spyOn(Notification, 'error');
+      spyOn(AANotificationService, 'error');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
     });
@@ -121,7 +121,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Auto Attendant target', function () {
@@ -132,7 +132,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to Auto Attendant target if key is not initialized', function () {
@@ -144,7 +144,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Hunt Group target', function () {
@@ -155,7 +155,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to Hunt Group target if key is not initialized', function () {
@@ -167,7 +167,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to User target', function () {
@@ -178,7 +178,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to User target if key is not initialized', function () {
@@ -190,7 +190,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Voicemail target', function () {
@@ -201,7 +201,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to Voicemail target if key is not initialized', function () {
@@ -213,7 +213,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('report validation error for an empty Route to Phone Number target', function () {
@@ -224,7 +224,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(AANotificationService.error).toHaveBeenCalled();
     });
 
     it('should not report validation error for an empty Route to Phone Number target if key is not initialized', function () {
@@ -236,7 +236,7 @@ describe('Service: AAValidationService', function () {
       var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
 
       expect(valid).toEqual(true);
-      expect(Notification.error).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
     });
   });
 

@@ -2,6 +2,7 @@
   'use strict';
 
   var pageDirectiveNames = [
+    'ctName',
     'ctProfile',
     'ctOverview',
     'ctCustomer',

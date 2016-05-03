@@ -190,6 +190,10 @@ describe('Controller: UserOverviewCtrl', function () {
     it('should check if status is pending', function () {
       expect(controller.pendingStatus).toBe(true);
     });
+
+    it('should not have any licenseID', function () {
+      expect(controller.hasNoLicenseId).toBe(true);
+    });
   });
 
   describe('resendInvitation', function () {

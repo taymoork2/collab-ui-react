@@ -1,8 +1,12 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular
-  .module('uc.autoattendant')
-  .directive('aaKeypress', ['Notification', function (Notification) {
+  angular
+    .module('uc.autoattendant')
+    .directive('aaKeypress', aaKeypress);
+
+  /* @ngInject */
+  function aaKeypress(Notification) {
     return function (scope, element, attrs) {
       var charsNotAllowed = [{
         'keyCode': 60,
@@ -30,4 +34,5 @@ angular
 
       });
     };
-  }]);
+  }
+})();

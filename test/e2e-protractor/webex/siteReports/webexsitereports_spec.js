@@ -19,11 +19,11 @@ while (1 >= sitereports.testInfo.describeCount) {
 
     if (sitereports.testInfo.testType == "T31") {
       it('should signin as ' + sitereports.t31Info.testAdminUsername + ' for T31 site config test', function () {
-        login.loginThroughGui(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
+        login.loginThroughGuiUsingIntegrationBackend(sitereports.t31Info.testAdminUsername, sitereports.t31Info.testAdminPassword);
       });
     } else {
       it('should signin as ' + sitereports.t30Info.testAdminUsername + ' for T30 site config test', function () {
-        login.loginThroughGui(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
+        login.loginThroughGuiUsingIntegrationBackend(sitereports.t30Info.testAdminUsername, sitereports.t30Info.testAdminPassword);
       });
     }
 

@@ -16,9 +16,11 @@ module.exports = function () {
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
   var tsSpecSuffix = '.ts.spec.js';
+  var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
+  var tsManifest = '/../ts/ts-manifest.txt';
 
   var config = {
     build: build,
@@ -31,16 +33,15 @@ module.exports = function () {
     e2eFailRetrySpecLists: cache + '/e2e-fail-retry-run-*',
     e2eReports: e2e + '/reports',
     app: 'app',
-    unsupportedDir: 'app/unsupported',
     fonts: 'fonts',
     images: 'images',
     css: 'styles',
     docs: 'docs',
     cssName: 'main',
     jsIndexName: 'index.scripts',
-    jsUnsupportedName: 'unsupported.scripts',
     cache: cache,
     examples: examples,
+    tsManifest: tsManifest,
 
     gulpFiles: gulpFiles,
 
@@ -48,6 +49,10 @@ module.exports = function () {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js'
+      ],
+      notTs: [
+        '!' + app + '/modules/**/*.js',
+        '!' + app + '/scripts/**/*.js'
       ],
       json: app + '/**/*.json',
       csv: app + '/**/*.csv',
@@ -62,17 +67,9 @@ module.exports = function () {
     typeScript: {
       appFiles: app + '/**/*.ts',
       testFiles: app + '/**/*.spec.ts',
+      compiledSuffix: tsSuffix,
       compiledTestSuffix: tsSpecSuffix,
       compiledTestFiles: compiledTestFiles,
-    },
-
-    unsupported: {
-      dir: 'unsupported',
-      file: 'unsupportedApp.js',
-      js: [
-        app + '/unsupported/**/*.js',
-      ],
-      name: 'unsupported.scripts',
     },
 
     templateCache: {
@@ -94,6 +91,11 @@ module.exports = function () {
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
         build + '/modules/**/*.js',
+      ],
+      notTs: [
+        '!' + build + '/scripts/**/*.ts.js',
+        '!' + build + '/modules/**/*.module.ts.js',
+        '!' + build + '/modules/**/*.ts.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -133,12 +135,6 @@ module.exports = function () {
     },
 
     vendorFiles: {
-      unsupported: [
-        vendor + '/json3/lib/json3.min.js',
-        vendor + '/angular/angular.js',
-        vendor + '/angular-translate/angular-translate.js',
-        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-      ],
       js: [
         vendor + '/x2js/xml2json.js',
         vendor + '/jquery/dist/jquery.js',

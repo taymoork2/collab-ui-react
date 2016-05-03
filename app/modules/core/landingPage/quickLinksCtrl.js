@@ -1,12 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core')
+  angular.module('Core')
+    .controller('QuikLinksCtrl', QuikLinksCtrl);
 
-.controller('QuikLinksCtrl', ['$scope', 'Authinfo',
-  function ($scope, Authinfo) {
-
+  /* @ngInject */
+  function QuikLinksCtrl($scope, Authinfo) {
     $scope.isPageActive = function (name) {
       return Authinfo.isAllowedState(name);
     };
   }
-]);
+})();

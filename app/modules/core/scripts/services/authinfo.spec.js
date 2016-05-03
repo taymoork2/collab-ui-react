@@ -361,6 +361,36 @@ describe('Authinfo:', function () {
       Authinfo.initializeTabs();
       expect(Authinfo.getTabs()).toEqual(tabConfig);
     });
+
+    describe('customer with CONFERENCING license', function () {
+      var accountData = {
+        "customers": [{
+          "customerId": "1",
+          "customerName": "Atlas_Test_1",
+          "licenses": [{
+            "licenseType": "CONFERENCING",
+            "siteUrl": "whatever"
+          }]
+        }]
+      };
+
+      it('is patched with Site_Admin role if customer has full admin role.', function () {
+        var Authinfo = setupUser({
+          roles: ['Full_Admin']
+        });
+        var a = Authinfo.updateAccountInfo(accountData);
+        expect(Authinfo.getRoles()).toEqual(["Full_Admin", "Site_Admin"]);
+      });
+
+      it('is patched with Site_Admin role if customer has read only admin role.', function () {
+        var Authinfo = setupUser({
+          roles: ['Readonly_Admin']
+        });
+        var a = Authinfo.updateAccountInfo(accountData);
+        expect(Authinfo.getRoles()).toEqual(["Readonly_Admin", "Site_Admin"]);
+      });
+    });
+
   });
 
   function setupConfig(override) {

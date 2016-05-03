@@ -24,7 +24,8 @@
       getConnector: getConnector,
       getRunningStateSeverity: getRunningStateSeverity,
       subscribe: hub.on,
-      upgradeSoftware: upgradeSoftware
+      upgradeSoftware: upgradeSoftware,
+      getReleaseNotes: getReleaseNotes
     };
 
     return service;
@@ -213,8 +214,8 @@
       return _.values(clusterCache[type]);
     }
 
-    function upgradeSoftware(clusterId, serviceType) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+    function upgradeSoftware(clusterId, connectorType) {
+      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + connectorType + '/upgrade';
       return $http.post(url, '{}')
         .then(extractDataFromResponse)
         .then(function (data) {
@@ -247,5 +248,15 @@
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
     }
+
+    function getReleaseNotes(releaseChannel, connectorType) {
+      var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/channels/' + releaseChannel + '/packages/' + connectorType + '?fields=@wide';
+      return $http.get(url)
+        .then(extractDataFromResponse)
+        .then(function (data) {
+          return data.releaseNotes;
+        });
+    }
+
   }
 }());
