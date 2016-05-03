@@ -332,10 +332,10 @@
           });
 
         $httpProvider.interceptors.push('TrackingIdInterceptor');
-        $httpProvider.interceptors.push('ResponseInterceptor');
-        $httpProvider.interceptors.push('TimingInterceptor');
-        $httpProvider.interceptors.push('ServerErrorInterceptor');
-        $httpProvider.interceptors.push('ReadonlyInterceptor');
+        // $httpProvider.interceptors.push('ResponseInterceptor');
+        // $httpProvider.interceptors.push('TimingInterceptor');
+        // $httpProvider.interceptors.push('ServerErrorInterceptor');
+        // $httpProvider.interceptors.push('ReadonlyInterceptor');
 
         // See ... http://angular-translate.github.io/docs/#/guide/19_security
         $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -347,10 +347,8 @@
 
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
 
-        var defaultLang = 'en_US';
-
-        //Tell the module what language to use by default
-        $translateProvider.preferredLanguage(defaultLang);
+        $translateProvider.determinePreferredLanguage();
+        $translateProvider.fallbackLanguage('en_US');
       }
     ]);
 
