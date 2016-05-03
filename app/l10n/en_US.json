@@ -3061,6 +3061,7 @@
     "exampleLink": "(see example)",
     "uploadNote": "For best results logo should be transparent with no padding around the outside of the image. Image file size must be less than 1 MB.",
     "logoPlaceholder": "Drag and drop your logo here",
+    "logoUploadNote": "Only .gif, .jpg or .png  le types accepted,  le size cannot exceed 1MB. Do not include padding around image.",
     "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
@@ -3107,7 +3108,8 @@
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "Customize your employee’s experience of Cisco applications by uploading your company logo below.",
-    "usePartnerLogo": "Use logo currently being used by {{partner}}",
+
+    "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support parameters below. These parameters will be displayed under Support Options in the Spark application.",
     "supportAccessTitle": "Support Access",
     "supportAccessInfo": "This setting gives Cisco or Partner read-only access to your organization. It does not allow changes to be made to your organization's details.",
@@ -3117,6 +3119,10 @@
     "crashReportCheckboxLabel": "Enable Automatic Crash reporting",
     "crashReportTooltipDescription": "What do these reports contain?",
     "crashReportTooltip": "Crash reports can include user and organisation identifiers, user agent strings, sanitized agent browser strings, client IP addresses and user’s device MAC address. All information will be treated confidentially and used solely for product quality enhancement."
+  },
+  "brandingExample": {
+    "title": "Examples of Custom Branding",
+    "description": "Logo Placement Examples: <br/>After your logo is uploaded it will be automatically sized and appear in the Spark “About” and “Support” tabs as shown on the right. The logo will also be displayed on the right side of the webex.com site header as shown in the illustration below."
   },
   "fileUpload": {
     "uploading": "Uploading File",
