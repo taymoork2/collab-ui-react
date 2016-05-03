@@ -135,18 +135,7 @@
         var hexByte = null;
         var intByte = null;
 
-        if ("\t" == data[i]) {
-          "%09".replace(/([0-9a-f]{1})/gi, function (newHexByte) {
-            hexByte = newHexByte;
-          });
-        } else if ("\n" == data[i]) {
-          "%0A".replace(/([0-9a-f]{1})/gi, function (newHexByte) {
-            hexByte = newHexByte;
-          });
-        } else {
-          hexByte = data[i].charCodeAt(0).toString(16);
-        }
-
+        hexByte = data[i].charCodeAt(0).toString(16);
         intByte = parseInt(hexByte, 16);
 
         if (25 > i) {
