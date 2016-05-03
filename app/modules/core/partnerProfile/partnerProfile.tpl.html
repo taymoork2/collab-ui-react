@@ -142,6 +142,22 @@
             </div>
           </div>
         </ng-form>
+
+        <div class="columns small-12 form-section" id="crashReportForm" ng-if="showCrashLogUpload">
+          <h4 translate="customerProfile.crashReportTitle"></h4>
+          <div class="form-spacing">
+            <span translate="customerProfile.crashReportText"></span>
+          </div>
+          <div class="form-spacing">
+            <input type="checkbox" id="crashReportCheckbox" ng-change='setCrashReportCheckbox(allowCrashLogUpload)' ng-model="allowCrashLogUpload">
+            <label for="crashReportCheckbox">
+              <span translate="customerProfile.crashReportCheckboxLabel"></span>
+            </label>
+          </div>
+          <p>
+            <span translate="customerProfile.crashReportTooltipDescription"></span><i class="icon icon-information" tooltip-trigger="mouseenter" tooltip-placement="above" tooltip-animation="true" tooltip="{{::'customerProfile.crashReportTooltip' | translate}}"></i>
+          </p>
+        </div>
       </div>
 
       <div class="partner-profile columns small-12 large-6 xlarge-5 end">

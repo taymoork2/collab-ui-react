@@ -15,12 +15,13 @@ module.exports = function () {
   var now = new Date();
   var year = now.getFullYear();
   var gulpFiles = 'gulp/**/*.js';
-  var tsSpecSuffix = '.ts.spec.js';
+  var tsSpecSuffix = '.spec.ts.js';
   var tsSuffix = '.ts.js';
   var compiledTestFiles = app + '/**/*' + tsSpecSuffix;
   var examples = 'examples';
   var cache = '.cache';
   var tsManifest = '/../ts/ts-manifest.txt';
+  var tsTestManifest = '/../ts/ts-test-manifest.txt';
 
   var config = {
     build: build,
@@ -44,7 +45,7 @@ module.exports = function () {
     cache: cache,
     examples: examples,
     tsManifest: tsManifest,
-
+    tsTestManifest: tsTestManifest,
     gulpFiles: gulpFiles,
 
     appFiles: {
@@ -53,7 +54,7 @@ module.exports = function () {
         app + '/scripts/**/*.js'
       ],
       notTs: [
-        '!' + app + '/modules/**/*.js',
+        '!' + app + '/modules/**/*.ts.js',
         '!' + app + '/scripts/**/*.js'
       ],
       json: app + '/**/*.json',
@@ -105,8 +106,11 @@ module.exports = function () {
       ],
       notTs: [
         '!' + build + '/scripts/**/*.ts.js',
+        '!' + build + '/scripts/**/*.ts.spec.js',
         '!' + build + '/modules/**/*.module.ts.js',
-        '!' + build + '/modules/**/*.ts.js'
+        '!' + build + '/modules/**/*.module.ts.spec.js',
+        '!' + build + '/modules/**/*.ts.js',
+        '!' + build + '/modules/**/*.ts.spec.js'
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',

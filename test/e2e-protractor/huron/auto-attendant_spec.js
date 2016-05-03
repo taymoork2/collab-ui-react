@@ -3,9 +3,24 @@
 
 describe('Huron Auto Attendant', function () {
 
+  var initialIgnoreSync = true;
+
   beforeAll(function () {
+
+    initialIgnoreSync = browser.ignoreSynchronization;
+
     login.login('huron-int1');
+
   }, 120000);
+
+  // See AUTOATTN-556
+  beforeEach(function () {
+    browser.ignoreSynchronization = false;
+  });
+
+  afterEach(function () {
+    browser.ignoreSynchronization = initialIgnoreSync;
+  });
 
   describe('Create and Delete AA', function () {
 
@@ -115,7 +130,7 @@ describe('Huron Auto Attendant', function () {
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Add Phone Menu Say Message
-      utils.click(autoattendant.phoneMenu);
+      utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.expectIsEnabled(autoattendant.saveButton);
@@ -206,7 +221,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
-    }, 60000);
+    }, 120000);
 
     it('should add a 2nd Say Message via Add New Step to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -248,8 +263,9 @@ describe('Huron Auto Attendant', function () {
       // Also we are depending on menu order for this test, so if the Add New Step menu gets new steps or
       // gets rearranged this will break - but again it will fail immediately so it should be clear what's going on.
       //
-      // Verify we have 1 Say Message already:
 
+      // Verify we have 1 Say Message already:
+      // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 1);
 
       utils.click(autoattendant.addStep);
@@ -261,6 +277,9 @@ describe('Huron Auto Attendant', function () {
       // middle/2nd menu option is Add Phone Menu
       utils.click(autoattendant.newStepSelectSecond);
 
+      utils.click(autoattendant.saveButton);
+
+      // On timing issues here, see AUTOATTN-556
       utils.expectCount(autoattendant.phoneMenuAll, 2);
 
       // Click on the language for the new (first) Phone Menu we just added
@@ -332,15 +351,19 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.schedule);
       utils.wait(autoattendant.addschedule, 12000);
       utils.click(autoattendant.addschedule);
+
       utils.click(autoattendant.starttime);
-      utils.sendKeys(autoattendant.starttime, '01:00AM');
+      autoattendant.starttime.sendKeys(autoattendant.starttime, '1', protractor.Key.TAB, '00', protractor.Key.TAB, 'A');
+
       utils.click(autoattendant.endtime);
-      utils.sendKeys(autoattendant.endtime, '05:00PM');
+      autoattendant.endtime.sendKeys(autoattendant.starttime, '5', protractor.Key.TAB, '00', protractor.Key.TAB, 'P');
+
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.day1);
       utils.expectIsEnabled(autoattendant.modalsave);
       utils.click(autoattendant.modalsave);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+
     }, 60000);
 
     it('should add a Holiday Schedule to AA', function () {
@@ -401,8 +424,8 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.modalsave);
       utils.click(autoattendant.scheduletrash);
 
-      utils.wait(autoattendant.toggleHolidayWhenOpenCloseExpanded, 12000);
-      utils.click(autoattendant.toggleHolidayWhenOpenCloseExpanded);
+      utils.wait(autoattendant.toggleHolidays, 12000);
+      utils.click(autoattendant.toggleHolidays);
       utils.click(autoattendant.deleteHoliday.first()); // Thanksgiving created above
       utils.click(autoattendant.deleteHoliday.first()); // Some Holiday created above
 
@@ -438,6 +461,7 @@ describe('Huron Auto Attendant', function () {
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
         utils.click(autoattendant.deleteModalConfirmButton);
+        autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
       });
 
     });

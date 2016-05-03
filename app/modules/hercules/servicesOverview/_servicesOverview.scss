@@ -1,4 +1,4 @@
-.servicesLanding {
+.servicesOverview {
   .hidden {
     display: none;
   }
@@ -62,7 +62,7 @@
 
       opacity: 1;
       z-index: 100;
-      span{
+      span {
         font-size: 1rem;
       }
     }
@@ -121,7 +121,7 @@
 }
 
 @media only screen and (max-width: 1200px) {
-  .servicesLanding {
+  .servicesOverview {
     .servicesBlock {
       .cs-card-layout {
         .cs-card {

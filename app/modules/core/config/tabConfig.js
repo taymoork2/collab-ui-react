@@ -29,14 +29,14 @@
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: 'atlas-service-landing',
-    state: 'services-landing',
-    link: 'services/landing'
+    feature: 'atlas-services-overview',
+    state: 'services-overview',
+    link: 'services/overview'
   }, {
     tab: 'servicesTab',
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
-    feature: "!atlas-service-landing",
+    feature: "!atlas-services-overview",
     subPages: [{
       title: 'tabs.conferencing',
       desc: 'tabs.conferencingDesc',
@@ -47,6 +47,11 @@
       desc: 'tabs.huronLineDetailsTabDesc',
       state: 'huronsettings',
       link: '#hurondetails/settings'
+    }, {
+      title: 'tabs.careTab',
+      desc: 'tabs.careTabDesc',
+      state: 'care.Features',
+      link: '#careDetails/features'
     }, {
       title: 'tabs.fusionDetailsTab',
       desc: 'tabs.fusionDetailsTabDesc',

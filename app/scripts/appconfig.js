@@ -83,7 +83,7 @@ angular
         })
         // start online order pages. note: unauthenticated pages are protected by a URL token
         .state('enterEmailAddr', {
-          url: '/enter-email-addr',
+          url: '/enter-email-addr?referrer&sku&orderId&campaignId',
           views: {
             'main@': {
               templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -158,6 +158,7 @@ angular
           },
           params: {
             email: null,
+            referrer: null,
             redirect: null,
             params: null
           },
@@ -232,6 +233,17 @@ angular
             }
           },
           authenticate: true
+        })
+        .state('drAdminChoices', {
+          url: '/dr-admin-choices',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/adminChoices/adminChoices.tpl.html',
+              controller: 'adminChoicesController',
+              controllerAs: 'adminChoicesController'
+            }
+          },
+          authenticate: false
         })
         // end online order pages
         .state('unauthorized', {
@@ -504,6 +516,16 @@ angular
           controllerAs: 'settingsCtrl',
           parent: 'main'
         })
+        .state('settings.enable3rdPartyAuth', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'Enable3rdPartyAuthCtrl',
+              controllerAs: 'enable3rdPartyAuth',
+              templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'
+            }
+          }
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
@@ -554,6 +576,44 @@ angular
           controller: 'OverviewCtrl',
           controllerAs: 'overview',
           parent: 'main'
+        })
+        .state('my-company', {
+          // url: '/my-company',
+          templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+          controller: 'MyCompanyPageCtrl',
+          controllerAs: 'mcp',
+          parent: 'main',
+          abstract: true
+        })
+        .state('my-company.subscriptions', {
+          url: '/my-company/subscriptions',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpSubscription',
+              controller: 'MyCompanyPageSubscriptionCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageSubscription.tpl.html'
+            }
+          }
+        })
+        .state('my-company.info', {
+          url: '/my-company',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpInfo',
+              controller: 'MyCompanyPageInfoCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html'
+            }
+          }
+        })
+        .state('my-company.orders', {
+          url: '/my-company/orders',
+          views: {
+            'tabContent': {
+              controllerAs: 'mcpOrder',
+              controller: 'MyCompanyPageOrderCtrl',
+              templateUrl: 'modules/core/myCompany/myCompanyPageOrder.tpl.html'
+            }
+          }
         })
         .state('users', {
           abstract: true,
@@ -1854,11 +1914,11 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('services-landing', {
-          url: '/services/landing',
-          templateUrl: 'modules/hercules/servicesLanding/servicesLanding.html',
-          controller: 'ServicesLandingCtrl',
-          controllerAs: 'servicesLandingCtrl',
+        .state('services-overview', {
+          url: '/services/overview',
+          templateUrl: 'modules/hercules/servicesOverview/servicesOverview.html',
+          controller: 'ServicesOverviewCtrl',
+          controllerAs: 'servicesOverviewCtrl',
           parent: 'main'
         })
         .state('calendar-service', {

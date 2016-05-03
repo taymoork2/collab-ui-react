@@ -251,7 +251,7 @@
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video', 'settings'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName'],
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',
@@ -287,12 +287,13 @@
         'devices',
         'device-overview',
         'devices-redux',
-        'services-landing'
+        'services-overview'
       ],
       'squared-fusion-mgmt': [
         'cluster-details',
         'management-service',
-        'services-landing'
+        'services-overview',
+        'my-company'
       ],
       'spark-room-system': [
         'devices',
@@ -304,7 +305,7 @@
       ],
       'squared-fusion-cal': [
         'calendar-service',
-        'services-landing'
+        'services-overview'
       ],
       'squared-team-member': [
         'organization'

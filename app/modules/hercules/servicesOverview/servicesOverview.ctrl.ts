@@ -1,12 +1,12 @@
-/// <reference path="ServicesLandingCard.ts"/>
-namespace servicesLanding {
+/// <reference path="ServicesOverviewCard.ts"/>
+namespace servicesOverview {
   export enum CardFilter{
     all,
     active
   }
-  class ServicesLandingCtrl {
+  export class ServicesOverviewCtrl {
 
-    private cards:Array<ServicesLandingCard>;
+    private cards:Array<ServicesOverviewCard>;
     private _feature = false;
 
     get featureEnabled():boolean {
@@ -14,16 +14,16 @@ namespace servicesLanding {
     }
 
     public hybridCardFilters = {
-      all: {cardType: servicesLanding.CardType.hybrid},
-      active: {cardType: servicesLanding.CardType.hybrid, active: true}
+      all: {cardType: servicesOverview.CardType.hybrid},
+      active: {cardType: servicesOverview.CardType.hybrid, active: true}
     };
     private activeHybridCardFilter = this.hybridCardFilters.all;
     public showFilterDropDown:boolean = false;
 
 
     /* @ngInject */
-    constructor(Orgservice, private ServicesLandingCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
-      this.cards = ServicesLandingCardFactory.createCards();
+    constructor(Orgservice, private ServicesOverviewCardFactory, private $q, private Authinfo, ServiceDescriptor, FeatureToggleService) {
+      this.cards = ServicesOverviewCardFactory.createCards();
 
       this.loadWebexSiteList();
 
@@ -31,17 +31,17 @@ namespace servicesLanding {
         this.forwardEvent('hybridStatusEventHandler', services)
       }, true);
 
-      FeatureToggleService.supports(FeatureToggleService.features.serviceLanding).then((supports)=> {
+      FeatureToggleService.supports(FeatureToggleService.features.servicesOverview).then((supports)=> {
         this._feature = !!supports;
       });
     }
 
-    public hybridCards() {
+    get hybridCards() {
       return _.filter(this.cards, this.activeHybridCardFilter);
     }
 
-    public cloudCards() {
-      return _.filter(this.cards, {cardType: servicesLanding.CardType.cloud});
+    get cloudCards() {
+      return _.filter(this.cards, {cardType: servicesOverview.CardType.cloud});
     }
 
     public filterHybridCard(filter:string) {
@@ -54,7 +54,7 @@ namespace servicesLanding {
     }
 
     private forwardEvent(handlerName, ...eventArgs:Array<any>) {
-      console.log("forwarding event", eventArgs, "this", this);
+      // console.log("forwarding event", eventArgs, "this", this);
       _.each(this.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);
@@ -67,7 +67,6 @@ namespace servicesLanding {
         let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
         resolve(siteList);
       }).then((siteList)=> {
-        console.log("supersite", siteList);
         this.forwardEvent('updateWebexSiteList', siteList);
       });
 
@@ -75,5 +74,5 @@ namespace servicesLanding {
   }
   angular
     .module('Hercules')
-    .controller('ServicesLandingCtrl', ServicesLandingCtrl);
+    .controller('ServicesOverviewCtrl', ServicesOverviewCtrl);
 }

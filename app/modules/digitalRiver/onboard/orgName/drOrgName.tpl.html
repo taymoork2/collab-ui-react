@@ -1,6 +1,6 @@
 <div class="dr-container">
     <div class="dr-row" ng-hide="drOrgNameController.error == null">
-        <input type="text" ng-model="drOrgNameController.error" readonly="readonly" id="dr-error">
+        <textarea rows="2" cols="50" ng-model="drOrgNameController.error" readonly="readonly" id="dr-error"/>
     </div>
 	<div class="dr-row">
 		<div class="dr-center dr-pad" id="dr-onboard-question-label" translate="digitalRiver.orgName.orgNameLabel"/>
@@ -15,7 +15,7 @@
     </div>
 	<div class="dr-row">
 		<div class="dr-button">
-			<button class="dr-button" ng-click="drOrgNameController.handleContinue()" id="dr-onboard-question-yes" translate="digitalRiver.continue"/>
+			<button class="btn btn--primary" ng-click="drOrgNameController.handleContinue()" id="dr-onboard-question-yes" translate="digitalRiver.continue"/>
 		</div>
 	</div>
 </div>

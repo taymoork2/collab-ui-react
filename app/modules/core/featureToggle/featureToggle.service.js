@@ -41,7 +41,7 @@
       console: 'console',
       deleteContent: 'delete-content',
       disableCacheForFeatures: 'disableCacheForFeatures',
-      serviceLanding: 'atlas-service-landing',
+      servicesOverview: 'atlas-services-overview',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',
@@ -119,7 +119,8 @@
       ceAllowNolockdown: 'ce-allow-nolockdown',
       webexCSV: 'webex-CSV',
       webexClientLockdown: 'atlas-webex-clientlockdown',
-      huronCallTrials: 'huron-call-trials'
+      huronCallTrials: 'huron-call-trials',
+      enableCrashLogs: 'csdm-enable-crash-logs'
     };
 
     var toggles = {};
