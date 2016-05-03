@@ -7,7 +7,7 @@ namespace servicesOverview {
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridContext.buttons.settings', link: ''}];
+      {name: 'servicesOverview.cards.hybridContext.buttons.settings', link: '', buttonClass:'btn-link'}];
 
 
     getButtons():Array<servicesOverview.CardButton> {

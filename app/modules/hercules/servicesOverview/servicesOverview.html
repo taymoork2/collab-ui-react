@@ -1,8 +1,4 @@
 <div class="servicesOverview" ng-if="servicesOverviewCtrl.featureEnabled">
-  <!--
-       Toolkit did not work for cs-page-header here
-       FIX
-  -->
   <cs-page-header title="servicesOverview.title"></cs-page-header>
 
 
@@ -16,14 +12,7 @@
     </cs-card-layout>
 
     <h5><span translate="servicesOverview.hybridServices"></span>
-      <cs-header-right>
-        <i class="icon icon-three-dots" ng-click="servicesOverviewCtrl.toggleDropdown()"></i>
-        <ul class="dropdown" ng-if="servicesOverviewCtrl.showFilterDropDown">
-          <li ng-click="servicesOverviewCtrl.filterHybridCard('all')" translate="servicesOverview.showAllCards"></li>
-          <li ng-click="servicesOverviewCtrl.filterHybridCard('active')"
-              translate="servicesOverview.showActiveCards"></li>
-        </ul>
-      </cs-header-right>
+      
     </h5>
     <cs-card-layout id="hybrid-layout" ng-if="showLayout!='none'">
       <cs-card class="large-3 medium-6 small-12 header-bar gray" ng-class="card.cardClass"

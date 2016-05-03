@@ -7,10 +7,11 @@ namespace servicesOverview {
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridManagement.buttons.resources', link: 'services/expressway-management'},
+      {name: 'servicesOverview.cards.hybridManagement.buttons.resources', link: 'services/expressway-management', buttonClass:'btn-link'},
       {
         name: 'servicesOverview.cards.hybridManagement.buttons.settings',
-        link: 'services/expressway-management/settings'
+        link: 'services/expressway-management/settings',
+        buttonClass:'btn-link'
       }
     ];
 

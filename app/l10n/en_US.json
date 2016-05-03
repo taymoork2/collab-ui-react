@@ -3951,18 +3951,18 @@
     "cards": {
       "message": {
         "title": "Message",
-        "description": "Arma virumque cano, Troiae qui primus ab oris Italiam, fato profugus, Laviniaque venit litora, multum ille et terris iactatus et alto vi superum saevae memorem Iunonis.",
+        "description": "Cisco Spark configurations for your organization and individuals.",
         "buttons": {
           "webexMessenger": "Webex Messenger"
         }
       },
       "meeting": {
         "title": "Meeting",
-        "description": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals."
       },
       "call": {
         "title": "Call",
-        "description": "Basic external calling and full Unified Communications enabled for your organization.",
+        "description": "Unified Communications and basic calling configurations for your organization.",
         "buttons": {
           "numbers": "Numbers",
           "features": "Features",
@@ -3979,7 +3979,7 @@
       },
       "calendar": {
         "title": "Calendar",
-        "description": "(Integrate Microsoft Exchange) Collaborate instantly. Just add @webex to attach a WebEx to your invitation. Add @spark to create a Spark room.",
+        "description": "Integrate Microsoft Exchange enabling @webex and @spark to be used in the meeting invite location field to automatically include meeting info.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -3987,7 +3987,7 @@
       },
       "hybridCall": {
         "title": "Call",
-        "description": "Enables Zero-Touch Meetings, desktop sharing from Cisco Spark clients while on a work phone (Aware).  Place/answer work calls from Cisco Spark clients (Connect).",
+        "description": "Enables Aware and Connect, two features which bring cloud capabilities to your desk phone like using Cisco Spark to answer and place calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -3995,7 +3995,7 @@
       },
       "hybridMedia": {
         "title": "Media",
-        "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
+        "description": "Set up the Media Service to host meetings in the Cloud and On-premise.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -4003,7 +4003,7 @@
       },
       "hybridContext": {
         "title": "Context",
-        "description": "Set up the Media Service to host meetings in the Cloud and On-premise.",
+        "description": "Lorem ipsum dolor sit amet, consectetur a the adipiscing elit. Donec placera ultricvenenatis. Aliquam mauris. Lorem ipsum dolor.",
         "buttons": {
           "settings": "Settings"
         }

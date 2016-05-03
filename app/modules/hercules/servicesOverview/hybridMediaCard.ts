@@ -13,8 +13,8 @@ namespace servicesOverview {
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaservice'},
-      {name: 'servicesOverview.cards.hybridMedia.buttons.settings', link: 'mediaservice/settings'}];
+      {name: 'servicesOverview.cards.hybridMedia.buttons.resources', link: 'mediaservice', buttonClass:'btn-link'},
+      {name: 'servicesOverview.cards.hybridMedia.buttons.settings', link: 'mediaservice/settings', buttonClass:'btn-link'}];
 
 
     getButtons():Array<servicesOverview.CardButton> {

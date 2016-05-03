@@ -112,6 +112,10 @@
           background-color: $color-cta-base !important;
           color: white;
         }
+        button.btn-link{
+          color: $color-primary-base;
+          background-color: transparent;
+        }
       }
       .cs-card.header-bar.cta-bar header:after {
         border-top-color: $color-cta-base !important;

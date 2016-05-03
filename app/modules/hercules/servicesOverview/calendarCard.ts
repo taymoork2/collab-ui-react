@@ -7,8 +7,8 @@ namespace servicesOverview {
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar'},
-      {name: 'servicesOverview.cards.calendar.buttons.settings', link: 'services/calendar/settings'}];
+      {name: 'servicesOverview.cards.calendar.buttons.resources', link: 'services/calendar', buttonClass:'btn-link'},
+      {name: 'servicesOverview.cards.calendar.buttons.settings', link: 'services/calendar/settings', buttonClass:'btn-link'}];
 
 
     getButtons():Array<servicesOverview.CardButton> {

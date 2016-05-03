@@ -12,9 +12,9 @@ namespace servicesOverview {
     }
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.call.buttons.numbers', link: 'hurondetails/lines'},
-      {name: 'servicesOverview.cards.call.buttons.features', link: 'hurondetails/features'},
-      {name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings'}];
+      {name: 'servicesOverview.cards.call.buttons.numbers', link: 'hurondetails/lines', buttonClass:'btn-link'},
+      {name: 'servicesOverview.cards.call.buttons.features', link: 'hurondetails/features', buttonClass:'btn-link'},
+      {name: 'servicesOverview.cards.call.buttons.settings', link: 'hurondetails/settings', buttonClass:'btn-link'}];
 
     getButtons():Array<servicesOverview.CardButton> {
       return _.take(this._buttons, 3);

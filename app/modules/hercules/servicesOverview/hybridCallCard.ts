@@ -13,8 +13,8 @@ namespace servicesOverview {
     };
 
     private _buttons:Array<servicesOverview.CardButton> = [
-      {name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call'},
-      {name: 'servicesOverview.cards.hybridCall.buttons.settings', link: 'services/call/settings'}];
+      {name: 'servicesOverview.cards.hybridCall.buttons.resources', link: 'services/call', buttonClass:'btn-link'},
+      {name: 'servicesOverview.cards.hybridCall.buttons.settings', link: 'services/call/settings', buttonClass:'btn-link'}];
 
 
     getButtons():Array<servicesOverview.CardButton> {

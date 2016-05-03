@@ -2,7 +2,7 @@
 namespace servicesOverview {
 
   export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
-    private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list'};
+    private moreButton:CardButton = {name: 'servicesOverview.showMore', link: 'site-list', buttonClass:'btn-link'};
 
     getShowMoreButton():servicesOverview.CardButton {
       if (this._buttons.length > 3) {
@@ -40,7 +40,7 @@ namespace servicesOverview {
          }*/
 
         //TODO pushing all items now, either update list, or replace when getting the data model or test data for this.
-        this._buttons.push({name: serviceFeature.license.siteUrl, link: 'site-list'});
+        this._buttons.push({name: serviceFeature.license.siteUrl, link: 'site-list', buttonClass:'btn-link'});
       });
 
       //done loading
