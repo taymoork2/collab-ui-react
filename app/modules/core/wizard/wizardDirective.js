@@ -13,19 +13,25 @@
   function PromiseHook($q) {
     return factory;
 
-    function factory(scope, name, controllerAs) {
+    function factory(scope, name, tabControllerAs, subTabControllerAs) {
       var promises = [];
       (function traverse(scope) {
         if (!scope) {
           return;
         }
 
-        if (controllerAs && scope[controllerAs] && scope[controllerAs][name]) {
-          promises.push($q.when(scope[controllerAs][name]()));
-          return;
-        } else if (scope[name]) {
+        if (_.has(scope, name)) {
           promises.push($q.when(scope[name]()));
           return;
+        } else if (tabControllerAs || subTabControllerAs) {
+          if (_.has(scope, tabControllerAs + '.' + name)) {
+            promises.push($q.when(scope[tabControllerAs][name]()));
+            return;
+          }
+          if (_.has(scope, subTabControllerAs + '.' + name)) {
+            promises.push($q.when(scope[subTabControllerAs][name]()));
+            return;
+          }
         }
 
         traverse(scope.$$childHead);
@@ -251,7 +257,8 @@
     }
 
     function nextStep() {
-      new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs).then(function () {
+      var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
+      new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         //TODO remove these broadcasts
         if (getTab().name === 'messagingSetup' && getStep().name === 'setup') {
           $rootScope.$broadcast('wizard-messenger-setup-event');
@@ -274,7 +281,6 @@
       }).finally(function () {
         vm.wizardNextLoad = false;
       });
-
     }
 
     function updateStep() {

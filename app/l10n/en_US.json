@@ -3922,14 +3922,27 @@
       "beforeVerify": "Before you verify"
     }
   },
+  "csvUpload": {
+    "fileModalTitle": "Import User List",
+    "resultModalTitle": "Import User List Results",
+    "desc": "Best method for adding up to {{maxUsers}} users at a time. Entitlement changes of the existing users can also be made through CSV file upload. Users cannot be deleted during this process.",
+    "uploadPrompt": "Drag and Drop your CSV file here",
+    "fileBrowser": "or click to browse",
+    "enableRemoveLabel": "Match user entitlements exactly from CSV",
+    "enableRemoveNote": "Note: User entitlements not included in the CSV file upload will not be removed.",
+    "removeFile": "Remove File",
+    "newUsers": "Added",
+    "existingUsers": "Updated",
+    "errorUsers": "Errors"
+  },
   "csvDownload": {
-    "csvDownloadConfirmTitle": "Are you sure?",
+    "confirmTitle": "Are you sure?",
     "confirmCsvDownloadMsg": "Gathering your data for export may take a while. During this time you cannot sign out, or refresh your browser or the export will not complete.",
     "confirmCsvDownload": "Do you want to continue?",
     "confirmCsvCancelMsg": "This will cancel the current data export. The action cannot be reversed.",
-    "csvDownloadIsRunning": "An export task is already running. Please try again later.",
-    "csvDownloadInProgress": "Background task 'Export {{type}} list' is running...",
-    "csvDownloadSuccess": "Your {{type}} list has been compiled and your download has started."
+    "isRunning": "An export task is already running. Please try again later.",
+    "inProgress": "Background task 'Export {{type}} list' is running...",
+    "success": "Your {{type}} list has been compiled and your download has started."
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode",

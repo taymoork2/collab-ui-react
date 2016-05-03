@@ -33,16 +33,14 @@
         </button>
         <ul cs-dropdown-menu class="dropdown-menu" role="menu">
           <li>
-            <a id="export-lnk" ng-click="startExportUserList()">{{::'usersPage.exportUserList' | translate}}</a>
-          </li>
-          <!--
-          <li>
-            <a id="import-lnk" disabled="disabled">{{::'usersPage.importUserList' | translate}}</a>
+            <a ng-click="startExportUserList()">{{::'usersPage.exportUserList' | translate}}</a>
           </li>
           <li>
-            <a id="view-last-import-lnk" disabled="disabled">{{::'usersPage.viewLastImport' | translate}}</a>
+            <a ui-sref="users.csv">{{::'usersPage.importUserList' | translate}}</a>
           </li>
-          -->
+          <!--<li>
+            <a ui-sref="users.csv.results">{{::'usersPage.viewLastImport' | translate}}</a>
+          </li>-->
         </ul>
       </div>
       <div class="export-users" ng-if="!obtainedTotalUserCount">

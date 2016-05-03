@@ -1,4 +1,5 @@
-<div class="users-upload-csv">
+<div class="user-csv-upload">
+  <div class="csv-desc">{{csv.model.desc}}</div>
   <div
     ng-if="!csv.model.file"
     class="file-drop"
@@ -11,7 +12,7 @@
     file-suffix="csv"
     file-type-error="csv.onFileTypeError()">
     <div class="file-drop-content">
-      <div class="icon icon-circle-upload center"></div>
+      <div class="icon icon-circle-upload"></div>
       <input
         id="upload"
         name="upload"
@@ -24,22 +25,28 @@
         file-type="text/csv, application/csv, application/vnd.ms-excel"
         file-suffix="csv"
         file-type-error="csv.onFileTypeError()"/>
-      <span translate="firstTimeWizard.uploadPrompt"></span>
-      <label for='upload' translate="firstTimeWizard.fileBrowser"></label>
+      <div translate="csvUpload.uploadPrompt"></div>
+      <label for='upload' translate="csvUpload.fileBrowser"></label>
     </div>
   </div>
   <div ng-if="csv.model.file" class="file-drop-inactive">
     <div class="file-drop-content">
-      <div class="progressbar-info">
-        <span class="progressbar-label" ng-show="csv.model.uploadProgress < 100" translate="firstTimeWizard.uploading"></span>
-        <span class="progressbar-label" ng-show="csv.model.uploadProgress == 100" translate="common.done"></span>
-        <span class="progressbar-progress">{{csv.model.uploadProgress}}%</span>
-      </div>
-      <progressbar animate="false" class="progress-striped active" value="csv.model.uploadProgress" type="primary"></progressbar>
+      <div class="icon icon-check"></div>
       <div class="file-name">{{csv.model.fileName}}</div>
+      <a ng-click="csv.resetFile()" translate="csvUpload.removeFile"></a>
     </div>
-    <button type="button" class="close" ng-click="csv.resetFile();">
-      <span class="sr-only" translate="common.close"></span>
-    </button>
+  </div>
+  <div class="csv-enable-remove">
+    <div class="csv-enable-remove-checkbox">
+      <input
+        class="center"
+        cs-input
+        type="checkbox"
+        ng-model="csv.model.enableRemove"
+        id="cbEnableRemove"
+        name="cbEnableRemove"
+        cs-input-label="{{::'csvUpload.enableRemoveLabel' | translate}}"
+        cs-input-help-text="{{::'csvUpload.enableRemoveNote' | translate}}" />
+    </div>
   </div>
 </div>
