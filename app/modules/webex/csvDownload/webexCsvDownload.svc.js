@@ -123,32 +123,51 @@
       var funcName = "webexCreateObjectUrl()";
       var logMsg = "";
 
+      logMsg = funcName + "\n" +
+        "data.length=" + data.length;
+      $log.log(logMsg);
+
       var intBytes = [];
-      var littleEndianHeader = "%ff%fe";
 
-      littleEndianHeader.replace(/([0-9a-f]{2})/gi, function (hexByte) {
-        var intByte = parseInt(hexByte, 16);
+      var utf16leHeader = '%ff%fe';
 
-        intBytes.push(intByte);
+      utf16leHeader.replace(/([0-9a-f]{2})/gi, function (byte) {
+        intBytes.push(parseInt(byte, 16));
       });
 
       for (var i = 0; i < data.length; ++i) {
-        var hexByte = data[i].charCodeAt(0).toString(16);
-        var intByte = parseInt(hexByte, 16);
+        var hexChar = data[i].charCodeAt(0);
 
-        if (2 <= i) {
-          intBytes.push(intByte);
-        } else {
+        var hexByte1 = hexChar & 0xff;
+        var hexByte2 = (hexChar >> 8) & 0xff;
+
+        var intByte1 = parseInt(hexByte1.toString(16), 16);
+        var intByte2 = parseInt(hexByte2.toString(16), 16);
+
+        /*
+        if ( (6100 < i) && (6500 > i) ) {
           logMsg = funcName + "\n" +
-            "data[" + i + "]=" + data[i] + "\n" +
-            "hexByte=" + hexByte + "\n" +
-            "intByte=" + intByte;
+            "hexChar=" + hexChar + "\n" +
+            "hexByte1=" + hexByte1 + "\n" +
+            "hexByte2=" + hexByte2 + "\n" +
+            "intByte1=" + intByte1 + "\n" +
+            "intByte2=" + intByte2 + "\n" +
+            "data[" + i + "]=" + data[i];
           $log.log(logMsg);
         }
+        */
+
+        intBytes.push(intByte1);
+        intBytes.push(intByte2);
       }
 
-      var blob = new $window.Blob([new Uint8Array(intBytes)], {
-        type: 'text/csv;charset=UTF-16LE;'
+      var newData = new Uint8Array(intBytes);
+      // var newData = data;
+
+      var blob = new $window.Blob([newData], {
+        // type: 'text/csv;charset=UTF-16LE;'
+        // type: 'text/csv'
+        type: 'text/plain'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
