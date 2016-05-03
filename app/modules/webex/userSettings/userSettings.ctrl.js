@@ -1,69 +1,61 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').controller('WebExUserSettingsCtrl', [
-    '$scope',
-    '$rootScope',
-    '$log',
-    '$translate',
-    '$filter',
-    '$state',
-    '$stateParams',
-    'WebExUserSettingsFact',
-    'Notification',
-    function (
-      $scope,
-      $rootScope,
-      $log,
-      $translate,
-      $filter,
-      $state,
-      $stateParams,
-      WebExUserSettingsFact,
-      Notification
-    ) {
-      // Update the breadcrumb with site url
-      $state.current.data.displayName = $stateParams.site;
-      $rootScope.$broadcast('displayNameUpdated');
+  angular.module('WebExApp').controller('WebExUserSettingsCtrl', WebExUserSettingsCtrl);
 
-      $scope.initPanel = function () {
-        WebExUserSettingsFact.getUserSettingsFromWebEx();
-      }; // initPanel()
+  /* @ngInject */
+  function WebExUserSettingsCtrl(
+    $scope,
+    $rootScope,
+    $log,
+    $translate,
+    $filter,
+    $state,
+    $stateParams,
+    WebExUserSettingsFact,
+    Notification
+  ) {
+    // Update the breadcrumb with site url
+    $state.current.data.displayName = $stateParams.site;
+    $rootScope.$broadcast('displayNameUpdated');
 
-      $scope.getUserSettingsInfo = function (form) {
-        WebExUserSettingsFact.getUserSettingsInfo(form);
-      }; // getUserSettingsInfo()
+    $scope.initPanel = function () {
+      WebExUserSettingsFact.getUserSettingsFromWebEx();
+    }; // initPanel()
 
-      $scope.btnReload = function () {
-        var funcName = "btnReload()";
-        var logMsg = "";
+    $scope.getUserSettingsInfo = function (form) {
+      WebExUserSettingsFact.getUserSettingsInfo(form);
+    }; // getUserSettingsInfo()
 
-        logMsg = funcName + ": " + "\n" +
-          "sessionTicketErr=" + $scope.userSettingsModel.sessionTicketErr;
-        // $log.log(logMsg);
+    $scope.btnReload = function () {
+      var funcName = "btnReload()";
+      var logMsg = "";
 
-        if ($scope.userSettingsModel.sessionTicketErr) {
-          $scope.initPanel();
-        } else {
-          $scope.getUserSettingsInfo(null);
-        }
-      }; // btnReload()
+      logMsg = funcName + ": " + "\n" +
+        "sessionTicketErr=" + $scope.userSettingsModel.sessionTicketErr;
+      // $log.log(logMsg);
 
-      $scope.btnSave = function (form) {
-        WebExUserSettingsFact.updateUserSettings(form);
-      }; // btnSave()
+      if ($scope.userSettingsModel.sessionTicketErr) {
+        $scope.initPanel();
+      } else {
+        $scope.getUserSettingsInfo(null);
+      }
+    }; // btnReload()
 
-      $scope.btnReset = function (form) {
-        $scope.getUserSettingsInfo(form);
-      }; // btnReset()
+    $scope.btnSave = function (form) {
+      WebExUserSettingsFact.updateUserSettings(form);
+    }; // btnSave()
 
-      //----------------------------------------------------------------------//
+    $scope.btnReset = function (form) {
+      $scope.getUserSettingsInfo(form);
+    }; // btnReset()
 
-      $log.log("Show panel3");
+    //----------------------------------------------------------------------//
 
-      $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
-      WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
-      $scope.initPanel();
-    } // WebExUserSettingsCtrl()
-  ]);
+    $log.log("Show panel3");
+
+    $scope.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
+    WebExUserSettingsFact.getUserWebExEntitlementFromAtlas();
+    $scope.initPanel();
+  } // WebExUserSettingsCtrl()
 })();

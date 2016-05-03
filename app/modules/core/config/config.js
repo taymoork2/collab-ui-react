@@ -95,7 +95,8 @@
         application: 'atlas-portal.application',
         reports: 'atlas-portal.reports',
         sales: 'atlas-portal.partner.salesadmin',
-        helpdesk: 'atlas-portal.partner.helpdesk'
+        helpdesk: 'atlas-portal.partner.helpdesk',
+        spark_synckms: 'spark.synckms'
       },
 
       roles: {
@@ -106,7 +107,8 @@
         application: 'Application',
         reports: 'Reports',
         sales: 'Sales_Admin',
-        helpdesk: 'Help_Desk'
+        helpdesk: 'Help_Desk',
+        spark_synckms: 'Spark_SyncKms'
       },
 
       roleState: {
@@ -249,7 +251,7 @@
       PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'pstnSetup', 'video'],
       CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
       //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
-      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName'],
+      User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
       Site_Admin: [
         'site-list',
         'site-csv-import',

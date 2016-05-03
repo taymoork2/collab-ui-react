@@ -1,18 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Core').service('SiteListService', [
-  '$log',
-  '$translate',
-  '$interval',
-  'Authinfo',
-  'UrlConfig',
-  'FeatureToggleService',
-  'WebExApiGatewayService',
-  'WebExApiGatewayConstsService',
-  'WebExUtilsFact',
-  'WebExUtilsService',
+  angular.module('Core').service('SiteListService', SiteListService);
 
-  function (
+  /* @ngInject */
+  function SiteListService(
     $log,
     $translate,
     $interval,
@@ -549,4 +541,4 @@ angular.module('Core').service('SiteListService', [
       } // updateGridColumns()
     }; // updateGrid()
   } // end top level function
-]);
+})();

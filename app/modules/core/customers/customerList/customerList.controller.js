@@ -270,7 +270,7 @@
       $scope.showManagedOrgsRefresh = true;
       var promiselist = [PartnerService.getManagedOrgsList(searchText)];
 
-      if (Authinfo.isPartnerAdmin()) {
+      if (Authinfo.isPartnerAdmin() || Authinfo.isPartnerReadOnlyAdmin()) {
         // move our org to the top of the list
         // dont know why this is here yet
         // this should be handled by a sorting fn
@@ -404,6 +404,11 @@
       angular.element('.open').removeClass('open');
     }
 
+    function getIsTrial(org) {
+      if (!!org.isPartner) return false;
+      return _.get(org, 'communications.isTrial', true);
+    }
+
     function addNumbers(org) {
       return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
         .then(function (response) {
@@ -412,7 +417,7 @@
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,
-              customerCommunicationLicenseIsTrial: _.get(org, 'communications.isTrial', org.isTrial)
+              customerCommunicationLicenseIsTrial: getIsTrial(org)
             });
           } else {
             return $state.go('didadd', {

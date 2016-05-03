@@ -60,5 +60,14 @@
     translate}}</a>
 </section>
 <footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
-  <p>{{card.notEnabledFooter| translate}}</p>
+  <div ng-if="!card.isCSB">
+    <p>{{card.notEnabledFooter| translate}}</p>
+  </div>
+  <div ng-if="card.isCSB">
+    <p>
+      <span translate="overview.contactCsb"></span>
+      <a ui-sref="userRedirect" translate="overview.telstraMarketplace"></a>
+      <span translate="overview.toSubscribe"></span>
+    </p>
+  </div>
 </footer>

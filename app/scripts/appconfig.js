@@ -83,7 +83,7 @@ angular
         })
         // start online order pages. note: unauthenticated pages are protected by a URL token
         .state('enterEmailAddr', {
-          url: '/enter-email-addr',
+          url: '/enter-email-addr?referrer&sku&orderId&campaignId',
           views: {
             'main@': {
               templateUrl: 'modules/digitalRiver/login/enterEmailAddr/enterEmailAddr.tpl.html',
@@ -158,6 +158,7 @@ angular
           },
           params: {
             email: null,
+            referrer: null,
             redirect: null,
             params: null
           },
@@ -232,6 +233,17 @@ angular
             }
           },
           authenticate: true
+        })
+        .state('drAdminChoices', {
+          url: '/dr-admin-choices',
+          views: {
+            'main@': {
+              templateUrl: 'modules/digitalRiver/onboard/adminChoices/adminChoices.tpl.html',
+              controller: 'adminChoicesController',
+              controllerAs: 'adminChoicesController'
+            }
+          },
+          authenticate: false
         })
         // end online order pages
         .state('unauthorized', {
@@ -319,6 +331,7 @@ angular
       $httpProvider.interceptors.push('ResponseInterceptor');
       $httpProvider.interceptors.push('TimingInterceptor');
       $httpProvider.interceptors.push('ServerErrorInterceptor');
+      $httpProvider.interceptors.push('ReadonlyInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
       $translateProvider.useSanitizeValueStrategy('escapeParameters');
@@ -347,8 +360,7 @@ angular
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
         options = options || {};
-        /* @ngInject */
-        return function ($modal, $state, $previousState) {
+        return /* @ngInject */ function ($modal, $state, $previousState) {
           if ($state.modal) {
             $state.modal.stopPreviousState = true;
           } else {
@@ -640,6 +652,26 @@ angular
           views: {
             'usersConvert@users.convert': {
               templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
+        .state('users.csv', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'UserCsvCtrl',
+              controllerAs: 'csv',
+              template: '<div ui-view="usersCsv"></div>'
+            },
+            'usersCsv@users.csv': {
+              templateUrl: 'modules/core/users/userCsv/userCsvFileModal.tpl.html'
+            }
+          }
+        })
+        .state('users.csv.results', {
+          views: {
+            'usersCsv@users.csv': {
+              templateUrl: 'modules/core/users/userCsv/userCsvResultsModal.tpl.html'
             }
           }
         })
@@ -1303,24 +1335,22 @@ angular
         })
         .state('wizardmodal', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState',
-            function ($modal, $state, $previousState) {
-              $previousState.memo(wizardmodalMemo);
-              $state.modal = $modal.open({
-                template: '<div ui-view="modal"></div>',
-                controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
-                backdrop: 'static'
-              });
-              $state.modal.result.finally(function () {
-                $state.modal = null;
-                var previousState = $previousState.get(wizardmodalMemo);
-                if (previousState) {
-                  return $previousState.go(wizardmodalMemo);
-                }
-              });
-            }
-          ],
+          onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+            $previousState.memo(wizardmodalMemo);
+            $state.modal = $modal.open({
+              template: '<div ui-view="modal"></div>',
+              controller: 'ModalWizardCtrl',
+              windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+              backdrop: 'static'
+            });
+            $state.modal.result.finally(function () {
+              $state.modal = null;
+              var previousState = $previousState.get(wizardmodalMemo);
+              if (previousState) {
+                return $previousState.go(wizardmodalMemo);
+              }
+            });
+          },
           onExit: ['$state', '$previousState',
             function ($state, $previousState) {
               if ($state.modal) {
@@ -1848,11 +1878,11 @@ angular
     function ($stateProvider) {
       $stateProvider
         .state('calendar-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_cal"
+            connectorType: 'c_cal'
           },
           parent: 'main',
           abstract: true
@@ -1860,60 +1890,54 @@ angular
         .state('calendar-service.list', {
           url: '/services/calendar',
           views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            fullPane: {
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('calendar-service.settings', {
           url: '/services/calendar/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/calendar-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_cal"
           }
         })
         .state('call-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_ucmc"
+            connectorType: 'c_ucmc'
           },
           parent: 'main'
         })
         .state('call-service.list', {
           url: '/services/call',
           views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            fullPane: {
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('call-service.settings', {
           url: '/services/call/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/call-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/call-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_ucmc"
           }
         })
         .state('management-service', {
-          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          templateUrl: 'modules/hercules/overview/overview.html',
           controller: 'ExpresswayServiceController',
           controllerAs: 'exp',
           data: {
-            serviceType: "c_mgmt"
+            connectorType: 'c_mgmt'
           },
           parent: 'main',
           abstract: true
@@ -1922,21 +1946,18 @@ angular
           url: '/services/expressway-management',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+              templateUrl: 'modules/hercules/cluster-list/cluster-list.html'
             }
           }
         })
         .state('management-service.settings', {
           url: '/services/expressway-management/settings',
           views: {
-            'fullPane': {
+            fullPane: {
               controllerAs: 'expresswayServiceSettings',
               controller: 'ExpresswayServiceSettingsController',
-              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+              templateUrl: 'modules/hercules/service-settings/management-service-settings.html'
             }
-          },
-          params: {
-            serviceType: "c_mgmt"
           }
         })
         .state('cluster-details', {
@@ -1945,10 +1966,10 @@ angular
             'sidepanel@': {
               controllerAs: 'clusterDetailsCtrl',
               controller: 'ExpresswayServiceClusterController',
-              templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
+              templateUrl: 'modules/hercules/cluster-sidepanel/cluster-details.html'
             },
             'header@cluster-details': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
+              templateUrl: 'modules/hercules/cluster-sidepanel/cluster-header.html'
             }
           },
           data: {
@@ -1956,11 +1977,11 @@ angular
           },
           params: {
             clusterId: null,
-            serviceType: null
+            connectorType: null
           }
         })
         .state('cluster-details.alarm-details', {
-          templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
+          templateUrl: 'modules/hercules/cluster-sidepanel/alarm-details.html',
           controller: 'AlarmController',
           controllerAs: 'alarmCtrl',
           data: {
@@ -1972,7 +1993,7 @@ angular
           }
         })
         .state('cluster-details.host-details', {
-          templateUrl: 'modules/hercules/expressway-service/host-details.html',
+          templateUrl: 'modules/hercules/cluster-sidepanel/host-details.html',
           controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
           data: {
@@ -1981,7 +2002,7 @@ angular
           params: {
             host: null,
             clusterId: null,
-            serviceType: null
+            connectorType: null
           }
         });
     }

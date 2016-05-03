@@ -7,6 +7,7 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   var escapeKey = 27;
   var leftArrow = 37;
   var rightArrow = 39;
+  var templateName = 'Atlas UT Chat Template';
 
   beforeEach(module('Sunlight'));
 
@@ -38,15 +39,22 @@ describe('Care Chat Setup Assistant Ctrl', function () {
   });
 
   it("should hide previous button on first page", function () {
-    checkStateOfButton(0, 'hidden', true);
+    checkStateOfButton(0, 'hidden', false);
   });
 
   it("should hide next button on last page", function () {
     checkStateOfButton(8, true, 'hidden');
   });
 
-  it("should test the right arrow on the first page", function () {
+  it("next button should be enabled when name is present", function () {
+    controller.template.name = templateName;
+    checkStateOfButton(0, 'hidden', true);
     validateKeyPressEvent(rightArrow, 0, 1);
+  });
+
+  it("next button should be disabled when name is not present", function () {
+    controller.template.name = '';
+    checkStateOfButton(0, 'hidden', false);
   });
 
   it("should test the left arrow when on the first page", function () {

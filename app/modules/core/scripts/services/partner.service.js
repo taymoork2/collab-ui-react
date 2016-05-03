@@ -152,13 +152,15 @@
         state: customer.state,
         isAllowedToManage: true,
         isSquaredUcOffer: false,
-        notes: {}
+        notes: {},
+        isPartner: false
       };
 
       var licensesAndOffersData = parseLicensesAndOffers(customer);
       angular.extend(dataObj, licensesAndOffersData);
 
       dataObj.isAllowedToManage = isTrialData || customer.isAllowedToManage;
+      dataObj.isPartner = _.get(customer, 'isPartner', false);
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
 

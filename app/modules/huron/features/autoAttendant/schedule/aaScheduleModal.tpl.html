@@ -16,20 +16,20 @@
           <div class="row">
             <div class="cs-input-group aa-schedule-time"
                  ng-class="{'error': hoursForm.starttime.$invalid && hoursForm.starttime.$touched}">
-              <label for="starttime" translate="autoAttendant.scheduleOpenTime"></label>
+              <label for="starttime{{$index}}" translate="autoAttendant.scheduleOpenTime"></label>
               <input cs-timepicker
-                     id="starttime"
-                     name="starttime"
+                     id="starttime{{$index}}"
+                     name="starttime{{$index}}"
                      type="text"
                      ng-model="hours.starttime"
                      required>
             </div>
             <div class="cs-input-group aa-schedule-time"
                  ng-class="{'error':  aaScheduleModalCtrl.isOpenHoursAfterCloseHours(hours.starttime, hours.endtime)}">
-              <label for="endtime" translate="autoAttendant.scheduleClosedTime"></label>
+              <label for="endtime{{$index}}" translate="autoAttendant.scheduleClosedTime"></label>
               <input cs-timepicker
-                     id="endtime"
-                     name="endtime"
+                     id="endtime{{$index}}"
+                     name="endtime{{$index}}"
                      type="text"
                      ng-model="hours.endtime"
                      required>

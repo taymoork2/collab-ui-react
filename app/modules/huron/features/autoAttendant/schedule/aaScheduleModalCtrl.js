@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function AAScheduleModalCtrl($modal, $modalInstance, $translate, Notification, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
+  function AAScheduleModalCtrl($modal, $modalInstance, $translate, AANotificationService, AACalendarService, AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService) {
     /*jshint validthis: true */
     var vm = this;
 
@@ -297,7 +297,7 @@
               //and the newly created orphaned calendar is deleted.
               return;
             }
-            Notification.success('autoAttendant.successUpdateCe', {
+            AANotificationService.success('autoAttendant.successUpdateCe', {
               name: notifyName
             });
             vm.isDeleted = false;
@@ -311,20 +311,20 @@
               //Error deleting calendar or updating CE. Retain the scheduleId.
               vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
               vm.isDeleted = false;
-              Notification.error('autoAttendant.errorDeleteCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorDeleteCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else if (angular.isUndefined(vm.aaModel.aaRecord.scheduleId)) {
               //Calendar create failed
-              Notification.error('autoAttendant.errorCreateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorCreateCe', {
                 name: calName,
                 statusText: response.statusText,
                 status: response.status
               });
             } else {
-              Notification.error('autoAttendant.errorUpdateCe', {
+              AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
                 name: notifyName,
                 statusText: response.statusText,
                 status: response.status
@@ -363,7 +363,7 @@
           vm.aaModel.aaRecord.scheduleId = vm.ui.ceInfo.scheduleId;
         }, function (response) {
           // failure in updating CE with schedue id, so clean up the possible orphaned schedule and the objects
-          Notification.error('autoAttendant.errorUpdateCe', {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
             name: ceName,
             statusText: response.statusText,
             status: response.status
@@ -465,7 +465,7 @@
       });
       importModal.result.then(function (allHours) {
         if (allHours) {
-          Notification.success('autoAttendant.successImport', {
+          AANotificationService.success('autoAttendant.successImport', {
             holidays: allHours.holidays.length,
             hours: allHours.hours.length
           });

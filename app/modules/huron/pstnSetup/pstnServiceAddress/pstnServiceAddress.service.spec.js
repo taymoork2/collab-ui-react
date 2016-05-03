@@ -35,7 +35,7 @@ describe('Service: PstnServiceAddressService', function () {
     };
 
     serviceAddress = {
-      serviceName: '',
+      serviceName: 'Test Customer Site',
       serviceStreetNumber: '123',
       serviceStreetDirection: '',
       serviceStreetName: 'My Street',
@@ -87,10 +87,10 @@ describe('Service: PstnServiceAddressService', function () {
 
   it('should create a customer site', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/sites', {
-      name: '',
+      name: 'Test Customer Site',
       serviceAddress: serviceAddress
     }).respond(201);
-    PstnServiceAddressService.createCustomerSite(customerId, '', address);
+    PstnServiceAddressService.createCustomerSite(customerId, 'Test Customer Site', address);
     $httpBackend.flush();
   });
 

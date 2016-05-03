@@ -13,8 +13,7 @@ var runSeq = require('run-sequence');
 gulp.task('optimize', function (done) {
   runSeq(
     [
-      'optimize:app',
-      'optimize:unsupported'
+      'optimize:app'
     ],
     done
   );
@@ -52,35 +51,6 @@ gulp.task('optimize:app', function () {
     .pipe($.uglify({
       mangle: false
     }))
-    .pipe(jsFilter.restore)
-    .pipe($.header(config.banner, {
-      pkg: pkg
-    }))
-    .pipe($.rev())
-    .pipe(assets.restore())
-    .pipe($.useref())
-    .pipe($.revReplace())
-    .pipe($.sourcemaps.write('./'))
-    .pipe(gulp.dest(config.dist));
-});
-
-// Optimize unsupported files
-gulp.task('optimize:unsupported', function () {
-  messageLogger('Optimizing the JavaScript, CSS, and HTML for production unsupported.html');
-  var assets = $.useref.assets({
-    searchPath: config.build
-  });
-  var jsFilter = $.filter('**/*.js', {
-    restore: true
-  });
-
-  return gulp
-    .src(config.build + '/unsupported.html')
-    .pipe($.plumber())
-    .pipe(assets)
-    .pipe($.sourcemaps.init())
-    .pipe(jsFilter)
-    .pipe($.uglify())
     .pipe(jsFilter.restore)
     .pipe($.header(config.banner, {
       pkg: pkg

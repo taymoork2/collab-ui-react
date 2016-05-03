@@ -1,10 +1,11 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('Mediafusion')
+  angular.module('Mediafusion')
+    .service('vtslistservice', vtslistservice);
 
-.service('vtslistservice', ['$http', '$rootScope', 'Storage', 'Authinfo', 'Utils', 'Auth',
-
-  function ($http, $rootScope, Storage, Authinfo, Utils, Auth) {
+  /* @ngInject */
+  function vtslistservice($http, $rootScope, Storage, Authinfo, Utils, Auth) {
 
     var vtslistservice = {
 
@@ -102,5 +103,4 @@ angular.module('Mediafusion')
     return vtslistservice;
 
   }
-
-]);
+})();

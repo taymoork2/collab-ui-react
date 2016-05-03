@@ -23,10 +23,10 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+          <span>{{'helpdesk.accountCreated' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
+          <span>{{helpdeskOrgCtrl.org.meta.created | date : 'longDate' : '+0000'}}</span>
         </div>
       </div>
 
@@ -102,6 +102,15 @@
         </div>
         <div class="large-7 columns details-value">
           <span>{{helpdeskOrgCtrl.supportedBy}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
         </div>
       </div>
 
