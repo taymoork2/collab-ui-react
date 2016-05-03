@@ -172,8 +172,8 @@
 
       var blob = new $window.Blob([newData], {
         // type: 'text/csv;charset=UTF-16LE;'
+        // type: 'text/csv'
         type: 'text/plain'
-          // type: 'text/csv'
       });
 
       var oUrl = ($window.URL || $window.webkitURL).createObjectURL(blob);
