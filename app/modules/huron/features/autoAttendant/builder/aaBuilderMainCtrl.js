@@ -48,7 +48,7 @@
       tname: "OpenClosedHoursTemplate",
       actions: [{
         lane: 'openHours',
-        actionset: ['say', 'runActionsOnInput']
+        actionset: []
       }, {
         lane: 'closedHours',
         actionset: []
