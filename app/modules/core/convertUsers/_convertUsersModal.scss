@@ -12,16 +12,17 @@
     position: relative;
     margin-bottom: 15px;
     margin-top: 15px;
-  }
-  .search input {
-    width: 790px;
-    height: 32px;
-    text-indent: 20px;
-  }
-  .search .icon-search { 
-    position: absolute;
-    top: 10px;
-    left: 10px;
+
+    input {
+      width: 790px;
+      height: 32px;
+      text-indent: 20px;
+    }
+
+    .icon-search {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
   }
 }
-

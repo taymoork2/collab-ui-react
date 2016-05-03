@@ -15,7 +15,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMessageServices;
   var getLicensesUsage;
   var getLicensesUsageSpy;
-  var getUnlicensedUsers;
+  var unlicensedUsers;
   var $controller;
   beforeEach(module('Core'));
   beforeEach(module('Hercules'));
@@ -67,6 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     headers = getJSONFixture('core/json/users/headers.json');
     getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
+    unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
 
     spyOn(Orgservice, 'getHybridServiceAcknowledged').and.returnValue($q.when(fusionServices));
     spyOn(CsvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -78,7 +79,7 @@ describe('OnboardCtrl: Ctrl', function () {
     });
 
     spyOn(Notification, 'notify');
-    spyOn(Orgservice, 'getUnlicensedUsers');
+    spyOn(Orgservice, 'getUnlicensedUsers').and.returnValue(unlicensedUsers);
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
@@ -425,7 +426,7 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('filterList', function () {
     beforeEach(initController);
     it('a proper query should call out to organizationService', function () {
-      $scope.filterList('abcd');
+      $scope.filterList('sqtest');
       $timeout.flush();
       expect(Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
     });
