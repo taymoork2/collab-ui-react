@@ -6,15 +6,13 @@
 var SiteSettigsPage = function () {
   this.t31Info = {
     siteUrl: 't30citestprov6.webex.com',
-    //testAdminUsername: 't31r1-regression-adm@mailinator.com',
-    testAdminUsername: 't31r1-csvtoggle-adm@mailinator.com',
+    testAdminUsername: 't31r1-regression-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
   this.t30Info = {
     siteUrl: 't30citestprov9.webex.com',
-    //testAdminUsername: 't30sp6-regression-adm@mailinator.com',
-    testAdminUsername: 't30citestprov9_csvadm4@mailinator.com',
+    testAdminUsername: 't30sp6-regression-adm@mailinator.com',
     testAdminPassword: 'Cisco!23'
   };
 
@@ -28,10 +26,8 @@ var SiteSettigsPage = function () {
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
-  //this.t31ConfigureCog = element(by.id(this.t31Info.siteUrl + "_webex-site-settings"));
-  //this.t30ConfigureCog = element(by.id(this.t30Info.siteUrl + "_webex-site-settings"));
-  this.t31ConfigureIcon = element(by.id(this.t31Info.siteUrl + "_SiteConfigLink"));
-  this.t30ConfigureIcon = element(by.id(this.t30Info.siteUrl + "_SiteConfigLink"));
+  this.t31ConfigureCog = element(by.id(this.t31Info.siteUrl + "_webex-site-settings"));
+  this.t30ConfigureCog = element(by.id(this.t30Info.siteUrl + "_webex-site-settings"));
   this.t31CardsSectionId = element(by.id(this.t31Info.siteUrl + "-cardsSection"));
   this.t30CardsSectionId = element(by.id(this.t30Info.siteUrl + "-cardsSection"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
