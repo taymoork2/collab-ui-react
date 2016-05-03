@@ -88,14 +88,6 @@ namespace servicesOverview {
         return this.serviceEnabledWeight['' + serv.enabled] > this.serviceEnabledWeight['' + result] ? serv.enabled : result;
       }, startVal);
       return res;
-      // return _.chain(services)
-      //   .filter((service)=> {
-      //     return _.indexOf(serviceIds, service.id) >= 0;
-      //   })
-      //   .reduce((result, serv:{enabled:boolean})=> {
-      //     return this.serviceEnabledWeight[serv.enabled] > this.serviceEnabledWeight[result] ? serv.enabled : result;
-      //   }, undefined)
-      //   .value();
     }
 
     protected filterAndGetCssStatus(services:Array<{id:string,status:string}>, serviceIds:Array<string>):string {
@@ -105,19 +97,10 @@ namespace servicesOverview {
       }).reduce((result, serv)=> {
         return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result;
       }, startVal);
-      // let callServiceStatus:string = _.chain(services)
-      //   .filter((service)=> {
-      //     return _.indexOf(serviceIds, service.id) >= 0;
-      //   })
-      //   .reduce((result, serv:{status:string})=> {
-      //     return this.serviceStatusWeight[serv.status] > this.serviceStatusWeight[result] ? serv.status : result
-      //   }, undefined)
-      //   .value();
       if (callServiceStatus) {
         return this.serviceStatusToCss[callServiceStatus] || this.serviceStatusToCss['undefined'];
       }
       return undefined;
     }
   }
-
 }

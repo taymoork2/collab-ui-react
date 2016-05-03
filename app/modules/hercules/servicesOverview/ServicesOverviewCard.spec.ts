@@ -27,9 +27,7 @@ namespace servicesOverview {
         //   card: new ServicesOverviewHybridContextCard(), services: ['contact-center-context']
         // }
       ];
-
-
-      // });
+      
       cards.forEach((cardService)=> {
         // describe()
         it(cardService.card.name + ' should set enable if expected service(s) are enabled', ()=> {
@@ -82,17 +80,7 @@ namespace servicesOverview {
             expect(cardService.card.status).toEqual(cssExpectedStatus);
           });
         });
-
-
       });
-
-
     });
-    // let card:ServicesOverviewCardImpl;
-    //
-    // it('filterServices should filter out and give status from one specific service', ()=> {
-    //   let isEnabled = card.filterAndGetEnabledService([{id: 'service1', enabled: true}], ['service1']);
-    //   expect(isEnabled).toBeTruthy();
-    // });
   });
 }
