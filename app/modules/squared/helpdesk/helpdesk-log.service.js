@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskLogService($q, LogService, HelpdeskMockData, HelpdeskService) {
 
     function searchForLastPushedLog(term) {

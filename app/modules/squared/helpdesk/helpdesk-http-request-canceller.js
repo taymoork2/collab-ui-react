@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  /*ngInject*/
+  /* @ngInject */
   function HelpdeskHttpRequestCanceller($q, $timeout) {
 
     var cancelPromises = [];

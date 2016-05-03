@@ -1,11 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('WebExApp').service('WebExUtilsService', [
-  '$q',
-  '$log',
-  'FeatureToggleService',
+  angular.module('WebExApp').service('WebExUtilsService', WebExUtilsService);
 
-  function (
+  /* @ngInject */
+  function WebExUtilsService(
     $q,
     $log,
     FeatureToggleService
@@ -39,4 +38,4 @@ angular.module('WebExApp').service('WebExUtilsService', [
       return deferredGetToggle.promise;
     }; // checkWebExFeaturToggle()
   } // end top level function
-]);
+})();

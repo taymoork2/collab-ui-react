@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  /* eslint no-control-regex:0 */
+
   angular
     .module('Core')
     .factory('ValidationService', ValidationService);

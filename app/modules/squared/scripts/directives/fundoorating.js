@@ -1,7 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('FundooDirectiveTutorial', [])
-  .directive('fundooRating', function () {
+  angular.module('FundooDirectiveTutorial', [])
+    .directive('fundooRating', fundooRating);
+
+  function fundooRating() {
     return {
       restrict: 'A',
       template: '<ul class="rating">' +
@@ -43,4 +46,5 @@ angular.module('FundooDirectiveTutorial', [])
         });
       }
     };
-  });
+  }
+})();

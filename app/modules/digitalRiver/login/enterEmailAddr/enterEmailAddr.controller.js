@@ -6,7 +6,7 @@
     .controller('enterEmailAddrController', enterEmailAddrController);
 
   /* @ngInject */
-  function enterEmailAddrController($location, $window, $translate, $state, Auth, DigitalRiverService) {
+  function enterEmailAddrController($translate, $state, DigitalRiverService) {
 
     var vm = this;
     vm.loading = false;
@@ -14,14 +14,13 @@
     vm.drReferrer = ($state.params.referrer === DigitalRiverService.getDrReferrer());
     if (!vm.drReferrer) {
       vm.error = $translate.instant('digitalRiver.restrictedPage');
-    } else {
-      var sku = $state.params.sku;
-      var orderId = $state.params.orderId;
-      var campaignId = $state.params.campaignId;
-
-      vm.emailPlaceholder = emailPlaceholder;
-      vm.handleEnterEmailAddr = handleEnterEmailAddr;
     }
+    vm.sku = $state.params.sku;
+    vm.orderId = $state.params.orderId;
+    vm.campaignId = $state.params.campaignId;
+
+    vm.emailPlaceholder = emailPlaceholder;
+    vm.handleEnterEmailAddr = handleEnterEmailAddr;
 
     function emailPlaceholder() {
       return $translate.instant('digitalRiver.enterEmailAddr.emailPlaceholder');
@@ -34,21 +33,24 @@
       }
 
       vm.loading = true;
-      DigitalRiverService.userExists(vm.email)
+      return DigitalRiverService.userExists(vm.email)
         .then(function (result) {
           vm.loading = false;
-          if (result.error) {
+          if (!angular.isDefined(result)) {
+            vm.error = $translate.instant('digitalRiver.validation.unexpectedError');
+          } else if (result.error) {
             vm.error = result.error;
           } else if (result.domainClaimed) {
+            //TODO existing admin can have domainClaimed
             vm.error = $translate.instant('digitalRiver.enterEmailAddr.domainClaimed');
           } else {
             var params = {};
             params.referrer = DigitalRiverService.getDrReferrer();
             params.email = vm.email;
             var innerParams = {};
-            innerParams.sku = sku;
-            innerParams.orderId = orderId;
-            innerParams.campaignId = campaignId;
+            innerParams.sku = vm.sku;
+            innerParams.orderId = vm.orderId;
+            innerParams.campaignId = vm.campaignId;
             params.params = innerParams;
 
             if (result.userExists) {
@@ -60,7 +62,7 @@
           }
         }).catch(function (result) {
           vm.error = _.get(result, 'data.message', $translate.instant('digitalRiver.validation.unexpectedError'));
-        }).finally(function (result) {
+        }).finally(function () {
           vm.loading = false;
         });
     }

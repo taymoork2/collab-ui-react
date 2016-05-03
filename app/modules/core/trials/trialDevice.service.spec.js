@@ -17,13 +17,13 @@ describe('Service: Trial Device Service:', function () {
 
     it('should contain a list of states', function () {
       var states = TrialDeviceService.getStates();
-      expect(states.length).toEqual(50);
+      expect(states.length).toEqual(51);
     });
 
     it('should contain a unique list of states', function () {
       var states = TrialDeviceService.getStates();
       var uniqueStates = _.uniq(states);
-      expect(uniqueStates.length).toEqual(50);
+      expect(uniqueStates.length).toEqual(51);
     });
   });
 
