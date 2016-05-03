@@ -12,7 +12,6 @@ describe('Services > Webex page aka Site List page', function () {
     browser.ignoreSynchronization = true;
   });
 
-
   describe(': CSV Export/Import : ', function () {
     var setup = false;
 
